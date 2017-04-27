@@ -12,8 +12,10 @@ plugins {
     id "idea"
 
     id "checkstyle"
-    id "jacoco"
+    id "findbugs"
     id "pmd"
+
+    id "jacoco"
 }
 
 repositories {
@@ -47,5 +49,12 @@ jacocoTestReport {
         csv.enabled = false
         html.enabled = true
         xml.enabled = true
+    }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
     }
 }
