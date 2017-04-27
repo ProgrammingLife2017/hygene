@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4"
+    }
+}
+
 plugins {
     id "java"
     id "idea"
@@ -11,10 +20,22 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testCompile group: "junit", name: "junit", version: junitVersion
-}
+apply plugin: "org.junit.platform.gradle.plugin"
 
+dependencies {
+    // JUnit Jupiter API and TestEngine implementation
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+
+    // If you also want to support JUnit 3 and JUnit 4 tests
+    testCompile("junit:junit:${junit4Version}")
+    testRuntime("org.junit.vintage:junit-vintage-engine:${junitVintageVersion}")
+
+    testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+    testCompile("org.assertj:assertj-core:${assertjVersion}")
+}
 
 /* Plugin settings */
 checkstyle {
