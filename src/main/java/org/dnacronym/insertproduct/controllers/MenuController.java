@@ -17,6 +17,6 @@ public class MenuController implements Initializable {
     }
 
     @FXML
-    private void openAction(ActionEvent event) {
+    protected void openAction(ActionEvent event) {
     }
 }
