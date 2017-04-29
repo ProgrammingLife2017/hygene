@@ -38,10 +38,11 @@ class AssemblyTest {
 
     @Test
     void testAddSegmentDuplicate() {
+        final String sequence = "i9lmsQajqPINZ66wnZCB";
         final Segment segmentA = mock(Segment.class);
         final Segment segmentB = mock(Segment.class);
-        when(segmentA.getName()).thenReturn("i9lmsQajqPINZ66wnZCB");
-        when(segmentB.getName()).thenReturn("i9lmsQajqPINZ66wnZCB");
+        when(segmentA.getName()).thenReturn(sequence);
+        when(segmentB.getName()).thenReturn(sequence);
 
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);

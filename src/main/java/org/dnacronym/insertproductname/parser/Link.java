@@ -5,6 +5,7 @@ package org.dnacronym.insertproductname.parser;
  * A {@code Link} connects two {@code Segment}s, possibly with some overlap.
  *
  * @author Felix Dekker
+ * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class Link {
     private final Segment from;
@@ -30,14 +31,14 @@ public final class Link {
     public Link(final Segment from, final boolean fromOrient, final Segment to, final boolean toOrient,
                 final int overlap) {
         if (from == null || to == null) {
-            throw new IllegalArgumentException("Link segments cannot be null");
+            throw new IllegalArgumentException("Link segments cannot be null.");
         }
         if (overlap < 0) {
-            throw new IllegalArgumentException("Link overlap must be at least 0");
+            throw new IllegalArgumentException("Link overlap must be at least 0.");
         }
         if (overlap > from.getLength() || overlap > to.getLength()) {
             // TODO replace this with a more appropriate exception
-            throw new IllegalArgumentException("Link overlap cannot be larger than either segment");
+            throw new IllegalArgumentException("Link overlap cannot be larger than either segment.");
         }
 
         this.from = from;

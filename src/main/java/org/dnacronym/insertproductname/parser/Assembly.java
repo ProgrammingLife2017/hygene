@@ -10,6 +10,7 @@ import java.util.Map;
  * An {@code Assembly} is a collection of {@code Segment}s and {@code Link}s between those {@code Segment}s.
  *
  * @author Felix Dekker
+ * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class Assembly {
     private final Map<String, Segment> segments;

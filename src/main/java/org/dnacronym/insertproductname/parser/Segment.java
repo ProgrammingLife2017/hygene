@@ -5,6 +5,7 @@ package org.dnacronym.insertproductname.parser;
  * A {@code Segment} is a sequence of bases.
  *
  * @author Felix Dekker
+ * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class Segment {
     private final String name;
@@ -19,7 +20,7 @@ public final class Segment {
      */
     public Segment(final String name, final String sequence) {
         if (name == null || sequence == null) {
-            throw new IllegalArgumentException("Segment name and sequence must be non-null");
+            throw new IllegalArgumentException("Segment name and sequence must be non-null.");
         }
 
         this.name = name;

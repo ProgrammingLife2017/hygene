@@ -38,8 +38,10 @@ class SegmentTest {
 
     @Test
     void testGetLength() {
-        final Segment segment = new Segment("gqkrQuzvtvjZLdOa8hDV", "vaKlWKSE0TAcFFjqfp4N");
-        assertThat(segment.getLength()).isEqualTo(20);
+        final String sequence = "vaKlWKSE0TAcFFjqfp4N";
+        final Segment segment = new Segment("gqkrQuzvtvjZLdOa8hDV", sequence);
+
+        assertThat(segment.getLength()).isEqualTo(sequence.length());
     }
 
     @Test
