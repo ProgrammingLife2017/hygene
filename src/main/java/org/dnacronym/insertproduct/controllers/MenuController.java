@@ -1,6 +1,7 @@
 package org.dnacronym.insertproduct.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
@@ -13,7 +14,8 @@ public class MenuController implements Initializable {
 
     }
 
-    private void fileAction(ActionEvent event) {
+    @FXML
+    private void openAction(ActionEvent event) {
 
     }
 }
