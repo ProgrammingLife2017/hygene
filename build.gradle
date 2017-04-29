@@ -12,8 +12,10 @@ plugins {
     id "idea"
 
     id "checkstyle"
-    id "jacoco"
+    id "findbugs"
     id "pmd"
+
+    id "jacoco"
 }
 
 repositories {
@@ -35,6 +37,7 @@ dependencies {
     testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
     testCompile("org.assertj:assertj-core:${assertjVersion}")
+    testCompile("org.mockito:mockito-core:${mockitoCoreVersion}")
 }
 
 /* Plugin settings */
@@ -47,5 +50,12 @@ jacocoTestReport {
         csv.enabled = false
         html.enabled = true
         xml.enabled = true
+    }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
     }
 }
