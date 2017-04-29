@@ -24,8 +24,22 @@ class ExampleTest {
         assertThat(mockedThing.returnTrue()).isFalse();
     }
 
+    @Test
+    void testSomethingWithFinalMocks() {
+        final Thang mockedThang = mock(Thang.class);
+        when(mockedThang.returnTrue()).thenReturn(false);
+
+        assertThat(mockedThang.returnTrue()).isFalse();
+    }
+
 
     private class Thing {
+        boolean returnTrue() {
+            return true;
+        }
+    }
+
+    private final class Thang {
         boolean returnTrue() {
             return true;
         }
