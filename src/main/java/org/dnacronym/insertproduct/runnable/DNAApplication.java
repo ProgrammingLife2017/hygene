@@ -20,13 +20,14 @@ public class DNAApplication extends Application {
     private static final String APPLICATION_VIEW = "/view/main_view.fxml";
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource(APPLICATION_VIEW));
-
+    public void start(final Stage primaryStage) throws Exception {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        primaryStage.setScene(new Scene(root));
+        final Parent root = FXMLLoader.load(getClass().getResource(APPLICATION_VIEW));
+        final Scene rootScene = new Scene(root);
+
+        primaryStage.setScene(rootScene);
         primaryStage.show();
     }
 

@@ -25,16 +25,17 @@ public class DNAPreloader extends Preloader {
     private Stage stage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws Exception {
         stage = primaryStage;
         stage.setTitle(DNAApplication.TITLE);
         stage.initStyle(StageStyle.UNDECORATED);
 
-        Parent root = FXMLLoader.load(getClass().getResource(PRELOADER_VIEW));
-
         progress = new ProgressBar();
 
-        stage.setScene(new Scene(root));
+        final Parent root = FXMLLoader.load(getClass().getResource(PRELOADER_VIEW));
+        final Scene rootScene = new Scene(root);
+
+        stage.setScene(rootScene);
         stage.show();
     }
 
@@ -44,7 +45,7 @@ public class DNAPreloader extends Preloader {
      * @param pn Progress notification, which contains a progress.
      */
     @Override
-    public void handleProgressNotification(ProgressNotification pn) {
+    public void handleProgressNotification(final ProgressNotification pn) {
         progress.setProgress(pn.getProgress());
     }
 
@@ -56,7 +57,7 @@ public class DNAPreloader extends Preloader {
      * @see Stage#hide
      */
     @Override
-    public void handleStateChangeNotification(StateChangeNotification evt) {
+    public void handleStateChangeNotification(final StateChangeNotification evt) {
         if (evt.getType() == StateChangeNotification.Type.BEFORE_START) {
             stage.hide();
         }
