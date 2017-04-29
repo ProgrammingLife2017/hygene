@@ -12,6 +12,10 @@ public final class Segment {
 
 
     public Segment(final String name, final String sequence) {
+        if (name == null || sequence == null) {
+            throw new IllegalArgumentException("Segment name and sequence must be non-null");
+        }
+
         this.name = name;
         this.sequence = sequence;
     }
@@ -23,6 +27,10 @@ public final class Segment {
 
     public String getSequence() {
         return sequence;
+    }
+
+    public int getLength() {
+        return sequence.length();
     }
 
     public String getReversedSequence() {
