@@ -8,6 +8,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dnacronym.insertproduct.preloader.DNAPreloader;
 
+/**
+ * Main class of the application. Launches a {@link DNAPreloader}, and afterwards a {@link DNAApplication}.
+ *
+ * @see LauncherImpl#launchApplication(Class, Class, String[])
+ */
 public class DNAApplication extends Application {
 
     public static final String TITLE = "DNA";

@@ -10,6 +10,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.dnacronym.insertproduct.runnable.DNAApplication;
 
+/**
+ * Pre loader of {@link DNAApplication}.
+ * <p>
+ * View of preloader is located at {@value PRELOADER_VIEW}.
+ */
 public class DNAPreloader extends Preloader {
 
     private static final String PRELOADER_VIEW = "/view/dna_preloader_view.fxml";
@@ -33,11 +38,23 @@ public class DNAPreloader extends Preloader {
         stage.show();
     }
 
+    /**
+     * Update {@link #progress} of the application.
+     *
+     * @param pn Progress notification, which contains a progress.
+     */
     @Override
     public void handleProgressNotification(ProgressNotification pn) {
         progress.setProgress(pn.getProgress());
     }
 
+    /**
+     * Notify the pre loader of the state of the application. If {@link StateChangeNotification#getType()} is
+     * {@link StateChangeNotification.Type#BEFORE_START}, {@link #stage} of pre loader is hidden.
+     *
+     * @param evt State change notification, notifying the pre loader what it should do.
+     * @see Stage#hide
+     */
     @Override
     public void handleStateChangeNotification(StateChangeNotification evt) {
         if (evt.getType() == StateChangeNotification.Type.BEFORE_START) {
