@@ -118,11 +118,26 @@ public final class GFAParser {
             from = assembly.getSegment(fromName);
             to = assembly.getSegment(toName);
 
-            overlap = Integer.parseInt(overlapString.substring(0, -1));
+            overlap = parseCigarString(overlapString);
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link", offset);
         }
 
         return new Link(from, fromOrient, to, toOrient, overlap);
+    }
+
+    /**
+     * Parses a CIGAR-compliant {@code String}.
+     *
+     * @param cigar a CIGAR-compliant {@code String}
+     * @return the overlap in indicated by the CIGAR string.
+     * @see <a href="http://genome.sph.umich.edu/wiki/SAM#What_is_a_CIGAR.3F">What is a CIGAR?</a>
+     */
+    private int parseCigarString(final String cigar) {
+        if (cigar == null || cigar.length() == 0) {
+            return 0;
+        }
+
+        return Integer.parseInt(cigar.replaceAll("M", ""));
     }
 }
