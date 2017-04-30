@@ -46,6 +46,11 @@ class SequenceNodeTest {
     }
 
     @Test
+    void testHasLeftNeighbours() {
+        assertThat(sequenceNode.hasLeftNeighbours()).isFalse();
+    }
+
+    @Test
     void testAddPreviousNode() {
         final SequenceNode newNode = new SequenceNode("ATAT");
         sequenceNode.addLeftNeighbour(newNode);
@@ -57,6 +62,11 @@ class SequenceNodeTest {
     @Test
     void testGetNextNodes() {
         assertThat(sequenceNode.getRightNeighbours()).isEmpty();
+    }
+
+    @Test
+    void testHasRightNeighbours() {
+        assertThat(sequenceNode.hasRightNeighbours()).isFalse();
     }
 
     @Test
