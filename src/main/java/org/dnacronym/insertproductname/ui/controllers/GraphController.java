@@ -13,8 +13,7 @@ import java.util.ResourceBundle;
 public class GraphController extends MainController implements Initializable {
 
     /**
-     * Construct a new main controller. Used by controllers that inherit from this to directly access the
-     * stage.
+     * Construct a new graph controller.
      *
      * @param stage Primary stage of the application.
      */

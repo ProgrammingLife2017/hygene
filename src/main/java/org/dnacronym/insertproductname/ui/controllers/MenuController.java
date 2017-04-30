@@ -18,8 +18,7 @@ public class MenuController extends MainController implements Initializable {
     private static final String FILE_CHOOSER_TITLE = "Choose DNA Graph";
 
     /**
-     * Construct a new main controller. Used by controllers that inherit from this to directly access the
-     * stage.
+     * Construct a new menu controller.
      *
      * @param stage Primary stage of the application.
      */
