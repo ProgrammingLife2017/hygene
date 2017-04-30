@@ -1,20 +1,23 @@
 package org.dnacronym.insertproductname.ui.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.mock;
 
+
 /**
  * Unit test for {@link MenuController}.
  */
-public class MenuControllerTest {
+class MenuControllerTest {
     private MenuController menuController;
+
 
     @BeforeEach
     void beforeEach() {
-        menuController = new MenuController();
+        menuController = new MenuController(mock(Stage.class));
     }
 
 

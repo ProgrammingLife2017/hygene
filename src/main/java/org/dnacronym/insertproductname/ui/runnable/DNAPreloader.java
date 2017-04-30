@@ -8,12 +8,13 @@ import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+
 /**
- * Pre loader of {@link Application}.
+ * Pre loader of {@link DNAApplication}.
  * <p>
  * View of preloader is located at {@value PRELOADER_VIEW}.
  */
-public class Preloader extends javafx.application.Preloader {
+public class DNAPreloader extends javafx.application.Preloader {
 
     private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
 
@@ -23,9 +24,9 @@ public class Preloader extends javafx.application.Preloader {
     private Stage stage;
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public final void start(final Stage primaryStage) throws Exception {
         stage = primaryStage;
-        stage.setTitle(Application.TITLE);
+        stage.setTitle(DNAApplication.TITLE);
         stage.initStyle(StageStyle.UNDECORATED);
 
         progress = new ProgressBar();
@@ -43,7 +44,7 @@ public class Preloader extends javafx.application.Preloader {
      * @param pn Progress notification, which contains a progress.
      */
     @Override
-    public void handleProgressNotification(final ProgressNotification pn) {
+    public final void handleProgressNotification(final ProgressNotification pn) {
         progress.setProgress(pn.getProgress());
     }
 
@@ -55,7 +56,7 @@ public class Preloader extends javafx.application.Preloader {
      * @see Stage#hide
      */
     @Override
-    public void handleStateChangeNotification(final StateChangeNotification evt) {
+    public final void handleStateChangeNotification(final StateChangeNotification evt) {
         if (evt.getType() == StateChangeNotification.Type.BEFORE_START) {
             stage.hide();
         }
