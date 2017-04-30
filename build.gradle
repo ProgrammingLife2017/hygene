@@ -12,8 +12,11 @@ plugins {
     id "idea"
 
     id "checkstyle"
-    id "jacoco"
+    id "findbugs"
     id "pmd"
+    id "org.sonarqube" version "2.3"
+
+    id "jacoco"
 }
 
 repositories {
@@ -35,6 +38,7 @@ dependencies {
     testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
     testCompile("org.assertj:assertj-core:${assertjVersion}")
+    testCompile("org.mockito:mockito-core:${mockitoCoreVersion}")
 }
 
 /* Plugin settings */
@@ -48,4 +52,32 @@ jacocoTestReport {
         html.enabled = true
         xml.enabled = true
     }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+afterEvaluate {
+    jacoco {
+        applyTo junitPlatformTest
+    }
+
+    task junit5CodeCoverageReport(type: JacocoReport) {
+        executionData junitPlatformTest
+        sourceSets sourceSets.main
+        sourceDirectories = files()
+        classDirectories = files()
+        sourceDirectories = files("./src/main")
+        classDirectories = files("$buildDir/classes/main")
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+    }
+
+    junitPlatformTest { finalizedBy junit5CodeCoverageReport }
 }
