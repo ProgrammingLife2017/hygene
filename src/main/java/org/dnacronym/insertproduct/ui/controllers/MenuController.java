@@ -1,4 +1,4 @@
-package org.dnacronym.insertproduct.controllers;
+package org.dnacronym.insertproduct.ui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
