@@ -1,6 +1,7 @@
 package org.dnacronym.insertproductname.ui.runnable;
 
 import com.sun.javafx.application.LauncherImpl;
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ import javafx.stage.Stage;
  *
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
-public class DNAApplication extends javafx.application.Application {
+public class DNAApplication extends Application {
 
     public static final String TITLE = "DNA";
 

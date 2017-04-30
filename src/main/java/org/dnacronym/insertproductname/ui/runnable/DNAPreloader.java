@@ -1,5 +1,6 @@
 package org.dnacronym.insertproductname.ui.runnable;
 
+import javafx.application.Preloader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,7 +15,7 @@ import javafx.stage.StageStyle;
  * <p>
  * View of preloader is located at {@value PRELOADER_VIEW}.
  */
-public class DNAPreloader extends javafx.application.Preloader {
+public class DNAPreloader extends Preloader {
 
     private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
 
