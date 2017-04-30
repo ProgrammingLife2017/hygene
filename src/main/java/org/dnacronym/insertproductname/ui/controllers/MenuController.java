@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public class MenuController extends MainController implements Initializable {
 
-    private static final String FILECHOOSER_TITLE = "Choose DNA Graph";
+    private static final String FILE_CHOOSER_TITLE = "Choose DNA Graph";
 
     /**
      * Construct a new main controller. Used by controllers that inherit from this to directly access the
@@ -39,7 +39,7 @@ public class MenuController extends MainController implements Initializable {
     @FXML
     protected final void openAction(final ActionEvent event) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(FILECHOOSER_TITLE);
+        fileChooser.setTitle(FILE_CHOOSER_TITLE);
         fileChooser.showOpenDialog(getStage());
     }
 }
