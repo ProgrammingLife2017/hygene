@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dnacronym.insertproductname.ui.controllers.MainController;
 
 
 /**
@@ -35,11 +34,8 @@ public class DNAApplication extends javafx.application.Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final MainController mainController = new MainController(primaryStage);
-
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(APPLICATION_VIEW));
         final Parent parent = fxmlLoader.load();
-        fxmlLoader.setController(mainController);
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);

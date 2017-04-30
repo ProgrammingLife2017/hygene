@@ -7,6 +7,6 @@
          fx:controller="org.dnacronym.insertproductname.ui.controllers.MenuController"
          xmlns="http://javafx.com/javafx/8">
     <Menu mnemonicParsing="false" text="File">
-        <MenuItem mnemonicParsing="false" text="Open" onAction="#openAction"/>
+        <MenuItem mnemonicParsing="false" text="Open"/>
     </Menu>
 </MenuBar>
