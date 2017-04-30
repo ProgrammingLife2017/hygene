@@ -64,6 +64,15 @@ public final class SequenceNode {
     }
 
     /**
+     * Returns true iff. the node has 1 or more left neighbours.
+     *
+     * @return true iff. the node has 1 or more left neighbours.
+     */
+    public boolean hasLeftNeighbours() {
+        return !leftNeighbours.isEmpty();
+    }
+
+    /**
      * Adds the given {@code sequenceNode} to the list of left neighbours.
      *
      * @param sequenceNode the node to be added as a left neighbour
@@ -79,6 +88,15 @@ public final class SequenceNode {
      */
     public List<SequenceNode> getRightNeighbours() {
         return rightNeighbours;
+    }
+
+    /**
+     * Returns true iff. the node has 1 or more right neighbours.
+     *
+     * @return true iff. the node has 1 or more right neighbours.
+     */
+    public boolean hasRightNeighbours() {
+        return !rightNeighbours.isEmpty();
     }
 
     /**
