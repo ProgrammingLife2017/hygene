@@ -1,6 +1,5 @@
 package org.dnacronym.insertproduct.ui.runnable;
 
-import javafx.application.Preloader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,14 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.dnacronym.insertproduct.ui.runnable.DNAApplication;
 
 /**
- * Pre loader of {@link DNAApplication}.
+ * Pre loader of {@link Application}.
  * <p>
  * View of preloader is located at {@value PRELOADER_VIEW}.
  */
-public class DNAPreloader extends Preloader {
+public class Preloader extends javafx.application.Preloader {
 
     private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
 
@@ -27,7 +25,7 @@ public class DNAPreloader extends Preloader {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         stage = primaryStage;
-        stage.setTitle(DNAApplication.TITLE);
+        stage.setTitle(Application.TITLE);
         stage.initStyle(StageStyle.UNDECORATED);
 
         progress = new ProgressBar();
