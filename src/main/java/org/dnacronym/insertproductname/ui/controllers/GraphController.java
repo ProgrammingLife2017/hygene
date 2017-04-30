@@ -7,11 +7,12 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the Graph View of the application. Handles user interaction with the graph.
+ * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public class GraphController implements Initializable {
 
     @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    public final void initialize(final URL location, final ResourceBundle resources) {
+        // TODO implement GraphController initialize method.
     }
 }

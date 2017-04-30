@@ -7,11 +7,12 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the menu bar of the application. Each menu item has its own action.
+ * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public class MenuController implements Initializable {
 
     @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    public final void initialize(final URL location, final ResourceBundle resources) {
+        // TODO implement MenuController initialize method.
     }
 }
