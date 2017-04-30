@@ -19,6 +19,10 @@ public class DNAApplication extends Application {
 
     private static final String APPLICATION_VIEW = "/view/main_view.fxml";
 
+    public static void main(String[] args) {
+        LauncherImpl.launchApplication(DNAApplication.class, DNAPreloader.class, args);
+    }
+
     @Override
     public void start(final Stage primaryStage) throws Exception {
         primaryStage.setTitle(TITLE);
@@ -29,9 +33,5 @@ public class DNAApplication extends Application {
 
         primaryStage.setScene(rootScene);
         primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        LauncherImpl.launchApplication(DNAApplication.class, DNAPreloader.class, args);
     }
 }
