@@ -4,7 +4,6 @@ package org.dnacronym.insertproductname.parser;
 /**
  * A {@code Segment} is a sequence of bases.
  *
- * @author Felix Dekker
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class Segment {

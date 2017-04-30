@@ -4,7 +4,6 @@ package org.dnacronym.insertproductname.parser;
 /**
  * A {@code Link} connects two {@code Segment}s, possibly with some overlap.
  *
- * @author Felix Dekker
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class Link {

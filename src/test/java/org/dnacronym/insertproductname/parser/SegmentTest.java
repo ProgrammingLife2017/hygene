@@ -8,8 +8,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 /**
  * Unit tests for {@code Segment}s.
- *
- * @author Felix Dekker
  */
 class SegmentTest {
     @Test

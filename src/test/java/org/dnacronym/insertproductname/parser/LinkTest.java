@@ -11,8 +11,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@code Link}s.
- *
- * @author Felix Dekker
  */
 final class LinkTest {
     private Segment from;
