@@ -22,12 +22,12 @@ class SequenceNodeTest {
 
 
     @Test
-    void getSequence() {
+    void testGetSequence() {
         assertThat(sequenceNode.getSequence()).isEqualTo(SEQUENCE_STRING);
     }
 
     @Test
-    void getReadIdentifiers() {
+    void testGetReadIdentifiers() {
         assertThat(sequenceNode.getReadIdentifiers()).isEmpty();
     }
 
@@ -37,34 +37,34 @@ class SequenceNodeTest {
         sequenceNode.addReadIdentifier(newIdentifier);
 
         assertThat(sequenceNode.getReadIdentifiers()).hasSize(1);
-        assertThat(sequenceNode.getReadIdentifiers().get(0)).isEqualTo(newIdentifier);
+        assertThat(sequenceNode.getReadIdentifiers()).contains(newIdentifier);
     }
 
     @Test
-    void getPreviousNodes() {
-        assertThat(sequenceNode.getPreviousNodes()).isEmpty();
+    void testGetLeftNeighbours() {
+        assertThat(sequenceNode.getLeftNeighbours()).isEmpty();
     }
 
     @Test
-    void addPreviousNode() {
+    void testAddPreviousNode() {
         final SequenceNode newNode = new SequenceNode("ATAT");
-        sequenceNode.addPreviousNode(newNode);
+        sequenceNode.addLeftNeighbour(newNode);
 
-        assertThat(sequenceNode.getPreviousNodes()).hasSize(1);
-        assertThat(sequenceNode.getPreviousNodes().get(0)).isEqualTo(newNode);
+        assertThat(sequenceNode.getLeftNeighbours()).hasSize(1);
+        assertThat(sequenceNode.getLeftNeighbours()).contains(newNode);
     }
 
     @Test
-    void getNextNodes() {
-        assertThat(sequenceNode.getNextNodes()).isEmpty();
+    void testGetNextNodes() {
+        assertThat(sequenceNode.getRightNeighbours()).isEmpty();
     }
 
     @Test
-    void addNextNode() {
+    void testAddNextNode() {
         final SequenceNode newNode = new SequenceNode("ATAT");
-        sequenceNode.addNextNode(newNode);
+        sequenceNode.addRightNeighbour(newNode);
 
-        assertThat(sequenceNode.getNextNodes()).hasSize(1);
-        assertThat(sequenceNode.getNextNodes().get(0)).isEqualTo(newNode);
+        assertThat(sequenceNode.getRightNeighbours()).hasSize(1);
+        assertThat(sequenceNode.getRightNeighbours()).contains(newNode);
     }
 }

@@ -10,8 +10,8 @@ import java.util.List;
 public final class SequenceNode {
     private final String sequence;
     private final List<String> readIdentifiers;
-    private final List<SequenceNode> previousNodes;
-    private final List<SequenceNode> nextNodes;
+    private final List<SequenceNode> leftNeighbours;
+    private final List<SequenceNode> rightNeighbours;
 
 
     /**
@@ -22,8 +22,8 @@ public final class SequenceNode {
     public SequenceNode(final String sequence) {
         this.sequence = sequence;
         this.readIdentifiers = new ArrayList<>();
-        this.previousNodes = new ArrayList<>();
-        this.nextNodes = new ArrayList<>();
+        this.leftNeighbours = new ArrayList<>();
+        this.rightNeighbours = new ArrayList<>();
     }
 
 
@@ -55,38 +55,38 @@ public final class SequenceNode {
     }
 
     /**
-     * Returns the previous nodes.
+     * Returns the left neighbours.
      *
-     * @return the previous nodes.
+     * @return the left neighbours.
      */
-    public List<SequenceNode> getPreviousNodes() {
-        return previousNodes;
+    public List<SequenceNode> getLeftNeighbours() {
+        return leftNeighbours;
     }
 
     /**
-     * Adds the given {@code sequenceNode} to the list of previous nodes.
+     * Adds the given {@code sequenceNode} to the list of left neighbours.
      *
-     * @param sequenceNode the node to be added as a previous node
+     * @param sequenceNode the node to be added as a left neighbour
      */
-    public void addPreviousNode(final SequenceNode sequenceNode) {
-        previousNodes.add(sequenceNode);
+    public void addLeftNeighbour(final SequenceNode sequenceNode) {
+        leftNeighbours.add(sequenceNode);
     }
 
     /**
-     * Returns the next nodes.
+     * Returns the right neighbours.
      *
-     * @return the next nodes.
+     * @return the right neighbours.
      */
-    public List<SequenceNode> getNextNodes() {
-        return nextNodes;
+    public List<SequenceNode> getRightNeighbours() {
+        return rightNeighbours;
     }
 
     /**
-     * Adds the given {@code sequenceNode} to the list of next nodes.
+     * Adds the given {@code sequenceNode} to the list of right neighbours.
      *
-     * @param sequenceNode the node to be added as a next node
+     * @param sequenceNode the node to be added as a right neighbour
      */
-    public void addNextNode(final SequenceNode sequenceNode) {
-        nextNodes.add(sequenceNode);
+    public void addRightNeighbour(final SequenceNode sequenceNode) {
+        rightNeighbours.add(sequenceNode);
     }
 }
