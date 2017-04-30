@@ -1,4 +1,4 @@
-package org.dnacronym.insertproduct.ui.controllers;
+package org.dnacronym.insertproductname.ui.controllers;
 
 import javafx.fxml.Initializable;
 

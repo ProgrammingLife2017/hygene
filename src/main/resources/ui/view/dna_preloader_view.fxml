@@ -3,7 +3,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.insertproduct.ui.runnable.Preloader"
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.insertproductname.ui.runnable.Preloader"
       xmlns="http://javafx.com/javafx/8">
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="DNA"/>
     <ProgressBar fx:id="progress" prefWidth="200.0" progress="0.0"/>

@@ -1,4 +1,4 @@
-package org.dnacronym.insertproduct.ui.runnable;
+package org.dnacronym.insertproductname.ui.runnable;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
