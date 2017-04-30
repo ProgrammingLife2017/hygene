@@ -23,7 +23,7 @@ public final class SequenceGraph {
      *
      * @return the start node.
      */
-    public final SequenceNode getStartNode() {
+    public SequenceNode getStartNode() {
         return startNode;
     }
 }

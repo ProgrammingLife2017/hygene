@@ -43,7 +43,7 @@ public final class SequenceNode {
      *
      * @return the sequence.
      */
-    public final String getSequence() {
+    public String getSequence() {
         return sequence;
     }
 
@@ -52,7 +52,7 @@ public final class SequenceNode {
      *
      * @return the read identifiers.
      */
-    public final List<String> getReadIdentifiers() {
+    public List<String> getReadIdentifiers() {
         return readIdentifiers;
     }
 
@@ -61,7 +61,7 @@ public final class SequenceNode {
      *
      * @param identifier the identifier to be added
      */
-    public final void addReadIdentifier(final String identifier) {
+    public void addReadIdentifier(final String identifier) {
         readIdentifiers.add(identifier);
     }
 
@@ -70,7 +70,7 @@ public final class SequenceNode {
      *
      * @return the next nodes.
      */
-    public final List<SequenceNode> getNextNodes() {
+    public List<SequenceNode> getNextNodes() {
         return nextNodes;
     }
 
@@ -79,7 +79,7 @@ public final class SequenceNode {
      *
      * @param sequenceNode the node to be added as an adjacent node
      */
-    public final void addNextNode(final SequenceNode sequenceNode) {
+    public void addNextNode(final SequenceNode sequenceNode) {
         nextNodes.add(sequenceNode);
     }
 }
