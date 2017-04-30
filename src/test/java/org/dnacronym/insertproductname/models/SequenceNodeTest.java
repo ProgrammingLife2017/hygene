@@ -57,12 +57,25 @@ class SequenceNodeTest {
     }
 
     @Test
-    void testAddPreviousNode() {
+    void testAddLeftNeighbour() {
         final SequenceNode newNode = new SequenceNode("1", "ATAT");
         sequenceNode.addLeftNeighbour(newNode);
 
         assertThat(sequenceNode.getLeftNeighbours()).hasSize(1);
         assertThat(sequenceNode.getLeftNeighbours()).contains(newNode);
+    }
+
+    @Test
+    void testLinkToLeftNeighbour() {
+        final SequenceNode newNode = new SequenceNode("1", "CTG");
+        sequenceNode.linkToLeftNeighbour(newNode);
+
+        assertThat(sequenceNode.getLeftNeighbours()).hasSize(1);
+        assertThat(sequenceNode.getLeftNeighbours()).contains(newNode);
+
+        // Check whether the new node correctly links back to the main node
+        assertThat(newNode.getRightNeighbours()).hasSize(1);
+        assertThat(newNode.getRightNeighbours()).contains(sequenceNode);
     }
 
     @Test
@@ -76,11 +89,24 @@ class SequenceNodeTest {
     }
 
     @Test
-    void testAddNextNode() {
+    void testAddRightNeighbour() {
         final SequenceNode newNode = new SequenceNode("1", "ATAT");
         sequenceNode.addRightNeighbour(newNode);
 
         assertThat(sequenceNode.getRightNeighbours()).hasSize(1);
         assertThat(sequenceNode.getRightNeighbours()).contains(newNode);
+    }
+
+    @Test
+    void testLinkToRightNeighbour() {
+        final SequenceNode newNode = new SequenceNode("1", "ATC");
+        sequenceNode.linkToRightNeighbour(newNode);
+
+        assertThat(sequenceNode.getRightNeighbours()).hasSize(1);
+        assertThat(sequenceNode.getRightNeighbours()).contains(newNode);
+
+        // Check whether the new node correctly links back to the main node
+        assertThat(newNode.getLeftNeighbours()).hasSize(1);
+        assertThat(newNode.getLeftNeighbours()).contains(sequenceNode);
     }
 }
