@@ -103,9 +103,8 @@ public final class SequenceNode {
      * @param sequenceNode the node to be linked on the left side
      */
     public void linkToLeftNeighbour(final SequenceNode sequenceNode) {
-        addLeftNeighbour(sequenceNode);
-
         if (sequenceNode != null) {
+            addLeftNeighbour(sequenceNode);
             sequenceNode.addRightNeighbour(this);
         }
     }
@@ -143,9 +142,8 @@ public final class SequenceNode {
      * @param sequenceNode the node to be linked on the right side
      */
     public void linkToRightNeighbour(final SequenceNode sequenceNode) {
-        addRightNeighbour(sequenceNode);
-
         if (sequenceNode != null) {
+            addRightNeighbour(sequenceNode);
             sequenceNode.addLeftNeighbour(this);
         }
     }
