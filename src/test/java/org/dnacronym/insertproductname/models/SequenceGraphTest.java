@@ -17,8 +17,8 @@ class SequenceGraphTest {
 
     @BeforeEach
     void setUp() {
-        startNode = new SequenceNode("ATAT");
-        endNode = new SequenceNode("CTCT");
+        startNode = new SequenceNode("1", "ATAT");
+        endNode = new SequenceNode("2", "CTCT");
         sequenceGraph = new SequenceGraph(startNode, endNode);
     }
 

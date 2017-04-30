@@ -6,8 +6,13 @@ import java.util.List;
 
 /**
  * A {@code SequenceNode} represents a node in a DNA Sequence Alignment Graph.
+ *
+ * Each node contains a base-sequence, held in the {@code sequence} field. Each node also is associated with one or more
+ * reads (runs of DNA analysis). Finally, each node is linked with its adjacent nodes, either backward or forward (left
+ * or right).
  */
 public final class SequenceNode {
+    private final String id;
     private final String sequence;
     private final List<String> readIdentifiers;
     private final List<SequenceNode> leftNeighbours;
@@ -17,15 +22,26 @@ public final class SequenceNode {
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
      *
+     * @param id the ID of this sequence segment
      * @param sequence the sequence of bases this node contains
      */
-    public SequenceNode(final String sequence) {
+    public SequenceNode(final String id, final String sequence) {
+        this.id = id;
         this.sequence = sequence;
         this.readIdentifiers = new ArrayList<>();
         this.leftNeighbours = new ArrayList<>();
         this.rightNeighbours = new ArrayList<>();
     }
 
+
+    /**
+     * Returns the ID.
+     *
+     * @return the ID.
+     */
+    public final String getId() {
+        return id;
+    }
 
     /**
      * Returns the sequence.

@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for {@code SequenceNode}s.
  */
 class SequenceNodeTest {
+    private static final String SEQUENCE_ID = "1";
     private static final String SEQUENCE_STRING = "ACTG";
 
     private SequenceNode sequenceNode;
@@ -17,9 +18,14 @@ class SequenceNodeTest {
 
     @BeforeEach
     void setUp() {
-        sequenceNode = new SequenceNode(SEQUENCE_STRING);
+        sequenceNode = new SequenceNode(SEQUENCE_ID, SEQUENCE_STRING);
     }
 
+
+    @Test
+    void testGetId() {
+        assertThat(sequenceNode.getId()).isEqualTo(SEQUENCE_ID);
+    }
 
     @Test
     void testGetSequence() {
@@ -52,7 +58,7 @@ class SequenceNodeTest {
 
     @Test
     void testAddPreviousNode() {
-        final SequenceNode newNode = new SequenceNode("ATAT");
+        final SequenceNode newNode = new SequenceNode("1", "ATAT");
         sequenceNode.addLeftNeighbour(newNode);
 
         assertThat(sequenceNode.getLeftNeighbours()).hasSize(1);
@@ -71,7 +77,7 @@ class SequenceNodeTest {
 
     @Test
     void testAddNextNode() {
-        final SequenceNode newNode = new SequenceNode("ATAT");
+        final SequenceNode newNode = new SequenceNode("1", "ATAT");
         sequenceNode.addRightNeighbour(newNode);
 
         assertThat(sequenceNode.getRightNeighbours()).hasSize(1);
