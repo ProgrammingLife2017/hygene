@@ -1,6 +1,8 @@
 package org.dnacronym.insertproductname.parser;
 
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * A {@code Link} connects two {@code Segment}s, possibly with some overlap.
  *
@@ -22,10 +24,7 @@ public final class Link {
      * @param to         the {@code Segment}. Cannot be {@code null}
      * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive.
      */
-    public Link(final String from, final String to, final int overlap) {
-        if (from == null || to == null) {
-            throw new IllegalArgumentException("Link segments cannot be null.");
-        }
+    public Link(final @NonNull String from, final @NonNull String to, final int overlap) {
         if (overlap < 0) {
             throw new IllegalArgumentException("Link overlap must be at least 0.");
         }

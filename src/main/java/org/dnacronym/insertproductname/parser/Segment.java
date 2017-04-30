@@ -1,6 +1,8 @@
 package org.dnacronym.insertproductname.parser;
 
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * A {@code Segment} is a sequence of bases.
  *
@@ -17,11 +19,7 @@ public final class Segment {
      * @param name     the name
      * @param sequence the sequence
      */
-    public Segment(final String name, final String sequence) {
-        if (name == null || sequence == null) {
-            throw new IllegalArgumentException("Segment name and sequence must be non-null.");
-        }
-
+    public Segment(final @NonNull String name, final @NonNull String sequence) {
         this.name = name;
         this.sequence = sequence;
     }
