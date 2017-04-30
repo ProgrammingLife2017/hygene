@@ -10,6 +10,7 @@ import java.util.List;
 public final class SequenceNode {
     private final String sequence;
     private final List<String> readIdentifiers;
+    private final List<SequenceNode> previousNodes;
     private final List<SequenceNode> nextNodes;
 
 
@@ -21,20 +22,8 @@ public final class SequenceNode {
     public SequenceNode(final String sequence) {
         this.sequence = sequence;
         this.readIdentifiers = new ArrayList<>();
+        this.previousNodes = new ArrayList<>();
         this.nextNodes = new ArrayList<>();
-    }
-
-    /**
-     * Constructs a new {@code SequenceNode}.
-     *
-     * @param sequence        the sequence of bases this node contains
-     * @param readIdentifiers the list of read identifiers that contain this sequence
-     * @param nextNodes       the list of adjacent nodes, linked by an outgoing edge from this node
-     */
-    public SequenceNode(final String sequence, final List<String> readIdentifiers, final List<SequenceNode> nextNodes) {
-        this.sequence = sequence;
-        this.readIdentifiers = readIdentifiers;
-        this.nextNodes = nextNodes;
     }
 
 
@@ -66,6 +55,24 @@ public final class SequenceNode {
     }
 
     /**
+     * Returns the previous nodes.
+     *
+     * @return the previous nodes.
+     */
+    public List<SequenceNode> getPreviousNodes() {
+        return previousNodes;
+    }
+
+    /**
+     * Adds the given {@code sequenceNode} to the list of previous nodes.
+     *
+     * @param sequenceNode the node to be added as a previous node
+     */
+    public void addPreviousNode(final SequenceNode sequenceNode) {
+        previousNodes.add(sequenceNode);
+    }
+
+    /**
      * Returns the next nodes.
      *
      * @return the next nodes.
@@ -75,9 +82,9 @@ public final class SequenceNode {
     }
 
     /**
-     * Adds the given {@code sequenceNode} to the list of adjacent nodes.
+     * Adds the given {@code sequenceNode} to the list of next nodes.
      *
-     * @param sequenceNode the node to be added as an adjacent node
+     * @param sequenceNode the node to be added as a next node
      */
     public void addNextNode(final SequenceNode sequenceNode) {
         nextNodes.add(sequenceNode);
