@@ -98,6 +98,19 @@ public final class SequenceNode {
     }
 
     /**
+     * Adds the given {@code sequenceNode} to the list of left neighbours and creates a link back from that node.
+     *
+     * @param sequenceNode the node to be linked on the left side
+     */
+    public void linkToLeftNeighbour(final SequenceNode sequenceNode) {
+        addLeftNeighbour(sequenceNode);
+
+        if (sequenceNode != null) {
+            sequenceNode.addRightNeighbour(this);
+        }
+    }
+
+    /**
      * Returns the right neighbours.
      *
      * @return the right neighbours.
@@ -122,5 +135,18 @@ public final class SequenceNode {
      */
     public void addRightNeighbour(final SequenceNode sequenceNode) {
         rightNeighbours.add(sequenceNode);
+    }
+
+    /**
+     * Adds the given {@code sequenceNode} to the list of right neighbours and creates a link back from that node.
+     *
+     * @param sequenceNode the node to be linked on the right side
+     */
+    public void linkToRightNeighbour(final SequenceNode sequenceNode) {
+        addRightNeighbour(sequenceNode);
+
+        if (sequenceNode != null) {
+            sequenceNode.addLeftNeighbour(this);
+        }
     }
 }
