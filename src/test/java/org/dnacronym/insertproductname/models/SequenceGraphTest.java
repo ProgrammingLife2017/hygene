@@ -10,19 +10,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for {@code SequenceGraph}s.
  */
 class SequenceGraphTest {
-    private static final SequenceNode START_NODE = new SequenceNode("ATAT");
-
+    private SequenceNode startNode;
     private SequenceGraph sequenceGraph;
 
 
     @BeforeEach
     void setUp() {
-        sequenceGraph = new SequenceGraph(START_NODE);
+        startNode = new SequenceNode("ATAT");
+        sequenceGraph = new SequenceGraph(startNode);
     }
 
 
     @Test
-    void getStartNode() {
-        assertThat(sequenceGraph.getStartNode()).isEqualTo(START_NODE);
+    void testGetStartNode() {
+        assertThat(sequenceGraph.getStartNode()).isEqualTo(startNode);
     }
 }
