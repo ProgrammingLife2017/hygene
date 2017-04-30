@@ -1,5 +1,7 @@
 package org.dnacronym.insertproductname.parser;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ public final class Assembly {
      * @param name the name of the {@code Segment}.
      * @return the {@code Segment} with the given name, or {@code null} if it doesn't exist.
      */
-    public Segment getSegment(final String name) {
+    public @Nullable Segment getSegment(final String name) {
         return segments.get(name);
     }
 

@@ -25,6 +25,15 @@ repositories {
 
 apply plugin: "org.junit.platform.gradle.plugin"
 
+configurations {
+    checkerFrameworkAnnotatedJDK {
+        description = 'a copy of JDK classes with Checker Framework type qualifers inserted'
+    }
+    checkerFramework {
+        description = 'The Checker Framework: custom pluggable types for Java'
+    }
+}
+
 dependencies {
     // JUnit Jupiter API and TestEngine implementation
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
@@ -42,6 +51,20 @@ dependencies {
 
     testCompile("org.testfx:testfx-core:${testfxVersion}")
     testCompile("org.testfx:testfx-junit:${testfxVersion}")
+
+    checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
+    checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
+    compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
+}
+
+tasks.withType(JavaCompile).all { JavaCompile compile ->
+    compile.options.compilerArgs = [
+            '-processor', 'org.checkerframework.checker.nullness.NullnessChecker',
+            '-processorpath', "${configurations.checkerFramework.asPath}",
+            "-Xbootclasspath/p:${configurations.checkerFrameworkAnnotatedJDK.asPath}",
+            "-AskipDefs=Test\$"
+    ]
+
 }
 
 /* Plugin settings */
