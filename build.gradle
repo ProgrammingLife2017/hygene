@@ -66,7 +66,7 @@ afterEvaluate {
         applyTo junitPlatformTest
     }
 
-    task junit5CodeCoverageReport(type: JacocoReport) {
+    task jacocoJUnit5TestReport(type: JacocoReport) {
         executionData junitPlatformTest
         sourceSets sourceSets.main
         sourceDirectories = files()
@@ -79,5 +79,5 @@ afterEvaluate {
         }
     }
 
-    junitPlatformTest { finalizedBy junit5CodeCoverageReport }
+    junitPlatformTest { finalizedBy jacocoJUnit5TestReport }
 }
