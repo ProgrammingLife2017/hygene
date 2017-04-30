@@ -15,7 +15,17 @@ install:
   - ./gradlew -version
 
 script:
-  - ./gradlew check
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+        ./gradlew check sonarqube -Dsonar.login=$SONAR_LOGIN;
+    elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
+        ./gradlew check sonarqube -Dsonar.analysis.mode=preview
+            -Dsonar.login=$SONAR_LOGIN
+            -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST
+            -Dsonar.github.repository=$TRAVIS_REPO_SLUG
+            -Dsonar.github.oauth=$GITHUB_TOKEN ;
+    else
+        ./gradlew check;
+    fi
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -30,4 +40,3 @@ test:
   post:
     - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
     - bash <(curl -s https://codecov.io/bash) -t 18d9443f-bf82-4d44-9cc6-04e0a0a999c8
-
