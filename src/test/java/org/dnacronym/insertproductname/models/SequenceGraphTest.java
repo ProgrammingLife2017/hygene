@@ -11,18 +11,26 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class SequenceGraphTest {
     private SequenceNode startNode;
+    private SequenceNode endNode;
     private SequenceGraph sequenceGraph;
 
 
     @BeforeEach
     void setUp() {
         startNode = new SequenceNode("ATAT");
-        sequenceGraph = new SequenceGraph(startNode);
+        endNode = new SequenceNode("CTCT");
+        sequenceGraph = new SequenceGraph(startNode, endNode);
     }
 
 
     @Test
     void testGetStartNode() {
         assertThat(sequenceGraph.getStartNode()).isEqualTo(startNode);
+    }
+
+
+    @Test
+    void testGetEndNode() {
+        assertThat(sequenceGraph.getEndNode()).isEqualTo(endNode);
     }
 }
