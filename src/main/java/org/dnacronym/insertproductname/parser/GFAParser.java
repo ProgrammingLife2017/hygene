@@ -22,7 +22,7 @@ public final class GFAParser {
         final String[] lines = gfa.split("\\R");
 
         for (int offset = 0; offset < lines.length; offset++) {
-            parse(assembly, lines[offset], offset);
+            parseLine(assembly, lines[offset], offset);
         }
 
         return assembly;
@@ -37,7 +37,7 @@ public final class GFAParser {
      * @param offset   the current line number
      * @throws ParseException if the given {@code String}s are not GFA-compliant
      */
-    private void parse(final Assembly assembly, final String line, final int offset) throws ParseException {
+    private void parseLine(final Assembly assembly, final String line, final int offset) throws ParseException {
         final StringTokenizer st = new StringTokenizer(line, "\t");
         if (!st.hasMoreTokens()) {
             return;
@@ -74,17 +74,14 @@ public final class GFAParser {
             throw new IllegalArgumentException("Segment StringTokenizer cannot be null.");
         }
 
-        final String name;
-        final String sequence;
-
         try {
-            name = st.nextToken();
-            sequence = st.nextToken();
+            final String name = st.nextToken();
+            final String sequence = st.nextToken();
+
+            return new Segment(name, sequence);
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for segment on line" + offset, e);
         }
-
-        return new Segment(name, sequence);
     }
 
     /**
@@ -104,23 +101,17 @@ public final class GFAParser {
             throw new IllegalArgumentException("Segment StringTokenizer cannot be null.");
         }
 
-        final String from;
-        final boolean fromOrient;
-        final String to;
-        final boolean toOrient;
-        final int overlap;
-
         try {
-            from = st.nextToken();
-            fromOrient = "+".equals(st.nextToken());
-            to = st.nextToken();
-            toOrient = "-".equals(st.nextToken());
-            overlap = parseCigarString(st.nextToken(), offset);
+            final String from = st.nextToken();
+            final boolean fromOrient = "+".equals(st.nextToken());
+            final String to = st.nextToken();
+            final boolean toOrient = "-".equals(st.nextToken());
+            final int overlap = parseCigarString(st.nextToken(), offset);
+
+            return new Link(from, fromOrient, to, toOrient, overlap);
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link on line " + offset, e);
         }
-
-        return new Link(from, fromOrient, to, toOrient, overlap);
     }
 
     /**
