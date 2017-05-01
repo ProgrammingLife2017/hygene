@@ -1,6 +1,5 @@
 package org.dnacronym.insertproductname.parser;
 
-import java.text.ParseException;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -58,7 +57,7 @@ public final class GFAParser {
                 break;
 
             default:
-                throw new ParseException("Unknown record type `" + recordType + "`", offset);
+                throw new ParseException("Unknown record type `" + recordType + "` on line " + offset);
         }
     }
 
@@ -82,7 +81,7 @@ public final class GFAParser {
             name = st.nextToken();
             sequence = st.nextToken();
         } catch (final NoSuchElementException e) {
-            throw new ParseException("Not enough parameters for segment", offset);
+            throw new ParseException("Not enough parameters for segment on line" + offset, e);
         }
 
         return new Segment(name, sequence);
@@ -105,8 +104,10 @@ public final class GFAParser {
             throw new IllegalArgumentException("Segment StringTokenizer cannot be null.");
         }
 
-        final String from, to;
-        final boolean fromOrient, toOrient;
+        final String from;
+        final boolean fromOrient;
+        final String to;
+        final boolean toOrient;
         final int overlap;
 
         try {
@@ -116,7 +117,7 @@ public final class GFAParser {
             toOrient = "-".equals(st.nextToken());
             overlap = parseCigarString(st.nextToken(), offset);
         } catch (final NoSuchElementException e) {
-            throw new ParseException("Not enough parameters for link", offset);
+            throw new ParseException("Not enough parameters for link on line " + offset, e);
         }
 
         return new Link(from, fromOrient, to, toOrient, overlap);
@@ -128,6 +129,7 @@ public final class GFAParser {
      * @param cigar  a CIGAR-compliant {@code String}
      * @param offset the current line number, used for debugging
      * @return the overlap in indicated by the CIGAR string.
+     * @throws ParseException if the CIGAR string is invalid
      * @see <a href="http://genome.sph.umich.edu/wiki/SAM#What_is_a_CIGAR.3F">What is a CIGAR?</a>
      */
     private int parseCigarString(final String cigar, final int offset) throws ParseException {
@@ -139,7 +141,7 @@ public final class GFAParser {
         try {
             overlap = Integer.parseInt(cigar.replaceAll("M", ""));
         } catch (final NumberFormatException e) {
-            throw new ParseException("Link cigar string could not be parsed", offset);
+            throw new ParseException("Link cigar string could not be parsed on line " + offset, e);
         }
         return overlap;
     }
