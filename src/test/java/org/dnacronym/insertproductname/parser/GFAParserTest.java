@@ -45,6 +45,14 @@ class GFAParserTest {
     }
 
     @Test
+    void testSegmentContents() throws ParseException {
+        final String gfa = "S name contents";
+        final Assembly assembly = parse(gfa);
+
+        assertThat(assembly.getSegment("name").getSequence()).isEqualTo("contents");
+    }
+
+    @Test
     void testLinkWithMissingOverlap() {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 +";
 
