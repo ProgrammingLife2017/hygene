@@ -39,7 +39,10 @@ public final class GFAParser {
      * @throws ParseException if the given {@code String}s are not GFA-compliant
      */
     private void parse(final Assembly assembly, final String line, final int offset) throws ParseException {
-        final StringTokenizer st = new StringTokenizer(line, "\\t");
+        final StringTokenizer st = new StringTokenizer(line, "\t");
+        if (!st.hasMoreTokens()) {
+            return;
+        }
 
         final String recordType = st.nextToken();
         switch (recordType) {
@@ -111,7 +114,7 @@ public final class GFAParser {
             fromOrient = "+".equals(st.nextToken());
             to = st.nextToken();
             toOrient = "-".equals(st.nextToken());
-            overlap = parseCigarString(st.nextToken());
+            overlap = parseCigarString(st.nextToken(), offset);
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link", offset);
         }
@@ -122,15 +125,22 @@ public final class GFAParser {
     /**
      * Parses a CIGAR-compliant {@code String}.
      *
-     * @param cigar a CIGAR-compliant {@code String}
+     * @param cigar  a CIGAR-compliant {@code String}
+     * @param offset the current line number, used for debugging
      * @return the overlap in indicated by the CIGAR string.
      * @see <a href="http://genome.sph.umich.edu/wiki/SAM#What_is_a_CIGAR.3F">What is a CIGAR?</a>
      */
-    private int parseCigarString(final String cigar) {
+    private int parseCigarString(final String cigar, final int offset) throws ParseException {
         if (cigar == null || cigar.length() == 0) {
             return 0;
         }
 
-        return Integer.parseInt(cigar.replaceAll("M", ""));
+        final int overlap;
+        try {
+            overlap = Integer.parseInt(cigar.replaceAll("M", ""));
+        } catch (final NumberFormatException e) {
+            throw new ParseException("Link cigar string could not be parsed", offset);
+        }
+        return overlap;
     }
 }

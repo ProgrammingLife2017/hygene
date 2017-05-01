@@ -8,7 +8,7 @@ import java.util.Map;
 
 
 /**
- * .
+ * Parses an {@code Assembly} to a {@code SequenceGraph}.
  */
 public final class AssemblyParser {
     /**
@@ -19,6 +19,10 @@ public final class AssemblyParser {
      */
     public SequenceGraph parse(final Assembly assembly) {
         final Map<String, SequenceNode> nodes = new HashMap<>();
+
+        for (final Segment segment : assembly.getSegments()) {
+            getNode(nodes, assembly.getSegment(segment.getName()));
+        }
 
         for (final Link link : assembly.getLinks()) {
             final SequenceNode fromNode = getNode(nodes, assembly.getSegment(link.getFrom()));
@@ -52,7 +56,6 @@ public final class AssemblyParser {
         return node2;
     }
 
-
     /**
      * Calls {@code getFirstNode} on some element in the given {@code Map}.
      *
@@ -76,7 +79,7 @@ public final class AssemblyParser {
     private SequenceNode getFirstNode(final SequenceNode node) {
         SequenceNode first = node;
 
-        while (first.getLeftNeighbours().isEmpty()) {
+        while (!first.getLeftNeighbours().isEmpty()) {
             first = first.getLeftNeighbours().get(0);
         }
 
@@ -106,7 +109,7 @@ public final class AssemblyParser {
     private SequenceNode getLastNode(final SequenceNode node) {
         SequenceNode first = node;
 
-        while (first.getRightNeighbours().isEmpty()) {
+        while (!first.getRightNeighbours().isEmpty()) {
             first = first.getRightNeighbours().get(0);
         }
 
