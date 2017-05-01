@@ -20,7 +20,7 @@ public class DNAApplication extends Application {
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
     /**
-     * Main method of application. Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before launches the
+     * Main method of application. Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the
      * {@link DNAApplication}.
      *
      * @param args Arguments of application.

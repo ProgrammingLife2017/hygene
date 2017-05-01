@@ -11,9 +11,9 @@ import javafx.stage.StageStyle;
 
 
 /**
- * Pre loader of {@link DNAApplication}.
+ * {@link Preloader} of {@link DNAApplication}.
  * <p>
- * View of preloader is located at {@value PRELOADER_VIEW}.
+ * The view is located at {@value PRELOADER_VIEW}.
  */
 public class DNAPreloader extends Preloader {
 
