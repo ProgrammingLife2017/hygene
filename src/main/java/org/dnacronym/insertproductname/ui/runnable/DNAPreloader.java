@@ -11,7 +11,7 @@ import javafx.stage.StageStyle;
 
 
 /**
- * {@link Preloader} of {@link DNAApplication}.
+ * Preloader of {@link DNAApplication}.
  * <p>
  * The view is located at {@value PRELOADER_VIEW}.
  */
@@ -50,10 +50,10 @@ public class DNAPreloader extends Preloader {
     }
 
     /**
-     * Notify the pre loader of the state of the application. If {@link StateChangeNotification#getType()} is
-     * {@link StateChangeNotification.Type#BEFORE_START}, {@link #stage} of pre loader is hidden.
+     * Notify the preloader of the state of the application. If {@link StateChangeNotification#getType()} is
+     * {@link StateChangeNotification.Type#BEFORE_START}, {@link #stage} of preloader is hidden.
      *
-     * @param evt State change notification, notifying the pre loader what it should do.
+     * @param evt State change notification, notifying the preloader what it should do.
      * @see Stage#hide
      */
     @Override
