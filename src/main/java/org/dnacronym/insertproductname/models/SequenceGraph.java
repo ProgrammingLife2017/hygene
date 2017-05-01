@@ -47,7 +47,7 @@ public final class SequenceGraph {
     /**
      * Returns the nodes.
      * <p>
-     * At a later stage (after an initial prototype of the parser has been built), this datastructure will be better
+     * At a later stage (after an initial prototype of the parser has been built), this data structure will be better
      * encapsulated by this class, and this accessor removed.
      *
      * @return the nodes.
