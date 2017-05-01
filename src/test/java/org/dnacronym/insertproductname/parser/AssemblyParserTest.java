@@ -6,8 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 class AssemblyParserTest {
@@ -31,64 +29,55 @@ class AssemblyParserTest {
 
     @Test
     void testParseOneLooseSegment() {
-        final Segment segment = mock(Segment.class);
-        when(segment.getName()).thenReturn("random string here"); // TODO place random string here
-
         final Assembly assembly = new Assembly();
+        final Segment segment = new Segment("name", "sequence");
+
         assembly.addSegment(segment);
         final SequenceGraph graph = parser.parse(assembly);
 
-        assertThat(graph.getStartNode().getId()).isEqualTo(segment.getName());
-        assertThat(graph.getEndNode().getId()).isEqualTo(segment.getName());
+        assertThat(graph.getStartNode().getId()).isEqualTo("name");
+        assertThat(graph.getEndNode().getId()).isEqualTo("name");
     }
 
     @Test
     void testParseTwoLooseSegments() {
-        final Segment segmentA = mock(Segment.class);
-        final Segment segmentB = mock(Segment.class);
-        when(segmentA.getName()).thenReturn("random string1 here"); // TODO place random string here
-        when(segmentB.getName()).thenReturn("random string2 here"); // TODO place random string here
-
         final Assembly assembly = new Assembly();
+        final Segment segmentA = new Segment("A", "sequenceA");
+        final Segment segmentB = new Segment("B", "sequenceB");
+
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);
         final SequenceGraph graph = parser.parse(assembly);
 
-        assertThat(graph.getStartNode().getId()).isEqualTo(segmentB.getName());
-        assertThat(graph.getEndNode().getId()).isEqualTo(segmentB.getName());
+        assertThat(graph.getStartNode().getId()).isEqualTo("A");
+        assertThat(graph.getEndNode().getId()).isEqualTo("A");
     }
 
     @Test
     void testParseSingleLink() {
-        final Segment segmentA = mock(Segment.class);
-        final Segment segmentB = mock(Segment.class);
-        when(segmentA.getName()).thenReturn("segmentA");
-        when(segmentB.getName()).thenReturn("segmentB");
-        final Link link = new Link(segmentA.getName(), true, segmentB.getName(), false, 0);
-
         final Assembly assembly = new Assembly();
+        final Segment segmentA = new Segment("A", "sequenceA");
+        final Segment segmentB = new Segment("B", "sequenceB");
+        final Link link = new Link("A", true, "B", false, 0);
+
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);
         assembly.addLink(link);
         final SequenceGraph graph = parser.parse(assembly);
 
-        assertThat(graph.getStartNode().getId()).isEqualTo(segmentA.getName());
-        assertThat(graph.getEndNode().getId()).isEqualTo(segmentB.getName());
+        assertThat(graph.getStartNode().getId()).isEqualTo("A");
+        assertThat(graph.getEndNode().getId()).isEqualTo("B");
     }
 
     @Test
     void testParseSplit() {
-        final Segment segmentA = mock(Segment.class);
-        final Segment segmentB = mock(Segment.class);
-        final Segment segmentC = mock(Segment.class);
-        when(segmentA.getName()).thenReturn("random string1 here"); // TODO place random string here
-        when(segmentB.getName()).thenReturn("random string2 here"); // TODO place random string here
-        when(segmentC.getName()).thenReturn("random string3 here"); // TODO place random string here
-        final Link linkAB = new Link(segmentA.getName(), true, segmentB.getName(), false, 0);
-        final Link linkAC = new Link(segmentA.getName(), true, segmentC.getName(), false, 0);
-
-
         final Assembly assembly = new Assembly();
+        final Segment segmentA = new Segment("A", "sequenceA");
+        final Segment segmentB = new Segment("B", "sequenceB");
+        final Segment segmentC = new Segment("C", "sequenceC");
+        final Link linkAB = new Link("A", true, "B", true, 0);
+        final Link linkAC = new Link("A", true, "C", true, 0);
+
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);
         assembly.addSegment(segmentC);
@@ -96,26 +85,22 @@ class AssemblyParserTest {
         assembly.addLink(linkAC);
         final SequenceGraph graph = parser.parse(assembly);
         final SequenceNode startNode = graph.getStartNode();
+        final Object[] rightNeighbours = startNode.getRightNeighbours().stream().map(SequenceNode::getId).toArray();
 
-        assertThat(startNode.getId()).isEqualTo(segmentA.getName());
-        // TODO make this dynamic so that the order of right neighbours doesn't matter
-        assertThat(startNode.getRightNeighbours().get(0).getId()).isEqualTo(segmentB.getName());
-        assertThat(startNode.getRightNeighbours().get(1).getId()).isEqualTo(segmentC.getName());
+        assertThat(startNode.getId()).isEqualTo("A");
+        assertThat(rightNeighbours).contains("B");
+        assertThat(rightNeighbours).contains("C");
     }
 
     @Test
     void testParseJoin() {
-        final Segment segmentA = mock(Segment.class);
-        final Segment segmentB = mock(Segment.class);
-        final Segment segmentC = mock(Segment.class);
-        when(segmentA.getName()).thenReturn("random string1 here"); // TODO place random string here
-        when(segmentB.getName()).thenReturn("random string2 here"); // TODO place random string here
-        when(segmentC.getName()).thenReturn("random string3 here"); // TODO place random string here
-        final Link linkAC = new Link(segmentA.getName(), true, segmentC.getName(), false, 0);
-        final Link linkBC = new Link(segmentB.getName(), true, segmentC.getName(), false, 0);
-
-
         final Assembly assembly = new Assembly();
+        final Segment segmentA = new Segment("A", "sequenceA");
+        final Segment segmentB = new Segment("B", "sequenceB");
+        final Segment segmentC = new Segment("C", "sequenceC");
+        final Link linkAC = new Link("A", true, "C", true, 0);
+        final Link linkBC = new Link("B", true, "C", true, 0);
+
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);
         assembly.addSegment(segmentC);
@@ -123,10 +108,10 @@ class AssemblyParserTest {
         assembly.addLink(linkBC);
         final SequenceGraph graph = parser.parse(assembly);
         final SequenceNode endNode = graph.getEndNode();
+        final Object[] leftNeighbours = endNode.getLeftNeighbours().stream().map(SequenceNode::getId).toArray();
 
-        assertThat(endNode.getId()).isEqualTo(segmentC.getName());
-        // TODO make this dynamic so that the order of right neighbours doesn't matter
-        assertThat(endNode.getLeftNeighbours().get(0).getId()).isEqualTo(segmentA.getName());
-        assertThat(endNode.getLeftNeighbours().get(1).getId()).isEqualTo(segmentB.getName());
+        assertThat(endNode.getId()).isEqualTo("C");
+        assertThat(leftNeighbours).contains("A");
+        assertThat(leftNeighbours).contains("B");
     }
 }
