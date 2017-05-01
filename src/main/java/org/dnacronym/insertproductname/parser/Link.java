@@ -7,9 +7,9 @@ package org.dnacronym.insertproductname.parser;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class Link {
-    private final Segment from;
+    private final String from;
     private final boolean fromOrient;
-    private final Segment to;
+    private final String to;
     private final boolean toOrient;
     private final int overlap;
 
@@ -24,20 +24,15 @@ public final class Link {
      * @param fromOrient the orientation of the from {@code Segment}.
      * @param to         the {@code Segment}. Cannot be {@code null}.
      * @param toOrient   the orientation of the to {@code Segment}.
-     * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive and no
-     *                   greater than the largest length of the given {@code Segment}s.
+     * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive.
      */
-    public Link(final Segment from, final boolean fromOrient, final Segment to, final boolean toOrient,
+    public Link(final String from, final boolean fromOrient, final String to, final boolean toOrient,
                 final int overlap) {
         if (from == null || to == null) {
             throw new IllegalArgumentException("Link segments cannot be null.");
         }
         if (overlap < 0) {
             throw new IllegalArgumentException("Link overlap must be at least 0.");
-        }
-        if (overlap > from.getLength() || overlap > to.getLength()) {
-            // TODO replace this with a more appropriate exception
-            throw new IllegalArgumentException("Link overlap cannot be larger than either segment.");
         }
 
         this.from = from;
@@ -53,7 +48,7 @@ public final class Link {
      *
      * @return the from {@code Segment}.
      */
-    public Segment getFrom() {
+    public String getFrom() {
         return from;
     }
 
@@ -71,7 +66,7 @@ public final class Link {
      *
      * @return the to {@code Segment}.
      */
-    public Segment getTo() {
+    public String getTo() {
         return to;
     }
 

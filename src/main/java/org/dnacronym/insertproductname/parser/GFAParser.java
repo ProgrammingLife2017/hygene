@@ -102,23 +102,16 @@ public final class GFAParser {
             throw new IllegalArgumentException("Segment StringTokenizer cannot be null.");
         }
 
-        final Segment from, to;
+        final String from, to;
         final boolean fromOrient, toOrient;
         final int overlap;
 
         try {
-            final String fromName, toName, overlapString;
-
-            fromName = st.nextToken();
+            from = st.nextToken();
             fromOrient = "+".equals(st.nextToken());
-            toName = st.nextToken();
+            to = st.nextToken();
             toOrient = "-".equals(st.nextToken());
-            overlapString = st.nextToken();
-
-            from = assembly.getSegment(fromName);
-            to = assembly.getSegment(toName);
-
-            overlap = parseCigarString(overlapString);
+            overlap = parseCigarString(st.nextToken());
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link", offset);
         }

@@ -21,8 +21,8 @@ public final class AssemblyParser {
         final Map<String, SequenceNode> nodes = new HashMap<>();
 
         for (final Link link : assembly.getLinks()) {
-            final SequenceNode fromNode = getNode(nodes, link.getFrom());
-            final SequenceNode toNode = getNode(nodes, link.getTo());
+            final SequenceNode fromNode = getNode(nodes, assembly.getSegment(link.getFrom()));
+            final SequenceNode toNode = getNode(nodes, assembly.getSegment(link.getTo()));
 
             fromNode.addRightNeighbour(toNode);
             toNode.addLeftNeighbour(fromNode);
@@ -76,7 +76,7 @@ public final class AssemblyParser {
     private SequenceNode getFirstNode(final SequenceNode node) {
         SequenceNode first = node;
 
-        while (first.getLeftNeighbours().size() != 0) {
+        while (first.getLeftNeighbours().isEmpty()) {
             first = first.getLeftNeighbours().get(0);
         }
 
@@ -106,7 +106,7 @@ public final class AssemblyParser {
     private SequenceNode getLastNode(final SequenceNode node) {
         SequenceNode first = node;
 
-        while (first.getRightNeighbours().size() != 0) {
+        while (first.getRightNeighbours().isEmpty()) {
             first = first.getRightNeighbours().get(0);
         }
 
