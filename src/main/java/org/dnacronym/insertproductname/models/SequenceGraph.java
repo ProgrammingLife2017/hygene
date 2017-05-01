@@ -52,7 +52,7 @@ public final class SequenceGraph {
      *
      * @return the nodes.
      */
-    public final Map<String, SequenceNode> getNodes() {
+    public Map<String, SequenceNode> getNodes() {
         return nodes;
     }
 
@@ -61,7 +61,7 @@ public final class SequenceGraph {
      *
      * @return the number of nodes in the graph.
      */
-    public final int size() {
+    public int size() {
         return nodes.size();
     }
 }
