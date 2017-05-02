@@ -30,7 +30,7 @@ public final class Assembly {
 
 
     /**
-     * Returns the {@code Segment} with the given name, or throw exception if it doesn't exist.
+     * Returns the {@code Segment} with the given name, or throws an exception if it doesn't exist.
      *
      * @param name the name of the {@code Segment}.
      * @return the {@code Segment} with the given name if it exists
