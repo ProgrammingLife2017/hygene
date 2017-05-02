@@ -9,14 +9,18 @@ import org.graphstream.graph.implementations.SingleGraph;
 
 /**
  * Used to render {@link SequenceGraph} using the {@link org.graphstream} library.
+ * <p>
+ * Note that this is a temporary class.
  *
  * @see org.graphstream.graph.Graph
  * @see org.graphstream.graph.Node
  * @see org.graphstream.graph.implementations.SingleGraph
  */
 public class GraphStreamVisualiser {
-    private final static String TITLE = "Sequence Alignment Graph";
-    private final static String STYLESHEET = "/ui/css/graph_style.css";
+    private static final String TITLE = "Sequence Alignment Graph";
+    private static final String STYLESHEET = "/ui/css/graph_style.css";
+
+    private static final int MAX_SEQUENCE_LENGH = 20;
 
     private boolean antiAliasing = true;
     private boolean prettyRendering = false;
@@ -30,13 +34,21 @@ public class GraphStreamVisualiser {
      * @param antiAliasing    Use anti aliasing
      * @param prettyRendering Use pretty rendering.
      */
-    public GraphStreamVisualiser(boolean antiAliasing, boolean prettyRendering) {
+    public GraphStreamVisualiser(final boolean antiAliasing, final boolean prettyRendering) {
         this.antiAliasing = antiAliasing;
         this.prettyRendering = prettyRendering;
 
         initGraph();
     }
 
+    /**
+     * Get the interally stored {@link Graph}.
+     *
+     * @return Graph stored in visualiser.
+     */
+    public final Graph getGraph() {
+        return graph;
+    }
 
     /**
      * Initialize the graph object.
@@ -93,15 +105,12 @@ public class GraphStreamVisualiser {
     private void addNode(final SequenceNode node) {
         final String nodeId = node.getId();
 
-        // Test whether the node was already added to the graph
-        if (graph.getNode(nodeId) != null) {
-            return;
+        if (graph.getNode(nodeId) == null) {
+            final Node graphNode = graph.addNode(node.getId());
+            addNodeClass(graphNode, node);
+            graphNode.setAttribute("ui.label",
+                    node.getSequence().substring(0, Math.min(MAX_SEQUENCE_LENGH, node.getSequence().length())));
         }
-
-        final Node graphNode = graph.addNode(node.getId());
-        addNodeClass(graphNode, node);
-        graphNode.setAttribute("ui.label",
-                node.getSequence().substring(0, Math.min(20, node.getSequence().length())));
     }
 
     /**
