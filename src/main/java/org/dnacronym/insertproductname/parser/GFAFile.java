@@ -37,6 +37,7 @@ public class GFAFile {
 
     /**
      * Reads a GFA file into memory and constructs a {@code GFAFile} object.
+     * <p>
      * Is exposed as a named constructor to ease the construction of GFA file object.
      *
      * @param fileName the name of the GFA file
