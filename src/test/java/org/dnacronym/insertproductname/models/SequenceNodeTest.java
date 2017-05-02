@@ -53,8 +53,10 @@ class SequenceNodeTest {
 
     @Test
     void testGetLeftMostNeighbour() {
-        final SequenceNode leftNode = new SequenceNode("2", "ATA");
-        sequenceNode.addLeftNeighbour(leftNode);
+        final SequenceNode leftNode = new SequenceNode("3", "ATA");
+        final SequenceNode middleNode = new SequenceNode("2", "TGA");
+        leftNode.linkToRightNeighbour(middleNode);
+        middleNode.linkToRightNeighbour(sequenceNode);
 
         assertThat(sequenceNode.getLeftMostNeighbour()).isEqualTo(leftNode);
     }
@@ -92,6 +94,16 @@ class SequenceNodeTest {
     }
 
     @Test
+    void testGetRightMostNeighbour() {
+        final SequenceNode rightNode = new SequenceNode("3", "ATA");
+        final SequenceNode middleNode = new SequenceNode("2", "TGA");
+        rightNode.linkToLeftNeighbour(middleNode);
+        middleNode.linkToLeftNeighbour(sequenceNode);
+
+        assertThat(sequenceNode.getRightMostNeighbour()).isEqualTo(rightNode);
+    }
+
+    @Test
     void testHasRightNeighbours() {
         assertThat(sequenceNode.hasRightNeighbours()).isFalse();
     }
@@ -116,13 +128,5 @@ class SequenceNodeTest {
         // Check whether the new node correctly links back to the main node
         assertThat(newNode.getLeftNeighbours()).hasSize(1);
         assertThat(newNode.getLeftNeighbours()).contains(sequenceNode);
-    }
-
-    @Test
-    void testGetRightMostNeighbour() {
-        final SequenceNode rightNode = new SequenceNode("2", "ATA");
-        sequenceNode.addRightNeighbour(rightNode);
-
-        assertThat(sequenceNode.getRightMostNeighbour()).isEqualTo(rightNode);
     }
 }
