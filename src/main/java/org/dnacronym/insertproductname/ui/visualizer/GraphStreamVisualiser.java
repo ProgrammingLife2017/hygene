@@ -1,5 +1,7 @@
 package org.dnacronym.insertproductname.ui.visualizer;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.models.SequenceNode;
 import org.graphstream.graph.Graph;
@@ -22,8 +24,8 @@ public class GraphStreamVisualiser {
 
     private static final int MAX_SEQUENCE_LENGTH = 20;
 
-    private boolean antiAliasing = true;
-    private boolean prettyRendering = false;
+    private final BooleanProperty antiAliasing = new SimpleBooleanProperty();
+    private final BooleanProperty prettyRendering = new SimpleBooleanProperty();
 
     private Graph graph;
 
@@ -35,12 +37,46 @@ public class GraphStreamVisualiser {
      * @param prettyRendering Use pretty rendering.
      */
     public GraphStreamVisualiser(final boolean antiAliasing, final boolean prettyRendering) {
-        this.antiAliasing = antiAliasing;
-        this.prettyRendering = prettyRendering;
+        this.antiAliasing.addListener((observable, oldValue, antiA) -> {
+            if (antiA) {
+                graph.addAttribute("ui.antialias");
+            } else {
+                graph.removeAttribute("ui.antialias");
+            }
+        });
+
+        this.prettyRendering.addListener(((observable, oldValue, pretty) -> {
+            if (pretty) {
+                graph.addAttribute("ui.quality");
+            } else {
+                graph.removeAttribute("ui.quality");
+            }
+        }));
+
+        this.antiAliasing.set(antiAliasing);
+        this.prettyRendering.set(prettyRendering);
 
         initGraph();
     }
 
+
+    /**
+     * This property determines whether the graph should be anti aliased.
+     *
+     * @return a {@link BooleanProperty} representing the ant aliasing property of the graph.
+     */
+    public final BooleanProperty antiAliaingProperty() {
+        return antiAliasing;
+    }
+
+    /**
+     * This property determines whether the graph should be rendered pretty.
+     *
+     * @return a {@link BooleanProperty} representing the pretty rendering property of the graph.
+     */
+    public final BooleanProperty prettyRendingProperty() {
+        return prettyRendering;
+    }
 
     /**
      * Get the interally stored {@link Graph}.
@@ -58,13 +94,6 @@ public class GraphStreamVisualiser {
         graph = new SingleGraph(TITLE);
 
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-
-        if (antiAliasing) {
-            graph.addAttribute("ui.antialias");
-        }
-        if (prettyRendering) {
-            graph.addAttribute("ui.quality");
-        }
 
         graph.addAttribute("ui.stylesheet", getClass().getResource(STYLESHEET));
     }
