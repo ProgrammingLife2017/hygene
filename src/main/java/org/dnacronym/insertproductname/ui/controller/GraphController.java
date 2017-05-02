@@ -1,8 +1,11 @@
 package org.dnacronym.insertproductname.ui.controller;
 
+import javafx.embed.swing.SwingNode;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.Pane;
 import org.dnacronym.insertproductname.models.SequenceGraph;
-import org.graphstream.ui.view.Viewer;
+import org.dnacronym.insertproductname.ui.visualizer.GraphStreamVisualiser;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,6 +15,12 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public class GraphController implements Initializable {
+    private static final GraphStreamVisualiser visualiser = new GraphStreamVisualiser(true, true);
+
+    private static final SwingNode graphSwingNode = new SwingNode();
+
+    @FXML
+    private Pane graphPane;
 
     @Override
     public final void initialize(final URL location, final ResourceBundle resources) {
@@ -19,11 +28,11 @@ public class GraphController implements Initializable {
 
 //        final ObjectProperty<SequenceGraph> sequenceGraph = DNAApplication.getGraphStore().sequenceGraphProperty();
 //        sequenceGraph.addListener((observable, oldValue, newValue) -> {
-//            updateGraphSwingNode(newValue);
+//            visualiser.populateGraph(sequenceGraph);
 //        });
 //
 //        if (sequenceGraph.get() != null) {
-//            updateGraphSwingNode(sequenceGraph.get());
+//            visualiser.populateGraph(sequenceGraph);
 //        }
     }
 
@@ -33,11 +42,10 @@ public class GraphController implements Initializable {
      * @param sequenceGraph new {@link SequenceGraph} to display.
      */
     protected final void updateGraphSwingNode(final SequenceGraph sequenceGraph) {
+        visualiser.populateGraph(sequenceGraph);
 
-        GraphStreamVisualiser v = new GraphStreamVisualiser(sequenceGraph);
-
-        Viewer view = v.sequenceGraph.display();
-        view.getDefaultView().resizeFrame(1200, 750);
-        view.getDefaultView().getCamera().setViewPercent(0.01);
+//        Viewer view = v.sequenceGraph.display();
+//        view.getDefaultView().resizeFrame(1200, 750);
+//        view.getDefaultView().getCamera().setViewPercent(0.01);
     }
 }

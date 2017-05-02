@@ -2,6 +2,7 @@
 
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="graphPane"
             fx:controller="org.dnacronym.insertproductname.ui.controller.GraphController"
             maxHeight="-Infinity"
             maxWidth="-Infinity"
