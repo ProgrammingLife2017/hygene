@@ -20,7 +20,7 @@ public class GraphStreamVisualiser {
     private static final String TITLE = "Sequence Alignment Graph";
     private static final String STYLESHEET = "/ui/css/graph_style.css";
 
-    private static final int MAX_SEQUENCE_LENGH = 20;
+    private static final int MAX_SEQUENCE_LENGTH = 20;
 
     private boolean antiAliasing = true;
     private boolean prettyRendering = false;
@@ -40,6 +40,7 @@ public class GraphStreamVisualiser {
 
         initGraph();
     }
+
 
     /**
      * Get the interally stored {@link Graph}.
@@ -109,7 +110,7 @@ public class GraphStreamVisualiser {
             final Node graphNode = graph.addNode(node.getId());
             addNodeClass(graphNode, node);
             graphNode.setAttribute("ui.label",
-                    node.getSequence().substring(0, Math.min(MAX_SEQUENCE_LENGH, node.getSequence().length())));
+                    node.getSequence().substring(0, Math.min(MAX_SEQUENCE_LENGTH, node.getSequence().length())));
         }
     }
 
