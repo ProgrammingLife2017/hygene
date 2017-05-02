@@ -2,18 +2,9 @@ package org.dnacronym.insertproductname.visualizer;
 
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.models.SequenceNode;
-import org.dnacronym.insertproductname.parser.AssemblyParser;
-import org.dnacronym.insertproductname.parser.GFAParser;
-import org.dnacronym.insertproductname.parser.ParseException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.view.Viewer;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Class for creating a {@code Viewer} object. The viewer can be embedded in the GUI to display the sequence graph.
