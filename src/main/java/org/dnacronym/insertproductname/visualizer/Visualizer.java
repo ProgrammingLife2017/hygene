@@ -24,7 +24,6 @@ public class Visualizer {
     private final static Boolean ENABLE_PRETTY_RENDERING = false;
 
     private Graph graph;
-    private Viewer viewer;
 
     /**
      * Construct a new Visualizer from a {@code SequenceGraph}.
@@ -36,22 +35,6 @@ public class Visualizer {
         initGraph();
 
         populateGraph(graphData);
-    }
-
-    // Basic runner method for debugging without running the GUI, will be removed once the graph will be embedded
-    // in the GUI.
-    public static void main(String[] args) throws IOException, ParseException {
-        String text = new String(Files.readAllBytes(Paths.get("src\\\\main\\\\resources\\\\example-graphs\\\\TB10.gfa")), StandardCharsets.UTF_8);
-
-        GFAParser parser = new GFAParser();
-        AssemblyParser ap = new AssemblyParser();
-        SequenceGraph graph = ap.parse(parser.parse(text));
-
-        Visualizer v = new Visualizer(graph);
-
-        Viewer view = v.graph.display();
-        view.getDefaultView().resizeFrame(1200, 750);
-        view.getDefaultView().getCamera().setViewPercent(0.01);
     }
 
     /**
@@ -126,7 +109,7 @@ public class Visualizer {
     /**
      * Given the node a class which can be used for styling.
      *
-     * @param graphNode node within the (GUI) graph
+     * @param graphNode    node within the (GUI) graph
      * @param sequenceNode node within the internal graph data structure
      */
     public void addNodeClass(Node graphNode, SequenceNode sequenceNode) {
