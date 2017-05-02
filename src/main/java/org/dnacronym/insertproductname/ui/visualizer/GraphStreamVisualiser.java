@@ -22,6 +22,12 @@ public class GraphStreamVisualiser {
     private static final String TITLE = "Sequence Alignment Graph";
     private static final String STYLESHEET = "/ui/css/graph_style.css";
 
+    private static final String UI_CLASS = "ui.class";
+    private static final String UI_ANTI_ANTIALIAS = "ui.antialias";
+    private static final String UI_QUALITY = "ui.quality";
+    private static final String UI_LABEL = "ui.label";
+    private static final String UI_STYLESHEET = "ui.stylesheet";
+
     private static final int MAX_SEQUENCE_LENGTH = 20;
 
     private final BooleanProperty antiAliasing = new SimpleBooleanProperty();
@@ -39,17 +45,17 @@ public class GraphStreamVisualiser {
     public GraphStreamVisualiser(final boolean antiAliasing, final boolean prettyRendering) {
         this.antiAliasing.addListener((observable, oldValue, antiA) -> {
             if (antiA) {
-                graph.addAttribute("ui.antialias");
+                graph.addAttribute(UI_ANTI_ANTIALIAS);
             } else {
-                graph.removeAttribute("ui.antialias");
+                graph.removeAttribute(UI_ANTI_ANTIALIAS);
             }
         });
 
         this.prettyRendering.addListener(((observable, oldValue, pretty) -> {
             if (pretty) {
-                graph.addAttribute("ui.quality");
+                graph.addAttribute(UI_QUALITY);
             } else {
-                graph.removeAttribute("ui.quality");
+                graph.removeAttribute(UI_QUALITY);
             }
         }));
 
@@ -95,7 +101,7 @@ public class GraphStreamVisualiser {
 
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
-        graph.addAttribute("ui.stylesheet", getClass().getResource(STYLESHEET));
+        graph.addAttribute(UI_STYLESHEET, getClass().getResource(STYLESHEET));
     }
 
     /**
@@ -138,7 +144,7 @@ public class GraphStreamVisualiser {
         if (graph.getNode(nodeId) == null) {
             final Node graphNode = graph.addNode(node.getId());
             addNodeClass(graphNode, node);
-            graphNode.setAttribute("ui.label",
+            graphNode.setAttribute(UI_LABEL,
                     node.getSequence().substring(0, Math.min(MAX_SEQUENCE_LENGTH, node.getSequence().length())));
         }
     }
@@ -150,21 +156,10 @@ public class GraphStreamVisualiser {
      * @param sequenceNode node within the internal graph data structure
      */
     private void addNodeClass(final Node graphNode, final SequenceNode sequenceNode) {
-        switch (sequenceNode.getSequence().substring(0, 1)) {
-            case "A":
-                graphNode.setAttribute("ui.class", "A");
-                break;
-            case "C":
-                graphNode.setAttribute("ui.class", "C");
-                break;
-            case "T":
-                graphNode.setAttribute("ui.class", "T");
-                break;
-            case "G":
-                graphNode.setAttribute("ui.class", "G");
-                break;
-            default:
-                graphNode.setAttribute("ui.class", "");
+        if (sequenceNode.getSequence().length() > 0) {
+            graphNode.setAttribute(UI_CLASS, sequenceNode.getSequence().charAt(0));
+        } else {
+            graphNode.setAttribute(UI_CLASS, "");
         }
     }
 
