@@ -42,6 +42,9 @@ dependencies {
 
     testCompile("org.testfx:testfx-core:${testfxVersion}")
     testCompile("org.testfx:testfx-junit:${testfxVersion}")
+
+    compile "org.graphstream:gs-core:${graphstreamVersion}"
+    compile "org.graphstream:gs-ui:${graphstreamVersion}"
 }
 
 /* Plugin settings */
