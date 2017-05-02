@@ -1,6 +1,7 @@
 package org.dnacronym.insertproductname.parser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,15 @@ public final class Assembly {
      */
     public Segment getSegment(final String name) {
         return segments.get(name);
+    }
+
+    /**
+     * Returns the {@code Collection} of {@code Segment}s.
+     *
+     * @return the {@code Collection} of {@code Segment}s.
+     */
+    public Collection<Segment> getSegments() {
+        return segments.values();
     }
 
     /**
