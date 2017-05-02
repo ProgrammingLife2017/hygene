@@ -27,7 +27,7 @@ public final class AssemblyParserFactory {
     }
 
     /**
-     * Gets an instance of {@code AssemblyParser}. Constructs a new one if necessary.
+     * Returns a new instance of {@code AssemblyParser} if no preferred instance is set.
      *
      * @return an instance of {@code AssemblyParser}
      */

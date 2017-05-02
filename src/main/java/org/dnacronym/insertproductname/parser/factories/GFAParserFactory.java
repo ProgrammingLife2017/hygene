@@ -27,7 +27,7 @@ public final class GFAParserFactory {
     }
 
     /**
-     * Gets an instance of {@code GFAParser}. Constructs a new one if necessary.
+     * Returns a new instance of {@code GFAParser} if no preferred instance is set.
      *
      * @return an instance of {@code GFAParser}
      */
