@@ -24,24 +24,27 @@ public class GraphStore {
      * Load a {@link SequenceGraph} into memory.
      *
      * @param file {@link File} to load. This should be a {@value GFA_EXTENSION} file.
-     * @throws IllegalArgumentException if file is null, doesn't exist or doesn't end with {@value GFA_EXTENSION}.
-     * @throws IOException              if unable to get the file
-     * @throws ParseException           if unable to parse the GFA file.
+     * @throws IOException if unable to get the GFA file, file is not a gfa file,
+     *                     or unable to parse the file.
      * @see GFAFile#read(String)
      * @see GFAFile#parse()
      */
-    public final void load(final File file) throws IllegalArgumentException, IOException, ParseException {
+    public final void load(final File file) throws IOException {
         if (!file.exists()) {
-            throw new IllegalArgumentException("File does not exist.");
+            throw new IOException("File does not exist.");
         }
 
         String fileName = file.getName();
-        if (!fileName.substring(fileName.lastIndexOf(".") + 1).equals(GFA_EXTENSION)) {
-            throw new IllegalArgumentException(fileName + " is not a GFA file.");
+        if (!fileName.substring(fileName.lastIndexOf('.') + 1).equals(GFA_EXTENSION)) {
+            throw new IOException(fileName + " is not a GFA file.");
         }
 
-        final SequenceGraph sequenceGraph = GFAFile.read(file.getAbsolutePath()).parse();
-        this.sequenceGraph.set(sequenceGraph);
+        try {
+            final SequenceGraph sequenceGraph = GFAFile.read(file.getAbsolutePath()).parse();
+            this.sequenceGraph.set(sequenceGraph);
+        } catch (ParseException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
