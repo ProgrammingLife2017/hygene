@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
-import org.dnacronym.insertproductname.parser.ParseException;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
@@ -49,7 +48,7 @@ public class MenuController implements Initializable {
 
         try {
             DNAApplication.getGraphStore().load(gfaFile);
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             // TODO show exception in ui
             e.printStackTrace();
         }

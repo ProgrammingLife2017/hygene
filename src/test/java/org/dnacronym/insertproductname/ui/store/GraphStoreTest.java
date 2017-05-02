@@ -1,6 +1,5 @@
 package org.dnacronym.insertproductname.ui.store;
 
-import org.dnacronym.insertproductname.parser.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +37,7 @@ public class GraphStoreTest {
 
         Throwable e = catchThrowable(() -> graphStore.load(file));
 
-        assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        assertThat(e).isInstanceOf(IOException.class);
     }
 
     @Test
@@ -48,11 +47,11 @@ public class GraphStoreTest {
 
         Throwable e = catchThrowable(() -> graphStore.load(file));
 
-        assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        assertThat(e).isInstanceOf(IOException.class);
     }
 
     @Test
-    public final void testOpenGFAFile() throws IOException, ParseException {
+    public final void testOpenGFAFile() throws IOException {
         final File file = new File("src/test/resources/gfa/simple.gfa");
 
         graphStore.load(file);
