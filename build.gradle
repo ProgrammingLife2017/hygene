@@ -39,6 +39,9 @@ dependencies {
 
     testCompile("org.assertj:assertj-core:${assertjVersion}")
     testCompile("org.mockito:mockito-core:${mockitoCoreVersion}")
+
+    testCompile("org.testfx:testfx-core:${testfxVersion}")
+    testCompile("org.testfx:testfx-junit:${testfxVersion}")
 }
 
 /* Plugin settings */
