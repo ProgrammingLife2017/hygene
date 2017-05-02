@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.dnacronym.insertproductname.ui.store.GraphStore;
 
 
 /**
@@ -18,6 +19,18 @@ public class DNAApplication extends Application {
     public static final String TITLE = "DNA";
 
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+
+    private static final GraphStore GRAPH_STORE = new GraphStore();
+
+    /**
+     * Get the {@link GraphStore} of the {@link DNAApplication}.
+     *
+     * @return {@link GraphStore} of the {@link DNAApplication}.
+     * @see GraphStore
+     */
+    public static GraphStore getGraphStore() {
+        return GRAPH_STORE;
+    }
 
     /**
      * Main method of application. Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the

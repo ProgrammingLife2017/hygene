@@ -12,6 +12,6 @@
         <MenuItem fx:id="fileOpen"
                   mnemonicParsing="false"
                   text="Open"
-                  onAction="#openAction"/>
+                  onAction="#openFileAction"/>
     </Menu>
 </MenuBar>
