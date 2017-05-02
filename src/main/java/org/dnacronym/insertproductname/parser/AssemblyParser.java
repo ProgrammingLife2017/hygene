@@ -32,7 +32,12 @@ public final class AssemblyParser {
             toNode.addLeftNeighbour(fromNode);
         }
 
-        return new SequenceGraph(getFirstNode(nodes), getLastNode(nodes));
+        final SequenceNode someNode = nodes.values().stream().findFirst().orElse(null);
+        if (someNode != null) {
+            return new SequenceGraph(someNode.getLeftMostNeighbour(), someNode.getRightMostNeighbour());
+        } else {
+            return new SequenceGraph(null, null);
+        }
     }
 
 
@@ -54,65 +59,5 @@ public final class AssemblyParser {
         final SequenceNode node2 = new SequenceNode(segment.getName(), segment.getSequence());
         nodes.put(segment.getName(), node2);
         return node2;
-    }
-
-    /**
-     * Calls {@code getFirstNode} on some element in the given {@code Map}.
-     *
-     * @param nodes a {@code Map} of {@code SequenceNode}s
-     * @return the indirect left neighbour of a {@code SequenceNode} that does not have a left neighbour
-     */
-    private SequenceNode getFirstNode(final Map<String, SequenceNode> nodes) {
-        return nodes.values().stream()
-                .findFirst()
-                .map(this::getFirstNode)
-                .orElse(null);
-    }
-
-    /**
-     * Takes a {@code SequenceNode}'s left neighbour and takes that neighbour's left neighbour etc. until it finds a
-     * {@code SequenceNode} without a left neighbour, and returns this {@code SequenceNode}.
-     *
-     * @param node a {@code Sequence Node}
-     * @return the indirect left neighbour of a {@code SequenceNode} that does not have a left neighbour
-     */
-    private SequenceNode getFirstNode(final SequenceNode node) {
-        SequenceNode first = node;
-
-        while (!first.getLeftNeighbours().isEmpty()) {
-            first = first.getLeftNeighbours().get(0);
-        }
-
-        return first;
-    }
-
-    /**
-     * Calls {@code getLastNode} on some element in the given {@code Map}.
-     *
-     * @param nodes a {@code Map} of {@code SequenceNode}s
-     * @return the indirect right neighbour of a {@code SequenceNode} that does not have a right neighbour
-     */
-    private SequenceNode getLastNode(final Map<String, SequenceNode> nodes) {
-        return nodes.values().stream()
-                .findFirst()
-                .map(this::getLastNode)
-                .orElse(null);
-    }
-
-    /**
-     * Takes a {@code SequenceNode}'s right neighbour and takes that neighbour's right neighbour etc. until it finds a
-     * {@code SequenceNode} without a right neighbour, and returns this {@code SequenceNode}.
-     *
-     * @param node a {@code Sequence Node}
-     * @return the indirect right neighbour of a {@code SequenceNode} that does not have a right neighbour
-     */
-    private SequenceNode getLastNode(final SequenceNode node) {
-        SequenceNode first = node;
-
-        while (!first.getRightNeighbours().isEmpty()) {
-            first = first.getRightNeighbours().get(0);
-        }
-
-        return first;
     }
 }
