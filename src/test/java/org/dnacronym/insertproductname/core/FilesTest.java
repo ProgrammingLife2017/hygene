@@ -8,8 +8,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class FilesTest {
     @Test
-    void testGetResourceUrl() throws FileNotFoundException {
-
+    final void testGetResourceUrl() throws FileNotFoundException {
         assertThat(Files.getInstance().getResourceUrl("/gfa/simple.gfa").toString())
                 .contains("/gfa/simple.gfa");
     }

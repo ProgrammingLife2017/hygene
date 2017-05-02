@@ -1,6 +1,5 @@
 package org.dnacronym.insertproductname.parser;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
