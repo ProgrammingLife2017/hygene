@@ -1,5 +1,6 @@
 package org.dnacronym.insertproductname.parser.factories;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.insertproductname.parser.GFAParser;
 
 
@@ -7,7 +8,7 @@ import org.dnacronym.insertproductname.parser.GFAParser;
  * Constructs {@code GFAParser} objects.
  */
 public final class GFAParserFactory {
-    private static GFAParser instance;
+    private static @MonotonicNonNull GFAParser instance;
 
 
     /**

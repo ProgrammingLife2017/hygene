@@ -30,7 +30,7 @@ public final class Segment {
      *
      * @return the name.
      */
-    public String getName() {
+    public @NonNull String getName() {
         return name;
     }
 

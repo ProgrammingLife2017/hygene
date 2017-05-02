@@ -1,5 +1,6 @@
 package org.dnacronym.insertproductname.parser.factories;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.insertproductname.parser.AssemblyParser;
 
 
@@ -7,7 +8,7 @@ import org.dnacronym.insertproductname.parser.AssemblyParser;
  * Constructs {@code AssemblyParser} objects.
  */
 public final class AssemblyParserFactory {
-    private static AssemblyParser instance;
+    private static @MonotonicNonNull AssemblyParser instance;
 
 
     /**
