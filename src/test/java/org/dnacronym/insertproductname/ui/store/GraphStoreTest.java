@@ -52,8 +52,8 @@ public class GraphStoreTest {
     }
 
     @Test
-    public final void testGFAFile() throws IOException, ParseException {
-        final File file = new File(String.valueOf(getClass().getResource("/gfa/simple.gfa")));
+    public final void testOpenGFAFile() throws IOException, ParseException {
+        final File file = new File("src/test/resources/gfa/simple.gfa");
 
         graphStore.load(file);
 

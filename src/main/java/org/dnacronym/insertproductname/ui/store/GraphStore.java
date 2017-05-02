@@ -36,7 +36,7 @@ public class GraphStore {
         }
 
         String fileName = file.getName();
-        if (fileName.substring(fileName.lastIndexOf(".") + 1).equals(GFA_EXTENSION)) {
+        if (!fileName.substring(fileName.lastIndexOf(".") + 1).equals(GFA_EXTENSION)) {
             throw new IllegalArgumentException(fileName + " is not a GFA file.");
         }
 
