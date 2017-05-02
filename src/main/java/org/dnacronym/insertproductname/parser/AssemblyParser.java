@@ -5,6 +5,7 @@ import org.dnacronym.insertproductname.models.SequenceNode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -32,12 +33,10 @@ public final class AssemblyParser {
             toNode.addLeftNeighbour(fromNode);
         }
 
-        final SequenceNode someNode = nodes.values().stream().findFirst().orElse(null);
-        if (someNode != null) {
-            return new SequenceGraph(someNode.getLeftMostNeighbour(), someNode.getRightMostNeighbour());
-        } else {
-            return new SequenceGraph(null, null);
-        }
+        final Optional<SequenceNode> someNode = nodes.values().stream().findFirst();
+        return someNode
+                .map(node -> new SequenceGraph(node.getLeftMostNeighbour(), node.getRightMostNeighbour()))
+                .orElseGet(() -> new SequenceGraph(null, null));
     }
 
 
