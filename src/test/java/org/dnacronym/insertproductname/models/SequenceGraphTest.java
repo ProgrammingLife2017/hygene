@@ -33,4 +33,14 @@ class SequenceGraphTest {
     void testGetEndNode() {
         assertThat(sequenceGraph.getEndNode()).isEqualTo(endNode);
     }
+
+    @Test
+    void testGetNodes() {
+        assertThat(sequenceGraph.getNodes()).isEmpty();
+    }
+
+    @Test
+    void testSize() {
+        assertThat(sequenceGraph.size()).isEqualTo(0);
+    }
 }
