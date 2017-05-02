@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<MenuBar xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="org.dnacronym.insertproductname.ui.controller.MenuController"
-         xmlns="http://javafx.com/javafx/8">
+<?import javafx.scene.control.MenuItem?>
+<MenuBar xmlns="http://javafx.com/javafx/8"
+         xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="org.dnacronym.insertproductname.ui.controller.MenuController">
+    <Menu mnemonicParsing="false"
+          text="File">
+        <MenuItem fx:id="fileOpen"
+                  mnemonicParsing="false"
+                  text="Open"
+                  onAction="#openAction"/>
+    </Menu>
 </MenuBar>
