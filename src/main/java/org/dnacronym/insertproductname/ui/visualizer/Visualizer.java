@@ -1,4 +1,4 @@
-package org.dnacronym.insertproductname.visualizer;
+package org.dnacronym.insertproductname.ui.visualizer;
 
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.models.SequenceNode;
