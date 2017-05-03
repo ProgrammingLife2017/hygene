@@ -18,10 +18,6 @@ public final class Segment {
      * @param sequence the sequence
      */
     public Segment(final String name, final String sequence) {
-        if (name == null || sequence == null) {
-            throw new IllegalArgumentException("Segment name and sequence must be non-null.");
-        }
-
         this.name = name;
         this.sequence = sequence;
     }

@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.insertproductname.core.Files;
 
 
 /**
@@ -20,23 +22,27 @@ public class DNAPreloader extends Preloader {
     private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
 
     @FXML
-    private ProgressBar progress;
+    private @Nullable ProgressBar progress;
 
-    private Stage stage;
+    private @Nullable Stage stage;
 
     @Override
     public final void start(final Stage primaryStage) throws Exception {
         stage = primaryStage;
-        stage.setTitle(DNAApplication.TITLE);
-        stage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.setTitle(DNAApplication.TITLE);
+        primaryStage.initStyle(StageStyle.UNDECORATED);
 
         progress = new ProgressBar();
 
-        final Parent root = FXMLLoader.load(getClass().getResource(PRELOADER_VIEW));
-        final Scene rootScene = new Scene(root);
+        final Parent root = FXMLLoader.load(Files.getInstance().getResourceUrl(PRELOADER_VIEW));
 
-        stage.setScene(rootScene);
-        stage.show();
+        if (root == null) {
+            throw new UIInitialisationException("The UI could not be initialised");
+        }
+
+        final Scene rootScene = new Scene(root);
+        primaryStage.setScene(rootScene);
+        primaryStage.show();
     }
 
     /**
@@ -46,7 +52,9 @@ public class DNAPreloader extends Preloader {
      */
     @Override
     public final void handleProgressNotification(final ProgressNotification pn) {
-        progress.setProgress(pn.getProgress());
+        if (progress != null) {
+            progress.setProgress(pn.getProgress());
+        }
     }
 
     /**
@@ -58,7 +66,7 @@ public class DNAPreloader extends Preloader {
      */
     @Override
     public final void handleStateChangeNotification(final StateChangeNotification evt) {
-        if (evt.getType() == StateChangeNotification.Type.BEFORE_START) {
+        if (evt.getType() == StateChangeNotification.Type.BEFORE_START && stage != null) {
             stage.hide();
         }
     }

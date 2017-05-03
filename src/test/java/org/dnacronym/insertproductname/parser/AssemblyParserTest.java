@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 class AssemblyParserTest {
@@ -21,14 +22,13 @@ class AssemblyParserTest {
     @Test
     void testParseEmpty() {
         final Assembly assembly = new Assembly();
-        final SequenceGraph graph = parser.parse(assembly);
+        final Throwable e = catchThrowable(() -> parser.parse(assembly));
 
-        assertThat(graph.getStartNode()).isNull();
-        assertThat(graph.getEndNode()).isNull();
+        assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
-    void testParseOneLooseSegment() {
+    void testParseOneLooseSegment() throws ParseException {
         final Assembly assembly = new Assembly();
         final Segment segment = new Segment("name", "sequence");
 
@@ -40,7 +40,7 @@ class AssemblyParserTest {
     }
 
     @Test
-    void testParseTwoLooseSegments() {
+    void testParseTwoLooseSegments() throws ParseException {
         final Assembly assembly = new Assembly();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
@@ -54,11 +54,11 @@ class AssemblyParserTest {
     }
 
     @Test
-    void testParseSingleLink() {
+    void testParseSingleLink() throws ParseException {
         final Assembly assembly = new Assembly();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
-        final Link link = new Link("A", true, "B", false, 0);
+        final Link link = new Link("A", "B", 0);
 
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);
@@ -70,13 +70,13 @@ class AssemblyParserTest {
     }
 
     @Test
-    void testParseSplit() {
+    void testParseSplit() throws ParseException {
         final Assembly assembly = new Assembly();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
         final Segment segmentC = new Segment("C", "sequenceC");
-        final Link linkAB = new Link("A", true, "B", true, 0);
-        final Link linkAC = new Link("A", true, "C", true, 0);
+        final Link linkAB = new Link("A", "B", 0);
+        final Link linkAC = new Link("A", "C", 0);
 
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);
@@ -93,13 +93,13 @@ class AssemblyParserTest {
     }
 
     @Test
-    void testParseJoin() {
+    void testParseJoin() throws ParseException {
         final Assembly assembly = new Assembly();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
         final Segment segmentC = new Segment("C", "sequenceC");
-        final Link linkAC = new Link("A", true, "C", true, 0);
-        final Link linkBC = new Link("B", true, "C", true, 0);
+        final Link linkAC = new Link("A", "C", 0);
+        final Link linkBC = new Link("B", "C", 0);
 
         assembly.addSegment(segmentA);
         assembly.addSegment(segmentB);

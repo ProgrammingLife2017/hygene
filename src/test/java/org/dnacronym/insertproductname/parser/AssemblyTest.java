@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,11 +24,12 @@ class AssemblyTest {
 
     @Test
     void testGetSegmentNull() {
-        assertThat(assembly.getSegment("yBzxeLyGuiioMD3oGNDD")).isNull();
+        final Throwable e = catchThrowable(() -> assembly.getSegment("yBzxeLyGuiioMD3oGNDD"));
+        assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
-    void testAddAndGetSegment() {
+    void testAddAndGetSegment() throws ParseException {
         final Segment segment = mock(Segment.class);
         when(segment.getName()).thenReturn("wMGSp96y6eFewU4XK8fu");
 
@@ -37,7 +39,7 @@ class AssemblyTest {
     }
 
     @Test
-    void testAddSegmentDuplicate() {
+    void testAddSegmentDuplicate() throws ParseException {
         final String sequence = "i9lmsQajqPINZ66wnZCB";
         final Segment segmentA = mock(Segment.class);
         final Segment segmentB = mock(Segment.class);

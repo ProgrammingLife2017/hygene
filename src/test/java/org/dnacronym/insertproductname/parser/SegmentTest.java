@@ -3,25 +3,12 @@ package org.dnacronym.insertproductname.parser;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
  * Unit tests for {@code Segment}s.
  */
 class SegmentTest {
-    @Test
-    void testNullName() {
-        final Throwable e = catchThrowable(() -> new Segment(null, "KQpD5PbkOovX21f1losl"));
-        assertThat(e).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void testNullSequence() {
-        final Throwable e = catchThrowable(() -> new Segment("xpynu2oSI4xEMGya0aO7", null));
-        assertThat(e).isInstanceOf(IllegalArgumentException.class);
-    }
-
     @Test
     void testGetName() {
         final Segment segment = new Segment("94ShLJ3ytpoXBiQxaxJ1", "aTeYVYR38z6AWbV2OgGh");

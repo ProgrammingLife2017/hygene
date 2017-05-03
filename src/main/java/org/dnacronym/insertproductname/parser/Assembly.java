@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -27,13 +28,15 @@ public final class Assembly {
 
 
     /**
-     * Returns the {@code Segment} with the given name, or {@code null} if it doesn't exist.
+     * Returns the {@code Segment} with the given name, or throws an exception if it doesn't exist.
      *
      * @param name the name of the {@code Segment}.
-     * @return the {@code Segment} with the given name, or {@code null} if it doesn't exist.
+     * @return the {@code Segment} with the given name if it exists
+     * @throws ParseException if segment with given name is not present
      */
-    public Segment getSegment(final String name) {
-        return segments.get(name);
+    public Segment getSegment(final String name) throws ParseException {
+        return Optional.ofNullable(segments.get(name))
+                .orElseThrow(() -> new ParseException("Segment " + name + " is not present."));
     }
 
     /**
