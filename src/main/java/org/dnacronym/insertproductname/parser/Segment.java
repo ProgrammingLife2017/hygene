@@ -1,8 +1,6 @@
 package org.dnacronym.insertproductname.parser;
 
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * A {@code Segment} is a sequence of bases.
  *
@@ -19,7 +17,7 @@ public final class Segment {
      * @param name     the name
      * @param sequence the sequence
      */
-    public Segment(final @NonNull String name, final @NonNull String sequence) {
+    public Segment(final String name, final String sequence) {
         this.name = name;
         this.sequence = sequence;
     }
@@ -30,7 +28,7 @@ public final class Segment {
      *
      * @return the name.
      */
-    public @NonNull String getName() {
+    public String getName() {
         return name;
     }
 

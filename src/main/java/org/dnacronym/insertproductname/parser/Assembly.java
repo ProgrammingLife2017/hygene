@@ -1,7 +1,5 @@
 package org.dnacronym.insertproductname.parser;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,7 +34,7 @@ public final class Assembly {
      * @return the {@code Segment} with the given name if it exists
      * @throws ParseException if segment with given name is not present
      */
-    public @NonNull Segment getSegment(final @NonNull String name) throws ParseException {
+    public Segment getSegment(final String name) throws ParseException {
         return Optional.ofNullable(segments.get(name))
                 .orElseThrow(() -> new ParseException("Segment " + name + " is not present."));
     }
@@ -46,7 +44,7 @@ public final class Assembly {
      *
      * @return the {@code Collection} of {@code Segment}s.
      */
-    public Collection<@NonNull Segment> getSegments() {
+    public Collection<Segment> getSegments() {
         return segments.values();
     }
 
