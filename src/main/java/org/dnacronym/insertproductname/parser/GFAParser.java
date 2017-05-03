@@ -55,7 +55,7 @@ public final class GFAParser {
                 break;
 
             case "L":
-                assembly.addLink(parseLink(assembly, st, offset));
+                assembly.addLink(parseLink(st, offset));
                 break;
 
             default:
@@ -72,10 +72,6 @@ public final class GFAParser {
      * @throws ParseException if the {@code Segment} is not GFA-compliant
      */
     private Segment parseSegment(final StringTokenizer st, final int offset) throws ParseException {
-        if (st == null) {
-            throw new IllegalArgumentException("Segment StringTokenizer cannot be null.");
-        }
-
         try {
             final String name = st.nextToken();
             final String sequence = st.nextToken();
@@ -89,20 +85,12 @@ public final class GFAParser {
     /**
      * Parses a line to a {@code Link}.
      *
-     * @param assembly the {@code Assembly} in which the {@code Segment}s are linked
      * @param st       the {@code StringTokenizer} in which each token is a GFA field
      * @param offset   the current line number, used for debugging
      * @return a {@code Link}
      * @throws ParseException if the {@code Link} is not GFA-compliant
      */
-    private Link parseLink(final Assembly assembly, final StringTokenizer st, final int offset) throws ParseException {
-        if (assembly == null) {
-            throw new IllegalArgumentException("Assembly cannot be null.");
-        }
-        if (st == null) {
-            throw new IllegalArgumentException("Segment StringTokenizer cannot be null.");
-        }
-
+    private Link parseLink(final StringTokenizer st, final int offset) throws ParseException {
         try {
             final String from = st.nextToken();
             st.nextToken();
@@ -126,16 +114,14 @@ public final class GFAParser {
      * @see <a href="http://genome.sph.umich.edu/wiki/SAM#What_is_a_CIGAR.3F">What is a CIGAR?</a>
      */
     private int parseCigarString(final String cigar, final int offset) throws ParseException {
-        if (cigar == null || cigar.length() == 0) {
+        if (cigar.length() == 0) {
             return 0;
         }
 
-        final int overlap;
         try {
-            overlap = Integer.parseInt(cigar.replaceAll("M", ""));
+            return Integer.parseInt(cigar.replaceAll("M", ""));
         } catch (final NumberFormatException e) {
             throw new ParseException("Link cigar string could not be parsed on line " + offset, e);
         }
-        return overlap;
     }
 }
