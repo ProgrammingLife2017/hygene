@@ -27,12 +27,12 @@ class GFAFileTest {
     void testReadFile() throws IOException {
         GFAFile gfaFile = GFAFile.read("src/test/resources/gfa/simple.gfa");
 
-        assertThat(gfaFile.getContents()).isEqualTo(
-                "H\tVN:Z:1.0\n"
-                + "S\t11\tACCTT\n"
-                + "S\t12\tTCAAGG\n"
-                + "L\t11\t+\t12\t-\t4M\n"
-        );
+        assertThat(gfaFile.getContents()).isEqualTo(String.format(
+                "H\tVN:Z:1.0%n"
+                + "S\t11\tACCTT%n"
+                + "S\t12\tTCAAGG%n"
+                + "L\t11\t+\t12\t-\t4M%n"
+        ));
     }
 
     @Test
