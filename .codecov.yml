@@ -5,3 +5,8 @@ comment:
   branches: null
   flags: null
   paths: null
+
+coverage:
+  status:
+    project: off
+    patch: off
