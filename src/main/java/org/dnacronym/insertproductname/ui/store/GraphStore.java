@@ -2,6 +2,7 @@ package org.dnacronym.insertproductname.ui.store;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.parser.GFAFile;
 import org.dnacronym.insertproductname.parser.ParseException;
@@ -29,7 +30,7 @@ public class GraphStore {
      * @see GFAFile#read(String)
      * @see GFAFile#parse()
      */
-    public final void load(final File file) throws IOException {
+    public final void load(@NonNull final File file) throws IOException {
         if (!file.exists()) {
             throw new IOException("File does not exist.");
         }

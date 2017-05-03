@@ -7,6 +7,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
+import org.dnacronym.insertproductname.ui.runnable.UIInitialisationException;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
 import java.io.File;
@@ -22,7 +23,9 @@ public class MenuController implements Initializable {
     private static final String FILE_CHOOSER_TITLE = "Open GFA File";
 
     private static final FileChooser.ExtensionFilter GFA_FILTER =
-            new FileChooser.ExtensionFilter("GFA", "*." + GraphStore.GFA_EXTENSION);
+            new FileChooser.ExtensionFilter(
+                    "GFA (*." + GraphStore.GFA_EXTENSION + ")",
+                    "*." + GraphStore.GFA_EXTENSION);
 
     @MonotonicNonNull
     private FileChooser fileChooser;
@@ -73,16 +76,21 @@ public class MenuController implements Initializable {
      */
     @FXML
     protected final void openFileAction(final ActionEvent event) {
-        if (fileChooser != null && fileOpen != null && graphStore != null) {
-            final File gfaFile = fileChooser.showOpenDialog(fileOpen.getParentPopup().getOwnerWindow());
+        if (fileChooser != null && graphStore != null) {
+            try {
+                final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getStage().getOwner());
 
-            if (gfaFile != null) {
-                try {
-                    graphStore.load(gfaFile);
-                } catch (IOException e) {
-                    // TODO show exception in ui
-                    e.printStackTrace();
+                if (gfaFile != null) {
+                    try {
+                        graphStore.load(gfaFile);
+                    } catch (IOException e) {
+                        // TODO show exception in ui
+                        e.printStackTrace();
+                    }
                 }
+            } catch (UIInitialisationException e) {
+                // TODO log exception
+                e.printStackTrace();
             }
         }
     }
