@@ -103,12 +103,12 @@ public final class GFAParser {
 
         try {
             final String from = st.nextToken();
-            final boolean fromOrient = "+".equals(st.nextToken());
+            st.nextToken();
             final String to = st.nextToken();
-            final boolean toOrient = "-".equals(st.nextToken());
+            st.nextToken();
             final int overlap = parseCigarString(st.nextToken(), offset);
 
-            return new Link(from, fromOrient, to, toOrient, overlap);
+            return new Link(from, to, overlap);
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link on line " + offset, e);
         }
