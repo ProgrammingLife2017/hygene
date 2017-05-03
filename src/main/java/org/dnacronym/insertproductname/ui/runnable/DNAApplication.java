@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.dnacronym.insertproductname.core.Files;
+import org.dnacronym.insertproductname.ui.UIInitialisationException;
 
 
 /**
@@ -35,8 +37,11 @@ public class DNAApplication extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(APPLICATION_VIEW));
-        final Parent parent = fxmlLoader.load();
+        final Parent parent = FXMLLoader.load(Files.getInstance().getResourceUrl(APPLICATION_VIEW));
+
+        if (parent == null) {
+            throw new UIInitialisationException("The UI could not be initialised.");
+        }
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);

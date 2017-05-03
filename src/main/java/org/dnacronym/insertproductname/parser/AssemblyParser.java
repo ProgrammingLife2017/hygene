@@ -16,8 +16,9 @@ public final class AssemblyParser {
      *
      * @param assembly an {@code Assembly}
      * @return a {@code GraphSequence}
+     * @throws ParseException if assembly is not according to the specification
      */
-    public SequenceGraph parse(final Assembly assembly) {
+    public SequenceGraph parse(final Assembly assembly) throws ParseException {
         final Map<String, SequenceNode> nodes = new HashMap<>();
 
         for (final Segment segment : assembly.getSegments()) {
@@ -34,7 +35,7 @@ public final class AssemblyParser {
 
         return nodes.values().stream().findFirst()
                 .map(node -> new SequenceGraph(node.getLeftMostNeighbour(), node.getRightMostNeighbour()))
-                .orElseGet(() -> new SequenceGraph(null, null));
+                .orElseThrow(() -> new ParseException("Start and end node could not be determined"));
     }
 
 

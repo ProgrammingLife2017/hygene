@@ -23,9 +23,6 @@ public final class Link {
      * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive.
      */
     public Link(final String from, final String to, final int overlap) {
-        if (from == null || to == null) {
-            throw new IllegalArgumentException("Link segments cannot be null.");
-        }
         if (overlap < 0) {
             throw new IllegalArgumentException("Link overlap must be at least 0.");
         }

@@ -11,18 +11,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  */
 final class LinkTest {
     @Test
-    void testNullFrom() {
-        final Throwable e = catchThrowable(() -> new Link(null, "to", 341));
-        assertThat(e).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void testNullTo() {
-        final Throwable e = catchThrowable(() -> new Link("from", null, 884));
-        assertThat(e).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void testNegativeOverlap() {
         final Throwable e = catchThrowable(() -> new Link("from", "to", -426));
         assertThat(e).isInstanceOf(IllegalArgumentException.class);
