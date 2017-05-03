@@ -6,9 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dnacronym.insertproductname.core.Files;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
-
 
 /**
  * Main class of the application. Launches a {@link DNAPreloader}, and afterwards a {@link DNAApplication}.
@@ -19,7 +17,7 @@ public class DNAApplication extends Application {
 
     public static final String TITLE = "DNA";
 
-    private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    public static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
     private static final GraphStore GRAPH_STORE = new GraphStore();
 
@@ -49,7 +47,7 @@ public class DNAApplication extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final Parent parent = FXMLLoader.load(Files.getInstance().getResourceUrl(APPLICATION_VIEW));
+        final Parent parent = FXMLLoader.load(getClass().getResource(APPLICATION_VIEW));
 
         if (parent == null) {
             throw new UIInitialisationException("The UI could not be initialised.");

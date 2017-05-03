@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
@@ -23,15 +24,27 @@ public class MenuController implements Initializable {
     private static final FileChooser.ExtensionFilter GFA_FILTER =
             new FileChooser.ExtensionFilter("GFA", "*." + GraphStore.GFA_EXTENSION);
 
+    @MonotonicNonNull
+    private FileChooser fileChooser;
+    @MonotonicNonNull
     private GraphStore graphStore;
 
     @FXML
+    @MonotonicNonNull
     private MenuItem fileOpen;
+
 
     @Override
     public final void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
+
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(FILE_CHOOSER_TITLE);
+        fileChooser.getExtensionFilters().add(GFA_FILTER);
+
+        setFileChooser(fileChooser);
     }
+
 
     /**
      * Set the {@link GraphStore} in the controller. This gives the menu access to the {@link GraphStore} of the
@@ -44,6 +57,15 @@ public class MenuController implements Initializable {
     }
 
     /**
+     * Set the {@link FileChooser} used by the menu. A {@link FileChooser} is used to select a {@link File}.
+     *
+     * @param fileChooser {@link FileChooser} for {@link MenuController}.
+     */
+    protected final void setFileChooser(final FileChooser fileChooser) {
+        this.fileChooser = fileChooser;
+    }
+
+    /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as that of the {@link #fileOpen}
      * {@link MenuItem}.
      *
@@ -51,18 +73,17 @@ public class MenuController implements Initializable {
      */
     @FXML
     protected final void openFileAction(final ActionEvent event) {
-        final FileChooser fileChooser = new FileChooser();
+        if (fileChooser != null && fileOpen != null && graphStore != null) {
+            final File gfaFile = fileChooser.showOpenDialog(fileOpen.getParentPopup().getOwnerWindow());
 
-        fileChooser.setTitle(FILE_CHOOSER_TITLE);
-        fileChooser.getExtensionFilters().add(GFA_FILTER);
-
-        final File gfaFile = fileChooser.showOpenDialog(fileOpen.getParentPopup().getOwnerWindow());
-
-        try {
-            graphStore.load(gfaFile);
-        } catch (IOException e) {
-            // TODO show exception in ui
-            e.printStackTrace();
+            if (gfaFile != null) {
+                try {
+                    graphStore.load(gfaFile);
+                } catch (IOException e) {
+                    // TODO show exception in ui
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
