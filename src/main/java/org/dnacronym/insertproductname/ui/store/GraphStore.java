@@ -18,7 +18,7 @@ import java.io.IOException;
 public class GraphStore {
     public static final String GFA_EXTENSION = "gfa";
 
-    private final ObjectProperty<SequenceGraph> sequenceGraph = new SimpleObjectProperty<>();
+    private final ObjectProperty<SequenceGraph> sequenceGraphProperty = new SimpleObjectProperty<>();
 
     /**
      * Load a {@link SequenceGraph} into memory.
@@ -41,7 +41,7 @@ public class GraphStore {
 
         try {
             final SequenceGraph sequenceGraph = GFAFile.read(file.getAbsolutePath()).parse();
-            this.sequenceGraph.set(sequenceGraph);
+            this.sequenceGraphProperty.set(sequenceGraph);
         } catch (ParseException e) {
             throw new IOException(e);
         }
@@ -53,6 +53,6 @@ public class GraphStore {
      * @return {@link ObjectProperty} that stores the {@link SequenceGraph}.
      */
     public final ObjectProperty<SequenceGraph> sequenceGraphProperty() {
-        return sequenceGraph;
+        return sequenceGraphProperty;
     }
 }
