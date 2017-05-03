@@ -7,7 +7,8 @@
 <MenuBar xmlns="http://javafx.com/javafx/8"
          xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="org.dnacronym.insertproductname.ui.controller.MenuController">
-    <Menu mnemonicParsing="false"
+    <Menu fx:id="fileMenu"
+          mnemonicParsing="false"
           text="File">
         <MenuItem fx:id="fileOpen"
                   mnemonicParsing="false"
