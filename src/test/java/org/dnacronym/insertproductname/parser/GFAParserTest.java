@@ -37,6 +37,12 @@ class GFAParserTest {
     }
 
     @Test
+    void testIgnoredRecordTypes() throws ParseException {
+        final String gfa = "H header\nC containment\nP path";
+        assertThat(parse(gfa)).isNotNull();
+    }
+
+    @Test
     void testSegmentWithMissingSequence() {
         final String gfa = "S name";
 

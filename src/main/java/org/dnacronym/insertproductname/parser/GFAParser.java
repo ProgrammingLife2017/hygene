@@ -46,6 +46,8 @@ public final class GFAParser {
         final String recordType = st.nextToken();
         switch (recordType) {
             case "H":
+            case "C":
+            case "P":
                 break;
 
             case "S":
