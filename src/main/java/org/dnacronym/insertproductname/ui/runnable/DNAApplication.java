@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
+import java.net.URL;
+
 /**
  * Main class of the application. Launches a {@link DNAPreloader}, and afterwards a {@link DNAApplication}.
  *
@@ -47,8 +49,12 @@ public class DNAApplication extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final Parent parent = FXMLLoader.load(getClass().getResource(APPLICATION_VIEW));
+        final URL resource = getClass().getResource(APPLICATION_VIEW);
+        if (resource == null) {
+            throw new UIInitialisationException("The UI could not be initialised.");
+        }
 
+        final Parent parent = FXMLLoader.load(resource);
         if (parent == null) {
             throw new UIInitialisationException("The UI could not be initialised.");
         }
