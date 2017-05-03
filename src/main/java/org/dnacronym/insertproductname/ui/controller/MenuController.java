@@ -23,12 +23,24 @@ public class MenuController implements Initializable {
     private static final FileChooser.ExtensionFilter GFA_FILTER =
             new FileChooser.ExtensionFilter("GFA", "*." + GraphStore.GFA_EXTENSION);
 
+    private GraphStore graphStore;
+
     @FXML
     private MenuItem fileOpen;
 
     @Override
     public final void initialize(final URL location, final ResourceBundle resources) {
-        // TODO implement MenuController initialize method.
+        setGraphStore(DNAApplication.getGraphStore());
+    }
+
+    /**
+     * Set the {@link GraphStore} in the controller. This gives the menu access to the {@link GraphStore} of the
+     * application.
+     *
+     * @param graphStore {@link GraphStore} to store in the {@link MenuController}.
+     */
+    protected final void setGraphStore(final GraphStore graphStore) {
+        this.graphStore = graphStore;
     }
 
     /**
@@ -47,7 +59,7 @@ public class MenuController implements Initializable {
         final File gfaFile = fileChooser.showOpenDialog(fileOpen.getParentPopup().getOwnerWindow());
 
         try {
-            DNAApplication.getGraphStore().load(gfaFile);
+            graphStore.load(gfaFile);
         } catch (IOException e) {
             // TODO show exception in ui
             e.printStackTrace();
