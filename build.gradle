@@ -52,6 +52,7 @@ dependencies {
 
     testCompile("org.testfx:testfx-core:${testfxVersion}")
     testCompile("org.testfx:testfx-junit:${testfxVersion}")
+    testRuntime("org.testfx:openjfx-monocle:${openjfxMonocoleVersion}")
 
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
@@ -85,6 +86,17 @@ tasks.withType(FindBugs) {
     reports {
         xml.enabled = false
         html.enabled = true
+    }
+}
+
+if (project.hasProperty('headless') ? project.headless : false) {
+    println "Running UI Tests Headless"
+    test {
+        jvmArgs = ['-Djava.awt.headless=true',
+                   '-Dtestfx.robot=glass',
+                   '-Dtestfx.headless=true',
+                   '-Dprism.order=sw',
+                   '-Dprism.text=t2k']
     }
 }
 
