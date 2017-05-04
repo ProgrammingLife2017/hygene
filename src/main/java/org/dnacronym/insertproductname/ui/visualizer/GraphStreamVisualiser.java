@@ -157,8 +157,6 @@ public class GraphStreamVisualiser {
     private void addNodeClass(final Node graphNode, final SequenceNode sequenceNode) {
         if (sequenceNode.getSequence().length() > 0) {
             graphNode.setAttribute(UI_CLASS, sequenceNode.getSequence().charAt(0));
-        } else {
-            graphNode.setAttribute(UI_CLASS, "");
         }
     }
 
