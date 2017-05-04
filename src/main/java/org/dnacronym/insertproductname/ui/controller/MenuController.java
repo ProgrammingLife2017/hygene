@@ -3,7 +3,6 @@ package org.dnacronym.insertproductname.ui.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
@@ -20,30 +19,25 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public class MenuController implements Initializable {
-    private static final String FILE_CHOOSER_TITLE = "Open GFA File";
-
-    private static final FileChooser.ExtensionFilter GFA_FILTER =
-            new FileChooser.ExtensionFilter(
-                    "GFA (*." + GraphStore.GFA_EXTENSION + ")",
-                    "*." + GraphStore.GFA_EXTENSION);
-
     @MonotonicNonNull
     private FileChooser fileChooser;
     @MonotonicNonNull
     private GraphStore graphStore;
-
-    @FXML
-    @MonotonicNonNull
-    private MenuItem fileOpen;
 
 
     @Override
     public final void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
 
+        final String fileChooserTitle = "Open GFA File";
+        final FileChooser.ExtensionFilter gfaFilter =
+                new FileChooser.ExtensionFilter(
+                        "GFA (*." + GraphStore.GFA_EXTENSION + ")",
+                        "*." + GraphStore.GFA_EXTENSION);
+
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(FILE_CHOOSER_TITLE);
-        fileChooser.getExtensionFilters().add(GFA_FILTER);
+        fileChooser.setTitle(fileChooserTitle);
+        fileChooser.getExtensionFilters().add(gfaFilter);
 
         setFileChooser(fileChooser);
     }
@@ -69,8 +63,8 @@ public class MenuController implements Initializable {
     }
 
     /**
-     * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as that of the {@link #fileOpen}
-     * {@link MenuItem}.
+     * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
+     * {@link DNAApplication#getStage()#getOwner()}.
      *
      * @param event {@link ActionEvent} associated with the event.
      */
