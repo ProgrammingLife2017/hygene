@@ -43,4 +43,5 @@ gradle-app.setting
 
 
 ## IDE-specific
-.idea/
+/.idea/
+/out/
