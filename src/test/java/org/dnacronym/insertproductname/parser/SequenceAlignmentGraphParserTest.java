@@ -35,8 +35,8 @@ class SequenceAlignmentGraphParserTest {
         alignmentGraph.addSegment(segment);
         final SequenceGraph graph = parser.parse(alignmentGraph);
 
-        assertThat(graph.getStartNode().getId()).isEqualTo("name");
-        assertThat(graph.getEndNode().getId()).isEqualTo("name");
+        assertThat(graph.getSourceNode().getRightNeighbours().get(0).getId()).isEqualTo("name");
+        assertThat(graph.getSinkNode().getLeftNeighbours().get(0).getId()).isEqualTo("name");
     }
 
     @Test
@@ -49,8 +49,8 @@ class SequenceAlignmentGraphParserTest {
         alignmentGraph.addSegment(segmentB);
         final SequenceGraph graph = parser.parse(alignmentGraph);
 
-        assertThat(graph.getStartNode().getId()).isEqualTo("A");
-        assertThat(graph.getEndNode().getId()).isEqualTo("A");
+        assertThat(graph.getSourceNode().getRightNeighbours().get(0).getId()).isEqualTo("A");
+        assertThat(graph.getSinkNode().getLeftNeighbours().get(0).getId()).isEqualTo("A");
     }
 
     @Test
@@ -65,8 +65,8 @@ class SequenceAlignmentGraphParserTest {
         alignmentGraph.addLink(link);
         final SequenceGraph graph = parser.parse(alignmentGraph);
 
-        assertThat(graph.getStartNode().getId()).isEqualTo("A");
-        assertThat(graph.getEndNode().getId()).isEqualTo("B");
+        assertThat(graph.getSourceNode().getRightNeighbours().get(0).getId()).isEqualTo("A");
+        assertThat(graph.getSinkNode().getLeftNeighbours().get(0).getId()).isEqualTo("B");
     }
 
     @Test
@@ -84,7 +84,7 @@ class SequenceAlignmentGraphParserTest {
         alignmentGraph.addLink(linkAB);
         alignmentGraph.addLink(linkAC);
         final SequenceGraph graph = parser.parse(alignmentGraph);
-        final SequenceNode startNode = graph.getStartNode();
+        final SequenceNode startNode = graph.getSourceNode().getRightNeighbours().get(0);
         final Object[] rightNeighbours = startNode.getRightNeighbours().stream().map(SequenceNode::getId).toArray();
 
         assertThat(startNode.getId()).isEqualTo("A");
@@ -107,7 +107,7 @@ class SequenceAlignmentGraphParserTest {
         alignmentGraph.addLink(linkAC);
         alignmentGraph.addLink(linkBC);
         final SequenceGraph graph = parser.parse(alignmentGraph);
-        final SequenceNode endNode = graph.getEndNode();
+        final SequenceNode endNode = graph.getSinkNode().getLeftNeighbours().get(0);
         final Object[] leftNeighbours = endNode.getLeftNeighbours().stream().map(SequenceNode::getId).toArray();
 
         assertThat(endNode.getId()).isEqualTo("C");

@@ -3,6 +3,7 @@ package org.dnacronym.insertproductname.parser;
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.models.SequenceNode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public final class SequenceAlignmentGraphParser {
         }
 
         return nodes.values().stream().findFirst()
-                .map(node -> new SequenceGraph(node.getLeftMostNeighbour(), node.getRightMostNeighbour()))
+                .map(node -> new SequenceGraph(new ArrayList<>(nodes.values())))
                 .orElseThrow(() -> new ParseException("Start and end node could not be determined"));
     }
 

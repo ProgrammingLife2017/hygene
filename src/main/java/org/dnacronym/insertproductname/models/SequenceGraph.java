@@ -1,38 +1,65 @@
 package org.dnacronym.insertproductname.models;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 
 /**
  * A {@code SequenceGraph} contains {@code SequenceNode}s.
+ *
+ * This graph has all its nodes passed to it on construction. It then adds two sentinel nodes (a 'source' and a 'sink'),
+ * to the start and end of the graph structure. The source node connects to all vertices without incoming edges on the
+ * left side, while the sink node is connected to all vertices without incoming edges on the right side. These two nodes
+ * allow for simplified and more unified graph processing.
  */
 public final class SequenceGraph {
-    private final Map<String, SequenceNode> nodes;
-    private final SequenceNode startNode;
-    private final SequenceNode endNode;
+    public static final String SOURCE_NODE_ID = "<SOURCE>";
+    public static final String SINK_NODE_ID = "<SINK>";
+
+    private final SequenceNode sourceNode;
+    private final SequenceNode sinkNode;
+    private final int nodeCount;
 
 
     /**
-     * Constructs a new {@code SequenceGraph} with the given starting node.
+     * Constructs a new {@code SequenceGraph} with the given nodes.
      *
-     * @param startNode the first link of the segment chain
-     * @param endNode   the last link of the segment chain
+     * @param nodes the list of nodes
      */
-    public SequenceGraph(final SequenceNode startNode, final SequenceNode endNode) {
-        this.nodes = new HashMap<>();
-        this.startNode = startNode;
-        this.endNode = endNode;
+    public SequenceGraph(final List<SequenceNode> nodes) {
+        this.sourceNode = new SequenceNode(SOURCE_NODE_ID, "");
+        this.sinkNode = new SequenceNode(SINK_NODE_ID, "");
+
+        // Store the number of nodes in the graph, including the added source and sink nodes (+ 2)
+        this.nodeCount = nodes.size() + 2;
+
+        initEdgeNodes(nodes);
     }
 
+
+    /**
+     * Finds the edge nodes of this graph and connects them to sentinels.
+     *
+     * @param nodes the list of nodes
+     */
+    private void initEdgeNodes(final List<SequenceNode> nodes) {
+        nodes.forEach(node -> {
+            if (!node.hasLeftNeighbours()) {
+                sourceNode.linkToRightNeighbour(node);
+            }
+
+            if (!node.hasRightNeighbours()) {
+                sinkNode.linkToLeftNeighbour(node);
+            }
+        });
+    }
 
     /**
      * Returns the start node.
      *
      * @return the start node.
      */
-    public SequenceNode getStartNode() {
-        return startNode;
+    public SequenceNode getSourceNode() {
+        return sourceNode;
     }
 
     /**
@@ -40,20 +67,8 @@ public final class SequenceGraph {
      *
      * @return the end node.
      */
-    public SequenceNode getEndNode() {
-        return endNode;
-    }
-
-    /**
-     * Returns the nodes.
-     * <p>
-     * At a later stage (after an initial prototype of the parser has been built), this data structure will be better
-     * encapsulated by this class, and this accessor removed.
-     *
-     * @return the nodes.
-     */
-    public Map<String, SequenceNode> getNodes() {
-        return nodes;
+    public SequenceNode getSinkNode() {
+        return sinkNode;
     }
 
     /**
@@ -62,6 +77,6 @@ public final class SequenceGraph {
      * @return the number of nodes in the graph.
      */
     public int size() {
-        return nodes.size();
+        return nodeCount;
     }
 }
