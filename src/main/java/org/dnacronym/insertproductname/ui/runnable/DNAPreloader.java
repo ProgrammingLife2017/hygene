@@ -9,6 +9,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.insertproductname.core.Files;
 
 import java.net.URL;
 
@@ -35,14 +36,14 @@ public class DNAPreloader extends Preloader {
 
         progress = new ProgressBar();
 
-        final URL resource = getClass().getResource(PRELOADER_VIEW);
+        final URL resource = Files.getInstance().getResourceUrl(PRELOADER_VIEW);
         if (resource == null) {
-            throw new UIInitialisationException("The UI could not be initialised");
+            throw new UIInitialisationException(DNAApplication.UI_NOT_INITIALIZED);
         }
 
         final Parent root = FXMLLoader.load(resource);
         if (root == null) {
-            throw new UIInitialisationException("The UI could not be initialised");
+            throw new UIInitialisationException(DNAApplication.UI_NOT_INITIALIZED);
         }
 
         final Scene rootScene = new Scene(root);
