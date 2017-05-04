@@ -1,6 +1,5 @@
 package org.dnacronym.insertproductname.ui.controller;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
@@ -51,7 +50,7 @@ public class MenuControllerTest {
 
     @AfterAll
     static void afterAll() {
-        Platform.exit();
+        System.exit(0);
     }
 
 

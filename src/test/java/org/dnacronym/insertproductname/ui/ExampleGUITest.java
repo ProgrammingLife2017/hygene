@@ -1,6 +1,5 @@
 package org.dnacronym.insertproductname.ui;
 
-import javafx.application.Platform;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +33,7 @@ public class ExampleGUITest extends FxRobot {
 
     @AfterAll
     static void afterAll() {
-        Platform.exit();
+        System.exit(0);
     }
 
 
