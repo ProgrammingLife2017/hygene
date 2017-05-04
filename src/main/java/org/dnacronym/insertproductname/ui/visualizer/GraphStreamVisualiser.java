@@ -112,8 +112,7 @@ public class GraphStreamVisualiser {
     public final void populateGraph(final SequenceGraph graphData) {
         graph.clear();
 
-        final SequenceNode currentNode = graphData.getStartNode();
-        populateGraph(currentNode);
+        populateGraph(graphData.getStartNode());
     }
 
     /**
