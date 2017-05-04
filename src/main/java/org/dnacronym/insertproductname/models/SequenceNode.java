@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * A {@code SequenceNode} represents a node in a DNA Sequence Alignment Graph.
- *
+ * <p>
  * Each node contains a base-sequence, held in the {@code sequence} field. Each node also is associated with one or more
  * reads (runs of DNA analysis). Finally, each node is linked with its adjacent nodes, either backward or forward (left
  * or right).
@@ -80,23 +80,6 @@ public final class SequenceNode {
     }
 
     /**
-     * Returns the left most neighbour of the current node.
-     * <p>
-     * This simple implementation does not support more complicated graph topologies with multiple left-most nodes.
-     *
-     * @return the left most neighbour of this node, or itself, if it has no left neighbours.
-     */
-    public SequenceNode getLeftMostNeighbour() {
-        SequenceNode currentNode = this;
-
-        while (currentNode.hasLeftNeighbours()) {
-            currentNode = currentNode.getLeftNeighbours().get(0);
-        }
-
-        return currentNode;
-    }
-
-    /**
      * Returns true iff. the node has 1 or more left neighbours.
      *
      * @return true iff. the node has 1 or more left neighbours.
@@ -131,23 +114,6 @@ public final class SequenceNode {
      */
     public List<SequenceNode> getRightNeighbours() {
         return rightNeighbours;
-    }
-
-    /**
-     * Returns the right most neighbour of the current node.
-     * <p>
-     * This simple implementation does not support more complicated graph topologies with multiple right-most nodes.
-     *
-     * @return the right most neighbour of this node, or itself, if it has no right neighbours.
-     */
-    public SequenceNode getRightMostNeighbour() {
-        SequenceNode currentNode = this;
-
-        while (currentNode.hasRightNeighbours()) {
-            currentNode = currentNode.getRightNeighbours().get(0);
-        }
-
-        return currentNode;
     }
 
     /**
