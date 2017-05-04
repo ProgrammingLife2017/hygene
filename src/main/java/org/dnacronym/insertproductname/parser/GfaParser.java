@@ -32,7 +32,7 @@ public final class GfaParser {
     /**
      * Parses a line of a GFA-compliant {@code String} and adds it to the {@code SequenceAlignmentGraph}.
      *
-     * @param graph    the {@code SequenceAlignmentGraph} to which this line should be added
+     * @param graph  the {@code SequenceAlignmentGraph} to which this line should be added
      * @param line   a line of a GFA-compliant {@code String}
      * @param offset the current line number
      * @throws ParseException if the given {@code String}s are not GFA-compliant
