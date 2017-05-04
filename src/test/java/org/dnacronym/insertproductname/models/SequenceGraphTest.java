@@ -52,11 +52,6 @@ class SequenceGraphTest {
     }
 
     @Test
-    void testGetNodes() {
-        assertThat(sequenceGraph.getNodes()).contains(node1);
-    }
-
-    @Test
     void testSize() {
         assertThat(sequenceGraph.size()).isEqualTo(4);
     }

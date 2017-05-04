@@ -15,9 +15,9 @@ public final class SequenceGraph {
     public static final String SOURCE_NODE_ID = "<SOURCE>";
     public static final String SINK_NODE_ID = "<SINK>";
 
-    private final List<SequenceNode> nodes;
     private final SequenceNode sourceNode;
     private final SequenceNode sinkNode;
+    private final int nodeCount;
 
 
     /**
@@ -26,18 +26,22 @@ public final class SequenceGraph {
      * @param nodes the list of nodes
      */
     public SequenceGraph(final List<SequenceNode> nodes) {
-        this.nodes = nodes;
         this.sourceNode = new SequenceNode(SOURCE_NODE_ID, "");
         this.sinkNode = new SequenceNode(SINK_NODE_ID, "");
 
-        initEdgeNodes();
+        // Store the number of nodes in the graph, including the added source and sink nodes (+ 2)
+        this.nodeCount = nodes.size() + 2;
+
+        initEdgeNodes(nodes);
     }
 
 
     /**
      * Finds the edge nodes of this graph and connects them to sentinels.
+     *
+     * @param nodes the list of nodes
      */
-    private void initEdgeNodes() {
+    private void initEdgeNodes(final List<SequenceNode> nodes) {
         nodes.forEach(node -> {
             if (!node.hasLeftNeighbours()) {
                 sourceNode.linkToRightNeighbour(node);
@@ -68,23 +72,11 @@ public final class SequenceGraph {
     }
 
     /**
-     * Returns the nodes.
-     * <p>
-     * At a later stage (after an initial prototype of the parser has been built), this data structure will be better
-     * encapsulated by this class, and this accessor removed.
-     *
-     * @return the nodes.
-     */
-    public List<SequenceNode> getNodes() {
-        return nodes;
-    }
-
-    /**
      * Returns the size of the graph, measured in terms of the number of nodes.
      *
      * @return the number of nodes in the graph.
      */
     public int size() {
-        return nodes.size() + 2;
+        return nodeCount;
     }
 }
