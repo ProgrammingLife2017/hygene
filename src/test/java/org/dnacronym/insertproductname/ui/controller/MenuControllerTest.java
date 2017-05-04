@@ -21,6 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * Unit tests for {@link MenuController}s.
  */
@@ -48,7 +49,7 @@ public class MenuControllerTest {
         final File file = mock(File.class);
 
         // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
-        when(fileChooser.showOpenDialog(DNAApplication.getStage().getOwner())).thenReturn(file, file);
+        when(fileChooser.showOpenDialog(DNAApplication.getStage().getOwner())).thenReturn(file, file, file);
 
         menuController.setFileChooser(fileChooser);
         menuController.setGraphStore(graphStore);
