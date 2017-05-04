@@ -22,10 +22,10 @@ class GfaParserTest {
 
     @Test
     void testParseEmpty() throws ParseException {
-        final SequenceAlignmentGraph sag = parse("");
+        final SequenceAlignmentGraph graph = parse("");
 
-        assertThat(sag.getLinks()).isEmpty();
-        assertThat(sag.getSegments()).isEmpty();
+        assertThat(graph.getLinks()).isEmpty();
+        assertThat(graph.getSegments()).isEmpty();
     }
 
     @Test
@@ -53,9 +53,9 @@ class GfaParserTest {
     @Test
     void testSegmentContents() throws ParseException {
         final String gfa = "S name contents";
-        final SequenceAlignmentGraph sag = parse(gfa);
+        final SequenceAlignmentGraph graph = parse(gfa);
 
-        assertThat(sag.getSegment("name").getSequence()).isEqualTo("contents");
+        assertThat(graph.getSegment("name").getSequence()).isEqualTo("contents");
     }
 
     @Test
@@ -77,10 +77,10 @@ class GfaParserTest {
     @Test
     void testSizes() throws ParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
-        final SequenceAlignmentGraph sag = parse(gfa);
+        final SequenceAlignmentGraph graph = parse(gfa);
 
-        assertThat(sag.getSegments()).hasSize(2);
-        assertThat(sag.getLinks()).hasSize(1);
+        assertThat(graph.getSegments()).hasSize(2);
+        assertThat(graph.getLinks()).hasSize(1);
     }
 
 

@@ -18,26 +18,26 @@ public final class GfaParser {
      * @throws ParseException if the given {@code String} is not GFA-compliant
      */
     public SequenceAlignmentGraph parse(final String gfa) throws ParseException {
-        final SequenceAlignmentGraph sag = new SequenceAlignmentGraph();
+        final SequenceAlignmentGraph graph = new SequenceAlignmentGraph();
         final String[] lines = gfa.split("\\R");
 
         for (int offset = 0; offset < lines.length; offset++) {
-            parseLine(sag, lines[offset], offset);
+            parseLine(graph, lines[offset], offset);
         }
 
-        return sag;
+        return graph;
     }
 
 
     /**
      * Parses a line of a GFA-compliant {@code String} and adds it to the {@code SequenceAlignmentGraph}.
      *
-     * @param sag    the {@code SequenceAlignmentGraph} to which this line should be added
+     * @param graph    the {@code SequenceAlignmentGraph} to which this line should be added
      * @param line   a line of a GFA-compliant {@code String}
      * @param offset the current line number
      * @throws ParseException if the given {@code String}s are not GFA-compliant
      */
-    private void parseLine(final SequenceAlignmentGraph sag, final String line, final int offset)
+    private void parseLine(final SequenceAlignmentGraph graph, final String line, final int offset)
             throws ParseException {
         final StringTokenizer st = new StringTokenizer(line, "\t");
         if (!st.hasMoreTokens()) {
@@ -52,11 +52,11 @@ public final class GfaParser {
                 break;
 
             case "S":
-                sag.addSegment(parseSegment(st, offset));
+                graph.addSegment(parseSegment(st, offset));
                 break;
 
             case "L":
-                sag.addLink(parseLink(st, offset));
+                graph.addLink(parseLink(st, offset));
                 break;
 
             default:

@@ -14,20 +14,20 @@ public final class SequenceAlignmentGraphParser {
     /**
      * Translates a {@code SequenceAlignmentGraph} into a {@code GraphSequence}.
      *
-     * @param sag a {@code SequenceAlignmentGraph}
+     * @param graph a {@code SequenceAlignmentGraph}
      * @return a {@code GraphSequence}
-     * @throws ParseException if the sag is not according to the specification
+     * @throws ParseException if the graph is not according to the specification
      */
-    public SequenceGraph parse(final SequenceAlignmentGraph sag) throws ParseException {
+    public SequenceGraph parse(final SequenceAlignmentGraph graph) throws ParseException {
         final Map<String, SequenceNode> nodes = new HashMap<>();
 
-        for (final Segment segment : sag.getSegments()) {
-            getNode(nodes, sag.getSegment(segment.getName()));
+        for (final Segment segment : graph.getSegments()) {
+            getNode(nodes, graph.getSegment(segment.getName()));
         }
 
-        for (final Link link : sag.getLinks()) {
-            final SequenceNode fromNode = getNode(nodes, sag.getSegment(link.getFrom()));
-            final SequenceNode toNode = getNode(nodes, sag.getSegment(link.getTo()));
+        for (final Link link : graph.getLinks()) {
+            final SequenceNode fromNode = getNode(nodes, graph.getSegment(link.getFrom()));
+            final SequenceNode toNode = getNode(nodes, graph.getSegment(link.getTo()));
 
             fromNode.addRightNeighbour(toNode);
             toNode.addLeftNeighbour(fromNode);
