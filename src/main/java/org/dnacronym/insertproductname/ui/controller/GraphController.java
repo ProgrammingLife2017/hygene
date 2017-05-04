@@ -9,7 +9,7 @@ import org.dnacronym.insertproductname.ui.visualizer.GraphStreamVisualiser;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -28,15 +28,6 @@ public class GraphController implements Initializable {
     @Override
     public final void initialize(final URL location, final ResourceBundle resources) {
         graphPane.getChildren().add(SWING_NODE);
-
-//        final ObjectProperty<SequenceGraph> sequenceGraph = DNAApplication.getGraphStore().sequenceGraphProperty();
-//        sequenceGraph.addListener((observable, oldValue, newValue) -> {
-//            VISUALISER.populateGraph(sequenceGraph);
-//        });
-//
-//        if (sequenceGraph.get() != null) {
-//            VISUALISER.populateGraph(sequenceGraph);
-//        }
     }
 
     /**
