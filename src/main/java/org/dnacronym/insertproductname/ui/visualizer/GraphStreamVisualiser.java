@@ -149,7 +149,7 @@ public class GraphStreamVisualiser {
     }
 
     /**
-     * Given the node a class which can be used for styling.
+     * Assign a (css) class to a node which can be used for styling.
      *
      * @param graphNode    node within the (GUI) graph
      * @param sequenceNode node within the internal graph data structure
