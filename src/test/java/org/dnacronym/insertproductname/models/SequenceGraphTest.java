@@ -33,14 +33,22 @@ class SequenceGraphTest {
 
     @Test
     void testGetSourceNode() {
-        assertThat(sequenceGraph.getSourceNode().getRightNeighbours().get(0)).isEqualTo(node1);
         assertThat(sequenceGraph.getSourceNode().getId()).isEqualTo(SequenceGraph.SOURCE_NODE_ID);
     }
 
     @Test
+    void testSourceNodeLink() {
+        assertThat(sequenceGraph.getSourceNode().getRightNeighbours().get(0)).isEqualTo(node1);
+    }
+
+    @Test
     void testGetSinkNode() {
-        assertThat(sequenceGraph.getSinkNode().getLeftNeighbours().get(0)).isEqualTo(node2);
         assertThat(sequenceGraph.getSinkNode().getId()).isEqualTo(SequenceGraph.SINK_NODE_ID);
+    }
+
+    @Test
+    void testSinkNodeLink() {
+        assertThat(sequenceGraph.getSinkNode().getLeftNeighbours().get(0)).isEqualTo(node2);
     }
 
     @Test
