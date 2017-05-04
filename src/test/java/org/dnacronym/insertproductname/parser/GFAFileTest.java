@@ -1,7 +1,7 @@
 package org.dnacronym.insertproductname.parser;
 
-import org.dnacronym.insertproductname.parser.factories.AssemblyParserFactory;
-import org.dnacronym.insertproductname.parser.factories.GFAParserFactory;
+import org.dnacronym.insertproductname.parser.factories.SequenceAlignmentGraphParserFactory;
+import org.dnacronym.insertproductname.parser.factories.GfaParserFactory;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,11 +13,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 
-class GFAFileTest {
+class GfaFileTest {
 
     @Test
     void testGFAFileObjectCanBeConstructed() {
-        final GFAFile gfaFile = new GFAFile("name_of_the_file.gfa", "contents_of_the_file");
+        final GfaFile gfaFile = new GfaFile("name_of_the_file.gfa", "contents_of_the_file");
 
         assertThat(gfaFile.getFileName()).isEqualTo("name_of_the_file.gfa");
         assertThat(gfaFile.getContents()).isEqualTo("contents_of_the_file");
@@ -25,7 +25,7 @@ class GFAFileTest {
 
     @Test
     void testReadFile() throws IOException {
-        GFAFile gfaFile = GFAFile.read("src/test/resources/gfa/simple.gfa");
+        GfaFile gfaFile = GfaFile.read("src/test/resources/gfa/simple.gfa");
 
         assertThat(gfaFile.getContents()).isEqualTo(String.format(
                 "H\tVN:Z:1.0%n"
@@ -37,21 +37,21 @@ class GFAFileTest {
 
     @Test
     void testCannotReadNonExistingFile() {
-        final Throwable e = catchThrowable(() -> GFAFile.read("random-file-name"));
+        final Throwable e = catchThrowable(() -> GfaFile.read("random-file-name"));
 
         assertThat(e).isInstanceOf(IOException.class);
     }
 
     @Test
     void testParseFile() throws IOException, ParseException {
-        GFAParser gfaParser = spy(GFAParser.class);
-        GFAParserFactory.setInstance(gfaParser);
-        AssemblyParser assemblyParser = spy(AssemblyParser.class);
-        AssemblyParserFactory.setInstance(assemblyParser);
+        GfaParser gfaParser = spy(GfaParser.class);
+        GfaParserFactory.setInstance(gfaParser);
+        SequenceAlignmentGraphParser sequenceAlignmentGraphParser = spy(SequenceAlignmentGraphParser.class);
+        SequenceAlignmentGraphParserFactory.setInstance(sequenceAlignmentGraphParser);
 
-        new GFAFile("filename", "S\t12\tTCAAGG").parse();
+        new GfaFile("filename", "S\t12\tTCAAGG").parse();
 
         verify(gfaParser).parse("S\t12\tTCAAGG");
-        verify(assemblyParser).parse(any(Assembly.class));
+        verify(sequenceAlignmentGraphParser).parse(any(SequenceAlignmentGraph.class));
     }
 }

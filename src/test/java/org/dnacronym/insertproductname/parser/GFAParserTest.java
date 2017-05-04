@@ -8,24 +8,24 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
- * Unit tests for {@code GFAParser}s.
+ * Unit tests for {@code GfaParser}s.
  */
-class GFAParserTest {
-    private GFAParser parser;
+class GfaParserTest {
+    private GfaParser parser;
 
 
     @BeforeEach
     void beforeEach() {
-        parser = new GFAParser();
+        parser = new GfaParser();
     }
 
 
     @Test
     void testParseEmpty() throws ParseException {
-        final Assembly assembly = parse("");
+        final SequenceAlignmentGraph sag = parse("");
 
-        assertThat(assembly.getLinks()).isEmpty();
-        assertThat(assembly.getSegments()).isEmpty();
+        assertThat(sag.getLinks()).isEmpty();
+        assertThat(sag.getSegments()).isEmpty();
     }
 
     @Test
@@ -53,9 +53,9 @@ class GFAParserTest {
     @Test
     void testSegmentContents() throws ParseException {
         final String gfa = "S name contents";
-        final Assembly assembly = parse(gfa);
+        final SequenceAlignmentGraph sag = parse(gfa);
 
-        assertThat(assembly.getSegment("name").getSequence()).isEqualTo("contents");
+        assertThat(sag.getSegment("name").getSequence()).isEqualTo("contents");
     }
 
     @Test
@@ -77,10 +77,10 @@ class GFAParserTest {
     @Test
     void testSizes() throws ParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
-        final Assembly assembly = parse(gfa);
+        final SequenceAlignmentGraph sag = parse(gfa);
 
-        assertThat(assembly.getSegments()).hasSize(2);
-        assertThat(assembly.getLinks()).hasSize(1);
+        assertThat(sag.getSegments()).hasSize(2);
+        assertThat(sag.getLinks()).hasSize(1);
     }
 
 
@@ -88,7 +88,7 @@ class GFAParserTest {
         return string.replaceAll(" ", "\t");
     }
 
-    private Assembly parse(final String gfa) throws ParseException {
+    private SequenceAlignmentGraph parse(final String gfa) throws ParseException {
         return parser.parse(replaceSpacesWithTabs(gfa));
     }
 }

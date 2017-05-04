@@ -10,21 +10,21 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests for {@code Assembly}s.
+ * Unit tests for {@code SequenceAlignmentGraph}s.
  */
-class AssemblyTest {
-    private Assembly assembly;
+class SequenceAlignmentGraphTest {
+    private SequenceAlignmentGraph sag;
 
 
     @BeforeEach
     void beforeEach() {
-        assembly = new Assembly();
+        sag = new SequenceAlignmentGraph();
     }
 
 
     @Test
     void testGetSegmentNull() {
-        final Throwable e = catchThrowable(() -> assembly.getSegment("yBzxeLyGuiioMD3oGNDD"));
+        final Throwable e = catchThrowable(() -> sag.getSegment("yBzxeLyGuiioMD3oGNDD"));
         assertThat(e).isInstanceOf(ParseException.class);
     }
 
@@ -33,9 +33,9 @@ class AssemblyTest {
         final Segment segment = mock(Segment.class);
         when(segment.getName()).thenReturn("wMGSp96y6eFewU4XK8fu");
 
-        assembly.addSegment(segment);
+        sag.addSegment(segment);
 
-        assertThat(assembly.getSegment("wMGSp96y6eFewU4XK8fu")).isEqualTo(segment);
+        assertThat(sag.getSegment("wMGSp96y6eFewU4XK8fu")).isEqualTo(segment);
     }
 
     @Test
@@ -46,34 +46,34 @@ class AssemblyTest {
         when(segmentA.getName()).thenReturn(sequence);
         when(segmentB.getName()).thenReturn(sequence);
 
-        assembly.addSegment(segmentA);
-        assembly.addSegment(segmentB);
+        sag.addSegment(segmentA);
+        sag.addSegment(segmentB);
 
-        assertThat(assembly.getSegment("i9lmsQajqPINZ66wnZCB")).isEqualTo(segmentB);
+        assertThat(sag.getSegment("i9lmsQajqPINZ66wnZCB")).isEqualTo(segmentB);
     }
 
     @Test
     void testGetLinksEmpty() {
-        assertThat(assembly.getLinks()).isEmpty();
+        assertThat(sag.getLinks()).isEmpty();
     }
 
     @Test
     void testAddAndGetLink() {
         final Link link = mock(Link.class);
 
-        assembly.addLink(link);
+        sag.addLink(link);
 
-        assertThat(assembly.getLinks().size()).isEqualTo(1);
-        assertThat(assembly.getLinks().get(0)).isEqualTo(link);
+        assertThat(sag.getLinks().size()).isEqualTo(1);
+        assertThat(sag.getLinks().get(0)).isEqualTo(link);
     }
 
     @Test
     void testAddLinkDouble() {
         final Link link = mock(Link.class);
 
-        assembly.addLink(link);
-        assembly.addLink(link);
+        sag.addLink(link);
+        sag.addLink(link);
 
-        assertThat(assembly.getLinks().size()).isEqualTo(2);
+        assertThat(sag.getLinks().size()).isEqualTo(2);
     }
 }
