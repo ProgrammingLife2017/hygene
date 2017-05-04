@@ -1,10 +1,13 @@
 package org.dnacronym.insertproductname.ui.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
 import org.dnacronym.insertproductname.ui.runnable.UIInitialisationException;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +42,16 @@ public class MenuControllerTest {
     final void beforeEach() throws IOException, TimeoutException {
         FxToolkit.setupApplication(DNAApplication.class);
         menuController = new MenuController();
+    }
+
+    @AfterEach
+    final void afterEach() throws TimeoutException {
+        FxToolkit.hideStage();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        Platform.exit();
     }
 
 
