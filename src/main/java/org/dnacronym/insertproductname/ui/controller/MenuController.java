@@ -29,17 +29,17 @@ public class MenuController implements Initializable {
     public final void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
 
-        final String fileChooserTitle = "Open GFA File";
+        final String chooserTitle = "Open GFA File";
         final FileChooser.ExtensionFilter gfaFilter =
                 new FileChooser.ExtensionFilter(
                         "GFA (*." + GraphStore.GFA_EXTENSION + ")",
                         "*." + GraphStore.GFA_EXTENSION);
 
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(fileChooserTitle);
-        fileChooser.getExtensionFilters().add(gfaFilter);
+        final FileChooser chooser = new FileChooser();
+        chooser.setTitle(chooserTitle);
+        chooser.getExtensionFilters().add(gfaFilter);
 
-        setFileChooser(fileChooser);
+        setFileChooser(chooser);
     }
 
 
@@ -70,22 +70,20 @@ public class MenuController implements Initializable {
      */
     @FXML
     protected final void openFileAction(final ActionEvent event) {
-        if (fileChooser != null && graphStore != null) {
-            try {
-                final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getStage().getOwner());
+        if (fileChooser == null || graphStore == null) {
+            return;
+        }
 
-                if (gfaFile != null) {
-                    try {
-                        graphStore.load(gfaFile);
-                    } catch (IOException e) {
-                        // TODO show exception in ui
-                        e.printStackTrace();
-                    }
-                }
-            } catch (UIInitialisationException e) {
-                // TODO log exception
-                e.printStackTrace();
+        try {
+            final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getStage().getOwner());
+
+            if (gfaFile != null) {
+                graphStore.load(gfaFile);
             }
+        } catch (UIInitialisationException | IOException e) {
+            // TODO log exception
+            // TODO show exception in GUI
+            e.printStackTrace();
         }
     }
 }
