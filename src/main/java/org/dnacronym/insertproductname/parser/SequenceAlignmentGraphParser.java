@@ -8,26 +8,26 @@ import java.util.Map;
 
 
 /**
- * Parses an {@code Assembly} to a {@code SequenceGraph}.
+ * Parses a {@code SequenceAlignmentGraph} to a {@code SequenceGraph}.
  */
-public final class AssemblyParser {
+public final class SequenceAlignmentGraphParser {
     /**
-     * Translates a {@code Assembly} into a {@code GraphSequence}.
+     * Translates a {@code SequenceAlignmentGraph} into a {@code GraphSequence}.
      *
-     * @param assembly an {@code Assembly}
+     * @param graph a {@code SequenceAlignmentGraph}
      * @return a {@code GraphSequence}
-     * @throws ParseException if assembly is not according to the specification
+     * @throws ParseException if the graph is not according to the specification
      */
-    public SequenceGraph parse(final Assembly assembly) throws ParseException {
+    public SequenceGraph parse(final SequenceAlignmentGraph graph) throws ParseException {
         final Map<String, SequenceNode> nodes = new HashMap<>();
 
-        for (final Segment segment : assembly.getSegments()) {
-            getNode(nodes, assembly.getSegment(segment.getName()));
+        for (final Segment segment : graph.getSegments()) {
+            getNode(nodes, graph.getSegment(segment.getName()));
         }
 
-        for (final Link link : assembly.getLinks()) {
-            final SequenceNode fromNode = getNode(nodes, assembly.getSegment(link.getFrom()));
-            final SequenceNode toNode = getNode(nodes, assembly.getSegment(link.getTo()));
+        for (final Link link : graph.getLinks()) {
+            final SequenceNode fromNode = getNode(nodes, graph.getSegment(link.getFrom()));
+            final SequenceNode toNode = getNode(nodes, graph.getSegment(link.getTo()));
 
             fromNode.addRightNeighbour(toNode);
             toNode.addLeftNeighbour(fromNode);
