@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.dnacronym.insertproductname.core.Files;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
 import java.net.URL;
@@ -20,8 +21,9 @@ import java.net.URL;
 public class DNAApplication extends Application {
 
     public static final String TITLE = "DNA";
-
     public static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+
+    private static final String UI_NOT_INITALIZED = "The UI could not be initialised.";
 
     private static final GraphStore GRAPH_STORE = new GraphStore();
 
@@ -44,10 +46,9 @@ public class DNAApplication extends Application {
      * @return {@link Stage} of the application.
      * @throws UIInitialisationException if the UI is not initialized.
      */
-    @NonNull
     public static Stage getStage() throws UIInitialisationException {
         if (DNAApplication.applicationStage == null) {
-            throw new UIInitialisationException("The UI could not be initialised.");
+            throw new UIInitialisationException(UI_NOT_INITALIZED);
         }
         return DNAApplication.applicationStage;
     }
@@ -79,14 +80,14 @@ public class DNAApplication extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final URL resource = getClass().getResource(APPLICATION_VIEW);
+        final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
         if (resource == null) {
-            throw new UIInitialisationException("The UI could not be initialised.");
+            throw new UIInitialisationException(UI_NOT_INITALIZED);
         }
 
         final Parent parent = FXMLLoader.load(resource);
         if (parent == null) {
-            throw new UIInitialisationException("The UI could not be initialised.");
+            throw new UIInitialisationException(UI_NOT_INITALIZED);
         }
 
         final Scene rootScene = new Scene(parent);
