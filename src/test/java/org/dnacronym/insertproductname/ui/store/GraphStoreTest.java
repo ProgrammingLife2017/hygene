@@ -27,7 +27,7 @@ public class GraphStoreTest {
 
     @Test
     public final void testInitialGraphNull() {
-        assertThat(graphStore.sequenceGraphProperty().get()).isNull();
+        assertThat(graphStore.getSequenceGraphProperty().get()).isNull();
     }
 
     @Test
@@ -56,6 +56,6 @@ public class GraphStoreTest {
 
         graphStore.load(file);
 
-        assertThat(graphStore.sequenceGraphProperty().get()).isNotNull();
+        assertThat(graphStore.getSequenceGraphProperty().get()).isNotNull();
     }
 }

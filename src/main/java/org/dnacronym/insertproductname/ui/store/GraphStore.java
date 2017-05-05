@@ -53,7 +53,7 @@ public class GraphStore {
      *
      * @return {@link ObjectProperty} that stores the {@link SequenceGraph}.
      */
-    public final ObjectProperty<SequenceGraph> sequenceGraphProperty() {
+    public final ObjectProperty<SequenceGraph> getSequenceGraphProperty() {
         return sequenceGraphProperty;
     }
 }
