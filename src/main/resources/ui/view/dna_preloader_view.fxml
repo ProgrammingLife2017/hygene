@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.dnacronym.insertproductname.ui.runnable.DNAPreloader"
+      fx:controller="org.dnacronym.hygene.ui.runnable.DNAPreloader"
       xmlns="http://javafx.com/javafx/8">
     <Text strokeType="OUTSIDE"
           strokeWidth="0.0"
