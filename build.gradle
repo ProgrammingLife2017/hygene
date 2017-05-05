@@ -65,7 +65,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.dnacronym.insertproductname.ui.runnable.DNAApplication'
+        attributes 'Main-Class': 'org.dnacronym.hygene.ui.runnable.DNAApplication'
     }
 }
 

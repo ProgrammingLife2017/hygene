@@ -6,7 +6,7 @@
 <?import javafx.scene.control.MenuItem?>
 <MenuBar xmlns="http://javafx.com/javafx/8"
          xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="org.dnacronym.insertproductname.ui.controller.MenuController">
+         fx:controller="org.dnacronym.hygene.ui.controller.MenuController">
     <Menu fx:id="fileMenu"
           mnemonicParsing="false"
           text="File">
