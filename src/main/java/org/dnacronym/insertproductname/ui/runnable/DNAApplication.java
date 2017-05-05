@@ -45,7 +45,6 @@ public class DNAApplication extends Application {
      * @return {@link Stage} of the application.
      * @throws UIInitialisationException if the UI is not initialized.
      */
-    @NonNull
     public static Stage getStage() throws UIInitialisationException {
         if (DNAApplication.applicationStage == null) {
             throw new UIInitialisationException(UI_NOT_INITIALIZED);
@@ -80,7 +79,7 @@ public class DNAApplication extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final URL resource = getClass().getResource(APPLICATION_VIEW);
+        final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
         if (parent == null) {
             throw new UIInitialisationException(UI_NOT_INITIALIZED);
