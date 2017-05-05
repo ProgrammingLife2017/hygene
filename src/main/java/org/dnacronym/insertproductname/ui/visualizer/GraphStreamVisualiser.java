@@ -33,8 +33,8 @@ public class GraphStreamVisualiser {
 
     private static final int MAX_SEQUENCE_LENGTH = 20;
 
-    private final BooleanProperty antiAliasing = new SimpleBooleanProperty();
-    private final BooleanProperty prettyRendering = new SimpleBooleanProperty();
+    private final BooleanProperty antiAliasing;
+    private final BooleanProperty prettyRendering;
 
     private Graph graph;
 
@@ -47,6 +47,9 @@ public class GraphStreamVisualiser {
      */
     public GraphStreamVisualiser(final boolean antiAliasing, final boolean prettyRendering) {
         graph = new SingleGraph(TITLE);
+
+        this.antiAliasing = new SimpleBooleanProperty();
+        this.prettyRendering = new SimpleBooleanProperty();
 
         this.antiAliasing.addListener((observable, oldValue, antiA) -> {
             if (antiA) {
@@ -138,7 +141,7 @@ public class GraphStreamVisualiser {
      */
     private void addNodeClass(final Node graphNode, final SequenceNode sequenceNode) {
         if (sequenceNode.getSequence().length() > 0) {
-            graphNode.setAttribute(UI_CLASS, sequenceNode.getSequence().charAt(0));
+            graphNode.setAttribute(UI_CLASS, String.valueOf(sequenceNode.getSequence().charAt(0)));
         }
     }
 
