@@ -59,6 +59,12 @@ dependencies {
     compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.dnacronym.insertproductname.ui.runnable.DNAApplication'
+    }
+}
+
 if (project.hasProperty('headless') ? project.headless : false) {
     test {
         jvmArgs = ['-Djava.awt.headless=true',
