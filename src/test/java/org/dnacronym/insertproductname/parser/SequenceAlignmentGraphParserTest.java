@@ -9,31 +9,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 
-class AssemblyParserTest {
-    private AssemblyParser parser;
+class SequenceAlignmentGraphParserTest {
+    private SequenceAlignmentGraphParser parser;
 
 
     @BeforeEach
     void beforeEach() {
-        parser = new AssemblyParser();
+        parser = new SequenceAlignmentGraphParser();
     }
 
 
     @Test
     void testParseEmpty() {
-        final Assembly assembly = new Assembly();
-        final Throwable e = catchThrowable(() -> parser.parse(assembly));
+        final SequenceAlignmentGraph graph = new SequenceAlignmentGraph();
+        final Throwable e = catchThrowable(() -> parser.parse(graph));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
     void testParseOneLooseSegment() throws ParseException {
-        final Assembly assembly = new Assembly();
+        final SequenceAlignmentGraph alignmentGraph = new SequenceAlignmentGraph();
         final Segment segment = new Segment("name", "sequence");
 
-        assembly.addSegment(segment);
-        final SequenceGraph graph = parser.parse(assembly);
+        alignmentGraph.addSegment(segment);
+        final SequenceGraph graph = parser.parse(alignmentGraph);
 
         assertThat(graph.getStartNode().getId()).isEqualTo("name");
         assertThat(graph.getEndNode().getId()).isEqualTo("name");
@@ -41,13 +41,13 @@ class AssemblyParserTest {
 
     @Test
     void testParseTwoLooseSegments() throws ParseException {
-        final Assembly assembly = new Assembly();
+        final SequenceAlignmentGraph alignmentGraph = new SequenceAlignmentGraph();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
 
-        assembly.addSegment(segmentA);
-        assembly.addSegment(segmentB);
-        final SequenceGraph graph = parser.parse(assembly);
+        alignmentGraph.addSegment(segmentA);
+        alignmentGraph.addSegment(segmentB);
+        final SequenceGraph graph = parser.parse(alignmentGraph);
 
         assertThat(graph.getStartNode().getId()).isEqualTo("A");
         assertThat(graph.getEndNode().getId()).isEqualTo("A");
@@ -55,15 +55,15 @@ class AssemblyParserTest {
 
     @Test
     void testParseSingleLink() throws ParseException {
-        final Assembly assembly = new Assembly();
+        final SequenceAlignmentGraph alignmentGraph = new SequenceAlignmentGraph();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
         final Link link = new Link("A", "B", 0);
 
-        assembly.addSegment(segmentA);
-        assembly.addSegment(segmentB);
-        assembly.addLink(link);
-        final SequenceGraph graph = parser.parse(assembly);
+        alignmentGraph.addSegment(segmentA);
+        alignmentGraph.addSegment(segmentB);
+        alignmentGraph.addLink(link);
+        final SequenceGraph graph = parser.parse(alignmentGraph);
 
         assertThat(graph.getStartNode().getId()).isEqualTo("A");
         assertThat(graph.getEndNode().getId()).isEqualTo("B");
@@ -71,19 +71,19 @@ class AssemblyParserTest {
 
     @Test
     void testParseSplit() throws ParseException {
-        final Assembly assembly = new Assembly();
+        final SequenceAlignmentGraph alignmentGraph = new SequenceAlignmentGraph();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
         final Segment segmentC = new Segment("C", "sequenceC");
         final Link linkAB = new Link("A", "B", 0);
         final Link linkAC = new Link("A", "C", 0);
 
-        assembly.addSegment(segmentA);
-        assembly.addSegment(segmentB);
-        assembly.addSegment(segmentC);
-        assembly.addLink(linkAB);
-        assembly.addLink(linkAC);
-        final SequenceGraph graph = parser.parse(assembly);
+        alignmentGraph.addSegment(segmentA);
+        alignmentGraph.addSegment(segmentB);
+        alignmentGraph.addSegment(segmentC);
+        alignmentGraph.addLink(linkAB);
+        alignmentGraph.addLink(linkAC);
+        final SequenceGraph graph = parser.parse(alignmentGraph);
         final SequenceNode startNode = graph.getStartNode();
         final Object[] rightNeighbours = startNode.getRightNeighbours().stream().map(SequenceNode::getId).toArray();
 
@@ -94,19 +94,19 @@ class AssemblyParserTest {
 
     @Test
     void testParseJoin() throws ParseException {
-        final Assembly assembly = new Assembly();
+        final SequenceAlignmentGraph alignmentGraph = new SequenceAlignmentGraph();
         final Segment segmentA = new Segment("A", "sequenceA");
         final Segment segmentB = new Segment("B", "sequenceB");
         final Segment segmentC = new Segment("C", "sequenceC");
         final Link linkAC = new Link("A", "C", 0);
         final Link linkBC = new Link("B", "C", 0);
 
-        assembly.addSegment(segmentA);
-        assembly.addSegment(segmentB);
-        assembly.addSegment(segmentC);
-        assembly.addLink(linkAC);
-        assembly.addLink(linkBC);
-        final SequenceGraph graph = parser.parse(assembly);
+        alignmentGraph.addSegment(segmentA);
+        alignmentGraph.addSegment(segmentB);
+        alignmentGraph.addSegment(segmentC);
+        alignmentGraph.addLink(linkAC);
+        alignmentGraph.addLink(linkBC);
+        final SequenceGraph graph = parser.parse(alignmentGraph);
         final SequenceNode endNode = graph.getEndNode();
         final Object[] leftNeighbours = endNode.getLeftNeighbours().stream().map(SequenceNode::getId).toArray();
 

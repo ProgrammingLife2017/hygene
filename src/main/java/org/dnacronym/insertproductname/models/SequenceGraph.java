@@ -17,7 +17,7 @@ public final class SequenceGraph {
      * Constructs a new {@code SequenceGraph} with the given starting node.
      *
      * @param startNode the first link of the segment chain
-     * @param endNode the last link of the segment chain
+     * @param endNode   the last link of the segment chain
      */
     public SequenceGraph(final SequenceNode startNode, final SequenceNode endNode) {
         this.nodes = new HashMap<>();

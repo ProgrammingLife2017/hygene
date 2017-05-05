@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.dnacronym.insertproductname.core.Files;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
 import java.net.URL;
@@ -19,9 +19,10 @@ import java.net.URL;
  */
 public class DNAApplication extends Application {
 
-    public static final String TITLE = "DNA";
+    protected static final String TITLE = "DNA";
+    protected static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
-    public static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    protected static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
 
     private static final GraphStore GRAPH_STORE = new GraphStore();
 
@@ -47,7 +48,7 @@ public class DNAApplication extends Application {
     @NonNull
     public static Stage getStage() throws UIInitialisationException {
         if (DNAApplication.applicationStage == null) {
-            throw new UIInitialisationException("The UI could not be initialised.");
+            throw new UIInitialisationException(UI_NOT_INITIALIZED);
         }
         return DNAApplication.applicationStage;
     }
@@ -82,7 +83,7 @@ public class DNAApplication extends Application {
         final URL resource = getClass().getResource(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
         if (parent == null) {
-            throw new UIInitialisationException("The UI could not be initialised.");
+            throw new UIInitialisationException(UI_NOT_INITIALIZED);
         }
 
         final Scene rootScene = new Scene(parent);

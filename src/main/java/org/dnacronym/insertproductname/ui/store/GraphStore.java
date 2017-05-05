@@ -4,7 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.insertproductname.models.SequenceGraph;
-import org.dnacronym.insertproductname.parser.GFAFile;
+import org.dnacronym.insertproductname.parser.GfaFile;
 import org.dnacronym.insertproductname.parser.ParseException;
 
 import java.io.File;
@@ -22,26 +22,17 @@ public class GraphStore {
     private final ObjectProperty<SequenceGraph> sequenceGraphProperty = new SimpleObjectProperty<>();
 
     /**
-     * Load a {@link SequenceGraph} into memory.
+     * Load a {@code SequenceGraph} into memory.
      *
      * @param file {@link File} to load. This should be a {@value GFA_EXTENSION} file.
      * @throws IOException if unable to get the GFA file, file is not a gfa file,
      *                     or unable to parse the file.
-     * @see GFAFile#read(String)
-     * @see GFAFile#parse()
+     * @see GfaFile#read(String)
+     * @see GfaFile#parse()
      */
     public final void load(@NonNull final File file) throws IOException {
-        if (!file.exists()) {
-            throw new IOException("File does not exist.");
-        }
-
-        String fileName = file.getName();
-        if (!fileName.substring(fileName.lastIndexOf('.') + 1).equals(GFA_EXTENSION)) {
-            throw new IOException(fileName + " is not a GFA file.");
-        }
-
         try {
-            final SequenceGraph sequenceGraph = GFAFile.read(file.getAbsolutePath()).parse();
+            final SequenceGraph sequenceGraph = GfaFile.read(file.getAbsolutePath()).parse();
             this.sequenceGraphProperty.set(sequenceGraph);
         } catch (ParseException e) {
             throw new IOException(e);

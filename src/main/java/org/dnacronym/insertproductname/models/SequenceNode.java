@@ -22,7 +22,7 @@ public final class SequenceNode {
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
      *
-     * @param id the ID of this sequence segment
+     * @param id       the ID of this sequence segment
      * @param sequence the sequence of bases this node contains
      */
     public SequenceNode(final String id, final String sequence) {
@@ -120,10 +120,8 @@ public final class SequenceNode {
      * @param sequenceNode the node to be linked on the left side
      */
     public void linkToLeftNeighbour(final SequenceNode sequenceNode) {
-        if (sequenceNode != null) {
-            addLeftNeighbour(sequenceNode);
-            sequenceNode.addRightNeighbour(this);
-        }
+        addLeftNeighbour(sequenceNode);
+        sequenceNode.addRightNeighbour(this);
     }
 
     /**
@@ -176,9 +174,7 @@ public final class SequenceNode {
      * @param sequenceNode the node to be linked on the right side
      */
     public void linkToRightNeighbour(final SequenceNode sequenceNode) {
-        if (sequenceNode != null) {
-            addRightNeighbour(sequenceNode);
-            sequenceNode.addLeftNeighbour(this);
-        }
+        addRightNeighbour(sequenceNode);
+        sequenceNode.addLeftNeighbour(this);
     }
 }
