@@ -1,4 +1,4 @@
-package org.dnacronym.insertproductname.ui;
+package org.dnacronym.insertproductname.ui.runnable;
 
 /**
  * Indicates that an error has occurred during the initialisation of the UI.

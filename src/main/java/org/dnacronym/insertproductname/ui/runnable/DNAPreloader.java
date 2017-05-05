@@ -10,7 +10,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.insertproductname.core.Files;
-import org.dnacronym.insertproductname.ui.UIInitialisationException;
+
+import java.net.URL;
 
 
 /**
@@ -35,10 +36,10 @@ public class DNAPreloader extends Preloader {
 
         progress = new ProgressBar();
 
-        final Parent root = FXMLLoader.load(Files.getInstance().getResourceUrl(PRELOADER_VIEW));
-
+        final URL resource = Files.getInstance().getResourceUrl(PRELOADER_VIEW);
+        final Parent root = FXMLLoader.load(resource);
         if (root == null) {
-            throw new UIInitialisationException("The UI could not be initialised");
+            throw new UIInitialisationException(DNAApplication.UI_NOT_INITIALIZED);
         }
 
         final Scene rootScene = new Scene(root);

@@ -21,6 +21,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    jcenter() // Used by TestFX
 }
 
 apply plugin: "org.junit.platform.gradle.plugin"
@@ -51,10 +52,21 @@ dependencies {
 
     testCompile("org.testfx:testfx-core:${testfxVersion}")
     testCompile("org.testfx:testfx-junit:${testfxVersion}")
+    testRuntime("org.testfx:openjfx-monocle:${openjfxMonocoleVersion}")
 
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
     compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
+}
+
+if (project.hasProperty('headless') ? project.headless : false) {
+    test {
+        jvmArgs = ['-Djava.awt.headless=true',
+                   '-Dtestfx.robot=glass',
+                   '-Dtestfx.headless=true',
+                   '-Dprism.order=sw',
+                   '-Dprism.text=t2k']
+    }
 }
 
 tasks.withType(JavaCompile).all { JavaCompile compile ->
