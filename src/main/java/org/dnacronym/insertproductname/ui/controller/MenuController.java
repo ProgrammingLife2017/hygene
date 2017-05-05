@@ -6,11 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
-import org.dnacronym.insertproductname.ui.runnable.UIInitialisationException;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -18,11 +16,9 @@ import java.util.ResourceBundle;
 /**
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
-public class MenuController implements Initializable {
-    @MonotonicNonNull
-    private FileChooser fileChooser;
-    @MonotonicNonNull
-    private GraphStore graphStore;
+public final class MenuController implements Initializable {
+    private @MonotonicNonNull FileChooser fileChooser;
+    private @MonotonicNonNull GraphStore graphStore;
 
 
     @Override
@@ -69,19 +65,15 @@ public class MenuController implements Initializable {
      * @param event {@link ActionEvent} associated with the event.
      */
     @FXML
-    protected final void openFileAction(final ActionEvent event) throws IOException {
+    protected final void openFileAction(final ActionEvent event) throws Exception {
         if (fileChooser == null || graphStore == null) {
             return;
         }
 
-        try {
-            final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getStage().getOwner());
+        final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getStage().getOwner());
 
-            if (gfaFile != null) {
-                graphStore.load(gfaFile);
-            }
-        } catch (UIInitialisationException | IOException e) {
-            throw new IOException(e);
+        if (gfaFile != null) {
+            graphStore.load(gfaFile);
         }
     }
 }
