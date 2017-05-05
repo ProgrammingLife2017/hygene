@@ -36,6 +36,10 @@ configurations {
 }
 
 dependencies {
+    // Graphstream
+    compile("org.graphstream:gs-core:${graphstreamVersion}")
+    compile("org.graphstream:gs-ui:${graphstreamVersion}")
+
     // JUnit Jupiter API and TestEngine implementation
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")

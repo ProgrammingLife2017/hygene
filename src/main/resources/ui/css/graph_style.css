@@ -1,0 +1,35 @@
+graph {
+    fill-color: #ffffff;
+}
+
+edge {
+    shape: cubic-curve;
+}
+
+node {
+    size-mode: fit;
+    shape: box;
+    fill-color: #00ccc4;
+    stroke-mode: plain;
+    stroke-color: black;
+}
+
+node.A {
+    fill-color: #4eff76;
+}
+
+node.C {
+    fill-color: #ff7f5f;
+}
+
+node.G {
+    fill-color: #ff37e2;
+}
+
+node.T {
+    fill-color: #ffe600;
+}
+
+node:clicked {
+    fill-color: red;
+}
