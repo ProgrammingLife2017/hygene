@@ -1,6 +1,5 @@
 package org.dnacronym.insertproductname.ui.controller;
 
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
@@ -11,7 +10,7 @@ import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 import org.dnacronym.insertproductname.ui.visualizer.GraphStreamVisualiser;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -32,7 +31,7 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
 
-        visualiser = new GraphStreamVisualiser(true, true);
+        visualiser = new GraphStreamVisualiser();
 
         if (graphPane != null && graphStore != null) {
             graphStore.getSequenceGraphProperty().addListener((observable, oldGraph, newGraph) -> {
@@ -64,8 +63,10 @@ public final class GraphController implements Initializable {
         }
 
         SwingUtilities.invokeLater(() -> {
-            visualiser.populateGraph(sequenceGraph);
-            visualiser.getGraph().display();
+            if (visualiser != null) { // must check inside runnable
+                visualiser.populateGraph(sequenceGraph);
+                visualiser.getGraph().display();
+            }
         });
     }
 }

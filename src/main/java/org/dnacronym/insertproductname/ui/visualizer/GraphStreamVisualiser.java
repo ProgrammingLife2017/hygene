@@ -1,7 +1,5 @@
 package org.dnacronym.insertproductname.ui.visualizer;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.dnacronym.insertproductname.core.Files;
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.models.SequenceNode;
@@ -33,42 +31,17 @@ public class GraphStreamVisualiser {
 
     private static final int MAX_SEQUENCE_LENGTH = 20;
 
-    private final BooleanProperty antiAliasing;
-    private final BooleanProperty prettyRendering;
-
     private Graph graph;
 
 
     /**
      * Create a new {@link GraphStreamVisualiser} object.
-     *
-     * @param antiAliasing    Use anti aliasing
-     * @param prettyRendering Use pretty rendering.
      */
-    public GraphStreamVisualiser(final boolean antiAliasing, final boolean prettyRendering) {
+    public GraphStreamVisualiser() {
         graph = new SingleGraph(TITLE);
 
-        this.antiAliasing = new SimpleBooleanProperty();
-        this.prettyRendering = new SimpleBooleanProperty();
-
-        this.antiAliasing.addListener((observable, oldValue, antiA) -> {
-            if (antiA) {
-                graph.addAttribute(UI_ANTI_ANTIALIAS);
-            } else {
-                graph.removeAttribute(UI_ANTI_ANTIALIAS);
-            }
-        });
-
-        this.prettyRendering.addListener(((observable, oldValue, pretty) -> {
-            if (pretty) {
-                graph.addAttribute(UI_QUALITY);
-            } else {
-                graph.removeAttribute(UI_QUALITY);
-            }
-        }));
-
-        this.antiAliasing.set(antiAliasing);
-        this.prettyRendering.set(prettyRendering);
+        graph.addAttribute(UI_ANTI_ANTIALIAS);
+        graph.addAttribute(UI_QUALITY);
 
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
