@@ -22,7 +22,7 @@ public final class MenuController implements Initializable {
 
 
     @Override
-    public final void initialize(final URL location, final ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
 
         final String chooserTitle = "Open GFA File";
@@ -45,7 +45,7 @@ public final class MenuController implements Initializable {
      *
      * @param graphStore {@link GraphStore} to store in the {@link MenuController}.
      */
-    protected final void setGraphStore(final GraphStore graphStore) {
+    protected void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
     }
 
@@ -54,7 +54,7 @@ public final class MenuController implements Initializable {
      *
      * @param fileChooser {@link FileChooser} for {@link MenuController}.
      */
-    protected final void setFileChooser(final FileChooser fileChooser) {
+    protected void setFileChooser(final FileChooser fileChooser) {
         this.fileChooser = fileChooser;
     }
 
@@ -63,9 +63,11 @@ public final class MenuController implements Initializable {
      * {@link DNAApplication#getStage()#getOwner()}.
      *
      * @param event {@link ActionEvent} associated with the event.
+     * @throws Exception if Unable to open the file, or parse the file.
+     * @see GraphStore#load(File)
      */
     @FXML
-    protected final void openFileAction(final ActionEvent event) throws Exception {
+    protected void openFileAction(final ActionEvent event) throws Exception {
         if (fileChooser == null || graphStore == null) {
             return;
         }

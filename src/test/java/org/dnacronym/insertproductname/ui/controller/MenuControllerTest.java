@@ -3,7 +3,6 @@ package org.dnacronym.insertproductname.ui.controller;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
-import org.dnacronym.insertproductname.ui.runnable.UIInitialisationException;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -55,7 +54,7 @@ public class MenuControllerTest {
 
 
     @Test
-    public final void testFileOpenerAccept() throws IOException, UIInitialisationException {
+    public final void testFileOpenerAccept() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
         final FileChooser fileChooser = mock(FileChooser.class);
         final File file = mock(File.class);
@@ -71,7 +70,7 @@ public class MenuControllerTest {
     }
 
     @Test
-    public final void testFileOpenerCancel() throws IOException {
+    public final void testFileOpenerCancel() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
         final FileChooser fileChooser = mock(FileChooser.class);
 
