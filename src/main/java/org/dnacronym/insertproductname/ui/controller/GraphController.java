@@ -22,7 +22,8 @@ import java.util.ResourceBundle;
 public final class GraphController implements Initializable {
     private GraphStreamVisualiser visualiser;
 
-    private @MonotonicNonNull GraphStore graphStore;
+    private @MonotonicNonNull
+    GraphStore graphStore;
 
     @FXML
     private Pane graphPane;
@@ -39,9 +40,9 @@ public final class GraphController implements Initializable {
 
         graphPane.getChildren().add(swingNode);
 
-        graphStore.getSequenceGraphProperty().addListener((observable, oldValue, newValue) -> {
-            updateGraphSwingNode(newValue);
-        });
+        graphStore.getSequenceGraphProperty().addListener((observable, oldValue, newValue) ->
+                updateGraphSwingNode(newValue)
+        );
 
         updateGraphSwingNode(graphStore.getSequenceGraphProperty().get());
     }
