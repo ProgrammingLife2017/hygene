@@ -8,9 +8,7 @@ package org.dnacronym.insertproductname.parser;
  */
 public final class Link {
     private final String from;
-    private final boolean fromOrient;
     private final String to;
-    private final boolean toOrient;
     private final int overlap;
 
 
@@ -20,25 +18,17 @@ public final class Link {
      * The orientation of a {@code Segment} indicates how the segment is placed in the link. If the orientation is
      * {@code false}, it is treated in reverse and is inverted.
      *
-     * @param from       the {@code Segment}. Cannot be {@code null}.
-     * @param fromOrient the orientation of the from {@code Segment}.
-     * @param to         the {@code Segment}. Cannot be {@code null}.
-     * @param toOrient   the orientation of the to {@code Segment}.
+     * @param from       the {@code Segment}. Cannot be {@code null}
+     * @param to         the {@code Segment}. Cannot be {@code null}
      * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive.
      */
-    public Link(final String from, final boolean fromOrient, final String to, final boolean toOrient,
-                final int overlap) {
-        if (from == null || to == null) {
-            throw new IllegalArgumentException("Link segments cannot be null.");
-        }
+    public Link(final String from, final String to, final int overlap) {
         if (overlap < 0) {
             throw new IllegalArgumentException("Link overlap must be at least 0.");
         }
 
         this.from = from;
-        this.fromOrient = fromOrient;
         this.to = to;
-        this.toOrient = toOrient;
         this.overlap = overlap;
     }
 
@@ -53,30 +43,12 @@ public final class Link {
     }
 
     /**
-     * Returns the orientation of the from {@code Segment}.
-     *
-     * @return the orientation of the from {@code Segment}.
-     */
-    public boolean getFromOrient() {
-        return fromOrient;
-    }
-
-    /**
      * Returns the to {@code Segment}.
      *
      * @return the to {@code Segment}.
      */
     public String getTo() {
         return to;
-    }
-
-    /**
-     * Returns the orientation of the to {@code Segment}.
-     *
-     * @return the orientation of the to {@code Segment}.
-     */
-    public boolean getToOrient() {
-        return toOrient;
     }
 
     /**

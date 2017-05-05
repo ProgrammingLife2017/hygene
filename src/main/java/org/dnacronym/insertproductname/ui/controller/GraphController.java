@@ -17,17 +17,19 @@ import java.util.ResourceBundle;
 /**
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
-public class GraphController implements Initializable {
+public final class GraphController implements Initializable {
     private static final GraphStreamVisualiser VISUALISER = new GraphStreamVisualiser(true, true);
 
-    private static final SwingNode SWING_NODE = new SwingNode();
+    private SwingNode swingNode;
 
     @FXML
     private Pane graphPane;
 
     @Override
-    public final void initialize(final URL location, final ResourceBundle resources) {
-        graphPane.getChildren().add(SWING_NODE);
+    public void initialize(final URL location, final ResourceBundle resources) {
+        swingNode = new SwingNode();
+
+        graphPane.getChildren().add(swingNode);
     }
 
     /**
@@ -35,7 +37,7 @@ public class GraphController implements Initializable {
      *
      * @param sequenceGraph new {@link SequenceGraph} to display.
      */
-    protected final void updateGraphSwingNode(final SequenceGraph sequenceGraph) {
+    protected void updateGraphSwingNode(final SequenceGraph sequenceGraph) {
         VISUALISER.populateGraph(sequenceGraph);
 
         Viewer viewer = new Viewer(VISUALISER.getGraph(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
@@ -48,6 +50,6 @@ public class GraphController implements Initializable {
         viewer.enableAutoLayout();
         viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.EXIT);
 
-        SWING_NODE.setContent((JComponent) view);
+        swingNode.setContent((JComponent) view);
     }
 }

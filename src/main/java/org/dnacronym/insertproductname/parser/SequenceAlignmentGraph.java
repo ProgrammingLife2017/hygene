@@ -5,35 +5,39 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
- * An {@code Assembly} is a collection of {@code Segment}s and {@code Link}s between those {@code Segment}s.
+ * A {@code SequenceAlignmentGraph} is a collection of {@code Segment}s and {@code Link}s between those
+ * {@code Segment}s.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
-public final class Assembly {
+public final class SequenceAlignmentGraph {
     private final Map<String, Segment> segments;
     private final List<Link> links;
 
 
     /**
-     * Constructs a new, empty {@code Assembly}.
+     * Constructs a new, empty {@code SequenceAlignmentGraph}.
      */
-    public Assembly() {
+    public SequenceAlignmentGraph() {
         segments = new HashMap<>();
         links = new ArrayList<>();
     }
 
 
     /**
-     * Returns the {@code Segment} with the given name, or {@code null} if it doesn't exist.
+     * Returns the {@code Segment} with the given name, or throws an exception if it doesn't exist.
      *
      * @param name the name of the {@code Segment}.
-     * @return the {@code Segment} with the given name, or {@code null} if it doesn't exist.
+     * @return the {@code Segment} with the given name if it exists
+     * @throws ParseException if segment with given name is not present
      */
-    public Segment getSegment(final String name) {
-        return segments.get(name);
+    public Segment getSegment(final String name) throws ParseException {
+        return Optional.ofNullable(segments.get(name))
+                .orElseThrow(() -> new ParseException("Segment " + name + " is not present."));
     }
 
     /**
@@ -46,7 +50,7 @@ public final class Assembly {
     }
 
     /**
-     * Adds a {@code Segment} to this {@code Assembly}.
+     * Adds a {@code Segment} to this {@code SequenceAlignmentGraph}.
      *
      * @param segment a {@code Segment}.
      */
@@ -55,7 +59,7 @@ public final class Assembly {
     }
 
     /**
-     * Adds a {@code Link} to this {@code Assembly}.
+     * Adds a {@code Link} to this {@code SequenceAlignmentGraph}.
      *
      * @param link a {@code Link}.
      */
@@ -64,9 +68,9 @@ public final class Assembly {
     }
 
     /**
-     * Returns the {@code List} of {@code Link}s in this {@code Assembly}.
+     * Returns the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}.
      *
-     * @return the {@code List} of {@code Link}s in this {@code Assembly}.
+     * @return the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}.
      */
     public List<Link> getLinks() {
         return links;
