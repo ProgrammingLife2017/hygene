@@ -19,10 +19,10 @@ import java.net.URL;
  */
 public class DNAApplication extends Application {
 
-    protected static final String TITLE = "DNA";
-    protected static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    static final String TITLE = "DNA";
+    static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
-    protected static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
+    static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
 
     private static final GraphStore GRAPH_STORE = new GraphStore();
 

@@ -2,11 +2,14 @@ package org.dnacronym.insertproductname.ui.visualizer;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.dnacronym.insertproductname.core.Files;
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.models.SequenceNode;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+
+import java.io.FileNotFoundException;
 
 
 /**
@@ -43,6 +46,8 @@ public class GraphStreamVisualiser {
      * @param prettyRendering Use pretty rendering.
      */
     public GraphStreamVisualiser(final boolean antiAliasing, final boolean prettyRendering) {
+        graph = new SingleGraph(TITLE);
+
         this.antiAliasing.addListener((observable, oldValue, antiA) -> {
             if (antiA) {
                 graph.addAttribute(UI_ANTI_ANTIALIAS);
@@ -62,27 +67,15 @@ public class GraphStreamVisualiser {
         this.antiAliasing.set(antiAliasing);
         this.prettyRendering.set(prettyRendering);
 
-        initGraph();
+        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+
+        try {
+            graph.addAttribute(UI_STYLESHEET, Files.getInstance().getResourceUrl(STYLESHEET));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-
-    /**
-     * This property determines whether the graph should be anti aliased.
-     *
-     * @return a {@link BooleanProperty} representing the ant aliasing property of the graph.
-     */
-    public final BooleanProperty antiAliaingProperty() {
-        return antiAliasing;
-    }
-
-    /**
-     * This property determines whether the graph should be rendered pretty.
-     *
-     * @return a {@link BooleanProperty} representing the pretty rendering property of the graph.
-     */
-    public final BooleanProperty prettyRendingProperty() {
-        return prettyRendering;
-    }
 
     /**
      * Get the interally stored {@link Graph}.
@@ -94,17 +87,6 @@ public class GraphStreamVisualiser {
     }
 
     /**
-     * Initialize the graph object.
-     */
-    private void initGraph() {
-        graph = new SingleGraph(TITLE);
-
-        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-
-        graph.addAttribute(UI_STYLESHEET, getClass().getResource(STYLESHEET));
-    }
-
-    /**
      * Populate the graph with the graph-data provided by a {@code SequenceGraph}.
      *
      * @param graphData a {@code SequenceGraph}.
@@ -112,7 +94,7 @@ public class GraphStreamVisualiser {
     public final void populateGraph(final SequenceGraph graphData) {
         graph.clear();
 
-        populateGraph(graphData.getStartNode());
+        populateGraph(graphData.getSourceNode());
     }
 
     /**

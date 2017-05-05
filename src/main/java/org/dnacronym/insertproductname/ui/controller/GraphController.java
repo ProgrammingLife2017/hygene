@@ -4,6 +4,8 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.insertproductname.models.SequenceGraph;
 import org.dnacronym.insertproductname.ui.runnable.DNAApplication;
 import org.dnacronym.insertproductname.ui.store.GraphStore;
@@ -11,7 +13,7 @@ import org.dnacronym.insertproductname.ui.visualizer.GraphStreamVisualiser;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,15 +22,14 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private GraphStreamVisualiser visualiser;
+    private @MonotonicNonNull GraphStreamVisualiser visualiser;
 
-    private @MonotonicNonNull
-    GraphStore graphStore;
+    private @MonotonicNonNull GraphStore graphStore;
+
+    private @MonotonicNonNull SwingNode swingNode;
 
     @FXML
-    private Pane graphPane;
-
-    private SwingNode swingNode;
+    private @MonotonicNonNull Pane graphPane;
 
 
     @Override
@@ -38,13 +39,15 @@ public final class GraphController implements Initializable {
         swingNode = new SwingNode();
         visualiser = new GraphStreamVisualiser(true, true);
 
-        graphPane.getChildren().add(swingNode);
+        if (graphPane != null && graphStore != null) {
+            graphPane.getChildren().add(swingNode);
 
-        graphStore.getSequenceGraphProperty().addListener((observable, oldValue, newValue) ->
-                updateGraphSwingNode(newValue)
-        );
-
-        updateGraphSwingNode(graphStore.getSequenceGraphProperty().get());
+            graphStore.getSequenceGraphProperty().addListener((observable, oldGraph, newGraph) -> {
+                if (newGraph != null) {
+                    updateGraphSwingNode(newGraph);
+                }
+            });
+        }
     }
 
 
@@ -62,11 +65,15 @@ public final class GraphController implements Initializable {
      *
      * @param sequenceGraph new {@link SequenceGraph} to display.
      */
-    protected void updateGraphSwingNode(final SequenceGraph sequenceGraph) {
+    protected void updateGraphSwingNode(@NonNull final SequenceGraph sequenceGraph) {
+        if (graphPane == null || visualiser == null || swingNode == null) {
+            return;
+        }
+
         visualiser.populateGraph(sequenceGraph);
 
-        Viewer viewer = new Viewer(visualiser.getGraph(), Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-        View view = viewer.addDefaultView(false);
+        final Viewer viewer = new Viewer(visualiser.getGraph(), Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+        final View view = viewer.addDefaultView(false);
 
         viewer.getDefaultView().resizeFrame(
                 (int) Math.round(graphPane.getWidth()),
