@@ -69,7 +69,7 @@ public class MenuController implements Initializable {
      * @param event {@link ActionEvent} associated with the event.
      */
     @FXML
-    protected final void openFileAction(final ActionEvent event) {
+    protected final void openFileAction(final ActionEvent event) throws IOException {
         if (fileChooser == null || graphStore == null) {
             return;
         }
@@ -81,9 +81,7 @@ public class MenuController implements Initializable {
                 graphStore.load(gfaFile);
             }
         } catch (UIInitialisationException | IOException e) {
-            // TODO log exception
-            // TODO show exception in GUI
-            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 }
