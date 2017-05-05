@@ -75,7 +75,7 @@ public final class GraphController implements Initializable {
         final Viewer viewer = new Viewer(visualiser.getGraph(), Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         final View view = viewer.addDefaultView(false);
 
-        viewer.getDefaultView().resizeFrame(
+        viewer.getDefaultView().setSize(
                 (int) Math.round(graphPane.getWidth()),
                 (int) Math.round(graphPane.getHeight()));
 
