@@ -37,10 +37,6 @@ public class DNAPreloader extends Preloader {
         progress = new ProgressBar();
 
         final URL resource = Files.getInstance().getResourceUrl(PRELOADER_VIEW);
-        if (resource == null) {
-            throw new UIInitialisationException(DNAApplication.UI_NOT_INITIALIZED);
-        }
-
         final Parent root = FXMLLoader.load(resource);
         if (root == null) {
             throw new UIInitialisationException(DNAApplication.UI_NOT_INITIALIZED);
