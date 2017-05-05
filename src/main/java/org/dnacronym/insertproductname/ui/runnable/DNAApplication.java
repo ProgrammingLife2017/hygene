@@ -80,10 +80,6 @@ public class DNAApplication extends Application {
         primaryStage.setMaximized(true);
 
         final URL resource = getClass().getResource(APPLICATION_VIEW);
-        if (resource == null) {
-            throw new UIInitialisationException("The UI could not be initialised.");
-        }
-
         final Parent parent = FXMLLoader.load(resource);
         if (parent == null) {
             throw new UIInitialisationException("The UI could not be initialised.");
