@@ -29,9 +29,9 @@ public class RecentFilesController {
     }
 
 
-    public List<String> getRecentlyOpenedFiles() throws IOException {
+    public List<String> getFiles() throws IOException {
         if (!dataFile.exists()) {
-            resetRecentlyOpenedFiles();
+            resetFileList();
             return new ArrayList<>();
         }
 
@@ -39,13 +39,13 @@ public class RecentFilesController {
         return truncateListOfLines(lines);
     }
 
-    public void resetRecentlyOpenedFiles() throws IOException {
+    public void resetFileList() throws IOException {
         writeToFile(dataFile, "");
     }
 
-    public void addFileToRecentlyOpenedFiles(final String filePath) throws IOException {
+    public void addFile(final String filePath) throws IOException {
         if (!dataFile.exists()) {
-            resetRecentlyOpenedFiles();
+            resetFileList();
         }
 
         final List<String> lines = readLinesFromFile(dataFile);
