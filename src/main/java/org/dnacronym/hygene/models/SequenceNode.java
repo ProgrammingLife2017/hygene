@@ -18,6 +18,8 @@ public final class SequenceNode {
     private final List<SequenceNode> leftNeighbours;
     private final List<SequenceNode> rightNeighbours;
 
+    private int horizontalPosition = -1;
+
 
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
@@ -142,5 +144,38 @@ public final class SequenceNode {
     public void linkToRightNeighbour(final SequenceNode sequenceNode) {
         addRightNeighbour(sequenceNode);
         sequenceNode.addLeftNeighbour(this);
+    }
+
+    /**
+     * Returns the optimal horizontal position as calculated by FAFOSP.
+     *
+     * @return the optimal horizontal position as calculated by FAFOSP.
+     */
+    public int getHorizontalPosition() {
+        return horizontalPosition;
+    }
+
+
+    /**
+     * Calculates the optimal horizontal position for this {@code SequenceNode} relative to its left neighbours using
+     * FAFOSP.
+     *
+     * @return the total width of the genome up until this node
+     */
+    int fafospX() {
+        if (horizontalPosition >= 0) {
+            return horizontalPosition;
+        }
+
+        int width = 0;
+        for (final SequenceNode neighbour : leftNeighbours) {
+            final int newWidth = neighbour.fafospX();
+            if (newWidth > width) {
+                width = newWidth;
+            }
+        }
+
+        horizontalPosition = width + sequence.length() / 2;
+        return width + sequence.length();
     }
 }
