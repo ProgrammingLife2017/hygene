@@ -21,11 +21,11 @@ public class RecentFilesController {
     private static final String FILE_ENCODING = "UTF-8";
     private static final int MAX_NUMBER_ENTRIES = 10;
 
-    final File dataFile;
+    private final File dataFile;
 
 
     public RecentFilesController() {
-        this.dataFile = getDataFile();
+        this.dataFile = generateFileObject();
     }
 
 
@@ -40,7 +40,6 @@ public class RecentFilesController {
     }
 
     public void resetRecentlyOpenedFiles() throws IOException {
-        createFoldersOnPath(dataFile);
         writeToFile(dataFile, "");
     }
 
@@ -52,6 +51,15 @@ public class RecentFilesController {
         final List<String> lines = readLinesFromFile(dataFile);
         lines.add(0, filePath);
         writeToFile(dataFile, String.join("\n", truncateListOfLines(lines)));
+    }
+
+    /**
+     * Returns the data file.
+     *
+     * @return the data file.
+     */
+    public final File getDataFile() {
+        return dataFile;
     }
 
     private List<String> readLinesFromFile(final File file) throws IOException {
@@ -68,13 +76,7 @@ public class RecentFilesController {
         return lines.subList(0, min(lines.size(), MAX_NUMBER_ENTRIES));
     }
 
-    private void createFoldersOnPath(final File file) throws IOException {
-        if (!file.getParentFile().mkdirs()) {
-            throw new IOException("Failed to create parent folders of file");
-        }
-    }
-
-    private File getDataFile() {
+    private File generateFileObject() {
         final String filePath = getAppDataFolderPath() + "/" + DATA_FILE_NAME;
         return new File(filePath);
     }
