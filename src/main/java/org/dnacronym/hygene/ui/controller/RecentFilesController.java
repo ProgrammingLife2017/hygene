@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.min;
@@ -20,19 +21,37 @@ public class RecentFilesController {
     private static final String FILE_ENCODING = "UTF-8";
     private static final int MAX_NUMBER_ENTRIES = 10;
 
+    final File dataFile;
+
+
+    public RecentFilesController() {
+        this.dataFile = getDataFile();
+    }
+
+
+    public List<String> getRecentlyOpenedFiles() throws IOException {
+        if (!dataFile.exists()) {
+            resetRecentlyOpenedFiles();
+            return new ArrayList<>();
+        }
+
+        final List<String> lines = readLinesFromFile(dataFile);
+        return truncateListOfLines(lines);
+    }
+
     public void resetRecentlyOpenedFiles() throws IOException {
-        final File dataFile = getDataFile();
         createFoldersOnPath(dataFile);
         writeToFile(dataFile, "");
     }
 
     public void addFileToRecentlyOpenedFiles(final String filePath) throws IOException {
-        final File dataFile = getDataFile();
+        if (!dataFile.exists()) {
+            resetRecentlyOpenedFiles();
+        }
+
         final List<String> lines = readLinesFromFile(dataFile);
         lines.add(0, filePath);
-
-        final List<String> truncatedListOfLines = lines.subList(0, min(lines.size(), MAX_NUMBER_ENTRIES));
-        writeToFile(dataFile, String.join("\n", truncatedListOfLines));
+        writeToFile(dataFile, String.join("\n", truncateListOfLines(lines)));
     }
 
     private List<String> readLinesFromFile(final File file) throws IOException {
@@ -43,6 +62,10 @@ public class RecentFilesController {
         FileOutputStream fileOutputStream = new FileOutputStream(file, false);
         fileOutputStream.write(contents.getBytes());
         fileOutputStream.close();
+    }
+
+    private List<String> truncateListOfLines(final List<String> lines) {
+        return lines.subList(0, min(lines.size(), MAX_NUMBER_ENTRIES));
     }
 
     private void createFoldersOnPath(final File file) throws IOException {
