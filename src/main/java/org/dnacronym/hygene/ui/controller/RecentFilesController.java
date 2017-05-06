@@ -24,11 +24,23 @@ public class RecentFilesController {
     private final File dataFile;
 
 
+    /**
+     * Constructs a {@code RecentFilesController}.
+     * <p>
+     * No actual file loading / reading is performed during this construction.
+     */
     public RecentFilesController() {
-        this.dataFile = generateFileObject();
+        final String filePath = getAppDataFolderPath() + "/" + DATA_FILE_NAME;
+        this.dataFile = new File(filePath);
     }
 
 
+    /**
+     * Reads and returns the list of files stored in the data file.
+     *
+     * @return the list of files.
+     * @throws IOException if an exception occurs during file IO
+     */
     public List<String> getFiles() throws IOException {
         if (!dataFile.exists()) {
             resetFileList();
@@ -39,10 +51,24 @@ public class RecentFilesController {
         return truncateListOfLines(lines);
     }
 
+    /**
+     * Resets the list of files to an empty list.
+     *
+     * @throws IOException if an exception occurs during file IO
+     */
     public void resetFileList() throws IOException {
         writeToFile(dataFile, "");
     }
 
+    /**
+     * Adds the given file path as entry to the data file.
+     * <p>
+     * This element is prepended to the front of the list. The list is truncated to the maximum size - if the list
+     * already had the maximal number of entries, the last item will be (permanently) lost.
+     *
+     * @param filePath the file path to be added
+     * @throws IOException if an exception occurs during file IO
+     */
     public void addFile(final String filePath) throws IOException {
         if (!dataFile.exists()) {
             resetFileList();
@@ -62,23 +88,42 @@ public class RecentFilesController {
         return dataFile;
     }
 
+    /**
+     * Reads all lines from the given file to a list of {@code String}s.
+     *
+     * @param file the file to be read from
+     * @return a list of {@code String}s, containing all lines of the file
+     * @throws IOException if an exception occurs during file IO
+     */
     private List<String> readLinesFromFile(final File file) throws IOException {
         return Files.readAllLines(Paths.get(file.getPath()), Charset.forName(FILE_ENCODING));
     }
 
-    private void writeToFile(final File file, final String contents) throws IOException {
+    /**
+     * Writes the given {@code String} to the file.
+     * <p>
+     * Overwrites the current content of the file with the new content.
+     *
+     * @param file    the file to write to
+     * @param content the new content to be written
+     * @throws IOException if an exception occurs during file IO
+     */
+    private void writeToFile(final File file, final String content) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(file, false);
-        fileOutputStream.write(contents.getBytes());
+        fileOutputStream.write(content.getBytes());
         fileOutputStream.close();
     }
 
+    /**
+     * Truncates the given list to a list containing the first MAX_NUMBER_ENTRIES entries of that list.
+     * <p>
+     * Does not modify the original list.
+     *
+     * @param lines the original list
+     * @return the truncated list.
+     */
     private List<String> truncateListOfLines(final List<String> lines) {
         return lines.subList(0, min(lines.size(), MAX_NUMBER_ENTRIES));
-    }
-
-    private File generateFileObject() {
-        final String filePath = getAppDataFolderPath() + "/" + DATA_FILE_NAME;
-        return new File(filePath);
     }
 
     /**
