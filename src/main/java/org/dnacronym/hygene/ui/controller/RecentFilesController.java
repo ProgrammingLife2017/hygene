@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.controller;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,12 +17,13 @@ import static java.lang.Integer.min;
 /**
  * Controller for both storing and retrieving recently opened files.
  */
-public class RecentFilesController {
+public final class RecentFilesController {
     private static final String APPLICATION_FOLDER_NAME = "hygene";
     private static final String DATA_FILE_NAME = "recently-opened-files.txt";
     private static final String FILE_ENCODING = "UTF-8";
     private static final int MAX_NUMBER_ENTRIES = 10;
 
+    @NonNull
     private final File dataFile;
 
 
@@ -84,7 +87,7 @@ public class RecentFilesController {
      *
      * @return the data file.
      */
-    public final File getDataFile() {
+    public File getDataFile() {
         return dataFile;
     }
 
@@ -109,9 +112,9 @@ public class RecentFilesController {
      * @throws IOException if an exception occurs during file IO
      */
     private void writeToFile(final File file, final String content) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream(file, false);
-        fileOutputStream.write(content.getBytes());
-        fileOutputStream.close();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file, false)) {
+            fileOutputStream.write(content.getBytes(Charset.forName(FILE_ENCODING)));
+        }
     }
 
     /**
@@ -131,7 +134,7 @@ public class RecentFilesController {
      *
      * @return the full path to a folder in which to store application data.
      */
-    private String getAppDataFolderPath() {
+    private static String getAppDataFolderPath() {
         final String operatingSystemName = (System.getProperty("os.name")).toUpperCase();
 
         String baseDirectory;
