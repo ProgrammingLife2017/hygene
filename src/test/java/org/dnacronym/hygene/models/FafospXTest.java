@@ -3,7 +3,6 @@ package org.dnacronym.hygene.models;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +15,7 @@ class FafospXTest {
     void testNoNeighboursEvenLength() {
         final SequenceNode node = new SequenceNode("1", "123456");
 
-        new SequenceGraph(Collections.singletonList(node));
+        node.fafospX();
 
         assertThat(node.getHorizontalPosition()).isEqualTo(3);
     }
@@ -25,7 +24,7 @@ class FafospXTest {
     void testNoNeighboursOddLength() {
         final SequenceNode node = new SequenceNode("1", "12345");
 
-        new SequenceGraph(Collections.singletonList(node));
+        node.fafospX();
 
         assertThat(node.getHorizontalPosition()).isEqualTo(2);
     }
@@ -72,6 +71,9 @@ class FafospXTest {
         assertThat(nodeC.getHorizontalPosition()).isEqualTo(30);
     }
 
+    /**
+     * Verifies correct behaviour when a node is visited twice in a depth-first order.
+     */
     @Test
     void testDepthFirstVisitTwice() {
         final SequenceNode nodeA = new SequenceNode("1", "1234567");
@@ -91,6 +93,9 @@ class FafospXTest {
         assertThat(nodeD.getHorizontalPosition()).isEqualTo(27);
     }
 
+    /**
+     * Verifies correct behaviour when a node is visited twice in a breadth-first order.
+     */
     @Test
     void testBreadthFirstVisitTwice() {
         final SequenceNode nodeA = new SequenceNode("1", "12345678901234");
