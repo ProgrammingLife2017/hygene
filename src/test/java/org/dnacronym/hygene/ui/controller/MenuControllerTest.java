@@ -47,11 +47,6 @@ public class MenuControllerTest {
         FxToolkit.hideStage();
     }
 
-    @AfterAll
-    static void afterAll() {
-        System.exit(0);
-    }
-
 
     @Test
     public final void testFileOpenerAccept() throws Exception {

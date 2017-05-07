@@ -29,11 +29,6 @@ public class ExampleGUITest extends FxRobot {
         FxToolkit.hideStage();
     }
 
-    @AfterAll
-    static void afterAll() {
-        System.exit(0);
-    }
-
 
     @Test
     public final void simpleFxRobotSample() {
