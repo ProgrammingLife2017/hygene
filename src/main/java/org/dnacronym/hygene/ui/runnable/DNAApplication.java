@@ -26,10 +26,17 @@ public class DNAApplication extends Application {
 
     protected static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
 
-    private final GraphStore graphStore = new GraphStore();
+    @MonotonicNonNull
+    private GraphStore graphStore;
 
     @MonotonicNonNull
     private Stage primaryStage;
+
+
+    @Override
+    public final void init() {
+        graphStore = new GraphStore();
+    }
 
 
     @Override
@@ -50,7 +57,6 @@ public class DNAApplication extends Application {
         primaryStage.setScene(rootScene);
         primaryStage.show();
     }
-
 
     /**
      * Get the {@link GraphStore} of the {@link DNAApplication}.
