@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Unit tests for {@link DNAApplication}s.
  */
-public class UITest extends FxRobot {
+public abstract class UITest extends FxRobot {
     private DNAApplication application;
     private Stage primaryStage;
 
