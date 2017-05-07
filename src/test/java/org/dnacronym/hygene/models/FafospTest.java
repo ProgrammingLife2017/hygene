@@ -68,4 +68,23 @@ class FafospTest {
         assertThat(nodeB.getHorizontalPosition()).isEqualTo(18);
         assertThat(nodeC.getHorizontalPosition()).isEqualTo(30);
     }
+
+    @Test
+    void testXDepthFirstVisitTwice() {
+        final SequenceNode nodeA = new SequenceNode("1", "1234567");
+        final SequenceNode nodeB = new SequenceNode("2", "12345");
+        final SequenceNode nodeC = new SequenceNode("3", "12345678901234");
+        final SequenceNode nodeD = new SequenceNode("4", "123456789012");
+        nodeA.linkToRightNeighbour(nodeB);
+        nodeA.linkToRightNeighbour(nodeC);
+        nodeB.linkToRightNeighbour(nodeD);
+        nodeC.linkToRightNeighbour(nodeD);
+
+        nodeD.fafospX();
+
+        assertThat(nodeA.getHorizontalPosition()).isEqualTo(3);
+        assertThat(nodeB.getHorizontalPosition()).isEqualTo(9);
+        assertThat(nodeC.getHorizontalPosition()).isEqualTo(14);
+        assertThat(nodeD.getHorizontalPosition()).isEqualTo(27);
+    }
 }
