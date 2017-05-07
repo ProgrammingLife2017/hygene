@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.models;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 
 /**
@@ -36,7 +38,7 @@ public final class SequenceGraph {
         this.nodeCount = nodes.size() + 2;
 
         initEdgeNodes(nodes);
-        sinkNode.fafospX();
+        fafospX();
     }
 
 
@@ -82,5 +84,26 @@ public final class SequenceGraph {
      */
     public int size() {
         return nodeCount;
+    }
+
+
+    /**
+     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP. The nodes are visited in
+     * breadth-first search order.
+     */
+    private void fafospX() {
+        final Queue<SequenceNode> queue = new LinkedList<>();
+        queue.add(sourceNode);
+        sourceNode.horizontalVisited = true;
+
+        while (!queue.isEmpty()) {
+            final SequenceNode node = queue.remove();
+
+            for (final SequenceNode neighbour : node.getRightNeighbours()) {
+                node.fafospX();
+                neighbour.horizontalVisited = true;
+                queue.add(neighbour);
+            }
+        }
     }
 }

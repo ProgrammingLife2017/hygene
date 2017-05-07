@@ -2,6 +2,9 @@ package org.dnacronym.hygene.models;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -13,7 +16,7 @@ class FafospTest {
     void testXNoNeighboursEvenLength() {
         final SequenceNode node = new SequenceNode("1", "123456");
 
-        node.fafospX();
+        new SequenceGraph(Collections.singletonList(node));
 
         assertThat(node.getHorizontalPosition()).isEqualTo(3);
     }
@@ -22,7 +25,7 @@ class FafospTest {
     void testXNoNeighboursOddLength() {
         final SequenceNode node = new SequenceNode("1", "12345");
 
-        node.fafospX();
+        new SequenceGraph(Collections.singletonList(node));
 
         assertThat(node.getHorizontalPosition()).isEqualTo(2);
     }
@@ -33,7 +36,7 @@ class FafospTest {
         final SequenceNode nodeB = new SequenceNode("2", "1234567");
         nodeB.linkToLeftNeighbour(nodeA);
 
-        nodeB.fafospX();
+        new SequenceGraph(Arrays.asList(nodeA, nodeB));
 
         assertThat(nodeA.getHorizontalPosition()).isEqualTo(2);
         assertThat(nodeB.getHorizontalPosition()).isEqualTo(7);
@@ -47,7 +50,7 @@ class FafospTest {
         nodeC.linkToLeftNeighbour(nodeA);
         nodeC.linkToLeftNeighbour(nodeB);
 
-        nodeC.fafospX();
+        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
         assertThat(nodeA.getHorizontalPosition()).isEqualTo(1);
         assertThat(nodeB.getHorizontalPosition()).isEqualTo(6);
@@ -62,7 +65,7 @@ class FafospTest {
         nodeB.linkToLeftNeighbour(nodeA);
         nodeC.linkToLeftNeighbour(nodeB);
 
-        nodeC.fafospX();
+        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
         assertThat(nodeA.getHorizontalPosition()).isEqualTo(4);
         assertThat(nodeB.getHorizontalPosition()).isEqualTo(18);
@@ -80,11 +83,27 @@ class FafospTest {
         nodeB.linkToRightNeighbour(nodeD);
         nodeC.linkToRightNeighbour(nodeD);
 
-        nodeD.fafospX();
+        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
 
         assertThat(nodeA.getHorizontalPosition()).isEqualTo(3);
         assertThat(nodeB.getHorizontalPosition()).isEqualTo(9);
         assertThat(nodeC.getHorizontalPosition()).isEqualTo(14);
         assertThat(nodeD.getHorizontalPosition()).isEqualTo(27);
+    }
+
+    @Test
+    void testXBreadthFirstVisitTwice() {
+        final SequenceNode nodeA = new SequenceNode("1", "12345678901234");
+        final SequenceNode nodeB = new SequenceNode("2", "123456789012345");
+        final SequenceNode nodeC = new SequenceNode("3", "12345678");
+        nodeA.linkToRightNeighbour(nodeB);
+        nodeA.linkToRightNeighbour(nodeC);
+        nodeB.linkToRightNeighbour(nodeC);
+
+        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
+
+        assertThat(nodeA.getHorizontalPosition()).isEqualTo(7);
+        assertThat(nodeB.getHorizontalPosition()).isEqualTo(21);
+        assertThat(nodeC.getHorizontalPosition()).isEqualTo(33);
     }
 }

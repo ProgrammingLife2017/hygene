@@ -18,7 +18,19 @@ public final class SequenceNode {
     private final List<SequenceNode> leftNeighbours;
     private final List<SequenceNode> rightNeighbours;
 
+    /**
+     * The optimal horizontal position as calculated by FAFOSP.
+     */
     private int horizontalPosition = -1;
+    /**
+     * The position of the right end of the node as calculated by FAFOSP.
+     * <p>
+     * This value is equal to {@code horizontalPosition + sequence.length() / 2}, except that the sequence length is
+     * rounded up.
+     */
+    private int horizontalRightEnd = -1;
+
+    boolean horizontalVisited = false;
 
 
     /**
@@ -162,20 +174,20 @@ public final class SequenceNode {
      *
      * @return the total width of the genome up until this node
      */
-    int fafospX() {
+    void fafospX() {
         if (horizontalPosition >= 0) {
-            return horizontalPosition + (sequence.length() + 2 - 1) / 2;
+            return;
         }
 
         int width = 0;
         for (final SequenceNode neighbour : leftNeighbours) {
-            final int newWidth = neighbour.fafospX();
+            final int newWidth = neighbour.horizontalRightEnd;
             if (newWidth > width) {
                 width = newWidth;
             }
         }
 
         horizontalPosition = width + sequence.length() / 2;
-        return width + sequence.length();
+        horizontalRightEnd = width + sequence.length();
     }
 }
