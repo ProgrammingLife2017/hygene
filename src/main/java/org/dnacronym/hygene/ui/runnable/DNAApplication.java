@@ -18,19 +18,16 @@ import java.net.URL;
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
 public class DNAApplication extends Application {
-    @MonotonicNonNull
-    private static DNAApplication dnaApplication;
+    private static @MonotonicNonNull DNAApplication dnaApplication;
 
     protected static final String TITLE = "DNA";
     protected static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
     protected static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
 
-    @MonotonicNonNull
-    private GraphStore graphStore;
+    private @MonotonicNonNull GraphStore graphStore;
 
-    @MonotonicNonNull
-    private Stage primaryStage;
+    private @MonotonicNonNull Stage primaryStage;
 
 
     @Override
