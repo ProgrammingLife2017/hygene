@@ -64,7 +64,10 @@ public class DNAApplication extends Application {
      * @return {@link GraphStore} of the {@link DNAApplication}.
      * @see GraphStore
      */
-    public final GraphStore getGraphStore() {
+    public final GraphStore getGraphStore() throws UIInitialisationException {
+        if (graphStore == null) {
+            throw new UIInitialisationException(UI_NOT_INITIALIZED);
+        }
         return graphStore;
     }
 
