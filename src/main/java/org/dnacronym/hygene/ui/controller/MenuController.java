@@ -12,6 +12,8 @@ import org.dnacronym.hygene.ui.store.GraphStore;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -39,7 +41,8 @@ public final class MenuController implements Initializable {
 
             setFileChooser(chooser);
         } catch (UIInitialisationException e) {
-            e.printStackTrace();
+            final Logger logger = Logger.getAnonymousLogger();
+            logger.log(Level.SEVERE, "An exception was thrown.", e);
         }
     }
 
