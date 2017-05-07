@@ -164,7 +164,7 @@ public final class SequenceNode {
      */
     int fafospX() {
         if (horizontalPosition >= 0) {
-            return horizontalPosition;
+            return horizontalPosition + (sequence.length() + 2 - 1) / 2;
         }
 
         int width = 0;
