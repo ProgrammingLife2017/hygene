@@ -30,8 +30,6 @@ public final class SequenceNode {
      */
     private int horizontalRightEnd = -1;
 
-    boolean horizontalVisited = false;
-
 
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
@@ -171,8 +169,6 @@ public final class SequenceNode {
     /**
      * Calculates the optimal horizontal position for this {@code SequenceNode} relative to its left neighbours using
      * FAFOSP.
-     *
-     * @return the total width of the genome up until this node
      */
     void fafospX() {
         if (horizontalPosition >= 0) {

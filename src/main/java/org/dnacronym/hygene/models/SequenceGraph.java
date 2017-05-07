@@ -94,14 +94,12 @@ public final class SequenceGraph {
     private void fafospX() {
         final Queue<SequenceNode> queue = new LinkedList<>();
         queue.add(sourceNode);
-        sourceNode.horizontalVisited = true;
 
         while (!queue.isEmpty()) {
             final SequenceNode node = queue.remove();
 
             for (final SequenceNode neighbour : node.getRightNeighbours()) {
                 node.fafospX();
-                neighbour.horizontalVisited = true;
                 queue.add(neighbour);
             }
         }
