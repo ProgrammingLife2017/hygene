@@ -9,17 +9,18 @@ import java.io.IOException;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class FilesTest {
+class FilesTest {
     private static final String TEST_FILE_NAME = "appdata-test.txt";
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     @AfterAll
-    static void tearDown() {
-        Files.getInstance().getAppDataFile(TEST_FILE_NAME).delete();
+    static void tearDown() throws IOException {
+        if (!Files.getInstance().getAppDataFile(TEST_FILE_NAME).delete()) {
+            throw new IOException("File has not been created in any of the tests");
+        }
     }
 
     @Test
-    final void testInstanceRemainsTheSame() throws FileNotFoundException {
+    void testInstanceRemainsTheSame() throws FileNotFoundException {
         Files files1 = Files.getInstance();
         Files files2 = Files.getInstance();
 
@@ -27,13 +28,13 @@ public class FilesTest {
     }
 
     @Test
-    final void testGetResourceUrl() throws FileNotFoundException {
+    void testGetResourceUrl() throws FileNotFoundException {
         assertThat(Files.getInstance().getResourceUrl("/gfa/simple.gfa").toString())
                 .contains("/gfa/simple.gfa");
     }
 
     @Test
-    final void testGetResourceUrlForNonExistingFile() {
+    void testGetResourceUrlForNonExistingFile() {
         final Throwable e = catchThrowable(() -> Files.getInstance().getResourceUrl("does-not-exist"));
 
         assertThat(e).isInstanceOf(FileNotFoundException.class);

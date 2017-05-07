@@ -70,8 +70,8 @@ public final class RecentFiles {
         final List<String> lines = getAll();
         lines.add(0, filePath);
 
-        final String fileContents = String.join("\n", lines);
-        Files.getInstance().putAppData(DATA_FILE_NAME, String.join("\n", truncateListOfLines(lines)));
+        final String fileContents = String.join("\n", truncateListOfLines(lines));
+        Files.getInstance().putAppData(DATA_FILE_NAME, String.join("\n", fileContents));
     }
 
 
