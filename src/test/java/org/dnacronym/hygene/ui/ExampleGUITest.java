@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui;
 
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +26,6 @@ public class ExampleGUITest extends FxRobot {
     @AfterEach
     final void afterEach() throws TimeoutException {
         FxToolkit.hideStage();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        System.exit(0);
     }
 
 
