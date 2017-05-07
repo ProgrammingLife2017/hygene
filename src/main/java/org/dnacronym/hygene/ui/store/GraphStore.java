@@ -32,8 +32,7 @@ public class GraphStore {
      */
     public final void load(@NonNull final File file) throws IOException {
         try {
-            final SequenceGraph sequenceGraph = GfaFile.read(file.getAbsolutePath()).parse();
-            this.sequenceGraphProperty.set(sequenceGraph);
+            sequenceGraphProperty.set(GfaFile.read(file.getAbsolutePath()).parse());
         } catch (ParseException e) {
             throw new IOException(e);
         }

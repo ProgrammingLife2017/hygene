@@ -31,26 +31,6 @@ public class GraphStoreTest {
     }
 
     @Test
-    public final void testNonExistentFile() {
-        final File file = mock(File.class);
-        when(file.exists()).thenReturn(false);
-
-        Throwable e = catchThrowable(() -> graphStore.load(file));
-
-        assertThat(e).isInstanceOf(IOException.class);
-    }
-
-    @Test
-    public final void testWrongFileExtension() {
-        final File file = mock(File.class);
-        when(file.getName()).thenReturn("file.wrong");
-
-        Throwable e = catchThrowable(() -> graphStore.load(file));
-
-        assertThat(e).isInstanceOf(IOException.class);
-    }
-
-    @Test
     public final void testOpenGFAFile() throws IOException {
         final File file = new File("src/test/resources/gfa/simple.gfa");
 
