@@ -1,6 +1,8 @@
-package org.dnacronym.hygene.ui.runnable;
+package org.dnacronym.hygene.ui;
 
 import javafx.stage.Stage;
+import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxRobot;

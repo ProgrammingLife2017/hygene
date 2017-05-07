@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
-import org.dnacronym.hygene.ui.runnable.UITest;
+import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.junit.jupiter.api.Test;
 
