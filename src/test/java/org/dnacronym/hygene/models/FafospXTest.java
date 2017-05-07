@@ -11,9 +11,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for FAFOSP.
  */
-class FafospTest {
+class FafospXTest {
     @Test
-    void testXNoNeighboursEvenLength() {
+    void testNoNeighboursEvenLength() {
         final SequenceNode node = new SequenceNode("1", "123456");
 
         new SequenceGraph(Collections.singletonList(node));
@@ -22,7 +22,7 @@ class FafospTest {
     }
 
     @Test
-    void testXNoNeighboursOddLength() {
+    void testNoNeighboursOddLength() {
         final SequenceNode node = new SequenceNode("1", "12345");
 
         new SequenceGraph(Collections.singletonList(node));
@@ -31,7 +31,7 @@ class FafospTest {
     }
 
     @Test
-    void testXOneNeighbour() {
+    void testOneNeighbour() {
         final SequenceNode nodeA = new SequenceNode("1", "1234");
         final SequenceNode nodeB = new SequenceNode("2", "1234567");
         nodeB.linkToLeftNeighbour(nodeA);
@@ -43,7 +43,7 @@ class FafospTest {
     }
 
     @Test
-    void testXTwoNeighbours() {
+    void testTwoNeighbours() {
         final SequenceNode nodeA = new SequenceNode("1", "123");
         final SequenceNode nodeB = new SequenceNode("2", "1234567890123");
         final SequenceNode nodeC = new SequenceNode("3", "1234");
@@ -58,7 +58,7 @@ class FafospTest {
     }
 
     @Test
-    void testXChainOfThree() {
+    void testChainOfThree() {
         final SequenceNode nodeA = new SequenceNode("1", "123456789");
         final SequenceNode nodeB = new SequenceNode("2", "1234567890123456789");
         final SequenceNode nodeC = new SequenceNode("3", "12345");
@@ -73,7 +73,7 @@ class FafospTest {
     }
 
     @Test
-    void testXDepthFirstVisitTwice() {
+    void testDepthFirstVisitTwice() {
         final SequenceNode nodeA = new SequenceNode("1", "1234567");
         final SequenceNode nodeB = new SequenceNode("2", "12345");
         final SequenceNode nodeC = new SequenceNode("3", "12345678901234");
@@ -92,7 +92,7 @@ class FafospTest {
     }
 
     @Test
-    void testXBreadthFirstVisitTwice() {
+    void testBreadthFirstVisitTwice() {
         final SequenceNode nodeA = new SequenceNode("1", "12345678901234");
         final SequenceNode nodeB = new SequenceNode("2", "123456789012345");
         final SequenceNode nodeC = new SequenceNode("3", "12345678");
