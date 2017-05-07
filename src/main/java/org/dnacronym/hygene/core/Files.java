@@ -66,7 +66,8 @@ public final class Files {
      * @throws IOException if an exception occurs during file IO
      */
     public String getAppData(final String fileName) throws IOException {
-        return readFile(getAppDataFile(fileName));
+        final File file = getAppDataFile(fileName);
+        return readFile(file);
     }
 
     /**
