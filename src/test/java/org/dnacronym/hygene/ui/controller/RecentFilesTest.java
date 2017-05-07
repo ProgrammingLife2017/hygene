@@ -10,23 +10,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for the {@code RecentFilesController} class.
+ * Unit tests for the {@code RecentFiles} class.
  */
-class RecentFilesControllerTest {
-    private RecentFilesController recentFilesController;
+class RecentFilesTest {
+    private RecentFiles recentFiles;
 
     @BeforeEach
     void setUp() throws IOException {
-        recentFilesController = new RecentFilesController();
-        recentFilesController.resetFileList();
+        recentFiles = new RecentFiles();
+        recentFiles.reset();
     }
 
     @Test
     void testAddAndGetFilesSimple() throws IOException {
         final String testFilePath = "Path\\to\\test.txt";
-        recentFilesController.addFile(testFilePath);
+        recentFiles.add(testFilePath);
 
-        final List<String> filePaths = recentFilesController.getFiles();
+        final List<String> filePaths = recentFiles.getAll();
         assertThat(filePaths).contains(testFilePath);
     }
 
@@ -34,37 +34,37 @@ class RecentFilesControllerTest {
     void testAddAndGetFilesAddToFront() throws IOException {
         final String testFilePath1 = "Path\\to\\test1.txt";
         final String testFilePath2 = "Path\\to\\test2.txt";
-        recentFilesController.addFile(testFilePath1);
-        recentFilesController.addFile(testFilePath2);
+        recentFiles.add(testFilePath1);
+        recentFiles.add(testFilePath2);
 
-        final List<String> filePaths = recentFilesController.getFiles();
+        final List<String> filePaths = recentFiles.getAll();
         assertThat(filePaths.indexOf(testFilePath1)).isGreaterThan(filePaths.indexOf(testFilePath2));
     }
 
     @Test
     void testGetFilesWithNonExistingFile() throws IOException {
-        if (!recentFilesController.getDataFile().delete()) {
+        if (!recentFiles.getDataFile().delete()) {
             throw new IOException("Unable to delete file");
         }
 
-        assertThat(recentFilesController.getFiles()).isEmpty();
+        assertThat(recentFiles.getAll()).isEmpty();
     }
 
     @Test
     void testAddFileWithNonExistingFile() throws IOException {
         final String testFilePath = "Path\\to\\test.txt";
 
-        if (!recentFilesController.getDataFile().delete()) {
+        if (!recentFiles.getDataFile().delete()) {
             throw new IOException("Unable to delete file");
         }
 
-        recentFilesController.addFile(testFilePath);
-        assertThat(recentFilesController.getFiles()).contains(testFilePath);
+        recentFiles.add(testFilePath);
+        assertThat(recentFiles.getAll()).contains(testFilePath);
     }
 
     @Test
     void testResetFiles() throws IOException {
-        assertThat(recentFilesController.getDataFile()).exists();
-        assertThat(recentFilesController.getFiles()).isEmpty();
+        assertThat(recentFiles.getDataFile()).exists();
+        assertThat(recentFiles.getAll()).isEmpty();
     }
 }
