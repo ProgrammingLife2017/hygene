@@ -97,11 +97,9 @@ public final class SequenceGraph {
 
         while (!queue.isEmpty()) {
             final SequenceNode node = queue.remove();
+            node.fafospX();
 
-            for (final SequenceNode neighbour : node.getRightNeighbours()) {
-                node.fafospX();
-                queue.add(neighbour);
-            }
+            queue.addAll(node.getRightNeighbours());
         }
     }
 }
