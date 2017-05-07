@@ -62,6 +62,7 @@ public class DNAApplication extends Application {
      * Get the {@link GraphStore} of the {@link DNAApplication}.
      *
      * @return {@link GraphStore} of the {@link DNAApplication}.
+     * @throws UIInitialisationException if the UI has not been initialized.
      * @see GraphStore
      */
     public final GraphStore getGraphStore() throws UIInitialisationException {
