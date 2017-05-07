@@ -7,9 +7,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.ThrowableAssert.catchThrowable;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -28,26 +25,6 @@ public class GraphStoreTest {
     @Test
     public final void testInitialGraphNull() {
         assertThat(graphStore.getSequenceGraphProperty().get()).isNull();
-    }
-
-    @Test
-    public final void testNonExistentFile() {
-        final File file = mock(File.class);
-        when(file.exists()).thenReturn(false);
-
-        Throwable e = catchThrowable(() -> graphStore.load(file));
-
-        assertThat(e).isInstanceOf(IOException.class);
-    }
-
-    @Test
-    public final void testWrongFileExtension() {
-        final File file = mock(File.class);
-        when(file.getName()).thenReturn("file.wrong");
-
-        Throwable e = catchThrowable(() -> graphStore.load(file));
-
-        assertThat(e).isInstanceOf(IOException.class);
     }
 
     @Test
