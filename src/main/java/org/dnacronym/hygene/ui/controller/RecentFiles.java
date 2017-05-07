@@ -5,6 +5,7 @@ import org.dnacronym.hygene.core.Files;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Integer.min;
@@ -14,7 +15,8 @@ import static java.lang.Integer.min;
  * Controller for both storing and retrieving recently opened files.
  */
 public final class RecentFiles {
-    private static final String DATA_FILE_NAME = "recently-opened-files.txt";
+    static final String DATA_FILE_NAME = "recently-opened-files.txt";
+
     private static final int MAX_NUMBER_ENTRIES = 10;
 
 
@@ -31,14 +33,18 @@ public final class RecentFiles {
      * @return the list of files.
      * @throws IOException if an exception occurs during file IO
      */
-    public List<String> getAll() throws IOException {
+    public static synchronized List<String> getAll() throws IOException {
         if (!Files.getInstance().getAppDataFile(DATA_FILE_NAME).exists()) {
             reset();
             return new ArrayList<>();
         }
 
         final String content = Files.getInstance().getAppData(DATA_FILE_NAME);
-        final List<String> lines = Arrays.asList(content.split("\n"));
+        final List<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
+
+        // Remove any empty lines from the list of lines
+        lines.removeAll(Collections.singletonList(""));
+
         return truncateListOfLines(lines);
     }
 
@@ -47,7 +53,7 @@ public final class RecentFiles {
      *
      * @throws IOException if an exception occurs during file IO
      */
-    public void reset() throws IOException {
+    public static synchronized void reset() throws IOException {
         Files.getInstance().putAppData(DATA_FILE_NAME, "");
     }
 
@@ -60,12 +66,12 @@ public final class RecentFiles {
      * @param filePath the file path to be added
      * @throws IOException if an exception occurs during file IO
      */
-    public void add(final String filePath) throws IOException {
+    public static synchronized void add(final String filePath) throws IOException {
         final List<String> lines = getAll();
         lines.add(0, filePath);
 
         final String fileContents = String.join("\n", lines);
-        Files.getInstance().putAppData(fileContents, String.join("\n", truncateListOfLines(lines)));
+        Files.getInstance().putAppData(DATA_FILE_NAME, String.join("\n", truncateListOfLines(lines)));
     }
 
 
@@ -77,7 +83,7 @@ public final class RecentFiles {
      * @param lines the original list
      * @return the truncated list.
      */
-    private List<String> truncateListOfLines(final List<String> lines) {
+    private static List<String> truncateListOfLines(final List<String> lines) {
         return lines.subList(0, min(lines.size(), MAX_NUMBER_ENTRIES));
     }
 }

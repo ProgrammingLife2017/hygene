@@ -1,8 +1,10 @@
 package org.dnacronym.hygene.ui.controller;
 
+import org.dnacronym.hygene.core.Files;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -13,58 +15,65 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for the {@code RecentFiles} class.
  */
 class RecentFilesTest {
-    private RecentFiles recentFiles;
-
     @BeforeEach
     void setUp() throws IOException {
-        recentFiles = new RecentFiles();
-        recentFiles.reset();
+        RecentFiles.reset();
     }
 
     @Test
-    void testAddAndGetFilesSimple() throws IOException {
+    void testAddAndGetSimple() throws IOException {
         final String testFilePath = "Path\\to\\test.txt";
-        recentFiles.add(testFilePath);
+        RecentFiles.add(testFilePath);
 
-        final List<String> filePaths = recentFiles.getAll();
+        final List<String> filePaths = RecentFiles.getAll();
         assertThat(filePaths).contains(testFilePath);
     }
 
     @Test
-    void testAddAndGetFilesAddToFront() throws IOException {
+    void testAddAndGetAddToFront() throws IOException {
         final String testFilePath1 = "Path\\to\\test1.txt";
         final String testFilePath2 = "Path\\to\\test2.txt";
-        recentFiles.add(testFilePath1);
-        recentFiles.add(testFilePath2);
+        RecentFiles.add(testFilePath1);
+        RecentFiles.add(testFilePath2);
 
-        final List<String> filePaths = recentFiles.getAll();
+        final List<String> filePaths = RecentFiles.getAll();
         assertThat(filePaths.indexOf(testFilePath1)).isGreaterThan(filePaths.indexOf(testFilePath2));
     }
 
     @Test
-    void testGetFilesWithNonExistingFile() throws IOException {
-        if (!recentFiles.getDataFile().delete()) {
+    void testGetWithNonExistingFile() throws IOException {
+        if (!getDataFile().delete()) {
             throw new IOException("Unable to delete file");
         }
 
-        assertThat(recentFiles.getAll()).isEmpty();
+        assertThat(RecentFiles.getAll()).isEmpty();
     }
 
     @Test
-    void testAddFileWithNonExistingFile() throws IOException {
+    void testAddWithNonExistingFile() throws IOException {
         final String testFilePath = "Path\\to\\test.txt";
 
-        if (!recentFiles.getDataFile().delete()) {
+        if (!getDataFile().delete()) {
             throw new IOException("Unable to delete file");
         }
 
-        recentFiles.add(testFilePath);
-        assertThat(recentFiles.getAll()).contains(testFilePath);
+        RecentFiles.add(testFilePath);
+        assertThat(RecentFiles.getAll()).contains(testFilePath);
     }
 
     @Test
-    void testResetFiles() throws IOException {
-        assertThat(recentFiles.getDataFile()).exists();
-        assertThat(recentFiles.getAll()).isEmpty();
+    void testReset() throws IOException {
+        assertThat(getDataFile()).exists();
+        assertThat(RecentFiles.getAll()).isEmpty();
+    }
+
+
+    /**
+     * Gets a {@code File} instance representing the data file under test.
+     *
+     * @return the data file.
+     */
+    private File getDataFile() {
+        return Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME);
     }
 }
