@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
-import org.dnacronym.hygene.ui.runnable.DNAApplicationTest;
+import org.dnacronym.hygene.ui.runnable.UITest;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link MenuController}s.
  */
-public class MenuControllerTest extends DNAApplicationTest {
+public class MenuControllerTest extends UITest {
     private MenuController menuController;
 
 
