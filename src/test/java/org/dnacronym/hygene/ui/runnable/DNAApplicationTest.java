@@ -17,9 +17,4 @@ public class DNAApplicationTest extends UITest {
     public final void testGetPrimaryStage() throws UIInitialisationException {
         assertThat(DNAApplication.getInstance().getPrimaryStage()).isEqualTo(getPrimaryStage());
     }
-
-    @Test
-    public final void testCloseApplication() {
-        closeCurrentWindow();
-    }
 }
