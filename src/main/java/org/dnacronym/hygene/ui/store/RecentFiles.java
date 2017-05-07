@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.store;
 
 import org.dnacronym.hygene.core.Files;
 

@@ -71,7 +71,7 @@ public final class Files {
     }
 
     /**
-     * Writes the given {@code String} to the file.
+     * Writes the given {@code String} to the file with given {@code fileName}.
      * <p>
      * Overwrites the current content of the file with the new content.
      *

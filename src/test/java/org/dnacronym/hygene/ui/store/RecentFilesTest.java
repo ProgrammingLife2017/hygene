@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.store;
 
 import org.dnacronym.hygene.core.Files;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +19,7 @@ class RecentFilesTest {
     void setUp() throws IOException {
         RecentFiles.reset();
     }
+
 
     @Test
     void testAddAndGetSimple() throws IOException {
