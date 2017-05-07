@@ -23,22 +23,22 @@ class RecentFilesTest {
 
     @Test
     void testAddAndGetSimple() throws IOException {
-        final String testFilePath = "Path\\to\\test.txt";
-        RecentFiles.add(testFilePath);
+        final File testFile = new File("Path\\to\\test.txt");
+        RecentFiles.add(testFile);
 
-        final List<String> filePaths = RecentFiles.getAll();
-        assertThat(filePaths).contains(testFilePath);
+        final List<File> files = RecentFiles.getAll();
+        assertThat(files).contains(testFile);
     }
 
     @Test
     void testAddAndGetAddToFront() throws IOException {
-        final String testFilePath1 = "Path\\to\\test1.txt";
-        final String testFilePath2 = "Path\\to\\test2.txt";
-        RecentFiles.add(testFilePath1);
-        RecentFiles.add(testFilePath2);
+        final File testFile1 = new File("Path\\to\\test1.txt");
+        final File testFile2 = new File("Path\\to\\test2.txt");
+        RecentFiles.add(testFile1);
+        RecentFiles.add(testFile2);
 
-        final List<String> filePaths = RecentFiles.getAll();
-        assertThat(filePaths.indexOf(testFilePath1)).isGreaterThan(filePaths.indexOf(testFilePath2));
+        final List<File> files = RecentFiles.getAll();
+        assertThat(files.indexOf(testFile1)).isGreaterThan(files.indexOf(testFile2));
     }
 
     @Test
@@ -52,14 +52,14 @@ class RecentFilesTest {
 
     @Test
     void testAddWithNonExistingFile() throws IOException {
-        final String testFilePath = "Path\\to\\test.txt";
+        final File testFile = new File("Path\\to\\test.txt");
 
         if (!getDataFile().delete()) {
             throw new IOException("Unable to delete file");
         }
 
-        RecentFiles.add(testFilePath);
-        assertThat(RecentFiles.getAll()).contains(testFilePath);
+        RecentFiles.add(testFile);
+        assertThat(RecentFiles.getAll()).contains(testFile);
     }
 
     @Test
