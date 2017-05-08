@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.store;
 
 import org.dnacronym.hygene.core.Files;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,13 @@ class RecentFilesTest {
     @BeforeEach
     void setUp() throws IOException {
         RecentFiles.reset();
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        if (!Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME).delete()) {
+            throw new IOException("File has not been created in any of the tests");
+        }
     }
 
 

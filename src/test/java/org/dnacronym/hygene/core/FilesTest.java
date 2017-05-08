@@ -12,12 +12,14 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class FilesTest {
     private static final String TEST_FILE_NAME = "appdata-test.txt";
 
+
     @AfterAll
     static void tearDown() throws IOException {
         if (!Files.getInstance().getAppDataFile(TEST_FILE_NAME).delete()) {
             throw new IOException("File has not been created in any of the tests");
         }
     }
+
 
     @Test
     void testInstanceRemainsTheSame() throws FileNotFoundException {

@@ -60,6 +60,8 @@ public final class Files {
 
     /**
      * Returns the contents of the given application data file.
+     * <p>
+     * Returns an empty string if no file with the given name is found.
      *
      * @param fileName the name of the data file to be read
      * @return the contents of that file.
@@ -67,7 +69,12 @@ public final class Files {
      */
     public String getAppData(final String fileName) throws IOException {
         final File file = getAppDataFile(fileName);
-        return readFile(file);
+
+        if (!file.exists()) {
+            return "";
+        } else {
+            return readFile(file);
+        }
     }
 
     /**
@@ -81,6 +88,11 @@ public final class Files {
      */
     public void putAppData(final String fileName, final String content) throws IOException {
         final File file = getAppDataFile(fileName);
+        final File parent = file.getParentFile();
+
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            throw new IOException("Failed to create directories on path of file");
+        }
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(file, false)) {
             fileOutputStream.write(content.getBytes(Charset.forName(FILE_ENCODING)));
@@ -104,7 +116,7 @@ public final class Files {
             baseDirectory = System.getProperty("user.home");
         }
 
-        return new File(baseDirectory + "/" + APPLICATION_FOLDER_NAME + "/" + fileName);
+        return new File(baseDirectory + "/" + APPLICATION_FOLDER_NAME, fileName);
     }
 
 
