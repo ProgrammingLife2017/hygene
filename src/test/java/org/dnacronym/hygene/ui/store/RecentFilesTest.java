@@ -23,7 +23,9 @@ class RecentFilesTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        if (!Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME).delete()) {
+        final File file = Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME);
+
+        if (file.exists() && !file.delete()) {
             throw new IOException("File has not been created in any of the tests");
         }
     }

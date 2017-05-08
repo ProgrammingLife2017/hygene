@@ -3,6 +3,7 @@ package org.dnacronym.hygene.core;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -15,7 +16,9 @@ class FilesTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        if (!Files.getInstance().getAppDataFile(TEST_FILE_NAME).delete()) {
+        final File file = Files.getInstance().getAppDataFile(TEST_FILE_NAME);
+
+        if (file.exists() && !file.delete()) {
             throw new IOException("File has not been created in any of the tests");
         }
     }
