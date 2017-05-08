@@ -18,19 +18,16 @@ import java.net.URL;
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
 public class DNAApplication extends Application {
-    @MonotonicNonNull
-    private static DNAApplication dnaApplication;
+    private static @MonotonicNonNull DNAApplication dnaApplication;
 
     protected static final String TITLE = "DNA";
     protected static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
     protected static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
 
-    @MonotonicNonNull
-    private GraphStore graphStore;
+    private @MonotonicNonNull GraphStore graphStore;
 
-    @MonotonicNonNull
-    private Stage primaryStage;
+    private @MonotonicNonNull Stage primaryStage;
 
 
     @Override
@@ -62,13 +59,10 @@ public class DNAApplication extends Application {
      * Get the {@link GraphStore} of the {@link DNAApplication}.
      *
      * @return {@link GraphStore} of the {@link DNAApplication}.
-     * @throws UIInitialisationException if the UI has not been initialized.
      * @see GraphStore
      */
-    public final GraphStore getGraphStore() throws UIInitialisationException {
-        if (graphStore == null) {
-            throw new UIInitialisationException(UI_NOT_INITIALIZED);
-        }
+    @SuppressWarnings("nullness")
+    public final GraphStore getGraphStore() {
         return graphStore;
     }
 
@@ -76,14 +70,11 @@ public class DNAApplication extends Application {
      * Get an instance of the DNAApplication. If there is not an instance, then it will throw a
      * {@link UIInitialisationException} as opposed to creating a new one.
      *
-     * @return Instance of the {@link DNAApplication}.
-     * @throws UIInitialisationException if the UI has not been initialized.
+     * @return instance of the {@link DNAApplication}.
      */
-    public final Stage getPrimaryStage() throws UIInitialisationException {
-        if (this.primaryStage == null) {
-            throw new UIInitialisationException(UI_NOT_INITIALIZED);
-        }
-        return this.primaryStage;
+    @SuppressWarnings("nullness")
+    public final Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     /**
