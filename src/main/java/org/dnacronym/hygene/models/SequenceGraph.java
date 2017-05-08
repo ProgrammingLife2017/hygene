@@ -93,7 +93,7 @@ public final class SequenceGraph {
      */
     private void fafospX() {
         final Queue<SequenceNode> queue = new LinkedList<>();
-        queue.add(sourceNode);
+        queue.addAll(sourceNode.getRightNeighbours());
 
         while (!queue.isEmpty()) {
             final SequenceNode node = queue.remove();

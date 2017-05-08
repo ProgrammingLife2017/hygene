@@ -29,7 +29,7 @@ class FafospXTest {
         new SequenceGraph(Arrays.asList(nodeA, nodeB));
 
         assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(4);
-        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(11);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(12); // 11 + 1
     }
 
     @Test
@@ -44,7 +44,7 @@ class FafospXTest {
 
         assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(3);
         assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(13);
-        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(17);
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(18); // 17 + 1
     }
 
     @Test
@@ -58,8 +58,8 @@ class FafospXTest {
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
         assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(9);
-        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(28);
-        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(33);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(29); // 28 + 1
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(35); // 33 + 2
     }
 
     /**
@@ -79,9 +79,9 @@ class FafospXTest {
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
 
         assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(7);
-        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(12);
-        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(21);
-        assertThat(nodeD.getHorizontalRightEnd()).isEqualTo(33);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(13); // 12 + 1
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(22); // 21 + 1
+        assertThat(nodeD.getHorizontalRightEnd()).isEqualTo(35); // 33 + 2
     }
 
     /**
@@ -99,7 +99,7 @@ class FafospXTest {
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
         assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(14);
-        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(29);
-        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(37);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(30); // 29 + 1
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(39); // 37 + 2
     }
 }

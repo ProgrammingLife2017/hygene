@@ -170,7 +170,7 @@ public final class SequenceNode {
 
         int width = 0;
         for (final SequenceNode neighbour : leftNeighbours) {
-            final int newWidth = neighbour.horizontalRightEnd;
+            final int newWidth = neighbour.horizontalRightEnd + 1;
             if (newWidth > width) {
                 width = newWidth;
             }
