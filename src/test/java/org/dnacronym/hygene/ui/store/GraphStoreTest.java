@@ -28,7 +28,7 @@ public class GraphStoreTest {
     }
 
     @Test
-    public final void testOpenGFAFile() throws IOException {
+    public final void testOpenGfaFile() throws IOException {
         final File file = new File("src/test/resources/gfa/simple.gfa");
 
         graphStore.load(file);

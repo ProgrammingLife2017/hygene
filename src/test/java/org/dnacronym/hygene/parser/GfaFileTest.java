@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 class GfaFileTest {
 
     @Test
-    void testGFAFileObjectCanBeConstructed() {
+    void testGfaFileObjectCanBeConstructed() {
         final GfaFile gfaFile = new GfaFile("name_of_the_file.gfa", "contents_of_the_file");
 
         assertThat(gfaFile.getFileName()).isEqualTo("name_of_the_file.gfa");
