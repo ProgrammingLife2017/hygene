@@ -12,7 +12,8 @@ import java.util.concurrent.TimeoutException;
 
 
 /**
- * Unit tests for {@link DNAApplication}s.
+ * Abstract test class for UI testing. Initializes and closes and application instance before and after each unit test
+ * in test classes that inherit from this class.
  */
 public abstract class UITest extends FxRobot {
     private DNAApplication application;
