@@ -32,7 +32,6 @@ class SequenceGraphIteratorTest {
         assertThat(e).isInstanceOf(NoSuchElementException.class);
     }
 
-
     @Test
     void testIteratorEmpty() {
         final SequenceGraph graph = new SequenceGraph(new ArrayList<>());

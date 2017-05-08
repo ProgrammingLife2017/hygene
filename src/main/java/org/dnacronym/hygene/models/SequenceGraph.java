@@ -178,7 +178,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
          * given node.
          * <p>
          * The custom {@code duplicateDetector} can be used to indicate that a node has already been visited. This
-         * can be use when you change the nodes while iterating, and this change results in a detectable property.
+         * can be used when you change the nodes while iterating, and this change results in a detectable property.
          *
          * @param startNode         the root {@code SequenceNode}
          * @param direction         {@code true} if the iterator should go to the right, or {@code false} if the
@@ -225,10 +225,10 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
 
         /**
-         * Returns true if the given {@code SequenceNode} is a sentinel node.
+         * Returns true iff. the given {@code SequenceNode} is a sentinel node.
          *
          * @param node a {@code SequenceNode}
-         * @return true if the given {@code SequenceNode} is a sentinel node.
+         * @return true iff. the given {@code SequenceNode} is a sentinel node.
          */
         private boolean isSentinel(final SequenceNode node) {
             return getNeighbours(node).isEmpty();
