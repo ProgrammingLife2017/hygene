@@ -204,6 +204,8 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
             }
 
             while (duplicateDetector.apply(head)) {
+                // Head can never be null because there is always the sentinel
+                // A sentinel can never have been visited before
                 head = queue.remove();
             }
 
