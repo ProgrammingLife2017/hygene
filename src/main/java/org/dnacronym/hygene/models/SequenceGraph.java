@@ -231,7 +231,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
          * @return true iff. the given {@code SequenceNode} is a sentinel node.
          */
         private boolean isSentinel(final SequenceNode node) {
-            return getNeighbours(node).isEmpty();
+            return !node.hasLeftNeighbours() || !node.hasRightNeighbours();
         }
 
         /**
