@@ -192,16 +192,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
             this.duplicateDetector = duplicateDetector;
 
             queue = new LinkedList<>();
-            switch (direction) {
-                case RIGHT:
-                    queue.addAll(startNode.getRightNeighbours());
-                    break;
-                case LEFT:
-                    queue.addAll(startNode.getLeftNeighbours());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid enum value");
-            }
+            queue.addAll(direction.ternary(startNode.getLeftNeighbours(), startNode.getRightNeighbours()));
         }
 
 
@@ -245,23 +236,12 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
         /**
          * Returns the neighbours of the node relevant to this iterator.
-         * <p>
-         * This method is equivalent to {@code direction ? node.getRightNeighbours() : node.getLeftNeighbours();}.
          *
          * @param node a {@code SequenceNode}
          * @return the neighbours of the node relevant to this iterator.
          */
         private List<SequenceNode> getNeighbours(final SequenceNode node) {
-            switch (direction) {
-                case RIGHT:
-                    return node.getRightNeighbours();
-                case LEFT:
-                    return node.getLeftNeighbours();
-                default:
-                    throw new IllegalArgumentException("Invalid enum value");
-            }
+            return direction.ternary(node.getLeftNeighbours(), node.getRightNeighbours());
         }
-
-
     }
 }
