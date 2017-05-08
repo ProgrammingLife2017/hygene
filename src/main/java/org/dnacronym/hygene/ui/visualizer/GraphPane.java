@@ -3,9 +3,7 @@ package org.dnacronym.hygene.ui.visualizer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
 
@@ -18,23 +16,20 @@ import org.dnacronym.hygene.models.SequenceGraph;
  * @see GraphicsContext
  */
 public class GraphPane extends Pane {
-    private final @NonNull Canvas canvas;
-    private final @NonNull GraphicsContext graphicsContext;
+    private final Canvas canvas;
+    private final GraphicsContext graphicsContext;
 
 
     /**
      * Create a new {@link GraphPane} instance.
      */
+    @SuppressWarnings("nullness")
     public GraphPane() {
         super();
 
         canvas = new Canvas();
         graphicsContext = canvas.getGraphicsContext2D();
 
-        init(this);
-    }
-
-    private void init(@UnderInitialization(Region.class) Region region) {
         canvas.widthProperty().bind(this.widthProperty());
         canvas.heightProperty().bind(this.heightProperty());
         this.getChildren().add(canvas);
@@ -73,7 +68,7 @@ public class GraphPane extends Pane {
     /**
      * Clear the canvas.
      */
-    private final void clear() {
+    private void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
