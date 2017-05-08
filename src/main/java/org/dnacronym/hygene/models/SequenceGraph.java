@@ -118,7 +118,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      */
     @Override
     public Iterator<SequenceNode> iterator() {
-        return new BreadthFirstIterator(sourceNode, true);
+        return new BreadthFirstIterator(sourceNode, BreadthFirstIterator.Direction.FORWARDS);
     }
 
     /**
@@ -129,7 +129,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
      */
     public Iterator<SequenceNode> iterator(final Function<SequenceNode, Boolean> duplicateDetector) {
-        return new BreadthFirstIterator(sourceNode, true, duplicateDetector);
+        return new BreadthFirstIterator(sourceNode, BreadthFirstIterator.Direction.FORWARDS, duplicateDetector);
     }
 
     /**
@@ -138,7 +138,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * @return a breadth-first {@code Iterator} that traverses from right to left.
      */
     public Iterator<SequenceNode> reverseIterator() {
-        return new BreadthFirstIterator(sinkNode, false);
+        return new BreadthFirstIterator(sinkNode, BreadthFirstIterator.Direction.BACKWARDS);
     }
 
     /**
@@ -149,7 +149,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
      */
     public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
-        return new BreadthFirstIterator(sinkNode, false, duplicateDetector);
+        return new BreadthFirstIterator(sinkNode, BreadthFirstIterator.Direction.BACKWARDS, duplicateDetector);
     }
 
 
@@ -158,7 +158,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      */
     static class BreadthFirstIterator implements Iterator<SequenceNode> {
         private final Queue<SequenceNode> queue;
-        private final boolean direction;
+        private final Direction direction;
         private final Function<SequenceNode, Boolean> duplicateDetector;
 
 
@@ -169,7 +169,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
          * @param direction {@code true} if the iterator should go to the right, or {@code false} if the iterator should
          *                  go to the left
          */
-        BreadthFirstIterator(final SequenceNode startNode, final boolean direction) {
+        BreadthFirstIterator(final SequenceNode startNode, final Direction direction) {
             this(startNode, direction, node -> false);
         }
 
@@ -186,13 +186,22 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
          * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
          *                          visited
          */
-        BreadthFirstIterator(final SequenceNode startNode, final boolean direction,
+        BreadthFirstIterator(final SequenceNode startNode, final Direction direction,
                              final Function<SequenceNode, Boolean> duplicateDetector) {
             this.direction = direction;
             this.duplicateDetector = duplicateDetector;
 
             queue = new LinkedList<>();
-            queue.addAll(direction ? startNode.getRightNeighbours() : startNode.getLeftNeighbours());
+            switch (direction) {
+                case FORWARDS:
+                    queue.addAll(startNode.getRightNeighbours());
+                    break;
+                case BACKWARDS:
+                    queue.addAll(startNode.getLeftNeighbours());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid enum value");
+            }
         }
 
 
@@ -243,11 +252,29 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
          * @return the neighbours of the node relevant to this iterator.
          */
         private List<SequenceNode> getNeighbours(final SequenceNode node) {
-            if (direction) {
-                return node.getRightNeighbours();
-            } else {
-                return node.getLeftNeighbours();
+            switch (direction) {
+                case FORWARDS:
+                    return node.getRightNeighbours();
+                case BACKWARDS:
+                    return node.getLeftNeighbours();
+                default:
+                    throw new IllegalArgumentException("Invalid enum value");
             }
+        }
+
+
+        /**
+         * Indicates the direction the iterator is going in.
+         */
+        enum Direction {
+            /**
+             * The iterator goes from left to right.
+             */
+            FORWARDS,
+            /**
+             * The iterator goes from right to left.
+             */
+            BACKWARDS
         }
     }
 }
