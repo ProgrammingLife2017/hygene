@@ -44,7 +44,8 @@ class FilesTest {
 
     @Test
     void testPutGetAppData() throws IOException {
-        final String testData = "Computer science is no more about computers than astronomy is about telescopes.\n";
+        final String testData = "Computer science is no more about computers than astronomy is about telescopes. "
+                + "- Edsger Dijkstra\n";
         Files.getInstance().putAppData(TEST_FILE_NAME, testData);
 
         assertThat(Files.getInstance().getAppData(TEST_FILE_NAME)).contains(testData);

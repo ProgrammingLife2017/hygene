@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,11 +44,11 @@ public final class RecentFiles {
         final List<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         // Remove any empty lines from the list of lines
-        lines.removeAll(Collections.singletonList(""));
+        lines.removeIf(""::equals);
 
         final List<File> files = lines.stream().map(File::new).collect(Collectors.toList());
 
-        return truncateListOfFiles(files);
+        return truncate(files);
     }
 
     /**
@@ -74,9 +73,9 @@ public final class RecentFiles {
         final List<File> files = getAll();
         files.add(0, file);
 
-        final List<String> lines = truncateListOfFiles(files).stream().map(File::getPath).collect(Collectors.toList());
+        final List<String> lines = truncate(files).stream().map(File::getPath).collect(Collectors.toList());
         final String fileContents = String.join("\n", lines);
-        Files.getInstance().putAppData(DATA_FILE_NAME, String.join("\n", fileContents));
+        Files.getInstance().putAppData(DATA_FILE_NAME, fileContents);
     }
 
 
@@ -88,7 +87,7 @@ public final class RecentFiles {
      * @param fileList the original list
      * @return the truncated list.
      */
-    private static List<File> truncateListOfFiles(final List<File> fileList) {
+    private static List<File> truncate(final List<File> fileList) {
         return fileList.subList(0, min(fileList.size(), MAX_NUMBER_ENTRIES));
     }
 }

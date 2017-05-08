@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ import java.util.Optional;
  * This class is a thread-safe singleton.
  */
 public final class Files {
-    private static final String FILE_ENCODING = "UTF-8";
+    private static final Charset FILE_ENCODING = StandardCharsets.UTF_8;
     private static final String APPLICATION_FOLDER_NAME = "hygene";
     private static volatile @MonotonicNonNull Files instance;
 
@@ -95,7 +96,7 @@ public final class Files {
         }
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(file, false)) {
-            fileOutputStream.write(content.getBytes(Charset.forName(FILE_ENCODING)));
+            fileOutputStream.write(content.getBytes(FILE_ENCODING));
         }
     }
 
@@ -108,7 +109,7 @@ public final class Files {
     public File getAppDataFile(final String fileName) {
         final String operatingSystemName = (System.getProperty("os.name")).toUpperCase();
 
-        String baseDirectory;
+        final String baseDirectory;
         if (operatingSystemName.contains("WIN")) {
             baseDirectory = System.getenv("AppData");
         } else {
@@ -129,6 +130,6 @@ public final class Files {
      */
     private String readFile(final File file) throws IOException {
         final byte[] rawContents = java.nio.file.Files.readAllBytes(Paths.get(file.getPath()));
-        return new String(rawContents, Charset.forName(FILE_ENCODING));
+        return new String(rawContents, FILE_ENCODING);
     }
 }
