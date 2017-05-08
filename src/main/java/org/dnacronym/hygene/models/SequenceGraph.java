@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.function.Function;
 
 
 /**
@@ -111,9 +112,9 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     }
 
     /**
-     * Returns a breadth-first {@code Iterator} over the {@code SequenceNode} from left to right.
+     * Returns a breadth-first {@code Iterator} that traverses from left to right.
      *
-     * @return a breadth-first {@code Iterator} over the {@code SequenceNode} from left to right.
+     * @return a breadth-first {@code Iterator} that traverses from left to right.
      */
     @Override
     public Iterator<SequenceNode> iterator() {
@@ -121,21 +122,44 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     }
 
     /**
-     * Returns a breadth-first {@code Iterator} over the {@code SequenceNode} from right to left.
+     * Returns a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
      *
-     * @return a breadth-first {@code Iterator} over the {@code SequenceNode} from right to left.
+     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has
+     *                          been visited
+     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
+     */
+    public Iterator<SequenceNode> iterator(final Function<SequenceNode, Boolean> duplicateDetector) {
+        return new BreadthFirstIterator(sourceNode, true, duplicateDetector);
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} that traverses from right to left.
+     *
+     * @return a breadth-first {@code Iterator} that traverses from right to left.
      */
     public Iterator<SequenceNode> reverseIterator() {
         return new BreadthFirstIterator(sinkNode, false);
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
+     *
+     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has
+     *                          been visited
+     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
+     */
+    public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
+        return new BreadthFirstIterator(sinkNode, false, duplicateDetector);
     }
 
 
     /**
      * An iterator that iterates in breadth-first order over {@code SequenceNode}s.
      */
-    private static class BreadthFirstIterator implements Iterator<SequenceNode> {
+    static class BreadthFirstIterator implements Iterator<SequenceNode> {
         private final Queue<SequenceNode> queue;
-        private boolean direction;
+        private final boolean direction;
+        private final Function<SequenceNode, Boolean> duplicateDetector;
 
 
         /**
@@ -146,26 +170,44 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
          *                  go to the left
          */
         BreadthFirstIterator(final SequenceNode startNode, final boolean direction) {
+            this(startNode, direction, node -> false);
+        }
+
+        /**
+         * Creates a new {@code BreadthFirstIterator} with custom duplicate detection over the nodes connected to the
+         * given node.
+         * <p>
+         * The custom {@code duplicateDetector} can be used to indicate that a node has already been visited. This
+         * can be use when you change the nodes while iterating, and this change results in a detectable property.
+         *
+         * @param startNode         the root {@code SequenceNode}
+         * @param direction         {@code true} if the iterator should go to the right, or {@code false} if the
+         *                          iterator should go to the left
+         * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has
+         *                          been visited
+         */
+        BreadthFirstIterator(final SequenceNode startNode, final boolean direction,
+                             final Function<SequenceNode, Boolean> duplicateDetector) {
             this.direction = direction;
+            this.duplicateDetector = duplicateDetector;
 
             queue = new LinkedList<>();
-            if (direction) {
-                queue.addAll(startNode.getRightNeighbours());
-            } else {
-                queue.addAll(startNode.getLeftNeighbours());
-            }
+            queue.addAll(direction ? startNode.getRightNeighbours() : startNode.getLeftNeighbours());
         }
 
 
         @Override
         public boolean hasNext() {
-            if (queue.isEmpty()) {
+            SequenceNode head = queue.peek();
+            if (head == null) {
                 return false;
             }
 
-            final SequenceNode head = queue.peek();
-            return head != null && (direction ? head.hasRightNeighbours() : head.hasLeftNeighbours());
+            while (duplicateDetector.apply(head)) {
+                head = queue.remove();
+            }
 
+            return !isSentinel(head);
         }
 
         @Override
@@ -175,8 +217,35 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
             }
 
             final SequenceNode head = queue.remove();
-            queue.addAll(direction ? head.getRightNeighbours() : head.getLeftNeighbours());
+            queue.addAll(getNeighbours(head));
             return head;
+        }
+
+
+        /**
+         * Returns true if the given {@code SequenceNode} is a sentinel node.
+         *
+         * @param node a {@code SequenceNode}
+         * @return true if the given {@code SequenceNode} is a sentinel node.
+         */
+        private boolean isSentinel(final SequenceNode node) {
+            return getNeighbours(node).isEmpty();
+        }
+
+        /**
+         * Returns the neighbours of the node relevant to this iterator.
+         * <p>
+         * This method can be implemented as {@code direction ? node.getRightNeighbours() : node.getLeftNeighbours();}.
+         *
+         * @param node a {@code SequenceNode}
+         * @return the neighbours of the node relevant to this iterator.
+         */
+        private List<SequenceNode> getNeighbours(final SequenceNode node) {
+            if (direction) {
+                return node.getRightNeighbours();
+            } else {
+                return node.getLeftNeighbours();
+            }
         }
     }
 }
