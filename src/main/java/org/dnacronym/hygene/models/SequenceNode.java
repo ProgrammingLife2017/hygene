@@ -19,14 +19,7 @@ public final class SequenceNode {
     private final List<SequenceNode> rightNeighbours;
 
     /**
-     * The optimal horizontal position as calculated by FAFOSP.
-     */
-    private int horizontalPosition = -1;
-    /**
      * The position of the right end of the node as calculated by FAFOSP.
-     * <p>
-     * This value is equal to {@code horizontalPosition + sequence.length() / 2}, except that the sequence length is
-     * rounded up.
      */
     private int horizontalRightEnd = -1;
 
@@ -161,8 +154,8 @@ public final class SequenceNode {
      *
      * @return the optimal horizontal position as calculated by FAFOSP.
      */
-    public int getHorizontalPosition() {
-        return horizontalPosition;
+    public int getHorizontalRightEnd() {
+        return horizontalRightEnd;
     }
 
 
@@ -171,7 +164,7 @@ public final class SequenceNode {
      * FAFOSP.
      */
     void fafospX() {
-        if (horizontalPosition >= 0) {
+        if (horizontalRightEnd >= 0) {
             return;
         }
 
@@ -183,7 +176,6 @@ public final class SequenceNode {
             }
         }
 
-        horizontalPosition = width + sequence.length() / 2;
         horizontalRightEnd = width + sequence.length();
     }
 }

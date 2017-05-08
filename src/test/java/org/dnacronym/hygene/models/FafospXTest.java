@@ -17,16 +17,7 @@ class FafospXTest {
 
         node.fafospX();
 
-        assertThat(node.getHorizontalPosition()).isEqualTo(3);
-    }
-
-    @Test
-    void testNoNeighboursOddLength() {
-        final SequenceNode node = new SequenceNode("1", "12345");
-
-        node.fafospX();
-
-        assertThat(node.getHorizontalPosition()).isEqualTo(2);
+        assertThat(node.getHorizontalRightEnd()).isEqualTo(6);
     }
 
     @Test
@@ -37,8 +28,8 @@ class FafospXTest {
 
         new SequenceGraph(Arrays.asList(nodeA, nodeB));
 
-        assertThat(nodeA.getHorizontalPosition()).isEqualTo(2);
-        assertThat(nodeB.getHorizontalPosition()).isEqualTo(7);
+        assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(4);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(11);
     }
 
     @Test
@@ -46,14 +37,14 @@ class FafospXTest {
         final SequenceNode nodeA = new SequenceNode("1", "123");
         final SequenceNode nodeB = new SequenceNode("2", "1234567890123");
         final SequenceNode nodeC = new SequenceNode("3", "1234");
-        nodeC.linkToLeftNeighbour(nodeA);
-        nodeC.linkToLeftNeighbour(nodeB);
+        nodeA.linkToRightNeighbour(nodeC);
+        nodeB.linkToRightNeighbour(nodeC);
 
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
-        assertThat(nodeA.getHorizontalPosition()).isEqualTo(1);
-        assertThat(nodeB.getHorizontalPosition()).isEqualTo(6);
-        assertThat(nodeC.getHorizontalPosition()).isEqualTo(15);
+        assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(3);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(13);
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(17);
     }
 
     @Test
@@ -61,14 +52,14 @@ class FafospXTest {
         final SequenceNode nodeA = new SequenceNode("1", "123456789");
         final SequenceNode nodeB = new SequenceNode("2", "1234567890123456789");
         final SequenceNode nodeC = new SequenceNode("3", "12345");
-        nodeB.linkToLeftNeighbour(nodeA);
-        nodeC.linkToLeftNeighbour(nodeB);
+        nodeA.linkToRightNeighbour(nodeB);
+        nodeB.linkToRightNeighbour(nodeC);
 
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
-        assertThat(nodeA.getHorizontalPosition()).isEqualTo(4);
-        assertThat(nodeB.getHorizontalPosition()).isEqualTo(18);
-        assertThat(nodeC.getHorizontalPosition()).isEqualTo(30);
+        assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(9);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(28);
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(33);
     }
 
     /**
@@ -87,10 +78,10 @@ class FafospXTest {
 
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
 
-        assertThat(nodeA.getHorizontalPosition()).isEqualTo(3);
-        assertThat(nodeB.getHorizontalPosition()).isEqualTo(9);
-        assertThat(nodeC.getHorizontalPosition()).isEqualTo(14);
-        assertThat(nodeD.getHorizontalPosition()).isEqualTo(27);
+        assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(7);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(12);
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(21);
+        assertThat(nodeD.getHorizontalRightEnd()).isEqualTo(33);
     }
 
     /**
@@ -107,8 +98,8 @@ class FafospXTest {
 
         new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
 
-        assertThat(nodeA.getHorizontalPosition()).isEqualTo(7);
-        assertThat(nodeB.getHorizontalPosition()).isEqualTo(21);
-        assertThat(nodeC.getHorizontalPosition()).isEqualTo(33);
+        assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(14);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(29);
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(37);
     }
 }
