@@ -11,6 +11,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
+/**
+ * Unit tests for the {@code Files} class.
+ */
 class FilesTest {
     private static final String TEST_FILE_NAME = "appdata-test.txt";
 
