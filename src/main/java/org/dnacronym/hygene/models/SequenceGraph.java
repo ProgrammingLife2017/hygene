@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * A {@code SequenceGraph} contains {@code SequenceNode}s.
- *
+ * <p>
  * This graph has all its nodes passed to it on construction. It then adds two sentinel nodes (a 'source' and a 'sink'),
  * to the start and end of the graph structure. The source node connects to all vertices without incoming edges on the
  * left side, while the sink node is connected to all vertices without incoming edges on the right side. These two nodes
@@ -42,6 +42,11 @@ public final class SequenceGraph {
      * @param nodes the list of nodes
      */
     private void initEdgeNodes(final List<SequenceNode> nodes) {
+        if (nodes.isEmpty()) {
+            sourceNode.linkToRightNeighbour(sinkNode);
+            return;
+        }
+
         nodes.forEach(node -> {
             if (!node.hasLeftNeighbours()) {
                 sourceNode.linkToRightNeighbour(node);
