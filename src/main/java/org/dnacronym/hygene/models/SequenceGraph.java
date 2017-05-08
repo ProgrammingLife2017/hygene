@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.models;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 
@@ -16,7 +18,7 @@ import java.util.Queue;
  * The construction of a {@code SequenceGraph} may take some time as the entire structure is fed to FAFOSP, the Felix
  * Algorithm For Optimal Segment Positioning.
  */
-public final class SequenceGraph {
+public final class SequenceGraph implements Iterable<SequenceNode> {
     public static final String SOURCE_NODE_ID = "<SOURCE>";
     public static final String SINK_NODE_ID = "<SINK>";
 
@@ -105,6 +107,76 @@ public final class SequenceGraph {
             node.fafospX();
 
             queue.addAll(node.getRightNeighbours());
+        }
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} over the {@code SequenceNode} from left to right.
+     *
+     * @return a breadth-first {@code Iterator} over the {@code SequenceNode} from left to right.
+     */
+    @Override
+    public Iterator<SequenceNode> iterator() {
+        return new BreadthFirstIterator(sourceNode, true);
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} over the {@code SequenceNode} from right to left.
+     *
+     * @return a breadth-first {@code Iterator} over the {@code SequenceNode} from right to left.
+     */
+    public Iterator<SequenceNode> reverseIterator() {
+        return new BreadthFirstIterator(sinkNode, false);
+    }
+
+
+    /**
+     * An iterator that iterates in breadth-first order over {@code SequenceNode}s.
+     */
+    private static class BreadthFirstIterator implements Iterator<SequenceNode> {
+        private final Queue<SequenceNode> queue;
+        private boolean direction;
+
+
+        /**
+         * Creates a new {@code BreadthFirstIterator} over the nodes connected to the given node.
+         *
+         * @param startNode the root {@code SequenceNode}
+         * @param direction {@code true} if the iterator should go to the right, or {@code false} if the iterator should
+         *                  go to the left
+         */
+        BreadthFirstIterator(final SequenceNode startNode, final boolean direction) {
+            this.direction = direction;
+
+            queue = new LinkedList<>();
+            if (direction) {
+                queue.addAll(startNode.getRightNeighbours());
+            } else {
+                queue.addAll(startNode.getLeftNeighbours());
+            }
+        }
+
+
+        @Override
+        public boolean hasNext() {
+            if (queue.isEmpty()) {
+                return false;
+            }
+
+            final SequenceNode head = queue.peek();
+            return head != null && (direction ? head.hasRightNeighbours() : head.hasLeftNeighbours());
+
+        }
+
+        @Override
+        public SequenceNode next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No more elements in the iterator");
+            }
+
+            final SequenceNode head = queue.remove();
+            queue.addAll(direction ? head.getRightNeighbours() : head.getLeftNeighbours());
+            return head;
         }
     }
 }
