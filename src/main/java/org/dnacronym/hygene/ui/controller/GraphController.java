@@ -8,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.visualizer.GraphPrimitives;
+import org.dnacronym.hygene.ui.visualizer.GraphPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private @MonotonicNonNull GraphPrimitives visualiser;
+    private @MonotonicNonNull GraphPane visualiser;
 
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -30,7 +30,7 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
 
-        visualiser = new GraphPrimitives();
+        visualiser = new GraphPane();
 
         if (graphPane != null && graphStore != null) {
             graphStore.getSequenceGraphProperty().addListener((observable, oldGraph, newGraph) -> {

@@ -3,33 +3,42 @@ package org.dnacronym.hygene.ui.visualizer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
 
 
 /**
  * A simple canvas that allows drawing of primitive shapes.
- * When passing a {@link SequenceGraph}, it will draw it using primitives.
+ * When passing a {@link SequenceGraph}, it will draw it using JavaFX primitives.
+ *
+ * @see Canvas
+ * @see GraphicsContext
  */
-public class GraphPrimitives extends Pane {
-    private Canvas canvas;
-    private GraphicsContext graphicsContext;
+public class GraphPane extends Pane {
+    private final @NonNull Canvas canvas;
+    private final @NonNull GraphicsContext graphicsContext;
 
 
     /**
-     * Create a new {@link GraphPrimitives} instance.
+     * Create a new {@link GraphPane} instance.
      */
-    public GraphPrimitives() {
-        canvas = new Canvas();
-        canvas.widthProperty().bind(this.widthProperty());
-        canvas.heightProperty().bind(this.heightProperty());
+    public GraphPane() {
+        super();
 
+        canvas = new Canvas();
         graphicsContext = canvas.getGraphicsContext2D();
 
-        this.getChildren().add(canvas);
+        init(this);
     }
 
+    private void init(@UnderInitialization(Region.class) Region region) {
+        canvas.widthProperty().bind(this.widthProperty());
+        canvas.heightProperty().bind(this.heightProperty());
+        this.getChildren().add(canvas);
+    }
 
     /**
      * Draw line onscreen.
@@ -74,7 +83,7 @@ public class GraphPrimitives extends Pane {
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      */
-    public void visualise(@NonNull SequenceGraph sequenceGraph) {
+    public final void visualise(final @NonNull SequenceGraph sequenceGraph) {
         clear();
 
         final double bandCount = 1;
