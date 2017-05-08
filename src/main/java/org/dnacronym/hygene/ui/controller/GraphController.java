@@ -14,8 +14,6 @@ import org.dnacronym.hygene.ui.visualizer.GraphStreamVisualiser;
 import javax.swing.SwingUtilities;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -45,8 +43,7 @@ public final class GraphController implements Initializable {
                 });
             }
         } catch (UIInitialisationException e) {
-            final Logger logger = Logger.getAnonymousLogger();
-            logger.log(Level.SEVERE, "An exception was thrown.", e);
+            e.printStackTrace();
         }
     }
 

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -12,8 +13,6 @@ import org.dnacronym.hygene.ui.store.GraphStore;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -41,8 +40,7 @@ public final class MenuController implements Initializable {
 
             setFileChooser(chooser);
         } catch (UIInitialisationException e) {
-            final Logger logger = Logger.getAnonymousLogger();
-            logger.log(Level.SEVERE, "An exception was thrown.", e);
+            e.printStackTrace();
         }
     }
 
@@ -80,7 +78,8 @@ public final class MenuController implements Initializable {
             return;
         }
 
-        final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getInstance().getPrimaryStage().getOwner());
+        final Stage primaryStage = DNAApplication.getInstance().getPrimaryStage();
+        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
             graphStore.load(gfaFile);
