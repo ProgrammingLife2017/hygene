@@ -47,7 +47,6 @@ public final class RecentFiles {
         lines.removeIf(""::equals);
 
         final List<File> files = lines.stream().map(File::new).collect(Collectors.toList());
-
         return truncate(files);
     }
 

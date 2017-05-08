@@ -71,12 +71,7 @@ public final class Files {
      */
     public String getAppData(final String fileName) throws IOException {
         final File file = getAppDataFile(fileName);
-
-        if (!file.exists()) {
-            return "";
-        } else {
-            return readFile(file);
-        }
+        return readFile(file);
     }
 
     /**
@@ -108,14 +103,13 @@ public final class Files {
      * @return the application data {@code File} object.
      */
     public File getAppDataFile(final String fileName) {
-        final String operatingSystemName = (System.getProperty("os.name")).toUpperCase();
+        final String operatingSystemName = System.getProperty("os.name").toUpperCase();
 
-        final String baseDirectory;
+        String baseDirectory = System.getProperty("user.home");
+
+        // Use the AppData directory if on Windows
         if (operatingSystemName.contains("WIN")) {
             baseDirectory = System.getenv("AppData");
-        } else {
-            // Assume OS to be macOS or Linux
-            baseDirectory = System.getProperty("user.home");
         }
 
         return new File(baseDirectory + "/" + APPLICATION_FOLDER_NAME, fileName);
