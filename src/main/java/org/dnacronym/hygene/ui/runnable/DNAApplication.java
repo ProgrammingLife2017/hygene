@@ -20,10 +20,9 @@ import java.net.URL;
 public class DNAApplication extends Application {
     private static @MonotonicNonNull DNAApplication dnaApplication;
 
-    protected static final String TITLE = "DNA";
-    protected static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    static final String TITLE = "Hygene";
 
-    protected static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
+    private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -47,7 +46,7 @@ public class DNAApplication extends Application {
         final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
         if (parent == null) {
-            throw new UIInitialisationException(UI_NOT_INITIALIZED);
+            throw new UIInitialisationException("Root of Application could not be found.");
         }
 
         final Scene rootScene = new Scene(parent);
@@ -59,10 +58,15 @@ public class DNAApplication extends Application {
      * Get the {@link GraphStore} of the {@link DNAApplication}.
      *
      * @return {@link GraphStore} of the {@link DNAApplication}.
+     * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
+     *                                   in {@link #init()}.
      * @see GraphStore
+     * @see #init()
      */
-    @SuppressWarnings("nullness")
-    public final GraphStore getGraphStore() {
+    public final GraphStore getGraphStore() throws UIInitialisationException {
+        if (graphStore == null) {
+            throw new UIInitialisationException("GraphStore not present.");
+        }
         return graphStore;
     }
 
@@ -71,9 +75,14 @@ public class DNAApplication extends Application {
      * {@link UIInitialisationException} as opposed to creating a new one.
      *
      * @return instance of the {@link DNAApplication}.
+     * @throws UIInitialisationException if the UI was not initialzed, meaning the {@link Stage} was not set in
+     *                                   {@link #start(Stage)}.
+     * @see #start(Stage)
      */
-    @SuppressWarnings("nullness")
-    public final Stage getPrimaryStage() {
+    public final Stage getPrimaryStage() throws UIInitialisationException {
+        if (primaryStage == null) {
+            throw new UIInitialisationException("Stage not present.");
+        }
         return primaryStage;
     }
 
@@ -85,7 +94,7 @@ public class DNAApplication extends Application {
      */
     public static synchronized DNAApplication getInstance() throws UIInitialisationException {
         if (dnaApplication == null) {
-            throw new UIInitialisationException(UI_NOT_INITIALIZED);
+            throw new UIInitialisationException("Instance of Application not set.");
         }
         return dnaApplication;
     }
@@ -94,9 +103,8 @@ public class DNAApplication extends Application {
      * Set the {@link DNAApplication} instance.
      *
      * @param application {@link DNAApplication} instance.
-     * @throws UIInitialisationException If instance is already set.
      */
-    protected static synchronized void setInstance(final DNAApplication application) throws UIInitialisationException {
+    protected static synchronized void setInstance(final DNAApplication application) {
         dnaApplication = application;
     }
 

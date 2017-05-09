@@ -22,48 +22,48 @@ public abstract class UITest extends FxRobot {
 
     /**
      * Set up application before each test.
-     * Afterwards, calls the {@link #overridableBeforeEach()} method.
+     * Afterwards, calls the {@link #beforeEach()} method.
      *
      * @throws TimeoutException if unable to set up application.
      * @see FxToolkit#setupApplication(Class, String...)
      */
     @BeforeEach
-    public final void beforeEach() throws TimeoutException {
+    public final void basicBeforeEach() throws TimeoutException {
         this.primaryStage = FxToolkit.registerPrimaryStage();
         this.application = (DNAApplication) FxToolkit.setupApplication(DNAApplication.class);
 
         FxToolkit.showStage();
 
-        overridableBeforeEach();
+        beforeEach();
     }
 
     /**
      * Hide the application after each test.
-     * Afterwards, calls the {@link #overridableAfterEach()} method.
+     * Afterwards, calls the {@link #afterEach()} method.
      *
      * @throws TimeoutException if unable to hide application.
      */
     @AfterEach
-    public final void afterEach() throws TimeoutException, UIInitialisationException {
+    public final void basicAfterEach() throws TimeoutException, UIInitialisationException {
         FxToolkit.cleanupApplication(DNAApplication.getInstance());
         FxToolkit.cleanupStages();
 
-        overridableAfterEach();
+        afterEach();
     }
 
 
     /**
-     * This method is called after the {@link #beforeEach()} method.
+     * This method is called after the {@link #basicBeforeEach()} method.
      * If this method is not overridden it doesn't do anything.
      */
-    public void overridableBeforeEach() {
+    public void beforeEach() {
     }
 
     /**
-     * This method is called after the {@link #afterEach()} method.
+     * This method is called after the {@link #basicAfterEach()} method.
      * If this method is not overridden it doesn't do anything.
      */
-    public void overridableAfterEach() {
+    public void afterEach() {
     }
 
     /**

@@ -26,7 +26,7 @@ public class MenuControllerTest extends UITest {
 
 
     @Override
-    public final void overridableBeforeEach() {
+    public final void beforeEach() {
         menuController = new MenuController();
     }
 
