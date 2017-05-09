@@ -58,7 +58,7 @@ public final class Edge implements Comparable<Edge> {
     /**
      * Compares this edge to another {@link Edge}.
      * <p>
-     * First the destination 'to' is compared. If to == other.to, the source 'from' will be used for comparison.
+     * First the destination 'to' is compared. If {@code to == other.to}, the source 'from' will be used for comparison.
      *
      * @param other {@link Edge} to compare this edge with.
      * @return the value {@code 0} if {@code to == other.to} and {@code from == other.from};

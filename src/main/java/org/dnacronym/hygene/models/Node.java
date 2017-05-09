@@ -1,10 +1,10 @@
 package org.dnacronym.hygene.models;
 
-
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Set;
 import java.util.TreeSet;
+
 
 /**
  * The {@code Node} class wraps around a node array and provides convenience methods.
@@ -26,7 +26,8 @@ class Node {
     private final int[] data;
 
     private @MonotonicNonNull Set<Edge> incomingEdges;
-    private @MonotonicNonNull Set<Edge> outgoingEges;
+    private @MonotonicNonNull Set<Edge> outgoingEdges;
+
 
     /**
      * Constructor for {@code Node}.
@@ -127,18 +128,18 @@ class Node {
      * @return set containing the outgoing edges of the {@code Node}.
      */
     public Set<Edge> getOutgoingEdges() {
-        if (outgoingEges == null) {
-            outgoingEges = new TreeSet<>();
+        if (outgoingEdges == null) {
+            outgoingEdges = new TreeSet<>();
 
             final int offset = NODE_EDGE_DATA_OFFSET;
 
             for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                 int to = data[offset + i * EDGE_DATA_SIZE];
                 int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                outgoingEges.add(new Edge(id, to, lineNumber));
+                outgoingEdges.add(new Edge(id, to, lineNumber));
             }
         }
-        return outgoingEges;
+        return outgoingEdges;
     }
 
     /**
