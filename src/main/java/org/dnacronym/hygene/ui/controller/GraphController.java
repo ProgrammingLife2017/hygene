@@ -26,7 +26,6 @@ public final class GraphController implements Initializable {
     @FXML
     private @MonotonicNonNull Pane graphPane;
 
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
@@ -41,7 +40,6 @@ public final class GraphController implements Initializable {
             });
         }
     }
-
 
     /**
      * Set the {@link GraphStore} in the controller.

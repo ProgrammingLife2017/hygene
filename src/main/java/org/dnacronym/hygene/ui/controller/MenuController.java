@@ -20,7 +20,6 @@ public final class MenuController implements Initializable {
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         setGraphStore(DNAApplication.getGraphStore());
@@ -37,7 +36,6 @@ public final class MenuController implements Initializable {
 
         setFileChooser(chooser);
     }
-
 
     /**
      * Set the {@link GraphStore} in the controller. This gives the menu access to the {@link GraphStore} of the
