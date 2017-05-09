@@ -1,16 +1,18 @@
 package org.dnacronym.hygene.ui.runnable;
 
-
 import org.dnacronym.hygene.ui.UITest;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
+
 /**
- * Unit tests for the {@link DNADialogue} class.
+ * Unit tests for the {@link Dialogue} class.
+ * <p>
+ * Due to the nature of ui {@link Dialogue}, this class consists mostly of black box tests.
  */
-public class DNADialogueTest extends UITest {
+public class DialogueTest extends UITest {
     private Exception exception;
 
 
@@ -21,25 +23,22 @@ public class DNADialogueTest extends UITest {
 
 
     @Test
-    public final void testNullException() {
-        Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, null));
+    public final void testNoNullPointerException() {
+        Throwable e = catchThrowable(() -> (new Dialogue(Dialogue.DialogueType.ERROR, exception)).show());
 
         assertThat(e).isNull();
     }
 
     @Test
     public final void testShowError() {
-        Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, exception));
+        Throwable e = catchThrowable(() -> (new Dialogue(Dialogue.DialogueType.ERROR, exception)).show());
 
         assertThat(e).isNull();
     }
 
     @Test
     public final void testShowWarning() {
-        Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.WARNING, exception));
+        Throwable e = catchThrowable(() -> (new Dialogue(Dialogue.DialogueType.WARNING, exception)).show());
 
         assertThat(e).isNull();
     }
