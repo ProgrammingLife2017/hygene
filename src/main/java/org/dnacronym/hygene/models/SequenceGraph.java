@@ -1,8 +1,10 @@
 package org.dnacronym.hygene.models;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Function;
 
 
 /**
@@ -16,7 +18,7 @@ import java.util.Queue;
  * The construction of a {@code SequenceGraph} may take some time as the entire structure is fed to FAFOSP, the Felix
  * Algorithm For Optimal Segment Positioning.
  */
-public final class SequenceGraph {
+public final class SequenceGraph implements Iterable<SequenceNode> {
     public static final String SOURCE_NODE_ID = "<SOURCE>";
     public static final String SINK_NODE_ID = "<SINK>";
 
@@ -91,7 +93,6 @@ public final class SequenceGraph {
         return nodeCount;
     }
 
-
     /**
      * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP. The nodes are visited in
      * breadth-first search order.
@@ -107,4 +108,48 @@ public final class SequenceGraph {
             queue.addAll(node.getRightNeighbours());
         }
     }
+
+
+    /**
+     * Returns a breadth-first {@code Iterator} that traverses from left to right.
+     *
+     * @return a breadth-first {@code Iterator} that traverses from left to right.
+     */
+    @Override
+    public Iterator<SequenceNode> iterator() {
+        return new BreadthFirstIterator(sourceNode, SequenceDirection.RIGHT);
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
+     *
+     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
+     *                          visited
+     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
+     */
+    public Iterator<SequenceNode> iterator(final Function<SequenceNode, Boolean> duplicateDetector) {
+        return new BreadthFirstIterator(sourceNode, SequenceDirection.RIGHT, duplicateDetector);
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} that traverses from right to left.
+     *
+     * @return a breadth-first {@code Iterator} that traverses from right to left.
+     */
+    public Iterator<SequenceNode> reverseIterator() {
+        return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT);
+    }
+
+    /**
+     * Returns a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
+     *
+     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
+     *                          visited
+     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
+     */
+    public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
+        return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT, duplicateDetector);
+    }
+
+
 }
