@@ -46,7 +46,7 @@ class NodeTest {
         final Node node = NodeBuilder.start()
                 .withNodeId(42)
                 .withLineNumber(1)
-                .withColor(NodeColor.BLUE)
+                .withColor(NodeColor.BLACK)
                 .withUnscaledXPosition(3)
                 .withUnscaledYPosition(4)
                 .withOutgoingEdge(1, 30)

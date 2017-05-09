@@ -12,11 +12,11 @@ import java.util.stream.IntStream;
 public final class NodeBuilder {
     private int nodeId = 0;
     private int lineNumber = 0;
-    private NodeColor color = NodeColor.RED;
+    private NodeColor color = NodeColor.BLACK;
     private int unscaledXPosition = 0;
     private int unscaledYPosition = 0;
-    private final Set<Edge> incomingEdges = new TreeSet<>();
-    private final Set<Edge> outgoingEdges = new TreeSet<>();
+    private Set<Edge> incomingEdges = new TreeSet<>();
+    private Set<Edge> outgoingEdges = new TreeSet<>();
 
     /**
      * Creates a new instance of the builder.
@@ -25,6 +25,26 @@ public final class NodeBuilder {
      */
     public static NodeBuilder start() {
         return new NodeBuilder();
+    }
+
+    /**
+     * Creates a new instance of the builder from an existing node vector.
+     *
+     * @return a new instance of the builder.
+     */
+    public static NodeBuilder fromArray(int nodeId, int[] nodeVector) {
+        Node node = new Node(nodeId, nodeVector);
+
+        NodeBuilder builder = new NodeBuilder();
+        builder.nodeId = nodeId;
+        builder.lineNumber = node.getLineNumber();
+        builder.color = node.getColor();
+        builder.unscaledXPosition = node.getUnscaledXPosition();
+        builder.unscaledYPosition = node.getUnscaledYPosition();
+        builder.incomingEdges = node.getIncomingEdges();
+        builder.outgoingEdges = node.getOutgoingEdges();
+
+        return builder;
     }
 
     /**

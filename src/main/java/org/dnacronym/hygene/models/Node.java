@@ -12,7 +12,7 @@ import java.util.TreeSet;
  * Node array format:
  * [[nodeLineNumber, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
-class Node {
+public class Node {
     static final int NODE_LINE_NUMBER_INDEX = 0;
     static final int NODE_COLOR_INDEX = 1;
     static final int UNSCALED_X_POSITION_INDEX = 2;

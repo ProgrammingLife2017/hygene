@@ -18,9 +18,9 @@ class GraphTest {
 
     @Test
     void testGetNodeColor() {
-        final Graph graph = createGraphWithNode(NodeBuilder.start().withColor(NodeColor.BLUE).create().toArray());
+        final Graph graph = createGraphWithNode(NodeBuilder.start().withColor(NodeColor.BLACK).create().toArray());
 
-        assertThat(graph.getColor(0)).isEqualTo(NodeColor.BLUE);
+        assertThat(graph.getColor(0)).isEqualTo(NodeColor.BLACK);
     }
 
     @Test
