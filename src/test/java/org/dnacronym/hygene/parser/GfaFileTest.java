@@ -17,29 +17,16 @@ class GfaFileTest {
 
     @Test
     void testGfaFileObjectCanBeConstructed() {
-        final GfaFile gfaFile = new GfaFile("name_of_the_file.gfa", "contents_of_the_file");
+        final GfaFile gfaFile = new GfaFile("name_of_the_file.gfa");
 
         assertThat(gfaFile.getFileName()).isEqualTo("name_of_the_file.gfa");
-        assertThat(gfaFile.getContents()).isEqualTo("contents_of_the_file");
-    }
-
-    @Test
-    void testReadFile() throws IOException {
-        GfaFile gfaFile = GfaFile.read("src/test/resources/gfa/simple.gfa");
-
-        assertThat(gfaFile.getContents()).isEqualTo(String.format(
-                "H\tVN:Z:1.0%n"
-                + "S\t11\tACCTT%n"
-                + "S\t12\tTCAAGG%n"
-                + "L\t11\t+\t12\t-\t4M%n"
-        ));
     }
 
     @Test
     void testCannotReadNonExistingFile() {
-        final Throwable e = catchThrowable(() -> GfaFile.read("random-file-name"));
+        final Throwable e = catchThrowable(() -> new GfaFile("random-file-name").parse());
 
-        assertThat(e).isInstanceOf(IOException.class);
+        assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
@@ -49,9 +36,14 @@ class GfaFileTest {
         SequenceAlignmentGraphParser sequenceAlignmentGraphParser = spy(SequenceAlignmentGraphParser.class);
         SequenceAlignmentGraphParserFactory.setInstance(sequenceAlignmentGraphParser);
 
-        new GfaFile("filename", "S\t12\tTCAAGG").parse();
+        new GfaFile("src/test/resources/gfa/simple.gfa").parse();
 
-        verify(gfaParser).parse("S\t12\tTCAAGG");
+        verify(gfaParser).parse(
+                "H\tVN:Z:1.0\n"
+                + "S\t11\tACCTT\n"
+                + "S\t12\tTCAAGG\n"
+                + "L\t11\t+\t12\t-\t4M\n"
+        );
         verify(sequenceAlignmentGraphParser).parse(any(SequenceAlignmentGraph.class));
     }
 }
