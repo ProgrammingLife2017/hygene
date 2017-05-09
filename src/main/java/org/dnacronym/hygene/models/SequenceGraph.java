@@ -150,6 +150,4 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
         return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT, duplicateDetector);
     }
-
-
 }
