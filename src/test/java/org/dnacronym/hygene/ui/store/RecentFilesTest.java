@@ -31,7 +31,7 @@ class RecentFilesTest {
 
     @Test
     void testAddAndGetSimple() throws IOException {
-        final File testFile = new File("Path\\to\\test.gfa");
+        final File testFile = new File("Path\\to\\test.txt");
         RecentFiles.add(testFile);
 
         final List<File> files = RecentFiles.getAll();
@@ -40,24 +40,13 @@ class RecentFilesTest {
 
     @Test
     void testAddAndGetAddToFront() throws IOException {
-        final File testFile1 = new File("Path\\to\\test1.gfa");
-        final File testFile2 = new File("Path\\to\\test2.gfa");
+        final File testFile1 = new File("Path\\to\\test1.txt");
+        final File testFile2 = new File("Path\\to\\test2.txt");
         RecentFiles.add(testFile1);
         RecentFiles.add(testFile2);
 
         final List<File> files = RecentFiles.getAll();
         assertThat(files.indexOf(testFile1)).isGreaterThan(files.indexOf(testFile2));
-    }
-
-    @Test
-    void testAddAndGetInvalidLines() throws IOException {
-        final File testFile1 = new File("");
-        final File testFile2 = new File("Path\\to\\test2.gfb");
-        RecentFiles.add(testFile1);
-        RecentFiles.add(testFile2);
-
-        final List<File> files = RecentFiles.getAll();
-        assertThat(files).isEmpty();
     }
 
     @Test
@@ -71,7 +60,7 @@ class RecentFilesTest {
 
     @Test
     void testAddWithNonExistingFile() throws IOException {
-        final File testFile = new File("Path\\to\\test.gfa");
+        final File testFile = new File("Path\\to\\test.txt");
 
         if (!getDataFile().delete()) {
             throw new IOException("Unable to delete file");
