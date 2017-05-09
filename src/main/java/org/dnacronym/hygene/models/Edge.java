@@ -67,8 +67,8 @@ public final class Edge implements Comparable<Edge> {
      */
     @Override
     public int compareTo(final Edge other) {
-        int compareEdgeTo = Integer.compare(to, other.to);
-        int compareEdgeFrom = Integer.compare(from, other.from);
+        final int compareEdgeTo = Integer.compare(to, other.to);
+        final int compareEdgeFrom = Integer.compare(from, other.from);
 
         if (compareEdgeTo == 0) {
             return compareEdgeFrom;

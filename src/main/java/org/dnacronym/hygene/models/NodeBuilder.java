@@ -15,8 +15,8 @@ public final class NodeBuilder {
     private NodeColor color = NodeColor.RED;
     private int unscaledXPosition = 0;
     private int unscaledYPosition = 0;
-    private Set<Edge> incomingEdges = new TreeSet<>();
-    private Set<Edge> outgoingEdges = new TreeSet<>();
+    private final Set<Edge> incomingEdges = new TreeSet<>();
+    private final Set<Edge> outgoingEdges = new TreeSet<>();
 
     /**
      * Creates a new instance of the builder.
@@ -119,16 +119,16 @@ public final class NodeBuilder {
      * @return array representation of the currently known node details.
      */
     public int[] toArray() {
-        IntStream detailsArray = Arrays.stream(new int[]{
+        final IntStream detailsArray = Arrays.stream(new int[]{
                 lineNumber,
                 color.ordinal(),
                 unscaledXPosition,
                 unscaledYPosition,
                 outgoingEdges.size()
         });
-        IntStream outgoingEdgesArray = outgoingEdges.stream()
+        final IntStream outgoingEdgesArray = outgoingEdges.stream()
                 .flatMapToInt(edge -> Arrays.stream(new int[]{edge.getTo(), edge.getLineNumber()}));
-        IntStream incomingEdgesArray = incomingEdges.stream()
+        final IntStream incomingEdgesArray = incomingEdges.stream()
                 .flatMapToInt(edge -> Arrays.stream(new int[]{edge.getFrom(), edge.getLineNumber()}));
 
         return IntStream.concat(detailsArray, IntStream.concat(outgoingEdgesArray, incomingEdgesArray)).toArray();

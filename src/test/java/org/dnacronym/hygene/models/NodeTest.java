@@ -8,42 +8,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NodeTest {
     @Test
     void testGetId() {
-        Node node = NodeBuilder.start().withNodeId(5).create();
+        final Node node = NodeBuilder.start().withNodeId(5).create();
 
         assertThat(node.getId()).isEqualTo(5);
     }
 
     @Test
     void testGetLineNumber() {
-        Node node = NodeBuilder.start().withLineNumber(4).create();
+        final Node node = NodeBuilder.start().withLineNumber(4).create();
 
         assertThat(node.getLineNumber()).isEqualTo(4);
     }
 
     @Test
     void testGetColor() {
-        Node node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
+        final Node node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
 
         assertThat(node.getColor()).isEqualTo(NodeColor.GREEN);
     }
 
     @Test
     void testGetUnscaledXPosition() {
-        Node node = NodeBuilder.start().withUnscaledXPosition(5).create();
+        final Node node = NodeBuilder.start().withUnscaledXPosition(5).create();
 
         assertThat(node.getUnscaledXPosition()).isEqualTo(5);
     }
 
     @Test
     void testGetUnscaledYPosition() {
-        Node node = NodeBuilder.start().withUnscaledYPosition(6).create();
+        final Node node = NodeBuilder.start().withUnscaledYPosition(6).create();
 
         assertThat(node.getUnscaledYPosition()).isEqualTo(6);
     }
 
     @Test
     void testToArray() {
-        Node node = NodeBuilder.start()
+        final Node node = NodeBuilder.start()
                 .withNodeId(42)
                 .withLineNumber(1)
                 .withColor(NodeColor.BLUE)
@@ -61,14 +61,14 @@ class NodeTest {
 
     @Test
     void testGetNumberOfOutgoingEdges() {
-        Node node = NodeBuilder.start().withOutgoingEdge(1, 30).create();
+        final Node node = NodeBuilder.start().withOutgoingEdge(1, 30).create();
 
         assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(1);
     }
 
     @Test
     void testGetNumberOfIncomingEdges() {
-        Node node = NodeBuilder.start().withIncomingEdge(1, 30).withIncomingEdge(2, 40).create();
+        final Node node = NodeBuilder.start().withIncomingEdge(1, 30).withIncomingEdge(2, 40).create();
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(2);
     }
@@ -80,7 +80,7 @@ class NodeTest {
      */
     @Test
     void testGetOutgoingEdges() {
-        Node node = NodeBuilder.start()
+        final Node node = NodeBuilder.start()
                 .withNodeId(10)
                 .withOutgoingEdge(20, 3)
                 .withOutgoingEdge(30, 4)
@@ -100,7 +100,7 @@ class NodeTest {
      */
     @Test
     void testGetIncomingEdges() {
-        Node node = NodeBuilder.start()
+        final Node node = NodeBuilder.start()
                 .withNodeId(10)
                 .withIncomingEdge(20, 3)
                 .withIncomingEdge(30, 4)
