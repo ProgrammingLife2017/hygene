@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui;
+package org.dnacronym.hygene.ui.runnable;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -16,7 +16,12 @@ import java.io.StringWriter;
  * <p>
  * A dialogue can either be of type {@link HygeneDialogueType#ERROR} or {@link HygeneDialogueType#WARNING}.
  */
-public class HygeneDialogue {
+public class DNADialogue {
+    /**
+     * Denotes the type of dialogue. A error is more severe, and should be used to relay to the user that something went
+     * wrong with the application. A warning is less severe, and should be used to relay to the user that they did
+     * something they shouldn't do.
+     */
     public enum HygeneDialogueType {
         ERROR,
         WARNING
@@ -25,18 +30,24 @@ public class HygeneDialogue {
     /**
      * Show a dialogue onscreen. A dialogue prevents any further interaction with the UI until it is closed. Uses the
      * {@link Alert} from JavaFX.
+     * <p>
+     * An error dialogue should relay to the user that something went wrong with the application. A warning dialogue
+     * should relay to the user that they did something they shouldn't do (i.e. trying to perform certain operations
+     * without loading a graph).
      *
      * @param type           type of warning dialogue.
-     * @param exception      exception associated with this dialogue.
+     * @param exception      exception associated with this dialogue. The message in the exception determines what is
+     *                       displayed in the header of the dialogue.
      * @param showStackTrace true if you want to show the stacktrace to the user, false otherwise.
      */
     public static void show(final HygeneDialogueType type, final Exception exception, final boolean showStackTrace) {
+        final String headerText = exception.getMessage();
         switch (type) {
             case ERROR:
-                show(Alert.AlertType.ERROR, exception, showStackTrace);
+                show(Alert.AlertType.ERROR, exception, showStackTrace, "Error!", headerText);
                 break;
             case WARNING:
-                show(Alert.AlertType.WARNING, exception, showStackTrace);
+                show(Alert.AlertType.WARNING, exception, showStackTrace, "Warning!", headerText);
                 break;
         }
     }
@@ -47,13 +58,15 @@ public class HygeneDialogue {
      * @param alertType      type of warning dialogue.
      * @param exception      exception associated with this dialogue.
      * @param showStackTrace true if you want to show the stacktrace to the user, false otherwise.
+     * @param title          title of dialogue.
+     * @param headerText     text to display in header of dialogue.
      * @see Alert
      */
-    private static void show(final Alert.AlertType alertType, final Exception exception, final boolean showStackTrace) {
+    private static void show(final Alert.AlertType alertType, final Exception exception, final boolean showStackTrace,
+                             final String title, final String headerText) {
         final Alert alert = new Alert(alertType);
-        alert.setTitle("Exception Dialog");
-        alert.setHeaderText("Look, an Exception Dialog");
-        alert.setContentText("Could not find file blabla.txt!");
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
 
         if (showStackTrace) {
             final Label label = new Label("The exception stacktrace was:");
