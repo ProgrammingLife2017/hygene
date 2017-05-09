@@ -30,20 +30,29 @@ class GfaFileTest {
     }
 
     @Test
+    void testGetGraphWithoutParsing() {
+        final Throwable e = catchThrowable(() -> new GfaFile("random-file-name").getGraph());
+
+        assertThat(e).isInstanceOf(ParseException.class);
+    }
+
+    @Test
     void testParseFile() throws IOException, ParseException {
         GfaParser gfaParser = spy(GfaParser.class);
         GfaParserFactory.setInstance(gfaParser);
         SequenceAlignmentGraphParser sequenceAlignmentGraphParser = spy(SequenceAlignmentGraphParser.class);
         SequenceAlignmentGraphParserFactory.setInstance(sequenceAlignmentGraphParser);
 
-        new GfaFile("src/test/resources/gfa/simple.gfa").parse();
+        GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
+        gfaFile.parse();
 
         verify(gfaParser).parse(
                 "H\tVN:Z:1.0\n"
-                + "S\t11\tACCTT\n"
-                + "S\t12\tTCAAGG\n"
-                + "L\t11\t+\t12\t-\t4M\n"
+                        + "S\t11\tACCTT\n"
+                        + "S\t12\tTCAAGG\n"
+                        + "L\t11\t+\t12\t-\t4M\n"
         );
         verify(sequenceAlignmentGraphParser).parse(any(SequenceAlignmentGraph.class));
+        assertThat(gfaFile.getGraph()).isNotNull();
     }
 }
