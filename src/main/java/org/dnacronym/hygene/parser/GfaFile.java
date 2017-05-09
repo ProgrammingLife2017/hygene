@@ -79,7 +79,7 @@ public class GfaFile {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new ParseException("File '" + fileName + "' cannot be read. ");
+            throw new ParseException("File '" + fileName + "' cannot be read. ", e);
         }
     }
 }
