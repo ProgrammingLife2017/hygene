@@ -25,8 +25,8 @@ class Node {
     private final int id;
     private final int[] data;
 
-    private @MonotonicNonNull Set<Edge> incomingEdges;
-    private @MonotonicNonNull Set<Edge> outgoingEdges;
+    private volatile @MonotonicNonNull Set<Edge> incomingEdges;
+    private volatile @MonotonicNonNull Set<Edge> outgoingEdges;
 
 
     /**
@@ -129,14 +129,19 @@ class Node {
      */
     public Set<Edge> getOutgoingEdges() {
         if (outgoingEdges == null) {
-            outgoingEdges = new TreeSet<>();
+            synchronized (Node.class) {
+                if (outgoingEdges == null) {
+                    Set<Edge> outgoingEdges = new TreeSet<>();
 
-            final int offset = NODE_EDGE_DATA_OFFSET;
+                    final int offset = NODE_EDGE_DATA_OFFSET;
 
-            for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
-                int to = data[offset + i * EDGE_DATA_SIZE];
-                int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                outgoingEdges.add(new Edge(id, to, lineNumber));
+                    for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
+                        int to = data[offset + i * EDGE_DATA_SIZE];
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                        outgoingEdges.add(new Edge(id, to, lineNumber));
+                    }
+                    this.outgoingEdges = outgoingEdges;
+                }
             }
         }
         return outgoingEdges;
@@ -151,14 +156,20 @@ class Node {
      */
     public Set<Edge> getIncomingEdges() {
         if (incomingEdges == null) {
-            incomingEdges = new TreeSet<>();
+            synchronized (Node.class) {
+                if (incomingEdges == null) {
+                    Set<Edge> incomingEdges = new TreeSet<>();
 
-            final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
+                    final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
 
-            for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
-                int from = data[offset + i * EDGE_DATA_SIZE];
-                int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                incomingEdges.add(new Edge(from, id, lineNumber));
+                    for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
+                        int from = data[offset + i * EDGE_DATA_SIZE];
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                        incomingEdges.add(new Edge(from, id, lineNumber));
+                    }
+
+                    this.incomingEdges = incomingEdges;
+                }
             }
         }
         return incomingEdges;
