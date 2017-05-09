@@ -1,6 +1,11 @@
 package org.dnacronym.hygene.models;
 
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * The {@code Node} class wraps around a node array and provides convenience methods.
  * <p>
@@ -20,6 +25,8 @@ class Node {
     private final int id;
     private final int[] data;
 
+    private @MonotonicNonNull Set<Edge> incomingEdges;
+    private @MonotonicNonNull Set<Edge> outgoingEges;
 
     /**
      * Constructor for {@code Node}.
@@ -106,9 +113,53 @@ class Node {
      * @return the number of incoming edges.
      */
     public int getNumberOfIncomingEdges() {
-        final int metaDataLength = NODE_EDGE_DATA_OFFSET + 1;
+        final int metaDataLength = NODE_EDGE_DATA_OFFSET - 1;
         final int outgoingEdgesLength = data[NODE_OUTGOING_EDGES_INDEX] * EDGE_DATA_SIZE;
 
         return (data.length - metaDataLength - outgoingEdgesLength) / EDGE_DATA_SIZE;
+    }
+
+    /**
+     * Creates a set containing the outgoing edges of the {@code Node}.
+     * <p>
+     * Warning: This method creates of copy of the edges data and should be used with caution.
+     *
+     * @return set containing the outgoing edges of the {@code Node}.
+     */
+    public Set<Edge> getOutgoingEdges() {
+        if (outgoingEges == null) {
+            outgoingEges = new TreeSet<>();
+
+            final int offset = NODE_EDGE_DATA_OFFSET;
+
+            for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
+                int to = data[offset + i * EDGE_DATA_SIZE];
+                int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                outgoingEges.add(new Edge(id, to, lineNumber));
+            }
+        }
+        return outgoingEges;
+    }
+
+    /**
+     * Creates a set containing the incoming edges of the {@code Node}.
+     * <p>
+     * Warning: This method creates of copy of the edges data and should be used with caution.
+     *
+     * @return set containing the incoming edges of the {@code Node}.
+     */
+    public Set<Edge> getIncomingEdges() {
+        if (incomingEdges == null) {
+            incomingEdges = new TreeSet<>();
+
+            final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
+
+            for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
+                int from = data[offset + i * EDGE_DATA_SIZE];
+                int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                incomingEdges.add(new Edge(from, id, lineNumber));
+            }
+        }
+        return incomingEdges;
     }
 }

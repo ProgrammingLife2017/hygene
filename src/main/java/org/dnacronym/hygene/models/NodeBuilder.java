@@ -1,5 +1,9 @@
 package org.dnacronym.hygene.models;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.IntStream;
 
 /**
  * The node builder provides an easy way to construct a new node
@@ -11,6 +15,8 @@ public final class NodeBuilder {
     private NodeColor color = NodeColor.RED;
     private int unscaledXPosition = 0;
     private int unscaledYPosition = 0;
+    private Set<Edge> incomingEdges = new TreeSet<>();
+    private Set<Edge> outgoingEdges = new TreeSet<>();
 
     /**
      * Creates a new instance of the builder.
@@ -82,18 +88,50 @@ public final class NodeBuilder {
     }
 
     /**
+     * Adds a new incoming edge to the {@code Node} under construction.
+     *
+     * @param from ID of the node where the edge is coming from
+     * @param lineNumber line number of the edge in the GFA file
+     * @return current instance of the builder to provide a fluent interface.
+     */
+    public NodeBuilder withIncomingEdge(final int from, final int lineNumber) {
+        incomingEdges.add(new Edge(from, nodeId, lineNumber));
+
+        return this;
+    }
+
+    /**
+     * Adds a new outgoing edge to the {@code Node} under construction.
+     *
+     * @param to ID of the node where the edge is going to
+     * @param lineNumber line number of the edge in the GFA file
+     * @return current instance of the builder to provide a fluent interface.
+     */
+    public NodeBuilder withOutgoingEdge(final int to, final int lineNumber) {
+        outgoingEdges.add(new Edge(nodeId, to, lineNumber));
+
+        return this;
+    }
+
+    /**
      * Creates an array representation of the currently known node details.
      *
      * @return array representation of the currently known node details.
      */
     public int[] toArray() {
-        return new int[]{
+        IntStream detailsArray = Arrays.stream(new int[]{
                 lineNumber,
                 color.ordinal(),
                 unscaledXPosition,
                 unscaledYPosition,
-                0 // outgoing edges size, will be added later, at the moment we don't have
-        };
+                outgoingEdges.size()
+        });
+        IntStream outgoingEdgesArray = outgoingEdges.stream()
+                .flatMapToInt(edge -> Arrays.stream(new int[]{edge.getTo(), edge.getLineNumber()}));
+        IntStream incomingEdgesArray = incomingEdges.stream()
+                .flatMapToInt(edge -> Arrays.stream(new int[]{edge.getFrom(), edge.getLineNumber()}));
+
+        return IntStream.concat(detailsArray, IntStream.concat(outgoingEdgesArray, incomingEdgesArray)).toArray();
     }
 
     /**
