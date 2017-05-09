@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 
 /**
- * Represents a GFA file with its contents and meta data.
+ * Represents a GFA file with its contents and metadata.
  */
 public class GfaFile {
     private String fileName;
