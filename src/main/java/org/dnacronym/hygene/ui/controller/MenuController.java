@@ -4,8 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 
 import java.io.File;
@@ -23,19 +25,23 @@ public final class MenuController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        setGraphStore(DNAApplication.getGraphStore());
+        try {
+            setGraphStore(DNAApplication.getInstance().getGraphStore());
 
-        final String chooserTitle = "Open GFA File";
-        final FileChooser.ExtensionFilter gfaFilter =
-                new FileChooser.ExtensionFilter(
-                        "GFA (*." + GraphStore.GFA_EXTENSION + ")",
-                        "*." + GraphStore.GFA_EXTENSION);
+            final String chooserTitle = "Open GFA File";
+            final FileChooser.ExtensionFilter gfaFilter =
+                    new FileChooser.ExtensionFilter(
+                            "GFA (*." + GraphStore.GFA_EXTENSION + ")",
+                            "*." + GraphStore.GFA_EXTENSION);
 
-        final FileChooser chooser = new FileChooser();
-        chooser.setTitle(chooserTitle);
-        chooser.getExtensionFilters().add(gfaFilter);
+            final FileChooser chooser = new FileChooser();
+            chooser.setTitle(chooserTitle);
+            chooser.getExtensionFilters().add(gfaFilter);
 
-        setFileChooser(chooser);
+            setFileChooser(chooser);
+        } catch (UIInitialisationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -59,7 +65,7 @@ public final class MenuController implements Initializable {
 
     /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
-     * {@link DNAApplication#getStage()#getOwner()}.
+     * {@link DNAApplication#getPrimaryStage()#getOwner()}.
      *
      * @param event {@link ActionEvent} associated with the event.
      * @throws Exception if Unable to open the file, or parse the file.
@@ -71,7 +77,8 @@ public final class MenuController implements Initializable {
             return;
         }
 
-        final File gfaFile = fileChooser.showOpenDialog(DNAApplication.getStage().getOwner());
+        final Stage primaryStage = DNAApplication.getInstance().getPrimaryStage();
+        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
             graphStore.load(gfaFile);

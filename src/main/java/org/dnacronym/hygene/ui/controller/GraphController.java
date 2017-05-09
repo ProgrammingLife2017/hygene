@@ -7,6 +7,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphStreamVisualiser;
 
@@ -29,16 +30,20 @@ public final class GraphController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        setGraphStore(DNAApplication.getGraphStore());
+        try {
+            setGraphStore(DNAApplication.getInstance().getGraphStore());
 
-        visualiser = new GraphStreamVisualiser();
+            visualiser = new GraphStreamVisualiser();
 
-        if (graphPane != null && graphStore != null) {
-            graphStore.getSequenceGraphProperty().addListener((observable, oldGraph, newGraph) -> {
-                if (newGraph != null) {
-                    updateGraphSwingNode(newGraph);
-                }
-            });
+            if (graphPane != null && graphStore != null) {
+                graphStore.getSequenceGraphProperty().addListener((observable, oldGraph, newGraph) -> {
+                    if (newGraph != null) {
+                        updateGraphSwingNode(newGraph);
+                    }
+                });
+            }
+        } catch (UIInitialisationException e) {
+            e.printStackTrace();
         }
     }
 
