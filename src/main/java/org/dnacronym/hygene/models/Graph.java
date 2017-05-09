@@ -48,10 +48,10 @@ public final class Graph {
     }
 
     /**
-     * Getter for the line number where the {@link Node}'s metadata resides.
+     * Getter for the line number where the {@link Node}'s meta data resides.
      *
      * @param id the {@link Node}'s id
-     * @return the {@link Node}'s linenumber.
+     * @return the {@link Node}'s line number.
      */
     public int getLineNumber(final int id) {
         return nodeArrays[id][Node.NODE_LINE_NUMBER_INDEX];

@@ -42,7 +42,7 @@ class Node {
 
 
     /**
-     * Getter for the node's array which contains its metadata.
+     * Getter for the node's array which contains its meta data.
      *
      * @return the node array
      */
@@ -60,7 +60,7 @@ class Node {
     }
 
     /**
-     * Getter for {@link Node} metadata line number.
+     * Getter for {@link Node} meta data line number.
      *
      * @return the linenumber
      */
