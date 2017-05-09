@@ -46,12 +46,21 @@ class GraphTest {
     }
 
     @Test
+    void testGetNodeArrayOfSecondNode() {
+        final int[] nodeArray = NodeBuilder.start().withUnscaledXPosition(33).create().toArray();
+        final Graph graph = new Graph(new int[][] {{}, nodeArray});
+
+        assertThat(graph.getNodeArray(1)).isEqualTo(nodeArray);
+    }
+
+    @Test
     void testGetNode() {
         Node node = NodeBuilder.start().create();
         final Graph graph = createGraphWithNode(node.toArray());
 
         assertThat(graph.getNode(0).toArray()).isEqualTo(node.toArray());
     }
+
 
     private Graph createGraphWithNode(final int[] node) {
         return new Graph(new int[][] {node});
