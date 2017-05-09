@@ -46,6 +46,9 @@ public final class RecentFiles {
         // Remove any empty lines from the list of lines
         lines.removeIf(""::equals);
 
+        // Remove paths not ending with the proper extension to restrict effects of manual manipulation of this list
+        lines.removeIf(line -> !line.toLowerCase().endsWith("." + GraphStore.GFA_EXTENSION));
+
         final List<File> files = lines.stream().map(File::new).collect(Collectors.toList());
         return truncate(files);
     }
