@@ -30,10 +30,12 @@ public final class NodeBuilder {
     /**
      * Creates a new instance of the builder from an existing node vector.
      *
+     * @param nodeId internal node ID
+     * @param nodeArray array representation of a node
      * @return a new instance of the builder.
      */
-    public static NodeBuilder fromArray(int nodeId, int[] nodeVector) {
-        Node node = new Node(nodeId, nodeVector);
+    public static NodeBuilder fromArray(final int nodeId, final int[] nodeArray) {
+        Node node = new Node(nodeId, nodeArray);
 
         NodeBuilder builder = new NodeBuilder();
         builder.nodeId = nodeId;

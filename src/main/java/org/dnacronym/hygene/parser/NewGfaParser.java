@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.parser;
 
-import com.sun.tools.javac.util.GraphUtils;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.Graph;

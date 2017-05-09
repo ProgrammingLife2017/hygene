@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.TreeSet;
  * Node array format:
  * [[nodeLineNumber, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
-public class Node {
+public final class Node {
     static final int NODE_LINE_NUMBER_INDEX = 0;
     static final int NODE_COLOR_INDEX = 1;
     static final int UNSCALED_X_POSITION_INDEX = 2;
@@ -46,6 +47,10 @@ public class Node {
      *
      * @return the node array
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "For performance reasons, we don't want to create a copy here"
+    )
     public int[] toArray() {
         return data;
     }

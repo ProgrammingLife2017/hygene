@@ -52,6 +52,10 @@ public final class Graph {
      *
      * @return the array representation of all node arrays.
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "For performance reasons, we don't want to create a copy here"
+    )
     public int[][] getNodeArrays() {
         return nodeArrays;
     }

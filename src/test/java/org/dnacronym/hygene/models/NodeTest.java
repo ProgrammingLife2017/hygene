@@ -55,7 +55,7 @@ class NodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[]{
-                1, 2, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                1, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }
 
