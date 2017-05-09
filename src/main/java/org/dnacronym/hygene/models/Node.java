@@ -131,16 +131,16 @@ class Node {
         if (outgoingEdges == null) {
             synchronized (Node.class) {
                 if (outgoingEdges == null) {
-                    Set<Edge> outgoingEdges = new TreeSet<>();
+                    Set<Edge> newOutgoingEdges = new TreeSet<>();
 
                     final int offset = NODE_EDGE_DATA_OFFSET;
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         int to = data[offset + i * EDGE_DATA_SIZE];
                         int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                        outgoingEdges.add(new Edge(id, to, lineNumber));
+                        newOutgoingEdges.add(new Edge(id, to, lineNumber));
                     }
-                    this.outgoingEdges = outgoingEdges;
+                    this.outgoingEdges = newOutgoingEdges;
                 }
             }
         }
@@ -158,17 +158,17 @@ class Node {
         if (incomingEdges == null) {
             synchronized (Node.class) {
                 if (incomingEdges == null) {
-                    Set<Edge> incomingEdges = new TreeSet<>();
+                    Set<Edge> newIncomingEdges = new TreeSet<>();
 
                     final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         int from = data[offset + i * EDGE_DATA_SIZE];
                         int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                        incomingEdges.add(new Edge(from, id, lineNumber));
+                        newIncomingEdges.add(new Edge(from, id, lineNumber));
                     }
 
-                    this.incomingEdges = incomingEdges;
+                    this.incomingEdges = newIncomingEdges;
                 }
             }
         }
