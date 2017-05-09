@@ -42,7 +42,7 @@ class Node {
 
 
     /**
-     * Getter for the node's array which contains its meta data.
+     * Getter for the node's array which contains its metadata.
      *
      * @return the node array
      */
@@ -60,7 +60,7 @@ class Node {
     }
 
     /**
-     * Getter for {@link Node} meta data line number.
+     * Getter for {@link Node} metadata line number.
      *
      * @return the linenumber
      */
@@ -107,17 +107,17 @@ class Node {
     /**
      * Getter for the number of incoming edges of this node.
      * <p>
-     * Computed by subtracting the length of the meta data and the length of the outgoing edges
+     * Computed by subtracting the length of the metadata and the length of the outgoing edges
      * from the length of the array. This result is divided by the length of a single edge, in
      * order to get the total number of incoming edges.
      *
      * @return the number of incoming edges.
      */
     public int getNumberOfIncomingEdges() {
-        final int metaDataLength = NODE_EDGE_DATA_OFFSET - 1;
+        final int metadataLength = NODE_EDGE_DATA_OFFSET - 1;
         final int outgoingEdgesLength = data[NODE_OUTGOING_EDGES_INDEX] * EDGE_DATA_SIZE;
 
-        return (data.length - metaDataLength - outgoingEdgesLength) / EDGE_DATA_SIZE;
+        return (data.length - metadataLength - outgoingEdgesLength) / EDGE_DATA_SIZE;
     }
 
     /**

@@ -38,17 +38,17 @@ public final class Graph {
     }
 
     /**
-     * Getter for the array representing a {@link Node}'s meta data.
+     * Getter for the array representing a {@link Node}'s metadata.
      *
      * @param id the {@link Node}'s id
-     * @return the array representing a {@link Node}'s meta data.
+     * @return the array representing a {@link Node}'s metadata.
      */
     public int[] getNodeArray(final int id) {
         return nodeArrays[id];
     }
 
     /**
-     * Getter for the line number where the {@link Node}'s meta data resides.
+     * Getter for the line number where the {@link Node}'s metadata resides.
      *
      * @param id the {@link Node}'s id
      * @return the {@link Node}'s line number.
