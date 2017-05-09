@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.runnable;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -63,19 +64,24 @@ public final class DNADialogue {
      * An error dialogue should relay to the user that something went wrong with the application. A warning dialogue
      * should relay to the user that they did something they shouldn't do (i.e. trying to perform certain operations
      * without loading a graph).
+     * <p>
+     * Uses {@link Platform#runLater(Runnable)}. This ensures this can be called from any thread.
      *
      * @param type           type of warning dialogue.
      * @param exception      exception associated with this dialogue. The message in the exception determines what is
      *                       displayed in the header of the dialogue.
      * @param showStackTrace true if you want to show the stacktrace to the user, false otherwise.
+     * @see Platform#runLater(Runnable)
      */
     public void show(final HygeneDialogueType type, final Exception exception, final boolean showStackTrace) {
-        final String headerText = exception.getMessage();
-        if (type == HygeneDialogueType.ERROR) {
-            show(Alert.AlertType.ERROR, exception, showStackTrace, "Error!", headerText);
-        } else {
-            show(Alert.AlertType.WARNING, exception, showStackTrace, "Warning!", headerText);
-        }
+        Platform.runLater(() -> {
+            final String headerText = exception.getMessage();
+            if (type == HygeneDialogueType.ERROR) {
+                show(Alert.AlertType.ERROR, exception, showStackTrace, "Error!", headerText);
+            } else {
+                show(Alert.AlertType.WARNING, exception, showStackTrace, "Warning!", headerText);
+            }
+        });
     }
 
     /**
