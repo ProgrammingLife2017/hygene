@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.models.SequenceNode;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -53,7 +54,7 @@ public class GraphPane extends Pane {
      * @param color  color of the line.
      */
     private void drawLine(final double startX, final double startY,
-                                final double endX, final double endY, final Color color) {
+                          final double endX, final double endY, final Color color) {
         graphicsContext.setFill(color);
         graphicsContext.strokeLine(startX, startY, endX, endY);
     }
@@ -68,7 +69,7 @@ public class GraphPane extends Pane {
      * @param color  color of the rectangle.
      */
     private void drawRectangle(final double startX, final double startY,
-                                     final double width, final double height, final Color color) {
+                               final double width, final double height, final Color color) {
         graphicsContext.setFill(color);
         graphicsContext.fillRect(startX, startY, startX + width, startY - height);
     }
@@ -81,34 +82,16 @@ public class GraphPane extends Pane {
     }
 
     /**
-     * Generate a color based on the sequence.
-     *
-     * @param sequence sequence which to base the color of the node off.
-     * @return {@link Color} based on the given sequence.
-     */
-    private Color generateColor(final String sequence) {
-        // TODO generate color based on current mode and sequence
-        return Color.GRAY;
-    }
-
-    /**
      * Visualise a {@link SequenceNode} in the {@link Canvas}.
+     *
+     * A {@link SequenceNode} is drawn in the center of each band.
      *
      * @param sequenceNode sequenceNode to visualise.
      * @param stepHeight   denotes the height of each of the onscreen bands in which nodes reside.
      */
     private void visualise(final SequenceNode sequenceNode, final double stepHeight) {
-        // TODO call drawRectangle
-        final Color nodeColor = generateColor(sequenceNode.getSequence());
-        drawRectangle(0, 0, 0, 0, nodeColor);
-
-        for (SequenceNode rightNeighbour : sequenceNode.getRightNeighbours()) {
-            // TODO draw line from rightmost point of node to leftmost point of next node (neighbour)
-            final Color edgeColor = edgeColorProperty.get();
-            drawLine(0, 0, 0, 0, edgeColor);
-
-            visualise(sequenceNode, stepHeight);
-        }
+        // TODO call drawRectangle and drawEdge using the x and position of the node and neighbour
+        throw new NotImplementedException();
     }
 
     /**
@@ -129,7 +112,7 @@ public class GraphPane extends Pane {
     public final void visualise(final @NonNull SequenceGraph sequenceGraph) {
         clear();
 
-        // TODO retrive bandcount from sequenceGraph
+        // TODO retrieve bandcount from sequenceGraph
         final double bandCount = 1;
         final double stepHeight = canvas.getHeight() / bandCount;
 
