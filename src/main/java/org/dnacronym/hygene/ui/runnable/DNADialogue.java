@@ -24,12 +24,18 @@ public final class DNADialogue {
     private static volatile @MonotonicNonNull DNADialogue instance;
 
     /**
-     * Denotes the type of dialogue. A error is more severe, and should be used to relay to the user that something went
-     * wrong with the application. A warning is less severe, and should be used to relay to the user that they did
-     * something they shouldn't do.
+     * Denotes the type of dialogue.
      */
     public enum HygeneDialogueType {
+        /**
+         * An error is more severe, and should be used to relay to the user that something went
+         * wrong with the application.
+         */
         ERROR,
+        /**
+         * A warning is less severe, and should be used to relay to the user that they did
+         * something they shouldn't do.
+         */
         WARNING
     }
 
@@ -58,13 +64,10 @@ public final class DNADialogue {
     }
 
     /**
-     * Show a dialogue onscreen. A dialogue prevents any further interaction with the UI until it is closed. Uses the
-     * {@link Alert} from JavaFX.
+     * Show a dialogue onscreen.
      * <p>
-     * An error dialogue should relay to the user that something went wrong with the application. A warning dialogue
-     * should relay to the user that they did something they shouldn't do (i.e. trying to perform certain operations
-     * without loading a graph).<br>
-     * An error dialogue shows the stacktrace of the exception, the warning dialogue doesn't.
+     * A dialogue prevents any further interaction with the UI until it is closed. Uses the
+     * {@link Alert} from JavaFX.
      * <p>
      * Uses {@link Platform#runLater(Runnable)}. This ensures this can be called from any thread.
      *
