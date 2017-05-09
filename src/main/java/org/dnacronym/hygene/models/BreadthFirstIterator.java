@@ -47,7 +47,7 @@ class BreadthFirstIterator implements Iterator<SequenceNode> {
         this.duplicateDetector = duplicateDetector;
 
         queue = new LinkedList<>();
-        queue.addAll(direction.ternary(startNode.getLeftNeighbours(), startNode.getRightNeighbours()));
+        queue.add(startNode);
     }
 
 
@@ -59,34 +59,25 @@ class BreadthFirstIterator implements Iterator<SequenceNode> {
         }
 
         while (duplicateDetector.apply(head)) {
-            // Head can never be null because there is always the sentinel
-            // A sentinel can never have been visited before
-            head = queue.remove();
+            queue.remove();
+            head = queue.peek();
+            if (head == null) {
+                return false;
+            }
         }
 
-        return !isSentinel(head);
+        return true;
     }
 
     @Override
     public SequenceNode next() {
         if (!hasNext()) {
-            throw new NoSuchElementException("No more elements in the iterator");
+            throw new NoSuchElementException("No more elements in the iterator.");
         }
 
         final SequenceNode head = queue.remove();
         queue.addAll(getNeighbours(head));
         return head;
-    }
-
-
-    /**
-     * Returns true iff. the given {@code SequenceNode} is a sentinel node.
-     *
-     * @param node a {@code SequenceNode}
-     * @return true iff. the given {@code SequenceNode} is a sentinel node.
-     */
-    private boolean isSentinel(final SequenceNode node) {
-        return !node.hasLeftNeighbours() || !node.hasRightNeighbours();
     }
 
     /**

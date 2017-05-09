@@ -27,24 +27,33 @@ class SequenceGraphIteratorTest {
     @Test
     void testIteratorEmptyException() {
         final SequenceGraph graph = new SequenceGraph(new ArrayList<>());
+        final Iterator<SequenceNode> iterator = graph.iterator();
 
-        final Throwable e = catchThrowable(() -> graph.iterator().next());
+        // Contains two sentinel nodes
+        iterator.next();
+        iterator.next();
+
+        final Throwable e = catchThrowable(iterator::next);
         assertThat(e).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    void testIteratorEmpty() {
+    void testIteratorEmptySize() {
         final SequenceGraph graph = new SequenceGraph(new ArrayList<>());
-        assertThat(graph.iterator()).isEmpty();
+
+        assertThat(graph.iterator()).hasSize(2);
     }
 
     @Test
     void testIteratorOneElement() {
         final SequenceNode node = new SequenceNode("1", "1");
-        final SequenceGraph graph = new SequenceGraph(Collections.singletonList(node));
 
-        assertThat(graph.iterator()).hasSize(1);
-        assertThat(graph.iterator()).containsExactly(node);
+        final SequenceGraph graph = new SequenceGraph(Collections.singletonList(node));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
+
+        assertThat(graph.iterator()).hasSize(3);
+        assertThat(graph.iterator()).containsExactly(source, node, sink);
     }
 
     @Test
@@ -58,9 +67,11 @@ class SequenceGraphIteratorTest {
         nodeA.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.iterator()).hasSize(4);
-        assertThat(graph.iterator()).containsExactly(nodeA, nodeB, nodeC, nodeD);
+        assertThat(graph.iterator()).hasSize(6 + 2);
+        assertThat(graph.iterator()).containsExactly(source, nodeA, nodeB, nodeC, nodeD, sink, sink, sink);
     }
 
     @Test
@@ -74,9 +85,11 @@ class SequenceGraphIteratorTest {
         nodeC.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.iterator()).hasSize(4);
-        assertThat(graph.iterator()).containsExactly(nodeA, nodeB, nodeC, nodeD);
+        assertThat(graph.iterator()).hasSize(6);
+        assertThat(graph.iterator()).containsExactly(source, nodeA, nodeB, nodeC, nodeD, sink);
     }
 
     @Test
@@ -91,9 +104,11 @@ class SequenceGraphIteratorTest {
         nodeC.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.iterator()).hasSize(5);
-        assertThat(graph.iterator()).containsExactly(nodeA, nodeB, nodeC, nodeD, nodeD);
+        assertThat(graph.iterator()).hasSize(7 + 1);
+        assertThat(graph.iterator()).containsExactly(source, nodeA, nodeB, nodeC, nodeD, nodeD, sink, sink);
     }
 
 
@@ -109,26 +124,32 @@ class SequenceGraphIteratorTest {
         nodeC.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
         final List<SequenceNode> nodes = iterateModifyCollect(graph.iterator(DUPLICATE_DETECTOR), DUPLICATE_MODIFIER);
 
-        assertThat(nodes).hasSize(4);
-        assertThat(nodes).containsExactly(nodeA, nodeB, nodeC, nodeD);
+        assertThat(nodes).hasSize(6);
+        assertThat(nodes).containsExactly(source, nodeA, nodeB, nodeC, nodeD, sink);
     }
 
 
     @Test
-    void testReverseIteratorEmpty() {
+    void testReverseIteratorEmptySize() {
         final SequenceGraph graph = new SequenceGraph(new ArrayList<>());
-        assertThat(graph.reverseIterator()).hasSize(0);
+
+        assertThat(graph.reverseIterator()).hasSize(2);
     }
 
     @Test
     void testReverseIteratorOneElement() {
         final SequenceNode node = new SequenceNode("1", "1");
-        final SequenceGraph graph = new SequenceGraph(Collections.singletonList(node));
 
-        assertThat(graph.reverseIterator()).hasSize(1);
-        assertThat(graph.reverseIterator()).containsExactly(node);
+        final SequenceGraph graph = new SequenceGraph(Collections.singletonList(node));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
+
+        assertThat(graph.reverseIterator()).hasSize(3);
+        assertThat(graph.reverseIterator()).containsExactly(sink, node, source);
     }
 
     @Test
@@ -142,9 +163,12 @@ class SequenceGraphIteratorTest {
         nodeA.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.reverseIterator()).hasSize(6);
-        assertThat(graph.reverseIterator()).containsExactly(nodeB, nodeC, nodeD, nodeA, nodeA, nodeA);
+        assertThat(graph.reverseIterator()).hasSize(8 + 2);
+        assertThat(graph.reverseIterator()).containsExactly(sink, nodeB, nodeC, nodeD, nodeA, nodeA, nodeA, source,
+                source, source);
     }
 
     @Test
@@ -158,9 +182,11 @@ class SequenceGraphIteratorTest {
         nodeC.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.reverseIterator()).hasSize(4);
-        assertThat(graph.reverseIterator()).containsExactly(nodeD, nodeC, nodeB, nodeA);
+        assertThat(graph.reverseIterator()).hasSize(6);
+        assertThat(graph.reverseIterator()).containsExactly(sink, nodeD, nodeC, nodeB, nodeA, source);
     }
 
     @Test
@@ -175,9 +201,11 @@ class SequenceGraphIteratorTest {
         nodeC.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.reverseIterator()).hasSize(5);
-        assertThat(graph.reverseIterator()).containsExactly(nodeD, nodeB, nodeC, nodeA, nodeA);
+        assertThat(graph.reverseIterator()).hasSize(7 + 1);
+        assertThat(graph.reverseIterator()).containsExactly(sink, nodeD, nodeB, nodeC, nodeA, nodeA, source, source);
     }
 
 
@@ -192,11 +220,13 @@ class SequenceGraphIteratorTest {
         nodeA.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
         final List<SequenceNode> nodes = iterateModifyCollect(graph.reverseIterator(DUPLICATE_DETECTOR),
                 DUPLICATE_MODIFIER);
 
-        assertThat(nodes).hasSize(4);
-        assertThat(nodes).containsExactly(nodeB, nodeC, nodeD, nodeA);
+        assertThat(nodes).hasSize(6);
+        assertThat(nodes).containsExactly(sink, nodeB, nodeC, nodeD, nodeA, source);
     }
 
     @Test
@@ -211,11 +241,13 @@ class SequenceGraphIteratorTest {
         nodeC.linkToRightNeighbour(nodeD);
 
         final SequenceGraph graph = new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        final SequenceNode source = graph.getSourceNode();
+        final SequenceNode sink = graph.getSinkNode();
         final List<SequenceNode> nodes = iterateModifyCollect(graph.reverseIterator(DUPLICATE_DETECTOR),
                 DUPLICATE_MODIFIER);
 
-        assertThat(nodes).hasSize(4);
-        assertThat(nodes).containsExactly(nodeD, nodeB, nodeC, nodeA);
+        assertThat(nodes).hasSize(6);
+        assertThat(nodes).containsExactly(sink, nodeD, nodeB, nodeC, nodeA, source);
     }
 
 
