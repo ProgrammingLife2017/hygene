@@ -9,6 +9,7 @@ import javafx.scene.layout.Priority;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+
 /**
  * Hygene Dialogue. A dialogue is displayed onscreen and prevents any further interaction with the application until
  * it is closed.
@@ -22,7 +23,8 @@ public class HygeneDialogue {
     }
 
     /**
-     * Show a dialogue onscreen. A dialogue prevents any further interaction with the UI until it is closed.
+     * Show a dialogue onscreen. A dialogue prevents any further interaction with the UI until it is closed. Uses the
+     * {@link Alert} from JavaFX.
      *
      * @param type           type of warning dialogue.
      * @param exception      exception associated with this dialogue.
@@ -39,6 +41,14 @@ public class HygeneDialogue {
         }
     }
 
+    /**
+     * Show a dialogue onscreen that prevents further interaction with the UI until closed.
+     *
+     * @param alertType      type of warning dialogue.
+     * @param exception      exception associated with this dialogue.
+     * @param showStackTrace true if you want to show the stacktrace to the user, false otherwise.
+     * @see Alert
+     */
     private static void show(final Alert.AlertType alertType, final Exception exception, final boolean showStackTrace) {
         final Alert alert = new Alert(alertType);
         alert.setTitle("Exception Dialog");
