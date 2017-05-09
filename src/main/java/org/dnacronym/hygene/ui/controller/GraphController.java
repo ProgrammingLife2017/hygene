@@ -42,7 +42,6 @@ public final class GraphController implements Initializable {
         }
     }
 
-
     /**
      * Set the {@link GraphStore} in the controller.
      *

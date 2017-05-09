@@ -38,7 +38,6 @@ public final class MenuController implements Initializable {
         setFileChooser(chooser);
     }
 
-
     /**
      * Set the {@link GraphStore} in the controller. This gives the menu access to the {@link GraphStore} of the
      * application.
