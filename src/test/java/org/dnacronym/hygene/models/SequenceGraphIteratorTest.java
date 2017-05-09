@@ -70,7 +70,7 @@ class SequenceGraphIteratorTest {
         final SequenceNode source = graph.getSourceNode();
         final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.iterator()).hasSize(8); // 6 + 2
+        assertThat(graph.iterator()).hasSize(6 + 2);
         assertThat(graph.iterator()).containsExactly(source, nodeA, nodeB, nodeC, nodeD, sink, sink, sink);
     }
 
@@ -107,7 +107,7 @@ class SequenceGraphIteratorTest {
         final SequenceNode source = graph.getSourceNode();
         final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.iterator()).hasSize(8); // 7 + 1
+        assertThat(graph.iterator()).hasSize(7 + 1);
         assertThat(graph.iterator()).containsExactly(source, nodeA, nodeB, nodeC, nodeD, nodeD, sink, sink);
     }
 
@@ -166,7 +166,7 @@ class SequenceGraphIteratorTest {
         final SequenceNode source = graph.getSourceNode();
         final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.reverseIterator()).hasSize(10); // 8 + 2
+        assertThat(graph.reverseIterator()).hasSize(8 + 2);
         assertThat(graph.reverseIterator()).containsExactly(sink, nodeB, nodeC, nodeD, nodeA, nodeA, nodeA, source,
                 source, source);
     }
@@ -204,7 +204,7 @@ class SequenceGraphIteratorTest {
         final SequenceNode source = graph.getSourceNode();
         final SequenceNode sink = graph.getSinkNode();
 
-        assertThat(graph.reverseIterator()).hasSize(8); // 7 + 1
+        assertThat(graph.reverseIterator()).hasSize(7 + 1);
         assertThat(graph.reverseIterator()).containsExactly(sink, nodeD, nodeB, nodeC, nodeA, nodeA, source, source);
     }
 
