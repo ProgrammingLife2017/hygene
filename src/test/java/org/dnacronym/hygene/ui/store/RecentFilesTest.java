@@ -50,6 +50,17 @@ class RecentFilesTest {
     }
 
     @Test
+    void testAddAndGetInvalidLines() throws IOException {
+        final File testFile1 = new File("");
+        final File testFile2 = new File("Path\\to\\test2.gfb");
+        RecentFiles.add(testFile1);
+        RecentFiles.add(testFile2);
+
+        final List<File> files = RecentFiles.getAll();
+        assertThat(files).isEmpty();
+    }
+
+    @Test
     void testGetWithNonExistingFile() throws IOException {
         if (!getDataFile().delete()) {
             throw new IOException("Unable to delete file");
