@@ -43,8 +43,8 @@ public final class RecentFiles {
         final String content = Files.getInstance().getAppData(DATA_FILE_NAME);
         final List<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        // Remove any empty lines from the list of lines
-        lines.removeIf(""::equals);
+        // Remove paths not ending with the proper extension to restrict effects of manual manipulation of this list
+        lines.removeIf(line -> !line.toLowerCase().endsWith("." + GraphStore.GFA_EXTENSION));
 
         final List<File> files = lines.stream().map(File::new).collect(Collectors.toList());
         return truncate(files);
