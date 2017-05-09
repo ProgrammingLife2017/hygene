@@ -75,7 +75,7 @@ public final class DNADialogue {
      */
     public void show(final HygeneDialogueType type, final Exception exception, final boolean showStackTrace) {
         Platform.runLater(() -> {
-            final String headerText = exception.getMessage();
+            final String headerText = exception != null ? exception.getMessage() : null;
             if (type == HygeneDialogueType.ERROR) {
                 show(Alert.AlertType.ERROR, exception, showStackTrace, "Error!", headerText);
             } else {
@@ -103,7 +103,7 @@ public final class DNADialogue {
             alert.setHeaderText(headerText);
         }
 
-        if (showStackTrace) {
+        if (exception != null && showStackTrace) {
             final Label label = new Label("The exception stacktrace was:");
 
             final StringWriter stringWriter = new StringWriter();
