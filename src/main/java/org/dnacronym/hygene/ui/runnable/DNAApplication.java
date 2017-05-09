@@ -28,12 +28,10 @@ public class DNAApplication extends Application {
 
     private @MonotonicNonNull Stage primaryStage;
 
-
     @Override
     public final void init() {
         graphStore = new GraphStore();
     }
-
 
     @Override
     public final void start(final Stage primaryStage) throws Exception {
