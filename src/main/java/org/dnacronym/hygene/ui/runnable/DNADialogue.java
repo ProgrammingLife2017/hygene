@@ -63,23 +63,23 @@ public final class DNADialogue {
      * <p>
      * An error dialogue should relay to the user that something went wrong with the application. A warning dialogue
      * should relay to the user that they did something they shouldn't do (i.e. trying to perform certain operations
-     * without loading a graph).
+     * without loading a graph).<br>
+     * An error dialogue shows the stacktrace of the exception, the warning dialogue doesn't.
      * <p>
      * Uses {@link Platform#runLater(Runnable)}. This ensures this can be called from any thread.
      *
-     * @param type           type of warning dialogue.
-     * @param exception      exception associated with this dialogue. The message in the exception determines what is
-     *                       displayed in the header of the dialogue.
-     * @param showStackTrace true if you want to show the stacktrace to the user, false otherwise.
+     * @param type      type of warning dialogue.
+     * @param exception exception associated with this dialogue. The message in the exception determines what is
+     *                  displayed in the header of the dialogue.
      * @see Platform#runLater(Runnable)
      */
-    public void show(final HygeneDialogueType type, final Exception exception, final boolean showStackTrace) {
+    public void show(final HygeneDialogueType type, final Exception exception) {
         Platform.runLater(() -> {
             final String headerText = exception != null ? exception.getMessage() : null;
             if (type == HygeneDialogueType.ERROR) {
-                show(Alert.AlertType.ERROR, exception, showStackTrace, "Error!", headerText);
+                show(Alert.AlertType.ERROR, exception, true, "Error!", headerText);
             } else {
-                show(Alert.AlertType.WARNING, exception, showStackTrace, "Warning!", headerText);
+                show(Alert.AlertType.WARNING, exception, false, "Warning!", headerText);
             }
         });
     }

@@ -23,23 +23,7 @@ public class DNADialogueTest extends UITest {
     @Test
     public final void testNullException() {
         Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, null, true));
-
-        assertThat(e).isNull();
-    }
-
-    @Test
-    public final void testShowErrorShowStackTrace() {
-        Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, exception, true));
-
-        assertThat(e).isNull();
-    }
-
-    @Test
-    public final void testShowWarningShowStackTrace() {
-        Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.WARNING, exception, true));
+                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, null));
 
         assertThat(e).isNull();
     }
@@ -47,7 +31,7 @@ public class DNADialogueTest extends UITest {
     @Test
     public final void testShowError() {
         Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, exception, false));
+                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.ERROR, exception));
 
         assertThat(e).isNull();
     }
@@ -55,7 +39,7 @@ public class DNADialogueTest extends UITest {
     @Test
     public final void testShowWarning() {
         Throwable e = catchThrowable(() ->
-                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.WARNING, exception, false));
+                DNADialogue.getInstance().show(DNADialogue.HygeneDialogueType.WARNING, exception));
 
         assertThat(e).isNull();
     }
