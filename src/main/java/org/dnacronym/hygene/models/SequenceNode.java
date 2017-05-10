@@ -235,25 +235,31 @@ public final class SequenceNode {
      */
     void fafospYInit(final SequenceDirection direction) {
         final List<SequenceNode> neighbours = direction.ternary(getLeftNeighbours(), getRightNeighbours());
+        final int neighbourSize = neighbours.size();
 
         final int height;
-        if (neighbours.isEmpty()) {
+        if (neighbourSize == 0) {
             height = 2;
+        } else if (neighbourSize == 1) {
+            final SequenceNode neighbour = neighbours.get(0);
+            final int neighbourNeighbourSize
+                    = direction.ternary(neighbour.getRightNeighbours(), neighbour.getLeftNeighbours()).size();
+
+            if (neighbourNeighbourSize == 1) {
+                height = direction.ternary(neighbour.leftHeight, neighbour.rightHeight);
+            } else {
+                height = 2;
+            }
         } else {
             height = neighbours.stream()
-                    .mapToInt(neighbour -> direction.ternary(neighbour.leftHeight, neighbour.rightHeight))
+                    .mapToInt(node -> direction.ternary(node.getLeftHeight(), node.getRightHeight()))
                     .sum();
         }
 
-        switch (direction) {
-            case LEFT:
-                leftHeight = height;
-                break;
-            case RIGHT:
-                rightHeight = height;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown enum value.");
+        if (direction.equals(SequenceDirection.LEFT)) {
+            leftHeight = height;
+        } else {
+            rightHeight = height;
         }
     }
 
