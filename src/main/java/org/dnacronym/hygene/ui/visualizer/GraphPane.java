@@ -32,6 +32,10 @@ public class GraphPane extends Pane {
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
 
+    private SequenceGraph sequenceGraph;
+
+    private double laneHeight;
+
     /**
      * Create a new {@link GraphPane} instance.
      */
@@ -50,12 +54,14 @@ public class GraphPane extends Pane {
 
         selectedNodeProperty = new SimpleObjectProperty<>();
         canvas.setOnMouseClicked(event -> {
-            final double xPos = event.getSceneX();
-            final double yPos = event.getSceneY();
+            if (sequenceGraph != null) {
+                final double xPos = event.getSceneX();
+                final double yPos = event.getSceneY();
 
-            final double[] positions = toSequenceNodeCoordinate(xPos, yPos);
-            final double xNodePos = positions[0];
-            final double lane = positions[1];
+                final int[] positions = toSequenceNodeCoordinates(xPos, yPos);
+                final int nodeXPos = positions[0];
+                final int nodeLane = positions[1];
+            }
         });
 
         this.getChildren().add(canvas);
@@ -153,9 +159,38 @@ public class GraphPane extends Pane {
      * @return x and y position in a double array of size 2 which correspond with x and y position of
      * {@link SequenceNode}.
      */
-    private double[] toSequenceNodeCoordinate(final double xPos, final double yPos) {
-        // TODO write, and update javadoc to use widthproperty
-        return new double[]{0.0, 0.0};
+    private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
+        // TODO write, and update javadoc to use widthProperty
+
+        final int lane = (int) Math.floor(yPos / laneHeight) + 1;
+
+        return new int[]{0, lane};
+    }
+
+    /**
+     * Sets the {@link #selectedNodeProperty} to the found node in the {@link SequenceGraph}.
+     * <p>
+     * The nodeX should not be onscreen position, but should have been converted to a {@link SequenceGraph} x. The band
+     * is the vertical position of the node, and should denote in which band the node should be.
+     *
+     * @param nodeX x position of the node.
+     * @param band  band the node is in.
+     * @see #getSelectedNodeProperty()
+     * @see SequenceNode#getHorizontalRightEnd()
+     * @see SequenceNode#getVerticalPosition()
+     */
+    private void setCurrentNode(final int nodeX, final int band) {
+        for (SequenceNode node : sequenceGraph) {
+            if (node.getVerticalPosition() == band) {
+                final int nodeRightEnd = node.getHorizontalRightEnd();
+                final int nodeLeftEnd = 0;
+                
+                if (nodeLeftEnd <= nodeX && nodeX < nodeRightEnd) {
+                    selectedNodeProperty.set(node);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -200,12 +235,13 @@ public class GraphPane extends Pane {
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      */
     public final void draw(final @Nullable SequenceGraph sequenceGraph) {
+        this.sequenceGraph = sequenceGraph;
         clear();
 
         if (sequenceGraph != null) {
             // TODO retrieve bandcount from sequenceGraph
             final double bandCount = 1;
-            final double laneHeight = canvas.getHeight() / bandCount;
+            laneHeight = canvas.getHeight() / bandCount;
 
             final SequenceNode sink = sequenceGraph.getSinkNode();
             draw(sink, laneHeight);
