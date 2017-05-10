@@ -198,7 +198,7 @@ public final class SequenceNode {
      *
      * @return the maximal height of any node that is connected to this node.
      */
-    int getMaxHeight() {
+    public int getMaxHeight() {
         return maxHeight;
     }
 

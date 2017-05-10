@@ -30,7 +30,8 @@ public class GraphPane extends Pane {
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
-    private final DoubleProperty nodeWidthPropery;
+    private final DoubleProperty nodeWidthProperty;
+    private final DoubleProperty laneHeightProperty;
 
 
     /**
@@ -48,23 +49,29 @@ public class GraphPane extends Pane {
 
         edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
-        nodeWidthPropery = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
+        nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
+        laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
 
         this.getChildren().add(canvas);
     }
 
 
     /**
-     * Draw line on the {@link Canvas}.
+     * Draw edge on the {@link Canvas}.
      *
-     * @param startX x position of the start of the line
-     * @param startY y position of the start of the line
-     * @param endX   x position of the end of the line
-     * @param endY   y position of the end of the line
+     * @param startHorizontal x position of the start of the line
+     * @param startVertical y position of the start of the line
+     * @param endHorizontal   x position of the end of the line
+     * @param endVertical   y position of the end of the line
      */
-    private void drawEdge(final double startX, final double startY,
-                          final double endX, final double endY) {
-        graphicsContext.strokeLine(startX, startY, endX, endY);
+    private void drawEdge(final double startHorizontal, final double startVertical,
+                          final double endHorizontal, final double endVertical) {
+        graphicsContext.strokeLine(
+                startHorizontal * nodeWidthProperty.get(),
+                startVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2,
+                endHorizontal * nodeWidthProperty.get(),
+                endVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2
+        );
     }
 
     /**
@@ -76,7 +83,12 @@ public class GraphPane extends Pane {
      * @see SequenceNode#getRightNeighbours()
      */
     private void drawEdges(final SequenceNode sequenceNode) {
-        // TODO iterate over neighbours, draw edges and call method on those neighbours
+        sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
+                sequenceNode.getHorizontalRightEnd(),
+                sequenceNode.getVerticalPosition(),
+                neighbour.getHorizontalRightEnd() - neighbour.getSequence().length(),
+                neighbour.getVerticalPosition()
+        ));
     }
 
     /**
@@ -92,47 +104,31 @@ public class GraphPane extends Pane {
     }
 
     /**
-     * Draw a rectangle on the {@link Canvas}.
+     * Draw a node on the {@link Canvas}.
      *
-     * @param startX x position of the upper left corner of rectangle
-     * @param startY y position of the upper left corner of rectangle
-     * @param width  width of the rectangle
-     * @param height height of the rectangle
-     * @param color  color of the rectangle
+     * @param startHorizontal x position of the node
+     * @param verticalPosition y position of the node
+     * @param width  width of the node
+     * @param color  color of the node
      */
-    private void drawNode(final double startX, final double startY,
-                          final double width, final double height, final Color color) {
+    private void drawNode(final double startHorizontal, final double verticalPosition,
+                          final double width, final Color color) {
         graphicsContext.setFill(color);
-        graphicsContext.fillRect(startX, startY, startX + width, startY - height);
+        graphicsContext.fillRect(
+                startHorizontal * nodeWidthProperty.get(),
+                verticalPosition * nodeHeightProperty.get(),
+                width * nodeWidthProperty.get(),
+                nodeHeightProperty.get()
+        );
     }
 
-    /**
-     * Draw the given {@link SequenceNode} onscreen.
-     * <p>
-     * Color depends on the set color of he {@link SequenceNode}.
-     * <p>
-     * Afterwards, proceeds to draw all right neighbours of the given {@link SequenceNode}.
-     *
-     * @param sequenceNode the node which should be drawn onscreen
-     * @param nodeHeight   how tall each node should be. If this is more than laneHeight, nodes will overlap
-     * @param laneHeight   the height of a step. A single step represents a band onscreen
-     * @see SequenceNode#getRightNeighbours()
-     */
-    private void drawNodes(final SequenceNode sequenceNode, final double nodeHeight, final double laneHeight) {
-        // TODO draw node based on x, lane, width and its color. Iterate over right neighbours and call method again.
-    }
-
-    /**
-     * Visualise a {@link SequenceNode} in the {@link Canvas}.
-     * <p>
-     * A {@link SequenceNode} is drawn in the center of each band.
-     *
-     * @param sequenceNode sequenceNode to draw.
-     * @param stepHeight   denotes the height of each of the onscreen bands in which nodes reside.
-     */
-    private void draw(final SequenceNode sequenceNode, final double stepHeight) {
-        drawNodes(sequenceNode, nodeHeightProperty.get(), stepHeight);
-        drawEdges(sequenceNode, edgeColorProperty.get());
+    private void drawNode(final SequenceNode node) {
+        drawNode(
+                node.getHorizontalRightEnd() - node.getSequence().length(),
+                node.getVerticalPosition(),
+                node.getSequence().length(),
+                Color.BLUE
+        );
     }
 
     /**
@@ -167,8 +163,8 @@ public class GraphPane extends Pane {
      *
      * @return property which decides the width of nodes.
      */
-    public final DoubleProperty getNodeWidthPropery() {
-        return nodeWidthPropery;
+    public final DoubleProperty getNodeWidthProperty() {
+        return nodeWidthProperty;
     }
 
     /**
@@ -179,15 +175,17 @@ public class GraphPane extends Pane {
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      */
     public final void draw(final @Nullable SequenceGraph sequenceGraph) {
-        clear();
-
         if (sequenceGraph != null) {
-            // TODO retrieve band count from sequenceGraph
-            final double bandCount = 1;
-            final double laneHeight = canvas.getHeight() / bandCount;
+            clear();
 
-            final SequenceNode sink = sequenceGraph.getSinkNode();
-            draw(sink, laneHeight);
+            // TODO retrieve lanecount from sequenceGraph
+            final double laneCount = sequenceGraph.getSourceNode().getMaxHeight();
+            laneHeightProperty.set(canvas.getHeight() / laneCount);
+
+            sequenceGraph.iterator().forEachRemaining(node -> {
+                drawNode(node);
+                drawEdges(node);
+            });
         }
     }
 }
