@@ -110,18 +110,12 @@ public class GraphPane extends Pane {
      * Afterwards, proceeds to draw all right neighbours of the given {@link SequenceNode}.
      *
      * @param sequenceNode the node which should be drawn onscreen.
+     * @param nodeHeight   how tall each node should be. If this is more than laneHeight, nodes will overlap.
      * @param laneHeight   the heigh of a step. A single step represents a band onscreen.
      * @see SequenceNode#getRightNeighbours()
      */
-    private void drawNodes(final SequenceNode sequenceNode, final double laneHeight) {
+    private void drawNodes(final SequenceNode sequenceNode, final double nodeHeight, final double laneHeight) {
         // TODO draw node based on x, lane, width and its color. Iterate over right neighbours and call method again.
-    }
-
-    /**
-     * Clear the canvas.
-     */
-    private void clear() {
-        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     /**
@@ -133,17 +127,33 @@ public class GraphPane extends Pane {
      * @param stepHeight   denotes the height of each of the onscreen bands in which nodes reside.
      */
     private void visualise(final SequenceNode sequenceNode, final double stepHeight) {
-        drawNodes(sequenceNode, stepHeight);
+        drawNodes(sequenceNode, nodeHeightProperty.get(), stepHeight);
         drawEdges(sequenceNode, edgeColorProperty.get());
     }
 
     /**
-     * The property of edge colors. This color determines the colors of edges.
+     * Clear the canvas.
+     */
+    public final void clear() {
+        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    /**
+     * The property of onscreen edge colors.
      *
      * @return property which decides the color of edges.
      */
     public final ObjectProperty<Color> getEdgeColorProperty() {
         return edgeColorProperty;
+    }
+
+    /**
+     * The property of onscreen node heights.
+     *
+     * @return property which decides the height of nodes.
+     */
+    public final DoubleProperty getNodeHeightProperty() {
+        return nodeHeightProperty;
     }
 
     /**
