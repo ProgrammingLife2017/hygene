@@ -57,11 +57,11 @@ public final class GraphController implements Initializable {
      * @see GfaFile#getGraph()
      */
     protected void updateGraph(final GfaFile gfaFile) {
-        try {
-            if (graphPane == null || visualiser == null) {
-                return;
-            }
+        if (graphPane == null || visualiser == null) {
+            return;
+        }
 
+        try {
             visualiser.draw(gfaFile.getGraph());
         } catch (ParseException e) {
             e.printStackTrace();
