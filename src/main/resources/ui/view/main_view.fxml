@@ -13,6 +13,9 @@
     <top>
         <fx:include source="menu_view.fxml"/>
     </top>
+    <bottom>
+        <fx:include source="console_view.fxml"/>
+    </bottom>
     <center>
         <fx:include source="graph_view.fxml"/>
     </center>
