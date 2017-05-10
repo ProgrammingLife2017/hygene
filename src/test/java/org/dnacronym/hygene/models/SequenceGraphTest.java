@@ -32,6 +32,14 @@ class SequenceGraphTest {
 
 
     @Test
+    void testEmptyGraph() {
+        sequenceGraph = new SequenceGraph(new ArrayList<>());
+
+        assertThat(sequenceGraph.getSourceNode().hasRightNeighbours()).isTrue();
+        assertThat(sequenceGraph.getSinkNode().hasLeftNeighbours()).isTrue();
+    }
+
+    @Test
     void testGetSourceNode() {
         assertThat(sequenceGraph.getSourceNode().getId()).isEqualTo(SequenceGraph.SOURCE_NODE_ID);
     }

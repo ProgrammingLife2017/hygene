@@ -40,6 +40,9 @@ dependencies {
     compile("org.graphstream:gs-core:${graphstreamVersion}")
     compile("org.graphstream:gs-ui:${graphstreamVersion}")
 
+    // FindBugs annotations
+    compile("com.google.code.findbugs:annotations:${findBugsAnnotations}")
+
     // JUnit Jupiter API and TestEngine implementation
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
@@ -67,6 +70,16 @@ jar {
     manifest {
         attributes 'Main-Class': 'org.dnacronym.hygene.ui.runnable.DNAApplication'
     }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'org.dnacronym.hygene.ui.runnable.DNAApplication'
+    }
+    baseName = project.name + '-all'
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 if (project.hasProperty('headless') ? project.headless : false) {

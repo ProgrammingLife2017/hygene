@@ -39,7 +39,7 @@ public class DNAPreloader extends Preloader {
         final URL resource = Files.getInstance().getResourceUrl(PRELOADER_VIEW);
         final Parent root = FXMLLoader.load(resource);
         if (root == null) {
-            throw new UIInitialisationException(DNAApplication.UI_NOT_INITIALIZED);
+            throw new UIInitialisationException("Root of Preloader could not be found.");
         }
 
         final Scene rootScene = new Scene(root);

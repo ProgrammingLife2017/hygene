@@ -18,47 +18,92 @@ import java.net.URL;
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
 public class DNAApplication extends Application {
+    private static @MonotonicNonNull DNAApplication dnaApplication;
 
-    static final String TITLE = "DNA";
-    static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    static final String TITLE = "Hygene";
 
-    static final String UI_NOT_INITIALIZED = "The UI could not be initialised.";
+    private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
 
-    private static final GraphStore GRAPH_STORE = new GraphStore();
+    private @MonotonicNonNull GraphStore graphStore;
 
-    @MonotonicNonNull
-    private static Stage applicationStage;
+    private @MonotonicNonNull Stage primaryStage;
+
+    @Override
+    public final void init() {
+        graphStore = new GraphStore();
+    }
+
+    @Override
+    public final void start(final Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
+        setInstance(this);
+
+        primaryStage.setTitle(TITLE);
+        primaryStage.setMaximized(true);
+
+        final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
+        final Parent parent = FXMLLoader.load(resource);
+        if (parent == null) {
+            throw new UIInitialisationException("Root of Application could not be found.");
+        }
+
+        final Scene rootScene = new Scene(parent);
+        primaryStage.setScene(rootScene);
+        primaryStage.show();
+    }
 
     /**
      * Get the {@link GraphStore} of the {@link DNAApplication}.
      *
      * @return {@link GraphStore} of the {@link DNAApplication}.
+     * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
+     *                                   in {@link #init()}.
      * @see GraphStore
+     * @see #init()
      */
-    public static GraphStore getGraphStore() {
-        return GRAPH_STORE;
-    }
-
-    /**
-     * Get the {@link Stage} of the application.
-     *
-     * @return {@link Stage} of the application.
-     * @throws UIInitialisationException if the UI is not initialized.
-     */
-    public static Stage getStage() throws UIInitialisationException {
-        if (DNAApplication.applicationStage == null) {
-            throw new UIInitialisationException(UI_NOT_INITIALIZED);
+    public final GraphStore getGraphStore() throws UIInitialisationException {
+        if (graphStore == null) {
+            throw new UIInitialisationException("GraphStore not present.");
         }
-        return DNAApplication.applicationStage;
+        return graphStore;
     }
 
     /**
-     * Set the {@link Stage} of the {@link Application}.
+     * Get an instance of the DNAApplication. If there is not an instance, then it will throw a
+     * {@link UIInitialisationException} as opposed to creating a new one.
      *
-     * @param stage {@link Stage} of the application.
+     * @return instance of the {@link DNAApplication}.
+     * @throws UIInitialisationException if the UI was not initialzed, meaning the {@link Stage} was not set in
+     *                                   {@link #start(Stage)}.
+     * @see #start(Stage)
      */
-    protected static void setStage(final Stage stage) {
-        applicationStage = stage;
+    public final Stage getPrimaryStage() throws UIInitialisationException {
+        if (primaryStage == null) {
+            throw new UIInitialisationException("Stage not present.");
+        }
+        return primaryStage;
+    }
+
+    /**
+     * Get an instance of an {@link DNAApplication}.
+     *
+     * @return Instance of {@link DNAApplication}.
+     * @throws UIInitialisationException if the UI has not be initialized.
+     */
+    public static synchronized DNAApplication getInstance() throws UIInitialisationException {
+        if (dnaApplication == null) {
+            throw new UIInitialisationException("Instance of Application not set.");
+        }
+        return dnaApplication;
+    }
+
+    /**
+     * Set the {@link DNAApplication} instance.
+     *
+     * @param application {@link DNAApplication} instance.
+     */
+    protected static synchronized void setInstance(final DNAApplication application) {
+        dnaApplication = application;
     }
 
     /**
@@ -70,23 +115,5 @@ public class DNAApplication extends Application {
      */
     public static void main(final String[] args) {
         LauncherImpl.launchApplication(DNAApplication.class, DNAPreloader.class, args);
-    }
-
-    @Override
-    public final void start(final Stage primaryStage) throws Exception {
-        DNAApplication.setStage(primaryStage);
-
-        primaryStage.setTitle(TITLE);
-        primaryStage.setMaximized(true);
-
-        final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
-        final Parent parent = FXMLLoader.load(resource);
-        if (parent == null) {
-            throw new UIInitialisationException(UI_NOT_INITIALIZED);
-        }
-
-        final Scene rootScene = new Scene(parent);
-        primaryStage.setScene(rootScene);
-        primaryStage.show();
     }
 }

@@ -65,7 +65,6 @@ public class GraphPane extends Pane {
 
     /**
      * draws all onscreen edges between the current {@link SequenceNode} and it's right neighbours.
-     * <p>
      * Afterwards, calls itself on each of the right neighbours of the current node.
      *
      * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}.
@@ -104,7 +103,6 @@ public class GraphPane extends Pane {
 
     /**
      * Draw the given {@link SequenceNode} onscreen.
-     * <p>
      * Color depends on the set color of he {@link SequenceNode}.
      * <p>
      * Afterwards, proceeds to draw all right neighbours of the given {@link SequenceNode}.
@@ -120,13 +118,12 @@ public class GraphPane extends Pane {
 
     /**
      * Visualise a {@link SequenceNode} in the {@link Canvas}.
-     * <p>
      * A {@link SequenceNode} is drawn in the center of each band.
      *
-     * @param sequenceNode sequenceNode to visualise.
+     * @param sequenceNode sequenceNode to draw.
      * @param stepHeight   denotes the height of each of the onscreen bands in which nodes reside.
      */
-    private void visualise(final SequenceNode sequenceNode, final double stepHeight) {
+    private void draw(final SequenceNode sequenceNode, final double stepHeight) {
         drawNodes(sequenceNode, nodeHeightProperty.get(), stepHeight);
         drawEdges(sequenceNode, edgeColorProperty.get());
     }
@@ -162,7 +159,7 @@ public class GraphPane extends Pane {
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      */
-    public final void visualise(final SequenceGraph sequenceGraph) {
+    public final void draw(final SequenceGraph sequenceGraph) {
         clear();
 
         // TODO retrieve bandcount from sequenceGraph
@@ -170,6 +167,6 @@ public class GraphPane extends Pane {
         final double laneHeight = canvas.getHeight() / bandCount;
 
         final SequenceNode sink = sequenceGraph.getSinkNode();
-        visualise(sink, laneHeight);
+        draw(sink, laneHeight);
     }
 }
