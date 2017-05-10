@@ -40,7 +40,7 @@ class RecentFilesTest {
 
     @Test
     void testAddAndGetWithTrailingWhitespace() throws IOException {
-        final File testFile = new File("Path\\to\\test.txt      \n");
+        final File testFile = new File("Path/to/test.txt      \n");
         RecentFiles.add(testFile);
 
         final List<File> files = RecentFiles.getAll();
