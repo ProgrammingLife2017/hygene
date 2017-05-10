@@ -23,6 +23,7 @@ public class DNAApplication extends Application {
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
     private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(DNAApplication.class);
     private static @MonotonicNonNull DNAApplication dnaApplication;
+
     private @MonotonicNonNull GraphStore graphStore;
 
     private @MonotonicNonNull Stage primaryStage;
@@ -82,6 +83,7 @@ public class DNAApplication extends Application {
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
         primaryStage.show();
+
         logger.info("Launching HyGene GUI");
     }
 

@@ -22,7 +22,6 @@ public final class ConsoleController implements Initializable {
         // Enable custom appender to redirect logging output to console window.
         JFXAppender.setConsoleWindow(console);
 
-        // Make sure the TextArea cannot be edited
         if (console != null) {
             console.setEditable(false);
         }

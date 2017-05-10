@@ -14,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Serializable;
 
+
 /**
  * Custom Appender plugin for Log4j2 that will cause the logger output appended to a JavaFX {@code TextArea} in the GUI.
  */
@@ -25,11 +26,11 @@ public final class JFXAppender extends AbstractAppender {
     /**
      * Constructor for creating a new JFXAppender.
      *
-     * @param name             The Appender name.
-     * @param filter           The Filter to associate with the Appender.
-     * @param layout           The layout to use to format the event.
-     * @param ignoreExceptions If true, exceptions will be logged and suppressed. If false errors will be logged and
-     *                         then passed to the application.
+     * @param name             the Appender's name
+     * @param filter           the {@code Filter} to associate with the Appender
+     * @param layout           the layout to use to format the event
+     * @param ignoreExceptions if true, exceptions will be logged and suppressed. If false errors will be logged and
+     *                         then passed to the application
      */
     protected JFXAppender(final String name, final Filter filter, final Layout<? extends Serializable> layout,
                           final boolean ignoreExceptions) {
