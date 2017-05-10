@@ -208,5 +208,4 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
         return foundNode;
     }
-
 }

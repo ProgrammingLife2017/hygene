@@ -190,7 +190,6 @@ public final class SequenceNode {
      *
      * @return the sum of left heights of its left neighbours.
      */
-
     int getLeftHeight() {
         return leftHeight;
     }
