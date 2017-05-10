@@ -3,8 +3,6 @@ package org.dnacronym.hygene.ui.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.util.JFXAppender;
 
@@ -24,6 +22,7 @@ public final class ConsoleController implements Initializable {
         // Enable custom appender to redirect logging output to console window.
         JFXAppender.setConsoleWindow(console);
 
+        // Make sure the TextArea cannot be edited
         console.setEditable(false);
     }
 }
