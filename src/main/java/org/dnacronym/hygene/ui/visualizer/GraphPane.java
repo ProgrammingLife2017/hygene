@@ -33,7 +33,7 @@ public class GraphPane extends Pane {
     /**
      * Create a new {@link GraphPane} instance.
      */
-    @SuppressWarnings("nullness")
+    @SuppressWarnings("nullness") // Superclass width and height has already been instantiated, so can't be null.
     public GraphPane() {
         super();
 
@@ -53,10 +53,10 @@ public class GraphPane extends Pane {
     /**
      * Draw line on the {@link Canvas}.
      *
-     * @param startX x position of the start of the line.
-     * @param startY y position of the start of the line.
-     * @param endX   x position of the end of the line.
-     * @param endY   y position of the end of the line.
+     * @param startX x position of the start of the line
+     * @param startY y position of the start of the line
+     * @param endX   x position of the end of the line
+     * @param endY   y position of the end of the line
      */
     private void drawEdge(final double startX, final double startY,
                           final double endX, final double endY) {
@@ -64,10 +64,11 @@ public class GraphPane extends Pane {
     }
 
     /**
-     * draws all onscreen edges between the current {@link SequenceNode} and it's right neighbours.
+     * Draws all onscreen edges between the current {@link SequenceNode} and it's right neighbours.
+     * <p>
      * Afterwards, calls itself on each of the right neighbours of the current node.
      *
-     * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}.
+     * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}
      * @see SequenceNode#getRightNeighbours()
      */
     private void drawEdges(final SequenceNode sequenceNode) {
@@ -77,8 +78,8 @@ public class GraphPane extends Pane {
     /**
      * Sets the fill of the {@link GraphicsContext} before proceeding to draw all onscreen edges.
      *
-     * @param sequenceNode the node representing the source of the graph.
-     * @param color        the color with which all edges should be drawn.
+     * @param sequenceNode the node representing the source of the graph
+     * @param color        the color with which all edges should be drawn
      * @see #drawEdges(SequenceNode)
      */
     private void drawEdges(final SequenceNode sequenceNode, final Color color) {
@@ -89,11 +90,11 @@ public class GraphPane extends Pane {
     /**
      * Draw a rectangle on the {@link Canvas}.
      *
-     * @param startX x position of the upper left corner of rectangle.
-     * @param startY y position of the upper left corner of rectangle.
-     * @param width  width of the rectangle.
-     * @param height height of the rectangle.
-     * @param color  color of the rectangle.
+     * @param startX x position of the upper left corner of rectangle
+     * @param startY y position of the upper left corner of rectangle
+     * @param width  width of the rectangle
+     * @param height height of the rectangle
+     * @param color  color of the rectangle
      */
     private void drawNode(final double startX, final double startY,
                           final double width, final double height, final Color color) {
@@ -103,13 +104,14 @@ public class GraphPane extends Pane {
 
     /**
      * Draw the given {@link SequenceNode} onscreen.
+     * <p>
      * Color depends on the set color of he {@link SequenceNode}.
      * <p>
      * Afterwards, proceeds to draw all right neighbours of the given {@link SequenceNode}.
      *
-     * @param sequenceNode the node which should be drawn onscreen.
-     * @param nodeHeight   how tall each node should be. If this is more than laneHeight, nodes will overlap.
-     * @param laneHeight   the heigh of a step. A single step represents a band onscreen.
+     * @param sequenceNode the node which should be drawn onscreen
+     * @param nodeHeight   how tall each node should be. If this is more than laneHeight, nodes will overlap
+     * @param laneHeight   the height of a step. A single step represents a band onscreen
      * @see SequenceNode#getRightNeighbours()
      */
     private void drawNodes(final SequenceNode sequenceNode, final double nodeHeight, final double laneHeight) {
@@ -118,6 +120,7 @@ public class GraphPane extends Pane {
 
     /**
      * Visualise a {@link SequenceNode} in the {@link Canvas}.
+     * <p>
      * A {@link SequenceNode} is drawn in the center of each band.
      *
      * @param sequenceNode sequenceNode to draw.
@@ -155,6 +158,7 @@ public class GraphPane extends Pane {
 
     /**
      * Populate the graphs primitives with the given sequence graph.
+     * <p>
      * First clears the graph before drawing.
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
