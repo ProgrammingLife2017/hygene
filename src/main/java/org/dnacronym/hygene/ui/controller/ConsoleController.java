@@ -1,0 +1,29 @@
+package org.dnacronym.hygene.ui.controller;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.ui.util.JFXAppender;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+
+/**
+ * Controller for the console window.
+ */
+public final class ConsoleController implements Initializable {
+    @FXML
+    private @MonotonicNonNull TextArea console;
+
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
+        // Enable custom appender to redirect logging output to console window.
+        JFXAppender.setConsoleWindow(console);
+
+        console.setEditable(false);
+    }
+}
