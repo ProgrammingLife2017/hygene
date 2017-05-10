@@ -23,6 +23,8 @@ public final class ConsoleController implements Initializable {
         JFXAppender.setConsoleWindow(console);
 
         // Make sure the TextArea cannot be edited
-        console.setEditable(false);
+        if (console != null) {
+            console.setEditable(false);
+        }
     }
 }
