@@ -138,7 +138,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
 
     /**
-     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP. The nodes are visited in
+     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
      * breadth-first search order.
      */
     private void fafospX() {
@@ -154,7 +154,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     }
 
     /**
-     * Calculates the optimal vertical position of each {@code SequenceNode} using FAFOSP. The nodes are visited in
+     * Calculates the optimal vertical position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
      * breadth-first search order.
      */
     private void fafospY() {
