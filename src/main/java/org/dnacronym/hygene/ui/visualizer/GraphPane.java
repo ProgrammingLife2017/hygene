@@ -52,6 +52,10 @@ public class GraphPane extends Pane {
         canvas.setOnMouseClicked(event -> {
             final double xPos = event.getSceneX();
             final double yPos = event.getSceneY();
+
+            final double[] positions = toSequenceNodeCoordinate(xPos, yPos);
+            final double xNodePos = positions[0];
+            final double lane = positions[1];
         });
 
         this.getChildren().add(canvas);
@@ -137,6 +141,21 @@ public class GraphPane extends Pane {
     private void draw(final SequenceNode sequenceNode, final double stepHeight) {
         drawNodes(sequenceNode, nodeHeightProperty.get(), stepHeight);
         drawEdges(sequenceNode, edgeColorProperty.get());
+    }
+
+    /**
+     * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.
+     * <p>
+     * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
+     *
+     * @param xPos x position onscreen
+     * @param yPos y position onscreen
+     * @return x and y position in a double array of size 2 which correspond with x and y position of
+     * {@link SequenceNode}.
+     */
+    private double[] toSequenceNodeCoordinate(final double xPos, final double yPos) {
+        // TODO write, and update javadoc to use widthproperty
+        return new double[]{0.0, 0.0};
     }
 
     /**
