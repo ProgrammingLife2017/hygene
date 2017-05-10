@@ -23,6 +23,7 @@ import org.dnacronym.hygene.models.SequenceNode;
  */
 public class GraphPane extends Pane {
     private static final double DEFAULT_NODE_HEIGHT = 100;
+    private static final double DEFAULT_NODE_WIDTH = 20;
 
     private final Canvas canvas;
     private final GraphicsContext graphicsContext;
@@ -31,6 +32,7 @@ public class GraphPane extends Pane {
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
+    private final DoubleProperty nodeWidthPropery;
 
     private @Nullable SequenceGraph sequenceGraph;
 
@@ -52,6 +54,7 @@ public class GraphPane extends Pane {
 
         edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+        nodeWidthPropery = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
 
         selectedNodeProperty = new SimpleObjectProperty<>();
         canvas.setOnMouseClicked(event -> {
@@ -163,11 +166,10 @@ public class GraphPane extends Pane {
      * {@link SequenceNode}.
      */
     private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
-        // TODO write, and update javadoc to use widthProperty
-
+        final int nodeX = (int) Math.round(xPos / nodeWidthPropery.get());
         final int lane = (int) Math.floor(yPos / laneHeight) + 1;
 
-        return new int[]{0, lane};
+        return new int[]{nodeX, lane};
     }
 
     /**
@@ -236,6 +238,17 @@ public class GraphPane extends Pane {
      */
     public final DoubleProperty getNodeHeightProperty() {
         return nodeHeightProperty;
+    }
+
+    /**
+     * The property of node widths.
+     * <p>
+     * Node width determines how wide a single width unit in the FAFOSP algorithm.
+     *
+     * @return property which decides the width of nodes.
+     */
+    public final DoubleProperty getNodeWidthPropery() {
+        return nodeWidthPropery;
     }
 
     /**
