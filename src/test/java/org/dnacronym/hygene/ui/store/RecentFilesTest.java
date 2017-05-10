@@ -39,6 +39,16 @@ class RecentFilesTest {
     }
 
     @Test
+    void testAddAndGetWithTrailingWhitespace() throws IOException {
+        final File testFile = new File("Path/to/test.txt      \n");
+        RecentFiles.add(testFile);
+
+        final List<File> files = RecentFiles.getAll();
+        assertThat(files.size()).isEqualTo(1);
+        assertThat(files.get(0).getPath()).isEqualTo(testFile.getPath().trim());
+    }
+
+    @Test
     void testAddAndGetAddToFront() throws IOException {
         final File testFile1 = new File("Path/to/test1.gfa");
         final File testFile2 = new File("Path/to/test2.gfa");
