@@ -46,8 +46,8 @@ public final class NewGfaParser {
 
         nodeVectors = new int[nodeIds.size()][];
 
-        for (int offset = 0; offset < lines.length; offset++) {
-            parseLine(lines[offset], offset);
+        for (int offset = 1; offset <= lines.length; offset++) {
+            parseLine(lines[offset - 1], offset);
         }
 
         return new Graph(nodeVectors);

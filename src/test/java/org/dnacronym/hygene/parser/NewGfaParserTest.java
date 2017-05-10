@@ -47,7 +47,7 @@ class NewGfaParserTest {
 
     @Test
     void testSegmentWithMissingSequence() {
-        final String gfa = "S name sequence";
+        final String gfa = "S name ";
 
         final Throwable e = catchThrowable(() -> parse(gfa));
         assertThat(e).isInstanceOf(ParseException.class);
@@ -66,7 +66,7 @@ class NewGfaParserTest {
         final String gfa = "S name1 contents\nS name2 contents\nS name3 contents";
         final Graph graph = parse(gfa);
 
-        assertThat(graph.getLineNumber(2)).isEqualTo(3);
+        assertThat(graph.getLineNumber(2)).isEqualTo(4);
         assertThat(graph.getColor(2)).isEqualTo(NodeColor.BLACK);
     }
 
@@ -88,10 +88,10 @@ class NewGfaParserTest {
         Node firstNode = graph.getNode(0);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 3));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 4));
 
         assertThat(firstNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 4));
+        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 5));
     }
 
 
