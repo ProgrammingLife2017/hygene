@@ -172,7 +172,7 @@ public final class NewGfaParser {
      */
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
         nodeVectors[toId] = NodeBuilder.fromArray(toId, nodeVectors[toId])
-                .withIncomingEdge(fromId, offset + 1).toArray();
+                .withIncomingEdge(fromId, offset).toArray();
     }
 
     /**
@@ -184,6 +184,6 @@ public final class NewGfaParser {
      */
     private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
         nodeVectors[fromId] = NodeBuilder.fromArray(fromId, nodeVectors[fromId])
-                .withOutgoingEdge(toId, offset + 1).toArray();
+                .withOutgoingEdge(toId, offset).toArray();
     }
 }

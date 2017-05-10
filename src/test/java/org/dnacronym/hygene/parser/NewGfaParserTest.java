@@ -88,10 +88,10 @@ class NewGfaParserTest {
         Node firstNode = graph.getNode(0);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 4));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 3));
 
         assertThat(firstNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 5));
+        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 4));
     }
 
 
