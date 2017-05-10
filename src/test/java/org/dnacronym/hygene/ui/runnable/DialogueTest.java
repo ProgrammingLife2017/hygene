@@ -21,6 +21,7 @@ public class DialogueTest extends UITest {
         exception = new UIInitialisationException("test exception");
     }
 
+
     @Test
     public final void testShowError() {
         Throwable e = catchThrowable(() -> (new Dialogue(Dialogue.DialogueType.ERROR, exception)).show());
