@@ -98,7 +98,7 @@ public class NewGfaFile {
      * @return contents of the GFA file.
      * @throws ParseException if the given file name cannot be read
      */
-    public String readFile() throws ParseException {
+    public final String readFile() throws ParseException {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
         } catch (IOException e) {

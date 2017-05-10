@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 
 
 class NewGfaFileTest {
-    private final static String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
+    private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
             + "S\t11\tACCTT%n"
             + "S\t12\tTCAAGG%n"
             + "L\t11\t+\t12\t-\t4M%n");

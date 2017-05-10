@@ -2,6 +2,8 @@ package org.dnacronym.hygene.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -25,6 +27,7 @@ public final class Node {
 
     private final int id;
     private final int[] data;
+    private final @Nullable Graph graph;
 
     private volatile @MonotonicNonNull Set<Edge> incomingEdges;
     private volatile @MonotonicNonNull Set<Edge> outgoingEdges;
@@ -33,12 +36,14 @@ public final class Node {
     /**
      * Constructor for {@code Node}.
      *
-     * @param id   the node's id
-     * @param data the node array representing the node's data
+     * @param id    the node's id
+     * @param data  the node array representing the node's data
+     * @param graph the graph containing the node
      */
-    Node(final int id, final int[] data) {
+    Node(final int id, final int[] data, final @Nullable Graph graph) {
         this.id = id;
         this.data = data;
+        this.graph = graph;
     }
 
 
@@ -143,7 +148,7 @@ public final class Node {
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         int to = data[offset + i * EDGE_DATA_SIZE];
                         int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
-                        newOutgoingEdges.add(new Edge(id, to, lineNumber));
+                        newOutgoingEdges.add(new Edge(id, to, lineNumber, graph));
                     }
                     this.outgoingEdges = newOutgoingEdges;
                 }
@@ -170,7 +175,7 @@ public final class Node {
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         int from = data[offset + i * EDGE_DATA_SIZE];
                         int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
-                        newIncomingEdges.add(new Edge(from, id, lineNumber));
+                        newIncomingEdges.add(new Edge(from, id, lineNumber, graph));
                     }
 
                     this.incomingEdges = newIncomingEdges;
@@ -178,5 +183,24 @@ public final class Node {
             }
         }
         return incomingEdges;
+    }
+
+    /**
+     * Getter for the {@link Graph} reference.
+     *
+     * @return a reference to the {@link Graph} the edge belongs to.
+     */
+    public @Nullable Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * Retrieves metadata of the node.
+     *
+     * @return metadata of the bode.
+     * @throws ParseException if the edge metadata cannot be parsed
+     */
+    public NodeMetadata retrieveMetadata() throws ParseException {
+        return NodeMetadata.retrieveFor(this);
     }
 }

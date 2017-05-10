@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.dnacronym.hygene.parser.NewGfaFile;
 
 
 /**
@@ -11,19 +12,22 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public final class Graph {
     private final int[][] nodeArrays;
+    private final NewGfaFile gfaFile;
 
 
     /**
      * Constructs a graph from array based data structure.
      *
      * @param nodeArrays nested array containing the graphs data
+     * @param gfaFile    a reference to the GFA file from which the graph is created
      */
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
             justification = "For performance reasons, we don't want to create a copy here"
     )
-    public Graph(final int[][] nodeArrays) {
+    public Graph(final int[][] nodeArrays, final NewGfaFile gfaFile) {
         this.nodeArrays = nodeArrays;
+        this.gfaFile = gfaFile;
     }
 
 
@@ -34,7 +38,7 @@ public final class Graph {
      * @return the created {@link Node} object
      */
     public Node getNode(final int id) {
-        return new Node(id, nodeArrays[id]);
+        return new Node(id, nodeArrays[id], this);
     }
 
     /**
@@ -98,5 +102,14 @@ public final class Graph {
      */
     public int getUnscaledYPosition(final int id) {
         return nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX];
+    }
+
+    /**
+     * Getter for the {@code GfaFile} instance where the graph belongs to.
+     *
+     * @return the {@code GfaFile} instance where the graph belongs to.
+     */
+    public NewGfaFile getGfaFile() {
+        return gfaFile;
     }
 }

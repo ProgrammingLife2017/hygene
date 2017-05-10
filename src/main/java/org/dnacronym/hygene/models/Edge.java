@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.models;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ public final class Edge implements Comparable<Edge> {
     private final int from;
     private final int to;
     private final int lineNumber;
+    private final @Nullable Graph graph;
 
 
     /**
@@ -20,11 +22,13 @@ public final class Edge implements Comparable<Edge> {
      * @param from       node from which the edge originates
      * @param to         node at which the edge ends
      * @param lineNumber line number of GFA file where the edge is specified
+     * @param graph      a reference to the graph that the edge belongs to
      */
-    public Edge(final int from, final int to, final int lineNumber) {
+    public Edge(final int from, final int to, final int lineNumber, final @Nullable Graph graph) {
         this.from = from;
         this.to = to;
         this.lineNumber = lineNumber;
+        this.graph = graph;
     }
 
 
@@ -53,6 +57,25 @@ public final class Edge implements Comparable<Edge> {
      */
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    /**
+     * Getter for the {@link Graph} reference.
+     *
+     * @return a reference to the {@link Graph} the edge belongs to.
+     */
+    public @Nullable Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * Retrieves metadata of the edge.
+     *
+     * @return metadata of the edge.
+     * @throws ParseException if the edge metadata cannot be parsed
+     */
+    public EdgeMetadata retrieveMetadata() throws ParseException {
+        return EdgeMetadata.retrieveFor(this);
     }
 
     /**
