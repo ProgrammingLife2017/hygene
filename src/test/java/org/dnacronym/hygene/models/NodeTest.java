@@ -46,7 +46,7 @@ class NodeTest {
         final Node node = NodeBuilder.start()
                 .withNodeId(42)
                 .withLineNumber(1)
-                .withColor(NodeColor.BLUE)
+                .withColor(NodeColor.BLACK)
                 .withUnscaledXPosition(3)
                 .withUnscaledYPosition(4)
                 .withOutgoingEdge(1, 30)
@@ -55,7 +55,7 @@ class NodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[]{
-                1, 2, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                1, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }
 
