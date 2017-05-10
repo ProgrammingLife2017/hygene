@@ -27,9 +27,10 @@ public class GraphPane extends Pane {
     private final Canvas canvas;
     private final GraphicsContext graphicsContext;
 
+    private final ObjectProperty<SequenceNode> selectedNodeProperty;
+
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
-
 
     /**
      * Create a new {@link GraphPane} instance.
@@ -46,6 +47,12 @@ public class GraphPane extends Pane {
 
         edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+
+        selectedNodeProperty = new SimpleObjectProperty<>();
+        canvas.setOnMouseClicked(event -> {
+            final double xPos = event.getSceneX();
+            final double yPos = event.getSceneY();
+        });
 
         this.getChildren().add(canvas);
     }
@@ -137,6 +144,15 @@ public class GraphPane extends Pane {
      */
     public final void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    /**
+     * The property of the selected node. This node is updated every time the user clicks on the canvas.
+     *
+     * @return Selected {@link SequenceNode} by the user. Can be null.
+     */
+    public final ObjectProperty<SequenceNode> getSelectedNodeProperty() {
+        return selectedNodeProperty;
     }
 
     /**
