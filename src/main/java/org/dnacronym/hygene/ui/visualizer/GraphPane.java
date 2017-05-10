@@ -23,12 +23,14 @@ import org.dnacronym.hygene.models.SequenceNode;
  */
 public class GraphPane extends Pane {
     private static final double DEFAULT_NODE_HEIGHT = 100;
+    private static final double DEFAULT_NODE_WIDTH = 20;
 
     private final Canvas canvas;
     private final GraphicsContext graphicsContext;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
+    private final DoubleProperty nodeWidthPropery;
 
 
     /**
@@ -46,6 +48,7 @@ public class GraphPane extends Pane {
 
         edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+        nodeWidthPropery = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
 
         this.getChildren().add(canvas);
     }
@@ -155,6 +158,17 @@ public class GraphPane extends Pane {
      */
     public final DoubleProperty getNodeHeightProperty() {
         return nodeHeightProperty;
+    }
+
+    /**
+     * The property of node widths.
+     * <p>
+     * Node width determines how wide a single width unit in the FAFOSP algorithm.
+     *
+     * @return property which decides the width of nodes.
+     */
+    public final DoubleProperty getNodeWidthPropery() {
+        return nodeWidthPropery;
     }
 
     /**
