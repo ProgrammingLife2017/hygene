@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
+import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -35,13 +36,7 @@ public final class GraphController implements Initializable {
             visualiser = new GraphPane();
 
             if (graphPane != null && graphStore != null) {
-                graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> {
-                    try {
-                        updateGraph(newFile.getGraph());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                });
+                graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
             }
         } catch (UIInitialisationException e) {
             e.printStackTrace();
@@ -58,15 +53,19 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Update the swing node to display the new {@link SequenceGraph}.
+     * Update the swing node to display the new {@link SequenceGraph} of the given {@link GfaFile}.
      *
-     * @param sequenceGraph new {@link SequenceGraph} to display.
+     * @param gfaFile with internal {@link SequenceGraph} to display.
      */
-    protected void updateGraph(final SequenceGraph sequenceGraph) {
-        if (graphPane == null || visualiser == null) {
-            return;
-        }
+    protected void updateGraph(final GfaFile gfaFile) {
+        try {
+            if (graphPane == null || visualiser == null) {
+                return;
+            }
 
-        visualiser.draw(sequenceGraph);
+            visualiser.draw(gfaFile.getGraph());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
