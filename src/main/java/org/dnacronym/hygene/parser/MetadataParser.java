@@ -96,7 +96,7 @@ public final class MetadataParser {
      * @param expectedPrefix the expected prefix of the line
      * @throws ParseException if the line does not start with the prefix
      */
-    private void validateLine(String line, String expectedPrefix) throws ParseException {
+    private void validateLine(final String line, final String expectedPrefix) throws ParseException {
         if (!line.startsWith(expectedPrefix)) {
             throw new ParseException("Expected line to start with " + expectedPrefix + " but line was " + line);
         }
@@ -109,7 +109,7 @@ public final class MetadataParser {
      * @return an initialized {@link StringTokenizer} object.
      * @throws ParseException if the given line does not contain any tabs
      */
-    private StringTokenizer initializeStringTokenizer(String line) throws ParseException {
+    private StringTokenizer initializeStringTokenizer(final String line) throws ParseException {
         final StringTokenizer st = new StringTokenizer(line, "\t");
         if (!st.hasMoreTokens()) {
             throw new ParseException("Invalid line (line: " + line + ")");

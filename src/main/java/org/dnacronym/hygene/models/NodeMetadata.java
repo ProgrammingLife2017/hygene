@@ -3,9 +3,9 @@ package org.dnacronym.hygene.models;
 /**
  * Represents the metadata of a {@link Node}.
  */
-public class NodeMetadata {
-    private String originalNodeId;
-    private String sequence;
+public final class NodeMetadata {
+    private final String originalNodeId;
+    private final String sequence;
 
 
     /**
@@ -14,7 +14,7 @@ public class NodeMetadata {
      * @param originalNodeId the node ID in the GFA file
      * @param sequence the DNA sequence
      */
-    public NodeMetadata(String originalNodeId, String sequence) {
+    public NodeMetadata(final String originalNodeId, final String sequence) {
         this.originalNodeId = originalNodeId;
         this.sequence = sequence;
     }

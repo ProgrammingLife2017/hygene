@@ -3,7 +3,7 @@ package org.dnacronym.hygene.models;
 /**
  * Represents the metadata of a {@link Edge}.
  */
-public class EdgeMetadata {
+public final class EdgeMetadata {
     private String fromOrient;
     private String toOrient;
     private String overlap;
@@ -16,7 +16,7 @@ public class EdgeMetadata {
      * @param toOrient the orient of the to node
      * @param overlap the overlap
      */
-    public EdgeMetadata(String fromOrient, String toOrient, String overlap) {
+    public EdgeMetadata(final String fromOrient, final String toOrient, final String overlap) {
         this.fromOrient = fromOrient;
         this.toOrient = toOrient;
         this.overlap = overlap;
