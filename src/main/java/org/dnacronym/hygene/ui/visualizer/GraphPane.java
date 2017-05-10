@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.models.SequenceNode;
 
@@ -159,18 +160,20 @@ public class GraphPane extends Pane {
     /**
      * Populate the graphs primitives with the given sequence graph.
      * <p>
-     * First clears the graph before drawing.
+     * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      */
-    public final void draw(final SequenceGraph sequenceGraph) {
+    public final void draw(final @Nullable SequenceGraph sequenceGraph) {
         clear();
 
-        // TODO retrieve bandcount from sequenceGraph
-        final double bandCount = 1;
-        final double laneHeight = canvas.getHeight() / bandCount;
+        if (sequenceGraph != null) {
+            // TODO retrieve bandcount from sequenceGraph
+            final double bandCount = 1;
+            final double laneHeight = canvas.getHeight() / bandCount;
 
-        final SequenceNode sink = sequenceGraph.getSinkNode();
-        draw(sink, laneHeight);
+            final SequenceNode sink = sequenceGraph.getSinkNode();
+            draw(sink, laneHeight);
+        }
     }
 }

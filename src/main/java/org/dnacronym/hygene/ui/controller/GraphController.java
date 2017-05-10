@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
@@ -38,10 +37,7 @@ public final class GraphController implements Initializable {
             if (graphPane != null && graphStore != null) {
                 graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> {
                     try {
-                        final SequenceGraph graph = newFile.getGraph();
-                        if (graph != null) {
-                            updateGraph(graph);
-                        }
+                        updateGraph(newFile.getGraph());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -66,7 +62,7 @@ public final class GraphController implements Initializable {
      *
      * @param sequenceGraph new {@link SequenceGraph} to display.
      */
-    protected void updateGraph(@NonNull final SequenceGraph sequenceGraph) {
+    protected void updateGraph(final SequenceGraph sequenceGraph) {
         if (graphPane == null || visualiser == null) {
             return;
         }
