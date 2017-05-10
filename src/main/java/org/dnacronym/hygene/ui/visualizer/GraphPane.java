@@ -83,7 +83,7 @@ public class GraphPane extends Pane {
      */
     private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
         final int nodeX = (int) Math.round(xPos / nodeWidthPropery.get());
-        final int lane = (int) Math.floor(yPos / laneHeight) + 1;
+        final int lane = (int) Math.floor(yPos / laneHeight);
 
         return new int[]{nodeX, lane};
     }

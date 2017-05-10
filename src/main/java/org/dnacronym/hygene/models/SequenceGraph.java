@@ -194,7 +194,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * node found null.
      */
     @Nullable
-    public final SequenceNode getNode(final int horizontalPosition, final int verticalPosition) {
+    public SequenceNode getNode(final int horizontalPosition, final int verticalPosition) {
         SequenceNode foundNode = null;
 
         for (SequenceNode node : this) {

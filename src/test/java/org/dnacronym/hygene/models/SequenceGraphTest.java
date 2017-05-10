@@ -63,4 +63,24 @@ class SequenceGraphTest {
     void testSize() {
         assertThat(sequenceGraph.size()).isEqualTo(4);
     }
+
+    @Test
+    void testGetNode1InBounds() {
+        assertThat(sequenceGraph.getNode(1, 0)).isEqualTo(node1);
+    }
+
+    @Test
+    void testGetNode2InBounds() {
+        assertThat(sequenceGraph.getNode(6, 0)).isEqualTo(node2);
+    }
+
+    @Test
+    void testOnlyHorizontalPositionInBounds() {
+        assertThat(sequenceGraph.getNode(6, 1)).isNull();
+    }
+
+    @Test
+    void testOnlyVerticalPositionInBounds() {
+        assertThat(sequenceGraph.getNode(20, 0)).isNull();
+    }
 }
