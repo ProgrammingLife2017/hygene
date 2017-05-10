@@ -41,6 +41,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
         initEdgeNodes(nodes);
         fafospX();
+        fafospY();
     }
 
 
@@ -93,22 +94,6 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
         return nodeCount;
     }
 
-    /**
-     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP. The nodes are visited in
-     * breadth-first search order.
-     */
-    private void fafospX() {
-        final Queue<SequenceNode> queue = new LinkedList<>();
-        queue.addAll(sourceNode.getRightNeighbours());
-
-        while (!queue.isEmpty()) {
-            final SequenceNode node = queue.remove();
-            node.fafospX();
-
-            queue.addAll(node.getRightNeighbours());
-        }
-    }
-
 
     /**
      * Returns a breadth-first {@code Iterator} that traverses from left to right.
@@ -149,5 +134,52 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      */
     public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
         return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT, duplicateDetector);
+    }
+
+
+    /**
+     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
+     * breadth-first search order.
+     */
+    private void fafospX() {
+        final Queue<SequenceNode> queue = new LinkedList<>();
+        queue.addAll(sourceNode.getRightNeighbours());
+
+        while (!queue.isEmpty()) {
+            final SequenceNode node = queue.remove();
+            node.fafospX();
+
+            queue.addAll(node.getRightNeighbours());
+        }
+    }
+
+    /**
+     * Calculates the optimal vertical position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
+     * breadth-first search order.
+     */
+    private void fafospY() {
+        fafospYInit();
+        fafospYCalculate();
+    }
+
+    /**
+     * Calculates the {@code leftHeight}, {@code rightHeight}, and {@code maximumHeight} properties for all
+     * {@code SequenceNode}s (including the sentinels).
+     */
+    private void fafospYInit() {
+        iterator(node -> node.getLeftHeight() >= 0)
+                .forEachRemaining(node -> node.fafospYInit(SequenceDirection.LEFT));
+        reverseIterator(node -> node.getRightHeight() >= 0)
+                .forEachRemaining(node -> node.fafospYInit(SequenceDirection.RIGHT));
+
+        iterator(node -> node.getMaxHeight() >= 0)
+                .forEachRemaining(node -> node.setMaxHeight(sourceNode.getRightHeight()));
+    }
+
+    /**
+     * Calculates the vertical positions for all {@code SequenceNode}s (including the sentinels).
+     */
+    private void fafospYCalculate() {
+        iterator().forEachRemaining(SequenceNode::fafospYCalculate);
     }
 }
