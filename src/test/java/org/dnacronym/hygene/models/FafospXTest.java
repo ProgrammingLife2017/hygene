@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for FAFOSP.
+ * Unit tests for FAFOSP-X.
  */
 class FafospXTest {
     @Test

@@ -10,6 +10,9 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+/**
+ * Unit tests for FAFOSP-Y.
+ */
 class FafospYTest {
     /*
      * Default values.

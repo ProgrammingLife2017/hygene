@@ -161,7 +161,7 @@ public final class SequenceNode {
     }
 
     /**
-     * Returns vertical position of the centre of the node as calculated by FAFOSP.
+     * Returns the vertical position of the centre of the node as calculated by FAFOSP.
      *
      * @return vertical position of the centre of the node as calculated by FAFOSP.
      */
@@ -172,7 +172,7 @@ public final class SequenceNode {
     /**
      * Returns the sum of left heights of its left neighbours.
      * <p>
-     * This method is not implemented recursively.
+     * This method has a complexity of O(1) as it returns a precomputed value.
      *
      * @return the sum of left heights of its left neighbours.
      */
@@ -183,7 +183,7 @@ public final class SequenceNode {
     /**
      * Returns the sum of right heights of its right neighbours.
      * <p>
-     * This method is not implemented recursively.
+     * This method has a complexity of O(1) as it returns a precomputed value.
      *
      * @return the sum of right heights of its right neighbours.
      */
@@ -194,7 +194,7 @@ public final class SequenceNode {
     /**
      * Returns the maximal height of any node that is connected to this node.
      * <p>
-     * This method is not implemented recursively.
+     * This method has a complexity of O(1) as it returns a precomputed value.
      *
      * @return the maximal height of any node that is connected to this node.
      */
@@ -257,7 +257,7 @@ public final class SequenceNode {
                 rightHeight = height;
                 break;
             default:
-                throw new IllegalArgumentException("Unknown enum value,");
+                throw new IllegalArgumentException("Unknown enum value.");
         }
     }
 
