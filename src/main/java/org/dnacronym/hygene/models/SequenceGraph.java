@@ -185,7 +185,6 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
         iterator().forEachRemaining(SequenceNode::fafospYCalculate);
     }
 
-
     /**
      * Finds the first node who's vertical and horizontal positions match.
      *
@@ -199,16 +198,11 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
         SequenceNode foundNode = null;
 
         for (SequenceNode node : this) {
-            if (node.getVerticalPosition() == verticalPosition) {
-                final int nodeRightEnd = node.getHorizontalRightEnd();
-                final int nodeLeftEnd = nodeRightEnd - node.getSequence().length();
-
-                if (nodeLeftEnd <= horizontalPosition && horizontalPosition < nodeRightEnd) {
-                    foundNode = node;
-                    break;
-                } else if (horizontalPosition > nodeRightEnd) {
-                    break;
-                }
+            if (node.inBounds(horizontalPosition, verticalPosition)) {
+                foundNode = node;
+                break;
+            } else if (horizontalPosition > node.getHorizontalRightEnd()) {
+                break;
             }
         }
 
