@@ -18,10 +18,12 @@ public final class SequenceNode {
     private final List<SequenceNode> leftNeighbours;
     private final List<SequenceNode> rightNeighbours;
 
-    /**
-     * The position of the right end of the node as calculated by FAFOSP.
-     */
     private int horizontalRightEnd = -1;
+    private int verticalPosition = -1;
+
+    private int leftHeight = -1;
+    private int rightHeight = -1;
+    private int maxHeight = -1;
 
 
     /**
@@ -150,12 +152,63 @@ public final class SequenceNode {
     }
 
     /**
-     * Returns the optimal horizontal position as calculated by FAFOSP.
+     * Returns horizontal position of the right end of the node as calculated by FAFOSP.
      *
-     * @return the optimal horizontal position as calculated by FAFOSP.
+     * @return horizontal position of the right end of the node as calculated by FAFOSP.
      */
     public int getHorizontalRightEnd() {
         return horizontalRightEnd;
+    }
+
+    /**
+     * Returns the vertical position of the centre of the node as calculated by FAFOSP.
+     *
+     * @return vertical position of the centre of the node as calculated by FAFOSP.
+     */
+    public int getVerticalPosition() {
+        return verticalPosition;
+    }
+
+    /**
+     * Returns the sum of left heights of its left neighbours.
+     * <p>
+     * This method has a complexity of O(1) as it returns a precomputed value.
+     *
+     * @return the sum of left heights of its left neighbours.
+     */
+    int getLeftHeight() {
+        return leftHeight;
+    }
+
+    /**
+     * Returns the sum of right heights of its right neighbours.
+     * <p>
+     * This method has a complexity of O(1) as it returns a precomputed value.
+     *
+     * @return the sum of right heights of its right neighbours.
+     */
+    int getRightHeight() {
+        return rightHeight;
+    }
+
+    /**
+     * Returns the maximal height of any node that is connected to this node.
+     * <p>
+     * This method has a complexity of O(1) as it returns a precomputed value.
+     *
+     * @return the maximal height of any node that is connected to this node.
+     */
+    int getMaxHeight() {
+        return maxHeight;
+    }
+
+    /**
+     * Sets the maximal height.
+     *
+     * @param maxHeight the new maximal height
+     */
+    void setMaxHeight(final int maxHeight) {
+        this.maxHeight = maxHeight;
     }
 
 
@@ -177,5 +230,113 @@ public final class SequenceNode {
         }
 
         horizontalRightEnd = width + sequence.length();
+    }
+
+    /**
+     * Calculates the {@code leftHeight} or {@code rightHeight}, depending on the indicated direction.
+     *
+     * @param direction which height to calculate
+     */
+    void fafospYInit(final SequenceDirection direction) {
+        final List<SequenceNode> neighbours = direction.ternary(getLeftNeighbours(), getRightNeighbours());
+
+        final int height;
+        if (neighbours.isEmpty()) {
+            height = 2;
+        } else {
+            height = neighbours.stream()
+                    .mapToInt(neighbour -> direction.ternary(neighbour.leftHeight, neighbour.rightHeight))
+                    .sum();
+        }
+
+        switch (direction) {
+            case LEFT:
+                leftHeight = height;
+                break;
+            case RIGHT:
+                rightHeight = height;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown enum value.");
+        }
+    }
+
+    /**
+     * Calculates the vertical position for the right neighbour(s) of this {@code SequenceNode}.
+     */
+    void fafospYCalculate() {
+        if (verticalPosition < 0) {
+            verticalPosition = maxHeight / 2;
+        }
+
+        if (rightNeighbours.size() == 1) {
+            final SequenceNode neighbour = rightNeighbours.get(0);
+            fafospYCalculate(neighbour);
+        } else {
+            fafospYCalculate(rightNeighbours);
+        }
+    }
+
+    /**
+     * Calculates the vertical position for the single right neighbour of this {@code SequenceNode}.
+     *
+     * @param neighbour the neighbour of whom the height should be calculated
+     */
+    private void fafospYCalculate(final SequenceNode neighbour) {
+        final List<SequenceNode> neighbourLeftNeighbours = neighbour.getLeftNeighbours();
+
+        if (neighbourLeftNeighbours.size() == 1) {
+            // This node and the neighbour are each other's only neighbour.
+            neighbour.verticalPosition = this.verticalPosition;
+        } else {
+            // Neighbour has multiple neighbours
+            int neighbourLeftNeighboursHeight = 0;
+
+            for (final SequenceNode neighbourLeftNeighbour : neighbourLeftNeighbours) {
+                if (neighbourLeftNeighbour.getId().equals(this.id)) {
+                    break;
+                }
+
+                neighbourLeftNeighboursHeight += neighbourLeftNeighbour.leftHeight;
+            }
+
+            // Calculate the top of the neighbour's left height range
+            final int neighbourTop = this.verticalPosition - neighbourLeftNeighboursHeight;
+            // Compensate for differences in height
+            final int leftDifference = neighbour.leftHeight / 2 - this.leftHeight / 2;
+
+            neighbour.verticalPosition = neighbourTop + leftDifference;
+        }
+    }
+
+    /**
+     * Calculates the vertical positions for each right neighbour of this {@code SequenceNode}.
+     *
+     * @param neighbours the neighbours of whom the height should be calculated
+     */
+    private void fafospYCalculate(final List<SequenceNode> neighbours) {
+        int relativeHeight = verticalPosition - rightHeight / 2;
+
+        for (final SequenceNode neighbour : neighbours) {
+            final List<SequenceNode> neighbourLeftNeighbours = neighbour.getLeftNeighbours();
+
+            if (neighbourLeftNeighbours.size() == 1) {
+                // Current neighbour has only one neighbour
+                if (neighbour.verticalPosition >= 0) {
+                    relativeHeight = neighbour.verticalPosition + neighbour.rightHeight / 2;
+                } else {
+                    neighbour.verticalPosition = relativeHeight + neighbour.rightHeight / 2;
+                    relativeHeight += neighbour.rightHeight;
+                }
+            } else {
+                // Current neighbour has multiple neighbours, so the left width is different from the current node
+                if (neighbour.verticalPosition >= 0) {
+                    relativeHeight = neighbour.verticalPosition + neighbour.leftHeight / 2;
+                } else {
+                    neighbour.verticalPosition = relativeHeight + neighbour.leftHeight / 2;
+                    relativeHeight += neighbour.leftHeight;
+                }
+            }
+        }
     }
 }
