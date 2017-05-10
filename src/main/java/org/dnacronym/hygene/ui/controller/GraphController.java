@@ -4,15 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.dnacronym.hygene.models.SequenceGraph;
+import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.visualizer.GraphStreamVisualiser;
+import org.dnacronym.hygene.ui.visualizer.GraphPane;
 
-import javax.swing.SwingUtilities;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,7 +19,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private @MonotonicNonNull GraphStreamVisualiser visualiser;
+    private @MonotonicNonNull GraphPane visualiser;
 
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -33,20 +31,13 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(DNAApplication.getInstance().getGraphStore());
+            visualiser = new GraphPane();
         } catch (UIInitialisationException e) {
             e.printStackTrace();
         }
 
-        visualiser = new GraphStreamVisualiser();
-
         if (graphPane != null && graphStore != null) {
-            graphStore.getGfaFileProperty().addListener((observable, oldGfaFile, newGfaFile) -> {
-                try {
-                    updateGraphSwingNode(newGfaFile.getGraph());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            });
+            graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
         }
     }
 
@@ -60,20 +51,20 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Update the swing node to display the new {@link SequenceGraph}.
+     * Update the swing node to display graph of the given {@link GfaFile}.
      *
-     * @param sequenceGraph new {@link SequenceGraph} to display.
+     * @param gfaFile with internal graph to display.
+     * @see GfaFile#getGraph()
      */
-    protected void updateGraphSwingNode(@NonNull final SequenceGraph sequenceGraph) {
+    protected void updateGraph(final GfaFile gfaFile) {
         if (graphPane == null || visualiser == null) {
             return;
         }
 
-        SwingUtilities.invokeLater(() -> {
-            if (visualiser != null) { // must check inside runnable
-                visualiser.populateGraph(sequenceGraph);
-                visualiser.getGraph().display();
-            }
-        });
+        try {
+            visualiser.draw(gfaFile.getGraph());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
