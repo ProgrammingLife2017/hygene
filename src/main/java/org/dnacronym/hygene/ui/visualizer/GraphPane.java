@@ -168,7 +168,7 @@ public class GraphPane extends Pane {
         clear();
 
         if (sequenceGraph != null) {
-            // TODO retrieve bandcount from sequenceGraph
+            // TODO retrieve band count from sequenceGraph
             final double bandCount = 1;
             final double laneHeight = canvas.getHeight() / bandCount;
 

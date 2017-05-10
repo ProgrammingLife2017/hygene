@@ -69,12 +69,14 @@ public class DNAApplication extends Application {
     }
 
     /**
-     * Get an instance of the DNAApplication. If there is not an instance, then it will throw a
-     * {@link UIInitialisationException} as opposed to creating a new one.
+     * Get an instance of the DNAApplication.
+     * <p>
+     * If there is not an instance, then it will throw a {@link UIInitialisationException} as opposed to creating a
+     * new one.
      *
      * @return instance of the {@link DNAApplication}.
-     * @throws UIInitialisationException if the UI was not initialzed, meaning the {@link Stage} was not set in
-     *                                   {@link #start(Stage)}.
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
+     *                                   #start(Stage)}.
      * @see #start(Stage)
      */
     public final Stage getPrimaryStage() throws UIInitialisationException {

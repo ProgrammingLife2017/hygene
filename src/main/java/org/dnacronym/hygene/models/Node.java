@@ -20,7 +20,7 @@ public final class Node {
     static final int UNSCALED_Y_POSITION_INDEX = 3;
     static final int NODE_OUTGOING_EDGES_INDEX = 4;
     static final int NODE_EDGE_DATA_OFFSET = 5;
-    static final int EDGE_LINENUMBER_OFFSET = 1;
+    static final int EDGE_LINE_NUMBER_OFFSET = 1;
     static final int EDGE_DATA_SIZE = 2;
 
     private final int id;
@@ -67,7 +67,7 @@ public final class Node {
     /**
      * Getter for {@link Node} metadata line number.
      *
-     * @return the linenumber
+     * @return the line number
      */
     public int getLineNumber() {
         return data[NODE_LINE_NUMBER_INDEX];
@@ -142,7 +142,7 @@ public final class Node {
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         int to = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
                         newOutgoingEdges.add(new Edge(id, to, lineNumber));
                     }
                     this.outgoingEdges = newOutgoingEdges;
@@ -169,7 +169,7 @@ public final class Node {
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         int from = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
                         newIncomingEdges.add(new Edge(from, id, lineNumber));
                     }
 
