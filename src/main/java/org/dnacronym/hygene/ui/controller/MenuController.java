@@ -63,6 +63,7 @@ public final class MenuController implements Initializable {
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
+            RecentFiles.add(gfaFile);
             graphStore.load(gfaFile);
         }
     }
@@ -109,6 +110,15 @@ public final class MenuController implements Initializable {
             for (final File file : recentFiles) {
                 final MenuItem menuItem = new MenuItem(file.getPath());
                 recentFilesMenu.getItems().add(menuItem);
+
+                menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+                    try {
+                        RecentFiles.add(file);
+                        graphStore.load(file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
     }
