@@ -59,20 +59,34 @@ public class GraphPane extends Pane {
         selectedNodeProperty = new SimpleObjectProperty<>();
         canvas.setOnMouseClicked(event -> {
             if (sequenceGraph != null) {
-                final double xPos = event.getSceneX();
-                final double yPos = event.getSceneY();
-
-                final int[] positions = toSequenceNodeCoordinates(xPos, yPos);
+                final int[] positions = toSequenceNodeCoordinates(event.getSceneX(), event.getSceneY());
                 final int nodeXPos = positions[0];
                 final int nodeLane = positions[1];
 
-                selectedNodeProperty.set(setCurrentNode(nodeXPos, nodeLane, sequenceGraph));
+                selectedNodeProperty.set(sequenceGraph.getNode(nodeXPos, nodeLane));
             }
         });
 
         this.getChildren().add(canvas);
     }
 
+
+    /**
+     * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.
+     * <p>
+     * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
+     *
+     * @param xPos x position onscreen
+     * @param yPos y position onscreen
+     * @return x and y position in a double array of size 2 which correspond with x and y position of
+     * {@link SequenceNode}.
+     */
+    private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
+        final int nodeX = (int) Math.round(xPos / nodeWidthPropery.get());
+        final int lane = (int) Math.floor(yPos / laneHeight) + 1;
+
+        return new int[]{nodeX, lane};
+    }
 
     /**
      * Draw line on the {@link Canvas}.
@@ -153,57 +167,6 @@ public class GraphPane extends Pane {
     private void draw(final SequenceNode sequenceNode, final double stepHeight) {
         drawNodes(sequenceNode, nodeHeightProperty.get(), stepHeight);
         drawEdges(sequenceNode, edgeColorProperty.get());
-    }
-
-    /**
-     * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.
-     * <p>
-     * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
-     *
-     * @param xPos x position onscreen
-     * @param yPos y position onscreen
-     * @return x and y position in a double array of size 2 which correspond with x and y position of
-     * {@link SequenceNode}.
-     */
-    private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
-        final int nodeX = (int) Math.round(xPos / nodeWidthPropery.get());
-        final int lane = (int) Math.floor(yPos / laneHeight) + 1;
-
-        return new int[]{nodeX, lane};
-    }
-
-    /**
-     * Sets the {@link #selectedNodeProperty} to the found node in the {@link SequenceGraph}.
-     * <p>
-     * The nodeX should not be onscreen position, but should have been converted to a {@link SequenceGraph} x. The band
-     * is the vertical position of the node, and should denote in which band the node should be.
-     *
-     * @param nodeX         x position of the node
-     * @param band          band the node is in
-     * @param sequenceGraph graph to iterate over
-     * @return {@link SequenceNode} where the nodeX is in bounds and the band is equal to the given band. If no such
-     * node found null.
-     * @see #getSelectedNodeProperty()
-     * @see SequenceNode#getHorizontalRightEnd()
-     * @see SequenceNode#getVerticalPosition()
-     */
-    @Nullable
-    private SequenceNode setCurrentNode(final int nodeX, final int band, final SequenceGraph sequenceGraph) {
-        SequenceNode foundNode = null;
-
-        for (SequenceNode node : sequenceGraph) {
-            if (node.getVerticalPosition() == band) {
-                final int nodeRightEnd = node.getHorizontalRightEnd();
-                final int nodeLeftEnd = nodeRightEnd - node.getSequence().length();
-
-                if (nodeLeftEnd <= nodeX && nodeX < nodeRightEnd) {
-                    foundNode = node;
-                    break;
-                }
-            }
-        }
-
-        return foundNode;
     }
 
     /**
