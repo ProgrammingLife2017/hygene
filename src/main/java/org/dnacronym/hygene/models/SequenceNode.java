@@ -217,10 +217,6 @@ public final class SequenceNode {
      * FAFOSP.
      */
     void fafospX() {
-        if (horizontalRightEnd >= 0) {
-            return;
-        }
-
         int width = 0;
         for (final SequenceNode neighbour : leftNeighbours) {
             final int newWidth = neighbour.horizontalRightEnd + 1;

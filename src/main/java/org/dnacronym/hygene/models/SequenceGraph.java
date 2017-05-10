@@ -1,9 +1,7 @@
 package org.dnacronym.hygene.models;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.function.Function;
 
 
@@ -142,15 +140,10 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * breadth-first search order.
      */
     private void fafospX() {
-        final Queue<SequenceNode> queue = new LinkedList<>();
-        queue.addAll(sourceNode.getRightNeighbours());
+        final Iterator<SequenceNode> iterator = iterator(node -> node.getHorizontalRightEnd() >= 0);
 
-        while (!queue.isEmpty()) {
-            final SequenceNode node = queue.remove();
-            node.fafospX();
-
-            queue.addAll(node.getRightNeighbours());
-        }
+        iterator.next(); // Skip source node
+        iterator.forEachRemaining(SequenceNode::fafospX);
     }
 
     /**
