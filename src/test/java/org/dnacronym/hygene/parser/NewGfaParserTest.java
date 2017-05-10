@@ -47,7 +47,7 @@ class NewGfaParserTest {
 
     @Test
     void testSegmentWithMissingSequence() {
-        final String gfa = "S name";
+        final String gfa = "S name ";
 
         final Throwable e = catchThrowable(() -> parse(gfa));
         assertThat(e).isInstanceOf(ParseException.class);

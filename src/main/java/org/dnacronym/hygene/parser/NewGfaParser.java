@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 public final class NewGfaParser {
     private int[][] nodeVectors;
     private int nodeVectorPosition = 0;
-    private Map<String, Integer> nodeIds; //Node id string => nodeVectors index (internal node id)
+    private Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
 
     /**
      * Constructs and initializes a new instance of {@code GfaParser}.
@@ -54,15 +54,16 @@ public final class NewGfaParser {
     }
 
     /**
-     * Allocates the required internal node IDs. This step is necessary because we need to know
-     * the internal node IDs upfront to be able to add edges to the correct node vectors.
+     * Allocates the required internal node IDs.
+     * <p>
+     * This step is necessary because we need to know the internal node IDs
+     * upfront to be able to add edges to the correct node vectors.
      *
      * @param lines lines of a GFA-compliant {@code String}
      */
     private void allocateNodes(final String[] lines) {
         Arrays.stream(lines).filter(line -> line.startsWith("S\t")).forEach(line -> {
-            final String name = line.substring(2).split("\t")[0];
-            nodeIds.put(name, nodeVectorPosition);
+            nodeIds.put(parseNodeName(line), nodeVectorPosition);
             nodeVectorPosition++;
         });
     }
@@ -151,15 +152,15 @@ public final class NewGfaParser {
     }
 
     /**
-     * Adds an outgoing edge to the node vector.
+     * Parses the name of the node (the node id) from a GFA file line.
      *
-     * @param fromId node ID of edge start node
-     * @param toId node ID of edge end node
-     * @param offset line number of edge
+     * @param line a GFA file line
+     * @return the name of the node (the node id)
      */
-    private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
-        nodeVectors[fromId] = NodeBuilder.fromArray(fromId, nodeVectors[fromId])
-                .withOutgoingEdge(toId, offset + 1).toArray();
+    private String parseNodeName(final String line) {
+        final String name = line.substring(2);
+
+        return name.substring(0, name.indexOf('\t'));
     }
 
     /**
@@ -172,5 +173,17 @@ public final class NewGfaParser {
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
         nodeVectors[toId] = NodeBuilder.fromArray(toId, nodeVectors[toId])
                 .withIncomingEdge(fromId, offset + 1).toArray();
+    }
+
+    /**
+     * Adds an outgoing edge to the node vector.
+     *
+     * @param fromId node ID of edge start node
+     * @param toId node ID of edge end node
+     * @param offset line number of edge
+     */
+    private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
+        nodeVectors[fromId] = NodeBuilder.fromArray(fromId, nodeVectors[fromId])
+                .withOutgoingEdge(toId, offset + 1).toArray();
     }
 }
