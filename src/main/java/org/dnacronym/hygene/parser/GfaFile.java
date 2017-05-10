@@ -42,7 +42,7 @@ public class GfaFile {
      * @throws IOException if the file cannot be read
      */
     public final SequenceGraph parse() throws ParseException {
-        graph = sagParser.parse(gfaParser.parse(readFile(fileName)));
+        graph = sagParser.parse(gfaParser.parse(readFile()));
         return graph;
     }
 
@@ -71,11 +71,10 @@ public class GfaFile {
     /**
      * Reads a GFA file into memory and gives its contents as a {@code String}.
      *
-     * @param fileName the name of the GFA file
      * @return contents of the GFA file.
      * @throws ParseException if the given file name cannot be read
      */
-    private String readFile(final String fileName) throws ParseException {
+    private String readFile() throws ParseException {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
         } catch (IOException e) {
