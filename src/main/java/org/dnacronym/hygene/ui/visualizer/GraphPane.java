@@ -32,9 +32,10 @@ public class GraphPane extends Pane {
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
 
-    private SequenceGraph sequenceGraph;
+    private @Nullable SequenceGraph sequenceGraph;
 
     private double laneHeight;
+
 
     /**
      * Create a new {@link GraphPane} instance.
@@ -61,6 +62,8 @@ public class GraphPane extends Pane {
                 final int[] positions = toSequenceNodeCoordinates(xPos, yPos);
                 final int nodeXPos = positions[0];
                 final int nodeLane = positions[1];
+
+                selectedNodeProperty.set(setCurrentNode(nodeXPos, nodeLane, sequenceGraph));
             }
         });
 
@@ -141,8 +144,8 @@ public class GraphPane extends Pane {
      * <p>
      * A {@link SequenceNode} is drawn in the center of each band.
      *
-     * @param sequenceNode sequenceNode to draw.
-     * @param stepHeight   denotes the height of each of the onscreen bands in which nodes reside.
+     * @param sequenceNode sequenceNode to draw
+     * @param stepHeight   denotes the height of each of the onscreen bands in which nodes reside
      */
     private void draw(final SequenceNode sequenceNode, final double stepHeight) {
         drawNodes(sequenceNode, nodeHeightProperty.get(), stepHeight);
@@ -173,24 +176,32 @@ public class GraphPane extends Pane {
      * The nodeX should not be onscreen position, but should have been converted to a {@link SequenceGraph} x. The band
      * is the vertical position of the node, and should denote in which band the node should be.
      *
-     * @param nodeX x position of the node.
-     * @param band  band the node is in.
+     * @param nodeX         x position of the node
+     * @param band          band the node is in
+     * @param sequenceGraph graph to iterate over
+     * @return {@link SequenceNode} where the nodeX is in bounds and the band is equal to the given band. If no such
+     * node found null.
      * @see #getSelectedNodeProperty()
      * @see SequenceNode#getHorizontalRightEnd()
      * @see SequenceNode#getVerticalPosition()
      */
-    private void setCurrentNode(final int nodeX, final int band) {
+    @Nullable
+    private SequenceNode setCurrentNode(final int nodeX, final int band, final SequenceGraph sequenceGraph) {
+        SequenceNode foundNode = null;
+
         for (SequenceNode node : sequenceGraph) {
             if (node.getVerticalPosition() == band) {
                 final int nodeRightEnd = node.getHorizontalRightEnd();
-                final int nodeLeftEnd = 0;
-                
+                final int nodeLeftEnd = nodeRightEnd - node.getSequence().length();
+
                 if (nodeLeftEnd <= nodeX && nodeX < nodeRightEnd) {
-                    selectedNodeProperty.set(node);
+                    foundNode = node;
                     break;
                 }
             }
         }
+
+        return foundNode;
     }
 
     /**
