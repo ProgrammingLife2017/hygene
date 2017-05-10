@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.models.SequenceGraph;
+import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -43,6 +44,18 @@ public final class GraphController implements Initializable {
             }
         } catch (UIInitialisationException e) {
             e.printStackTrace();
+        }
+
+        visualiser = new GraphStreamVisualiser();
+
+        if (graphPane != null && graphStore != null) {
+            graphStore.getGfaFileProperty().addListener((observable, oldGfaFile, newGfaFile) -> {
+                try {
+                    updateGraphSwingNode(newGfaFile.getGraph());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
