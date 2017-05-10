@@ -30,7 +30,7 @@ public class GraphStore {
      */
     public final void load(@NonNull final File file) throws IOException {
         try {
-            GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
+            final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
             gfaFile.parse();
 
             gfaFileProperty.set(gfaFile);

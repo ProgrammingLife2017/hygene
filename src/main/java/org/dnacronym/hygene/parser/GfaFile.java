@@ -71,7 +71,7 @@ public class GfaFile {
     /**
      * Reads a GFA file into memory and gives its contents as a {@code String}.
      *
-     *  @param fileName the name of the GFA file
+     * @param fileName the name of the GFA file
      * @return contents of the GFA file.
      * @throws ParseException if the given file name cannot be read
      */
