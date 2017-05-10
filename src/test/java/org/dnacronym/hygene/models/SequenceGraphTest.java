@@ -75,6 +75,21 @@ class SequenceGraphTest {
     }
 
     @Test
+    void testGetNodeOnLeftEdge() {
+        assertThat(sequenceGraph.getNode(5, 0)).isEqualTo(node2);
+    }
+
+    @Test
+    void testGetNodeOnRightEdge() {
+        assertThat(sequenceGraph.getNode(3, 0)).isEqualTo(node1);
+    }
+
+    @Test
+    void testBetweenNodes() {
+        assertThat(sequenceGraph.getNode(4, 0)).isNull();
+    }
+
+    @Test
     void testOnlyHorizontalPositionInBounds() {
         assertThat(sequenceGraph.getNode(6, 1)).isNull();
     }

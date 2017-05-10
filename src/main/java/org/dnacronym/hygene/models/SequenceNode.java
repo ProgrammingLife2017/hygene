@@ -180,7 +180,7 @@ public final class SequenceNode {
     public boolean inBounds(final int horizontalPosition, final int verticalPosition) {
         return this.verticalPosition == verticalPosition
                 && horizontalPosition < horizontalRightEnd
-                && horizontalRightEnd - sequence.length() <= horizontalPosition;
+                && horizontalPosition >= horizontalRightEnd - sequence.length();
     }
 
     /**
