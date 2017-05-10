@@ -32,14 +32,13 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(DNAApplication.getInstance().getGraphStore());
-
             visualiser = new GraphPane();
-
-            if (graphPane != null && graphStore != null) {
-                graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
-            }
         } catch (UIInitialisationException e) {
             e.printStackTrace();
+        }
+
+        if (graphPane != null && graphStore != null) {
+            graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
         }
     }
 
