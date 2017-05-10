@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 
 
 /**
- * Parses GFA to a {@code SequenceAlignmentGraph}.
+ * Parses GFA to a {@code Graph}.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
@@ -32,10 +32,10 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a GFA-compliant {@code String} to a {@code SequenceAlignmentGraph}.
+     * Parses a GFA-compliant {@code String} to a {@code Graph}.
      *
      * @param gfa a GFA-compliant {@code String}
-     * @return a {@code SequenceAlignmentGraph}
+     * @return a {@code Graph}
      * @throws ParseException if the given {@code String} is not GFA-compliant
      */
     @EnsuresNonNull("nodeVectors")
