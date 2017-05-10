@@ -36,26 +36,19 @@ public final class GraphController implements Initializable {
             visualiser = new GraphPane();
 
             if (graphPane != null && graphStore != null) {
-                graphStore.getSequenceGraphProperty().addListener((observable, oldGraph, newGraph) -> {
-                    if (newGraph != null) {
-                        updateGraphSwingNode(newGraph);
+                graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> {
+                    try {
+                        final SequenceGraph graph = newFile.getGraph();
+                        if (graph != null) {
+                            updateGraph(graph);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 });
             }
         } catch (UIInitialisationException e) {
             e.printStackTrace();
-        }
-
-        visualiser = new GraphStreamVisualiser();
-
-        if (graphPane != null && graphStore != null) {
-            graphStore.getGfaFileProperty().addListener((observable, oldGfaFile, newGfaFile) -> {
-                try {
-                    updateGraphSwingNode(newGfaFile.getGraph());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            });
         }
     }
 
@@ -73,7 +66,7 @@ public final class GraphController implements Initializable {
      *
      * @param sequenceGraph new {@link SequenceGraph} to display.
      */
-    protected void updateGraphSwingNode(@NonNull final SequenceGraph sequenceGraph) {
+    protected void updateGraph(@NonNull final SequenceGraph sequenceGraph) {
         if (graphPane == null || visualiser == null) {
             return;
         }
