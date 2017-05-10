@@ -21,14 +21,6 @@ public class DialogueTest extends UITest {
         exception = new UIInitialisationException("test exception");
     }
 
-
-    @Test
-    public final void testNoNullPointerException() {
-        Throwable e = catchThrowable(() -> (new Dialogue(Dialogue.DialogueType.ERROR, exception)).show());
-
-        assertThat(e).isNull();
-    }
-
     @Test
     public final void testShowError() {
         Throwable e = catchThrowable(() -> (new Dialogue(Dialogue.DialogueType.ERROR, exception)).show());
