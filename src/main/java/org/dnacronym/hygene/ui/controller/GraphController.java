@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
@@ -52,9 +51,10 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Update the swing node to display the new {@link SequenceGraph} of the given {@link GfaFile}.
+     * Update the swing node to display graph of the given {@link GfaFile}.
      *
-     * @param gfaFile with internal {@link SequenceGraph} to display.
+     * @param gfaFile with internal graph to display.
+     * @see GfaFile#getGraph()
      */
     protected void updateGraph(final GfaFile gfaFile) {
         try {
