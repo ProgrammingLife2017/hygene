@@ -181,9 +181,13 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
         while (!queue.isEmpty()) {
             final SequenceNode head = queue.remove();
+
+            // Do not revisit visited nodes
             head.getRightNeighbours().stream()
                     .filter(neighbour -> neighbour.getVerticalPosition() < 0)
                     .collect(Collectors.toCollection(() -> queue));
+
+            // Calculate vertical position
             head.fafospYCalculate();
         }
     }

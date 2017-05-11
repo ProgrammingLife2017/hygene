@@ -230,6 +230,19 @@ public final class SequenceNode {
 
     /**
      * Calculates the {@code leftHeight} or {@code rightHeight}, depending on the indicated direction.
+     * <p>
+     * Put simply, the height is defined as the sum of heights of the neighbours, until it is "reset" when there is
+     * only one neighbour and this neighbour has multiple neighbours in the opposite direction.
+     * <p>
+     * Put complexly, the following rules are applied:
+     * <ul>
+     * <li> If there are no neighbours, the node is a sentinel node and its height is the default of two.
+     * <li> If there is a single neighbour and this neighbour only has a single neighbour in the opposite direction,
+     * the height of the neighbour is copied.
+     * <li> If there is a single neighbour and this neighbour has multiple neighbours, the height is set to the
+     * default of two.
+     * <li> If there are multiple neighbours, the sum of their heights in the same direction is taken.
+     * </ul>
      *
      * @param direction which height to calculate
      */
@@ -256,10 +269,15 @@ public final class SequenceNode {
                     .sum();
         }
 
-        if (direction.equals(SequenceDirection.LEFT)) {
-            leftHeight = height;
-        } else {
-            rightHeight = height;
+        switch (direction) {
+            case LEFT:
+                leftHeight = height;
+                break;
+            case RIGHT:
+                rightHeight = height;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown enum value.");
         }
     }
 
