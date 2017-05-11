@@ -35,6 +35,8 @@ public class GraphVisualizer {
 
     /**
      * Create a new {@link GraphVisualizer} instance.
+     *
+     * @param canvas the canvas to draw to
      */
     @SuppressWarnings("nullness") // Superclass width and height has already been instantiated, so can't be null.
     public GraphVisualizer(final Canvas canvas) {
@@ -111,12 +113,17 @@ public class GraphVisualizer {
         graphicsContext.setFill(color);
         graphicsContext.fillRect(
                 startHorizontal * nodeWidthProperty.get(),
-                verticalPosition * laneHeightProperty.get() + nodeHeightProperty.get() / 4,
+                verticalPosition * laneHeightProperty.get() + nodeHeightProperty.get(),
                 width * nodeWidthProperty.get(),
                 nodeHeightProperty.get()
         );
     }
 
+    /**
+     * Draws the given node to the screen.
+     *
+     * @param node the node to draw
+     */
     private void drawNode(final SequenceNode node) {
         drawNode(
                 node.getHorizontalRightEnd() - node.getSequence().length(),

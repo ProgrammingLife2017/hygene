@@ -366,6 +366,11 @@ public final class SequenceNode {
         return visited;
     }
 
+    /**
+     * Sets the visited.
+     *
+     * @param visited whether the node was visited
+     */
     public void setVisited(final boolean visited) {
         this.visited = visited;
     }
