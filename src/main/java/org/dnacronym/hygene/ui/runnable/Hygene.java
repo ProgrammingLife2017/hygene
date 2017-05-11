@@ -27,7 +27,6 @@ public class Hygene extends Application {
     private static @MonotonicNonNull Hygene hygene;
 
     private @MonotonicNonNull GraphStore graphStore;
-
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     private @MonotonicNonNull Stage primaryStage;
