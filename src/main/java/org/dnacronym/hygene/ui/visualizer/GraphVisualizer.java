@@ -87,7 +87,7 @@ public class GraphVisualizer {
         sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
                 sequenceNode.getHorizontalRightEnd(),
                 sequenceNode.getVerticalPosition(),
-                neighbour.getHorizontalRightEnd() - neighbour.getSequence().length(),
+                neighbour.getHorizontalRightEnd() - neighbour.getLength(),
                 neighbour.getVerticalPosition()
         ));
     }
@@ -131,9 +131,9 @@ public class GraphVisualizer {
      */
     private void drawNode(final SequenceNode node, final Color color) {
         drawNode(
-                (double) node.getHorizontalRightEnd() - node.getSequence().length(),
+                (double) node.getHorizontalRightEnd() - node.getLength(),
                 node.getVerticalPosition(),
-                node.getSequence().length(),
+                node.getLength(),
                 color
         );
     }

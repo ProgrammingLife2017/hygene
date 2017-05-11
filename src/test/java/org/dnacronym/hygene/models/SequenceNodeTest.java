@@ -33,6 +33,11 @@ class SequenceNodeTest {
     }
 
     @Test
+    void testGetLength() {
+        assertThat(sequenceNode.getLength()).isEqualTo(4);
+    }
+
+    @Test
     void testGetReadIdentifiers() {
         assertThat(sequenceNode.getReadIdentifiers()).isEmpty();
     }
