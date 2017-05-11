@@ -31,7 +31,7 @@ public class DNAApplication extends Application {
     /**
      * Get an instance of an {@link DNAApplication}.
      *
-     * @return Instance of {@link DNAApplication}.
+     * @return instance of {@link DNAApplication}.
      * @throws UIInitialisationException if the UI has not be initialized.
      */
     public static synchronized DNAApplication getInstance() throws UIInitialisationException {
@@ -90,7 +90,7 @@ public class DNAApplication extends Application {
     }
 
     /**
-     * Get the {@link GraphStore} of the {@link DNAApplication}.
+     * Gets the {@link GraphStore} of the {@link DNAApplication}.
      *
      * @return {@link GraphStore} of the {@link DNAApplication}.
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
