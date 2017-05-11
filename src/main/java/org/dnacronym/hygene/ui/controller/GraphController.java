@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -34,7 +34,7 @@ public final class GraphController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            setGraphStore(DNAApplication.getInstance().getGraphStore());
+            setGraphStore(Hygene.getInstance().getGraphStore());
 
             if (graphCanvas != null) {
                 visualiser = new GraphVisualizer(graphCanvas);
