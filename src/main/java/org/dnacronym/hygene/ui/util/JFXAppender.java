@@ -12,8 +12,6 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -26,8 +24,7 @@ import java.io.UnsupportedEncodingException;
 public final class JFXAppender extends AbstractAppender {
     private static Logger logger = LogManager.getLogger(JFXAppender.class.getSimpleName());
 
-    @Nullable
-    private static volatile StringProperty consoleBinding = null;
+    private static volatile StringProperty consoleBinding = new SimpleStringProperty();
 
     /**
      * Constructor for creating a new JFXAppender.
@@ -48,11 +45,7 @@ public final class JFXAppender extends AbstractAppender {
      *
      * @return the console binding.
      */
-    @EnsuresNonNull("consoleBinding")
     public static StringProperty getConsoleBinding() {
-        if (consoleBinding == null) {
-            consoleBinding = new SimpleStringProperty();
-        }
         return consoleBinding;
     }
 
