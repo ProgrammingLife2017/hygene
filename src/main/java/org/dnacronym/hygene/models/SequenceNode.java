@@ -175,14 +175,14 @@ public final class SequenceNode {
      * Check if a given horizontal position is in bounds of node, and that the vertical position of node is equal to the
      * given vertical position.
      *
-     * @param horizontalPosition position that should be in bounds
-     * @param verticalPosition   vertical position node should be in
+     * @param targetHorizontalPosition position that should be in bounds
+     * @param targetVerticalPosition   vertical position node should be in
      * @return true iff in bounds.
      */
-    public boolean inBounds(final int horizontalPosition, final int verticalPosition) {
-        return this.verticalPosition == verticalPosition
-                && horizontalPosition < horizontalRightEnd
-                && horizontalPosition >= horizontalRightEnd - sequence.length();
+    public boolean inBounds(final int targetHorizontalPosition, final int targetVerticalPosition) {
+        return targetVerticalPosition == this.verticalPosition
+                && targetHorizontalPosition < this.horizontalRightEnd
+                && targetHorizontalPosition >= this.horizontalRightEnd - this.sequence.length();
     }
 
     /**

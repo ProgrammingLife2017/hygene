@@ -196,11 +196,13 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
     /**
      * Finds the first node whose vertical and horizontal positions match.
+     * <p>
+     * This gives the {@link SequenceNode} where the node's x is in bounds and the band is equal to the given band, or
+     * {@code null} if no such band is found
      *
      * @param horizontalPosition x position of the node
      * @param verticalPosition   band the node is in
-     * @return the {@link SequenceNode} where the node 's x is in bounds and the band is equal to the given band, or
-     * {@code null} if no such band is found
+     * @return the {@link SequenceNode} which satisfies these conditions.
      */
     public @Nullable SequenceNode getNode(final int horizontalPosition, final int verticalPosition) {
         SequenceNode foundNode = null;
