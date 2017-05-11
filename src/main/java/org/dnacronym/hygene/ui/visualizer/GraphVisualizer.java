@@ -20,9 +20,9 @@ import org.dnacronym.hygene.models.SequenceNode;
  * @see Canvas
  * @see GraphicsContext
  */
-public class GraphPane {
+public class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_NODE_WIDTH = 20;
+    private static final double DEFAULT_NODE_WIDTH = 0.001;
 
     private final Canvas canvas;
     private final GraphicsContext graphicsContext;
@@ -34,10 +34,10 @@ public class GraphPane {
 
 
     /**
-     * Create a new {@link GraphPane} instance.
+     * Create a new {@link GraphVisualizer} instance.
      */
     @SuppressWarnings("nullness") // Superclass width and height has already been instantiated, so can't be null.
-    public GraphPane(final Canvas canvas) {
+    public GraphVisualizer(final Canvas canvas) {
         super();
 
         this.canvas = canvas;
