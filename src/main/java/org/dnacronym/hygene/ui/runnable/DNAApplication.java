@@ -86,7 +86,7 @@ public class DNAApplication extends Application {
         primaryStage.setScene(rootScene);
         primaryStage.show();
 
-        logger.info("Launching HyGene GUI");
+        logger.info("Launching Hygene GUI");
     }
 
     /**
