@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.util;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Serializable;
@@ -21,11 +23,10 @@ import java.io.UnsupportedEncodingException;
  */
 @Plugin(name = "JFXAppender", category = "Core", elementType = "appender", printObject = true)
 public final class JFXAppender extends AbstractAppender {
-    @Nullable
-    private static volatile StringProperty consoleBinding = null;
-
     private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(JFXAppender.class.getSimpleName());
 
+    @Nullable
+    private static volatile StringProperty consoleBinding = null;
 
     /**
      * Constructor for creating a new JFXAppender.
@@ -42,12 +43,17 @@ public final class JFXAppender extends AbstractAppender {
     }
 
     /**
-     * Setter for the console binding.
+     * Getter for the console binding.
      *
-     * @param consoleBinding the console buffer
+     * @return the console binding.
      */
-    public static void setConsoleBinding(@Nullable final StringProperty consoleBinding) {
-        JFXAppender.consoleBinding = consoleBinding;
+    @EnsuresNonNull("consoleBinding")
+    public static StringProperty getConsoleBinding() {
+        if (consoleBinding != null) {
+            return consoleBinding;
+        }
+        consoleBinding = new SimpleStringProperty();
+        return consoleBinding;
     }
 
     /**
