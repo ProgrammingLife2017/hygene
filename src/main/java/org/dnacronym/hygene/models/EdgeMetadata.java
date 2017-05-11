@@ -6,7 +6,7 @@ import java.util.Optional;
 
 
 /**
- * Represents the metadata of a {@link Edge}.
+ * Represents the metadata of an {@link Edge}.
  */
 public final class EdgeMetadata {
     private String fromOrient;
@@ -15,7 +15,7 @@ public final class EdgeMetadata {
 
 
     /**
-     * Constructs and initializes a {@link Edge} object.
+     * Constructs and initializes an {@link Edge} object.
      *
      * @param fromOrient the orient of the from node
      * @param toOrient   the orient of the to node
@@ -29,7 +29,7 @@ public final class EdgeMetadata {
 
 
     /**
-     * Retrieves metadata of the given edge.
+     * Retrieves metadata of the given {@link Edge}.
      *
      * @param edge the edge to retrieve metadata of
      * @return metadata of the edge.

@@ -14,7 +14,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-
+/**
+ * Tests the behavior of the {@link NewGfaFile} class.
+ */
 class NewGfaFileTest {
     private static final String GFA_TEST_FILE = "src/test/resources/gfa/simple.gfa";
     private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"

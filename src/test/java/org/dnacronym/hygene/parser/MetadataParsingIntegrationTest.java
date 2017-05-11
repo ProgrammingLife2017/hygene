@@ -2,6 +2,7 @@ package org.dnacronym.hygene.parser;
 
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.EdgeMetadata;
+import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,9 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tests the integration between {@link MetadataParser}, {@link GfaFile}, {@link Graph}, {@link Node} and {@link Edge}.
+ */
 final class MetadataParsingIntegrationTest {
     @Test
     void testGetNodeMetadata() throws ParseException {
