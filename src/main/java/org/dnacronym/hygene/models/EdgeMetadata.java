@@ -13,8 +13,8 @@ public final class EdgeMetadata {
      * Constructs and initializes a {@link Edge} object.
      *
      * @param fromOrient the orient of the from node
-     * @param toOrient the orient of the to node
-     * @param overlap the overlap
+     * @param toOrient   the orient of the to node
+     * @param overlap    the overlap
      */
     public EdgeMetadata(final String fromOrient, final String toOrient, final String overlap) {
         this.fromOrient = fromOrient;
@@ -25,6 +25,7 @@ public final class EdgeMetadata {
 
     /**
      * Gets the orient of the from node.
+     *
      * @return the orient of the from node.
      */
     public String getFromOrient() {

@@ -72,7 +72,7 @@ final class MetadataParserTest {
         Throwable e = catchThrowable(() -> parser.parseNodeMetadata(replaceSpacesWithTabs("L 12 + 24 - 4M"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
-        assertThat(e).hasMessageContaining("Expected line to start with S");
+        assertThat(e).hasMessageContaining("Expected line 1 to start with S");
     }
 
     @Test
@@ -80,7 +80,7 @@ final class MetadataParserTest {
         Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(replaceSpacesWithTabs("S 12 ACTG"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
-        assertThat(e).hasMessageContaining("Expected line to start with L");
+        assertThat(e).hasMessageContaining("Expected line 1 to start with L");
     }
 
 

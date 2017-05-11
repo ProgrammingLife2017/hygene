@@ -12,7 +12,7 @@ public final class NodeMetadata {
      * Constructs and initializes a {@link NodeMetadata} object.
      *
      * @param originalNodeId the node ID in the GFA file
-     * @param sequence the DNA sequence
+     * @param sequence       the DNA sequence
      */
     public NodeMetadata(final String originalNodeId, final String sequence) {
         this.originalNodeId = originalNodeId;

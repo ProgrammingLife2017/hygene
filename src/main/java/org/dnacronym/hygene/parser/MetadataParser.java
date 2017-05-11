@@ -25,9 +25,9 @@ public final class MetadataParser {
     public NodeMetadata parseNodeMetadata(final String gfa, final int lineNumber) throws ParseException {
         String line = getLine(gfa, lineNumber);
 
-        validateLine(line, "S");
+        validateLine(line, "S", lineNumber);
 
-        final StringTokenizer st = initializeStringTokenizer(line);
+        final StringTokenizer st = initializeStringTokenizer(line, lineNumber);
 
         try {
             st.nextToken();
@@ -49,11 +49,11 @@ public final class MetadataParser {
      * @throws ParseException if the GFA file or given line is invalid
      */
     public EdgeMetadata parseEdgeMetadata(final String gfa, final int lineNumber) throws ParseException {
-        String line = getLine(gfa, lineNumber);
+        final String line = getLine(gfa, lineNumber);
 
-        validateLine(line, "L");
+        validateLine(line, "L", lineNumber);
 
-        final StringTokenizer st = initializeStringTokenizer(line);
+        final StringTokenizer st = initializeStringTokenizer(line, lineNumber);
 
         try {
             st.nextToken();
@@ -73,7 +73,7 @@ public final class MetadataParser {
      * Finds a specific line within the string representation of a GFA file.
      *
      * @param gfa        string containing the contents of the GFA file
-     * @param lineNumber the line number where the edge should be located
+     * @param lineNumber the line number where the node or edge should be located
      * @return the line of the file belonging to the node or edge.
      * @throws ParseException if the line number is out of bounds
      */
@@ -94,11 +94,13 @@ public final class MetadataParser {
      *
      * @param line           a line of the GFA file that 'might' belong to a node or an edge
      * @param expectedPrefix the expected prefix of the line
+     * @param lineNumber the line number where the node or edge is located
      * @throws ParseException if the line does not start with the prefix
      */
-    private void validateLine(final String line, final String expectedPrefix) throws ParseException {
+    private void validateLine(final String line, final String expectedPrefix,
+                              final int lineNumber) throws ParseException {
         if (!line.startsWith(expectedPrefix)) {
-            throw new ParseException("Expected line to start with " + expectedPrefix + " but line was " + line);
+            throw new ParseException("Expected line " + lineNumber + " to start with " + expectedPrefix);
         }
     }
 
@@ -106,13 +108,14 @@ public final class MetadataParser {
      * Initializes a {@link StringTokenizer} to be used for parsing.
      *
      * @param line the line of the GFA file belonging to a node or an edge
+     * @param lineNumber the line number where the node or edge is located
      * @return an initialized {@link StringTokenizer} object.
      * @throws ParseException if the given line does not contain any tabs
      */
-    private StringTokenizer initializeStringTokenizer(final String line) throws ParseException {
+    private StringTokenizer initializeStringTokenizer(final String line, final int lineNumber) throws ParseException {
         final StringTokenizer st = new StringTokenizer(line, "\t");
         if (!st.hasMoreTokens()) {
-            throw new ParseException("Invalid line (line: " + line + ")");
+            throw new ParseException("Line " + lineNumber + " is not valid");
         }
         return st;
     }
