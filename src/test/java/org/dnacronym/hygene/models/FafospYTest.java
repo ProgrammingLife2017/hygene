@@ -292,7 +292,7 @@ class FafospYTest {
     /**
      * Links nodes together in the given direction.
      *
-     * @param direction {@code LEFT} iff. the first node in a link is the node from each the edge leaves
+     * @param direction {@code LEFT} iff. the first node in a link is the node from which each the edge leaves
      * @param links     an array of links, where each link is described as a pair of node identifiers representing the
      *                  from and to nodes of the link
      */
