@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -24,6 +25,9 @@ public final class GraphController implements Initializable {
     private @MonotonicNonNull GraphStore graphStore;
 
     @FXML
+    private @MonotonicNonNull Canvas graphCanvas;
+
+    @FXML
     private @MonotonicNonNull Pane graphPane;
 
 
@@ -31,7 +35,7 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(DNAApplication.getInstance().getGraphStore());
-            visualiser = new GraphPane();
+            visualiser = new GraphPane(graphCanvas);
         } catch (UIInitialisationException e) {
             e.printStackTrace();
         }

@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceGraph;
@@ -21,8 +20,8 @@ import org.dnacronym.hygene.models.SequenceNode;
  * @see Canvas
  * @see GraphicsContext
  */
-public class GraphPane extends Pane {
-    private static final double DEFAULT_NODE_HEIGHT = 100;
+public class GraphPane {
+    private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_NODE_WIDTH = 20;
 
     private final Canvas canvas;
@@ -38,21 +37,16 @@ public class GraphPane extends Pane {
      * Create a new {@link GraphPane} instance.
      */
     @SuppressWarnings("nullness") // Superclass width and height has already been instantiated, so can't be null.
-    public GraphPane() {
+    public GraphPane(final Canvas canvas) {
         super();
 
-        canvas = new Canvas();
+        this.canvas = canvas;
         graphicsContext = canvas.getGraphicsContext2D();
-
-        canvas.widthProperty().bind(this.widthProperty());
-        canvas.heightProperty().bind(this.heightProperty());
 
         edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
-
-        this.getChildren().add(canvas);
     }
 
 
@@ -66,6 +60,7 @@ public class GraphPane extends Pane {
      */
     private void drawEdge(final double startHorizontal, final double startVertical,
                           final double endHorizontal, final double endVertical) {
+        graphicsContext.setLineWidth(2);
         graphicsContext.strokeLine(
                 startHorizontal * nodeWidthProperty.get(),
                 startVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2,
@@ -116,7 +111,7 @@ public class GraphPane extends Pane {
         graphicsContext.setFill(color);
         graphicsContext.fillRect(
                 startHorizontal * nodeWidthProperty.get(),
-                verticalPosition * nodeHeightProperty.get(),
+                verticalPosition * laneHeightProperty.get() + nodeHeightProperty.get() / 4,
                 width * nodeWidthProperty.get(),
                 nodeHeightProperty.get()
         );
@@ -178,13 +173,13 @@ public class GraphPane extends Pane {
         if (sequenceGraph != null) {
             clear();
 
-            // TODO retrieve lanecount from sequenceGraph
             final double laneCount = sequenceGraph.getSourceNode().getMaxHeight();
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
-            sequenceGraph.iterator().forEachRemaining(node -> {
+            sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
                 drawNode(node);
-                drawEdges(node);
+                drawEdges(node, Color.BLACK);
+                node.setVisited(true);
             });
         }
     }

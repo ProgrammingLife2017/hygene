@@ -25,6 +25,8 @@ public final class SequenceNode {
     private int rightHeight = -1;
     private int maxHeight = -1;
 
+    private boolean visited = false;
+
 
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
@@ -269,15 +271,10 @@ public final class SequenceNode {
                     .sum();
         }
 
-        switch (direction) {
-            case LEFT:
-                leftHeight = height;
-                break;
-            case RIGHT:
-                rightHeight = height;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown enum value.");
+        if (direction.equals(SequenceDirection.LEFT)) {
+            leftHeight = height;
+        } else {
+            rightHeight = height;
         }
     }
 
@@ -358,5 +355,18 @@ public final class SequenceNode {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the visited.
+     *
+     * @return the visited.
+     */
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(final boolean visited) {
+        this.visited = visited;
     }
 }
