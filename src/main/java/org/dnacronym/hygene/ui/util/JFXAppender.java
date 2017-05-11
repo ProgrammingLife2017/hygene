@@ -49,10 +49,9 @@ public final class JFXAppender extends AbstractAppender {
      */
     @EnsuresNonNull("consoleBinding")
     public static StringProperty getConsoleBinding() {
-        if (consoleBinding != null) {
-            return consoleBinding;
+        if (consoleBinding == null) {
+            consoleBinding = new SimpleStringProperty();
         }
-        consoleBinding = new SimpleStringProperty();
         return consoleBinding;
     }
 

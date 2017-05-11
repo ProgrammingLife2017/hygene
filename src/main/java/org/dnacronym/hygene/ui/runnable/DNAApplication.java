@@ -51,10 +51,12 @@ public class DNAApplication extends Application {
     }
 
     /**
-     * Main method of application. Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the
+     * Main method of application.
+     * <p>
+     * Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the
      * {@link DNAApplication}.
      *
-     * @param args Arguments of application.
+     * @param args arguments of application.
      * @see LauncherImpl
      */
     public static void main(final String[] args) {
