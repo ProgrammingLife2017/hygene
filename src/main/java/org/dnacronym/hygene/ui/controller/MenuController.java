@@ -8,8 +8,8 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.store.RecentFiles;
@@ -102,7 +102,7 @@ public final class MenuController implements Initializable {
             throw new UIInitialisationException("Error while reading recent files from data file.");
         }
 
-        if (!recentFiles.isEmpty()) {
+        if (!recentFiles.isEmpty() && recentFilesMenu.getItems() != null) {
             // Remove default information item (telling the user that there are no recent files)
             recentFilesMenu.getItems().clear();
 
@@ -167,8 +167,13 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadAndSaveFile(final File file) throws IOException, UIInitialisationException {
-        graphStore.load(file);
-        RecentFiles.add(file);
-        populateRecentFilesMenu();
+        if (graphStore != null) {
+            graphStore.load(file);
+
+            RecentFiles.add(file);
+            populateRecentFilesMenu();
+        } else {
+            throw new UIInitialisationException("Unable to load file.");
+        }
     }
 }
