@@ -19,7 +19,6 @@ public final class ConsoleController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        // Enable custom appender to redirect logging output to console window.
         JFXAppender.setConsoleWindow(console);
 
         if (console != null) {
