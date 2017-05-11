@@ -169,11 +169,15 @@ public final class MenuController implements Initializable {
     private void loadAndSaveFile(final File file) throws IOException, UIInitialisationException {
         if (graphStore != null) {
             graphStore.load(file);
-
-            RecentFiles.add(file);
-            populateRecentFilesMenu();
         } else {
             throw new UIInitialisationException("Unable to load file.");
+        }
+
+        RecentFiles.add(file);
+
+        // Update menu only in initialized state (not in test-cases)
+        if (recentFilesMenu != null) {
+            populateRecentFilesMenu();
         }
     }
 }
