@@ -207,14 +207,10 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     public @Nullable SequenceNode getNode(final int horizontalPosition, final int verticalPosition) {
         SequenceNode foundNode = null;
 
-        SequenceNode node;
-        for (Iterator<SequenceNode> it = iterator(n -> !n.isVisited()); it.hasNext();) {
-            node = it.next();
-            node.setVisited(false);
-        }
+        iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
 
         for (Iterator<SequenceNode> it = iterator(SequenceNode::isVisited); it.hasNext();) {
-            node = it.next();
+            final SequenceNode node = it.next();
             node.setVisited(true);
             if (node.inBounds(horizontalPosition, verticalPosition)) {
                 foundNode = node;
