@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
@@ -21,7 +22,7 @@ import java.net.URL;
 public class DNAApplication extends Application {
     static final String TITLE = "Hygene";
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
-    private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(DNAApplication.class);
+    private static Logger logger = LogManager.getLogger(DNAApplication.class);
     private static @MonotonicNonNull DNAApplication dnaApplication;
 
     private @MonotonicNonNull GraphStore graphStore;
