@@ -38,4 +38,24 @@ public enum SequenceDirection {
                 throw new IllegalArgumentException("Unknown enum value.");
         }
     }
+
+    /**
+     * Runs the {@code Runnable} {@code left} if this {@code SequenceDirection} is {@code LEFT} and runs {@code
+     * Runnable} {@code right} if this {@code SequenceDirection} is {@code RIGHT}.
+     *
+     * @param left  the {@code Runnable} to run if this {@code SequenceDirection} is {@code LEFT}
+     * @param right the {@code Runnable} to run if this {@code SequenceDirection} is {@code RIGHT}
+     */
+    public void ternary(final Runnable left, final Runnable right) {
+        switch (this) {
+            case LEFT:
+                left.run();
+                break;
+            case RIGHT:
+                right.run();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown enum value.");
+        }
+    }
 }
