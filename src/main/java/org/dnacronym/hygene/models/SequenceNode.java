@@ -25,6 +25,8 @@ public final class SequenceNode {
     private int rightHeight = -1;
     private int maxHeight = -1;
 
+    private boolean visited = false;
+
 
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
@@ -198,7 +200,7 @@ public final class SequenceNode {
      *
      * @return the maximal height of any node that is connected to this node.
      */
-    int getMaxHeight() {
+    public int getMaxHeight() {
         return maxHeight;
     }
 
@@ -358,5 +360,23 @@ public final class SequenceNode {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the visited.
+     *
+     * @return the visited.
+     */
+    public boolean isVisited() {
+        return visited;
+    }
+
+    /**
+     * Sets the visited.
+     *
+     * @param visited whether the node was visited
+     */
+    public void setVisited(final boolean visited) {
+        this.visited = visited;
     }
 }
