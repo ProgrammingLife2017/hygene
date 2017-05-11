@@ -7,6 +7,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -25,6 +27,8 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public final class MenuController implements Initializable {
+    private static Logger logger = LogManager.getLogger(Hygene.class);
+
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -40,7 +44,7 @@ public final class MenuController implements Initializable {
             populateRecentFilesMenu();
             initFileChooser();
         } catch (UIInitialisationException e) {
-            e.printStackTrace();
+            logger.error("Failed to initialize MenuController.");
         }
     }
 
@@ -63,7 +67,7 @@ public final class MenuController implements Initializable {
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
-            loadAndSaveFile(gfaFile);
+            loadFile(gfaFile);
         }
     }
 
@@ -112,9 +116,9 @@ public final class MenuController implements Initializable {
 
                 menuItem.addEventHandler(ActionEvent.ACTION, event -> {
                     try {
-                        loadAndSaveFile(file);
+                        loadFile(file);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error("Failed to load the selected recent file.");
                     }
                 });
             }
@@ -135,8 +139,7 @@ public final class MenuController implements Initializable {
      *
      * @return the {@link FileChooser}.
      */
-    @Nullable
-    FileChooser getFileChooser() {
+    @Nullable FileChooser getFileChooser() {
         return fileChooser;
     }
 
@@ -166,7 +169,7 @@ public final class MenuController implements Initializable {
      * @throws IOException               if an IO error occurrs during loading or saving
      * @throws UIInitialisationException if initialisation of the UI fails
      */
-    private void loadAndSaveFile(final File file) throws IOException, UIInitialisationException {
+    private void loadFile(final File file) throws IOException, UIInitialisationException {
         if (graphStore != null) {
             graphStore.load(file);
         } else {
