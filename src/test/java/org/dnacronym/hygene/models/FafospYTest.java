@@ -39,7 +39,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.LEFT);
 
-        assertNodes(SequenceNode::getLeftHeight, new int[] {2});
+        assertNodes(new int[] {2}, SequenceNode::getLeftHeight);
     }
 
     @Test
@@ -49,7 +49,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.LEFT);
 
-        assertNodes(SequenceNode::getLeftHeight, new int[] {2, 2});
+        assertNodes(new int[] {2, 2}, SequenceNode::getLeftHeight);
     }
 
     @Test
@@ -60,7 +60,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.LEFT);
 
-        assertNodes(SequenceNode::getLeftHeight, new int[] {4, 2, 2});
+        assertNodes(new int[] {4, 2, 2}, SequenceNode::getLeftHeight);
     }
 
     @Test
@@ -73,7 +73,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.LEFT);
 
-        assertNodes(SequenceNode::getLeftHeight, new int[] {6, 4, 2, 2, 2});
+        assertNodes(new int[] {6, 4, 2, 2, 2}, SequenceNode::getLeftHeight);
     }
 
     @Test
@@ -86,7 +86,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.LEFT);
 
-        assertNodes(SequenceNode::getLeftHeight, new int[] {4, 2, 2, 2});
+        assertNodes(new int[] {4, 2, 2, 2}, SequenceNode::getLeftHeight);
     }
 
     @Test
@@ -103,7 +103,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.LEFT);
 
-        assertNodes(SequenceNode::getLeftHeight, new int[] {4, 2, 2, 4, 2, 2, 2});
+        assertNodes(new int[] {4, 2, 2, 4, 2, 2, 2}, SequenceNode::getLeftHeight);
     }
 
     /*
@@ -115,7 +115,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.RIGHT);
 
-        assertNodes(SequenceNode::getRightHeight, new int[] {2});
+        assertNodes(new int[] {2}, SequenceNode::getRightHeight);
     }
 
     @Test
@@ -125,7 +125,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.RIGHT);
 
-        assertNodes(SequenceNode::getRightHeight, new int[] {2, 2});
+        assertNodes(new int[] {2, 2}, SequenceNode::getRightHeight);
     }
 
     @Test
@@ -136,7 +136,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.RIGHT);
 
-        assertNodes(SequenceNode::getRightHeight, new int[] {4, 2, 2});
+        assertNodes(new int[] {4, 2, 2}, SequenceNode::getRightHeight);
     }
 
     @Test
@@ -149,7 +149,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.RIGHT);
 
-        assertNodes(SequenceNode::getRightHeight, new int[] {6, 4, 2, 2, 2});
+        assertNodes(new int[] {6, 4, 2, 2, 2}, SequenceNode::getRightHeight);
     }
 
     @Test
@@ -162,7 +162,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.RIGHT);
 
-        assertNodes(SequenceNode::getRightHeight, new int[] {4, 2, 2, 2});
+        assertNodes(new int[] {4, 2, 2, 2}, SequenceNode::getRightHeight);
     }
 
     @Test
@@ -179,7 +179,7 @@ class FafospYTest {
 
         initNodes(SequenceDirection.RIGHT);
 
-        assertNodes(SequenceNode::getRightHeight, new int[] {4, 2, 2, 4, 2, 2, 2});
+        assertNodes(new int[] {4, 2, 2, 4, 2, 2, 2}, SequenceNode::getRightHeight);
     }
 
     /*
@@ -191,7 +191,7 @@ class FafospYTest {
 
         nodes[0].setMaxHeight(1197);
 
-        assertNodes(SequenceNode::getMaxHeight, new int[] {1197});
+        assertNodes(new int[] {1197}, SequenceNode::getMaxHeight);
     }
 
     @Test
@@ -208,7 +208,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getMaxHeight, new int[] {4, 4});
+        assertNodes(new int[] {4, 4}, SequenceNode::getMaxHeight);
     }
 
     /*
@@ -220,7 +220,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {1, 1});
+        assertNodes(new int[] {1, 1}, SequenceNode::getVerticalPosition);
     }
 
     @Test
@@ -229,7 +229,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {1});
+        assertNodes(new int[] {1}, SequenceNode::getVerticalPosition);
     }
 
     @Test
@@ -242,7 +242,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {2, 1, 3, 2});
+        assertNodes(new int[] {2, 1, 3, 2}, SequenceNode::getVerticalPosition);
     }
 
     @Test
@@ -261,7 +261,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {4, 2, 6, 1, 3, 5, 7, 4});
+        assertNodes(new int[] {4, 2, 6, 1, 3, 5, 7, 4}, SequenceNode::getVerticalPosition);
     }
 
     @Test
@@ -282,7 +282,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {4, 2, 6, 1, 3, 5, 7, 2, 6, 4});
+        assertNodes(new int[] {4, 2, 6, 1, 3, 5, 7, 2, 6, 4}, SequenceNode::getVerticalPosition);
     }
 
     @Test
@@ -300,7 +300,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {4, 2, 6, 1, 4, 7, 4});
+        assertNodes(new int[] {4, 2, 6, 1, 4, 7, 4}, SequenceNode::getVerticalPosition);
     }
 
     @Test
@@ -316,7 +316,7 @@ class FafospYTest {
 
         initGraph();
 
-        assertNodes(SequenceNode::getVerticalPosition, new int[] {3, 1, 4, 2, 5, 3});
+        assertNodes(new int[] {3, 1, 4, 2, 5, 3}, SequenceNode::getVerticalPosition);
     }
 
 
@@ -361,10 +361,10 @@ class FafospYTest {
      * That is, if the given function is applied to the {@code i}th node, this method asserts that that value must
      * equal the {@code i}th value in the array.
      *
-     * @param actual   a getter for a {@code SequenceNode}
      * @param expected an array of expected values
+     * @param actual   a getter for a {@code SequenceNode}
      */
-    private void assertNodes(final Function<SequenceNode, Integer> actual, final int[] expected) {
+    private void assertNodes(final int[] expected, final Function<SequenceNode, Integer> actual) {
         for (int i = 0; i < nodes.length; i++) {
             assertThat(actual.apply(nodes[i])).isEqualTo(expected[i]);
         }
