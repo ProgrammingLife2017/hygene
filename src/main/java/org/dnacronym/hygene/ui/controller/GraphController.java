@@ -4,8 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
@@ -22,8 +20,6 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private static Logger logger = LogManager.getLogger(Hygene.class);
-
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     private @MonotonicNonNull GraphStore graphStore;
@@ -41,7 +37,7 @@ public final class GraphController implements Initializable {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (UIInitialisationException e) {
-            logger.error(e);
+            e.printStackTrace();
         }
 
         if (graphVisualizer != null && graphCanvas != null) {
@@ -85,7 +81,7 @@ public final class GraphController implements Initializable {
         try {
             graphVisualizer.draw(gfaFile.getGraph());
         } catch (ParseException e) {
-            logger.warn(e);
+            e.printStackTrace();
         }
     }
 }
