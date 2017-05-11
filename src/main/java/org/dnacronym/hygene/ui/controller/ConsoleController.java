@@ -4,7 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.util.JFXAppender;
+import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
 import java.util.Optional;
@@ -15,11 +18,19 @@ import java.util.ResourceBundle;
  * Controller for the console window.
  */
 public final class ConsoleController implements Initializable {
+    private @MonotonicNonNull GraphVisualizer graphVisualizer;
+
     @FXML
     private @MonotonicNonNull TextArea console;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        try {
+            setGraphVisualizer(DNAApplication.getInstance().getGraphVisualizer());
+        } catch (UIInitialisationException e) {
+            e.printStackTrace();
+        }
+
         Optional.ofNullable(console).orElseThrow(() ->
                 new IllegalStateException("Invalid or uninitialized JavaFX FXML element")).setEditable(false);
 
@@ -28,5 +39,22 @@ public final class ConsoleController implements Initializable {
                 console.appendText(newValue);
             }
         });
+
+        if (graphVisualizer != null) {
+            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, nodeNode) -> {
+                if (console != null) {
+                    console.appendText(nodeNode.toString());
+                }
+            });
+        }
+    }
+
+    /**
+     * Set the {@link GraphVisualizer} in the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link ConsoleController}.
+     */
+    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
     }
 }
