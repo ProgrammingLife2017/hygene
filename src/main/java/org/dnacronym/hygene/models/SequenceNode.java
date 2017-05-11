@@ -271,10 +271,15 @@ public final class SequenceNode {
                     .sum();
         }
 
-        if (direction.equals(SequenceDirection.LEFT)) {
-            leftHeight = height;
-        } else {
-            rightHeight = height;
+        switch (direction) {
+            case LEFT:
+                leftHeight = height;
+                break;
+            case RIGHT:
+                rightHeight = height;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown enum value.");
         }
     }
 
