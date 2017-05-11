@@ -22,7 +22,7 @@ import org.dnacronym.hygene.models.SequenceNode;
  */
 public class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_NODE_WIDTH = 0.001;
+    private static final double DEFAULT_NODE_WIDTH = 0.003;
     private static final double DEFAULT_EDGE_WIDTH = 2;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
@@ -69,9 +69,9 @@ public class GraphVisualizer {
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
         graphicsContext.strokeLine(
                 startHorizontal * nodeWidthProperty.get(),
-                startVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2,
+                (startVertical + 1.0 / 2.0) * laneHeightProperty.get(),
                 endHorizontal * nodeWidthProperty.get(),
-                endVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2
+                (endVertical + 1.0 / 2.0) * laneHeightProperty.get()
         );
     }
 
@@ -117,7 +117,7 @@ public class GraphVisualizer {
         graphicsContext.setFill(color);
         graphicsContext.fillRect(
                 startHorizontal * nodeWidthProperty.get(),
-                verticalPosition * laneHeightProperty.get() + nodeHeightProperty.get(),
+                (verticalPosition + 1.0 / 2.0) * laneHeightProperty.get() - 1.0 / 2.0 * nodeHeightProperty.get(),
                 width * nodeWidthProperty.get(),
                 nodeHeightProperty.get()
         );
@@ -185,12 +185,17 @@ public class GraphVisualizer {
         if (sequenceGraph != null) {
             clear();
 
-            final double laneCount = sequenceGraph.getSourceNode().getMaxHeight();
+            final double canvasWidth = sequenceGraph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
+            canvas.setWidth(canvasWidth);
+
+            // TODO get actual laneCount from FAFOSP (as soon as fixed)
+            final double laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
             sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
                 drawNode(node, DEFAULT_NODE_COLOR);
                 drawEdges(node, DEFAULT_EDGE_COLOR);
+
                 node.setVisited(true);
             });
         }
