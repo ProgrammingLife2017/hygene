@@ -174,7 +174,7 @@ public final class SequenceNode {
      * given vertical position.
      *
      * @param horizontalPosition position that should be in bounds
-     * @param verticalPosition   vertical position node should be in.
+     * @param verticalPosition   vertical position node should be in
      * @return true iff in bounds.
      */
     public boolean inBounds(final int horizontalPosition, final int verticalPosition) {
