@@ -46,12 +46,14 @@
                                             prefHeight="30.0"
                                             vgrow="SOMETIMES"/>
                         </rowConstraints>
-                        <Slider minWidth="200.0"
+                        <Slider fx:id="nodeHeight"
+                                minWidth="200.0"
                                 prefWidth="200.0"
                                 showTickLabels="true"
                                 showTickMarks="true"
                                 GridPane.columnIndex="2"/>
-                        <Slider minWidth="200.0"
+                        <Slider fx:id="nodeWidth"
+                                minWidth="200.0"
                                 prefWidth="200.0"
                                 showTickLabels="true"
                                 showTickMarks="true"
@@ -87,7 +89,8 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                         </rowConstraints>
                         <children>
-                            <ColorPicker editable="true"
+                            <ColorPicker fx:id="edgeColors"
+                                         editable="true"
                                          minWidth="150.0"
                                          prefWidth="150.0"
                                          GridPane.columnIndex="1"/>
