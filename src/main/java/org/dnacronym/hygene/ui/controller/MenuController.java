@@ -63,8 +63,7 @@ public final class MenuController implements Initializable {
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
-            RecentFiles.add(gfaFile);
-            graphStore.load(gfaFile);
+            loadAndSaveFile(gfaFile);
         }
     }
 
@@ -113,9 +112,8 @@ public final class MenuController implements Initializable {
 
                 menuItem.addEventHandler(ActionEvent.ACTION, event -> {
                     try {
-                        RecentFiles.add(file);
-                        graphStore.load(file);
-                    } catch (IOException e) {
+                        loadAndSaveFile(file);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
@@ -158,5 +156,19 @@ public final class MenuController implements Initializable {
      */
     void setRecentFilesMenu(final Menu recentFilesMenu) {
         this.recentFilesMenu = recentFilesMenu;
+    }
+
+
+    /**
+     * Loads the given file and updates recent files history accordingly.
+     *
+     * @param file the file to be opened
+     * @throws IOException               if an IO error occurrs during loading or saving
+     * @throws UIInitialisationException if initialisation of the UI fails
+     */
+    private void loadAndSaveFile(final File file) throws IOException, UIInitialisationException {
+        graphStore.load(file);
+        RecentFiles.add(file);
+        populateRecentFilesMenu();
     }
 }
