@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -18,15 +20,49 @@ import java.net.URL;
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
 public class DNAApplication extends Application {
-    private static @MonotonicNonNull DNAApplication dnaApplication;
-
     static final String TITLE = "Hygene";
-
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    private static Logger logger = LogManager.getLogger(DNAApplication.class);
+    private static @MonotonicNonNull DNAApplication dnaApplication;
 
     private @MonotonicNonNull GraphStore graphStore;
 
     private @MonotonicNonNull Stage primaryStage;
+
+    /**
+     * Get an instance of an {@link DNAApplication}.
+     *
+     * @return instance of {@link DNAApplication}.
+     * @throws UIInitialisationException if the UI has not be initialized.
+     */
+    public static synchronized DNAApplication getInstance() throws UIInitialisationException {
+        if (dnaApplication == null) {
+            throw new UIInitialisationException("Instance of Application not set.");
+        }
+        return dnaApplication;
+    }
+
+    /**
+     * Set the {@link DNAApplication} instance.
+     *
+     * @param application {@link DNAApplication} instance.
+     */
+    protected static synchronized void setInstance(final DNAApplication application) {
+        dnaApplication = application;
+    }
+
+    /**
+     * Main method of application.
+     * <p>
+     * Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the
+     * {@link DNAApplication}.
+     *
+     * @param args arguments of application.
+     * @see LauncherImpl
+     */
+    public static void main(final String[] args) {
+        LauncherImpl.launchApplication(DNAApplication.class, DNAPreloader.class, args);
+    }
 
     @Override
     public final void init() {
@@ -50,10 +86,12 @@ public class DNAApplication extends Application {
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
         primaryStage.show();
+
+        logger.info("Launching Hygene GUI");
     }
 
     /**
-     * Get the {@link GraphStore} of the {@link DNAApplication}.
+     * Gets the {@link GraphStore} of the {@link DNAApplication}.
      *
      * @return {@link GraphStore} of the {@link DNAApplication}.
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
@@ -84,38 +122,5 @@ public class DNAApplication extends Application {
             throw new UIInitialisationException("Stage not present.");
         }
         return primaryStage;
-    }
-
-    /**
-     * Get an instance of an {@link DNAApplication}.
-     *
-     * @return Instance of {@link DNAApplication}.
-     * @throws UIInitialisationException if the UI has not be initialized.
-     */
-    public static synchronized DNAApplication getInstance() throws UIInitialisationException {
-        if (dnaApplication == null) {
-            throw new UIInitialisationException("Instance of Application not set.");
-        }
-        return dnaApplication;
-    }
-
-    /**
-     * Set the {@link DNAApplication} instance.
-     *
-     * @param application {@link DNAApplication} instance.
-     */
-    protected static synchronized void setInstance(final DNAApplication application) {
-        dnaApplication = application;
-    }
-
-    /**
-     * Main method of application. Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the
-     * {@link DNAApplication}.
-     *
-     * @param args Arguments of application.
-     * @see LauncherImpl
-     */
-    public static void main(final String[] args) {
-        LauncherImpl.launchApplication(DNAApplication.class, DNAPreloader.class, args);
     }
 }
