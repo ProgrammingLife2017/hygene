@@ -82,7 +82,7 @@ public class GraphVisualizer {
      * @param endHorizontal   x position of the end of the line
      * @param endVertical     y position of the end of the line
      */
-    @SuppressWarnings("nullness") // For performance.
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdge(final double startHorizontal, final double startVertical,
                           final double endHorizontal, final double endVertical) {
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
@@ -102,7 +102,7 @@ public class GraphVisualizer {
      * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}
      * @see SequenceNode#getRightNeighbours()
      */
-    @SuppressWarnings("nullness") // For performance.
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdges(final SequenceNode sequenceNode) {
         sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
                 sequenceNode.getHorizontalRightEnd(),
@@ -119,7 +119,7 @@ public class GraphVisualizer {
      * @param color        the color with which all edges should be drawn
      * @see #drawEdges(SequenceNode)
      */
-    @SuppressWarnings("nullness") // For performance.
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdges(final SequenceNode sequenceNode, final Color color) {
         graphicsContext.setFill(color);
         drawEdges(sequenceNode);
@@ -133,7 +133,7 @@ public class GraphVisualizer {
      * @param width            width of the node
      * @param color            color of the node
      */
-    @SuppressWarnings("nullness") // For performance.
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawNode(final double startHorizontal, final double verticalPosition,
                           final double width, final Color color) {
         graphicsContext.setFill(color);
@@ -163,7 +163,7 @@ public class GraphVisualizer {
     /**
      * Clear the canvas.
      */
-    @SuppressWarnings("nullness") // For performance.
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     public final void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
