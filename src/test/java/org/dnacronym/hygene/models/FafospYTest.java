@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for FAFOSP-Y.
  */
 class FafospYTest {
+    private SequenceNode[] nodes;
+
+
     /*
      * Default values.
      */
@@ -32,123 +35,75 @@ class FafospYTest {
      */
     @Test
     void testLeftHeightNoNeighbours() {
-        final SequenceNode node = new SequenceNode("A", "A");
+        createNodes(1);
 
-        node.fafospYInit(SequenceDirection.LEFT);
+        initNodes(SequenceDirection.LEFT);
 
-        assertThat(node.getLeftHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getLeftHeight, new int[] {2});
     }
 
     @Test
     void testLeftHeightSingleNeighbour() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        nodeA.linkToLeftNeighbour(nodeB);
+        createNodes(2);
+        nodes[0].linkToLeftNeighbour(nodes[1]);
 
-        nodeB.fafospYInit(SequenceDirection.LEFT);
-        nodeA.fafospYInit(SequenceDirection.LEFT);
+        initNodes(SequenceDirection.LEFT);
 
-        assertThat(nodeA.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getLeftHeight, new int[] {2, 2});
     }
 
     @Test
     void testLeftHeightTwoNeighbours() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        nodeA.linkToLeftNeighbour(nodeB);
-        nodeA.linkToLeftNeighbour(nodeC);
+        createNodes(3);
+        nodes[0].linkToLeftNeighbour(nodes[1]);
+        nodes[0].linkToLeftNeighbour(nodes[2]);
 
-        nodeC.fafospYInit(SequenceDirection.LEFT);
-        nodeB.fafospYInit(SequenceDirection.LEFT);
-        nodeA.fafospYInit(SequenceDirection.LEFT);
+        initNodes(SequenceDirection.LEFT);
 
-        assertThat(nodeA.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getLeftHeight, new int[] {4, 2, 2});
     }
 
     @Test
     void testLeftHeightTwoNeighboursAndOneNeighbourAlsoHasTwoNeighbours() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        nodeA.linkToLeftNeighbour(nodeB);
-        nodeA.linkToLeftNeighbour(nodeC);
-        nodeB.linkToLeftNeighbour(nodeD);
-        nodeB.linkToLeftNeighbour(nodeE);
+        createNodes(5);
+        nodes[0].linkToLeftNeighbour(nodes[1]);
+        nodes[0].linkToLeftNeighbour(nodes[2]);
+        nodes[1].linkToLeftNeighbour(nodes[3]);
+        nodes[1].linkToLeftNeighbour(nodes[4]);
 
-        nodeE.fafospYInit(SequenceDirection.LEFT);
-        nodeD.fafospYInit(SequenceDirection.LEFT);
-        nodeC.fafospYInit(SequenceDirection.LEFT);
-        nodeB.fafospYInit(SequenceDirection.LEFT);
-        nodeA.fafospYInit(SequenceDirection.LEFT);
+        initNodes(SequenceDirection.LEFT);
 
-        assertThat(nodeA.getLeftHeight()).isEqualTo(6);
-        assertThat(nodeB.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeD.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeE.getLeftHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getLeftHeight, new int[] {6, 4, 2, 2, 2});
     }
 
     @Test
     void testLeftHeightSharedNeighbour() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        nodeA.linkToLeftNeighbour(nodeB);
-        nodeA.linkToLeftNeighbour(nodeC);
-        nodeB.linkToLeftNeighbour(nodeD);
-        nodeC.linkToLeftNeighbour(nodeD);
+        createNodes(4);
+        nodes[0].linkToLeftNeighbour(nodes[1]);
+        nodes[0].linkToLeftNeighbour(nodes[2]);
+        nodes[1].linkToLeftNeighbour(nodes[3]);
+        nodes[2].linkToLeftNeighbour(nodes[3]);
 
-        nodeD.fafospYInit(SequenceDirection.LEFT);
-        nodeC.fafospYInit(SequenceDirection.LEFT);
-        nodeB.fafospYInit(SequenceDirection.LEFT);
-        nodeA.fafospYInit(SequenceDirection.LEFT);
+        initNodes(SequenceDirection.LEFT);
 
-        assertThat(nodeA.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeD.getLeftHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getLeftHeight, new int[] {4, 2, 2, 2});
     }
 
     @Test
     void testLeftHeightSequentialSplits() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        final SequenceNode nodeF = new SequenceNode("F", "F");
-        final SequenceNode nodeG = new SequenceNode("G", "G");
-        nodeA.linkToLeftNeighbour(nodeB);
-        nodeA.linkToLeftNeighbour(nodeC);
-        nodeB.linkToLeftNeighbour(nodeD);
-        nodeC.linkToLeftNeighbour(nodeD);
-        nodeD.linkToLeftNeighbour(nodeE);
-        nodeD.linkToLeftNeighbour(nodeF);
-        nodeE.linkToLeftNeighbour(nodeG);
-        nodeF.linkToLeftNeighbour(nodeG);
+        createNodes(7);
+        nodes[0].linkToLeftNeighbour(nodes[1]);
+        nodes[0].linkToLeftNeighbour(nodes[2]);
+        nodes[1].linkToLeftNeighbour(nodes[3]);
+        nodes[2].linkToLeftNeighbour(nodes[3]);
+        nodes[3].linkToLeftNeighbour(nodes[4]);
+        nodes[3].linkToLeftNeighbour(nodes[5]);
+        nodes[4].linkToLeftNeighbour(nodes[6]);
+        nodes[5].linkToLeftNeighbour(nodes[6]);
 
-        nodeG.fafospYInit(SequenceDirection.LEFT);
-        nodeF.fafospYInit(SequenceDirection.LEFT);
-        nodeE.fafospYInit(SequenceDirection.LEFT);
-        nodeD.fafospYInit(SequenceDirection.LEFT);
-        nodeC.fafospYInit(SequenceDirection.LEFT);
-        nodeB.fafospYInit(SequenceDirection.LEFT);
-        nodeA.fafospYInit(SequenceDirection.LEFT);
+        initNodes(SequenceDirection.LEFT);
 
-        assertThat(nodeA.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeD.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeE.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeF.getLeftHeight()).isEqualTo(2);
-        assertThat(nodeG.getLeftHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getLeftHeight, new int[] {4, 2, 2, 4, 2, 2, 2});
     }
 
     /*
@@ -156,123 +111,75 @@ class FafospYTest {
      */
     @Test
     void testRightHeightNoNeighbours() {
-        final SequenceNode node = new SequenceNode("A", "A");
+        createNodes(1);
 
-        node.fafospYInit(SequenceDirection.RIGHT);
+        initNodes(SequenceDirection.RIGHT);
 
-        assertThat(node.getRightHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getRightHeight, new int[] {2});
     }
 
     @Test
     void testRightHeightSingleNeighbour() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        nodeA.linkToRightNeighbour(nodeB);
+        createNodes(2);
+        nodes[0].linkToRightNeighbour(nodes[1]);
 
-        nodeB.fafospYInit(SequenceDirection.RIGHT);
-        nodeA.fafospYInit(SequenceDirection.RIGHT);
+        initNodes(SequenceDirection.RIGHT);
 
-        assertThat(nodeA.getRightHeight()).isEqualTo(2);
-        assertThat(nodeB.getRightHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getRightHeight, new int[] {2, 2});
     }
 
     @Test
     void testRightHeightTwoNeighbours() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
+        createNodes(3);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
 
-        nodeC.fafospYInit(SequenceDirection.RIGHT);
-        nodeB.fafospYInit(SequenceDirection.RIGHT);
-        nodeA.fafospYInit(SequenceDirection.RIGHT);
+        initNodes(SequenceDirection.RIGHT);
 
-        assertThat(nodeA.getRightHeight()).isEqualTo(4);
-        assertThat(nodeB.getRightHeight()).isEqualTo(2);
-        assertThat(nodeC.getRightHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getRightHeight, new int[] {4, 2, 2});
     }
 
     @Test
     void testRightHeightTwoNeighboursAndOneNeighbourAlsoHasTwoNeighbours() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeB.linkToRightNeighbour(nodeE);
+        createNodes(5);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[1].linkToRightNeighbour(nodes[4]);
 
-        nodeE.fafospYInit(SequenceDirection.RIGHT);
-        nodeD.fafospYInit(SequenceDirection.RIGHT);
-        nodeC.fafospYInit(SequenceDirection.RIGHT);
-        nodeB.fafospYInit(SequenceDirection.RIGHT);
-        nodeA.fafospYInit(SequenceDirection.RIGHT);
+        initNodes(SequenceDirection.RIGHT);
 
-        assertThat(nodeA.getRightHeight()).isEqualTo(6);
-        assertThat(nodeB.getRightHeight()).isEqualTo(4);
-        assertThat(nodeC.getRightHeight()).isEqualTo(2);
-        assertThat(nodeD.getRightHeight()).isEqualTo(2);
-        assertThat(nodeE.getRightHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getRightHeight, new int[] {6, 4, 2, 2, 2});
     }
 
     @Test
     void testRightHeightSharedNeighbour() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeC.linkToRightNeighbour(nodeD);
+        createNodes(4);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[2].linkToRightNeighbour(nodes[3]);
 
-        nodeD.fafospYInit(SequenceDirection.RIGHT);
-        nodeC.fafospYInit(SequenceDirection.RIGHT);
-        nodeB.fafospYInit(SequenceDirection.RIGHT);
-        nodeA.fafospYInit(SequenceDirection.RIGHT);
+        initNodes(SequenceDirection.RIGHT);
 
-        assertThat(nodeA.getRightHeight()).isEqualTo(4);
-        assertThat(nodeB.getRightHeight()).isEqualTo(2);
-        assertThat(nodeC.getRightHeight()).isEqualTo(2);
-        assertThat(nodeD.getRightHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getRightHeight, new int[] {4, 2, 2, 2});
     }
 
     @Test
     void testRightHeightSequentialSplits() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        final SequenceNode nodeF = new SequenceNode("F", "F");
-        final SequenceNode nodeG = new SequenceNode("G", "G");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeC.linkToRightNeighbour(nodeD);
-        nodeD.linkToRightNeighbour(nodeE);
-        nodeD.linkToRightNeighbour(nodeF);
-        nodeE.linkToRightNeighbour(nodeG);
-        nodeF.linkToRightNeighbour(nodeG);
+        createNodes(7);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[2].linkToRightNeighbour(nodes[3]);
+        nodes[3].linkToRightNeighbour(nodes[4]);
+        nodes[3].linkToRightNeighbour(nodes[5]);
+        nodes[4].linkToRightNeighbour(nodes[6]);
+        nodes[5].linkToRightNeighbour(nodes[6]);
 
-        nodeG.fafospYInit(SequenceDirection.RIGHT);
-        nodeF.fafospYInit(SequenceDirection.RIGHT);
-        nodeE.fafospYInit(SequenceDirection.RIGHT);
-        nodeD.fafospYInit(SequenceDirection.RIGHT);
-        nodeC.fafospYInit(SequenceDirection.RIGHT);
-        nodeB.fafospYInit(SequenceDirection.RIGHT);
-        nodeA.fafospYInit(SequenceDirection.RIGHT);
+        initNodes(SequenceDirection.RIGHT);
 
-        assertThat(nodeA.getRightHeight()).isEqualTo(4);
-        assertThat(nodeB.getRightHeight()).isEqualTo(2);
-        assertThat(nodeC.getRightHeight()).isEqualTo(2);
-        assertThat(nodeD.getRightHeight()).isEqualTo(4);
-        assertThat(nodeE.getRightHeight()).isEqualTo(2);
-        assertThat(nodeF.getRightHeight()).isEqualTo(2);
-        assertThat(nodeG.getRightHeight()).isEqualTo(2);
+        assertNodes(SequenceNode::getRightHeight, new int[] {4, 2, 2, 4, 2, 2, 2});
     }
 
     /*
@@ -280,11 +187,11 @@ class FafospYTest {
      */
     @Test
     void testGetSetMaxHeight() {
-        final SequenceNode node = new SequenceNode("A", "A");
+        createNodes(1);
 
-        node.setMaxHeight(1197);
+        nodes[0].setMaxHeight(1197);
 
-        assertThat(node.getMaxHeight()).isEqualTo(1197);
+        assertNodes(SequenceNode::getMaxHeight, new int[] {1197});
     }
 
     @Test
@@ -297,14 +204,11 @@ class FafospYTest {
 
     @Test
     void testMaxHeightDisconnectedNodes() {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
+        createNodes(2);
 
-        // This modifies the nodes
-        new SequenceGraph(Arrays.asList(nodeA, nodeB));
+        initGraph();
 
-        assertThat(nodeA.getMaxHeight()).isEqualTo(4);
-        assertThat(nodeB.getMaxHeight()).isEqualTo(4);
+        assertNodes(SequenceNode::getMaxHeight, new int[] {4, 4});
     }
 
     /*
@@ -312,171 +216,157 @@ class FafospYTest {
      */
     @Test
     void testPositionEmptyGraph() {
-        final SequenceGraph graph = new SequenceGraph(new ArrayList<>());
+        createNodes(0);
 
-        assertThat(graph.getSourceNode().getVerticalPosition()).isEqualTo(1);
-        assertThat(graph.getSinkNode().getVerticalPosition()).isEqualTo(1);
+        initGraph();
+
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {1, 1});
     }
 
     @Test
     void testPositionSingleNode() {
-        final SequenceNode node = new SequenceNode("A", "A");
+        createNodes(1);
 
-        // This modifies the node
-        new SequenceGraph(Collections.singletonList(node));
+        initGraph();
 
-        assertThat(node.getVerticalPosition()).isEqualTo(1);
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {1});
     }
 
     @Test
     void testPositionDiamond() throws ParseException {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeC.linkToRightNeighbour(nodeD);
+        createNodes(4);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[2].linkToRightNeighbour(nodes[3]);
 
-        // This modifies the nodes
-        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD));
+        initGraph();
 
-        assertThat(nodeA.getVerticalPosition()).isEqualTo(2);
-        assertThat(nodeB.getVerticalPosition()).isEqualTo(1);
-        assertThat(nodeC.getVerticalPosition()).isEqualTo(3);
-        assertThat(nodeD.getVerticalPosition()).isEqualTo(2);
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {2, 1, 3, 2});
     }
 
     @Test
     void testFafospDoubleTwoSplit() throws ParseException {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        final SequenceNode nodeF = new SequenceNode("F", "F");
-        final SequenceNode nodeG = new SequenceNode("G", "G");
-        final SequenceNode nodeH = new SequenceNode("H", "H");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeB.linkToRightNeighbour(nodeE);
-        nodeC.linkToRightNeighbour(nodeF);
-        nodeC.linkToRightNeighbour(nodeG);
-        nodeD.linkToRightNeighbour(nodeH);
-        nodeE.linkToRightNeighbour(nodeH);
-        nodeF.linkToRightNeighbour(nodeH);
-        nodeG.linkToRightNeighbour(nodeH);
+        createNodes(8);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[1].linkToRightNeighbour(nodes[4]);
+        nodes[2].linkToRightNeighbour(nodes[5]);
+        nodes[2].linkToRightNeighbour(nodes[6]);
+        nodes[3].linkToRightNeighbour(nodes[7]);
+        nodes[4].linkToRightNeighbour(nodes[7]);
+        nodes[5].linkToRightNeighbour(nodes[7]);
+        nodes[6].linkToRightNeighbour(nodes[7]);
 
-        // This modifies the nodes
-        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH));
+        initGraph();
 
-        assertThat(nodeA.getVerticalPosition()).isEqualTo(4);
-        assertThat(nodeB.getVerticalPosition()).isEqualTo(2);
-        assertThat(nodeC.getVerticalPosition()).isEqualTo(6);
-        assertThat(nodeD.getVerticalPosition()).isEqualTo(1);
-        assertThat(nodeE.getVerticalPosition()).isEqualTo(3);
-        assertThat(nodeF.getVerticalPosition()).isEqualTo(5);
-        assertThat(nodeG.getVerticalPosition()).isEqualTo(7);
-        assertThat(nodeH.getVerticalPosition()).isEqualTo(4);
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {4, 2, 6, 1, 3, 5, 7, 4});
     }
 
     @Test
     void testFafospBidirectionalDoubleTwoSplit() throws ParseException {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        final SequenceNode nodeF = new SequenceNode("F", "F");
-        final SequenceNode nodeG = new SequenceNode("G", "G");
-        final SequenceNode nodeH = new SequenceNode("H", "H");
-        final SequenceNode nodeI = new SequenceNode("I", "I");
-        final SequenceNode nodeJ = new SequenceNode("J", "J");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeB.linkToRightNeighbour(nodeE);
-        nodeC.linkToRightNeighbour(nodeF);
-        nodeC.linkToRightNeighbour(nodeG);
-        nodeD.linkToRightNeighbour(nodeH);
-        nodeE.linkToRightNeighbour(nodeH);
-        nodeF.linkToRightNeighbour(nodeI);
-        nodeG.linkToRightNeighbour(nodeI);
-        nodeH.linkToRightNeighbour(nodeJ);
-        nodeI.linkToRightNeighbour(nodeJ);
+        createNodes(10);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[1].linkToRightNeighbour(nodes[4]);
+        nodes[2].linkToRightNeighbour(nodes[5]);
+        nodes[2].linkToRightNeighbour(nodes[6]);
+        nodes[3].linkToRightNeighbour(nodes[7]);
+        nodes[4].linkToRightNeighbour(nodes[7]);
+        nodes[5].linkToRightNeighbour(nodes[8]);
+        nodes[6].linkToRightNeighbour(nodes[8]);
+        nodes[7].linkToRightNeighbour(nodes[9]);
+        nodes[8].linkToRightNeighbour(nodes[9]);
 
-        // This modifies the nodes
-        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH, nodeI, nodeJ));
+        initGraph();
 
-        assertThat(nodeA.getVerticalPosition()).isEqualTo(4);
-        assertThat(nodeB.getVerticalPosition()).isEqualTo(2);
-        assertThat(nodeC.getVerticalPosition()).isEqualTo(6);
-        assertThat(nodeD.getVerticalPosition()).isEqualTo(1);
-        assertThat(nodeE.getVerticalPosition()).isEqualTo(3);
-        assertThat(nodeF.getVerticalPosition()).isEqualTo(5);
-        assertThat(nodeG.getVerticalPosition()).isEqualTo(7);
-        assertThat(nodeH.getVerticalPosition()).isEqualTo(2);
-        assertThat(nodeI.getVerticalPosition()).isEqualTo(6);
-        assertThat(nodeJ.getVerticalPosition()).isEqualTo(4);
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {4, 2, 6, 1, 3, 5, 7, 2, 6, 4});
     }
 
     @Test
     void testFafospSharedDoubleTwoSplit() throws ParseException {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        final SequenceNode nodeF = new SequenceNode("F", "F");
-        final SequenceNode nodeG = new SequenceNode("G", "G");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeB.linkToRightNeighbour(nodeE);
-        nodeC.linkToRightNeighbour(nodeE);
-        nodeC.linkToRightNeighbour(nodeF);
-        nodeD.linkToRightNeighbour(nodeG);
-        nodeE.linkToRightNeighbour(nodeG);
-        nodeF.linkToRightNeighbour(nodeG);
+        createNodes(7);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[1].linkToRightNeighbour(nodes[4]);
+        nodes[2].linkToRightNeighbour(nodes[4]);
+        nodes[2].linkToRightNeighbour(nodes[5]);
+        nodes[3].linkToRightNeighbour(nodes[6]);
+        nodes[4].linkToRightNeighbour(nodes[6]);
+        nodes[5].linkToRightNeighbour(nodes[6]);
 
-        // This modifies the nodes
-        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG));
+        initGraph();
 
-        assertThat(nodeA.getVerticalPosition()).isEqualTo(4);
-        assertThat(nodeB.getVerticalPosition()).isEqualTo(2);
-        assertThat(nodeC.getVerticalPosition()).isEqualTo(6);
-        assertThat(nodeD.getVerticalPosition()).isEqualTo(1);
-        assertThat(nodeE.getVerticalPosition()).isEqualTo(4);
-        assertThat(nodeF.getVerticalPosition()).isEqualTo(7);
-        assertThat(nodeG.getVerticalPosition()).isEqualTo(4);
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {4, 2, 6, 1, 4, 7, 4});
     }
 
     @Test
     void testFafospDoubleReversedSplit() throws ParseException {
-        final SequenceNode nodeA = new SequenceNode("A", "A");
-        final SequenceNode nodeB = new SequenceNode("B", "B");
-        final SequenceNode nodeC = new SequenceNode("C", "C");
-        final SequenceNode nodeD = new SequenceNode("D", "D");
-        final SequenceNode nodeE = new SequenceNode("E", "E");
-        final SequenceNode nodeF = new SequenceNode("F", "F");
-        nodeA.linkToRightNeighbour(nodeB);
-        nodeA.linkToRightNeighbour(nodeC);
-        nodeB.linkToRightNeighbour(nodeD);
-        nodeC.linkToRightNeighbour(nodeD);
-        nodeC.linkToRightNeighbour(nodeE);
-        nodeD.linkToRightNeighbour(nodeF);
-        nodeE.linkToRightNeighbour(nodeF);
+        createNodes(6);
+        nodes[0].linkToRightNeighbour(nodes[1]);
+        nodes[0].linkToRightNeighbour(nodes[2]);
+        nodes[1].linkToRightNeighbour(nodes[3]);
+        nodes[2].linkToRightNeighbour(nodes[3]);
+        nodes[2].linkToRightNeighbour(nodes[4]);
+        nodes[3].linkToRightNeighbour(nodes[5]);
+        nodes[4].linkToRightNeighbour(nodes[5]);
 
-        // This modifies the nodes
-        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF));
+        initGraph();
 
-        assertThat(nodeA.getVerticalPosition()).isEqualTo(3);
-        assertThat(nodeB.getVerticalPosition()).isEqualTo(1);
-        assertThat(nodeC.getVerticalPosition()).isEqualTo(4);
-        assertThat(nodeD.getVerticalPosition()).isEqualTo(2);
-        assertThat(nodeE.getVerticalPosition()).isEqualTo(5);
-        assertThat(nodeF.getVerticalPosition()).isEqualTo(3);
+        assertNodes(SequenceNode::getVerticalPosition, new int[] {3, 1, 4, 2, 5, 3});
+    }
+
+
+    /*
+     * Helper methods.
+     */
+
+    /**
+     * Creates an array of {@code SequenceNode}s, each with a locally unique identifier and sequence.
+     *
+     * @param count the number of nodes to create
+     */
+    private void createNodes(final int count) {
+        nodes = new SequenceNode[count];
+        for (int i = 0; i < count; i++) {
+            nodes[i] = new SequenceNode(Integer.toString(i), Integer.toString(i));
+        }
+    }
+
+    /**
+     * Indirectly calls the fafosp methods through the {@code SequenceGraph}'s constructor.
+     */
+    private void initGraph() {
+        new SequenceGraph(Arrays.asList(nodes));
+    }
+
+    /**
+     * Calls the {@code fafospYInit} method using the given direction on all nodes in the array in reverse order.
+     *
+     * @param direction which height to calculate
+     */
+    private void initNodes(final SequenceDirection direction) {
+        for (int i = nodes.length - 1; i >= 0; i--) {
+            nodes[i].fafospYInit(direction);
+        }
+    }
+
+    /**
+     * Asserts for each initialised node that the value returned by some getter equals a corresponding value in the
+     * array.
+     * <p>
+     * That is, if the given function is applied to the {@code i}th node, this method asserts that that value must
+     * equal the {@code i}th value in the array.
+     *
+     * @param actual   a getter for a {@code SequenceNode}
+     * @param expected an array of expected values
+     */
+    private void assertNodes(final Function<SequenceNode, Integer> actual, final int[] expected) {
+        for (int i = 0; i < nodes.length; i++) {
+            assertThat(actual.apply(nodes[i])).isEqualTo(expected[i]);
+        }
     }
 }
