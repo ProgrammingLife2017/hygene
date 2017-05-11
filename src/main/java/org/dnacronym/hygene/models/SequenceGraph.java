@@ -200,8 +200,6 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
             if (node.inBounds(horizontalPosition, verticalPosition)) {
                 foundNode = node;
                 break;
-            } else if (horizontalPosition > node.getHorizontalRightEnd()) {
-                break;
             }
         }
 
