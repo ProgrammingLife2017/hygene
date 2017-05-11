@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -9,7 +10,7 @@ import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.visualizer.GraphPane;
+import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,9 +20,12 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private @MonotonicNonNull GraphPane visualiser;
+    private @MonotonicNonNull GraphVisualizer visualiser;
 
     private @MonotonicNonNull GraphStore graphStore;
+
+    @FXML
+    private @MonotonicNonNull Canvas graphCanvas;
 
     @FXML
     private @MonotonicNonNull Pane graphPane;
@@ -31,7 +35,10 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(DNAApplication.getInstance().getGraphStore());
-            visualiser = new GraphPane();
+
+            if (graphCanvas != null) {
+                visualiser = new GraphVisualizer(graphCanvas);
+            }
         } catch (UIInitialisationException e) {
             e.printStackTrace();
         }

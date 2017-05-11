@@ -49,7 +49,7 @@ public final class Edge implements Comparable<Edge> {
     /**
      * Getter for the {@link Edge}'s line number.
      *
-     * @return the edge's linenumber
+     * @return the edge's line number
      */
     public int getLineNumber() {
         return lineNumber;

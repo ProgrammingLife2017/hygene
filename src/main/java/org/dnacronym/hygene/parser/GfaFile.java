@@ -15,10 +15,10 @@ import java.nio.file.Paths;
  * Represents a GFA file with its contents and metadata.
  */
 public class GfaFile {
-    private String fileName;
+    private final String fileName;
+    private final GfaParser gfaParser;
+    private final SequenceAlignmentGraphParser sagParser;
     private @MonotonicNonNull SequenceGraph graph;
-    private GfaParser gfaParser;
-    private SequenceAlignmentGraphParser sagParser;
 
 
     /**
@@ -39,7 +39,6 @@ public class GfaFile {
      *
      * @return a {@code SequenceGraph} based on the contents of the GFA file
      * @throws ParseException if the file content is not GFA-compliant
-     * @throws IOException if the file cannot be read
      */
     public final SequenceGraph parse() throws ParseException {
         graph = sagParser.parse(gfaParser.parse(readFile()));

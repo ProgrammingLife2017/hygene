@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -144,15 +145,10 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * breadth-first search order.
      */
     private void fafospX() {
-        final Queue<SequenceNode> queue = new LinkedList<>();
-        queue.addAll(sourceNode.getRightNeighbours());
+        final Iterator<SequenceNode> iterator = iterator(node -> node.getHorizontalRightEnd() >= 0);
 
-        while (!queue.isEmpty()) {
-            final SequenceNode node = queue.remove();
-            node.fafospX();
-
-            queue.addAll(node.getRightNeighbours());
-        }
+        iterator.next(); // Skip source node
+        iterator.forEachRemaining(SequenceNode::fafospX);
     }
 
     /**
@@ -182,7 +178,20 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * Calculates the vertical positions for all {@code SequenceNode}s (including the sentinels).
      */
     private void fafospYCalculate() {
-        iterator().forEachRemaining(SequenceNode::fafospYCalculate);
+        final Queue<SequenceNode> queue = new LinkedList<>();
+        queue.add(sourceNode);
+
+        while (!queue.isEmpty()) {
+            final SequenceNode head = queue.remove();
+
+            // Do not revisit visited nodes
+            head.getRightNeighbours().stream()
+                    .filter(neighbour -> neighbour.getVerticalPosition() < 0)
+                    .collect(Collectors.toCollection(() -> queue));
+
+            // Calculate vertical position
+            head.fafospYCalculate();
+        }
     }
 
     /**

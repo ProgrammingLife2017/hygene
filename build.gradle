@@ -28,7 +28,7 @@ apply plugin: "org.junit.platform.gradle.plugin"
 
 configurations {
     checkerFrameworkAnnotatedJDK {
-        description = 'a copy of JDK classes with Checker Framework type qualifers inserted'
+        description = 'a copy of JDK classes with Checker Framework type qualifiers inserted'
     }
     checkerFramework {
         description = 'The Checker Framework: custom pluggable types for Java'
@@ -36,9 +36,13 @@ configurations {
 }
 
 dependencies {
-    // Graphstream
+    // GraphStream
     compile("org.graphstream:gs-core:${graphstreamVersion}")
     compile("org.graphstream:gs-ui:${graphstreamVersion}")
+
+    // Logger
+    compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    compile("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
     // FindBugs annotations
     compile("com.google.code.findbugs:annotations:${findBugsAnnotations}")
@@ -50,9 +54,6 @@ dependencies {
     // If you also want to support JUnit 3 and JUnit 4 tests
     testCompile("junit:junit:${junit4Version}")
     testRuntime("org.junit.vintage:junit-vintage-engine:${junitVintageVersion}")
-
-    testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-    testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
     testCompile("org.assertj:assertj-core:${assertjVersion}")
     testCompile("org.mockito:mockito-core:${mockitoCoreVersion}")

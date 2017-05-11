@@ -49,6 +49,7 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.LEFT);
 
         assertThat(nodeA.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
     }
 
     @Test
@@ -64,8 +65,8 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.LEFT);
 
         assertThat(nodeA.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeA.getLeftHeight()).isEqualTo(4);
-        assertThat(nodeA.getLeftHeight()).isEqualTo(4);
+        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
     }
 
     @Test
@@ -87,6 +88,10 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.LEFT);
 
         assertThat(nodeA.getLeftHeight()).isEqualTo(6);
+        assertThat(nodeB.getLeftHeight()).isEqualTo(4);
+        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeD.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeE.getLeftHeight()).isEqualTo(2);
     }
 
     @Test
@@ -106,6 +111,44 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.LEFT);
 
         assertThat(nodeA.getLeftHeight()).isEqualTo(4);
+        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeD.getLeftHeight()).isEqualTo(2);
+    }
+
+    @Test
+    void testLeftHeightSequentialSplits() {
+        final SequenceNode nodeA = new SequenceNode("A", "A");
+        final SequenceNode nodeB = new SequenceNode("B", "B");
+        final SequenceNode nodeC = new SequenceNode("C", "C");
+        final SequenceNode nodeD = new SequenceNode("D", "D");
+        final SequenceNode nodeE = new SequenceNode("E", "E");
+        final SequenceNode nodeF = new SequenceNode("F", "F");
+        final SequenceNode nodeG = new SequenceNode("G", "G");
+        nodeA.linkToLeftNeighbour(nodeB);
+        nodeA.linkToLeftNeighbour(nodeC);
+        nodeB.linkToLeftNeighbour(nodeD);
+        nodeC.linkToLeftNeighbour(nodeD);
+        nodeD.linkToLeftNeighbour(nodeE);
+        nodeD.linkToLeftNeighbour(nodeF);
+        nodeE.linkToLeftNeighbour(nodeG);
+        nodeF.linkToLeftNeighbour(nodeG);
+
+        nodeG.fafospYInit(SequenceDirection.LEFT);
+        nodeF.fafospYInit(SequenceDirection.LEFT);
+        nodeE.fafospYInit(SequenceDirection.LEFT);
+        nodeD.fafospYInit(SequenceDirection.LEFT);
+        nodeC.fafospYInit(SequenceDirection.LEFT);
+        nodeB.fafospYInit(SequenceDirection.LEFT);
+        nodeA.fafospYInit(SequenceDirection.LEFT);
+
+        assertThat(nodeA.getLeftHeight()).isEqualTo(4);
+        assertThat(nodeB.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeC.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeD.getLeftHeight()).isEqualTo(4);
+        assertThat(nodeE.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeF.getLeftHeight()).isEqualTo(2);
+        assertThat(nodeG.getLeftHeight()).isEqualTo(2);
     }
 
     /*
@@ -130,6 +173,7 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.RIGHT);
 
         assertThat(nodeA.getRightHeight()).isEqualTo(2);
+        assertThat(nodeB.getRightHeight()).isEqualTo(2);
     }
 
     @Test
@@ -145,6 +189,8 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.RIGHT);
 
         assertThat(nodeA.getRightHeight()).isEqualTo(4);
+        assertThat(nodeB.getRightHeight()).isEqualTo(2);
+        assertThat(nodeC.getRightHeight()).isEqualTo(2);
     }
 
     @Test
@@ -166,6 +212,10 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.RIGHT);
 
         assertThat(nodeA.getRightHeight()).isEqualTo(6);
+        assertThat(nodeB.getRightHeight()).isEqualTo(4);
+        assertThat(nodeC.getRightHeight()).isEqualTo(2);
+        assertThat(nodeD.getRightHeight()).isEqualTo(2);
+        assertThat(nodeE.getRightHeight()).isEqualTo(2);
     }
 
     @Test
@@ -185,6 +235,44 @@ class FafospYTest {
         nodeA.fafospYInit(SequenceDirection.RIGHT);
 
         assertThat(nodeA.getRightHeight()).isEqualTo(4);
+        assertThat(nodeB.getRightHeight()).isEqualTo(2);
+        assertThat(nodeC.getRightHeight()).isEqualTo(2);
+        assertThat(nodeD.getRightHeight()).isEqualTo(2);
+    }
+
+    @Test
+    void testRightHeightSequentialSplits() {
+        final SequenceNode nodeA = new SequenceNode("A", "A");
+        final SequenceNode nodeB = new SequenceNode("B", "B");
+        final SequenceNode nodeC = new SequenceNode("C", "C");
+        final SequenceNode nodeD = new SequenceNode("D", "D");
+        final SequenceNode nodeE = new SequenceNode("E", "E");
+        final SequenceNode nodeF = new SequenceNode("F", "F");
+        final SequenceNode nodeG = new SequenceNode("G", "G");
+        nodeA.linkToRightNeighbour(nodeB);
+        nodeA.linkToRightNeighbour(nodeC);
+        nodeB.linkToRightNeighbour(nodeD);
+        nodeC.linkToRightNeighbour(nodeD);
+        nodeD.linkToRightNeighbour(nodeE);
+        nodeD.linkToRightNeighbour(nodeF);
+        nodeE.linkToRightNeighbour(nodeG);
+        nodeF.linkToRightNeighbour(nodeG);
+
+        nodeG.fafospYInit(SequenceDirection.RIGHT);
+        nodeF.fafospYInit(SequenceDirection.RIGHT);
+        nodeE.fafospYInit(SequenceDirection.RIGHT);
+        nodeD.fafospYInit(SequenceDirection.RIGHT);
+        nodeC.fafospYInit(SequenceDirection.RIGHT);
+        nodeB.fafospYInit(SequenceDirection.RIGHT);
+        nodeA.fafospYInit(SequenceDirection.RIGHT);
+
+        assertThat(nodeA.getRightHeight()).isEqualTo(4);
+        assertThat(nodeB.getRightHeight()).isEqualTo(2);
+        assertThat(nodeC.getRightHeight()).isEqualTo(2);
+        assertThat(nodeD.getRightHeight()).isEqualTo(4);
+        assertThat(nodeE.getRightHeight()).isEqualTo(2);
+        assertThat(nodeF.getRightHeight()).isEqualTo(2);
+        assertThat(nodeG.getRightHeight()).isEqualTo(2);
     }
 
     /*

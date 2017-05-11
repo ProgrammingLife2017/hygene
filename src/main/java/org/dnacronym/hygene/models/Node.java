@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Set;
@@ -12,14 +13,14 @@ import java.util.TreeSet;
  * Node array format:
  * [[nodeLineNumber, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
-class Node {
+public final class Node {
     static final int NODE_LINE_NUMBER_INDEX = 0;
     static final int NODE_COLOR_INDEX = 1;
     static final int UNSCALED_X_POSITION_INDEX = 2;
     static final int UNSCALED_Y_POSITION_INDEX = 3;
     static final int NODE_OUTGOING_EDGES_INDEX = 4;
     static final int NODE_EDGE_DATA_OFFSET = 5;
-    static final int EDGE_LINENUMBER_OFFSET = 1;
+    static final int EDGE_LINE_NUMBER_OFFSET = 1;
     static final int EDGE_DATA_SIZE = 2;
 
     private final int id;
@@ -46,6 +47,10 @@ class Node {
      *
      * @return the node array
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "For performance reasons, we don't want to create a copy here"
+    )
     public int[] toArray() {
         return data;
     }
@@ -62,7 +67,7 @@ class Node {
     /**
      * Getter for {@link Node} metadata line number.
      *
-     * @return the linenumber
+     * @return the line number
      */
     public int getLineNumber() {
         return data[NODE_LINE_NUMBER_INDEX];
@@ -137,7 +142,7 @@ class Node {
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         int to = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
                         newOutgoingEdges.add(new Edge(id, to, lineNumber));
                     }
                     this.outgoingEdges = newOutgoingEdges;
@@ -164,7 +169,7 @@ class Node {
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         int from = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
                         newIncomingEdges.add(new Edge(from, id, lineNumber));
                     }
 

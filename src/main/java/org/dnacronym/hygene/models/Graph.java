@@ -48,6 +48,19 @@ public final class Graph {
     }
 
     /**
+     * Gets the array representation of all node arrays.
+     *
+     * @return the array representation of all node arrays.
+     */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "For performance reasons, we don't want to create a copy here"
+    )
+    public int[][] getNodeArrays() {
+        return nodeArrays;
+    }
+
+    /**
      * Getter for the line number where the {@link Node}'s metadata resides.
      *
      * @param id the {@link Node}'s id
