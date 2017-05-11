@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verify;
 
 
 class NewGfaFileTest {
+    private static final String GFA_TEST_FILE = "src/test/resources/gfa/simple.gfa";
     private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
             + "S\t11\tACCTT%n"
             + "S\t12\tTCAAGG%n"
@@ -44,7 +45,7 @@ class NewGfaFileTest {
 
     @Test
     void testReadFile() throws ParseException {
-        NewGfaFile gfaFile = new NewGfaFile("src/test/resources/gfa/simple.gfa");
+        NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
 
         assertThat(gfaFile.readFile()).isEqualTo(SIMPLE_GFA_CONTENTS);
     }
@@ -54,7 +55,7 @@ class NewGfaFileTest {
         NewGfaParser gfaParser = spy(NewGfaParser.class);
         NewGfaParserFactory.setInstance(gfaParser);
 
-        NewGfaFile gfaFile = new NewGfaFile("src/test/resources/gfa/simple.gfa");
+        NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
         verify(gfaParser).parse(any(NewGfaFile.class));
@@ -66,7 +67,7 @@ class NewGfaFileTest {
         MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
-        NewGfaFile gfaFile = new NewGfaFile("src/test/resources/gfa/simple.gfa");
+        NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
 
         verify(metadataParser).parseNodeMetadata(SIMPLE_GFA_CONTENTS, 2);
@@ -78,7 +79,7 @@ class NewGfaFileTest {
         MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
-        NewGfaFile gfaFile = new NewGfaFile("src/test/resources/gfa/simple.gfa");
+        NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
         verify(metadataParser).parseEdgeMetadata(SIMPLE_GFA_CONTENTS, 4);
