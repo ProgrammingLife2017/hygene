@@ -45,9 +45,9 @@ public final class ConsoleController implements Initializable {
         });
 
         if (graphVisualizer != null) {
-            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, nodeNode) -> {
+            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) -> {
                 if (console != null) {
-                    console.appendText("Sequence: " + nodeNode.getSequence() + "\n");
+                    console.appendText("Sequence: " + newNode.getSequence() + "\n");
                 }
             });
         }
