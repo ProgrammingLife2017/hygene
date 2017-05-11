@@ -2,8 +2,6 @@ package org.dnacronym.hygene.ui.util;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -22,8 +20,6 @@ import java.io.UnsupportedEncodingException;
  */
 @Plugin(name = "JFXAppender", category = "Core", elementType = "appender", printObject = true)
 public final class JFXAppender extends AbstractAppender {
-    private static Logger logger = LogManager.getLogger(JFXAppender.class.getSimpleName());
-
     private static volatile StringProperty consoleBinding = new SimpleStringProperty();
 
     /**
@@ -70,7 +66,7 @@ public final class JFXAppender extends AbstractAppender {
             try {
                 consoleBinding.setValue(new String(getLayout().toByteArray(event), "UTF-8") + "\n");
             } catch (UnsupportedEncodingException e) {
-                logger.error(e);
+                LOGGER.error(e);
             }
         }
     }
