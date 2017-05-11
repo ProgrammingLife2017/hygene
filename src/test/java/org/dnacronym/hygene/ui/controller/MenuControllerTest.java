@@ -3,7 +3,7 @@ package org.dnacronym.hygene.ui.controller;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class MenuControllerTest extends UITest {
         final File file = mock(File.class);
 
         // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
-        final Window owner = DNAApplication.getInstance().getPrimaryStage().getOwner();
+        final Window owner = Hygene.getInstance().getPrimaryStage().getOwner();
         when(fileChooser.showOpenDialog(owner)).thenReturn(file, file);
 
         menuController.setFileChooser(fileChooser);

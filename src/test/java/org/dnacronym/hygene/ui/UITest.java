@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui;
 
 import javafx.stage.Stage;
-import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeoutException;
  * in test classes that inherit from this class.
  */
 public abstract class UITest extends FxRobot {
-    private DNAApplication application;
+    private Hygene application;
     private Stage primaryStage;
 
 
@@ -30,7 +30,7 @@ public abstract class UITest extends FxRobot {
     @BeforeEach
     public final void basicBeforeEach() throws TimeoutException {
         this.primaryStage = FxToolkit.registerPrimaryStage();
-        this.application = (DNAApplication) FxToolkit.setupApplication(DNAApplication.class);
+        this.application = (Hygene) FxToolkit.setupApplication(Hygene.class);
 
         FxToolkit.showStage();
 
@@ -45,7 +45,7 @@ public abstract class UITest extends FxRobot {
      */
     @AfterEach
     public final void basicAfterEach() throws TimeoutException, UIInitialisationException {
-        FxToolkit.cleanupApplication(DNAApplication.getInstance());
+        FxToolkit.cleanupApplication(Hygene.getInstance());
         FxToolkit.cleanupStages();
 
         afterEach();
@@ -67,11 +67,11 @@ public abstract class UITest extends FxRobot {
     }
 
     /**
-     * Get the {@link DNAApplication} used for UI testing.
+     * Get the {@link Hygene} used for UI testing.
      *
-     * @return {@link DNAApplication} used for UI testing.
+     * @return {@link Hygene} used for UI testing.
      */
-    public final DNAApplication getApplication() {
+    public final Hygene getApplication() {
         return application;
     }
 

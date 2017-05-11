@@ -6,7 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 
@@ -26,7 +26,7 @@ public final class MenuController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            setGraphStore(DNAApplication.getInstance().getGraphStore());
+            setGraphStore(Hygene.getInstance().getGraphStore());
 
             final String chooserTitle = "Open GFA File";
             final FileChooser.ExtensionFilter gfaFilter =
@@ -65,7 +65,7 @@ public final class MenuController implements Initializable {
 
     /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
-     * {@link DNAApplication#getPrimaryStage()#getOwner()}.
+     * {@link Hygene#getPrimaryStage()#getOwner()}.
      *
      * @param event {@link ActionEvent} associated with the event.
      * @throws Exception if Unable to open the file, or parse the file.
@@ -77,7 +77,7 @@ public final class MenuController implements Initializable {
             return;
         }
 
-        final Stage primaryStage = DNAApplication.getInstance().getPrimaryStage();
+        final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
