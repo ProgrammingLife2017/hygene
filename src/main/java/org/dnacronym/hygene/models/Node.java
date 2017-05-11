@@ -38,7 +38,8 @@ public final class Node {
      *
      * @param id    the node's id
      * @param data  the node array representing the node's data
-     * @param graph the graph containing the node
+     * @param graph the graph containing the node, in case there is no graph (yet)
+     *              for this node to be on, null is accepted
      */
     Node(final int id, final int[] data, final @Nullable Graph graph) {
         this.id = id;

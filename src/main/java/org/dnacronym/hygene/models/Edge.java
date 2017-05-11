@@ -22,7 +22,8 @@ public final class Edge implements Comparable<Edge> {
      * @param from       node from which the edge originates
      * @param to         node at which the edge ends
      * @param lineNumber line number of GFA file where the edge is specified
-     * @param graph      a reference to the graph that the edge belongs to
+     * @param graph      a reference to the graph that the edge belongs to, in case there is no graph (yet)
+     *                   for this edge to be on, null is accepted
      */
     public Edge(final int from, final int to, final int lineNumber, final @Nullable Graph graph) {
         this.from = from;

@@ -4,6 +4,7 @@ import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Optional;
 
+
 /**
  * Represents the metadata of a {@link Edge}.
  */
