@@ -12,7 +12,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -62,12 +62,6 @@ public final class JFXAppender extends AbstractAppender {
 
     @Override
     public void append(final LogEvent event) {
-        if (consoleBinding != null) {
-            try {
-                consoleBinding.setValue(new String(getLayout().toByteArray(event), "UTF-8") + "\n");
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.error(e);
-            }
-        }
+        consoleBinding.setValue(new String(getLayout().toByteArray(event), StandardCharsets.UTF_8) + "\n");
     }
 }
