@@ -10,7 +10,7 @@ import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.DNAApplication;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
+import org.dnacronym.hygene.ui.visualizer.GraphPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private @MonotonicNonNull GraphVisualizer visualiser;
+    private @MonotonicNonNull GraphPane visualiser;
 
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -35,7 +35,7 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(DNAApplication.getInstance().getGraphStore());
-            visualiser = new GraphVisualizer(graphCanvas);
+            visualiser = new GraphPane(graphCanvas);
         } catch (UIInitialisationException e) {
             e.printStackTrace();
         }
