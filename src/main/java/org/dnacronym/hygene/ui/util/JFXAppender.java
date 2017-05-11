@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.util;
 
-import javafx.application.Platform;
-import javafx.scene.control.TextArea;
+import javafx.beans.property.StringProperty;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -13,6 +13,7 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -21,7 +22,10 @@ import java.io.Serializable;
 @Plugin(name = "JFXAppender", category = "Core", elementType = "appender", printObject = true)
 public final class JFXAppender extends AbstractAppender {
     @Nullable
-    private static volatile TextArea consoleWindow = null;
+    private static volatile StringProperty consoleBinding = null;
+
+    private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(JFXAppender.class.getSimpleName());
+
 
     /**
      * Constructor for creating a new JFXAppender.
@@ -38,12 +42,12 @@ public final class JFXAppender extends AbstractAppender {
     }
 
     /**
-     * Set the textarea used as console window.
+     * Setter for the console binding.
      *
-     * @param consoleWindow the console window instance.
+     * @param consoleBinding the console buffer
      */
-    public static void setConsoleWindow(@Nullable final TextArea consoleWindow) {
-        JFXAppender.consoleWindow = consoleWindow;
+    public static void setConsoleBinding(@Nullable final StringProperty consoleBinding) {
+        JFXAppender.consoleBinding = consoleBinding;
     }
 
     /**
@@ -63,10 +67,12 @@ public final class JFXAppender extends AbstractAppender {
 
     @Override
     public void append(final LogEvent event) {
-        Platform.runLater(() -> {
-            if (consoleWindow != null) {
-                consoleWindow.appendText(new String(getLayout().toByteArray(event)));
+        if (consoleBinding != null) {
+            try {
+                consoleBinding.setValue(new String(getLayout().toByteArray(event), "UTF-8") + "\n");
+            } catch (UnsupportedEncodingException e) {
+                logger.error(e);
             }
-        });
+        }
     }
 }
