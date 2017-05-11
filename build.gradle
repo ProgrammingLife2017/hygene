@@ -10,6 +10,7 @@ buildscript {
 plugins {
     id "java"
     id "idea"
+    id "application"
 
     id "checkstyle"
     id "findbugs"
@@ -104,6 +105,8 @@ tasks.withType(JavaCompile).all { JavaCompile compile ->
 }
 
 /* Plugin settings */
+mainClassName = "org.dnacronym.hygene.ui.runnable.Hygene"
+
 checkstyle {
     ignoreFailures = true
 }

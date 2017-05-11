@@ -24,7 +24,7 @@ import org.dnacronym.hygene.models.SequenceNode;
  */
 public class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_NODE_WIDTH = 0.001;
+    private static final double DEFAULT_NODE_WIDTH = 0.003;
     private static final double DEFAULT_EDGE_WIDTH = 2;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
@@ -68,10 +68,10 @@ public class GraphVisualizer {
      * {@link SequenceNode}.
      */
     private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
-        final int nodeX = (int) Math.round(xPos / nodeWidthProperty.get());
-        final int lane = (int) Math.floor(yPos / laneHeightProperty.get());
-
-        return new int[]{nodeX, lane};
+        return new int[]{
+                (int) Math.round(xPos / nodeWidthProperty.get()),
+                (int) Math.floor(yPos / laneHeightProperty.get())
+        };
     }
 
     /**
@@ -82,15 +82,14 @@ public class GraphVisualizer {
      * @param endHorizontal   x position of the end of the line
      * @param endVertical     y position of the end of the line
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdge(final double startHorizontal, final double startVertical,
                           final double endHorizontal, final double endVertical) {
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
         graphicsContext.strokeLine(
                 startHorizontal * nodeWidthProperty.get(),
-                startVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2,
+                (startVertical + 1.0 / 2.0) * laneHeightProperty.get(),
                 endHorizontal * nodeWidthProperty.get(),
-                endVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2
+                (endVertical + 1.0 / 2.0) * laneHeightProperty.get()
         );
     }
 
@@ -102,7 +101,6 @@ public class GraphVisualizer {
      * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}
      * @see SequenceNode#getRightNeighbours()
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdges(final SequenceNode sequenceNode) {
         sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
                 sequenceNode.getHorizontalRightEnd(),
@@ -119,7 +117,6 @@ public class GraphVisualizer {
      * @param color        the color with which all edges should be drawn
      * @see #drawEdges(SequenceNode)
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdges(final SequenceNode sequenceNode, final Color color) {
         graphicsContext.setFill(color);
         drawEdges(sequenceNode);
@@ -133,13 +130,12 @@ public class GraphVisualizer {
      * @param width            width of the node
      * @param color            color of the node
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawNode(final double startHorizontal, final double verticalPosition,
                           final double width, final Color color) {
         graphicsContext.setFill(color);
         graphicsContext.fillRect(
                 startHorizontal * nodeWidthProperty.get(),
-                verticalPosition * laneHeightProperty.get() + nodeHeightProperty.get(),
+                (verticalPosition + 1.0 / 2.0) * laneHeightProperty.get() - 1.0 / 2.0 * nodeHeightProperty.get(),
                 width * nodeWidthProperty.get(),
                 nodeHeightProperty.get()
         );
@@ -216,7 +212,7 @@ public class GraphVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.setOnMouseClicked(event -> {
-            final int[] positions = toSequenceNodeCoordinates(event.getSceneX(), event.getSceneY());
+            final int[] positions = toSequenceNodeCoordinates(event.getX(), event.getY());
             final int nodeXPos = positions[0];
             final int nodeLane = positions[1];
 
@@ -235,23 +231,27 @@ public class GraphVisualizer {
      * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
-     * @throws RuntimeException if the {@link Canvas} has not been set.
+     * @throws IllegalStateException if the {@link Canvas} has not been set.
      */
-    public final void draw(final @Nullable SequenceGraph sequenceGraph) throws RuntimeException {
+    public final void draw(final @Nullable SequenceGraph sequenceGraph) {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
         clear();
         this.sequenceGraph = sequenceGraph;
-
         if (sequenceGraph != null && canvas != null) {
-            final double laneCount = sequenceGraph.getSourceNode().getMaxHeight();
+            final double canvasWidth = sequenceGraph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
+            canvas.setWidth(canvasWidth);
+
+            // TODO get actual laneCount from FAFOSP (as soon as fixed)
+            final double laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
             sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
                 drawNode(node, DEFAULT_NODE_COLOR);
                 drawEdges(node, DEFAULT_EDGE_COLOR);
+
                 node.setVisited(true);
             });
         }

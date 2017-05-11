@@ -6,7 +6,7 @@ import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.util.JFXAppender;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  * Controller for the console window.
  */
 public final class ConsoleController implements Initializable {
-    private static Logger logger = LogManager.getLogger(DNAApplication.class);
+    private static Logger logger = LogManager.getLogger(Hygene.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
@@ -30,7 +30,7 @@ public final class ConsoleController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            setGraphVisualizer(DNAApplication.getInstance().getGraphVisualizer());
+            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (UIInitialisationException e) {
             logger.error(e);
         }
@@ -47,7 +47,7 @@ public final class ConsoleController implements Initializable {
         if (graphVisualizer != null) {
             graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, nodeNode) -> {
                 if (console != null) {
-                    console.appendText(nodeNode.toString());
+                    console.appendText("Sequence: " + nodeNode.getSequence() + "\n");
                 }
             });
         }

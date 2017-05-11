@@ -16,15 +16,15 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import java.net.URL;
 
 /**
- * Main class of the application. Launches a {@link DNAPreloader}, and afterwards a {@link DNAApplication}.
+ * Main class of the application. Launches a {@link HygenePreloader}, and afterwards a {@link Hygene}.
  *
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
-public class DNAApplication extends Application {
+public class Hygene extends Application {
     static final String TITLE = "Hygene";
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
-    private static Logger logger = LogManager.getLogger(DNAApplication.class);
-    private static @MonotonicNonNull DNAApplication dnaApplication;
+    private static Logger logger = LogManager.getLogger(Hygene.class);
+    private static @MonotonicNonNull Hygene hygene;
 
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -33,38 +33,38 @@ public class DNAApplication extends Application {
     private @MonotonicNonNull Stage primaryStage;
 
     /**
-     * Get an instance of an {@link DNAApplication}.
+     * Get an instance of an {@link Hygene}.
      *
-     * @return instance of {@link DNAApplication}.
+     * @return instance of {@link Hygene}.
      * @throws UIInitialisationException if the UI has not be initialized.
      */
-    public static synchronized DNAApplication getInstance() throws UIInitialisationException {
-        if (dnaApplication == null) {
+    public static synchronized Hygene getInstance() throws UIInitialisationException {
+        if (hygene == null) {
             throw new UIInitialisationException("Instance of Application not set.");
         }
-        return dnaApplication;
+        return hygene;
     }
 
     /**
-     * Set the {@link DNAApplication} instance.
+     * Set the {@link Hygene} instance.
      *
-     * @param application {@link DNAApplication} instance.
+     * @param application {@link Hygene} instance.
      */
-    protected static synchronized void setInstance(final DNAApplication application) {
-        dnaApplication = application;
+    protected static synchronized void setInstance(final Hygene application) {
+        hygene = application;
     }
 
     /**
      * Main method of application.
      * <p>
-     * Uses {@link LauncherImpl} to launch a {@link DNAPreloader} before it launches the
-     * {@link DNAApplication}.
+     * Uses {@link LauncherImpl} to launch a {@link HygenePreloader} before it launches the
+     * {@link Hygene}.
      *
      * @param args arguments of application.
      * @see LauncherImpl
      */
     public static void main(final String[] args) {
-        LauncherImpl.launchApplication(DNAApplication.class, DNAPreloader.class, args);
+        LauncherImpl.launchApplication(Hygene.class, HygenePreloader.class, args);
     }
 
     @Override
@@ -95,9 +95,9 @@ public class DNAApplication extends Application {
     }
 
     /**
-     * Gets the {@link GraphStore} of the {@link DNAApplication}.
+     * Gets the {@link GraphStore} of the {@link Hygene}.
      *
-     * @return {@link GraphStore} of the {@link DNAApplication}.
+     * @return {@link GraphStore} of the {@link Hygene}.
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
      *                                   in {@link #init()}.
      * @see GraphStore
@@ -111,9 +111,9 @@ public class DNAApplication extends Application {
     }
 
     /**
-     * Gets the {@link GraphVisualizer} of the {@link DNAApplication}.
+     * Gets the {@link GraphVisualizer} of the {@link Hygene}.
      *
-     * @return {@link GraphVisualizer} of the {@link DNAApplication}.
+     * @return {@link GraphVisualizer} of the {@link Hygene}.
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
      *                                   in {@link #init()}.
      * @see #init()
@@ -126,12 +126,12 @@ public class DNAApplication extends Application {
     }
 
     /**
-     * Get an instance of the DNAApplication.
+     * Get an instance of the Hygene.
      * <p>
      * If there is not an instance, then it will throw a {@link UIInitialisationException} as opposed to creating a
      * new one.
      *
-     * @return instance of the {@link DNAApplication}.
+     * @return instance of the {@link Hygene}.
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
      *                                   #start(Stage)}.
      * @see #start(Stage)

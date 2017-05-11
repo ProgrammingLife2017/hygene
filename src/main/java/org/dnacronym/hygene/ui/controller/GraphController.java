@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.runnable.DNAApplication;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private static Logger logger = LogManager.getLogger(DNAApplication.class);
+    private static Logger logger = LogManager.getLogger(Hygene.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
@@ -38,8 +38,8 @@ public final class GraphController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            setGraphStore(DNAApplication.getInstance().getGraphStore());
-            setGraphVisualizer(DNAApplication.getInstance().getGraphVisualizer());
+            setGraphStore(Hygene.getInstance().getGraphStore());
+            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (UIInitialisationException e) {
             logger.error(e);
         }
