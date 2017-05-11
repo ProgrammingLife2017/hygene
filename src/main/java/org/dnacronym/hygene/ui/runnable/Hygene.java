@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
 
@@ -26,6 +27,7 @@ public class Hygene extends Application {
     private static @MonotonicNonNull Hygene hygene;
 
     private @MonotonicNonNull GraphStore graphStore;
+    private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     private @MonotonicNonNull Stage primaryStage;
 
@@ -67,6 +69,7 @@ public class Hygene extends Application {
     @Override
     public final void init() {
         graphStore = new GraphStore();
+        graphVisualizer = new GraphVisualizer();
     }
 
     @Override
@@ -104,6 +107,21 @@ public class Hygene extends Application {
             throw new UIInitialisationException("GraphStore not present.");
         }
         return graphStore;
+    }
+
+    /**
+     * Gets the {@link GraphVisualizer} of the {@link Hygene}.
+     *
+     * @return {@link GraphVisualizer} of the {@link Hygene}.
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
+     *                                   in {@link #init()}.
+     * @see #init()
+     */
+    public final GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
+        if (graphVisualizer == null) {
+            throw new UIInitialisationException("GraphVisualiser not present.");
+        }
+        return graphVisualizer;
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.models;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -190,5 +192,32 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
             // Calculate vertical position
             head.fafospYCalculate();
         }
+    }
+
+    /**
+     * Finds the first node whose vertical and horizontal positions match.
+     * <p>
+     * This gives the {@link SequenceNode} where the node's x is in bounds and the band is equal to the given band, or
+     * {@code null} if no such band is found
+     *
+     * @param horizontalPosition x position of the node
+     * @param verticalPosition   band the node is in
+     * @return the {@link SequenceNode} which satisfies these conditions.
+     */
+    public @Nullable SequenceNode getNode(final int horizontalPosition, final int verticalPosition) {
+        SequenceNode foundNode = null;
+
+        iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
+
+        for (Iterator<SequenceNode> it = iterator(SequenceNode::isVisited); it.hasNext();) {
+            final SequenceNode node = it.next();
+            node.setVisited(true);
+            if (node.inBounds(horizontalPosition, verticalPosition)) {
+                foundNode = node;
+                break;
+            }
+        }
+
+        return foundNode;
     }
 }
