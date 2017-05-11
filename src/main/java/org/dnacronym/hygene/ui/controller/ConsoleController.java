@@ -21,7 +21,7 @@ public final class ConsoleController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         Optional.ofNullable(console).orElseThrow(() ->
-                new IllegalStateException("Invalid or uninitialized JavaFX FXML element")).setEditable(true);
+                new IllegalStateException("Invalid or uninitialized JavaFX FXML element")).setEditable(false);
 
         JFXAppender.getConsoleBinding().addListener((observable, oldValue, newValue) -> {
             if (console != null) {
