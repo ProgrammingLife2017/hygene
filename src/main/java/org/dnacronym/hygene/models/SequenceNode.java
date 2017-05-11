@@ -271,16 +271,9 @@ public final class SequenceNode {
                     .sum();
         }
 
-        switch (direction) {
-            case LEFT:
-                leftHeight = height;
-                break;
-            case RIGHT:
-                rightHeight = height;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown enum value.");
-        }
+        direction.ternary(
+                () -> leftHeight = height,
+                () -> rightHeight = height);
     }
 
     /**
