@@ -45,7 +45,7 @@ class FafospYTest {
     @Test
     void testLeftHeightSingleNeighbour() {
         createNodes(2);
-        nodes[0].linkToLeftNeighbour(nodes[1]);
+        linkNodes(SequenceDirection.LEFT, new int[][] {{0, 1}});
 
         initNodes(SequenceDirection.LEFT);
 
@@ -55,8 +55,7 @@ class FafospYTest {
     @Test
     void testLeftHeightTwoNeighbours() {
         createNodes(3);
-        nodes[0].linkToLeftNeighbour(nodes[1]);
-        nodes[0].linkToLeftNeighbour(nodes[2]);
+        linkNodes(SequenceDirection.LEFT, new int[][] {{0, 1}, {0, 2}});
 
         initNodes(SequenceDirection.LEFT);
 
@@ -66,10 +65,7 @@ class FafospYTest {
     @Test
     void testLeftHeightTwoNeighboursAndOneNeighbourAlsoHasTwoNeighbours() {
         createNodes(5);
-        nodes[0].linkToLeftNeighbour(nodes[1]);
-        nodes[0].linkToLeftNeighbour(nodes[2]);
-        nodes[1].linkToLeftNeighbour(nodes[3]);
-        nodes[1].linkToLeftNeighbour(nodes[4]);
+        linkNodes(SequenceDirection.LEFT, new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}});
 
         initNodes(SequenceDirection.LEFT);
 
@@ -79,10 +75,7 @@ class FafospYTest {
     @Test
     void testLeftHeightSharedNeighbour() {
         createNodes(4);
-        nodes[0].linkToLeftNeighbour(nodes[1]);
-        nodes[0].linkToLeftNeighbour(nodes[2]);
-        nodes[1].linkToLeftNeighbour(nodes[3]);
-        nodes[2].linkToLeftNeighbour(nodes[3]);
+        linkNodes(SequenceDirection.LEFT, new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}});
 
         initNodes(SequenceDirection.LEFT);
 
@@ -92,14 +85,8 @@ class FafospYTest {
     @Test
     void testLeftHeightSequentialSplits() {
         createNodes(7);
-        nodes[0].linkToLeftNeighbour(nodes[1]);
-        nodes[0].linkToLeftNeighbour(nodes[2]);
-        nodes[1].linkToLeftNeighbour(nodes[3]);
-        nodes[2].linkToLeftNeighbour(nodes[3]);
-        nodes[3].linkToLeftNeighbour(nodes[4]);
-        nodes[3].linkToLeftNeighbour(nodes[5]);
-        nodes[4].linkToLeftNeighbour(nodes[6]);
-        nodes[5].linkToLeftNeighbour(nodes[6]);
+        linkNodes(SequenceDirection.LEFT,
+                new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}, {3, 5}, {4, 6}, {5, 6}});
 
         initNodes(SequenceDirection.LEFT);
 
@@ -121,7 +108,7 @@ class FafospYTest {
     @Test
     void testRightHeightSingleNeighbour() {
         createNodes(2);
-        nodes[0].linkToRightNeighbour(nodes[1]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {{0, 1}});
 
         initNodes(SequenceDirection.RIGHT);
 
@@ -131,8 +118,7 @@ class FafospYTest {
     @Test
     void testRightHeightTwoNeighbours() {
         createNodes(3);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {{0, 1}, {0, 2}});
 
         initNodes(SequenceDirection.RIGHT);
 
@@ -142,10 +128,7 @@ class FafospYTest {
     @Test
     void testRightHeightTwoNeighboursAndOneNeighbourAlsoHasTwoNeighbours() {
         createNodes(5);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[1].linkToRightNeighbour(nodes[4]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}});
 
         initNodes(SequenceDirection.RIGHT);
 
@@ -155,10 +138,8 @@ class FafospYTest {
     @Test
     void testRightHeightSharedNeighbour() {
         createNodes(4);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[2].linkToRightNeighbour(nodes[3]);
+        linkNodes(SequenceDirection.RIGHT,
+                new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}});
 
         initNodes(SequenceDirection.RIGHT);
 
@@ -235,10 +216,7 @@ class FafospYTest {
     @Test
     void testPositionDiamond() throws ParseException {
         createNodes(4);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[2].linkToRightNeighbour(nodes[3]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}});
 
         initGraph();
 
@@ -248,16 +226,10 @@ class FafospYTest {
     @Test
     void testFafospDoubleTwoSplit() throws ParseException {
         createNodes(8);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[1].linkToRightNeighbour(nodes[4]);
-        nodes[2].linkToRightNeighbour(nodes[5]);
-        nodes[2].linkToRightNeighbour(nodes[6]);
-        nodes[3].linkToRightNeighbour(nodes[7]);
-        nodes[4].linkToRightNeighbour(nodes[7]);
-        nodes[5].linkToRightNeighbour(nodes[7]);
-        nodes[6].linkToRightNeighbour(nodes[7]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {
+                {0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 5},
+                {2, 6}, {3, 7}, {4, 7}, {5, 7}, {6, 7}
+        });
 
         initGraph();
 
@@ -267,18 +239,10 @@ class FafospYTest {
     @Test
     void testFafospBidirectionalDoubleTwoSplit() throws ParseException {
         createNodes(10);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[1].linkToRightNeighbour(nodes[4]);
-        nodes[2].linkToRightNeighbour(nodes[5]);
-        nodes[2].linkToRightNeighbour(nodes[6]);
-        nodes[3].linkToRightNeighbour(nodes[7]);
-        nodes[4].linkToRightNeighbour(nodes[7]);
-        nodes[5].linkToRightNeighbour(nodes[8]);
-        nodes[6].linkToRightNeighbour(nodes[8]);
-        nodes[7].linkToRightNeighbour(nodes[9]);
-        nodes[8].linkToRightNeighbour(nodes[9]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {
+                {0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 5}, {2, 6},
+                {3, 7}, {4, 7}, {5, 8}, {6, 8}, {7, 9}, {8, 9}
+        });
 
         initGraph();
 
@@ -288,15 +252,8 @@ class FafospYTest {
     @Test
     void testFafospSharedDoubleTwoSplit() throws ParseException {
         createNodes(7);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[1].linkToRightNeighbour(nodes[4]);
-        nodes[2].linkToRightNeighbour(nodes[4]);
-        nodes[2].linkToRightNeighbour(nodes[5]);
-        nodes[3].linkToRightNeighbour(nodes[6]);
-        nodes[4].linkToRightNeighbour(nodes[6]);
-        nodes[5].linkToRightNeighbour(nodes[6]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {
+                {0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 4}, {2, 5}, {3, 6}, {4, 6}, {5, 6}});
 
         initGraph();
 
@@ -306,13 +263,7 @@ class FafospYTest {
     @Test
     void testFafospDoubleReversedSplit() throws ParseException {
         createNodes(6);
-        nodes[0].linkToRightNeighbour(nodes[1]);
-        nodes[0].linkToRightNeighbour(nodes[2]);
-        nodes[1].linkToRightNeighbour(nodes[3]);
-        nodes[2].linkToRightNeighbour(nodes[3]);
-        nodes[2].linkToRightNeighbour(nodes[4]);
-        nodes[3].linkToRightNeighbour(nodes[5]);
-        nodes[4].linkToRightNeighbour(nodes[5]);
+        linkNodes(SequenceDirection.RIGHT, new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {2, 4}, {3, 5}, {4, 5}});
 
         initGraph();
 
@@ -335,6 +286,29 @@ class FafospYTest {
         nodes = new SequenceNode[count];
         for (int i = 0; i < count; i++) {
             nodes[i] = new SequenceNode(Integer.toString(i), Integer.toString(i));
+        }
+    }
+
+    /**
+     * Links nodes together in the given direction.
+     *
+     * @param direction {@code LEFT} iff. the first node in a link is the node from each the edge leaves
+     * @param links     an array of links, where each link is described as a pair of node identifiers representing the
+     *                  from and to nodes of the link
+     */
+    private void linkNodes(final SequenceDirection direction, final int[][] links) {
+        assert (nodes != null);
+
+        for (final int[] link : links) {
+            assert (link.length == 2);
+            assert (link[0] != link[1]);
+
+            final SequenceNode from = nodes[link[0]];
+            final SequenceNode to = nodes[link[1]];
+
+            direction.ternary(
+                    () -> from.linkToLeftNeighbour(to),
+                    () -> from.linkToRightNeighbour(to));
         }
     }
 
