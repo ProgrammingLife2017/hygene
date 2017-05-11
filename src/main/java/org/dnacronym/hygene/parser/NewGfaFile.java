@@ -51,7 +51,7 @@ public class NewGfaFile {
     /**
      * Parses a {@code Node}'s metadata to a {@code NodeMetadata} object.
      *
-     * @param lineNumber Line number of the node within the GFA file
+     * @param lineNumber line number of the node within the GFA file
      * @return a {@code NodeMetadata} object.
      * @throws ParseException if the node metadata cannot be parsed
      */

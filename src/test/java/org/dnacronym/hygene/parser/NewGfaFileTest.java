@@ -14,6 +14,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+
 /**
  * Tests the behavior of the {@link NewGfaFile} class.
  */
@@ -23,6 +24,7 @@ class NewGfaFileTest {
             + "S\t11\tACCTT%n"
             + "S\t12\tTCAAGG%n"
             + "L\t11\t+\t12\t-\t4M%n");
+
 
     @Test
     void testGfaFileObjectCanBeConstructed() {

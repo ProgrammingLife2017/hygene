@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
  * Tests the integration between {@link MetadataParser}, {@link GfaFile}, {@link Node} and {@link Edge}.
  */
