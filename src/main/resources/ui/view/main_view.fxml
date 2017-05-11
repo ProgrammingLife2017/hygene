@@ -16,4 +16,7 @@
     <center>
         <fx:include source="graph_view.fxml"/>
     </center>
+    <left>
+        <fx:include source="config_view.fxml"/>
+    </left>
 </BorderPane>
