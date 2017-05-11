@@ -102,10 +102,8 @@ public class GraphVisualizer {
      * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}
      * @see SequenceNode#getRightNeighbours()
      */
+    @SuppressWarnings("nullness") // For performance.
     private void drawEdges(final SequenceNode sequenceNode) {
-        if (canvas == null || graphicsContext == null) {
-            throw new IllegalStateException("Attempting to draw edges whilst canvas was not set.");
-        }
         sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
                 sequenceNode.getHorizontalRightEnd(),
                 sequenceNode.getVerticalPosition(),
@@ -237,8 +235,13 @@ public class GraphVisualizer {
      * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
+     * @throws IllegalStateException if the {@link Canvas} has not been set.
      */
-    public final void draw(final @Nullable SequenceGraph sequenceGraph) {
+    public final void draw(final @Nullable SequenceGraph sequenceGraph) throws IllegalStateException {
+        if (canvas == null || graphicsContext == null) {
+            throw new IllegalStateException("Attempting to draw whilst canvas not set.");
+        }
+
         clear();
         this.sequenceGraph = sequenceGraph;
 
