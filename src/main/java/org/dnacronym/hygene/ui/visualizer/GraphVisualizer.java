@@ -31,10 +31,14 @@ public class GraphVisualizer {
     private final Canvas canvas;
     private final GraphicsContext graphicsContext;
 
+    private final ObjectProperty<SequenceNode> selectedNodeProperty;
+
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
     private final DoubleProperty nodeWidthProperty;
     private final DoubleProperty laneHeightProperty;
+
+    private @Nullable SequenceGraph sequenceGraph;
 
 
     /**
@@ -49,12 +53,41 @@ public class GraphVisualizer {
         this.canvas = canvas;
         graphicsContext = canvas.getGraphicsContext2D();
 
+        selectedNodeProperty = new SimpleObjectProperty<>();
+
         edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+
+        canvas.setOnMouseClicked(event -> {
+            if (sequenceGraph != null) {
+                final int[] positions = toSequenceNodeCoordinates(event.getSceneX(), event.getSceneY());
+                final int nodeXPos = positions[0];
+                final int nodeLane = positions[1];
+
+                selectedNodeProperty.set(sequenceGraph.getNode(nodeXPos, nodeLane));
+            }
+        });
     }
 
+
+    /**
+     * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.
+     * <p>
+     * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
+     *
+     * @param xPos x position onscreen
+     * @param yPos y position onscreen
+     * @return x and y position in a double array of size 2 which correspond with x and y position of
+     * {@link SequenceNode}.
+     */
+    private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
+        final int nodeX = (int) Math.round(xPos / nodeWidthProperty.get());
+        final int lane = (int) Math.floor(yPos / laneHeightProperty.get());
+
+        return new int[]{nodeX, lane};
+    }
 
     /**
      * Draw edge on the {@link Canvas}.
@@ -146,6 +179,15 @@ public class GraphVisualizer {
     }
 
     /**
+     * The property of the selected node. This node is updated every time the user clicks on the canvas.
+     *
+     * @return Selected {@link SequenceNode} by the user. Can be null.
+     */
+    public final ObjectProperty<SequenceNode> getSelectedNodeProperty() {
+        return selectedNodeProperty;
+    }
+
+    /**
      * The property of onscreen edge colors.
      *
      * @return property which decides the color of edges.
@@ -182,9 +224,10 @@ public class GraphVisualizer {
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      */
     public final void draw(final @Nullable SequenceGraph sequenceGraph) {
-        if (sequenceGraph != null) {
-            clear();
+        clear();
+        this.sequenceGraph = sequenceGraph;
 
+        if (sequenceGraph != null) {
             final double laneCount = sequenceGraph.getSourceNode().getMaxHeight();
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
