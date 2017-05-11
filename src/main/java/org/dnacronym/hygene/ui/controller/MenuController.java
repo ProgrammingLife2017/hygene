@@ -44,7 +44,7 @@ public final class MenuController implements Initializable {
             populateRecentFilesMenu();
             initFileChooser();
         } catch (UIInitialisationException e) {
-            logger.error("Failed to initialize MenuController.");
+            logger.error("Failed to initialize MenuController.", e);
         }
     }
 
@@ -118,7 +118,7 @@ public final class MenuController implements Initializable {
                     try {
                         loadFile(file);
                     } catch (Exception e) {
-                        logger.error("Failed to load the selected recent file.");
+                        logger.error("Failed to load the selected recent file.", e);
                     }
                 });
             }
