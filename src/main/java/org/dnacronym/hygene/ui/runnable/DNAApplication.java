@@ -70,6 +70,7 @@ public class DNAApplication extends Application {
     @Override
     public final void init() {
         graphStore = new GraphStore();
+        graphVisualizer = new GraphVisualizer();
     }
 
     @Override

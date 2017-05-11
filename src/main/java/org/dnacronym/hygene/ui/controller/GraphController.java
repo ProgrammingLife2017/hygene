@@ -40,7 +40,7 @@ public final class GraphController implements Initializable {
             e.printStackTrace();
         }
 
-        if (graphVisualizer != null) {
+        if (graphVisualizer != null && graphCanvas != null) {
             graphVisualizer.setCanvas(graphCanvas);
         }
 

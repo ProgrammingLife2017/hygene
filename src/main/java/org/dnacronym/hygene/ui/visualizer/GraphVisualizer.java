@@ -16,7 +16,8 @@ import org.dnacronym.hygene.models.SequenceNode;
 /**
  * A simple canvas that allows drawing of primitive shapes.
  * <p>
- * When passing a {@link SequenceGraph}, it will draw it using JavaFX primitives.
+ * When passing a {@link SequenceGraph}, it will draw it using JavaFX primitives. If the {@link Canvas} has not been set
+ * all methods related to drawing will thrown an {@link IllegalStateException}.
  *
  * @see Canvas
  * @see GraphicsContext
@@ -29,8 +30,6 @@ public class GraphVisualizer {
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
     private static final Color DEFAULT_NODE_COLOR = Color.BLUE;
 
-    private final GraphicsContext graphicsContext;
-
     private final ObjectProperty<SequenceNode> selectedNodeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -41,6 +40,7 @@ public class GraphVisualizer {
     private @Nullable SequenceGraph sequenceGraph;
 
     private @MonotonicNonNull Canvas canvas;
+    private @MonotonicNonNull GraphicsContext graphicsContext;
 
     /**
      * Create a new {@link GraphVisualizer} instance.
@@ -48,35 +48,14 @@ public class GraphVisualizer {
     public GraphVisualizer() {
         super();
 
-        graphicsContext = canvas.getGraphicsContext2D();
-
         selectedNodeProperty = new SimpleObjectProperty<>();
 
-        edgeColorProperty = new SimpleObjectProperty<>(Color.BLACK);
+        edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
-
-        canvas.setOnMouseClicked(event -> {
-            if (sequenceGraph != null) {
-                final int[] positions = toSequenceNodeCoordinates(event.getSceneX(), event.getSceneY());
-                final int nodeXPos = positions[0];
-                final int nodeLane = positions[1];
-
-                selectedNodeProperty.set(sequenceGraph.getNode(nodeXPos, nodeLane));
-            }
-        });
     }
 
-
-    /**
-     * Set {@link Canvas} which the {@link GraphVisualizer} can draw on.
-     *
-     * @param canvas canvas to be used to {@link GraphVisualizer}
-     */
-    public void setCanvas(final Canvas canvas) {
-        this.canvas = canvas;
-    }
 
     /**
      * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.
@@ -103,6 +82,7 @@ public class GraphVisualizer {
      * @param endHorizontal   x position of the end of the line
      * @param endVertical     y position of the end of the line
      */
+    @SuppressWarnings("nullness") // For performance.
     private void drawEdge(final double startHorizontal, final double startVertical,
                           final double endHorizontal, final double endVertical) {
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
@@ -123,6 +103,9 @@ public class GraphVisualizer {
      * @see SequenceNode#getRightNeighbours()
      */
     private void drawEdges(final SequenceNode sequenceNode) {
+        if (canvas == null || graphicsContext == null) {
+            throw new IllegalStateException("Attempting to draw edges whilst canvas was not set.");
+        }
         sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
                 sequenceNode.getHorizontalRightEnd(),
                 sequenceNode.getVerticalPosition(),
@@ -138,6 +121,7 @@ public class GraphVisualizer {
      * @param color        the color with which all edges should be drawn
      * @see #drawEdges(SequenceNode)
      */
+    @SuppressWarnings("nullness") // For performance.
     private void drawEdges(final SequenceNode sequenceNode, final Color color) {
         graphicsContext.setFill(color);
         drawEdges(sequenceNode);
@@ -151,6 +135,7 @@ public class GraphVisualizer {
      * @param width            width of the node
      * @param color            color of the node
      */
+    @SuppressWarnings("nullness") // For performance.
     private void drawNode(final double startHorizontal, final double verticalPosition,
                           final double width, final Color color) {
         graphicsContext.setFill(color);
@@ -180,6 +165,7 @@ public class GraphVisualizer {
     /**
      * Clear the canvas.
      */
+    @SuppressWarnings("nullness") // For performance.
     public final void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
@@ -223,6 +209,29 @@ public class GraphVisualizer {
     }
 
     /**
+     * Set {@link Canvas} which the {@link GraphVisualizer} can draw on.
+     *
+     * @param canvas canvas to be used to {@link GraphVisualizer}
+     */
+    public final void setCanvas(final Canvas canvas) {
+        this.canvas = canvas;
+        this.graphicsContext = canvas.getGraphicsContext2D();
+
+        canvas.setOnMouseClicked(event -> {
+            final int[] positions = toSequenceNodeCoordinates(event.getSceneX(), event.getSceneY());
+            final int nodeXPos = positions[0];
+            final int nodeLane = positions[1];
+
+            if (sequenceGraph != null) {
+                final SequenceNode node = sequenceGraph.getNode(nodeXPos, nodeLane);
+                if (selectedNodeProperty != null && node != null) {
+                    selectedNodeProperty.set(node);
+                }
+            }
+        });
+    }
+
+    /**
      * Populate the graphs primitives with the given sequence graph.
      * <p>
      * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
@@ -233,7 +242,7 @@ public class GraphVisualizer {
         clear();
         this.sequenceGraph = sequenceGraph;
 
-        if (sequenceGraph != null) {
+        if (sequenceGraph != null && canvas != null) {
             final double laneCount = sequenceGraph.getSourceNode().getMaxHeight();
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
