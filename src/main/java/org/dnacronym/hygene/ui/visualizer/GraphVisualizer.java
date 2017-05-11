@@ -131,7 +131,7 @@ public class GraphVisualizer {
      */
     private void drawNode(final SequenceNode node, final Color color) {
         drawNode(
-                node.getHorizontalRightEnd() - node.getSequence().length(),
+                (double) node.getHorizontalRightEnd() - node.getSequence().length(),
                 node.getVerticalPosition(),
                 node.getSequence().length(),
                 color
