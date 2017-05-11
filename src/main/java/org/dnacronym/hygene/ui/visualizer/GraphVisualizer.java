@@ -60,9 +60,9 @@ public class GraphVisualizer {
      * Draw edge on the {@link Canvas}.
      *
      * @param startHorizontal x position of the start of the line
-     * @param startVertical y position of the start of the line
+     * @param startVertical   y position of the start of the line
      * @param endHorizontal   x position of the end of the line
-     * @param endVertical   y position of the end of the line
+     * @param endVertical     y position of the end of the line
      */
     private void drawEdge(final double startHorizontal, final double startVertical,
                           final double endHorizontal, final double endVertical) {
@@ -107,10 +107,10 @@ public class GraphVisualizer {
     /**
      * Draw a node on the {@link Canvas}.
      *
-     * @param startHorizontal x position of the node
+     * @param startHorizontal  x position of the node
      * @param verticalPosition y position of the node
-     * @param width  width of the node
-     * @param color  color of the node
+     * @param width            width of the node
+     * @param color            color of the node
      */
     private void drawNode(final double startHorizontal, final double verticalPosition,
                           final double width, final Color color) {
@@ -126,7 +126,7 @@ public class GraphVisualizer {
     /**
      * Draws the given node to the screen.
      *
-     * @param node the node to draw
+     * @param node  the node to draw
      * @param color the color to draw with
      */
     private void drawNode(final SequenceNode node, final Color color) {
