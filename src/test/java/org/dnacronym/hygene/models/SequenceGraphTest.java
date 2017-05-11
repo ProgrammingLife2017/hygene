@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -97,5 +98,21 @@ class SequenceGraphTest {
     @Test
     void testOnlyVerticalPositionInBounds() {
         assertThat(sequenceGraph.getNode(20, 1)).isNull();
+    }
+
+    @Test
+    void testNegativeVerticalPosition() {
+        assertThat(sequenceGraph.getNode(6, -1)).isNull();
+    }
+
+    @Test
+    void testNegativeHorizontalPosition() {
+        assertThat(sequenceGraph.getNode(-1, 1)).isNull();
+    }
+
+    @Test
+    void testGetNodeEmptyGraph() {
+        final SequenceGraph emptyGraph = new SequenceGraph(Collections.emptyList());
+        assertThat(emptyGraph.getNode(1, 1)).isNull();
     }
 }
