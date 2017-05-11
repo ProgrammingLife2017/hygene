@@ -330,6 +330,8 @@ class FafospYTest {
      * @param count the number of nodes to create
      */
     private void createNodes(final int count) {
+        assert (count >= 0);
+
         nodes = new SequenceNode[count];
         for (int i = 0; i < count; i++) {
             nodes[i] = new SequenceNode(Integer.toString(i), Integer.toString(i));
@@ -340,6 +342,8 @@ class FafospYTest {
      * Indirectly calls the fafosp methods through the {@code SequenceGraph}'s constructor.
      */
     private void initGraph() {
+        assert (nodes != null);
+
         new SequenceGraph(Arrays.asList(nodes));
     }
 
@@ -349,6 +353,8 @@ class FafospYTest {
      * @param direction which height to calculate
      */
     private void initNodes(final SequenceDirection direction) {
+        assert (nodes != null);
+
         for (int i = nodes.length - 1; i >= 0; i--) {
             nodes[i].fafospYInit(direction);
         }
@@ -365,6 +371,8 @@ class FafospYTest {
      * @param actual   a getter for a {@code SequenceNode}
      */
     private void assertNodes(final int[] expected, final Function<SequenceNode, Integer> actual) {
+        assert (nodes != null);
+
         for (int i = 0; i < nodes.length; i++) {
             assertThat(actual.apply(nodes[i])).isEqualTo(expected[i]);
         }
