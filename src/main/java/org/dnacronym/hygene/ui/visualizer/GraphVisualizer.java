@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.models.SequenceNode;
@@ -28,7 +29,6 @@ public class GraphVisualizer {
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
     private static final Color DEFAULT_NODE_COLOR = Color.BLUE;
 
-    private final Canvas canvas;
     private final GraphicsContext graphicsContext;
 
     private final ObjectProperty<SequenceNode> selectedNodeProperty;
@@ -40,17 +40,14 @@ public class GraphVisualizer {
 
     private @Nullable SequenceGraph sequenceGraph;
 
+    private @MonotonicNonNull Canvas canvas;
 
     /**
      * Create a new {@link GraphVisualizer} instance.
-     *
-     * @param canvas the canvas to draw to
      */
-    @SuppressWarnings("nullness") // Superclass width and height has already been instantiated, so can't be null.
-    public GraphVisualizer(final Canvas canvas) {
+    public GraphVisualizer() {
         super();
 
-        this.canvas = canvas;
         graphicsContext = canvas.getGraphicsContext2D();
 
         selectedNodeProperty = new SimpleObjectProperty<>();
@@ -71,6 +68,15 @@ public class GraphVisualizer {
         });
     }
 
+
+    /**
+     * Set {@link Canvas} which the {@link GraphVisualizer} can draw on.
+     *
+     * @param canvas canvas to be used to {@link GraphVisualizer}
+     */
+    public void setCanvas(final Canvas canvas) {
+        this.canvas = canvas;
+    }
 
     /**
      * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.

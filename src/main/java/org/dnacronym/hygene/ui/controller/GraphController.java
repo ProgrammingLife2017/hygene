@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private @MonotonicNonNull GraphVisualizer visualiser;
+    private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     private @MonotonicNonNull GraphStore graphStore;
 
@@ -35,12 +35,13 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(DNAApplication.getInstance().getGraphStore());
-
-            if (graphCanvas != null) {
-                visualiser = new GraphVisualizer(graphCanvas);
-            }
+            setGraphVisualizer(DNAApplication.getInstance().getGraphVisualizer());
         } catch (UIInitialisationException e) {
             e.printStackTrace();
+        }
+
+        if (graphVisualizer != null) {
+            graphVisualizer.setCanvas(graphCanvas);
         }
 
         if (graphPane != null && graphStore != null) {
@@ -58,18 +59,27 @@ public final class GraphController implements Initializable {
     }
 
     /**
+     * Set the {@link GraphVisualizer} in the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}.
+     */
+    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
      * Update the swing node to display graph of the given {@link GfaFile}.
      *
      * @param gfaFile with internal graph to display.
      * @see GfaFile#getGraph()
      */
     protected void updateGraph(final GfaFile gfaFile) {
-        if (graphPane == null || visualiser == null) {
+        if (graphPane == null || graphVisualizer == null) {
             return;
         }
 
         try {
-            visualiser.draw(gfaFile.getGraph());
+            graphVisualizer.draw(gfaFile.getGraph());
         } catch (ParseException e) {
             e.printStackTrace();
         }
