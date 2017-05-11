@@ -235,9 +235,9 @@ public class GraphVisualizer {
      * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
      *
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
-     * @throws IllegalStateException if the {@link Canvas} has not been set.
+     * @throws RuntimeException if the {@link Canvas} has not been set.
      */
-    public final void draw(final @Nullable SequenceGraph sequenceGraph) throws IllegalStateException {
+    public final void draw(final @Nullable SequenceGraph sequenceGraph) throws RuntimeException {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
