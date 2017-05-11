@@ -66,7 +66,7 @@ public class GraphVisualizer {
      */
     private void drawEdge(final double startHorizontal, final double startVertical,
                           final double endHorizontal, final double endVertical) {
-        graphicsContext.setLineWidth(2);
+        graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
         graphicsContext.strokeLine(
                 startHorizontal * nodeWidthProperty.get(),
                 startVertical * nodeHeightProperty.get() + nodeHeightProperty.get() / 2,
