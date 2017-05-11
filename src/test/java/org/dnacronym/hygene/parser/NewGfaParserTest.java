@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -66,7 +68,7 @@ class NewGfaParserTest {
         final String gfa = "S name1 contents\nS name2 contents\nS name3 contents";
         final Graph graph = parse(gfa);
 
-        assertThat(graph.getLineNumber(2)).isEqualTo(4);
+        assertThat(graph.getLineNumber(2)).isEqualTo(3);
         assertThat(graph.getColor(2)).isEqualTo(NodeColor.BLACK);
     }
 
@@ -88,10 +90,10 @@ class NewGfaParserTest {
         Node firstNode = graph.getNode(0);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 3));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 3, null));
 
         assertThat(firstNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 4));
+        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 4, null));
     }
 
 
@@ -100,6 +102,8 @@ class NewGfaParserTest {
     }
 
     private Graph parse(final String gfa) throws ParseException {
-        return parser.parse(replaceSpacesWithTabs(gfa));
+        final NewGfaFile gfaFile = mock(NewGfaFile.class);
+        when(gfaFile.readFile()).thenReturn(replaceSpacesWithTabs(gfa));
+        return parser.parse(gfaFile);
     }
 }

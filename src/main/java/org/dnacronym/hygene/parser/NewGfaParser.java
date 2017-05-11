@@ -32,14 +32,16 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a GFA-compliant {@code String} to a {@code Graph}.
+     * Parses a GFA file to a {@code Graph}.
      *
-     * @param gfa a GFA-compliant {@code String}
+     * @param gfaFile an instance of {@code GfaFile}
      * @return a {@code Graph}
      * @throws ParseException if the given {@code String} is not GFA-compliant
      */
     @EnsuresNonNull("nodeVectors")
-    public Graph parse(final String gfa) throws ParseException {
+    public Graph parse(final NewGfaFile gfaFile) throws ParseException {
+        final String gfa = gfaFile.readFile();
+
         final String[] lines = gfa.split("\\R");
 
         allocateNodes(lines);
@@ -50,7 +52,7 @@ public final class NewGfaParser {
             parseLine(lines[offset - 1], offset);
         }
 
-        return new Graph(nodeVectors);
+        return new Graph(nodeVectors, gfaFile);
     }
 
     /**
@@ -114,7 +116,7 @@ public final class NewGfaParser {
             final String sequence = st.nextToken();
 
             nodeVectors[nodeIds.get(name)] = NodeBuilder.start()
-                    .withLineNumber(offset + 1)
+                    .withLineNumber(offset)
                     .withColor(NodeColor.sequenceToColor(sequence))
                     .toArray();
 

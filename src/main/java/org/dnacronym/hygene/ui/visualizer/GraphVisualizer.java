@@ -22,7 +22,7 @@ import org.dnacronym.hygene.models.SequenceNode;
  */
 public class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_NODE_WIDTH = 0.003;
+    private static final double DEFAULT_NODE_WIDTH = 0.001;
     private static final double DEFAULT_EDGE_WIDTH = 2;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;

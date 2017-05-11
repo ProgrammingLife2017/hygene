@@ -88,8 +88,8 @@ class NodeTest {
 
         assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(2);
         assertThat(node.getOutgoingEdges()).containsOnly(
-                new Edge(10, 20, 3),
-                new Edge(10, 30, 4)
+                new Edge(10, 20, 3, null),
+                new Edge(10, 30, 4, null)
         );
     }
 
@@ -109,9 +109,9 @@ class NodeTest {
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(3);
         assertThat(node.getIncomingEdges()).containsOnly(
-                new Edge(20, 10, 3),
-                new Edge(30, 10, 4),
-                new Edge(40, 10, 5)
+                new Edge(20, 10, 3, null),
+                new Edge(30, 10, 4, null),
+                new Edge(40, 10, 5, null)
         );
     }
 }

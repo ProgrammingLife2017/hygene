@@ -1,5 +1,10 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.parser.ParseException;
+
+import java.util.Optional;
+
+
 /**
  * Represents the metadata of a {@link Node}.
  */
@@ -17,6 +22,21 @@ public final class NodeMetadata {
     public NodeMetadata(final String name, final String sequence) {
         this.name = name;
         this.sequence = sequence;
+    }
+
+
+    /**
+     * Retrieves metadata of the given edge.
+     *
+     * @param node the edge to retrieve metadata of
+     * @return metadata of the edge.
+     * @throws ParseException if the edge metadata cannot be parsed
+     */
+    public static NodeMetadata retrieveFor(final Node node) throws ParseException {
+        return Optional.ofNullable(node.getGraph())
+                .orElseThrow(() -> new ParseException("Cannot parse metadata for node because graph is unknown"))
+                .getGfaFile()
+                .parseNodeMetadata(node.getLineNumber());
     }
 
 

@@ -35,7 +35,7 @@ public final class NodeBuilder {
      * @return a new instance of the builder.
      */
     public static NodeBuilder fromArray(final int nodeId, final int[] nodeArray) {
-        Node node = new Node(nodeId, nodeArray);
+        Node node = new Node(nodeId, nodeArray, null);
 
         NodeBuilder builder = new NodeBuilder();
         builder.nodeId = nodeId;
@@ -117,7 +117,7 @@ public final class NodeBuilder {
      * @return current instance of the builder to provide a fluent interface.
      */
     public NodeBuilder withIncomingEdge(final int from, final int lineNumber) {
-        incomingEdges.add(new Edge(from, nodeId, lineNumber));
+        incomingEdges.add(new Edge(from, nodeId, lineNumber, null));
 
         return this;
     }
@@ -130,7 +130,7 @@ public final class NodeBuilder {
      * @return current instance of the builder to provide a fluent interface.
      */
     public NodeBuilder withOutgoingEdge(final int to, final int lineNumber) {
-        outgoingEdges.add(new Edge(nodeId, to, lineNumber));
+        outgoingEdges.add(new Edge(nodeId, to, lineNumber, null));
 
         return this;
     }
@@ -162,6 +162,6 @@ public final class NodeBuilder {
      * @return the node instance based on the given parameters.
      */
     public Node create() {
-        return new Node(nodeId, toArray());
+        return new Node(nodeId, toArray(), null);
     }
 }
