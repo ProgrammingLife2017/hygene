@@ -31,10 +31,10 @@ public final class MetadataParser {
 
         try {
             st.nextToken();
-            final String originalNodeId = st.nextToken();
+            final String name = st.nextToken();
             final String sequence = st.nextToken();
 
-            return new NodeMetadata(originalNodeId, sequence);
+            return new NodeMetadata(name, sequence);
         } catch (NoSuchElementException e) {
             throw new ParseException("Not enough parameters for segment on line " + lineNumber, e);
         }
@@ -94,7 +94,7 @@ public final class MetadataParser {
      *
      * @param line           a line of the GFA file that 'might' belong to a node or an edge
      * @param expectedPrefix the expected prefix of the line
-     * @param lineNumber the line number where the node or edge is located
+     * @param lineNumber     the line number where the node or edge is located
      * @throws ParseException if the line does not start with the prefix
      */
     private void validateLine(final String line, final String expectedPrefix,
@@ -107,7 +107,7 @@ public final class MetadataParser {
     /**
      * Initializes a {@link StringTokenizer} to be used for parsing.
      *
-     * @param line the line of the GFA file belonging to a node or an edge
+     * @param line       the line of the GFA file belonging to a node or an edge
      * @param lineNumber the line number where the node or edge is located
      * @return an initialized {@link StringTokenizer} object.
      * @throws ParseException if the given line does not contain any tabs

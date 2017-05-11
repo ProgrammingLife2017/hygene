@@ -22,7 +22,7 @@ final class MetadataParserTest {
     void testParseNodeMetadata() throws ParseException {
         NodeMetadata nodeMetadata = parser.parseNodeMetadata(replaceSpacesWithTabs("%n%nS 12 TCAAGG"), 3);
 
-        assertThat(nodeMetadata.getOriginalNodeId()).isEqualTo("12");
+        assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata.getSequence()).isEqualTo("TCAAGG");
     }
 
