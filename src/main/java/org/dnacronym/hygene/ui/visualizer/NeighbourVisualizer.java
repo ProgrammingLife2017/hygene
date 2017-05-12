@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.Node;
 
+
 /**
  * Create a neighbour visualizer.
  * <p>
@@ -15,6 +16,8 @@ import org.dnacronym.hygene.models.Node;
  * and lines on the left and right side representing the neighbours.
  */
 public class NeighbourVisualizer {
+    private static final double NODE_WIDTH_PORTION_OF_CANVAS = 0.25;
+
     private final ObjectProperty<Node> nodeProperty;
 
     private final ObjectProperty<Color> nodeColorProperty;
@@ -31,6 +34,7 @@ public class NeighbourVisualizer {
      * @param edgeColorProperty property which determines the color of edges to neighbours
      * @param nodeProperty      property which determines what node should actually be visualised
      */
+    @SuppressWarnings("nullness")
     public NeighbourVisualizer(final ObjectProperty<Color> nodeColorProperty,
                                final ObjectProperty<Color> edgeColorProperty,
                                final ObjectProperty<Node> nodeProperty) {
@@ -42,10 +46,7 @@ public class NeighbourVisualizer {
         this.edgeColorProperty.bind(edgeColorProperty);
         this.nodeProperty.bind(nodeProperty);
 
-        this.nodeProperty.addListener((observable, oldNode, newNode) -> {
-            clear();
-            draw(newNode);
-        });
+        this.nodeProperty.addListener((observable, oldNode, newNode) -> reDraw(newNode));
     }
 
 
@@ -60,6 +61,26 @@ public class NeighbourVisualizer {
     }
 
     /**
+     * Clear the canvas and draw the given node.
+     *
+     * @param node node  to draw
+     */
+    private void reDraw(final Node node) {
+        if (canvas != null && node != null) {
+            clear();
+            draw(node);
+        }
+    }
+
+    /**
+     * Clear the canvas.
+     */
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
+    private void clear() {
+        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    /**
      * Draw the node and outgoing edges.
      *
      * @param node node to draw
@@ -71,8 +92,8 @@ public class NeighbourVisualizer {
 
         graphicsContext.setFill(nodeColorProperty.get());
         graphicsContext.fillOval(
-                canvas.getWidth() / 4,
-                canvas.getWidth() / 4,
+                canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS,
+                canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS,
                 canvas.getWidth() / 2,
                 canvas.getWidth() / 2
         );
@@ -96,13 +117,5 @@ public class NeighbourVisualizer {
                     right * (canvas.getHeight() / rightNeighbours)
             );
         }
-    }
-
-    /**
-     * Clear the canvas.
-     */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void clear() {
-        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 }
