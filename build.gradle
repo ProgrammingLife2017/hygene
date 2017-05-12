@@ -70,13 +70,13 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.dnacronym.hygene.ui.runnable.DNAApplication'
+        attributes 'Main-Class': mainClass
     }
 }
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'org.dnacronym.hygene.ui.runnable.DNAApplication'
+        attributes 'Main-Class': mainClass
     }
     baseName = project.name + '-all'
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
