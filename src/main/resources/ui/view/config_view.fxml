@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.ConfigController">
@@ -66,11 +59,6 @@
                                         <ColorPicker fx:id="edgeColors" editable="true" minWidth="150.0"
                                                      prefWidth="150.0" GridPane.columnIndex="1"/>
                                         <Label text="Color"/>
-                                        <Label text="Width" GridPane.rowIndex="1"/>
-                                        <Slider fx:id="edgeWidth" blockIncrement="1.0" majorTickUnit="0.5" max="5.0"
-                                                minWidth="200.0" minorTickCount="1" prefWidth="200.0"
-                                                showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1"
-                                                GridPane.rowIndex="1"/>
                                     </children>
                                 </GridPane>
                             </children>

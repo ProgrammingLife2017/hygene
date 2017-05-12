@@ -5,33 +5,53 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.ui.visualizer.GraphPane;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ConfigController implements Initializable {
-    private @MonotonicNonNull GraphPane graphPane;
+    private static Logger logger = LogManager.getLogger(ConfigController.class);
+
+    private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     @FXML
     private @MonotonicNonNull Slider nodeHeight, nodeWidth;
 
     @FXML
     private @MonotonicNonNull ColorPicker edgeColors;
-    @FXML
-    private @MonotonicNonNull Slider edgeWidth;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
+        } catch (UIInitialisationException e) {
+            logger.error("Failed to initialise Configuration Controller.", e);
+        }
+
+        if (nodeHeight != null && nodeWidth != null && edgeColors != null) {
+            nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
+            nodeWidth.setValue(graphVisualizer.getNodeWidthProperty().get());
+            edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
+
+            nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
+            nodeWidth.valueProperty().bindBidirectional(graphVisualizer.getNodeWidthProperty());
+
+            edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
+        }
     }
 
     /**
-     * Set the {@link GraphPane}. This allows the sliders to change the properties of the {@link GraphPane}.
+     * Set the {@link GraphVisualizer}. This allows the sliders to change the properties of the {@link GraphVisualizer}.
      *
-     * @param graphPane graph pane to set in the controller.
+     * @param graphVisualiser graph pane to set in the controller.
      */
-    void setGraphPane(final GraphPane graphPane) {
-        this.graphPane = graphPane;
+    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
+        this.graphVisualizer = graphVisualiser;
     }
 }
