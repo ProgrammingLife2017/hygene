@@ -32,9 +32,10 @@ public final class MenuController implements Initializable {
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
+    private @MonotonicNonNull File parentDirectory;
+
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
-
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -47,7 +48,6 @@ public final class MenuController implements Initializable {
             logger.error("Failed to initialize MenuController.", e);
         }
     }
-
 
     /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
@@ -64,13 +64,17 @@ public final class MenuController implements Initializable {
         }
 
         final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
+
+        if (parentDirectory != null) {
+            fileChooser.setInitialDirectory(parentDirectory);
+        }
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
+            parentDirectory = gfaFile.getParentFile();
             loadFile(gfaFile);
         }
     }
-
 
     /**
      * Initializes the file chooser dialog.
