@@ -229,6 +229,13 @@ public class GraphVisualizer {
     }
 
     /**
+     * Redraw the most recently set {@link SequenceGraph}. If this is null, canvas is only cleared.
+     */
+    public final void reDraw() {
+        draw(this.sequenceGraph);
+    }
+
+    /**
      * Populate the graphs primitives with the given sequence graph.
      * <p>
      * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
