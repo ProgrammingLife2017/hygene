@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,13 @@ public class ConfigController implements Initializable {
     @FXML
     private @MonotonicNonNull ColorPicker edgeColors;
 
+    @FXML
+    private @MonotonicNonNull CheckBox showBorders;
+    @FXML
+    private @MonotonicNonNull Slider dashWidth;
+
     @Override
+    @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public final void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
@@ -39,18 +46,19 @@ public class ConfigController implements Initializable {
             logger.error("Failed to initialise Configuration Controller.", e);
         }
 
-        if (nodeHeight != null && nodeWidth != null && edgeColors != null && graphVisualizer != null) {
-            nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
-            nodeWidth.setValue(graphVisualizer.getNodeWidthProperty().get());
-            edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
-
+        if (nodeHeight != null && nodeWidth != null && edgeColors != null
+                && graphVisualizer != null && showBorders != null && dashWidth != null) {
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             nodeWidth.valueProperty().bindBidirectional(graphVisualizer.getNodeWidthProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
+            showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
+            dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
 
             nodeHeight.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             nodeWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             edgeColors.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
+            showBorders.selectedProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
+            dashWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
         }
     }
 

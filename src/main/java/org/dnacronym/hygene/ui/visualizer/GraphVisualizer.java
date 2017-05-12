@@ -1,12 +1,16 @@
 package org.dnacronym.hygene.ui.visualizer;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceGraph;
@@ -26,6 +30,7 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_NODE_WIDTH = 0.001;
     private static final double DEFAULT_EDGE_WIDTH = 2;
+    private static final double DEFAULT_DASH_LENGTH = 10;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
     private static final Color DEFAULT_NODE_COLOR = Color.BLUE;
@@ -36,6 +41,9 @@ public final class GraphVisualizer {
     private final DoubleProperty nodeHeightProperty;
     private final DoubleProperty nodeWidthProperty;
     private final DoubleProperty laneHeightProperty;
+
+    private final BooleanProperty displayLaneBordersProperty;
+    private final DoubleProperty borderDashLengthProperty;
 
     private @Nullable SequenceGraph sequenceGraph;
 
@@ -54,6 +62,9 @@ public final class GraphVisualizer {
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+
+        displayLaneBordersProperty = new SimpleBooleanProperty();
+        borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
     }
 
 
@@ -160,6 +171,35 @@ public final class GraphVisualizer {
     }
 
     /**
+     * Draw the border between bands as {@link Color#BLACK}.
+     *
+     * @param laneCount  amount of bands onscreen
+     * @param laneHeight height of each band
+     */
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
+    private void drawBandEdges(final int laneCount, final double laneHeight) {
+        final Paint orginalStroke = graphicsContext.getStroke();
+        final double originalLineWidth = graphicsContext.getLineWidth();
+
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashes(borderDashLengthProperty.get());
+
+        for (int band = 1; band < laneCount; band++) {
+            graphicsContext.strokeLine(
+                    0,
+                    band * laneHeight,
+                    canvas.getWidth(),
+                    band * laneHeight
+            );
+        }
+
+        graphicsContext.setStroke(orginalStroke);
+        graphicsContext.setLineWidth(originalLineWidth);
+        graphicsContext.setLineDashes(0);
+    }
+
+    /**
      * Clear the canvas.
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
@@ -206,6 +246,24 @@ public final class GraphVisualizer {
     }
 
     /**
+     * The property which determines whether to display the border between bands as black bands.
+     *
+     * @return property which decides whether to display the border between bands.
+     */
+    public final BooleanProperty getDisplayBordersProperty() {
+        return displayLaneBordersProperty;
+    }
+
+    /**
+     * The property which determines how long the onscreen dashes should be.
+     *
+     * @return property which determines the dash length.
+     */
+    public final DoubleProperty getBorderDashLengthProperty() {
+        return borderDashLengthProperty;
+    }
+
+    /**
      * Set {@link Canvas} which the {@link GraphVisualizer} can draw on.
      *
      * @param canvas canvas to be used to {@link GraphVisualizer}
@@ -226,6 +284,23 @@ public final class GraphVisualizer {
                 }
             }
         });
+    }
+
+    /**
+     * Bind the height of the canvas to a given {@link ReadOnlyDoubleProperty}.
+     * <p>
+     * This property should be the {@link ReadOnlyDoubleProperty} height property of the pane in which this canvas
+     * resides.
+     *
+     * @param heightProperty {@link ReadOnlyDoubleProperty} to which the height property of the {@link Canvas} should be
+     *                       bound
+     * @throws IllegalStateException if the canvas has not yet been set.
+     */
+    public final void bindCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
+        if (canvas == null) {
+            throw new IllegalStateException("Can't bind height of canvas if canvas not set.");
+        }
+        canvas.heightProperty().bind(heightProperty);
     }
 
     /**
@@ -255,7 +330,7 @@ public final class GraphVisualizer {
             canvas.setWidth(canvasWidth);
 
             // TODO get actual laneCount from FAFOSP (as soon as fixed)
-            final double laneCount = 12;
+            final int laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
             sequenceGraph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
@@ -266,6 +341,10 @@ public final class GraphVisualizer {
 
                 node.setVisited(true);
             });
+
+            if (displayLaneBordersProperty.get()) {
+                drawBandEdges(laneCount, laneHeightProperty.get());
+            }
         }
     }
 }
