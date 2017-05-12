@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public final class MenuController implements Initializable {
-    private static Logger logger = LogManager.getLogger(Hygene.class);
+    private final Logger logger = LogManager.getLogger(MenuController.class);
 
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
@@ -103,7 +103,7 @@ public final class MenuController implements Initializable {
         try {
             recentFiles = RecentFiles.getAll();
         } catch (final IOException e) {
-            throw new UIInitialisationException("Error while reading recent files from data file.");
+            throw new UIInitialisationException("Error while reading recent files from data file.", e);
         }
 
         if (!recentFiles.isEmpty() && recentFilesMenu.getItems() != null) {
