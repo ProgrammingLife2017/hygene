@@ -15,6 +15,10 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
+/**
+ * Controller for the configuration window.
+ */
 public class ConfigController implements Initializable {
     private static Logger logger = LogManager.getLogger(ConfigController.class);
 
@@ -27,14 +31,14 @@ public class ConfigController implements Initializable {
     private @MonotonicNonNull ColorPicker edgeColors;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public final void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
         } catch (UIInitialisationException e) {
             logger.error("Failed to initialise Configuration Controller.", e);
         }
 
-        if (nodeHeight != null && nodeWidth != null && edgeColors != null) {
+        if (nodeHeight != null && nodeWidth != null && edgeColors != null && graphVisualizer != null) {
             nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
             nodeWidth.setValue(graphVisualizer.getNodeWidthProperty().get());
             edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
@@ -51,7 +55,7 @@ public class ConfigController implements Initializable {
      *
      * @param graphVisualiser graph pane to set in the controller.
      */
-    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
+    final void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
         this.graphVisualizer = graphVisualiser;
     }
 }
