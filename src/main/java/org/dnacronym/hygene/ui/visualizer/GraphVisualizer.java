@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.ui.visualizer;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
@@ -37,6 +39,8 @@ public class GraphVisualizer {
     private final DoubleProperty nodeWidthProperty;
     private final DoubleProperty laneHeightProperty;
 
+    private final BooleanProperty displayBandBordersProperty;
+
     private @Nullable SequenceGraph sequenceGraph;
 
     private @MonotonicNonNull Canvas canvas;
@@ -54,6 +58,8 @@ public class GraphVisualizer {
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+
+        displayBandBordersProperty = new SimpleBooleanProperty();
     }
 
 
@@ -160,6 +166,25 @@ public class GraphVisualizer {
     }
 
     /**
+     * Draw the border between bands as {@link Color#BLACK}.
+     *
+     * @param laneCount  amount of bands onscreen
+     * @param laneHeight height of each band
+     */
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
+    private void drawBands(final int laneCount, final double laneHeight) {
+        for (int band = 1; band < laneCount; band++) {
+            graphicsContext.setFill(Color.BLACK);
+            drawEdge(
+                    0,
+                    band * laneHeight,
+                    canvas.getWidth(),
+                    band * laneHeight
+            );
+        }
+    }
+
+    /**
      * Clear the canvas.
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
@@ -203,6 +228,15 @@ public class GraphVisualizer {
      */
     public final DoubleProperty getNodeWidthProperty() {
         return nodeWidthProperty;
+    }
+
+    /**
+     * The property which determines whether to display the border between bands as black bands.
+     *
+     * @return property which decides whether to display the border between bands.
+     */
+    public final BooleanProperty getDisplayBordersProperty() {
+        return displayBandBordersProperty;
     }
 
     /**
@@ -255,7 +289,7 @@ public class GraphVisualizer {
             canvas.setWidth(canvasWidth);
 
             // TODO get actual laneCount from FAFOSP (as soon as fixed)
-            final double laneCount = 12;
+            final int laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
             sequenceGraph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
@@ -266,6 +300,10 @@ public class GraphVisualizer {
 
                 node.setVisited(true);
             });
+
+            if (displayBandBordersProperty.get()) {
+                drawBands(laneCount, laneHeightProperty.get());
+            }
         }
     }
 }
