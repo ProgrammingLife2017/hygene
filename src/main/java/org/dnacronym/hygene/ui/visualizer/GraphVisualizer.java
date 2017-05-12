@@ -120,7 +120,7 @@ public class GraphVisualizer {
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdges(final SequenceNode sequenceNode, final Color color) {
-        graphicsContext.setFill(color);
+        graphicsContext.setStroke(color);
         drawEdges(sequenceNode);
     }
 
@@ -262,7 +262,7 @@ public class GraphVisualizer {
 
             sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
                 drawNode(node, DEFAULT_NODE_COLOR);
-                drawEdges(node, DEFAULT_EDGE_COLOR);
+                drawEdges(node, edgeColorProperty.get());
 
                 node.setVisited(true);
             });
