@@ -35,7 +35,7 @@
                             <children>
                                 <Label text="Node Properties" />
                                 <Label text="Sequence" GridPane.rowIndex="1" />
-                                <Canvas fx:id="neighbourVisualizer" height="200.0" width="200.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                                <Canvas fx:id="neighbourCanvas" height="200.0" width="200.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                                 <Label text="Neighbours" GridPane.rowIndex="2" />
                                 <Label text="Position" GridPane.rowIndex="5" />
                                 <TextField fx:id="sequence" GridPane.columnIndex="1" GridPane.rowIndex="1" />
