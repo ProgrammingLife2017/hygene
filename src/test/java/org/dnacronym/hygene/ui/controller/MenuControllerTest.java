@@ -1,15 +1,22 @@
 package org.dnacronym.hygene.ui.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.store.RecentFiles;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -21,18 +28,18 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link MenuController}s.
  */
-public class MenuControllerTest extends UITest {
+public final class MenuControllerTest extends UITest {
     private MenuController menuController;
 
 
     @Override
-    public final void beforeEach() {
+    public void beforeEach() {
         menuController = new MenuController();
     }
 
 
     @Test
-    public final void testFileOpenerAccept() throws Exception {
+    public void testFileOpenerAccept() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
         final FileChooser fileChooser = mock(FileChooser.class);
         final File file = mock(File.class);
@@ -49,7 +56,7 @@ public class MenuControllerTest extends UITest {
     }
 
     @Test
-    public final void testFileOpenerCancel() throws Exception {
+    public void testFileOpenerCancel() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
         final FileChooser fileChooser = mock(FileChooser.class);
 
@@ -58,5 +65,33 @@ public class MenuControllerTest extends UITest {
         menuController.openFileAction(mock(ActionEvent.class));
 
         verify(graphStore, never()).load(any(File.class));
+    }
+
+    @Test
+    void testInitFileChooser() {
+        menuController.initFileChooser();
+
+        assertThat(menuController.getFileChooser()).isNotNull();
+    }
+
+    @SuppressWarnings("unchecked") // needed for the mocking of ObservableList<MenuItem>
+    @Test
+    void testPopulateRecentFilesMenu() throws UIInitialisationException, IOException {
+        // Clean up file history (not in a global @BeforeEach, due to this test being the only test requiring it)
+        RecentFiles.reset();
+
+        final Menu recentFilesMenuMock = mock(Menu.class);
+        when(recentFilesMenuMock.getItems()).thenReturn((ObservableList<MenuItem>) mock(ObservableList.class));
+
+        // Add one test-file
+        RecentFiles.add(new File("test.gfa"));
+
+        menuController.setRecentFilesMenu(recentFilesMenuMock);
+        menuController.populateRecentFilesMenu();
+
+        verify(recentFilesMenuMock.getItems()).add(any(MenuItem.class));
+
+        // Clean up file history
+        RecentFiles.reset();
     }
 }
