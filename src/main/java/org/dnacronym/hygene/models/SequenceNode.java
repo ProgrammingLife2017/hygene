@@ -62,6 +62,20 @@ public final class SequenceNode {
     }
 
     /**
+     * Returns the sequence length.
+     * <p>
+     * The size of a node is determined as the length of the sequence string.
+     * <p>
+     * This method is preferred over calling {@code getSequence().length()} because the definition of a node's length
+     * may be changed in future releases.
+     *
+     * @return the sequence length.
+     */
+    public int getLength() {
+        return sequence.length();
+    }
+
+    /**
      * Returns the read identifiers.
      *
      * @return the read identifiers.
@@ -241,7 +255,7 @@ public final class SequenceNode {
             }
         }
 
-        horizontalRightEnd = width + sequence.length();
+        horizontalRightEnd = width + getLength();
     }
 
     /**
