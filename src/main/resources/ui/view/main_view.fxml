@@ -17,7 +17,7 @@
         <fx:include source="graph_view.fxml"/>
     </center>
     <left>
-        <fx:include source="config_view.fxml"/>
+        <fx:include source="left_panel.fxml"/>
     </left>
     <bottom>
         <fx:include source="console_view.fxml"/>
