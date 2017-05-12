@@ -18,9 +18,9 @@ class GraphTest {
 
     @Test
     void testGetNodeColor() {
-        final Graph graph = createGraphWithNode(NodeBuilder.start().withColor(NodeColor.BLUE).create().toArray());
+        final Graph graph = createGraphWithNode(NodeBuilder.start().withColor(NodeColor.BLACK).create().toArray());
 
-        assertThat(graph.getColor(0)).isEqualTo(NodeColor.BLUE);
+        assertThat(graph.getColor(0)).isEqualTo(NodeColor.BLACK);
     }
 
     @Test
@@ -48,7 +48,7 @@ class GraphTest {
     @Test
     void testGetNodeArrayOfSecondNode() {
         final int[] nodeArray = NodeBuilder.start().withUnscaledXPosition(33).create().toArray();
-        final Graph graph = new Graph(new int[][] {{}, nodeArray});
+        final Graph graph = new Graph(new int[][] {{}, nodeArray}, null);
 
         assertThat(graph.getNodeArray(1)).isEqualTo(nodeArray);
     }
@@ -63,6 +63,6 @@ class GraphTest {
 
 
     private Graph createGraphWithNode(final int[] node) {
-        return new Graph(new int[][] {node});
+        return new Graph(new int[][] {node}, null);
     }
 }

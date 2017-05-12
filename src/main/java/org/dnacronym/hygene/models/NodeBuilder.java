@@ -12,11 +12,11 @@ import java.util.stream.IntStream;
 public final class NodeBuilder {
     private int nodeId = 0;
     private int lineNumber = 0;
-    private NodeColor color = NodeColor.RED;
+    private NodeColor color = NodeColor.BLACK;
     private int unscaledXPosition = 0;
     private int unscaledYPosition = 0;
-    private final Set<Edge> incomingEdges = new TreeSet<>();
-    private final Set<Edge> outgoingEdges = new TreeSet<>();
+    private Set<Edge> incomingEdges = new TreeSet<>();
+    private Set<Edge> outgoingEdges = new TreeSet<>();
 
     /**
      * Creates a new instance of the builder.
@@ -25,6 +25,28 @@ public final class NodeBuilder {
      */
     public static NodeBuilder start() {
         return new NodeBuilder();
+    }
+
+    /**
+     * Creates a new instance of the builder from an existing node vector.
+     *
+     * @param nodeId internal node ID
+     * @param nodeArray array representation of a node
+     * @return a new instance of the builder.
+     */
+    public static NodeBuilder fromArray(final int nodeId, final int[] nodeArray) {
+        Node node = new Node(nodeId, nodeArray, null);
+
+        NodeBuilder builder = new NodeBuilder();
+        builder.nodeId = nodeId;
+        builder.lineNumber = node.getLineNumber();
+        builder.color = node.getColor();
+        builder.unscaledXPosition = node.getUnscaledXPosition();
+        builder.unscaledYPosition = node.getUnscaledYPosition();
+        builder.incomingEdges = node.getIncomingEdges();
+        builder.outgoingEdges = node.getOutgoingEdges();
+
+        return builder;
     }
 
     /**
@@ -95,7 +117,7 @@ public final class NodeBuilder {
      * @return current instance of the builder to provide a fluent interface.
      */
     public NodeBuilder withIncomingEdge(final int from, final int lineNumber) {
-        incomingEdges.add(new Edge(from, nodeId, lineNumber));
+        incomingEdges.add(new Edge(from, nodeId, lineNumber, null));
 
         return this;
     }
@@ -108,7 +130,7 @@ public final class NodeBuilder {
      * @return current instance of the builder to provide a fluent interface.
      */
     public NodeBuilder withOutgoingEdge(final int to, final int lineNumber) {
-        outgoingEdges.add(new Edge(nodeId, to, lineNumber));
+        outgoingEdges.add(new Edge(nodeId, to, lineNumber, null));
 
         return this;
     }
@@ -140,6 +162,6 @@ public final class NodeBuilder {
      * @return the node instance based on the given parameters.
      */
     public Node create() {
-        return new Node(nodeId, toArray());
+        return new Node(nodeId, toArray(), null);
     }
 }

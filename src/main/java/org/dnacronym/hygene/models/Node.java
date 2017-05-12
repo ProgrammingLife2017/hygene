@@ -1,6 +1,9 @@
 package org.dnacronym.hygene.models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,18 +15,19 @@ import java.util.TreeSet;
  * Node array format:
  * [[nodeLineNumber, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
-class Node {
+public final class Node {
     static final int NODE_LINE_NUMBER_INDEX = 0;
     static final int NODE_COLOR_INDEX = 1;
     static final int UNSCALED_X_POSITION_INDEX = 2;
     static final int UNSCALED_Y_POSITION_INDEX = 3;
     static final int NODE_OUTGOING_EDGES_INDEX = 4;
     static final int NODE_EDGE_DATA_OFFSET = 5;
-    static final int EDGE_LINENUMBER_OFFSET = 1;
+    static final int EDGE_LINE_NUMBER_OFFSET = 1;
     static final int EDGE_DATA_SIZE = 2;
 
     private final int id;
     private final int[] data;
+    private final @Nullable Graph graph;
 
     private volatile @MonotonicNonNull Set<Edge> incomingEdges;
     private volatile @MonotonicNonNull Set<Edge> outgoingEdges;
@@ -32,12 +36,15 @@ class Node {
     /**
      * Constructor for {@code Node}.
      *
-     * @param id   the node's id
-     * @param data the node array representing the node's data
+     * @param id    the node's id
+     * @param data  the node array representing the node's data
+     * @param graph the graph containing the node, in case there is no graph (yet)
+     *              for this node to be on, null is accepted
      */
-    Node(final int id, final int[] data) {
+    Node(final int id, final int[] data, final @Nullable Graph graph) {
         this.id = id;
         this.data = data;
+        this.graph = graph;
     }
 
 
@@ -46,6 +53,10 @@ class Node {
      *
      * @return the node array
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "For performance reasons, we don't want to create a copy here"
+    )
     public int[] toArray() {
         return data;
     }
@@ -62,7 +73,7 @@ class Node {
     /**
      * Getter for {@link Node} metadata line number.
      *
-     * @return the linenumber
+     * @return the line number
      */
     public int getLineNumber() {
         return data[NODE_LINE_NUMBER_INDEX];
@@ -137,8 +148,8 @@ class Node {
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         int to = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                        newOutgoingEdges.add(new Edge(id, to, lineNumber));
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
+                        newOutgoingEdges.add(new Edge(id, to, lineNumber, graph));
                     }
                     this.outgoingEdges = newOutgoingEdges;
                 }
@@ -164,8 +175,8 @@ class Node {
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         int from = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINENUMBER_OFFSET];
-                        newIncomingEdges.add(new Edge(from, id, lineNumber));
+                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
+                        newIncomingEdges.add(new Edge(from, id, lineNumber, graph));
                     }
 
                     this.incomingEdges = newIncomingEdges;
@@ -173,5 +184,24 @@ class Node {
             }
         }
         return incomingEdges;
+    }
+
+    /**
+     * Getter for the {@link Graph} reference.
+     *
+     * @return a reference to the {@link Graph} the edge belongs to.
+     */
+    public @Nullable Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * Retrieves metadata of the node.
+     *
+     * @return metadata of the bode.
+     * @throws ParseException if the edge metadata cannot be parsed
+     */
+    public NodeMetadata retrieveMetadata() throws ParseException {
+        return NodeMetadata.retrieveFor(this);
     }
 }

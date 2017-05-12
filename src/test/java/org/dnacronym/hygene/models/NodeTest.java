@@ -46,7 +46,7 @@ class NodeTest {
         final Node node = NodeBuilder.start()
                 .withNodeId(42)
                 .withLineNumber(1)
-                .withColor(NodeColor.BLUE)
+                .withColor(NodeColor.BLACK)
                 .withUnscaledXPosition(3)
                 .withUnscaledYPosition(4)
                 .withOutgoingEdge(1, 30)
@@ -55,7 +55,7 @@ class NodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[]{
-                1, 2, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                1, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }
 
@@ -88,8 +88,8 @@ class NodeTest {
 
         assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(2);
         assertThat(node.getOutgoingEdges()).containsOnly(
-                new Edge(10, 20, 3),
-                new Edge(10, 30, 4)
+                new Edge(10, 20, 3, null),
+                new Edge(10, 30, 4, null)
         );
     }
 
@@ -109,9 +109,9 @@ class NodeTest {
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(3);
         assertThat(node.getIncomingEdges()).containsOnly(
-                new Edge(20, 10, 3),
-                new Edge(30, 10, 4),
-                new Edge(40, 10, 5)
+                new Edge(20, 10, 3, null),
+                new Edge(30, 10, 4, null),
+                new Edge(40, 10, 5, null)
         );
     }
 }

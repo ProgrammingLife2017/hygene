@@ -15,11 +15,11 @@ import java.net.URL;
 
 
 /**
- * Preloader of {@link DNAApplication}.
+ * Preloader of {@link Hygene}.
  * <p>
  * The view is located at {@value PRELOADER_VIEW}.
  */
-public class DNAPreloader extends Preloader {
+public class HygenePreloader extends Preloader {
 
     private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
 
@@ -31,7 +31,7 @@ public class DNAPreloader extends Preloader {
     @Override
     public final void start(final Stage primaryStage) throws Exception {
         stage = primaryStage;
-        primaryStage.setTitle(DNAApplication.TITLE);
+        primaryStage.setTitle(Hygene.TITLE);
         primaryStage.initStyle(StageStyle.UNDECORATED);
 
         progress = new ProgressBar();

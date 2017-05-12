@@ -25,6 +25,8 @@ public final class SequenceNode {
     private int rightHeight = -1;
     private int maxHeight = -1;
 
+    private boolean visited = false;
+
 
     /**
      * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
@@ -170,6 +172,20 @@ public final class SequenceNode {
     }
 
     /**
+     * Check if a given horizontal position is in bounds of node, and that the vertical position of node is equal to the
+     * given vertical position.
+     *
+     * @param targetHorizontalPosition position that should be in bounds
+     * @param targetVerticalPosition   vertical position node should be in
+     * @return true iff in bounds.
+     */
+    public boolean inBounds(final int targetHorizontalPosition, final int targetVerticalPosition) {
+        return targetVerticalPosition == this.verticalPosition
+                && targetHorizontalPosition < this.horizontalRightEnd
+                && targetHorizontalPosition >= this.horizontalRightEnd - this.sequence.length();
+    }
+
+    /**
      * Returns the sum of left heights of its left neighbours.
      * <p>
      * This method has a complexity of O(1) as it returns a precomputed value.
@@ -198,7 +214,7 @@ public final class SequenceNode {
      *
      * @return the maximal height of any node that is connected to this node.
      */
-    int getMaxHeight() {
+    public int getMaxHeight() {
         return maxHeight;
     }
 
@@ -217,10 +233,6 @@ public final class SequenceNode {
      * FAFOSP.
      */
     void fafospX() {
-        if (horizontalRightEnd >= 0) {
-            return;
-        }
-
         int width = 0;
         for (final SequenceNode neighbour : leftNeighbours) {
             final int newWidth = neighbour.horizontalRightEnd + 1;
@@ -234,31 +246,48 @@ public final class SequenceNode {
 
     /**
      * Calculates the {@code leftHeight} or {@code rightHeight}, depending on the indicated direction.
+     * <p>
+     * Put simply, the height is defined as the sum of heights of the neighbours, until it is "reset" when there is
+     * only one neighbour and this neighbour has multiple neighbours in the opposite direction.
+     * <p>
+     * Put complexly, the following rules are applied:
+     * <ul>
+     * <li> If there are no neighbours, the node is a sentinel node and its height is the default of two.
+     * <li> If there is a single neighbour and this neighbour only has a single neighbour in the opposite direction,
+     * the height of the neighbour is copied.
+     * <li> If there is a single neighbour and this neighbour has multiple neighbours, the height is set to the
+     * default of two.
+     * <li> If there are multiple neighbours, the sum of their heights in the same direction is taken.
+     * </ul>
      *
      * @param direction which height to calculate
      */
     void fafospYInit(final SequenceDirection direction) {
         final List<SequenceNode> neighbours = direction.ternary(getLeftNeighbours(), getRightNeighbours());
+        final int neighbourSize = neighbours.size();
 
         final int height;
-        if (neighbours.isEmpty()) {
+        if (neighbourSize == 0) {
             height = 2;
+        } else if (neighbourSize == 1) {
+            final SequenceNode neighbour = neighbours.get(0);
+            final int neighbourNeighbourSize
+                    = direction.ternary(neighbour.getRightNeighbours(), neighbour.getLeftNeighbours()).size();
+
+            if (neighbourNeighbourSize == 1) {
+                height = direction.ternary(neighbour.leftHeight, neighbour.rightHeight);
+            } else {
+                height = 2;
+            }
         } else {
             height = neighbours.stream()
-                    .mapToInt(neighbour -> direction.ternary(neighbour.leftHeight, neighbour.rightHeight))
+                    .mapToInt(node -> direction.ternary(node.getLeftHeight(), node.getRightHeight()))
                     .sum();
         }
 
-        switch (direction) {
-            case LEFT:
-                leftHeight = height;
-                break;
-            case RIGHT:
-                rightHeight = height;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown enum value.");
-        }
+        direction.ternary(
+                () -> leftHeight = height,
+                () -> rightHeight = height);
     }
 
     /**
@@ -338,5 +367,23 @@ public final class SequenceNode {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the visited.
+     *
+     * @return the visited.
+     */
+    public boolean isVisited() {
+        return visited;
+    }
+
+    /**
+     * Sets the visited.
+     *
+     * @param visited whether the node was visited
+     */
+    public void setVisited(final boolean visited) {
+        this.visited = visited;
     }
 }
