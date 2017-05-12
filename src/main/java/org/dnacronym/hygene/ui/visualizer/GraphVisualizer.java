@@ -120,7 +120,7 @@ public class GraphVisualizer {
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdges(final SequenceNode sequenceNode, final Color color) {
-        graphicsContext.setFill(color);
+        graphicsContext.setStroke(color);
         drawEdges(sequenceNode);
     }
 
@@ -229,6 +229,13 @@ public class GraphVisualizer {
     }
 
     /**
+     * Redraw the most recently set {@link SequenceGraph}. If this is null, canvas is only cleared.
+     */
+    public final void redraw() {
+        draw(this.sequenceGraph);
+    }
+
+    /**
      * Populate the graphs primitives with the given sequence graph.
      * <p>
      * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
@@ -251,9 +258,11 @@ public class GraphVisualizer {
             final double laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
+            sequenceGraph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
+
             sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
                 drawNode(node, DEFAULT_NODE_COLOR);
-                drawEdges(node, DEFAULT_EDGE_COLOR);
+                drawEdges(node, edgeColorProperty.get());
 
                 node.setVisited(true);
             });
