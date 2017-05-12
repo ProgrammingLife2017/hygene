@@ -22,7 +22,7 @@ import org.dnacronym.hygene.models.SequenceNode;
  * @see Canvas
  * @see GraphicsContext
  */
-public class GraphVisualizer {
+public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_NODE_WIDTH = 0.001;
     private static final double DEFAULT_EDGE_WIDTH = 2;
@@ -64,8 +64,8 @@ public class GraphVisualizer {
      *
      * @param xPos x position onscreen
      * @param yPos y position onscreen
-     * @return x and y position in a double array of size 2 which correspond with x and y position of
-     * {@link SequenceNode}.
+     * @return x and y position in a double array of size 2 which correspond with x and y position of {@link
+     * SequenceNode}.
      */
     private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
         return new int[]{
@@ -163,7 +163,7 @@ public class GraphVisualizer {
      * Clear the canvas.
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    public final void clear() {
+    public void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -172,7 +172,7 @@ public class GraphVisualizer {
      *
      * @return Selected {@link SequenceNode} by the user. Can be null.
      */
-    public final ObjectProperty<SequenceNode> getSelectedNodeProperty() {
+    public ObjectProperty<SequenceNode> getSelectedNodeProperty() {
         return selectedNodeProperty;
     }
 
@@ -181,7 +181,7 @@ public class GraphVisualizer {
      *
      * @return property which decides the color of edges.
      */
-    public final ObjectProperty<Color> getEdgeColorProperty() {
+    public ObjectProperty<Color> getEdgeColorProperty() {
         return edgeColorProperty;
     }
 
@@ -190,7 +190,7 @@ public class GraphVisualizer {
      *
      * @return property which decides the height of nodes.
      */
-    public final DoubleProperty getNodeHeightProperty() {
+    public DoubleProperty getNodeHeightProperty() {
         return nodeHeightProperty;
     }
 
@@ -201,7 +201,7 @@ public class GraphVisualizer {
      *
      * @return property which decides the width of nodes.
      */
-    public final DoubleProperty getNodeWidthProperty() {
+    public DoubleProperty getNodeWidthProperty() {
         return nodeWidthProperty;
     }
 
@@ -210,7 +210,7 @@ public class GraphVisualizer {
      *
      * @param canvas canvas to be used to {@link GraphVisualizer}
      */
-    public final void setCanvas(final Canvas canvas) {
+    public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
 
@@ -231,7 +231,7 @@ public class GraphVisualizer {
     /**
      * Redraw the most recently set {@link SequenceGraph}. If this is null, canvas is only cleared.
      */
-    public final void redraw() {
+    public void redraw() {
         draw(this.sequenceGraph);
     }
 
@@ -243,7 +243,7 @@ public class GraphVisualizer {
      * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
      * @throws IllegalStateException if the {@link Canvas} has not been set.
      */
-    public final void draw(final @Nullable SequenceGraph sequenceGraph) {
+    public void draw(final @Nullable SequenceGraph sequenceGraph) {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
