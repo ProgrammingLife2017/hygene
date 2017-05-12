@@ -23,7 +23,6 @@ public final class SequenceNode {
 
     private int leftHeight = -1;
     private int rightHeight = -1;
-    private int maxHeight = -1;
 
     private boolean visited = false;
 
@@ -193,26 +192,6 @@ public final class SequenceNode {
         return rightHeight;
     }
 
-    /**
-     * Returns the maximal height of any node that is connected to this node.
-     * <p>
-     * This method has a complexity of O(1) as it returns a precomputed value.
-     *
-     * @return the maximal height of any node that is connected to this node.
-     */
-    public int getMaxHeight() {
-        return maxHeight;
-    }
-
-    /**
-     * Sets the maximal height.
-     *
-     * @param maxHeight the new maximal height
-     */
-    void setMaxHeight(final int maxHeight) {
-        this.maxHeight = maxHeight;
-    }
-
 
     /**
      * Calculates the optimal horizontal position for this {@code SequenceNode} relative to its left neighbours using
@@ -278,10 +257,12 @@ public final class SequenceNode {
 
     /**
      * Calculates the vertical position for the right neighbour(s) of this {@code SequenceNode}.
+     *
+     * @param defaultPosition the position a node should be placed at by default
      */
-    void fafospYCalculate() {
+    void fafospYCalculate(final int defaultPosition) {
         if (verticalPosition < 0) {
-            verticalPosition = maxHeight / 2;
+            verticalPosition = defaultPosition;
         }
 
         if (rightNeighbours.size() == 1) {
