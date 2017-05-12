@@ -258,6 +258,8 @@ public class GraphVisualizer {
             final double laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
 
+            sequenceGraph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
+
             sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
                 drawNode(node, DEFAULT_NODE_COLOR);
                 drawEdges(node, DEFAULT_EDGE_COLOR);

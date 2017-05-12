@@ -3,8 +3,17 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.controller.ConfigController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.controller.ConfigController">
     <children>
         <Accordion AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <panes>
@@ -24,7 +33,7 @@
                                     </rowConstraints>
                                     <children>
                                         <Slider fx:id="nodeHeight" blockIncrement="5.0" majorTickUnit="10.0" max="30.0" minWidth="200.0" minorTickCount="5" prefWidth="200.0" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" />
-                                        <Slider fx:id="nodeWidth" blockIncrement="0.1" majorTickUnit="0.2" max="2.0" minWidth="200.0" minorTickCount="1" prefWidth="200.0" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Slider fx:id="nodeWidth" blockIncrement="0.1" majorTickUnit="0.005" max="0.01" minWidth="200.0" minorTickCount="1" prefWidth="200.0" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <Label text="Height" />
                                         <Label text="Width" GridPane.rowIndex="1" />
                                     </children>
