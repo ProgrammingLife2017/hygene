@@ -112,7 +112,7 @@ public final class Files {
             baseDirectory = System.getenv("AppData");
         }
 
-        return new File(baseDirectory + "/" + APPLICATION_FOLDER_NAME, fileName);
+        return new File(String.format("%s/%s", baseDirectory, APPLICATION_FOLDER_NAME), fileName);
     }
 
 
