@@ -82,6 +82,8 @@
                            <children>
                               <Label text="Show borders" />
                               <CheckBox fx:id="showBorders" mnemonicParsing="false" GridPane.columnIndex="1" />
+                              <Label text="Dash width" GridPane.rowIndex="1" />
+                              <Slider fx:id="dashWidth" blockIncrement="5.0" majorTickUnit="10.0" max="30.0" min="10.0" minWidth="200.0" minorTickCount="5" prefWidth="200.0" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
                      </children>

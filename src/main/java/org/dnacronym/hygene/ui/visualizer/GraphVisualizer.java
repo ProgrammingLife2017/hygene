@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceGraph;
@@ -29,6 +30,7 @@ public class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_NODE_WIDTH = 0.001;
     private static final double DEFAULT_EDGE_WIDTH = 2;
+    private static final double DEFAULT_DASH_LENGTH = 10;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
     private static final Color DEFAULT_NODE_COLOR = Color.BLUE;
@@ -41,6 +43,7 @@ public class GraphVisualizer {
     private final DoubleProperty laneHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
+    private final DoubleProperty borderDashLengthProperty;
 
     private @Nullable SequenceGraph sequenceGraph;
 
@@ -61,6 +64,7 @@ public class GraphVisualizer {
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
+        borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
     }
 
 
@@ -174,8 +178,14 @@ public class GraphVisualizer {
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawBandEdges(final int laneCount, final double laneHeight) {
+        final Paint orginalStroke = graphicsContext.getStroke();
+        final double originalLineWidth = graphicsContext.getLineWidth();
+
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashes(borderDashLengthProperty.get());
+
         for (int band = 1; band < laneCount; band++) {
-            graphicsContext.setStroke(Color.BLACK);
             graphicsContext.strokeLine(
                     0,
                     band * laneHeight,
@@ -183,6 +193,10 @@ public class GraphVisualizer {
                     band * laneHeight
             );
         }
+
+        graphicsContext.setStroke(orginalStroke);
+        graphicsContext.setLineWidth(originalLineWidth);
+        graphicsContext.setLineDashes(0);
     }
 
     /**
@@ -238,6 +252,15 @@ public class GraphVisualizer {
      */
     public final BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;
+    }
+
+    /**
+     * The property which determines how long the onscreen dashes should be.
+     *
+     * @return property which determines the dash length.
+     */
+    public final DoubleProperty getBorderDashLengthProperty() {
+        return borderDashLengthProperty;
     }
 
     /**

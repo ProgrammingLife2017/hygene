@@ -34,8 +34,11 @@ public class ConfigController implements Initializable {
 
     @FXML
     private @MonotonicNonNull CheckBox showBorders;
+    @FXML
+    private @MonotonicNonNull Slider dashWidth;
 
     @Override
+    @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public final void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
@@ -44,16 +47,18 @@ public class ConfigController implements Initializable {
         }
 
         if (nodeHeight != null && nodeWidth != null && edgeColors != null
-                && graphVisualizer != null && showBorders != null) {
+                && graphVisualizer != null && showBorders != null && dashWidth != null) {
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             nodeWidth.valueProperty().bindBidirectional(graphVisualizer.getNodeWidthProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
             showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
+            dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
 
             nodeHeight.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             nodeWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             edgeColors.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             showBorders.selectedProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
+            dashWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
         }
     }
 
