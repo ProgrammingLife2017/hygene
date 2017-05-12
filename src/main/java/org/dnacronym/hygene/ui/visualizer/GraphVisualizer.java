@@ -264,14 +264,20 @@ public class GraphVisualizer {
     }
 
     /**
-     * Bind the height of the canvas to a given height property.
+     * Bind the height of the canvas to a given {@link ReadOnlyDoubleProperty}.
+     * <p>
+     * This property should be the {@link ReadOnlyDoubleProperty} height property of the pane in which this canvas
+     * resides.
      *
-     * @param heightProperty height canvas should be.
+     * @param heightProperty {@link ReadOnlyDoubleProperty} to which the height property of the {@link Canvas} should be
+     *                       bound
+     * @throws IllegalStateException if the canvas has not yet been set.
      */
-    public final void setCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
-        if (canvas != null) {
-            canvas.heightProperty().bind(heightProperty);
+    public final void bindCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
+        if (canvas == null) {
+            throw new IllegalStateException("Can't bind height of canvas if canvas not set.");
         }
+        canvas.heightProperty().bind(heightProperty);
     }
 
     /**

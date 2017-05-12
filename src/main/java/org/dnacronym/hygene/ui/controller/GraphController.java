@@ -46,7 +46,7 @@ public final class GraphController implements Initializable {
 
         if (graphVisualizer != null && graphCanvas != null && graphPane != null) {
             graphVisualizer.setCanvas(graphCanvas);
-            graphVisualizer.setCanvasHeight(graphPane.heightProperty());
+            graphVisualizer.bindCanvasHeight(graphPane.heightProperty());
         }
 
         if (graphPane != null && graphStore != null) {
