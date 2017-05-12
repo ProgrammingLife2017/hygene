@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.visualizer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -39,7 +40,7 @@ public class GraphVisualizer {
     private final DoubleProperty nodeWidthProperty;
     private final DoubleProperty laneHeightProperty;
 
-    private final BooleanProperty displayBandBordersProperty;
+    private final BooleanProperty displayLaneBordersProperty;
 
     private @Nullable SequenceGraph sequenceGraph;
 
@@ -59,7 +60,7 @@ public class GraphVisualizer {
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
         laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
 
-        displayBandBordersProperty = new SimpleBooleanProperty();
+        displayLaneBordersProperty = new SimpleBooleanProperty();
     }
 
 
@@ -172,10 +173,10 @@ public class GraphVisualizer {
      * @param laneHeight height of each band
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawBands(final int laneCount, final double laneHeight) {
+    private void drawBandEdges(final int laneCount, final double laneHeight) {
         for (int band = 1; band < laneCount; band++) {
-            graphicsContext.setFill(Color.BLACK);
-            drawEdge(
+            graphicsContext.setStroke(Color.BLACK);
+            graphicsContext.strokeLine(
                     0,
                     band * laneHeight,
                     canvas.getWidth(),
@@ -236,7 +237,7 @@ public class GraphVisualizer {
      * @return property which decides whether to display the border between bands.
      */
     public final BooleanProperty getDisplayBordersProperty() {
-        return displayBandBordersProperty;
+        return displayLaneBordersProperty;
     }
 
     /**
@@ -260,6 +261,17 @@ public class GraphVisualizer {
                 }
             }
         });
+    }
+
+    /**
+     * Bind the height of the canvas to a given height property.
+     *
+     * @param heightProperty height canvas should be.
+     */
+    public final void setCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
+        if (canvas != null) {
+            canvas.heightProperty().bind(heightProperty);
+        }
     }
 
     /**
@@ -301,8 +313,8 @@ public class GraphVisualizer {
                 node.setVisited(true);
             });
 
-            if (displayBandBordersProperty.get()) {
-                drawBands(laneCount, laneHeightProperty.get());
+            if (displayLaneBordersProperty.get()) {
+                drawBandEdges(laneCount, laneHeightProperty.get());
             }
         }
     }
