@@ -40,7 +40,7 @@ public final class GraphController implements Initializable {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
-            logger.error(e);
+            logger.error("Failed to initialize GraphController", e);
             return;
         }
 
@@ -85,7 +85,7 @@ public final class GraphController implements Initializable {
         try {
             graphVisualizer.draw(gfaFile.getGraph());
         } catch (final ParseException e) {
-            logger.error(e);
+            logger.error("Failed to update graph", e);
         }
     }
 }
