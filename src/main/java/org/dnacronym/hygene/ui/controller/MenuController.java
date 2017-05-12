@@ -32,7 +32,7 @@ public final class MenuController implements Initializable {
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
-    private @MonotonicNonNull File parentDirectory;
+    private @Nullable File parentDirectory;
 
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
@@ -71,8 +71,8 @@ public final class MenuController implements Initializable {
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
-            parentDirectory = gfaFile.getParentFile();
             loadFile(gfaFile);
+            parentDirectory = gfaFile.getParentFile();
         }
     }
 
