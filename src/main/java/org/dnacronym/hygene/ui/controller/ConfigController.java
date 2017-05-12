@@ -25,8 +25,9 @@ public class ConfigController implements Initializable {
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     @FXML
-    private @MonotonicNonNull Slider nodeHeight, nodeWidth;
-
+    private @MonotonicNonNull Slider nodeHeight;
+    @FXML
+    private @MonotonicNonNull Slider nodeWidth;
     @FXML
     private @MonotonicNonNull ColorPicker edgeColors;
 
@@ -34,7 +35,7 @@ public class ConfigController implements Initializable {
     public final void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             logger.error("Failed to initialise Configuration Controller.", e);
         }
 
@@ -60,7 +61,7 @@ public class ConfigController implements Initializable {
      */
     final void redrawGraphVisualiser(final @Nullable GraphVisualizer graphVisualizer) {
         if (graphVisualizer != null) {
-            graphVisualizer.reDraw();
+            graphVisualizer.redraw();
         }
     }
 

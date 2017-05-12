@@ -231,7 +231,7 @@ public class GraphVisualizer {
     /**
      * Redraw the most recently set {@link SequenceGraph}. If this is null, canvas is only cleared.
      */
-    public final void reDraw() {
+    public final void redraw() {
         draw(this.sequenceGraph);
     }
 
