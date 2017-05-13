@@ -102,4 +102,25 @@ class FafospXTest {
         assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(30); // 29 + 1
         assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(39); // 37 + 2
     }
+
+    @Test
+    void testInsertionBubble() {
+        final SequenceNode nodeA = new SequenceNode("1", "123");
+        final SequenceNode nodeB = new SequenceNode("2", "12345");
+        final SequenceNode nodeC = new SequenceNode("3", "1234567");
+        nodeA.linkToRightNeighbour(nodeB);
+        nodeA.linkToRightNeighbour(nodeC);
+        nodeC.linkToRightNeighbour(nodeB);
+
+        new SequenceGraph(Arrays.asList(nodeA, nodeB, nodeC));
+
+        assertThat(nodeA.getHorizontalRightEnd()).isEqualTo(3);
+        assertThat(nodeB.getHorizontalRightEnd()).isEqualTo(15 + 2);
+        assertThat(nodeC.getHorizontalRightEnd()).isEqualTo(10 + 1);
+    }
+
+    @Test
+    void testAdvancedInsertionBubble() {
+
+    }
 }
