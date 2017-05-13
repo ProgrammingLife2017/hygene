@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -32,8 +33,19 @@ public final class MenuController implements Initializable {
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
+    private File parentDirectory;
+
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
+
+
+    /**
+     * Create an instance of a {@link MenuController} and set the directory for use by {@link FileChooser}.
+     */
+    public MenuController() {
+        super();
+        parentDirectory = new File(System.getProperty("user.home"));
+    }
 
 
     @Override
@@ -47,7 +59,6 @@ public final class MenuController implements Initializable {
             logger.error("Failed to initialize MenuController.", e);
         }
     }
-
 
     /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
@@ -64,13 +75,17 @@ public final class MenuController implements Initializable {
         }
 
         final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
+
+        if (parentDirectory != null) {
+            fileChooser.setInitialDirectory(parentDirectory);
+        }
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
             loadFile(gfaFile);
+            parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
         }
     }
-
 
     /**
      * Initializes the file chooser dialog.
