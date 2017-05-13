@@ -209,7 +209,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
         iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
 
-        for (Iterator<SequenceNode> it = iterator(SequenceNode::isVisited); it.hasNext();) {
+        for (final Iterator<SequenceNode> it = iterator(SequenceNode::isVisited); it.hasNext();) {
             final SequenceNode node = it.next();
             node.setVisited(true);
             if (node.inBounds(horizontalPosition, verticalPosition)) {

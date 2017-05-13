@@ -38,8 +38,8 @@ public final class Node {
      *
      * @param id    the node's id
      * @param data  the node array representing the node's data
-     * @param graph the graph containing the node, in case there is no graph (yet)
-     *              for this node to be on, null is accepted
+     * @param graph the graph containing the node, in case there is no graph (yet) for this node to be on, null is
+     *              accepted
      */
     Node(final int id, final int[] data, final @Nullable Graph graph) {
         this.id = id;
@@ -142,13 +142,12 @@ public final class Node {
         if (outgoingEdges == null) {
             synchronized (Node.class) {
                 if (outgoingEdges == null) {
-                    Set<Edge> newOutgoingEdges = new TreeSet<>();
-
+                    final Set<Edge> newOutgoingEdges = new TreeSet<>();
                     final int offset = NODE_EDGE_DATA_OFFSET;
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
-                        int to = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
+                        final int to = data[offset + i * EDGE_DATA_SIZE];
+                        final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
                         newOutgoingEdges.add(new Edge(id, to, lineNumber, graph));
                     }
                     this.outgoingEdges = newOutgoingEdges;
@@ -169,13 +168,12 @@ public final class Node {
         if (incomingEdges == null) {
             synchronized (Node.class) {
                 if (incomingEdges == null) {
-                    Set<Edge> newIncomingEdges = new TreeSet<>();
-
+                    final Set<Edge> newIncomingEdges = new TreeSet<>();
                     final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
-                        int from = data[offset + i * EDGE_DATA_SIZE];
-                        int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
+                        final int from = data[offset + i * EDGE_DATA_SIZE];
+                        final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
                         newIncomingEdges.add(new Edge(from, id, lineNumber, graph));
                     }
 

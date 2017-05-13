@@ -23,7 +23,7 @@ public final class MetadataParser {
      * @throws ParseException if the GFA file or given line is invalid
      */
     public NodeMetadata parseNodeMetadata(final String gfa, final int lineNumber) throws ParseException {
-        String line = getLine(gfa, lineNumber);
+        final String line = getLine(gfa, lineNumber);
 
         validateLine(line, "S", lineNumber);
 

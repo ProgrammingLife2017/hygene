@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * Controller for the configuration window.
  */
 public final class ConfigController implements Initializable {
-    private static Logger logger = LogManager.getLogger(ConfigController.class);
+    private static final Logger logger = LogManager.getLogger(ConfigController.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 

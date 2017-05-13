@@ -19,9 +19,9 @@ import java.util.StringTokenizer;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class NewGfaParser {
+    private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private int[][] nodeVectors;
     private int nodeVectorPosition = 0;
-    private Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
 
     /**
      * Constructs and initializes a new instance of {@code GfaParser}.
@@ -139,10 +139,10 @@ public final class NewGfaParser {
             final String to = st.nextToken();
             st.nextToken();
 
-            int fromId = Optional.ofNullable(nodeIds.get(from)).orElseThrow(
+            final int fromId = Optional.ofNullable(nodeIds.get(from)).orElseThrow(
                     () -> new ParseException("Link has reference to non existing node " + from)
             );
-            int toId = Optional.ofNullable(nodeIds.get(to)).orElseThrow(
+            final int toId = Optional.ofNullable(nodeIds.get(to)).orElseThrow(
                     () -> new ParseException("Link has reference to non existing node " + to)
             );
 
@@ -169,7 +169,7 @@ public final class NewGfaParser {
      * Adds an incoming edge to the node vector.
      *
      * @param fromId node ID of edge start node
-     * @param toId node ID of edge end node
+     * @param toId   node ID of edge end node
      * @param offset line number of edge
      */
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
@@ -181,7 +181,7 @@ public final class NewGfaParser {
      * Adds an outgoing edge to the node vector.
      *
      * @param fromId node ID of edge start node
-     * @param toId node ID of edge end node
+     * @param toId   node ID of edge end node
      * @param offset line number of edge
      */
     private void addOutgoingEdge(final int fromId, final int toId, final int offset) {

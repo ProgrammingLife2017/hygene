@@ -30,14 +30,14 @@ public final class NodeBuilder {
     /**
      * Creates a new instance of the builder from an existing node vector.
      *
-     * @param nodeId internal node ID
+     * @param nodeId    internal node ID
      * @param nodeArray array representation of a node
      * @return a new instance of the builder.
      */
     public static NodeBuilder fromArray(final int nodeId, final int[] nodeArray) {
-        Node node = new Node(nodeId, nodeArray, null);
+        final Node node = new Node(nodeId, nodeArray, null);
 
-        NodeBuilder builder = new NodeBuilder();
+        final NodeBuilder builder = new NodeBuilder();
         builder.nodeId = nodeId;
         builder.lineNumber = node.getLineNumber();
         builder.color = node.getColor();
@@ -112,7 +112,7 @@ public final class NodeBuilder {
     /**
      * Adds a new incoming edge to the {@code Node} under construction.
      *
-     * @param from ID of the node where the edge is coming from
+     * @param from       ID of the node where the edge is coming from
      * @param lineNumber line number of the edge in the GFA file
      * @return current instance of the builder to provide a fluent interface.
      */
@@ -125,7 +125,7 @@ public final class NodeBuilder {
     /**
      * Adds a new outgoing edge to the {@code Node} under construction.
      *
-     * @param to ID of the node where the edge is going to
+     * @param to         ID of the node where the edge is going to
      * @param lineNumber line number of the edge in the GFA file
      * @return current instance of the builder to provide a fluent interface.
      */
@@ -141,7 +141,7 @@ public final class NodeBuilder {
      * @return array representation of the currently known node details.
      */
     public int[] toArray() {
-        final IntStream detailsArray = Arrays.stream(new int[]{
+        final IntStream detailsArray = Arrays.stream(new int[] {
                 lineNumber,
                 color.ordinal(),
                 unscaledXPosition,
@@ -149,9 +149,9 @@ public final class NodeBuilder {
                 outgoingEdges.size()
         });
         final IntStream outgoingEdgesArray = outgoingEdges.stream()
-                .flatMapToInt(edge -> Arrays.stream(new int[]{edge.getTo(), edge.getLineNumber()}));
+                .flatMapToInt(edge -> Arrays.stream(new int[] {edge.getTo(), edge.getLineNumber()}));
         final IntStream incomingEdgesArray = incomingEdges.stream()
-                .flatMapToInt(edge -> Arrays.stream(new int[]{edge.getFrom(), edge.getLineNumber()}));
+                .flatMapToInt(edge -> Arrays.stream(new int[] {edge.getFrom(), edge.getLineNumber()}));
 
         return IntStream.concat(detailsArray, IntStream.concat(outgoingEdgesArray, incomingEdgesArray)).toArray();
     }

@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public final class MenuController implements Initializable {
-    private final Logger logger = LogManager.getLogger(MenuController.class);
+    private static final Logger logger = LogManager.getLogger(MenuController.class);
 
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
@@ -58,7 +58,7 @@ public final class MenuController implements Initializable {
      * @see GraphStore#load(File)
      */
     @FXML
-    protected void openFileAction(final ActionEvent event) throws Exception {
+    void openFileAction(final ActionEvent event) throws Exception {
         if (fileChooser == null || graphStore == null) {
             return;
         }
