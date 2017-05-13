@@ -120,7 +120,7 @@ public final class Graph {
         return direction.ternary(
                 (nodeArrays[id].length
                         - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
-                        - (Node.NODE_OUTGOING_EDGES_INDEX - 1)
+                        - (Node.NODE_OUTGOING_EDGES_INDEX + 1)
                 ) / Node.EDGE_DATA_SIZE,
                 nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
         );
@@ -135,10 +135,10 @@ public final class Graph {
      */
     public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
-            action.accept(direction.ternary(
-                    Node.NODE_OUTGOING_EDGES_INDEX + i,
-                    Node.NODE_OUTGOING_EDGES_INDEX + getNeighbourCount(id, direction.opposite()) + i
-            ));
+            action.accept(nodeArrays[id][direction.ternary(
+                    getNeighbourCount(id, direction.opposite()),
+                    0
+            ) + 1 + 2 * i + Node.NODE_OUTGOING_EDGES_INDEX]);
         }
     }
 
