@@ -35,7 +35,7 @@ public final class MetadataParser {
             final String sequence = st.nextToken();
 
             return new NodeMetadata(name, sequence);
-        } catch (NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for segment on line " + lineNumber, e);
         }
     }
@@ -64,7 +64,7 @@ public final class MetadataParser {
             final String overlap = st.nextToken();
 
             return new EdgeMetadata(fromOrient, toOrient, overlap);
-        } catch (NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link on line " + lineNumber, e);
         }
     }

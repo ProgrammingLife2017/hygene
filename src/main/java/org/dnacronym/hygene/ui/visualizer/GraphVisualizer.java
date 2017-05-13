@@ -79,7 +79,7 @@ public final class GraphVisualizer {
      * SequenceNode}.
      */
     private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
-        return new int[]{
+        return new int[] {
                 (int) Math.round(xPos / nodeWidthProperty.get()),
                 (int) Math.floor(yPos / laneHeightProperty.get())
         };
@@ -250,7 +250,7 @@ public final class GraphVisualizer {
      *
      * @return property which decides whether to display the border between bands.
      */
-    public final BooleanProperty getDisplayBordersProperty() {
+    public BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;
     }
 
@@ -259,7 +259,7 @@ public final class GraphVisualizer {
      *
      * @return property which determines the dash length.
      */
-    public final DoubleProperty getBorderDashLengthProperty() {
+    public DoubleProperty getBorderDashLengthProperty() {
         return borderDashLengthProperty;
     }
 
@@ -296,7 +296,7 @@ public final class GraphVisualizer {
      *                       bound
      * @throws IllegalStateException if the canvas has not yet been set.
      */
-    public final void bindCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
+    public void bindCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
         if (canvas == null) {
             throw new IllegalStateException("Can't bind height of canvas if canvas not set.");
         }

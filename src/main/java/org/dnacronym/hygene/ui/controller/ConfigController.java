@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the configuration window.
  */
-public class ConfigController implements Initializable {
+public final class ConfigController implements Initializable {
     private static Logger logger = LogManager.getLogger(ConfigController.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
@@ -39,7 +39,7 @@ public class ConfigController implements Initializable {
 
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
-    public final void initialize(final URL location, final ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
@@ -67,7 +67,7 @@ public class ConfigController implements Initializable {
      *
      * @param graphVisualizer {@link GraphVisualizer} to redraw
      */
-    final void redrawGraphVisualiser(final @Nullable GraphVisualizer graphVisualizer) {
+    void redrawGraphVisualiser(final @Nullable GraphVisualizer graphVisualizer) {
         if (graphVisualizer != null) {
             graphVisualizer.redraw();
         }
@@ -78,7 +78,7 @@ public class ConfigController implements Initializable {
      *
      * @param graphVisualiser graph pane to set in the controller.
      */
-    final void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
+    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
         this.graphVisualizer = graphVisualiser;
     }
 }
