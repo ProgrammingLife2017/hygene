@@ -58,4 +58,13 @@ public enum SequenceDirection {
                 throw new IllegalArgumentException("Unknown enum value.");
         }
     }
+
+    /**
+     * Returns the opposite direction.
+     *
+     * @return the opposite direction.
+     */
+    public SequenceDirection opposite() {
+        return this.ternary(RIGHT, LEFT);
+    }
 }
