@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -32,10 +33,20 @@ public final class MenuController implements Initializable {
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
-    private @Nullable File parentDirectory;
+    private File parentDirectory;
 
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
+
+
+    /**
+     * Create an instance of a {@link MenuController} and set the directory for use by {@link FileChooser}.
+     */
+    public MenuController() {
+        super();
+        parentDirectory = new File(System.getProperty("user.home"));
+    }
+
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -72,7 +83,7 @@ public final class MenuController implements Initializable {
 
         if (gfaFile != null) {
             loadFile(gfaFile);
-            parentDirectory = gfaFile.getParentFile();
+            parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
         }
     }
 
