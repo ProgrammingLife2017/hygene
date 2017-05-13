@@ -67,42 +67,42 @@ class SequenceGraphTest {
 
     @Test
     void testGetNode1InBounds() {
-        assertThat(sequenceGraph.getNode(2, 1)).isEqualTo(node1);
-    }
-
-    @Test
-    void testGetNode2InBounds() {
-        assertThat(sequenceGraph.getNode(7, 1)).isEqualTo(node2);
-    }
-
-    @Test
-    void testGetNodeOnLeftEdge() {
-        assertThat(sequenceGraph.getNode(6, 1)).isEqualTo(node2);
-    }
-
-    @Test
-    void testGetNodeOnRightEdge() {
         assertThat(sequenceGraph.getNode(3, 1)).isEqualTo(node1);
     }
 
     @Test
+    void testGetNode2InBounds() {
+        assertThat(sequenceGraph.getNode(8, 1)).isEqualTo(node2);
+    }
+
+    @Test
+    void testGetNodeOnLeftEdge() {
+        assertThat(sequenceGraph.getNode(7, 1)).isEqualTo(node2);
+    }
+
+    @Test
+    void testGetNodeOnRightEdge() {
+        assertThat(sequenceGraph.getNode(4, 1)).isEqualTo(node1);
+    }
+
+    @Test
     void testBetweenNodes() {
-        assertThat(sequenceGraph.getNode(4, 1)).isNull();
+        assertThat(sequenceGraph.getNode(5, 1)).isNull();
     }
 
     @Test
     void testOnlyHorizontalPositionInBounds() {
-        assertThat(sequenceGraph.getNode(6, 2)).isNull();
+        assertThat(sequenceGraph.getNode(7, 2)).isNull();
     }
 
     @Test
     void testOnlyVerticalPositionInBounds() {
-        assertThat(sequenceGraph.getNode(20, 1)).isNull();
+        assertThat(sequenceGraph.getNode(21, 1)).isNull();
     }
 
     @Test
     void testNegativeVerticalPosition() {
-        assertThat(sequenceGraph.getNode(6, -1)).isNull();
+        assertThat(sequenceGraph.getNode(7, -1)).isNull();
     }
 
     @Test

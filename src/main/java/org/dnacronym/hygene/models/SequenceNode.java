@@ -176,6 +176,15 @@ public final class SequenceNode {
     }
 
     /**
+     * Sets the horizontal position of the right end of the node.
+     *
+     * @param horizontalRightEnd the horizontal position of the right end of the node
+     */
+    public void setHorizontalRightEnd(final int horizontalRightEnd) {
+        this.horizontalRightEnd = horizontalRightEnd;
+    }
+
+    /**
      * Returns the vertical position of the centre of the node as calculated by FAFOSP.
      *
      * @return vertical position of the centre of the node as calculated by FAFOSP.
@@ -228,6 +237,9 @@ public final class SequenceNode {
     void fafospX() {
         int width = 0;
         for (final SequenceNode neighbour : leftNeighbours) {
+            if (neighbour.horizontalRightEnd < 0) {
+                return;
+            }
             final int newWidth = neighbour.horizontalRightEnd + 1;
             if (newWidth > width) {
                 width = newWidth;

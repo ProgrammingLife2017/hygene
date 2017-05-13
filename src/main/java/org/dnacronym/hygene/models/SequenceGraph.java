@@ -145,10 +145,26 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      * breadth-first search order.
      */
     private void fafospX() {
-        final Iterator<SequenceNode> iterator = iterator(node -> node.getHorizontalRightEnd() >= 0);
+        final Queue<SequenceNode> queue = new LinkedList<>();
+        queue.addAll(sourceNode.getRightNeighbours());
+        sourceNode.setHorizontalRightEnd(0);
 
-        iterator.next(); // Skip source node
-        iterator.forEachRemaining(SequenceNode::fafospX);
+        while (!queue.isEmpty()) {
+            final SequenceNode head = queue.remove();
+
+            // Horizontal position may have been set since it was added to the queue
+            if (head.getHorizontalRightEnd() < 0) {
+                head.fafospX();
+
+                // Horizontal position cannot always be determined by FAFOSP-X
+                if (head.getHorizontalRightEnd() >= 0) {
+                    // Add neighbours of which horizontal position was not set
+                    head.getRightNeighbours().stream()
+                            .filter(node -> node.getHorizontalRightEnd() < 0)
+                            .collect(Collectors.toCollection(() -> queue));
+                }
+            }
+        }
     }
 
     /**
