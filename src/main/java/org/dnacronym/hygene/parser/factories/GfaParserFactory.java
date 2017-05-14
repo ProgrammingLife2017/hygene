@@ -32,7 +32,7 @@ public final class GfaParserFactory {
      *
      * @return an instance of {@code GfaParser}
      */
-    public static GfaParser getInstance() {
+    public static GfaParser createInstance() {
         if (instance == null) {
             return new GfaParser();
         }
