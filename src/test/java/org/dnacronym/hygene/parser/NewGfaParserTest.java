@@ -96,6 +96,21 @@ class NewGfaParserTest {
         assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 4, null));
     }
 
+    @Test
+    void testEdgeSpecifiedBeforeNode() throws ParseException {
+        final String gfa = "S 1 A\nL 1 + 2 + 0M\nS 2 B";
+        final Graph graph = parse(gfa);
+
+        Node firstNode = graph.getNode(0);
+        Node secondNode = graph.getNode(1);
+
+        assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 2, null));
+
+        assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
+        assertThat(secondNode.getIncomingEdges()).contains(new Edge(0, 1, 2, null));
+    }
+
 
     private String replaceSpacesWithTabs(final String string) {
         return string.replaceAll(" ", "\t");

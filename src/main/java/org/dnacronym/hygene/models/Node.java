@@ -49,6 +49,16 @@ public final class Node {
 
 
     /**
+     * Creates an empty node array without edge details used to initialize a new node.
+     *
+     * @return an empty node array.
+     */
+    public static int[] createEmptyNodeArray() {
+        return new int[NODE_EDGE_DATA_OFFSET];
+    }
+
+
+    /**
      * Getter for the node's array which contains its metadata.
      *
      * @return the node array
