@@ -31,8 +31,8 @@ public class NewGfaFile {
     public NewGfaFile(final String fileName) {
         this.fileName = fileName;
 
-        gfaParser = NewGfaParserFactory.getInstance();
-        metadataParser = MetadataParserFactory.getInstance();
+        gfaParser = NewGfaParserFactory.createInstance();
+        metadataParser = MetadataParserFactory.createInstance();
     }
 
 

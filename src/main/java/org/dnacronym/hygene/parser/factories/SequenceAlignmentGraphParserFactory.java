@@ -32,7 +32,7 @@ public final class SequenceAlignmentGraphParserFactory {
      *
      * @return an instance of {@code SequenceAlignmentGraphParser}
      */
-    public static SequenceAlignmentGraphParser getInstance() {
+    public static SequenceAlignmentGraphParser createInstance() {
         if (instance == null) {
             return new SequenceAlignmentGraphParser();
         }

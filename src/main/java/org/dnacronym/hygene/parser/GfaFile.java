@@ -29,8 +29,8 @@ public class GfaFile {
     public GfaFile(final String fileName) {
         this.fileName = fileName;
 
-        gfaParser = GfaParserFactory.getInstance();
-        sagParser = SequenceAlignmentGraphParserFactory.getInstance();
+        gfaParser = GfaParserFactory.createInstance();
+        sagParser = SequenceAlignmentGraphParserFactory.createInstance();
     }
 
 
