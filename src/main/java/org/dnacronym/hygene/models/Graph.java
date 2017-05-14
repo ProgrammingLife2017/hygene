@@ -3,6 +3,11 @@ package org.dnacronym.hygene.models;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.dnacronym.hygene.parser.NewGfaFile;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 
 /**
  * Class wraps around the graph data represented as a nested array and provides utility methods.
@@ -102,6 +107,83 @@ public final class Graph {
      */
     public int getUnscaledYPosition(final int id) {
         return nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX];
+    }
+
+    /**
+     * Returns the number of neighbours of a node in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to count
+     * @return the number of neighbours of a node in the given direction.
+     */
+    public int getNeighbourCount(final int id, final SequenceDirection direction) {
+        return direction.ternary(
+                (nodeArrays[id].length
+                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
+                        - (Node.NODE_OUTGOING_EDGES_INDEX + 1)
+                ) / Node.EDGE_DATA_SIZE,
+                nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
+        );
+    }
+
+    /**
+     * Applies the given {@code Consumer} to the identifiers of the neighbours in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
+        final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
+                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+
+        for (int i = 0; i < getNeighbourCount(id, direction); i++) {
+            final int neighbourIndex = neighbourOffset + 2 * i;
+            action.accept(nodeArrays[id][neighbourIndex]);
+        }
+    }
+
+    /**
+     * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
+     *
+     * @param direction the direction to visit the nodes in
+     * @param action    the function to apply to each node's identifier
+     */
+    public void visitAll(final SequenceDirection direction, final Consumer<Integer> action) {
+        final boolean[] visited = new boolean[nodeArrays.length];
+        visitAll(direction, node -> visited[node], node -> {
+            visited[node] = true;
+            action.accept(node);
+        });
+    }
+
+    /**
+     * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
+     *
+     * @param direction the direction to visit the nodes in
+     * @param visited   a function that returns true if the node with the supplied id has been visited during this
+     *                  iteration
+     * @param action    the function to apply to each node's identifier
+     */
+    public void visitAll(final SequenceDirection direction, final Predicate<Integer> visited,
+                         final Consumer<Integer> action) {
+        final Queue<Integer> queue = new LinkedList<>();
+        queue.add(0);
+
+        while (!queue.isEmpty()) {
+            final int head = queue.remove();
+            if (visited.test(head)) {
+                continue;
+            }
+
+            action.accept(head);
+
+            visitNeighbours(head, direction, index -> {
+                if (!visited.test(index)) {
+                    queue.add(index);
+                }
+            });
+        }
     }
 
     /**
