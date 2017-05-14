@@ -3,7 +3,6 @@ package org.dnacronym.hygene.models;
 import org.dnacronym.hygene.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -26,7 +25,6 @@ class FafospYTest {
 
         assertThat(node.getLeftHeight()).isEqualTo(-1);
         assertThat(node.getRightHeight()).isEqualTo(-1);
-        assertThat(node.getMaxHeight()).isEqualTo(-1);
         assertThat(node.getVerticalPosition()).isEqualTo(-1);
     }
 
@@ -163,34 +161,6 @@ class FafospYTest {
         assertNodes(new int[] {4, 2, 2, 4, 2, 2, 2}, SequenceNode::getRightHeight);
     }
 
-    /*
-     * Max height.
-     */
-    @Test
-    void testGetSetMaxHeight() {
-        createNodes(1);
-
-        nodes[0].setMaxHeight(1197);
-
-        assertNodes(new int[] {1197}, SequenceNode::getMaxHeight);
-    }
-
-    @Test
-    void testMaxHeightEmptyGraph() {
-        final SequenceGraph graph = new SequenceGraph(new ArrayList<>());
-
-        assertThat(graph.getSourceNode().getMaxHeight()).isEqualTo(2);
-        assertThat(graph.getSinkNode().getMaxHeight()).isEqualTo(2);
-    }
-
-    @Test
-    void testMaxHeightDisconnectedNodes() {
-        createNodes(2);
-
-        initGraph();
-
-        assertNodes(new int[] {4, 4}, SequenceNode::getMaxHeight);
-    }
 
     /*
      * Vertical position.

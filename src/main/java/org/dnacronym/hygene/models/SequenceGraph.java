@@ -169,9 +169,6 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
                 .forEachRemaining(node -> node.fafospYInit(SequenceDirection.LEFT));
         reverseIterator(node -> node.getRightHeight() >= 0)
                 .forEachRemaining(node -> node.fafospYInit(SequenceDirection.RIGHT));
-
-        iterator(node -> node.getMaxHeight() >= 0)
-                .forEachRemaining(node -> node.setMaxHeight(sourceNode.getRightHeight()));
     }
 
     /**
@@ -190,7 +187,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
                     .collect(Collectors.toCollection(() -> queue));
 
             // Calculate vertical position
-            head.fafospYCalculate();
+            head.fafospYCalculate(sourceNode.getRightHeight() / 2);
         }
     }
 
