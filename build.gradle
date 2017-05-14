@@ -147,8 +147,8 @@ pmd {
             "java-unnecessary",
             "java-unusedcode"
     ]
-    ignoreFailures = true
-    sourceSets = [sourceSets.main]
+    ignoreFailures = false
+    sourceSets = [sourceSets.main, sourceSets.test]
 }
 
 jacocoTestReport {
