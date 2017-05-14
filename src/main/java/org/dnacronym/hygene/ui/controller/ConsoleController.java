@@ -27,7 +27,7 @@ public final class ConsoleController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             e.printStackTrace();
         }
 

@@ -9,9 +9,9 @@ import java.util.Optional;
  * Represents the metadata of an {@link Edge}.
  */
 public final class EdgeMetadata {
-    private String fromOrient;
-    private String toOrient;
-    private String overlap;
+    private final String fromOrient;
+    private final String toOrient;
+    private final String overlap;
 
 
     /**

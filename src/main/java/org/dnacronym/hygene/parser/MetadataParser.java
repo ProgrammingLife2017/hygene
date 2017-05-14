@@ -23,7 +23,7 @@ public final class MetadataParser {
      * @throws ParseException if the GFA file or given line is invalid
      */
     public NodeMetadata parseNodeMetadata(final String gfa, final int lineNumber) throws ParseException {
-        String line = getLine(gfa, lineNumber);
+        final String line = getLine(gfa, lineNumber);
 
         validateLine(line, "S", lineNumber);
 
@@ -35,7 +35,7 @@ public final class MetadataParser {
             final String sequence = st.nextToken();
 
             return new NodeMetadata(name, sequence);
-        } catch (NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for segment on line " + lineNumber, e);
         }
     }
@@ -64,7 +64,7 @@ public final class MetadataParser {
             final String overlap = st.nextToken();
 
             return new EdgeMetadata(fromOrient, toOrient, overlap);
-        } catch (NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for link on line " + lineNumber, e);
         }
     }

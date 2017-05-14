@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private final Logger logger = LogManager.getLogger(GraphController.class);
+    private static final Logger logger = LogManager.getLogger(GraphController.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
     private @MonotonicNonNull GraphStore graphStore;
@@ -59,7 +59,7 @@ public final class GraphController implements Initializable {
      *
      * @param graphStore {@link GraphStore} to store in the {@link GraphController}.
      */
-    protected void setGraphStore(final GraphStore graphStore) {
+    void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
     }
 
@@ -78,7 +78,7 @@ public final class GraphController implements Initializable {
      * @param gfaFile with internal graph to display.
      * @see GfaFile#getGraph()
      */
-    protected void updateGraph(final GfaFile gfaFile) {
+    void updateGraph(final GfaFile gfaFile) {
         if (graphPane == null || graphVisualizer == null) {
             return;
         }

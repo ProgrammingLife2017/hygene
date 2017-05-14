@@ -17,10 +17,10 @@ import java.nio.file.Paths;
  * Represents a GFA file with its contents and metadata.
  */
 public class NewGfaFile {
-    private String fileName;
+    private final String fileName;
+    private final NewGfaParser gfaParser;
+    private final MetadataParser metadataParser;
     private @MonotonicNonNull Graph graph;
-    private NewGfaParser gfaParser;
-    private MetadataParser metadataParser;
 
 
     /**
@@ -41,7 +41,7 @@ public class NewGfaFile {
      *
      * @return a {@code SequenceGraph} based on the contents of the GFA file
      * @throws ParseException if the file content is not GFA-compliant
-     * @throws IOException if the file cannot be read
+     * @throws IOException    if the file cannot be read
      */
     public final Graph parse() throws ParseException {
         graph = gfaParser.parse(this);
@@ -101,7 +101,7 @@ public class NewGfaFile {
     public final String readFile() throws ParseException {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ParseException("File '" + fileName + "' cannot be read. ", e);
         }
     }
