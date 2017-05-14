@@ -134,11 +134,12 @@ public final class Graph {
      * @param action    the function to apply to each neighbour's identifier
      */
     public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
+        final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
+                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
-            action.accept(nodeArrays[id][direction.ternary(
-                    getNeighbourCount(id, direction.opposite()),
-                    0
-            ) + 1 + 2 * i + Node.NODE_OUTGOING_EDGES_INDEX]);
+            final int neighbourIndex = neighbourOffset + 2 * i;
+            action.accept(nodeArrays[id][neighbourIndex]);
         }
     }
 
