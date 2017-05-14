@@ -146,6 +146,20 @@ public final class Graph {
      * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
+     * @param action    the function to apply to each node's identifier
+     */
+    public void visitAll(final SequenceDirection direction, final Consumer<Integer> action) {
+        final boolean[] visited = new boolean[nodeArrays.length];
+        visitAll(direction, node -> visited[node], node -> {
+            visited[node] = true;
+            action.accept(node);
+        });
+    }
+
+    /**
+     * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
+     *
+     * @param direction the direction to visit the nodes in
      * @param visited   a function that returns true if the node with the supplied id has been visited during this
      *                  iteration
      * @param action    the function to apply to each node's identifier
@@ -157,7 +171,12 @@ public final class Graph {
 
         while (!queue.isEmpty()) {
             final int head = queue.remove();
+            if (visited.test(head)) {
+                continue;
+            }
+
             action.accept(head);
+
             visitNeighbours(head, direction, index -> {
                 if (!visited.test(index)) {
                     queue.add(index);

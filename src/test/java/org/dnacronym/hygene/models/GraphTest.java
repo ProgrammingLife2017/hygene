@@ -122,7 +122,7 @@ class GraphTest {
     }
 
     @Test
-    void testVisitAllRight() {
+    void testVisitAllRightWithDuplicates() {
         final int[] nodeA = NodeBuilder.start()
                 .withOutgoingEdge(1, 0)
                 .withOutgoingEdge(2, 0)
@@ -135,12 +135,39 @@ class GraphTest {
         final int[] nodeC = NodeBuilder.start()
                 .withOutgoingEdge(4, 0)
                 .toArray();
-        final Graph graph = createGraphWithNodes(nodeA, nodeB, nodeC);
+        final int[] nodeD = NodeBuilder.start().toArray();
+        final int[] nodeE = NodeBuilder.start().toArray();
+        final Graph graph = createGraphWithNodes(nodeA, nodeB, nodeC, nodeD, nodeE);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitAll(SequenceDirection.LEFT, ignored -> false, neighbours::add);
+        graph.visitAll(SequenceDirection.RIGHT, node -> false, neighbours::add);
 
-        assertThat(neighbours).containsExactly(0, 1, 2, 4, 2, 3, 4);
+        assertThat(neighbours).containsExactly(0, 1, 2, 4, 2, 3, 4, 4);
+    }
+
+    @Test
+    void testVisitAllRightWithoutDuplicates() {
+        final int[] nodeA = NodeBuilder.start()
+                .withOutgoingEdge(1, 0)
+                .withOutgoingEdge(2, 0)
+                .toArray();
+        final int[] nodeB = NodeBuilder.start()
+                .withOutgoingEdge(3, 0)
+                .withOutgoingEdge(4, 0)
+                .toArray();
+        final int[] nodeC = NodeBuilder.start()
+                .withOutgoingEdge(4, 0)
+                .toArray();
+        final int[] nodeD = NodeBuilder.start()
+                .withOutgoingEdge(4, 0)
+                .toArray();
+        final int[] nodeE = NodeBuilder.start().toArray();
+        final Graph graph = createGraphWithNodes(nodeA, nodeB, nodeC, nodeD, nodeE);
+
+        final List<Integer> neighbours = new ArrayList<>();
+        graph.visitAll(SequenceDirection.RIGHT, neighbours::add);
+
+        assertThat(neighbours).containsExactly(0, 1, 2, 3, 4);
     }
 
 
