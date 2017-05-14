@@ -19,7 +19,6 @@ final class MetadataParsingIntegrationTest {
         gfaFile.parse();
         Node node = gfaFile.getGraph().getNode(0);
 
-        System.out.println(node.getLineNumber());
         NodeMetadata nodeMetadata = node.retrieveMetadata();
 
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");

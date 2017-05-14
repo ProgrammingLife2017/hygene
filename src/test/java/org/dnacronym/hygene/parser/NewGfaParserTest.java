@@ -7,6 +7,11 @@ import org.dnacronym.hygene.models.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
@@ -132,8 +137,11 @@ class NewGfaParserTest {
     }
 
     private Graph parse(final String gfa) throws ParseException {
+        final byte[] gfaBytes = replaceSpacesWithTabs(gfa).getBytes(StandardCharsets.UTF_8);
         final NewGfaFile gfaFile = mock(NewGfaFile.class);
-        when(gfaFile.readFile()).thenReturn(replaceSpacesWithTabs(gfa));
+        when(gfaFile.readFile()).thenAnswer(invocationOnMock ->
+                new BufferedReader(new InputStreamReader(new ByteArrayInputStream(gfaBytes)))
+        );
         return parser.parse(gfaFile);
     }
 }

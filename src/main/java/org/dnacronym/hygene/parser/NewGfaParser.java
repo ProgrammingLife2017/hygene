@@ -6,12 +6,15 @@ import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -21,14 +24,14 @@ import java.util.StringTokenizer;
  */
 public final class NewGfaParser {
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
+    private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeVectors;
-    private int nodeVectorPosition;
 
     /**
      * Constructs and initializes a new instance of {@code GfaParser}.
      */
     public NewGfaParser() {
-        this.nodeIds = new HashMap<>();
+        this.nodeIds = new ConcurrentHashMap<>();
         this.nodeVectors = new int[0][];
     }
 
@@ -41,17 +44,25 @@ public final class NewGfaParser {
      */
     @EnsuresNonNull("nodeVectors")
     public Graph parse(final NewGfaFile gfaFile) throws ParseException {
-        final String gfa = gfaFile.readFile();
+        BufferedReader gfa = gfaFile.readFile();
 
-        final String[] lines = gfa.split("\\R");
-
-        allocateNodes(lines);
+        allocateNodes(gfa);
 
         nodeVectors = new int[nodeIds.size()][];
         Arrays.setAll(nodeVectors, i -> Node.createEmptyNodeArray());
 
-        for (int offset = 1; offset <= lines.length; offset++) {
-            parseLine(lines[offset - 1], offset);
+        // Get new buffered reader
+        gfa = gfaFile.readFile();
+
+        try {
+            int offset = 0;
+            String line;
+            while ((line = gfa.readLine()) != null) {
+                parseLine(line, offset + 1);
+                offset++;
+            }
+        } catch (IOException e) {
+            throw new ParseException("Error while reading file: " + e.getMessage(), e);
         }
 
         return new Graph(nodeVectors, gfaFile);
@@ -63,12 +74,12 @@ public final class NewGfaParser {
      * This step is necessary because we need to know the internal node IDs
      * upfront to be able to add edges to the correct node vectors.
      *
-     * @param lines lines of a GFA-compliant {@code String}
+     * @param gfa lines of a GFA-compliant {@code String}
      */
-    private void allocateNodes(final String[] lines) {
-        Arrays.stream(lines).filter(line -> line.startsWith("S\t")).forEach(line -> {
-            nodeIds.put(parseNodeName(line), nodeVectorPosition);
-            nodeVectorPosition++;
+    private void allocateNodes(final BufferedReader gfa) {
+        gfa.lines().parallel().filter(line -> line.startsWith("S\t")).forEach(line -> {
+            nodeIds.put(parseNodeName(line), nodeVectorPosition.get());
+            nodeVectorPosition.incrementAndGet();
         });
     }
 

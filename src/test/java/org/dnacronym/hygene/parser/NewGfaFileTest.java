@@ -6,11 +6,12 @@ import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -51,7 +52,7 @@ class NewGfaFileTest {
     void testReadFile() throws ParseException {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
 
-        assertThat(gfaFile.readFile()).isEqualTo(SIMPLE_GFA_CONTENTS);
+        assertThat(bufferedReaderToString(gfaFile.readFile())).isEqualTo(SIMPLE_GFA_CONTENTS);
     }
 
     @Test
@@ -62,7 +63,7 @@ class NewGfaFileTest {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
-        verify(gfaParser).parse(any(NewGfaFile.class));
+        verify(gfaParser).parse(gfaFile);
         assertThat(gfaFile.getGraph()).isNotNull();
     }
 
@@ -74,7 +75,7 @@ class NewGfaFileTest {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
 
-        verify(metadataParser).parseNodeMetadata(SIMPLE_GFA_CONTENTS, 2);
+        verify(metadataParser).parseNodeMetadata(gfaFile, 2);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
     }
 
@@ -86,7 +87,11 @@ class NewGfaFileTest {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
-        verify(metadataParser).parseEdgeMetadata(SIMPLE_GFA_CONTENTS, 4);
+        verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
+    }
+
+    private String bufferedReaderToString(final BufferedReader reader) {
+        return reader.lines().collect(Collectors.joining("\n")) + "\n";
     }
 }
