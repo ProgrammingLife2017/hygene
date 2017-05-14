@@ -1,9 +1,11 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.models.SequenceGraph;
-import org.dnacronym.hygene.parser.factories.SequenceAlignmentGraphParserFactory;
-import org.dnacronym.hygene.parser.factories.GfaParserFactory;
+import org.dnacronym.hygene.models.EdgeMetadata;
+import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.NodeMetadata;
+import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
+import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,10 +17,10 @@ import java.nio.file.Paths;
  * Represents a GFA file with its contents and metadata.
  */
 public class GfaFile {
-    private final String fileName;
-    private final GfaParser gfaParser;
-    private final SequenceAlignmentGraphParser sagParser;
-    private @MonotonicNonNull SequenceGraph graph;
+    private String fileName;
+    private @MonotonicNonNull Graph graph;
+    private NewGfaParser gfaParser;
+    private MetadataParser metadataParser;
 
 
     /**
@@ -29,8 +31,8 @@ public class GfaFile {
     public GfaFile(final String fileName) {
         this.fileName = fileName;
 
-        gfaParser = GfaParserFactory.createInstance();
-        sagParser = SequenceAlignmentGraphParserFactory.createInstance();
+        gfaParser = NewGfaParserFactory.createInstance();
+        metadataParser = MetadataParserFactory.createInstance();
     }
 
 
@@ -39,10 +41,33 @@ public class GfaFile {
      *
      * @return a {@code SequenceGraph} based on the contents of the GFA file
      * @throws ParseException if the file content is not GFA-compliant
+     * @throws IOException if the file cannot be read
      */
-    public final SequenceGraph parse() throws ParseException {
-        graph = sagParser.parse(gfaParser.parse(readFile()));
+    public final Graph parse() throws ParseException {
+        graph = gfaParser.parse(this);
         return graph;
+    }
+
+    /**
+     * Parses a {@code Node}'s metadata to a {@code NodeMetadata} object.
+     *
+     * @param lineNumber line number of the node within the GFA file
+     * @return a {@code NodeMetadata} object.
+     * @throws ParseException if the node metadata cannot be parsed
+     */
+    public final NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
+        return metadataParser.parseNodeMetadata(readFile(), lineNumber);
+    }
+
+    /**
+     * Parses an {@code Edge}'s metadata to a {@code EdgeMetaData} object.
+     *
+     * @param lineNumber Line number of the edge within the GFA file
+     * @return a {@code EdgeMetaData} object.
+     * @throws ParseException if the edge metadata cannot be parsed
+     */
+    public final EdgeMetadata parseEdgeMetadata(final int lineNumber) throws ParseException {
+        return metadataParser.parseEdgeMetadata(readFile(), lineNumber);
     }
 
     /**
@@ -60,7 +85,7 @@ public class GfaFile {
      * @return the contents of the GFA file.
      * @throws ParseException if the file is not yet parsed to a graph
      */
-    public final SequenceGraph getGraph() throws ParseException {
+    public final Graph getGraph() throws ParseException {
         if (graph == null) {
             throw new ParseException("Cannot get the graph before parsing the file");
         }
@@ -73,7 +98,7 @@ public class GfaFile {
      * @return contents of the GFA file.
      * @throws ParseException if the given file name cannot be read
      */
-    private String readFile() throws ParseException {
+    public final String readFile() throws ParseException {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
         } catch (final IOException e) {

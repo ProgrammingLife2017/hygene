@@ -13,14 +13,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.models.SequenceGraph;
-import org.dnacronym.hygene.models.SequenceNode;
+import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.Node;
 
 
 /**
  * A simple canvas that allows drawing of primitive shapes.
  * <p>
- * When passing a {@link SequenceGraph}, it will draw it using JavaFX primitives. If the {@link Canvas} has not been set
+ * When passing a {@link Graph}, it will draw it using JavaFX primitives. If the {@link Canvas} has not been set
  * all methods related to drawing will thrown an {@link IllegalStateException}.
  *
  * @see Canvas
@@ -35,7 +35,7 @@ public final class GraphVisualizer {
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
     private static final Color DEFAULT_NODE_COLOR = Color.BLUE;
 
-    private final ObjectProperty<SequenceNode> selectedNodeProperty;
+    private final ObjectProperty<Node> selectedNodeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
@@ -45,7 +45,7 @@ public final class GraphVisualizer {
     private final BooleanProperty displayLaneBordersProperty;
     private final DoubleProperty borderDashLengthProperty;
 
-    private @Nullable SequenceGraph sequenceGraph;
+    private @Nullable Graph graph;
 
     private @MonotonicNonNull Canvas canvas;
     private @MonotonicNonNull GraphicsContext graphicsContext;
@@ -69,16 +69,16 @@ public final class GraphVisualizer {
 
 
     /**
-     * Converts onscreen coordinates to coordinates which can be used to find the correct sequenceNode.
+     * Converts onscreen coordinates to coordinates which can be used to find the correct node.
      * <p>
      * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
      *
      * @param xPos x position onscreen
      * @param yPos y position onscreen
      * @return x and y position in a double array of size 2 which correspond with x and y position of {@link
-     * SequenceNode}.
+     * Node}.
      */
-    private int[] toSequenceNodeCoordinates(final double xPos, final double yPos) {
+    private int[] toNodeCoordinates(final double xPos, final double yPos) {
         return new int[] {
                 (int) Math.round(xPos / nodeWidthProperty.get()),
                 (int) Math.floor(yPos / laneHeightProperty.get())
@@ -106,33 +106,31 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Draws all onscreen edges between the current {@link SequenceNode} and it's right neighbours.
+     * Draws all onscreen edges between the current {@link Node} and it's right neighbours.
      * <p>
      * Afterwards, calls itself on each of the right neighbours of the current node.
      *
-     * @param sequenceNode the node who's edges should be drawn on the {@link Canvas}
-     * @see SequenceNode#getRightNeighbours()
+     * @param node the node who's edges should be drawn on the {@link Canvas}
      */
-    private void drawEdges(final SequenceNode sequenceNode) {
-        sequenceNode.getRightNeighbours().forEach(neighbour -> drawEdge(
-                sequenceNode.getHorizontalRightEnd(),
-                sequenceNode.getVerticalPosition(),
-                (double) (neighbour.getHorizontalRightEnd() - neighbour.getLength()),
-                neighbour.getVerticalPosition()
-        ));
+    private void drawEdges(final Node node) {
+//        node.getRightNeighbours().forEach(neighbour -> drawEdge(
+//                node.getHorizontalRightEnd(),
+//                node.getVerticalPosition(),
+//                (double) (neighbour.getHorizontalRightEnd() - neighbour.getLength()),
+//                neighbour.getVerticalPosition()
+//        ));
     }
 
     /**
      * Sets the fill of the {@link GraphicsContext} before proceeding to draw all onscreen edges.
      *
-     * @param sequenceNode the node representing the source of the graph
+     * @param node the node representing the source of the graph
      * @param color        the color with which all edges should be drawn
-     * @see #drawEdges(SequenceNode)
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawEdges(final SequenceNode sequenceNode, final Color color) {
+    private void drawEdges(final Node node, final Color color) {
         graphicsContext.setStroke(color);
-        drawEdges(sequenceNode);
+        drawEdges(node);
     }
 
     /**
@@ -161,13 +159,13 @@ public final class GraphVisualizer {
      * @param node  the node to draw
      * @param color the color to draw with
      */
-    private void drawNode(final SequenceNode node, final Color color) {
-        drawNode(
-                (double) (node.getHorizontalRightEnd() - node.getLength()),
-                node.getVerticalPosition(),
-                node.getLength(),
-                color
-        );
+    private void drawNode(final Node node, final Color color) {
+//        drawNode(
+//                (double) (node.getHorizontalRightEnd() - node.getLength()),
+//                node.getVerticalPosition(),
+//                node.getLength(),
+//                color
+//        );
     }
 
     /**
@@ -210,9 +208,9 @@ public final class GraphVisualizer {
     /**
      * The property of the selected node. This node is updated every time the user clicks on the canvas.
      *
-     * @return Selected {@link SequenceNode} by the user. Can be null.
+     * @return Selected {@link Node} by the user. Can be null.
      */
-    public ObjectProperty<SequenceNode> getSelectedNodeProperty() {
+    public ObjectProperty<Node> getSelectedNodeProperty() {
         return selectedNodeProperty;
     }
 
@@ -273,16 +271,16 @@ public final class GraphVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.setOnMouseClicked(event -> {
-            final int[] positions = toSequenceNodeCoordinates(event.getX(), event.getY());
+            final int[] positions = toNodeCoordinates(event.getX(), event.getY());
             final int nodeXPos = positions[0];
             final int nodeLane = positions[1];
 
-            if (sequenceGraph != null) {
-                final SequenceNode node = sequenceGraph.getNode(nodeXPos, nodeLane);
-                if (selectedNodeProperty != null && node != null) {
-                    selectedNodeProperty.set(node);
-                }
-            }
+//            if (graph != null) {
+//                final Node node = graph.getNode(nodeXPos, nodeLane);
+//                if (selectedNodeProperty != null && node != null) {
+//                    selectedNodeProperty.set(node);
+//                }
+//            }
         });
     }
 
@@ -304,47 +302,47 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Redraw the most recently set {@link SequenceGraph}. If this is null, canvas is only cleared.
+     * Redraw the most recently set {@link Graph}. If this is null, canvas is only cleared.
      */
     public void redraw() {
-        draw(this.sequenceGraph);
+        draw(this.graph);
     }
 
     /**
-     * Populate the graphs primitives with the given sequence graph.
+     * Populate the graphs primitives with the given graph.
      * <p>
-     * First clears the graph before drawing. If {@link SequenceGraph} is null, only clears the canvas.
+     * First clears the graph before drawing. If {@link Graph} is null, only clears the canvas.
      *
-     * @param sequenceGraph {@link SequenceGraph} to populate canvas with.
+     * @param graph {@link Graph} to populate canvas with.
      * @throws IllegalStateException if the {@link Canvas} has not been set.
      */
-    public void draw(final @Nullable SequenceGraph sequenceGraph) {
+    public void draw(final @Nullable Graph graph) {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
         clear();
-        this.sequenceGraph = sequenceGraph;
-        if (sequenceGraph != null && canvas != null) {
-            final double canvasWidth = sequenceGraph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
-            canvas.setWidth(canvasWidth);
-
-            // TODO get actual laneCount from FAFOSP (as soon as fixed)
-            final int laneCount = 12;
-            laneHeightProperty.set(canvas.getHeight() / laneCount);
-
-            sequenceGraph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
-
-            sequenceGraph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
-                drawNode(node, DEFAULT_NODE_COLOR);
-                drawEdges(node, edgeColorProperty.get());
-
-                node.setVisited(true);
-            });
-
-            if (displayLaneBordersProperty.get()) {
-                drawBandEdges(laneCount, laneHeightProperty.get());
-            }
+        this.graph = graph;
+        if (graph != null && canvas != null) {
+//            final double canvasWidth = graph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
+//            canvas.setWidth(canvasWidth);
+//
+//            // TODO get actual laneCount from FAFOSP (as soon as fixed)
+//            final int laneCount = 12;
+//            laneHeightProperty.set(canvas.getHeight() / laneCount);
+//
+//            graph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
+//
+//            graph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
+//                drawNode(node, DEFAULT_NODE_COLOR);
+//                drawEdges(node, edgeColorProperty.get());
+//
+//                node.setVisited(true);
+//            });
+//
+//            if (displayLaneBordersProperty.get()) {
+//                drawBandEdges(laneCount, laneHeightProperty.get());
+//            }
         }
     }
 }

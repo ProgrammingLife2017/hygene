@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.util.JFXAppender;
@@ -43,7 +44,11 @@ public final class ConsoleController implements Initializable {
         if (graphVisualizer != null) {
             graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) -> {
                 if (console != null) {
-                    console.appendText("Sequence: " + newNode.getSequence() + "\n");
+                    try {
+                        console.appendText("Sequence: " + newNode.retrieveMetadata().getSequence() + "\n");
+                    } catch (ParseException e) {
+                        console.appendText("Metadata of node " + newNode.getId() + " could not be loaded");
+                    }
                 }
             });
         }

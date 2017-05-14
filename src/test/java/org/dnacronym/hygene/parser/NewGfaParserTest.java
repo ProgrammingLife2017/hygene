@@ -132,7 +132,7 @@ class NewGfaParserTest {
     }
 
     private Graph parse(final String gfa) throws ParseException {
-        final NewGfaFile gfaFile = mock(NewGfaFile.class);
+        final GfaFile gfaFile = mock(GfaFile.class);
         when(gfaFile.readFile()).thenReturn(replaceSpacesWithTabs(gfa));
         return parser.parse(gfaFile);
     }

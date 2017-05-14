@@ -40,7 +40,7 @@ public final class NewGfaParser {
      * @throws ParseException if the given {@code String} is not GFA-compliant
      */
     @EnsuresNonNull("nodeVectors")
-    public Graph parse(final NewGfaFile gfaFile) throws ParseException {
+    public Graph parse(final GfaFile gfaFile) throws ParseException {
         final String gfa = gfaFile.readFile();
 
         final String[] lines = gfa.split("\\R");
