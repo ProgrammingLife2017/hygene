@@ -23,7 +23,7 @@ import java.net.URL;
 public final class Hygene extends Application {
     static final String TITLE = "Hygene";
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
-    private static final Logger logger = LogManager.getLogger(Hygene.class);
+    private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
     private static @MonotonicNonNull Hygene hygene;
 
     private @MonotonicNonNull GraphStore graphStore;
@@ -90,7 +90,7 @@ public final class Hygene extends Application {
         primaryStage.setScene(rootScene);
         primaryStage.show();
 
-        logger.info("Launching Hygene GUI");
+        LOGGER.info("Launching Hygene GUI");
     }
 
     /**

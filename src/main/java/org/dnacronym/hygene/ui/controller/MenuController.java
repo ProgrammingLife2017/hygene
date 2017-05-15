@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public final class MenuController implements Initializable {
-    private static final Logger logger = LogManager.getLogger(MenuController.class);
+    private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
@@ -56,7 +56,7 @@ public final class MenuController implements Initializable {
             populateRecentFilesMenu();
             initFileChooser();
         } catch (final UIInitialisationException e) {
-            logger.error("Failed to initialize MenuController.", e);
+            LOGGER.error("Failed to initialize MenuController.", e);
         }
     }
 
@@ -133,7 +133,7 @@ public final class MenuController implements Initializable {
                     try {
                         loadFile(file);
                     } catch (final Exception e) {
-                        logger.error("Failed to load the selected recent file.", e);
+                        LOGGER.error("Failed to load the selected recent file.", e);
                     }
                 });
             }
