@@ -4,6 +4,7 @@ import org.dnacronym.hygene.core.Files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class for both storing and retrieving recently opened files.
- *
+ * <p>
  * This class operates on {@link LinkedHashSet}s to guarantee uniqueness of recent file items. The terms
  * '{@link LinkedHashSet}' and 'list' will thus be used interchangeably in documentation of its methods.
  */
@@ -36,10 +37,10 @@ public final class RecentFiles {
      * @return the list of files.
      * @throws IOException if an exception occurs during file IO
      */
-    public static synchronized LinkedHashSet<File> getAll() throws IOException {
+    public static synchronized List<File> getAll() throws IOException {
         if (!Files.getInstance().getAppDataFile(DATA_FILE_NAME).exists()) {
             reset();
-            return new LinkedHashSet<>();
+            return new ArrayList<>();
         }
 
         final String content = Files.getInstance().getAppData(DATA_FILE_NAME);
@@ -54,7 +55,7 @@ public final class RecentFiles {
                 .map(line -> new File(line.trim()))
                 .collect(Collectors.toList()));
 
-        return truncate(files);
+        return new ArrayList<>(truncate(files));
     }
 
     /**

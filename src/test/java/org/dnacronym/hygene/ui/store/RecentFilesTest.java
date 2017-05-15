@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +35,7 @@ class RecentFilesTest {
         final File testFile = new File("Path/to/test.gfa");
         RecentFiles.add(testFile);
 
-        final LinkedHashSet<File> files = RecentFiles.getAll();
+        final List<File> files = RecentFiles.getAll();
         assertThat(files).contains(testFile);
     }
 
@@ -44,7 +44,7 @@ class RecentFilesTest {
         final File testFile = new File("Path/to/test.txt      \n");
         RecentFiles.add(testFile);
 
-        final LinkedHashSet<File> files = RecentFiles.getAll();
+        final List<File> files = RecentFiles.getAll();
         assertThat(files.size()).isEqualTo(1);
         assertThat(files.iterator().next().getPath()).isEqualTo(testFile.getPath().trim());
     }
@@ -56,7 +56,7 @@ class RecentFilesTest {
         RecentFiles.add(testFile1);
         RecentFiles.add(testFile2);
 
-        final LinkedHashSet<File> files = RecentFiles.getAll();
+        final List<File> files = RecentFiles.getAll();
         final Iterator<File> iterator = files.iterator();
         assertThat(iterator.next()).isEqualTo(testFile2);
         assertThat(iterator.next()).isEqualTo(testFile1);
@@ -69,7 +69,7 @@ class RecentFilesTest {
         RecentFiles.add(testFile1);
         RecentFiles.add(testFile2);
 
-        final LinkedHashSet<File> files = RecentFiles.getAll();
+        final List<File> files = RecentFiles.getAll();
         final Iterator<File> iterator = files.iterator();
         assertThat(iterator.next()).isEqualTo(testFile1);
         assertThat(iterator.hasNext()).isFalse();
@@ -80,7 +80,7 @@ class RecentFilesTest {
         final File testFile = new File("");
         RecentFiles.add(testFile);
 
-        final LinkedHashSet<File> files = RecentFiles.getAll();
+        final List<File> files = RecentFiles.getAll();
         assertThat(files).isEmpty();
     }
 
