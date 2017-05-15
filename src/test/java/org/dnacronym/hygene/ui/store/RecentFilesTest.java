@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +46,7 @@ class RecentFilesTest {
 
         final List<File> files = RecentFiles.getAll();
         assertThat(files.size()).isEqualTo(1);
-        assertThat(files.get(0).getPath()).isEqualTo(testFile.getPath().trim());
+        assertThat(files.iterator().next().getPath()).isEqualTo(testFile.getPath().trim());
     }
 
     @Test
@@ -56,7 +57,22 @@ class RecentFilesTest {
         RecentFiles.add(testFile2);
 
         final List<File> files = RecentFiles.getAll();
-        assertThat(files.indexOf(testFile1)).isGreaterThan(files.indexOf(testFile2));
+        final Iterator<File> iterator = files.iterator();
+        assertThat(iterator.next()).isEqualTo(testFile2);
+        assertThat(iterator.next()).isEqualTo(testFile1);
+    }
+
+    @Test
+    void testAddAndGetDuplicates() throws IOException {
+        final File testFile1 = new File("Path/to/same_name.gfa");
+        final File testFile2 = new File("Path/to/same_name.gfa");
+        RecentFiles.add(testFile1);
+        RecentFiles.add(testFile2);
+
+        final List<File> files = RecentFiles.getAll();
+        final Iterator<File> iterator = files.iterator();
+        assertThat(iterator.next()).isEqualTo(testFile1);
+        assertThat(iterator.hasNext()).isFalse();
     }
 
     @Test
