@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;
@@ -47,6 +48,7 @@ public final class NewGfaParser {
         allocateNodes(lines);
 
         nodeVectors = new int[nodeIds.size()][];
+        Arrays.setAll(nodeVectors, i -> Node.createEmptyNodeArray());
 
         for (int offset = 1; offset <= lines.length; offset++) {
             parseLine(lines[offset - 1], offset);
@@ -115,7 +117,11 @@ public final class NewGfaParser {
             final String name = st.nextToken();
             final String sequence = st.nextToken();
 
-            nodeVectors[nodeIds.get(name)] = NodeBuilder.start()
+            final int nodeId = Optional.ofNullable(nodeIds.get(name)).orElseThrow(
+                    () -> new ParseException("Node name '" + name + "' not registered with a node id")
+            );
+
+            nodeVectors[nodeId] = NodeBuilder.fromArray(nodeId, nodeVectors[nodeId])
                     .withLineNumber(offset)
                     .withColor(NodeColor.sequenceToColor(sequence))
                     .toArray();
