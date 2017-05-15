@@ -13,6 +13,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -73,7 +74,7 @@ public final class Hygene extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws IOException, UIInitialisationException {
         this.primaryStage = primaryStage;
         setInstance(this);
 

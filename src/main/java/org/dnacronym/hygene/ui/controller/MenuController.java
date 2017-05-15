@@ -64,8 +64,9 @@ public final class MenuController implements Initializable {
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
      * {@link Hygene#getPrimaryStage()#getOwner()}.
      *
-     * @param event {@link ActionEvent} associated with the event.
-     * @throws Exception if Unable to open the file, or parse the file.
+     * @param event {@link ActionEvent} associated with the event
+     * @throws IOException               if unable to open or parse the file
+     * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
      * @see GraphStore#load(File)
      */
     @FXML
@@ -132,7 +133,7 @@ public final class MenuController implements Initializable {
                 menuItem.addEventHandler(ActionEvent.ACTION, event -> {
                     try {
                         loadFile(file);
-                    } catch (final Exception e) {
+                    } catch (final IOException | UIInitialisationException e) {
                         LOGGER.error("Failed to load the selected recent file.", e);
                     }
                 });
@@ -185,12 +186,11 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
-        if (graphStore != null) {
-            graphStore.load(file);
-        } else {
+        if (graphStore == null) {
             throw new UIInitialisationException("Unable to load file.");
         }
 
+        graphStore.load(file);
         RecentFiles.add(file);
 
         // Update menu only in initialized state (not in test-cases)
