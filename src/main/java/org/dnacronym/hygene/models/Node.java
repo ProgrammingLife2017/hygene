@@ -93,7 +93,7 @@ public final class Node {
     /**
      * Getter for the {@link Node}'s sequence length.
      *
-     * @return the line number
+     * @return the sequence length of the {@link Node}
      */
     public int getSequenceLength() {
         return data[NODE_SEQUENCE_LENGTH_INDEX];
