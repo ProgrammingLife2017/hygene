@@ -25,6 +25,9 @@ import java.util.stream.IntStream;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class NewGfaParser {
+    private static final String SOURCE_NAME = "<source>";
+    private static final String SINK_NAME = "<sink>";
+
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeArrays;
@@ -83,9 +86,9 @@ public final class NewGfaParser {
      * @param gfa lines of a GFA-compliant {@code String}
      */
     private void allocateNodes(final BufferedReader gfa) {
-        addNodeId("<source>");
+        addNodeId(SOURCE_NAME);
         gfa.lines().parallel().filter(line -> line.startsWith("S\t")).forEach(line -> addNodeId(parseNodeName(line)));
-        addNodeId("<sink>");
+        addNodeId(SINK_NAME);
     }
 
     /**
@@ -218,12 +221,12 @@ public final class NewGfaParser {
     /**
      * Add edges for nodes without incoming or outgoing edges to the source or sink.
      *
-     * @param graph The Graph data structure including the source and sink
+     * @param graph the graph data structure including the source and sink
      * @throws ParseException if the graph has an invalid number of nodes
      */
     private void addEdgesToSentinelNodes(final Graph graph) throws ParseException {
-        final int source = getNodeId("<source>");
-        final int sink = getNodeId("<sink>");
+        final int source = getNodeId(SOURCE_NAME);
+        final int sink = getNodeId(SINK_NAME);
 
         if (nodeArrays.length == 2) {
             throw new ParseException("The GFA file should contain at least one segment.");
