@@ -62,7 +62,7 @@ public final class NewGfaParser {
                 offset++;
             }
         } catch (final IOException e) {
-            throw new ParseException("Error while reading file: " + e.getMessage(), e);
+            throw new ParseException("An error while reading the GFA file.", e);
         }
 
         return new Graph(nodeVectors, gfaFile);
