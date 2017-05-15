@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * Controller for the configuration window.
  */
 public final class ConfigController implements Initializable {
-    private static final Logger logger = LogManager.getLogger(ConfigController.class);
+    private static final Logger LOGGER = LogManager.getLogger(ConfigController.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
@@ -43,7 +43,7 @@ public final class ConfigController implements Initializable {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
-            logger.error("Failed to initialise Configuration Controller.", e);
+            LOGGER.error("Failed to initialise Configuration Controller.", e);
         }
 
         if (nodeHeight != null && nodeWidth != null && edgeColors != null
