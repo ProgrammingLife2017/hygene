@@ -33,9 +33,9 @@ class NewGfaParserTest {
 
     @Test
     void testParseEmpty() throws ParseException {
-        final Graph graph = parse("");
-
-        assertThat(graph.getNodeArrays()).isEmpty();
+        final Throwable e = catchThrowable(() -> parse(""));
+        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).hasMessageContaining("The GFA file should contain at least one segment.");
     }
 
     @Test
@@ -48,7 +48,7 @@ class NewGfaParserTest {
 
     @Test
     void testIgnoredRecordTypes() throws ParseException {
-        final String gfa = "H header\nC containment\nP path";
+        final String gfa = "H header\nC containment\nP path\nS name content";
         assertThat(parse(gfa)).isNotNull();
     }
 
@@ -73,8 +73,8 @@ class NewGfaParserTest {
         final String gfa = "S name1 contents\nS name2 contents\nS name3 contents";
         final Graph graph = parse(gfa);
 
-        assertThat(graph.getLineNumber(2)).isEqualTo(3);
-        assertThat(graph.getColor(2)).isEqualTo(NodeColor.BLACK);
+        assertThat(graph.getLineNumber(3)).isEqualTo(3);
+        assertThat(graph.getColor(3)).isEqualTo(NodeColor.BLACK);
     }
 
     @Test
@@ -82,9 +82,9 @@ class NewGfaParserTest {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
         final Graph graph = parse(gfa);
 
-        assertThat(graph.getNodeArrays()).hasSize(2);
-        assertThat(graph.getNode(0).getOutgoingEdges()).hasSize(1);
-        assertThat(graph.getNode(1).getIncomingEdges()).hasSize(1);
+        assertThat(graph.getNodeArrays()).hasSize(4);
+        assertThat(graph.getNode(1).getOutgoingEdges()).hasSize(1);
+        assertThat(graph.getNode(2).getIncomingEdges()).hasSize(1);
     }
 
     @Test
@@ -92,13 +92,13 @@ class NewGfaParserTest {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M\nL 2 + 1 + 0M";
         final Graph graph = parse(gfa);
 
-        Node firstNode = graph.getNode(0);
+        Node firstNode = graph.getNode(1);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 3, null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 3, null));
 
         assertThat(firstNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(firstNode.getIncomingEdges()).contains(new Edge(1, 0, 4, null));
+        assertThat(firstNode.getIncomingEdges()).contains(new Edge(2, 1, 4, null));
     }
 
     @Test
@@ -106,14 +106,14 @@ class NewGfaParserTest {
         final String gfa = "S 1 A\nL 1 + 2 + 0M\nS 2 B";
         final Graph graph = parse(gfa);
 
-        Node firstNode = graph.getNode(0);
-        Node secondNode = graph.getNode(1);
+        Node firstNode = graph.getNode(1);
+        Node secondNode = graph.getNode(2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 2, null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 2, null));
 
         assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(secondNode.getIncomingEdges()).contains(new Edge(0, 1, 2, null));
+        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, 2, null));
     }
 
     @Test
@@ -121,14 +121,36 @@ class NewGfaParserTest {
         final String gfa = "L 100 + 200 + 0M\nS 100 A\nS 200 B";
         final Graph graph = parse(gfa);
 
-        Node firstNode = graph.getNode(0);
-        Node secondNode = graph.getNode(1);
+        Node firstNode = graph.getNode(1);
+        Node secondNode = graph.getNode(2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(0, 1, 1, null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 1, null));
 
         assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(secondNode.getIncomingEdges()).contains(new Edge(0, 1, 1, null));
+        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, 1, null));
+    }
+
+    @Test
+    void testSourceNodesAreAdded() throws ParseException {
+        final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
+        final Graph graph = parse(gfa);
+
+        assertThat(graph.getNodeArrays()).hasSize(4);
+        assertThat(graph.getNode(0).toArray()).containsSequence(0, 0, -1, -1);
+        assertThat(graph.getNode(0).getNumberOfOutgoingEdges()).isEqualTo(1);
+        assertThat(graph.getNode(0).getNumberOfIncomingEdges()).isEqualTo(0);
+    }
+
+    @Test
+    void testSinkNodesAreAdded() throws ParseException {
+        final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
+        final Graph graph = parse(gfa);
+
+        assertThat(graph.getNodeArrays()).hasSize(4);
+        assertThat(graph.getNode(3).toArray()).containsSequence(0, 0, -1, -1);
+        assertThat(graph.getNode(3).getNumberOfOutgoingEdges()).isEqualTo(0);
+        assertThat(graph.getNode(3).getNumberOfIncomingEdges()).isEqualTo(1);
     }
 
 

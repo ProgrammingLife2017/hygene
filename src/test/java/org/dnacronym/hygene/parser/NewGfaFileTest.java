@@ -4,6 +4,7 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -25,6 +26,13 @@ class NewGfaFileTest {
             + "S\t11\tACCTT%n"
             + "S\t12\tTCAAGG%n"
             + "L\t11\t+\t12\t-\t4M%n");
+
+
+    @AfterAll
+    static void resetFactories() {
+        NewGfaParserFactory.setInstance(null);
+        MetadataParserFactory.setInstance(null);
+    }
 
 
     @Test
