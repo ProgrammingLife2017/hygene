@@ -45,6 +45,10 @@ dependencies {
     compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     compile("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
+    // RTree
+    compile("com.github.davidmoten:rtree:${rTreeVersion}")
+    compile("com.vividsolutions:jts-core:${jtsCoreVersion}")
+
     // FindBugs annotations
     compile("com.google.code.findbugs:annotations:${findBugsAnnotations}")
 
