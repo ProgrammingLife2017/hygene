@@ -79,9 +79,8 @@ public final class RecentFiles {
     public static synchronized void add(final File file) throws IOException {
         final LinkedHashSet<File> files = new LinkedHashSet<>();
 
-        // Add new file to front of list
+        // Add new file to front of list and add previous items to the end
         files.add(file);
-        // Add previous items to the end
         files.addAll(getAll());
 
         final List<String> lines = truncate(files).stream().map(File::getPath).collect(Collectors.toList());
