@@ -61,7 +61,7 @@ public final class NewGfaParser {
                 parseLine(line, offset + 1);
                 offset++;
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ParseException("Error while reading file: " + e.getMessage(), e);
         }
 
