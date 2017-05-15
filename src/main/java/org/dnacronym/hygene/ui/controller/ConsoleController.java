@@ -3,6 +3,8 @@ package org.dnacronym.hygene.ui.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -18,7 +20,10 @@ import java.util.ResourceBundle;
  * Controller for the console window.
  */
 public final class ConsoleController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(ConsoleController.class);
+
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
+
 
     @FXML
     private @MonotonicNonNull TextArea console;
@@ -28,7 +33,8 @@ public final class ConsoleController implements Initializable {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to initialise ConsoleController.", e);
+            return;
         }
 
         Optional.ofNullable(console).orElseThrow(() ->

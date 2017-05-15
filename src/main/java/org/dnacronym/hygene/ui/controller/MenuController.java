@@ -69,7 +69,7 @@ public final class MenuController implements Initializable {
      * @see GraphStore#load(File)
      */
     @FXML
-    void openFileAction(final ActionEvent event) throws Exception {
+    void openFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
         if (fileChooser == null || graphStore == null) {
             return;
         }
