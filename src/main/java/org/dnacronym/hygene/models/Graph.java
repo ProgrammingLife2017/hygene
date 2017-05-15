@@ -144,6 +144,43 @@ public final class Graph {
     }
 
     /**
+     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
+     * {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more neighbours.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param action    the function to apply to each neighbour's identifier
+     * @param condition the {@link Predicate} that holds until no more neighbours should be visited
+     */
+    public void visitNeighboursWhile(final int id, final SequenceDirection direction, final Consumer<Integer> action,
+                                     final Predicate<Integer> condition) {
+        final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
+                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+
+        for (int i = 0; i < getNeighbourCount(id, direction); i++) {
+            final int neighbourIndex = neighbourOffset + 2 * i;
+            if (!condition.test(neighbourIndex)) {
+                break;
+            }
+            action.accept(nodeArrays[id][neighbourIndex]);
+        }
+    }
+
+    /**
+     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
+     * {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more neighbours.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param action    the function to apply to each neighbour's identifier
+     * @param condition the {@link Predicate} that fails until no more neighbours should be visited
+     */
+    public void visitNeighboursUntil(final int id, final SequenceDirection direction, final Consumer<Integer> action,
+                                     final Predicate<Integer> condition) {
+        visitNeighboursWhile(id, direction, action, neighbour -> !condition.test(neighbour));
+    }
+
+    /**
      * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
