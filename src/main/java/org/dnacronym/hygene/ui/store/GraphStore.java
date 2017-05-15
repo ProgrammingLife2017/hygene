@@ -2,7 +2,10 @@ package org.dnacronym.hygene.ui.store;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 
@@ -17,6 +20,7 @@ import java.io.IOException;
  */
 public final class GraphStore {
     public static final String GFA_EXTENSION = "gfa";
+    private static final Logger LOGGER = LogManager.getLogger(GraphStore.class);
 
     private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
 
@@ -30,7 +34,8 @@ public final class GraphStore {
     public void load(@NonNull final File file) throws IOException {
         try {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
-            gfaFile.parse();
+            SequenceGraph graph = gfaFile.parse();
+            LOGGER.info(String.format("Parsed a new SequenceGraph with %d nodes.", graph.size()));
 
             gfaFileProperty.set(gfaFile);
         } catch (final ParseException e) {
