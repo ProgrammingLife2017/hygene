@@ -27,15 +27,25 @@
         <exclude name="ShortVariable" />
         <!-- Avoid duplication because we override the minimum property. -->
         <exclude name="LongVariable" />
+        <!-- Avoid duplication because we override the minimum property. -->
+        <exclude name="ShortClassName" />
     </rule>
     <rule ref="rulesets/java/naming.xml/LongVariable">
         <properties>
             <property name="minimum" value="36" />
         </properties>
     </rule>
+    <rule ref="rulesets/java/naming.xml/ShortClassName">
+        <properties>
+            <property name="minimum" value="4" />
+        </properties>
+    </rule>
     <rule ref="rulesets/java/optimizations.xml" />
     <rule ref="rulesets/java/strictexception.xml" />
-    <rule ref="rulesets/java/strings.xml" />
+    <rule ref="rulesets/java/strings.xml">
+        <!-- Too many false positives. -->
+        <exclude name="AvoidDuplicateLiterals" />
+    </rule>
     <rule ref="rulesets/java/sunsecure.xml" />
     <rule ref="rulesets/java/typeresolution.xml" />
     <rule ref="rulesets/java/unnecessary.xml" />
