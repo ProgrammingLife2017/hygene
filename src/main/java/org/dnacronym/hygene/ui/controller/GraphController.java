@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  * Controller for the graph window of the application. Handles user interaction with the graph.
  */
 public final class GraphController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
+    private static final lOGGER logger = LogManager.getLogger(GraphController.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
     private @MonotonicNonNull GraphStore graphStore;
@@ -39,13 +39,13 @@ public final class GraphController implements Initializable {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
-            LOGGER.error("Failed to initialize GraphController.", e);
+            lOGGER.error("Failed to initialize GraphController.", e);
             return;
         }
 
         if (graphVisualizer != null && graphCanvas != null && graphPane != null) {
+            graphCanvas.heightProperty().bind(graphPane.heightProperty());
             graphVisualizer.setCanvas(graphCanvas);
-            graphVisualizer.bindCanvasHeight(graphPane.heightProperty());
         }
 
         if (graphPane != null && graphStore != null) {
@@ -85,7 +85,7 @@ public final class GraphController implements Initializable {
         try {
             graphVisualizer.draw(gfaFile.getGraph());
         } catch (final ParseException e) {
-            LOGGER.error("Failed to update graph", e);
+            lOGGER.error("Failed to update graph.", e);
         }
     }
 }
