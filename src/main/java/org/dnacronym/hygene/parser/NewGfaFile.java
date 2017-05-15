@@ -7,6 +7,7 @@ import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -56,7 +57,7 @@ public class NewGfaFile {
      * @throws ParseException if the node metadata cannot be parsed
      */
     public final NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
-        return metadataParser.parseNodeMetadata(readFile(), lineNumber);
+        return metadataParser.parseNodeMetadata(this, lineNumber);
     }
 
     /**
@@ -67,7 +68,7 @@ public class NewGfaFile {
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public final EdgeMetadata parseEdgeMetadata(final int lineNumber) throws ParseException {
-        return metadataParser.parseEdgeMetadata(readFile(), lineNumber);
+        return metadataParser.parseEdgeMetadata(this, lineNumber);
     }
 
     /**
@@ -98,9 +99,9 @@ public class NewGfaFile {
      * @return contents of the GFA file.
      * @throws ParseException if the given file name cannot be read
      */
-    public final String readFile() throws ParseException {
+    public final BufferedReader readFile() throws ParseException {
         try {
-            return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
+            return Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (final IOException e) {
             throw new ParseException("File '" + fileName + "' cannot be read. ", e);
         }
