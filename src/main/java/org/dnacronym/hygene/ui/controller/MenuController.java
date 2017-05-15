@@ -126,8 +126,9 @@ public final class MenuController implements Initializable {
             // Remove default information item (telling the user that there are no recent files)
             recentFilesMenu.getItems().clear();
 
+            MenuItem menuItem;
             for (final File file : recentFiles) {
-                final MenuItem menuItem = new MenuItem(file.getPath());
+                menuItem = new MenuItem(file.getPath());
                 recentFilesMenu.getItems().add(menuItem);
 
                 menuItem.addEventHandler(ActionEvent.ACTION, event -> {
