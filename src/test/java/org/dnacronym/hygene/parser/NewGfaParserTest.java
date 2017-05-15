@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -74,6 +75,7 @@ class NewGfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getLineNumber(3)).isEqualTo(3);
+        assertThat(graph.getSequenceLength(3)).isEqualTo(8);
         assertThat(graph.getColor(3)).isEqualTo(NodeColor.BLACK);
     }
 

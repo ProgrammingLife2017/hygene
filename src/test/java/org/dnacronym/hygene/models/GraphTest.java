@@ -20,6 +20,13 @@ class GraphTest {
     }
 
     @Test
+    void testGetSequenceLength() {
+        final Graph graph = createGraphWithNodes(NodeBuilder.start().withSequenceLength(5).create().toArray());
+
+        assertThat(graph.getSequenceLength(0)).isEqualTo(5);
+    }
+
+    @Test
     void testGetNodeColor() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withColor(NodeColor.BLACK).create().toArray());
 

@@ -80,6 +80,16 @@ public final class Graph {
     }
 
     /**
+     * Getter for the sequence length of a {@link Node}.
+     *
+     * @param id the {@link Node}'s id
+     * @return the {@link Node}'s line number.
+     */
+    public int getSequenceLength(final int id) {
+        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
+    }
+
+    /**
      * Getter for the color of a {@link Node}.
      *
      * @param id the {@link Node}'s id

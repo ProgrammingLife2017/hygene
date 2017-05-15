@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 public final class NodeBuilder {
     private int nodeId;
     private int lineNumber;
+    private int sequenceLength;
     private NodeColor color = NodeColor.BLACK;
     private int unscaledXPosition = -1;
     private int unscaledYPosition = -1;
@@ -40,6 +41,7 @@ public final class NodeBuilder {
         final NodeBuilder builder = new NodeBuilder();
         builder.nodeId = nodeId;
         builder.lineNumber = node.getLineNumber();
+        builder.sequenceLength = node.getSequenceLength();
         builder.color = node.getColor();
         builder.unscaledXPosition = node.getUnscaledXPosition();
         builder.unscaledYPosition = node.getUnscaledYPosition();
@@ -69,6 +71,18 @@ public final class NodeBuilder {
      */
     public NodeBuilder withLineNumber(final int lineNumber) {
         this.lineNumber = lineNumber;
+
+        return this;
+    }
+
+    /**
+     * Sets the sequence length for the {@code Node} under construction.
+     *
+     * @param sequenceLength the length of the sequence belonging to the node
+     * @return current instance of the builder to provide a fluent interface.
+     */
+    public NodeBuilder withSequenceLength(final int sequenceLength) {
+        this.sequenceLength = sequenceLength;
 
         return this;
     }
@@ -143,6 +157,7 @@ public final class NodeBuilder {
     public int[] toArray() {
         final IntStream detailsArray = Arrays.stream(new int[] {
                 lineNumber,
+                sequenceLength,
                 color.ordinal(),
                 unscaledXPosition,
                 unscaledYPosition,

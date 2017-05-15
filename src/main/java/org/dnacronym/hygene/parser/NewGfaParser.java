@@ -150,6 +150,7 @@ public final class NewGfaParser {
 
             nodeArrays[nodeId] = NodeBuilder.fromArray(nodeId, nodeArrays[nodeId])
                     .withLineNumber(offset)
+                    .withSequenceLength(sequence.length())
                     .withColor(NodeColor.sequenceToColor(sequence))
                     .toArray();
 
