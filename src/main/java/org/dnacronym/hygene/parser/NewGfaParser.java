@@ -5,6 +5,7 @@ import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;
+import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 
 /**
@@ -25,14 +27,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class NewGfaParser {
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
-    private int[][] nodeVectors;
+    private int[][] nodeArrays;
 
     /**
      * Constructs and initializes a new instance of {@code GfaParser}.
      */
     public NewGfaParser() {
         this.nodeIds = new ConcurrentHashMap<>();
-        this.nodeVectors = new int[0][];
+        this.nodeArrays = new int[0][];
     }
 
     /**
@@ -42,14 +44,14 @@ public final class NewGfaParser {
      * @return a {@code Graph}
      * @throws ParseException if the given {@code String} is not GFA-compliant
      */
-    @EnsuresNonNull("nodeVectors")
+    @EnsuresNonNull("nodeArrays")
     public Graph parse(final NewGfaFile gfaFile) throws ParseException {
         BufferedReader gfa = gfaFile.readFile();
 
         allocateNodes(gfa);
 
-        nodeVectors = new int[nodeIds.size()][];
-        Arrays.setAll(nodeVectors, i -> Node.createEmptyNodeArray());
+        nodeArrays = new int[nodeIds.size()][];
+        Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
 
         // Get new buffered reader
         gfa = gfaFile.readFile();
@@ -65,7 +67,11 @@ public final class NewGfaParser {
             throw new ParseException("An error while reading the GFA file.", e);
         }
 
-        return new Graph(nodeVectors, gfaFile);
+        final Graph graph = new Graph(nodeArrays, gfaFile);
+
+        addEdgesToSentinelNodes(graph);
+
+        return graph;
     }
 
     /**
@@ -77,10 +83,19 @@ public final class NewGfaParser {
      * @param gfa lines of a GFA-compliant {@code String}
      */
     private void allocateNodes(final BufferedReader gfa) {
-        gfa.lines().parallel().filter(line -> line.startsWith("S\t")).forEach(line -> {
-            nodeIds.put(parseNodeName(line), nodeVectorPosition.get());
-            nodeVectorPosition.incrementAndGet();
-        });
+        addNodeId("<source>");
+        gfa.lines().parallel().filter(line -> line.startsWith("S\t")).forEach(line -> addNodeId(parseNodeName(line)));
+        addNodeId("<sink>");
+    }
+
+    /**
+     * Add a node ID to the list of node IDs and increment the node vector position.
+     *
+     * @param nodeName The name of the node as specified in the GFA file
+     */
+    private void addNodeId(final String nodeName) {
+        nodeIds.put(nodeName, nodeVectorPosition.get());
+        nodeVectorPosition.incrementAndGet();
     }
 
     /**
@@ -128,11 +143,9 @@ public final class NewGfaParser {
             final String name = st.nextToken();
             final String sequence = st.nextToken();
 
-            final int nodeId = Optional.ofNullable(nodeIds.get(name)).orElseThrow(
-                    () -> new ParseException("Node name '" + name + "' not registered with a node id")
-            );
+            final int nodeId = getNodeId(name);
 
-            nodeVectors[nodeId] = NodeBuilder.fromArray(nodeId, nodeVectors[nodeId])
+            nodeArrays[nodeId] = NodeBuilder.fromArray(nodeId, nodeArrays[nodeId])
                     .withLineNumber(offset)
                     .withColor(NodeColor.sequenceToColor(sequence))
                     .toArray();
@@ -156,12 +169,8 @@ public final class NewGfaParser {
             final String to = st.nextToken();
             st.nextToken();
 
-            final int fromId = Optional.ofNullable(nodeIds.get(from)).orElseThrow(
-                    () -> new ParseException("Link has reference to non existing node " + from)
-            );
-            final int toId = Optional.ofNullable(nodeIds.get(to)).orElseThrow(
-                    () -> new ParseException("Link has reference to non existing node " + to)
-            );
+            final int fromId = getNodeId(from);
+            final int toId = getNodeId(to);
 
             addIncomingEdge(fromId, toId, offset);
             addOutgoingEdge(fromId, toId, offset);
@@ -190,7 +199,7 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
-        nodeVectors[toId] = NodeBuilder.fromArray(toId, nodeVectors[toId])
+        nodeArrays[toId] = NodeBuilder.fromArray(toId, nodeArrays[toId])
                 .withIncomingEdge(fromId, offset).toArray();
     }
 
@@ -202,7 +211,47 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
-        nodeVectors[fromId] = NodeBuilder.fromArray(fromId, nodeVectors[fromId])
+        nodeArrays[fromId] = NodeBuilder.fromArray(fromId, nodeArrays[fromId])
                 .withOutgoingEdge(toId, offset).toArray();
+    }
+
+    /**
+     * Add edges for nodes without incoming or outgoing edges to the source or sink.
+     *
+     * @param graph The Graph data structure including the source and sink
+     * @throws ParseException if the graph has an invalid number of nodes
+     */
+    private void addEdgesToSentinelNodes(final Graph graph) throws ParseException {
+        final int source = getNodeId("<source>");
+        final int sink = getNodeId("<sink>");
+
+        if (nodeArrays.length == 2) {
+            throw new ParseException("The GFA file should contain at least one segment.");
+        }
+
+        IntStream.range(1, nodeArrays.length - 1).parallel().forEach(nodeId -> {
+            if (graph.getNeighbourCount(nodeId, SequenceDirection.LEFT) == 0) {
+                addIncomingEdge(source, nodeId, -1);
+                addOutgoingEdge(source, nodeId, -1);
+            }
+
+            if (graph.getNeighbourCount(nodeId, SequenceDirection.RIGHT) == 0) {
+                addIncomingEdge(nodeId, sink, -1);
+                addOutgoingEdge(nodeId, sink, -1);
+            }
+        });
+    }
+
+    /**
+     * Gets node id belonging to a node name.
+     *
+     * @param nodeName name of the node as specified in the GFA file
+     * @return node id belonging to a node name
+     * @throws ParseException if the node name does not exist
+     */
+    private int getNodeId(final String nodeName) throws ParseException {
+        return Optional.ofNullable(nodeIds.get(nodeName)).orElseThrow(
+                () -> new ParseException("Link has reference to non existing node " + nodeName)
+        );
     }
 }

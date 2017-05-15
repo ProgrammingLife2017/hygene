@@ -54,7 +54,7 @@ public final class Node {
      * @return an empty node array.
      */
     public static int[] createEmptyNodeArray() {
-        return new int[NODE_EDGE_DATA_OFFSET];
+        return new int[]{0, 0, -1, -1, 0};
     }
 
 
