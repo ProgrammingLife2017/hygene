@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 public final class NewGfaParser {
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private int[][] nodeVectors;
-    private int nodeVectorPosition = 0;
+    private int nodeVectorPosition;
 
     /**
      * Constructs and initializes a new instance of {@code GfaParser}.

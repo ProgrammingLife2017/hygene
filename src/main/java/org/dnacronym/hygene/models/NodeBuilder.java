@@ -10,11 +10,11 @@ import java.util.stream.IntStream;
  * based on parameters that are converted into a node array.
  */
 public final class NodeBuilder {
-    private int nodeId = 0;
-    private int lineNumber = 0;
+    private int nodeId;
+    private int lineNumber;
     private NodeColor color = NodeColor.BLACK;
-    private int unscaledXPosition = 0;
-    private int unscaledYPosition = 0;
+    private int unscaledXPosition = -1;
+    private int unscaledYPosition = -1;
     private Set<Edge> incomingEdges = new TreeSet<>();
     private Set<Edge> outgoingEdges = new TreeSet<>();
 
