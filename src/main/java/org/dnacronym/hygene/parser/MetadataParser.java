@@ -83,7 +83,7 @@ public final class MetadataParser {
             throw new ParseException("Line " + lineNumber + " is not a valid line number.");
         }
 
-        return gfa.lines().skip(lineNumber - 1).findFirst().orElseThrow(
+        return gfa.lines().skip(lineNumber - 1L).findFirst().orElseThrow(
                 () -> new ParseException("Line " + lineNumber + " is not found in GFA file.")
         );
     }
