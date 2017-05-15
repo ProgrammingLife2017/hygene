@@ -11,6 +11,7 @@
     <rule ref="rulesets/java/codesize.xml" />
     <rule ref="rulesets/java/coupling.xml">
         <exclude name="LawOfDemeter" />
+        <exclude name="LoosePackageCoupling" />
     </rule>
     <rule ref="rulesets/java/design.xml" />
     <rule ref="rulesets/java/empty.xml" />
@@ -21,7 +22,17 @@
     </rule>
     <rule ref="rulesets/java/junit.xml" />
     <rule ref="rulesets/java/logging-java.xml" />
-    <rule ref="rulesets/java/naming.xml" />
+    <rule ref="rulesets/java/naming.xml">
+        <!-- Skipping because id (identifier), rs (ResultSet), ps (PreparedStatement) are OK, for example. -->
+        <exclude name="ShortVariable" />
+        <!-- Avoid duplication because we override the minimum property. -->
+        <exclude name="LongVariable" />
+    </rule>
+    <rule ref="rulesets/java/naming.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="36" />
+        </properties>
+    </rule>
     <rule ref="rulesets/java/optimizations.xml" />
     <rule ref="rulesets/java/strictexception.xml" />
     <rule ref="rulesets/java/strings.xml" />
