@@ -19,7 +19,7 @@ import org.dnacronym.hygene.ui.store.RecentFiles;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -114,7 +114,7 @@ public final class MenuController implements Initializable {
             throw new UIInitialisationException("Recent files menu instance not initialised by framework.");
         }
 
-        final List<File> recentFiles;
+        final LinkedHashSet<File> recentFiles;
         try {
             recentFiles = RecentFiles.getAll();
         } catch (final IOException e) {
