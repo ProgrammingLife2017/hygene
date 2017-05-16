@@ -308,9 +308,6 @@ public final class GraphVisualizer {
         clear();
         this.sequenceGraph = sequenceGraph;
         if (sequenceGraph != null && canvas != null) {
-            final double canvasWidth = sequenceGraph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
-            canvas.setWidth(canvasWidth);
-
             // TODO get actual laneCount from FAFOSP (as soon as fixed)
             final int laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
