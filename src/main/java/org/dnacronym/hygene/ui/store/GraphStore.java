@@ -2,10 +2,7 @@ package org.dnacronym.hygene.ui.store;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.dnacronym.hygene.models.SequenceGraph;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 
