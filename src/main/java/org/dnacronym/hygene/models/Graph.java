@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeLineNumber, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
+ * [[nodeLineNumber, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
  */
 public final class Graph {
     private final int[][] nodeArrays;
@@ -77,6 +77,16 @@ public final class Graph {
      */
     public int getLineNumber(final int id) {
         return nodeArrays[id][Node.NODE_LINE_NUMBER_INDEX];
+    }
+
+    /**
+     * Getter for the sequence length of a {@link Node}.
+     *
+     * @param id the {@link Node}'s id
+     * @return the {@link Node}'s sequence length.
+     */
+    public int getSequenceLength(final int id) {
+        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
     }
 
     /**

@@ -21,6 +21,13 @@ class NodeTest {
     }
 
     @Test
+    void testGetSequenceLength() {
+        final Node node = NodeBuilder.start().withSequenceLength(3).create();
+
+        assertThat(node.getSequenceLength()).isEqualTo(3);
+    }
+
+    @Test
     void testGetColor() {
         final Node node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
 
@@ -46,6 +53,7 @@ class NodeTest {
         final Node node = NodeBuilder.start()
                 .withNodeId(42)
                 .withLineNumber(1)
+                .withSequenceLength(5)
                 .withColor(NodeColor.BLACK)
                 .withUnscaledXPosition(3)
                 .withUnscaledYPosition(4)
@@ -55,7 +63,7 @@ class NodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[]{
-                1, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                1, 5, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }
 
