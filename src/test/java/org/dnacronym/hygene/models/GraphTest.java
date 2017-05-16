@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,6 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for {@code SequenceGraph}s.
  */
 class GraphTest {
+    private Consumer<Integer> dummyConsumer = ignored -> {
+    };
+
+
     @Test
     void testGetLineNumber() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withLineNumber(3).create().toArray());
@@ -179,7 +184,9 @@ class GraphTest {
         assertThat(neighbours).containsExactly(0, 1, 2, 3, 4);
     }
 
-    // Tests that all neighbours are visited if we visit "while true".
+    /**
+     * Tests that all neighbours are visited if we visit "while true".
+     */
     @Test
     void testVisitNeighboursWhileTrue() {
         final int[] node = NodeBuilder.start()
@@ -190,12 +197,14 @@ class GraphTest {
         final Graph graph = createGraphWithNodes(node);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitNeighboursWhile(0, SequenceDirection.RIGHT, neighbours::add, ignored -> true);
+        graph.visitNeighboursWhile(0, SequenceDirection.RIGHT, ignored -> true, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(92, 69, 30);
     }
 
-    // Tests that no neighbours are visited if we visit "while false".
+    /**
+     * Tests that no neighbours are visited if we visit "while false".
+     */
     @Test
     void testVisitNeighboursWhileFalse() {
         final int[] node = NodeBuilder.start()
@@ -207,12 +216,14 @@ class GraphTest {
         final Graph graph = createGraphWithNodes(node);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitNeighboursWhile(0, SequenceDirection.RIGHT, neighbours::add, ignored -> false);
+        graph.visitNeighboursWhile(0, SequenceDirection.RIGHT, ignored -> false, neighbours::add);
 
         assertThat(neighbours).isEmpty();
     }
 
-    // Tests that neighbours are visited while the number of visited neighbours has a particular value.
+    /**
+     * Tests that neighbours are visited while the number of visited neighbours has a particular value.
+     */
     @Test
     void testVisitNeighboursWhileSize() {
         final int[] node = NodeBuilder.start()
@@ -225,12 +236,38 @@ class GraphTest {
         final Graph graph = createGraphWithNodes(node);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitNeighboursWhile(0, SequenceDirection.LEFT, neighbours::add, ignored -> neighbours.size() < 3);
+        graph.visitNeighboursWhile(0, SequenceDirection.LEFT, ignored -> neighbours.size() < 3, neighbours::add);
 
         assertThat(neighbours).hasSize(3);
     }
 
-    // Tests that all neighbours are visited if we visit "until false".
+    /**
+     * Tests that the exit action is performed on the expected node.
+     */
+    @Test
+    void testVisitNeighboursWhileCatchAction() {
+        final int[] node = NodeBuilder.start()
+                .withIncomingEdge(75, 0)
+                .withIncomingEdge(25, 0)
+                .withIncomingEdge(22, 0)
+                .withIncomingEdge(50, 0)
+                .withIncomingEdge(58, 0)
+                .toArray();
+        final Graph graph = createGraphWithNodes(node);
+
+        final int[] exitNeighbour = new int[1];
+        graph.visitNeighboursWhile(0, SequenceDirection.LEFT,
+                neighbour -> neighbour != 22,
+                neighbour -> exitNeighbour[0] = neighbour,
+                dummyConsumer
+        );
+
+        assertThat(exitNeighbour[0]).isEqualTo(22);
+    }
+
+    /**
+     * Tests that all neighbours are visited if we visit "until false".
+     */
     @Test
     void testVisitNeighboursUntilFalse() {
         final int[] node = NodeBuilder.start()
@@ -241,12 +278,14 @@ class GraphTest {
         final Graph graph = createGraphWithNodes(node);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitNeighboursUntil(0, SequenceDirection.LEFT, neighbours::add, ignored -> false);
+        graph.visitNeighboursUntil(0, SequenceDirection.LEFT, ignored -> false, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(94, 13, 23);
     }
 
-    // Tests that all neighbours are visited if we visit "until true".
+    /**
+     * Tests that all neighbours are visited if we visit "until true".
+     */
     @Test
     void testVisitNeighboursUntilTrue() {
         final int[] node = NodeBuilder.start()
@@ -256,12 +295,14 @@ class GraphTest {
         final Graph graph = createGraphWithNodes(node);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitNeighboursUntil(0, SequenceDirection.RIGHT, neighbours::add, ignored -> true);
+        graph.visitNeighboursUntil(0, SequenceDirection.RIGHT, ignored -> true, neighbours::add);
 
         assertThat(neighbours).isEmpty();
     }
 
-    // Tests that neighbours are visited until the number of visited neighbours exceeds a particular value.
+    /**
+     * Tests that neighbours are visited until the number of visited neighbours exceeds a particular value.
+     */
     @Test
     void testVisitNeighboursUntilSize() {
         final int[] node = NodeBuilder.start()
@@ -275,9 +316,32 @@ class GraphTest {
         final Graph graph = createGraphWithNodes(node);
 
         final List<Integer> neighbours = new ArrayList<>();
-        graph.visitNeighboursUntil(0, SequenceDirection.LEFT, neighbours::add, ignored -> neighbours.size() > 4);
+        graph.visitNeighboursUntil(0, SequenceDirection.LEFT, ignored -> neighbours.size() > 4, neighbours::add);
 
         assertThat(neighbours).hasSize(5);
+    }
+
+    /**
+     * Tests that the exit action is performed on the expected node.
+     */
+    @Test
+    void testVisitNeighbourUntilCatchAction() {
+        final int[] node = NodeBuilder.start()
+                .withOutgoingEdge(83, 0)
+                .withIncomingEdge(98, 0)
+                .withIncomingEdge(94, 0)
+                .withIncomingEdge(35, 0)
+                .toArray();
+        final Graph graph = createGraphWithNodes(node);
+
+        final int[] exitNeighbour = new int[1];
+        graph.visitNeighboursUntil(0, SequenceDirection.LEFT,
+                neighbour -> neighbour == 35,
+                neighbour -> exitNeighbour[0] = neighbour,
+                dummyConsumer
+        );
+
+        assertThat(exitNeighbour[0]).isEqualTo(35);
     }
 
 
