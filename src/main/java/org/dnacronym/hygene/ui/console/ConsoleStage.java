@@ -22,7 +22,7 @@ public class ConsoleStage {
     private static final String TITLE = "Console";
     private static final String CONSOLE_VIEW = "/ui/view/console_view.fxml";
     private static final int CONSOLE_WINDOW_WIDTH = 780;
-    private static final int CONSOLE_WINDTH_HEIGHT = 600;
+    private static final int CONSOLE_WIDTH_HEIGHT = 600;
 
     private Stage stage;
 
@@ -45,9 +45,29 @@ public class ConsoleStage {
             throw new UIInitialisationException("Could not initialize the provided FXML resource.");
         }
 
-        final Scene rootScene = new Scene(parent, CONSOLE_WINDOW_WIDTH, CONSOLE_WINDTH_HEIGHT);
+        final Scene rootScene = new Scene(parent, CONSOLE_WINDOW_WIDTH, CONSOLE_WIDTH_HEIGHT);
         stage.setScene(rootScene);
 
         Platform.runLater(stage::show);
+    }
+
+    /**
+     * Gets the {@link Stage} in {@link ConsoleStage}.
+     *
+     * @return the {@link Stage}.
+     */
+    public final Stage getStage() {
+        return stage;
+    }
+
+    /**
+     * Brings the console window back to the from of the screen.
+     */
+    public final void bringToFront() {
+        if (stage.isShowing()) {
+            stage.toFront();
+        } else {
+            stage.show();
+        }
     }
 }

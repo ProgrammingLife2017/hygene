@@ -39,7 +39,7 @@ public final class MenuController implements Initializable {
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
 
-    private Stage consoleWindow = new Stage();
+    private @MonotonicNonNull ConsoleStage consoleStage;
 
 
     /**
@@ -91,10 +91,24 @@ public final class MenuController implements Initializable {
         }
     }
 
+    /**
+     * Opens the an independent stage showing the current.
+     *
+     * @param event {@link ActionEvent} associated with the event
+     * @throws IOException if unable to located the FXML resource.
+     */
     @FXML
-    void openConsoleAction(final ActionEvent event) throws IOException, UIInitialisationException {
-        new ConsoleStage();
-        LOGGER.info("Launched GUI console window");
+    void openConsoleAction(final ActionEvent event) throws IOException {
+        try {
+            if (consoleStage == null) {
+                consoleStage = new ConsoleStage();
+                LOGGER.info("Launched GUI console window");
+            }
+
+            consoleStage.bringToFront();
+        } catch (UIInitialisationException e) {
+            LOGGER.error(e);
+        }
     }
 
     /**
