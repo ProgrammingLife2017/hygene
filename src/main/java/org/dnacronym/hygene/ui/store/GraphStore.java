@@ -20,7 +20,6 @@ import java.io.IOException;
  */
 public final class GraphStore {
     public static final String GFA_EXTENSION = "gfa";
-    private static final Logger LOGGER = LogManager.getLogger(GraphStore.class);
 
     private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
 
@@ -34,8 +33,7 @@ public final class GraphStore {
     public void load(@NonNull final File file) throws IOException {
         try {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
-            final SequenceGraph graph = gfaFile.parse();
-            LOGGER.info(String.format("Parsed a new SequenceGraph with %d nodes.", graph.size()));
+            gfaFile.parse();
 
             gfaFileProperty.set(gfaFile);
         } catch (final ParseException e) {
