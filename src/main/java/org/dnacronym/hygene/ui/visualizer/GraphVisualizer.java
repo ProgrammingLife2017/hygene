@@ -57,6 +57,7 @@ public final class GraphVisualizer {
     private @MonotonicNonNull Canvas canvas;
     private @MonotonicNonNull GraphicsContext graphicsContext;
 
+
     /**
      * Create a new {@link GraphVisualizer} instance.
      */
@@ -130,11 +131,15 @@ public final class GraphVisualizer {
             final List<Integer> neighbours = new ArrayList<>();
             graph.visitNeighbours(centerNodeId, SequenceDirection.LEFT, nodeId -> {
                 neighbours.add(nodeId);
-                lanes[0] = Math.max(lanes[0], graph.getUnscaledYPosition(nodeId));
+                if (graph != null) {
+                    lanes[0] = Math.max(lanes[0], graph.getUnscaledYPosition(nodeId));
+                }
             });
             graph.visitNeighbours(centerNodeId, SequenceDirection.RIGHT, nodeId -> {
                 neighbours.add(nodeId);
-                lanes[0] = Math.max(lanes[0], graph.getUnscaledYPosition(nodeId));
+                if (graph != null) {
+                    lanes[0] = Math.max(lanes[0], graph.getUnscaledYPosition(nodeId));
+                }
             });
 
             this.laneHeight = lanes[0] / canvas.getHeight();
@@ -209,9 +214,16 @@ public final class GraphVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.setOnMouseClicked(event -> {
-            final int[] positions = toNodeCoordinates(event.getX(), event.getY());
-            final int nodeXPos = positions[0];
+            final int[] positions = toNodeCoordinates(canvas, event.getX(), event.getY());
+            final int nodeX = positions[0];
             final int nodeLane = positions[1];
+
+            if (graph != null) {
+                final int nodeId = graph.getNode(centerNodeProperty.get(), rangeProperty.get(), nodeX, nodeLane);
+                if (nodeId != -1) {
+                    selectedNodeProperty.set(graph.getNode(nodeId));
+                }
+            }
         });
     }
 
@@ -220,12 +232,13 @@ public final class GraphVisualizer {
      * <p>
      * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
      *
-     * @param xPos x position onscreen
-     * @param yPos y position onscreen
+     * @param canvas
+     * @param xPos   x position onscreen
+     * @param yPos   y position onscreen
      * @return x and y position in a double array of size 2 which correspond with x and y position of {@link
      * Node}.
      */
-    private int[] toNodeCoordinates(final double xPos, final double yPos) {
+    private int[] toNodeCoordinates(Canvas canvas, final double xPos, final double yPos) {
         final int diameter = maxX - minX;
 
         final int unscaledX = (int) (xPos / canvas.getWidth()) * diameter + minX;
