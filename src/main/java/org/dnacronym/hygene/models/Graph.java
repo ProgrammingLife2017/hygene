@@ -119,7 +119,7 @@ public final class Graph {
     public int getNeighbourCount(final int id, final SequenceDirection direction) {
         return direction.ternary(
                 (nodeArrays[id].length
-                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
+                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE
                         - (Node.NODE_OUTGOING_EDGES_INDEX + 1)
                 ) / Node.EDGE_DATA_SIZE,
                 nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
@@ -135,7 +135,7 @@ public final class Graph {
      */
     public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
         final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+                + direction.ternary(getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
 
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
             final int neighbourIndex = neighbourOffset + 2 * i;
@@ -155,7 +155,7 @@ public final class Graph {
     public void visitNeighboursWhile(final int id, final SequenceDirection direction, final Consumer<Integer> action,
                                      final Predicate<Integer> condition) {
         final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+                + direction.ternary(getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
 
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
             final int neighbourIndex = neighbourOffset + 2 * i;

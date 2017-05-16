@@ -80,6 +80,7 @@ class GraphTest {
     void testGetLeftNeighbourCount() {
         final int[] node = NodeBuilder.start()
                 .withOutgoingEdge(74, 0)
+                .withOutgoingEdge(90, 0)
                 .withIncomingEdge(45, 0)
                 .withIncomingEdge(85, 0)
                 .withIncomingEdge(30, 0)
@@ -111,6 +112,7 @@ class GraphTest {
                 .withIncomingEdge(15, 0)
                 .withIncomingEdge(67, 0)
                 .withIncomingEdge(10, 0)
+                .withOutgoingEdge(77, 0)
                 .withIncomingEdge(60, 0)
                 .toArray();
         final Graph graph = createGraphWithNodes(node);
