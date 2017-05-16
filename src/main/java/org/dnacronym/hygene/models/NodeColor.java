@@ -1,15 +1,24 @@
 package org.dnacronym.hygene.models;
 
 
+import javafx.scene.paint.Color;
+
 /**
  * Represents the color of node for the graph.
  */
 public enum NodeColor {
-    GREEN,
-    ORANGE,
-    PURPLE,
-    YELLOW,
-    BLACK;
+    GREEN(Color.GREEN),
+    ORANGE(Color.ORANGE),
+    PURPLE(Color.PURPLE),
+    YELLOW(Color.YELLOW),
+    BLACK(Color.BLACK);
+
+    private Color color;
+
+
+    NodeColor(final Color color) {
+        this.color = color;
+    }
 
 
     /**
@@ -31,5 +40,9 @@ public enum NodeColor {
             default:
                 return BLACK;
         }
+    }
+
+    public Color getFXColor() {
+        return color;
     }
 }
