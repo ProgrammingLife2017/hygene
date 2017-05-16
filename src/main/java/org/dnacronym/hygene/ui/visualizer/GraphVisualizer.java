@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -64,7 +65,7 @@ public final class GraphVisualizer {
 
         selectedNodeProperty = new SimpleObjectProperty<>();
 
-        centerNodeProperty = new SimpleIntegerProperty();
+        centerNodeProperty = new SimpleIntegerProperty(100);
         rangeProperty = new SimpleIntegerProperty();
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
@@ -98,31 +99,21 @@ public final class GraphVisualizer {
         );
     }
 
-    /**
-     * Draw a node on the {@link Canvas}.
-     *
-     * @param startHorizontal  unscaled x position of the node
-     * @param verticalPosition unscaled y position of the node
-     * @param width            unscaled width of the node
-     * @param color            color of the node
-     */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawNode(final double startHorizontal, final double verticalPosition,
-                          final double width, final Color color) {
-        graphicsContext.setFill(color);
-        graphicsContext.fillRect(
-                startHorizontal * nodeWidthProperty.get(),
-                (verticalPosition + 1.0 / 2.0) * laneHeightProperty.get() - 1.0 / 2.0 * nodeHeightProperty.get(),
-                width * nodeWidthProperty.get(),
-                nodeHeightProperty.get()
-        );
-    }
-
-    private void drawNode(final Graph graph, final int nodeId) {
+    private void drawNode(final Graph graph, final int nodeId, final int centerNodeX) {
         final int nodeX = graph.getUnscaledXPosition(nodeId);
         final int nodeY = graph.getUnscaledYPosition(nodeId);
+        final int sequenceLength = 10;
 
         final Color color = graph.getColor(nodeId).getFXColor();
+
+        final double rectX = (nodeX - centerNodeX) * nodeWidthProperty.get();
+        final double rectY = (nodeY + 1.0 / 2.0) * laneHeightProperty.get() - 1.0 / 2.0 * nodeHeightProperty.get();
+        final double rectWidth = sequenceLength * nodeWidthProperty.get();
+        final double rectHeight = nodeHeightProperty.get();
+
+        graphicsContext.setFill(color);
+        graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
     }
 
     /**
@@ -148,10 +139,22 @@ public final class GraphVisualizer {
             graph.visitNeighbours(centerNode, SequenceDirection.LEFT, neighbours::add);
             graph.visitNeighbours(centerNode, SequenceDirection.RIGHT, neighbours::add);
 
-            for (Integer nodeId : neighbours) {
+            final int centerNodeX = graph.getUnscaledXPosition(centerNode);
+            drawNode(graph, centerNode, centerNodeX);
 
+            for (Integer nodeId : neighbours) {
+                drawNode(graph, nodeId, centerNodeX);
             }
         }
+    }
+
+    /**
+     * nada.
+     *
+     * @param doubleProperty a
+     */
+    public void bindCanvasHeight(final ReadOnlyDoubleProperty doubleProperty) {
+        // TODO remove method once merged with master
     }
 
     /**
