@@ -11,6 +11,7 @@ import javafx.stage.StageStyle;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.Files;
 
+import java.io.IOException;
 import java.net.URL;
 
 
@@ -29,7 +30,7 @@ public final class HygenePreloader extends Preloader {
     private @Nullable Stage stage;
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws IOException, UIInitialisationException {
         stage = primaryStage;
         primaryStage.setTitle(Hygene.TITLE);
         primaryStage.initStyle(StageStyle.UNDECORATED);

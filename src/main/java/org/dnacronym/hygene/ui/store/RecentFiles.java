@@ -6,14 +6,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.lang.Integer.min;
 
 
 /**
  * Class for both storing and retrieving recently opened files.
+ * <p>
+ * This class operates on {@link LinkedHashSet}s to guarantee uniqueness of recent file items. The terms
+ * '{@link LinkedHashSet}' and 'list' will thus be used interchangeably in documentation of its methods.
  */
 public final class RecentFiles {
     static final String DATA_FILE_NAME = "recently-opened-files.txt";
@@ -41,15 +44,18 @@ public final class RecentFiles {
         }
 
         final String content = Files.getInstance().getAppData(DATA_FILE_NAME);
-        final List<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
+        final LinkedHashSet<String> lines = new LinkedHashSet<>(Arrays.asList(content.split("\n")));
 
         // Remove any empty lines from the list of lines
         lines.removeIf(""::equals);
 
-        final List<File> files = lines.stream()
+        final LinkedHashSet<File> files = new LinkedHashSet<>();
+
+        files.addAll(lines.stream()
                 .map(line -> new File(line.trim()))
-                .collect(Collectors.toList());
-        return truncate(files);
+                .collect(Collectors.toList()));
+
+        return new ArrayList<>(truncate(files));
     }
 
     /**
@@ -71,8 +77,11 @@ public final class RecentFiles {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized void add(final File file) throws IOException {
-        final List<File> files = getAll();
-        files.add(0, file);
+        final LinkedHashSet<File> files = new LinkedHashSet<>();
+
+        // Add new file to front of list and add previous items to the end
+        files.add(file);
+        files.addAll(getAll());
 
         final List<String> lines = truncate(files).stream().map(File::getPath).collect(Collectors.toList());
         final String fileContents = String.join("\n", lines);
@@ -88,7 +97,13 @@ public final class RecentFiles {
      * @param fileList the original list
      * @return the truncated list.
      */
-    private static List<File> truncate(final List<File> fileList) {
-        return fileList.subList(0, min(fileList.size(), MAX_NUMBER_ENTRIES));
+    private static LinkedHashSet<File> truncate(final LinkedHashSet<File> fileList) {
+        final LinkedHashSet<File> truncatedSet = new LinkedHashSet<>();
+        final Iterator<File> fileIterator = fileList.iterator();
+
+        while (fileIterator.hasNext() && truncatedSet.size() < MAX_NUMBER_ENTRIES) {
+            truncatedSet.add(fileIterator.next());
+        }
+        return truncatedSet;
     }
 }

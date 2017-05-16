@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public final class MenuController implements Initializable {
-    private static final Logger logger = LogManager.getLogger(MenuController.class);
+    private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
@@ -56,7 +56,7 @@ public final class MenuController implements Initializable {
             populateRecentFilesMenu();
             initFileChooser();
         } catch (final UIInitialisationException e) {
-            logger.error("Failed to initialize MenuController.", e);
+            LOGGER.error("Failed to initialize MenuController.", e);
         }
     }
 
@@ -64,12 +64,13 @@ public final class MenuController implements Initializable {
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
      * {@link Hygene#getPrimaryStage()#getOwner()}.
      *
-     * @param event {@link ActionEvent} associated with the event.
-     * @throws Exception if Unable to open the file, or parse the file.
+     * @param event {@link ActionEvent} associated with the event
+     * @throws IOException               if unable to open or parse the file
+     * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
      * @see GraphStore#load(File)
      */
     @FXML
-    void openFileAction(final ActionEvent event) throws Exception {
+    void openFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
         if (fileChooser == null || graphStore == null) {
             return;
         }
@@ -125,15 +126,16 @@ public final class MenuController implements Initializable {
             // Remove default information item (telling the user that there are no recent files)
             recentFilesMenu.getItems().clear();
 
+            MenuItem menuItem;
             for (final File file : recentFiles) {
-                final MenuItem menuItem = new MenuItem(file.getPath());
+                menuItem = new MenuItem(file.getPath());
                 recentFilesMenu.getItems().add(menuItem);
 
                 menuItem.addEventHandler(ActionEvent.ACTION, event -> {
                     try {
                         loadFile(file);
-                    } catch (final Exception e) {
-                        logger.error("Failed to load the selected recent file.", e);
+                    } catch (final IOException | UIInitialisationException e) {
+                        LOGGER.error("Failed to load the selected recent file.", e);
                     }
                 });
             }
@@ -185,12 +187,11 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
-        if (graphStore != null) {
-            graphStore.load(file);
-        } else {
+        if (graphStore == null) {
             throw new UIInitialisationException("Unable to load file.");
         }
 
+        graphStore.load(file);
         RecentFiles.add(file);
 
         // Update menu only in initialized state (not in test-cases)

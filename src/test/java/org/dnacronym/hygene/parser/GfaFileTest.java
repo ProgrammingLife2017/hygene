@@ -7,11 +7,12 @@ import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -26,11 +27,13 @@ class GfaFileTest {
             + "S\t12\tTCAAGG%n"
             + "L\t11\t+\t12\t-\t4M%n");
 
+
     @AfterAll
     static void resetFactories() {
         NewGfaParserFactory.setInstance(null);
         MetadataParserFactory.setInstance(null);
     }
+
 
     @Test
     void testGfaFileObjectCanBeConstructed() {
@@ -57,7 +60,7 @@ class GfaFileTest {
     void testReadFile() throws ParseException {
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
-        assertThat(gfaFile.readFile()).isEqualTo(SIMPLE_GFA_CONTENTS);
+        assertThat(bufferedReaderToString(gfaFile.readFile())).isEqualTo(SIMPLE_GFA_CONTENTS);
     }
 
     @Test
@@ -68,7 +71,7 @@ class GfaFileTest {
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
-        verify(gfaParser).parse(any(GfaFile.class));
+        verify(gfaParser).parse(gfaFile);
         assertThat(gfaFile.getGraph()).isNotNull();
     }
 
@@ -80,7 +83,7 @@ class GfaFileTest {
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
 
-        verify(metadataParser).parseNodeMetadata(SIMPLE_GFA_CONTENTS, 2);
+        verify(metadataParser).parseNodeMetadata(gfaFile, 2);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
     }
 
@@ -92,7 +95,11 @@ class GfaFileTest {
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
-        verify(metadataParser).parseEdgeMetadata(SIMPLE_GFA_CONTENTS, 4);
+        verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
+    }
+
+    private String bufferedReaderToString(final BufferedReader reader) {
+        return reader.lines().collect(Collectors.joining("\n")) + "\n";
     }
 }

@@ -3,6 +3,7 @@ package org.dnacronym.hygene.parser;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 
+import java.io.BufferedReader;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -22,8 +23,8 @@ public final class MetadataParser {
      * @return a {@link NodeMetadata} object containing a segment's metadata.
      * @throws ParseException if the GFA file or given line is invalid
      */
-    public NodeMetadata parseNodeMetadata(final String gfa, final int lineNumber) throws ParseException {
-        final String line = getLine(gfa, lineNumber);
+    public NodeMetadata parseNodeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
+        final String line = getLine(gfa.readFile(), lineNumber);
 
         validateLine(line, "S", lineNumber);
 
@@ -48,8 +49,8 @@ public final class MetadataParser {
      * @return an {@link EdgeMetadata} object containing a link's metadata.
      * @throws ParseException if the GFA file or given line is invalid
      */
-    public EdgeMetadata parseEdgeMetadata(final String gfa, final int lineNumber) throws ParseException {
-        final String line = getLine(gfa, lineNumber);
+    public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
+        final String line = getLine(gfa.readFile(), lineNumber);
 
         validateLine(line, "L", lineNumber);
 
@@ -77,16 +78,14 @@ public final class MetadataParser {
      * @return the line of the file belonging to the node or edge.
      * @throws ParseException if the line number is out of bounds
      */
-    private String getLine(final String gfa, final int lineNumber) throws ParseException {
-        final int arrayIndex = lineNumber - 1;
-
-        final String[] lines = gfa.split("\\R");
-
-        if (arrayIndex < 0 || arrayIndex > lines.length) {
-            throw new ParseException("Line " + lineNumber + " is not found in GFA file.");
+    private String getLine(final BufferedReader gfa, final int lineNumber) throws ParseException {
+        if (lineNumber <= 0) {
+            throw new ParseException("Line " + lineNumber + " is not a valid line number.");
         }
 
-        return gfa.split("\\R")[lineNumber - 1];
+        return gfa.lines().skip(lineNumber - 1L).findFirst().orElseThrow(
+                () -> new ParseException("Line " + lineNumber + " is not found in GFA file.")
+        );
     }
 
     /**
