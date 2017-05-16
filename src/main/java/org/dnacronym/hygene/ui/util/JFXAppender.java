@@ -62,6 +62,6 @@ public final class JFXAppender extends AbstractAppender {
 
     @Override
     public void append(final LogEvent event) {
-        consoleBinding.setValue(new String(getLayout().toByteArray(event), StandardCharsets.UTF_8) + "\n");
+        consoleBinding.setValue(new String(getLayout().toByteArray(event), StandardCharsets.UTF_8));
     }
 }
