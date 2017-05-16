@@ -184,7 +184,9 @@ class GraphTest {
         assertThat(neighbours).containsExactly(0, 1, 2, 3, 4);
     }
 
-    // Tests that all neighbours are visited if we visit "while true".
+    /**
+     * Tests that all neighbours are visited if we visit "while true".
+     */
     @Test
     void testVisitNeighboursWhileTrue() {
         final int[] node = NodeBuilder.start()
@@ -200,7 +202,9 @@ class GraphTest {
         assertThat(neighbours).containsExactlyInAnyOrder(92, 69, 30);
     }
 
-    // Tests that no neighbours are visited if we visit "while false".
+    /**
+     * Tests that no neighbours are visited if we visit "while false".
+     */
     @Test
     void testVisitNeighboursWhileFalse() {
         final int[] node = NodeBuilder.start()
@@ -217,7 +221,9 @@ class GraphTest {
         assertThat(neighbours).isEmpty();
     }
 
-    // Tests that neighbours are visited while the number of visited neighbours has a particular value.
+    /**
+     * Tests that neighbours are visited while the number of visited neighbours has a particular value.
+     */
     @Test
     void testVisitNeighboursWhileSize() {
         final int[] node = NodeBuilder.start()
@@ -235,7 +241,9 @@ class GraphTest {
         assertThat(neighbours).hasSize(3);
     }
 
-    // Tests that the exit action is performed on the expected node.
+    /**
+     * Tests that the exit action is performed on the expected node.
+     */
     @Test
     void testVisitNeighboursWhileCatchAction() {
         final int[] node = NodeBuilder.start()
@@ -257,7 +265,9 @@ class GraphTest {
         assertThat(exitNeighbour[0]).isEqualTo(22);
     }
 
-    // Tests that all neighbours are visited if we visit "until false".
+    /**
+     * Tests that all neighbours are visited if we visit "until false".
+     */
     @Test
     void testVisitNeighboursUntilFalse() {
         final int[] node = NodeBuilder.start()
@@ -273,7 +283,9 @@ class GraphTest {
         assertThat(neighbours).containsExactlyInAnyOrder(94, 13, 23);
     }
 
-    // Tests that all neighbours are visited if we visit "until true".
+    /**
+     * Tests that all neighbours are visited if we visit "until true".
+     */
     @Test
     void testVisitNeighboursUntilTrue() {
         final int[] node = NodeBuilder.start()
@@ -288,7 +300,9 @@ class GraphTest {
         assertThat(neighbours).isEmpty();
     }
 
-    // Tests that neighbours are visited until the number of visited neighbours exceeds a particular value.
+    /**
+     * Tests that neighbours are visited until the number of visited neighbours exceeds a particular value.
+     */
     @Test
     void testVisitNeighboursUntilSize() {
         final int[] node = NodeBuilder.start()
@@ -307,7 +321,9 @@ class GraphTest {
         assertThat(neighbours).hasSize(5);
     }
 
-    // Tests that the exit action is performed on the expected node.
+    /**
+     * Tests that the exit action is performed on the expected node.
+     */
     @Test
     void testVisitNeighbourUntilCatchAction() {
         final int[] node = NodeBuilder.start()
