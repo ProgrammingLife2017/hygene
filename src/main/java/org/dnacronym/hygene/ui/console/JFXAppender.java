@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.util;
+package org.dnacronym.hygene.ui.console;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
