@@ -165,6 +165,7 @@ public final class Graph {
     public void visitNeighboursWhile(final int id, final SequenceDirection direction,
                                      final Predicate<Integer> condition, final Consumer<Integer> action) {
         final Consumer<Integer> emptyCatchAction = ignored -> {
+            // Do nothing
         };
         visitNeighboursWhile(id, direction, condition, emptyCatchAction, action);
     }
