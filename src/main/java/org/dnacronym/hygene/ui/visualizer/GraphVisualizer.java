@@ -2,10 +2,11 @@ package org.dnacronym.hygene.ui.visualizer;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,6 +16,10 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.models.SequenceDirection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -29,13 +34,14 @@ import org.dnacronym.hygene.models.Node;
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_NODE_WIDTH = 0.001;
-    private static final double DEFAULT_EDGE_WIDTH = 2;
     private static final double DEFAULT_DASH_LENGTH = 10;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
-    private static final Color DEFAULT_NODE_COLOR = Color.BLUE;
 
     private final ObjectProperty<Node> selectedNodeProperty;
+
+    private final IntegerProperty centerNodeProperty;
+    private final IntegerProperty rangeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
@@ -58,6 +64,9 @@ public final class GraphVisualizer {
 
         selectedNodeProperty = new SimpleObjectProperty<>();
 
+        centerNodeProperty = new SimpleIntegerProperty();
+        rangeProperty = new SimpleIntegerProperty();
+
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
@@ -69,34 +78,18 @@ public final class GraphVisualizer {
 
 
     /**
-     * Converts onscreen coordinates to coordinates which can be used to find the correct node.
-     * <p>
-     * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
-     *
-     * @param xPos x position onscreen
-     * @param yPos y position onscreen
-     * @return x and y position in a double array of size 2 which correspond with x and y position of {@link
-     * Node}.
-     */
-    private int[] toNodeCoordinates(final double xPos, final double yPos) {
-        return new int[] {
-                (int) Math.round(xPos / nodeWidthProperty.get()),
-                (int) Math.floor(yPos / laneHeightProperty.get())
-        };
-    }
-
-    /**
      * Draw edge on the {@link Canvas}.
      *
      * @param startHorizontal x position of the start of the line
      * @param startVertical   y position of the start of the line
      * @param endHorizontal   x position of the end of the line
      * @param endVertical     y position of the end of the line
+     * @param color           color of the edge
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdge(final double startHorizontal, final double startVertical,
-                          final double endHorizontal, final double endVertical) {
-        graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
+                          final double endHorizontal, final double endVertical, final Color color) {
+        graphicsContext.setStroke(color);
         graphicsContext.strokeLine(
                 startHorizontal * nodeWidthProperty.get(),
                 (startVertical + 1.0 / 2.0) * laneHeightProperty.get(),
@@ -106,39 +99,11 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Draws all onscreen edges between the current {@link Node} and it's right neighbours.
-     * <p>
-     * Afterwards, calls itself on each of the right neighbours of the current node.
-     *
-     * @param node the node who's edges should be drawn on the {@link Canvas}
-     */
-    private void drawEdges(final Node node) {
-//        node.getRightNeighbours().forEach(neighbour -> drawEdge(
-//                node.getHorizontalRightEnd(),
-//                node.getVerticalPosition(),
-//                (double) (neighbour.getHorizontalRightEnd() - neighbour.getLength()),
-//                neighbour.getVerticalPosition()
-//        ));
-    }
-
-    /**
-     * Sets the fill of the {@link GraphicsContext} before proceeding to draw all onscreen edges.
-     *
-     * @param node the node representing the source of the graph
-     * @param color        the color with which all edges should be drawn
-     */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawEdges(final Node node, final Color color) {
-        graphicsContext.setStroke(color);
-        drawEdges(node);
-    }
-
-    /**
      * Draw a node on the {@link Canvas}.
      *
-     * @param startHorizontal  x position of the node
-     * @param verticalPosition y position of the node
-     * @param width            width of the node
+     * @param startHorizontal  unscaled x position of the node
+     * @param verticalPosition unscaled y position of the node
+     * @param width            unscaled width of the node
      * @param color            color of the node
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
@@ -153,19 +118,47 @@ public final class GraphVisualizer {
         );
     }
 
+    private void drawNode(final Graph graph, final int nodeId) {
+        final int nodeX = graph.getUnscaledXPosition(nodeId);
+        final int nodeY = graph.getUnscaledYPosition(nodeId);
+
+        final Color color = graph.getColor(nodeId).getFXColor();
+    }
+
     /**
-     * Draws the given node to the screen.
+     * Populate the graphs primitives with the given graph.
+     * <p>
+     * First clears the graph before drawing. If {@link Graph} is null, only clears the canvas.
      *
-     * @param node  the node to draw
-     * @param color the color to draw with
+     * @param graph {@link Graph} to populate canvas with
+     * @throws IllegalStateException if the {@link Canvas} has not been set
      */
-    private void drawNode(final Node node, final Color color) {
-//        drawNode(
-//                (double) (node.getHorizontalRightEnd() - node.getLength()),
-//                node.getVerticalPosition(),
-//                node.getLength(),
-//                color
-//        );
+    public void draw(final @Nullable Graph graph) {
+        if (canvas == null || graphicsContext == null) {
+            throw new IllegalStateException("Attempting to draw whilst canvas not set.");
+        }
+
+        clear();
+        this.graph = graph;
+        if (graph != null && canvas != null) {
+            final int centerNode = centerNodeProperty.get();
+            final int range = rangeProperty.get();
+
+            final List<Integer> neighbours = new ArrayList<>();
+            graph.visitNeighbours(centerNode, SequenceDirection.LEFT, neighbours::add);
+            graph.visitNeighbours(centerNode, SequenceDirection.RIGHT, neighbours::add);
+
+            for (Integer nodeId : neighbours) {
+
+            }
+        }
+    }
+
+    /**
+     * Redraw the most recently set {@link Graph}. If this is null, canvas is only cleared.
+     */
+    public void redraw() {
+        draw(this.graph);
     }
 
     /**
@@ -206,12 +199,65 @@ public final class GraphVisualizer {
     }
 
     /**
+     * Set {@link Canvas} which the {@link GraphVisualizer} can draw on.
+     *
+     * @param canvas canvas to be used to {@link GraphVisualizer}
+     */
+    public void setCanvas(final Canvas canvas) {
+        this.canvas = canvas;
+        this.graphicsContext = canvas.getGraphicsContext2D();
+
+        canvas.setOnMouseClicked(event -> {
+            final int[] positions = toNodeCoordinates(event.getX(), event.getY());
+            final int nodeXPos = positions[0];
+            final int nodeLane = positions[1];
+        });
+    }
+
+    /**
+     * Converts onscreen coordinates to coordinates which can be used to find the correct node.
+     * <p>
+     * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
+     *
+     * @param xPos x position onscreen
+     * @param yPos y position onscreen
+     * @return x and y position in a double array of size 2 which correspond with x and y position of {@link
+     * Node}.
+     */
+    private int[] toNodeCoordinates(final double xPos, final double yPos) {
+        return new int[]{
+                (int) Math.round(xPos / nodeWidthProperty.get()),
+                (int) Math.floor(yPos / laneHeightProperty.get())
+        };
+    }
+
+    /**
      * The property of the selected node. This node is updated every time the user clicks on the canvas.
      *
      * @return Selected {@link Node} by the user. Can be null.
      */
     public ObjectProperty<Node> getSelectedNodeProperty() {
         return selectedNodeProperty;
+    }
+
+    /**
+     * Property which determines the current center node.
+     *
+     * @return property which decides the current center node
+     */
+    public IntegerProperty getCenterNodeProperty() {
+        return centerNodeProperty;
+    }
+
+    /**
+     * The property which determines the range to draw around the center node.
+     * <p>
+     * The property determines how far should be iterated in both directions.
+     *
+     * @return property which decides the range to draw round the center node
+     */
+    public IntegerProperty getRangeProperty() {
+        return rangeProperty;
     }
 
     /**
@@ -259,90 +305,5 @@ public final class GraphVisualizer {
      */
     public DoubleProperty getBorderDashLengthProperty() {
         return borderDashLengthProperty;
-    }
-
-    /**
-     * Set {@link Canvas} which the {@link GraphVisualizer} can draw on.
-     *
-     * @param canvas canvas to be used to {@link GraphVisualizer}
-     */
-    public void setCanvas(final Canvas canvas) {
-        this.canvas = canvas;
-        this.graphicsContext = canvas.getGraphicsContext2D();
-
-        canvas.setOnMouseClicked(event -> {
-            final int[] positions = toNodeCoordinates(event.getX(), event.getY());
-            final int nodeXPos = positions[0];
-            final int nodeLane = positions[1];
-
-//            if (graph != null) {
-//                final Node node = graph.getNode(nodeXPos, nodeLane);
-//                if (selectedNodeProperty != null && node != null) {
-//                    selectedNodeProperty.set(node);
-//                }
-//            }
-        });
-    }
-
-    /**
-     * Bind the height of the canvas to a given {@link ReadOnlyDoubleProperty}.
-     * <p>
-     * This property should be the {@link ReadOnlyDoubleProperty} height property of the pane in which this canvas
-     * resides.
-     *
-     * @param heightProperty {@link ReadOnlyDoubleProperty} to which the height property of the {@link Canvas} should be
-     *                       bound
-     * @throws IllegalStateException if the canvas has not yet been set.
-     */
-    public void bindCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
-        if (canvas == null) {
-            throw new IllegalStateException("Can't bind height of canvas if canvas not set.");
-        }
-        canvas.heightProperty().bind(heightProperty);
-    }
-
-    /**
-     * Redraw the most recently set {@link Graph}. If this is null, canvas is only cleared.
-     */
-    public void redraw() {
-        draw(this.graph);
-    }
-
-    /**
-     * Populate the graphs primitives with the given graph.
-     * <p>
-     * First clears the graph before drawing. If {@link Graph} is null, only clears the canvas.
-     *
-     * @param graph {@link Graph} to populate canvas with.
-     * @throws IllegalStateException if the {@link Canvas} has not been set.
-     */
-    public void draw(final @Nullable Graph graph) {
-        if (canvas == null || graphicsContext == null) {
-            throw new IllegalStateException("Attempting to draw whilst canvas not set.");
-        }
-
-        clear();
-        this.graph = graph;
-        if (graph != null && canvas != null) {
-//            final double canvasWidth = graph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
-//            canvas.setWidth(canvasWidth);
-//
-//            // TODO get actual laneCount from FAFOSP (as soon as fixed)
-//            final int laneCount = 12;
-//            laneHeightProperty.set(canvas.getHeight() / laneCount);
-//
-//            graph.iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
-//
-//            graph.iterator(SequenceNode::isVisited).forEachRemaining(node -> {
-//                drawNode(node, DEFAULT_NODE_COLOR);
-//                drawEdges(node, edgeColorProperty.get());
-//
-//                node.setVisited(true);
-//            });
-//
-//            if (displayLaneBordersProperty.get()) {
-//                drawBandEdges(laneCount, laneHeightProperty.get());
-//            }
-        }
     }
 }
