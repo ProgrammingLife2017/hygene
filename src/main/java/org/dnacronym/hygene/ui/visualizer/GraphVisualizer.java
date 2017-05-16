@@ -4,7 +4,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -35,6 +34,10 @@ import java.util.List;
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
+    /**
+     * Range used when new graph is set, unless graph contains too few nodes.
+     */
+    private static final double DEFAULT_RANGE = 100;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
 
@@ -126,6 +129,11 @@ public final class GraphVisualizer {
         clear();
         this.graph = graph;
         if (graph != null && canvas != null) {
+            // TODO get node count from graph metadata
+            rangeProperty.set((int) Math.min(DEFAULT_RANGE, Integer.MAX_VALUE));
+            // TODO get node count from graph metadata and pick middle node
+            centerNodeProperty.set((int) Math.round(DEFAULT_RANGE));
+
             final int centerNodeId = centerNodeProperty.get();
             final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
             final int range = rangeProperty.get();
@@ -155,15 +163,6 @@ public final class GraphVisualizer {
                 drawNode(graph, nodeId, minX, maxX, lanes[0]);
             }
         }
-    }
-
-    /**
-     * nada.
-     *
-     * @param doubleProperty a
-     */
-    public void bindCanvasHeight(final ReadOnlyDoubleProperty doubleProperty) {
-        // TODO remove method once merged with master
     }
 
     /**
