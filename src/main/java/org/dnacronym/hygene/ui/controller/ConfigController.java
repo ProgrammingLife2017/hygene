@@ -44,7 +44,7 @@ public final class ConfigController implements Initializable {
             logger.error("Failed to initialise Configuration Controller.", e);
         }
 
-        if (nodeHeight != null&& edgeColors != null
+        if (nodeHeight != null && edgeColors != null
                 && graphVisualizer != null && showBorders != null && dashWidth != null) {
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
