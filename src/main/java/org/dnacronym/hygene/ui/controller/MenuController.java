@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.ui.console.ConsoleStage;
+import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -39,7 +39,7 @@ public final class MenuController implements Initializable {
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
 
-    private @MonotonicNonNull ConsoleStage consoleStage;
+    private @MonotonicNonNull ConsoleWrapper consoleStage;
 
 
     /**
@@ -101,7 +101,7 @@ public final class MenuController implements Initializable {
     void openConsoleAction(final ActionEvent event) throws IOException {
         try {
             if (consoleStage == null) {
-                consoleStage = new ConsoleStage();
+                consoleStage = new ConsoleWrapper();
                 LOGGER.info("Launched GUI console window");
             }
 
