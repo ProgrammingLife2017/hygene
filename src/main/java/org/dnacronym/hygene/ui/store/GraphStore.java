@@ -34,7 +34,7 @@ public final class GraphStore {
     public void load(@NonNull final File file) throws IOException {
         try {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
-            SequenceGraph graph = gfaFile.parse();
+            final SequenceGraph graph = gfaFile.parse();
             LOGGER.info(String.format("Parsed a new SequenceGraph with %d nodes.", graph.size()));
 
             gfaFileProperty.set(gfaFile);
