@@ -19,7 +19,7 @@ public enum NodeColor {
     /**
      * Construct a {@link NodeColor} with given {@link Color}.
      *
-     * @param color {@link Color} for use by JavaFX.
+     * @param color {@link Color} for use by JavaFX
      */
     NodeColor(final Color color) {
         this.color = color;
