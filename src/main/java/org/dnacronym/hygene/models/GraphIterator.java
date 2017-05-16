@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 
 /**
- * Created by Felix on 2017-05-16.
+ * A collection of iteration functions over a particular {@link Graph} or a part of it.
  */
 public final class GraphIterator {
     private final Graph graph;
