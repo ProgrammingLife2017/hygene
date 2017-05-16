@@ -40,13 +40,15 @@ public final class GraphController implements Initializable {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
-            LOGGER.error("Failed to initialize GraphController", e);
+            LOGGER.error("Failed to initialize GraphController.", e);
             return;
         }
 
         if (graphVisualizer != null && graphCanvas != null && graphPane != null) {
+            graphCanvas.heightProperty().bind(graphPane.heightProperty());
+            graphCanvas.widthProperty().bind(graphPane.widthProperty());
+
             graphVisualizer.setCanvas(graphCanvas);
-            graphVisualizer.bindCanvasHeight(graphPane.heightProperty());
         }
 
         if (graphPane != null && graphStore != null) {
@@ -86,7 +88,7 @@ public final class GraphController implements Initializable {
         try {
             graphVisualizer.draw(gfaFile.getGraph());
         } catch (final ParseException e) {
-            LOGGER.error("Failed to update graph", e);
+            LOGGER.error("Failed to update graph.", e);
         }
     }
 }

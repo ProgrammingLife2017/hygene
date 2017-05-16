@@ -3,7 +3,6 @@ package org.dnacronym.hygene.ui.visualizer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -287,23 +286,6 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Bind the height of the canvas to a given {@link ReadOnlyDoubleProperty}.
-     * <p>
-     * This property should be the {@link ReadOnlyDoubleProperty} height property of the pane in which this canvas
-     * resides.
-     *
-     * @param heightProperty {@link ReadOnlyDoubleProperty} to which the height property of the {@link Canvas} should be
-     *                       bound
-     * @throws IllegalStateException if the canvas has not yet been set.
-     */
-    public void bindCanvasHeight(final ReadOnlyDoubleProperty heightProperty) {
-        if (canvas == null) {
-            throw new IllegalStateException("Can't bind height of canvas if canvas not set.");
-        }
-        canvas.heightProperty().bind(heightProperty);
-    }
-
-    /**
      * Redraw the most recently set {@link SequenceGraph}. If this is null, canvas is only cleared.
      */
     public void redraw() {
@@ -326,9 +308,6 @@ public final class GraphVisualizer {
         clear();
         this.sequenceGraph = sequenceGraph;
         if (sequenceGraph != null && canvas != null) {
-            final double canvasWidth = sequenceGraph.getSinkNode().getHorizontalRightEnd() * nodeWidthProperty.get();
-            canvas.setWidth(canvasWidth);
-
             // TODO get actual laneCount from FAFOSP (as soon as fixed)
             final int laneCount = 12;
             laneHeightProperty.set(canvas.getHeight() / laneCount);
