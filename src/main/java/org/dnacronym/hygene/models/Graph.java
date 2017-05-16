@@ -5,6 +5,9 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.NewGfaFile;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 /**
  * Class wraps around the graph data represented as a nested array and provides utility methods.
@@ -109,6 +112,16 @@ public final class Graph {
     }
 
     /**
+     * Sets the unscaled x position.
+     *
+     * @param id                the {@link Node}'s id
+     * @param unscaledXPosition the unscaled x position
+     */
+    void setUnscaledXPosition(final int id, final int unscaledXPosition) {
+        nodeArrays[id][Node.UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
+    }
+
+    /**
      * Getter for the unscaled y position.
      *
      * @param id the {@link Node}'s id
@@ -146,6 +159,67 @@ public final class Graph {
             iterator = new GraphIterator(this);
         }
         return iterator;
+    }
+
+    /**
+     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
+     * breadth-first order.
+     */
+    private void fafospX() {
+        final GraphIterator iterator = iterator();
+
+        final Queue<Integer> queue = new LinkedList<>();
+        iterator.visitNeighbours(0, SequenceDirection.RIGHT, queue::add);
+        setUnscaledXPosition(0, 0);
+
+        while (!queue.isEmpty()) {
+            final Integer head = queue.remove();
+
+            // Horizontal position may have been set since it was added to the queue
+            if (getUnscaledXPosition(head) < 0) {
+                fafospX(head);
+
+                // Horizontal position cannot always be determined by FAFOSP-X
+                if (getUnscaledXPosition(head) >= 0) {
+                    // Add neighbours of which horizontal position was not set
+                    iterator.visitNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+                        if (getUnscaledXPosition(neighbour) < 0) {
+                            queue.add(neighbour);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculates the optimal horizontal position relative to its left neighbours for the node with the given
+     * identifier using FAFOSP.
+     *
+     * @param id the node's identifier
+     */
+    private void fafospX(final int id) {
+        final GraphIterator iterator = iterator();
+
+        final boolean[] continuxe = {true};
+        final int[] width = {-1};
+        iterator().visitNeighbours(id, SequenceDirection.LEFT, neighbour -> {
+            if (!continuxe[0]) {
+                return;
+            }
+            final int newWidth = getUnscaledXPosition(neighbour);
+            if (newWidth < 0) {
+                continuxe[0] = false;
+                width[0] = -1;
+                return;
+            } else if (newWidth + 1 > width[0]) {
+                width[0] = newWidth + 1;
+            }
+        });
+
+        if (width[0] >= 0) {
+            setUnscaledXPosition(id, width[0] + getSequenceLength(id));
+        }
     }
 
     /**
