@@ -22,10 +22,10 @@ import static org.mockito.Mockito.verify;
  */
 class NewGfaFileTest {
     private static final String GFA_TEST_FILE = "src/test/resources/gfa/simple.gfa";
-    private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
-            + "S\t11\tACCTT%n"
-            + "S\t12\tTCAAGG%n"
-            + "L\t11\t+\t12\t-\t4M%n");
+    private static final String SIMPLE_GFA_CONTENTS = "H\tVN:Z:1.0\n"
+            + "S\t11\tACCTT\n"
+            + "S\t12\tTCAAGG\n"
+            + "L\t11\t+\t12\t-\t4M\n";
 
 
     @AfterAll
