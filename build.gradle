@@ -71,7 +71,10 @@ dependencies {
     compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
 
     // SQLite driver
-    compile("org.xerial.sqlite-jdbc:${sqliteVersion}")
+    compile("org.xerial:sqlite-jdbc:${sqliteVersion}")
+
+    // Apache Commons Codec
+    compile("commons-codec:commons-codec:${commonsCodecVersion}")
 }
 
 jar {
