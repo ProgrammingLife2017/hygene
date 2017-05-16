@@ -10,13 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
  */
 // Too much trouble
 @SuppressWarnings("nullness")
-class GraphTestUtilities {
+class GraphBasedTest {
     private Graph graph;
     private int[][] nodeArrays;
 
 
     /**
-     * Resets this {@link GraphTestUtilities}'s fields.
+     * Resets this {@link GraphBasedTest}'s fields.
      */
     @BeforeEach
     private void beforeEach() {
@@ -35,7 +35,7 @@ class GraphTestUtilities {
     }
 
     /**
-     * Creates a new {@link Graph} with the given size, and sets it in this {@link GraphTestUtilities}.
+     * Creates a new {@link Graph} with the given size, and sets it in this {@link GraphBasedTest}.
      *
      * @param size the size of the {@link Graph} to create
      */
