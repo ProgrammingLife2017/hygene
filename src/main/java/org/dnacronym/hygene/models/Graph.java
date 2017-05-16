@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeLineNumber, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
+ * [[nodeLineNumber, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
  */
 public final class Graph {
     private final int[][] nodeArrays;
@@ -80,6 +80,16 @@ public final class Graph {
     }
 
     /**
+     * Getter for the sequence length of a {@link Node}.
+     *
+     * @param id the {@link Node}'s id
+     * @return the {@link Node}'s sequence length.
+     */
+    public int getSequenceLength(final int id) {
+        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
+    }
+
+    /**
      * Getter for the color of a {@link Node}.
      *
      * @param id the {@link Node}'s id
@@ -119,7 +129,7 @@ public final class Graph {
     public int getNeighbourCount(final int id, final SequenceDirection direction) {
         return direction.ternary(
                 (nodeArrays[id].length
-                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
+                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE
                         - (Node.NODE_OUTGOING_EDGES_INDEX + 1)
                 ) / Node.EDGE_DATA_SIZE,
                 nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
@@ -135,12 +145,87 @@ public final class Graph {
      */
     public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
         final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+                + direction.ternary(getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
 
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
             final int neighbourIndex = neighbourOffset + 2 * i;
             action.accept(nodeArrays[id][neighbourIndex]);
         }
+    }
+
+    /**
+     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
+     * {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more neighbours.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param condition the {@link Predicate} that holds until no more neighbours should be visited
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitNeighboursWhile(final int id, final SequenceDirection direction,
+                                     final Predicate<Integer> condition, final Consumer<Integer> action) {
+        final Consumer<Integer> emptyCatchAction = ignored -> {
+            // Do nothing
+        };
+        visitNeighboursWhile(id, direction, condition, emptyCatchAction, action);
+    }
+
+    /**
+     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
+     * {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more neighbours.
+     *
+     * @param id          the node's identifier
+     * @param direction   the direction of neighbours to visit
+     * @param condition   the {@link Predicate} that holds until no more neighbours should be visited
+     * @param catchAction the {@link Consumer} to execute as soon as the condition no longer holds
+     * @param action      the function to apply to each neighbour's identifier
+     */
+    public void visitNeighboursWhile(final int id, final SequenceDirection direction,
+                                     final Predicate<Integer> condition, final Consumer<Integer> catchAction,
+                                     final Consumer<Integer> action) {
+        final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
+                + direction.ternary(getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
+
+        for (int i = 0; i < getNeighbourCount(id, direction); i++) {
+            final int neighbour = nodeArrays[id][neighbourOffset + Node.EDGE_DATA_SIZE * i];
+
+            if (!condition.test(neighbour)) {
+                catchAction.accept(neighbour);
+                break;
+            }
+
+            action.accept(neighbour);
+        }
+    }
+
+    /**
+     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
+     * {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more neighbours.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param condition the {@link Predicate} that fails until no more neighbours should be visited
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitNeighboursUntil(final int id, final SequenceDirection direction,
+                                     final Predicate<Integer> condition, final Consumer<Integer> action) {
+        visitNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), action);
+    }
+
+    /**
+     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
+     * {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more neighbours.
+     *
+     * @param id          the node's identifier
+     * @param direction   the direction of neighbours to visit
+     * @param condition   the {@link Predicate} that fails until no more neighbours should be visited
+     * @param catchAction the {@link Consumer} to execute as soon as the condition holds
+     * @param action      the function to apply to each neighbour's identifier
+     */
+    public void visitNeighboursUntil(final int id, final SequenceDirection direction,
+                                     final Predicate<Integer> condition, final Consumer<Integer> catchAction,
+                                     final Consumer<Integer> action) {
+        visitNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), catchAction, action);
     }
 
     /**

@@ -13,15 +13,16 @@ import java.util.TreeSet;
  * The {@code Node} class wraps around a node array and provides convenience methods.
  * <p>
  * Node array format:
- * [[nodeLineNumber, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
+ * [[nodeLineNumber, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
 public final class Node {
     static final int NODE_LINE_NUMBER_INDEX = 0;
-    static final int NODE_COLOR_INDEX = 1;
-    static final int UNSCALED_X_POSITION_INDEX = 2;
-    static final int UNSCALED_Y_POSITION_INDEX = 3;
-    static final int NODE_OUTGOING_EDGES_INDEX = 4;
-    static final int NODE_EDGE_DATA_OFFSET = 5;
+    static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
+    static final int NODE_COLOR_INDEX = 2;
+    static final int UNSCALED_X_POSITION_INDEX = 3;
+    static final int UNSCALED_Y_POSITION_INDEX = 4;
+    static final int NODE_OUTGOING_EDGES_INDEX = 5;
+    static final int NODE_EDGE_DATA_OFFSET = 6;
     static final int EDGE_LINE_NUMBER_OFFSET = 1;
     static final int EDGE_DATA_SIZE = 2;
 
@@ -54,7 +55,7 @@ public final class Node {
      * @return an empty node array.
      */
     public static int[] createEmptyNodeArray() {
-        return new int[NODE_EDGE_DATA_OFFSET];
+        return new int[]{0, 0, 0, -1, -1, 0};
     }
 
 
@@ -87,6 +88,15 @@ public final class Node {
      */
     public int getLineNumber() {
         return data[NODE_LINE_NUMBER_INDEX];
+    }
+
+    /**
+     * Getter for the {@link Node}'s sequence length.
+     *
+     * @return the sequence length of the {@link Node}
+     */
+    public int getSequenceLength() {
+        return data[NODE_SEQUENCE_LENGTH_INDEX];
     }
 
     /**
@@ -155,10 +165,13 @@ public final class Node {
                     final Set<Edge> newOutgoingEdges = new TreeSet<>();
                     final int offset = NODE_EDGE_DATA_OFFSET;
 
+                    Edge edge;
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         final int to = data[offset + i * EDGE_DATA_SIZE];
                         final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
-                        newOutgoingEdges.add(new Edge(id, to, lineNumber, graph));
+
+                        edge = new Edge(id, to, lineNumber, graph);
+                        newOutgoingEdges.add(edge);
                     }
                     this.outgoingEdges = newOutgoingEdges;
                 }
@@ -181,10 +194,13 @@ public final class Node {
                     final Set<Edge> newIncomingEdges = new TreeSet<>();
                     final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
 
+                    Edge edge;
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         final int from = data[offset + i * EDGE_DATA_SIZE];
                         final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
-                        newIncomingEdges.add(new Edge(from, id, lineNumber, graph));
+
+                        edge = new Edge(from, id, lineNumber, graph);
+                        newIncomingEdges.add(edge);
                     }
 
                     this.incomingEdges = newIncomingEdges;

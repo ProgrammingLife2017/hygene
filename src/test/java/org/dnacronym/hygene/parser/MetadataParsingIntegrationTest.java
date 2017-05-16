@@ -17,9 +17,8 @@ final class MetadataParsingIntegrationTest {
     void testGetNodeMetadata() throws ParseException {
         GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse();
-        Node node = gfaFile.getGraph().getNode(0);
+        Node node = gfaFile.getGraph().getNode(1);
 
-        System.out.println(node.getLineNumber());
         NodeMetadata nodeMetadata = node.retrieveMetadata();
 
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
@@ -30,7 +29,7 @@ final class MetadataParsingIntegrationTest {
     void testGetEdgeMetadata() throws ParseException {
         GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse();
-        Edge edge = gfaFile.getGraph().getNode(0).getOutgoingEdges().iterator().next();
+        Edge edge = gfaFile.getGraph().getNode(1).getOutgoingEdges().iterator().next();
 
         EdgeMetadata edgeMetadata = edge.retrieveMetadata();
 

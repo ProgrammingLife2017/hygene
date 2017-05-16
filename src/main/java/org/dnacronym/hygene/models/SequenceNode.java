@@ -24,7 +24,7 @@ public final class SequenceNode {
     private int leftHeight = -1;
     private int rightHeight = -1;
 
-    private boolean visited = false;
+    private boolean visited;
 
 
     /**

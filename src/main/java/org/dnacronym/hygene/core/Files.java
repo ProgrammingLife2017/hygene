@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.core;
 
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,7 +19,7 @@ import java.util.Optional;
 public final class Files {
     private static final Charset FILE_ENCODING = StandardCharsets.UTF_8;
     private static final String APPLICATION_FOLDER_NAME = "hygene";
-    private static volatile @MonotonicNonNull Files instance;
+    private static Files instance = new Files();
 
 
     /**
@@ -37,13 +35,6 @@ public final class Files {
      * @return the instance of {@code Files}
      */
     public static Files getInstance() {
-        if (instance == null) {
-            synchronized (Files.class) {
-                if (instance == null) {
-                    instance = new Files();
-                }
-            }
-        }
         return instance;
     }
 
