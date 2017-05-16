@@ -16,6 +16,11 @@ public enum NodeColor {
     private Color color;
 
 
+    /**
+     * Construct a {@link NodeColor} with given {@code JavaFX} {@link Color}.
+     *
+     * @param color {@link Color} for use by {@code JavaFX}
+     */
     NodeColor(final Color color) {
         this.color = color;
     }
@@ -42,6 +47,11 @@ public enum NodeColor {
         }
     }
 
+    /**
+     * Get the {@link Color} of this color for use by {@code JavaFX}.
+     *
+     * @return color for use by JavaFX
+     */
     public Color getFXColor() {
         return color;
     }

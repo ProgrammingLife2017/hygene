@@ -5,6 +5,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.util.converter.NumberStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -26,6 +29,11 @@ public final class ConfigController implements Initializable {
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     @FXML
+    private @MonotonicNonNull TextField nodeId;
+    @FXML
+    private @MonotonicNonNull TextField range;
+
+    @FXML
     private @MonotonicNonNull Slider nodeHeight;
     @FXML
     private @MonotonicNonNull ColorPicker edgeColors;
@@ -44,13 +52,20 @@ public final class ConfigController implements Initializable {
             LOGGER.error("Failed to initialise Configuration Controller.", e);
         }
 
-        if (nodeHeight != null && edgeColors != null
-                && graphVisualizer != null && showBorders != null && dashWidth != null) {
+        if (nodeId != null && range != null && nodeHeight != null && edgeColors != null && graphVisualizer != null
+                && showBorders != null && dashWidth != null) {
+            nodeId.textProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty(),
+                    new NumberStringConverter());
+            nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+            range.textProperty().bindBidirectional(graphVisualizer.getRangeProperty(), new NumberStringConverter());
+            range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
             showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
             dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
 
+            nodeId.textProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             nodeHeight.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             edgeColors.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             showBorders.selectedProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));

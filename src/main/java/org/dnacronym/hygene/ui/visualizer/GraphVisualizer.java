@@ -66,8 +66,8 @@ public final class GraphVisualizer {
 
         selectedNodeProperty = new SimpleObjectProperty<>();
 
-        centerNodeProperty = new SimpleIntegerProperty(100);
-        rangeProperty = new SimpleIntegerProperty(5);
+        centerNodeProperty = new SimpleIntegerProperty(0);
+        rangeProperty = new SimpleIntegerProperty(0);
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -232,13 +232,13 @@ public final class GraphVisualizer {
      * <p>
      * The x coordinate depends on the widthproperty. The y property denotes in which lane the click is.
      *
-     * @param canvas
+     * @param canvas canvas who's width is used to get unscaled x position
      * @param xPos   x position onscreen
      * @param yPos   y position onscreen
      * @return x and y position in a double array of size 2 which correspond with x and y position of {@link
      * Node}.
      */
-    private int[] toNodeCoordinates(Canvas canvas, final double xPos, final double yPos) {
+    private int[] toNodeCoordinates(final Canvas canvas, final double xPos, final double yPos) {
         final int diameter = maxX - minX;
 
         final int unscaledX = (int) (xPos / canvas.getWidth()) * diameter + minX;
@@ -260,7 +260,7 @@ public final class GraphVisualizer {
      *
      * @return property which decides the current center node
      */
-    public IntegerProperty getCenterNodeProperty() {
+    public IntegerProperty getCenterNodeIdProperty() {
         return centerNodeProperty;
     }
 
