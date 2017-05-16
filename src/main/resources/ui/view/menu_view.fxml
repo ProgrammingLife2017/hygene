@@ -3,12 +3,23 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<MenuBar xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+<MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="org.dnacronym.hygene.ui.controller.MenuController">
-    <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
-        <MenuItem fx:id="fileOpen" mnemonicParsing="false" onAction="#openFileAction" text="Open"/>
-        <Menu fx:id="recentFilesMenu" mnemonicParsing="false" text="Recent Files">
-            <MenuItem disable="true" mnemonicParsing="false" text="No recently opened files"/>
+    <menus>
+        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+            <items>
+                <MenuItem fx:id="fileOpen" mnemonicParsing="false" onAction="#openFileAction" text="Open"/>
+                <Menu fx:id="recentFilesMenu" mnemonicParsing="false" text="Recent Files">
+                    <items>
+                        <MenuItem disable="true" mnemonicParsing="false" text="No recently opened files"/>
+                    </items>
+                </Menu>
+            </items>
         </Menu>
-    </Menu>
+        <Menu mnemonicParsing="false" text="Tools">
+            <items>
+                <MenuItem fx:id="openConsole" mnemonicParsing="false" onAction="#openConsoleAction" text="Console"/>
+            </items>
+        </Menu>
+    </menus>
 </MenuBar>

@@ -19,7 +19,4 @@
     <left>
         <fx:include source="config_view.fxml"/>
     </left>
-    <bottom>
-        <fx:include source="console_view.fxml"/>
-    </bottom>
 </BorderPane>

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.ui.console.ConsoleStage;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -37,6 +38,8 @@ public final class MenuController implements Initializable {
 
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
+
+    private Stage consoleWindow = new Stage();
 
 
     /**
@@ -86,6 +89,12 @@ public final class MenuController implements Initializable {
             loadFile(gfaFile);
             parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
         }
+    }
+
+    @FXML
+    void openConsoleAction(final ActionEvent event) throws IOException, UIInitialisationException {
+        new ConsoleStage();
+        LOGGER.info("Launched GUI console window");
     }
 
     /**
@@ -177,7 +186,6 @@ public final class MenuController implements Initializable {
     void setRecentFilesMenu(final Menu recentFilesMenu) {
         this.recentFilesMenu = recentFilesMenu;
     }
-
 
     /**
      * Loads the given file and updates recent files history accordingly.
