@@ -37,10 +37,6 @@ configurations {
 }
 
 dependencies {
-    // GraphStream
-    compile("org.graphstream:gs-core:${graphstreamVersion}")
-    compile("org.graphstream:gs-ui:${graphstreamVersion}")
-
     // Logger
     compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     compile("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
@@ -70,6 +66,8 @@ dependencies {
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
     compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
+
+    compile("org.xerial:sqlite-jdbc:${sqliteVersion}")
 }
 
 jar {
