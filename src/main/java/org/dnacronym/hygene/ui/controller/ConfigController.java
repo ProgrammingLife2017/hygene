@@ -28,8 +28,6 @@ public final class ConfigController implements Initializable {
     @FXML
     private @MonotonicNonNull Slider nodeHeight;
     @FXML
-    private @MonotonicNonNull Slider nodeWidth;
-    @FXML
     private @MonotonicNonNull ColorPicker edgeColors;
 
     @FXML
@@ -46,16 +44,14 @@ public final class ConfigController implements Initializable {
             logger.error("Failed to initialise Configuration Controller.", e);
         }
 
-        if (nodeHeight != null && nodeWidth != null && edgeColors != null
+        if (nodeHeight != null&& edgeColors != null
                 && graphVisualizer != null && showBorders != null && dashWidth != null) {
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
-            nodeWidth.valueProperty().bindBidirectional(graphVisualizer.getNodeWidthProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
             showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
             dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
 
             nodeHeight.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
-            nodeWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             edgeColors.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             showBorders.selectedProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
             dashWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
