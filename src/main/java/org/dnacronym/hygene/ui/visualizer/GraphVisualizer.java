@@ -34,7 +34,6 @@ import java.util.List;
  */
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_NODE_WIDTH = 0.001;
     private static final double DEFAULT_DASH_LENGTH = 10;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
@@ -46,11 +45,12 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
-    private final DoubleProperty nodeWidthProperty;
-    private final DoubleProperty laneHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
     private final DoubleProperty borderDashLengthProperty;
+
+    private double laneHeight;
+    private int minX, maxX;
 
     private @Nullable Graph graph;
 
@@ -66,12 +66,11 @@ public final class GraphVisualizer {
         selectedNodeProperty = new SimpleObjectProperty<>();
 
         centerNodeProperty = new SimpleIntegerProperty(100);
-        rangeProperty = new SimpleIntegerProperty();
+        rangeProperty = new SimpleIntegerProperty(5);
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
-        nodeWidthProperty = new SimpleDoubleProperty(DEFAULT_NODE_WIDTH);
-        laneHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+        laneHeight = DEFAULT_NODE_HEIGHT;
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
@@ -79,38 +78,26 @@ public final class GraphVisualizer {
 
 
     /**
-     * Draw edge on the {@link Canvas}.
+     * Draw a node on the canvas. The minimum and maximum x positions are assumed to be unscaled, directly from the
+     * FAFOSP algorithm.
      *
-     * @param startHorizontal x position of the start of the line
-     * @param startVertical   y position of the start of the line
-     * @param endHorizontal   x position of the end of the line
-     * @param endVertical     y position of the end of the line
-     * @param color           color of the edge
+     * @param graph  graph which contains all the nodes and their information
+     * @param nodeId id of node to draw
+     * @param minX   unscaled minimum x position
+     * @param maxX   unscaled maximum x position
+     * @param lanes  amount of lines in the current visualisation
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawEdge(final double startHorizontal, final double startVertical,
-                          final double endHorizontal, final double endVertical, final Color color) {
-        graphicsContext.setStroke(color);
-        graphicsContext.strokeLine(
-                startHorizontal * nodeWidthProperty.get(),
-                (startVertical + 1.0 / 2.0) * laneHeightProperty.get(),
-                endHorizontal * nodeWidthProperty.get(),
-                (endVertical + 1.0 / 2.0) * laneHeightProperty.get()
-        );
-    }
-
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawNode(final Graph graph, final int nodeId, final int centerNodeX) {
-        final int nodeX = graph.getUnscaledXPosition(nodeId);
-        final int nodeY = graph.getUnscaledYPosition(nodeId);
+    private void drawNode(final Graph graph, final int nodeId, final double minX, final double maxX, final int lanes) {
+        final double diameter = maxX - minX;
         final int sequenceLength = 10;
 
-        final Color color = graph.getColor(nodeId).getFXColor();
-
-        final double rectX = (nodeX - centerNodeX) * nodeWidthProperty.get();
-        final double rectY = (nodeY + 1.0 / 2.0) * laneHeightProperty.get() - 1.0 / 2.0 * nodeHeightProperty.get();
-        final double rectWidth = sequenceLength * nodeWidthProperty.get();
+        final double rectX = (graph.getUnscaledXPosition(nodeId) - minX) / diameter * canvas.getWidth();
+        final double rectY = laneHeight / 2 + graph.getUnscaledYPosition(nodeId) * laneHeight;
+        final double rectWidth = (sequenceLength / diameter) * canvas.getWidth();
         final double rectHeight = nodeHeightProperty.get();
+
+        final Color color = graph.getColor(nodeId).getFXColor();
 
         graphicsContext.setFill(color);
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
@@ -132,18 +119,29 @@ public final class GraphVisualizer {
         clear();
         this.graph = graph;
         if (graph != null && canvas != null) {
-            final int centerNode = centerNodeProperty.get();
+            final int centerNodeId = centerNodeProperty.get();
+            final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
             final int range = rangeProperty.get();
 
+            this.minX = unscaledCenterX - range;
+            this.maxX = unscaledCenterX + range;
+            final int[] lanes = {1};
+
             final List<Integer> neighbours = new ArrayList<>();
-            graph.visitNeighbours(centerNode, SequenceDirection.LEFT, neighbours::add);
-            graph.visitNeighbours(centerNode, SequenceDirection.RIGHT, neighbours::add);
+            graph.visitNeighbours(centerNodeId, SequenceDirection.LEFT, nodeId -> {
+                neighbours.add(nodeId);
+                lanes[0] = Math.max(lanes[0], graph.getUnscaledYPosition(nodeId));
+            });
+            graph.visitNeighbours(centerNodeId, SequenceDirection.RIGHT, nodeId -> {
+                neighbours.add(nodeId);
+                lanes[0] = Math.max(lanes[0], graph.getUnscaledYPosition(nodeId));
+            });
 
-            final int centerNodeX = graph.getUnscaledXPosition(centerNode);
-            drawNode(graph, centerNode, centerNodeX);
+            this.laneHeight = lanes[0] / canvas.getHeight();
 
+            drawNode(graph, centerNodeId, minX, maxX, lanes[0]);
             for (Integer nodeId : neighbours) {
-                drawNode(graph, nodeId, centerNodeX);
+                drawNode(graph, nodeId, minX, maxX, lanes[0]);
             }
         }
     }
@@ -228,10 +226,11 @@ public final class GraphVisualizer {
      * Node}.
      */
     private int[] toNodeCoordinates(final double xPos, final double yPos) {
-        return new int[]{
-                (int) Math.round(xPos / nodeWidthProperty.get()),
-                (int) Math.floor(yPos / laneHeightProperty.get())
-        };
+        final int diameter = maxX - minX;
+
+        final int unscaledX = (int) (xPos / canvas.getWidth()) * diameter + minX;
+        final int unscaledY = (int) (yPos / laneHeight);
+        return new int[]{unscaledX, unscaledY};
     }
 
     /**
@@ -279,17 +278,6 @@ public final class GraphVisualizer {
      */
     public DoubleProperty getNodeHeightProperty() {
         return nodeHeightProperty;
-    }
-
-    /**
-     * The property of node widths.
-     * <p>
-     * Node width determines how wide a single width unit in the FAFOSP algorithm.
-     *
-     * @return property which decides the width of nodes.
-     */
-    public DoubleProperty getNodeWidthProperty() {
-        return nodeWidthProperty;
     }
 
     /**
