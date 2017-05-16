@@ -290,8 +290,7 @@ public final class Graph {
         visitNeighbours(centerNodeId, SequenceDirection.LEFT, nodeId -> {
             if (unscaledYPosition == getUnscaledYPosition(nodeId)
                     && unscaledXPosition > getUnscaledXPosition(nodeId)
-                    // TODO retreive actual node length when this is implemented
-                    && unscaledXPosition < getUnscaledXPosition(nodeId) + 10) {
+                    && unscaledXPosition < getUnscaledXPosition(nodeId) + getSequenceLength(nodeId)) {
                 foundNode[0] = nodeId;
             }
         });
