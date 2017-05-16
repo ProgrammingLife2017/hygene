@@ -135,7 +135,7 @@ public final class Graph {
      */
     public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
         final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+                + direction.ternary(getNeighbourCount(id, direction.opposite()) * 2, 0);
 
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
             final int neighbourIndex = neighbourOffset + 2 * i;
@@ -155,7 +155,7 @@ public final class Graph {
     public void visitNeighboursWhile(final int id, final SequenceDirection direction, final Consumer<Integer> action,
                                      final Predicate<Integer> condition) {
         final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(getNeighbourCount(id, direction.opposite()), 0);
+                + direction.ternary(getNeighbourCount(id, direction.opposite()) * 2, 0);
 
         for (int i = 0; i < getNeighbourCount(id, direction); i++) {
             final int neighbourIndex = neighbourOffset + 2 * i;

@@ -111,6 +111,7 @@ class GraphTest {
                 .withIncomingEdge(15, 0)
                 .withIncomingEdge(67, 0)
                 .withIncomingEdge(10, 0)
+                .withOutgoingEdge(77, 0)
                 .withIncomingEdge(60, 0)
                 .toArray();
         final Graph graph = createGraphWithNodes(node);
