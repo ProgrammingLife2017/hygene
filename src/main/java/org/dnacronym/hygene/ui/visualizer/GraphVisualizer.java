@@ -61,20 +61,26 @@ public final class GraphVisualizer {
     /**
      * Create a new {@link GraphVisualizer} instance.
      */
+    @SuppressWarnings("nullness") // For passing redraw method to listeners whilst object uninitialized
     public GraphVisualizer() {
-        super();
-
         selectedNodeProperty = new SimpleObjectProperty<>();
 
         centerNodeProperty = new SimpleIntegerProperty(0);
         rangeProperty = new SimpleIntegerProperty(0);
+        centerNodeProperty.addListener((observable, oldValue, newValue) -> redraw());
+        rangeProperty.addListener((observable, oldValue, newValue) -> redraw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
+        edgeColorProperty.addListener((observable, oldValue, newValue) -> redraw());
+        nodeHeightProperty.addListener((observable, oldValue, newValue) -> redraw());
+
         laneHeight = DEFAULT_NODE_HEIGHT;
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
+        displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> redraw());
+        borderDashLengthProperty.addListener((observable, oldValue, newValue) -> redraw());
     }
 
 

@@ -2,8 +2,10 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -11,7 +13,6 @@ import javafx.util.converter.NumberStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -29,15 +30,22 @@ public final class ConfigController implements Initializable {
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
     @FXML
+    private @MonotonicNonNull Label currentNodeId;
+    @FXML
+    private @MonotonicNonNull Label currentRange;
+    @FXML
     private @MonotonicNonNull TextField nodeId;
     @FXML
     private @MonotonicNonNull TextField range;
+    @FXML
+    private @MonotonicNonNull Button setNodeId;
+    @FXML
+    private @MonotonicNonNull Button setRange;
 
     @FXML
     private @MonotonicNonNull Slider nodeHeight;
     @FXML
     private @MonotonicNonNull ColorPicker edgeColors;
-
     @FXML
     private @MonotonicNonNull CheckBox showBorders;
     @FXML
@@ -52,35 +60,48 @@ public final class ConfigController implements Initializable {
             LOGGER.error("Failed to initialise Configuration Controller.", e);
         }
 
-        if (nodeId != null && range != null && nodeHeight != null && edgeColors != null && graphVisualizer != null
-                && showBorders != null && dashWidth != null) {
-            nodeId.textProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty(),
-                    new NumberStringConverter());
+        if (nodeId != null && range != null && currentNodeId != null && currentRange != null && nodeHeight != null
+                && edgeColors != null && graphVisualizer != null && showBorders != null && dashWidth != null) {
             nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-            range.textProperty().bindBidirectional(graphVisualizer.getRangeProperty(), new NumberStringConverter());
             range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+
+            currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
+            currentRange.textProperty().bind(graphVisualizer.getRangeProperty().asString());
 
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
             showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
             dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
-
-            nodeId.textProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
-            nodeHeight.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
-            edgeColors.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
-            showBorders.selectedProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
-            dashWidth.valueProperty().addListener((ob, oldV, newV) -> redrawGraphVisualiser(graphVisualizer));
         }
     }
 
     /**
-     * Redraw the {@link GraphVisualizer}.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} to redraw
+     * Set the node id property in the {@link GraphVisualizer} integer value of the
+     * current {@link TextField}.
+     * <p>
+     * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
+     * can be entered in the {@link TextField}.
      */
-    void redrawGraphVisualiser(final @Nullable GraphVisualizer graphVisualizer) {
-        if (graphVisualizer != null) {
-            graphVisualizer.redraw();
+    @FXML
+    void setNodeId() {
+        if (nodeId != null && graphVisualizer != null) {
+            graphVisualizer.getCenterNodeIdProperty().set(Integer.valueOf(nodeId.getText()));
+            nodeId.clear();
+        }
+    }
+
+    /**
+     * Set the range property in the {@link GraphVisualizer} integer value of the
+     * current {@link TextField}.
+     * <p>
+     * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
+     * can be entered in the {@link TextField}.
+     */
+    @FXML
+    void setRange() {
+        if (range != null && graphVisualizer != null) {
+            graphVisualizer.getRangeProperty().set(Integer.valueOf(range.getText()));
+            range.clear();
         }
     }
 
