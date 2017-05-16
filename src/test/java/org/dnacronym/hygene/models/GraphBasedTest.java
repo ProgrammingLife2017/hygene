@@ -8,9 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
  * <p>
  * This class is intended to be extended.
  */
-// Too much trouble
-@SuppressWarnings("nullness")
-class GraphBasedTest {
+abstract class GraphBasedTest {
     private Graph graph;
     private int[][] nodeArrays;
 
