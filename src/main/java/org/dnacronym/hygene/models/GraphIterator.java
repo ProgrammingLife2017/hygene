@@ -8,7 +8,12 @@ import java.util.function.Predicate;
 
 /**
  * A collection of iteration functions over a particular {@link Graph} or a part of it.
+ * <p>
+ * A direct neighbour is a node that can be reached over a single edge. An indirect neighbour is a node that can be
+ * reached over at least one edge.
  */
+// All methods are closely related and cannot be refactored further
+@SuppressWarnings("PMD.TooManyMethods")
 public final class GraphIterator {
     private final Graph graph;
     private final int[][] nodeArrays;
@@ -26,42 +31,43 @@ public final class GraphIterator {
 
 
     /**
-     * Applies the given {@code Consumer} to the identifiers of the neighbours in the given direction.
+     * Applies the given {@code Consumer} to the identifiers of the direct neighbours in the given direction.
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to visit
      * @param action    the function to apply to each neighbour's identifier
      */
-    public void visitNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
-        final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(graph.getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
+    public void visitDirectNeighbours(final int id, final SequenceDirection direction, final Consumer<Integer> action) {
+        final int neighbourOffset = getNeighbourOffset(id, direction);
 
         for (int i = 0; i < graph.getNeighbourCount(id, direction); i++) {
-            final int neighbourIndex = neighbourOffset + 2 * i;
+            final int neighbourIndex = neighbourOffset + Node.EDGE_DATA_SIZE * i;
             action.accept(nodeArrays[id][neighbourIndex]);
         }
     }
 
     /**
-     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
-     * {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more neighbours.
+     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction until the
+     * given {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more
+     * neighbours.
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to visit
      * @param condition the {@link Predicate} that holds until no more neighbours should be visited
      * @param action    the function to apply to each neighbour's identifier
      */
-    public void visitNeighboursWhile(final int id, final SequenceDirection direction,
-                                     final Predicate<Integer> condition, final Consumer<Integer> action) {
+    public void visitDirectNeighboursWhile(final int id, final SequenceDirection direction,
+                                           final Predicate<Integer> condition, final Consumer<Integer> action) {
         final Consumer<Integer> emptyCatchAction = ignored -> {
             // Do nothing
         };
-        visitNeighboursWhile(id, direction, condition, emptyCatchAction, action);
+        visitDirectNeighboursWhile(id, direction, condition, emptyCatchAction, action);
     }
 
     /**
-     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
-     * {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more neighbours.
+     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction until the
+     * given {@link Predicate} returns {@code false} for that neighbour's identifier or until there are no more
+     * neighbours.
      *
      * @param id          the node's identifier
      * @param direction   the direction of neighbours to visit
@@ -69,11 +75,10 @@ public final class GraphIterator {
      * @param catchAction the {@link Consumer} to execute as soon as the condition no longer holds
      * @param action      the function to apply to each neighbour's identifier
      */
-    public void visitNeighboursWhile(final int id, final SequenceDirection direction,
-                                     final Predicate<Integer> condition, final Consumer<Integer> catchAction,
-                                     final Consumer<Integer> action) {
-        final int neighbourOffset = 1 + Node.NODE_OUTGOING_EDGES_INDEX
-                + direction.ternary(graph.getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
+    public void visitDirectNeighboursWhile(final int id, final SequenceDirection direction,
+                                           final Predicate<Integer> condition, final Consumer<Integer> catchAction,
+                                           final Consumer<Integer> action) {
+        final int neighbourOffset = getNeighbourOffset(id, direction);
 
         for (int i = 0; i < graph.getNeighbourCount(id, direction); i++) {
             final int neighbour = nodeArrays[id][neighbourOffset + Node.EDGE_DATA_SIZE * i];
@@ -88,22 +93,24 @@ public final class GraphIterator {
     }
 
     /**
-     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
-     * {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more neighbours.
+     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction until the
+     * given {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more
+     * neighbours.
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to visit
      * @param condition the {@link Predicate} that fails until no more neighbours should be visited
      * @param action    the function to apply to each neighbour's identifier
      */
-    public void visitNeighboursUntil(final int id, final SequenceDirection direction,
-                                     final Predicate<Integer> condition, final Consumer<Integer> action) {
-        visitNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), action);
+    public void visitDirectNeighboursUntil(final int id, final SequenceDirection direction,
+                                           final Predicate<Integer> condition, final Consumer<Integer> action) {
+        visitDirectNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), action);
     }
 
     /**
-     * Applies the given {@link Consumer} to the identifiers of the neighbours in the given direction until the given
-     * {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more neighbours.
+     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction until the
+     * given {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more
+     * neighbours.
      *
      * @param id          the node's identifier
      * @param direction   the direction of neighbours to visit
@@ -111,10 +118,118 @@ public final class GraphIterator {
      * @param catchAction the {@link Consumer} to execute as soon as the condition holds
      * @param action      the function to apply to each neighbour's identifier
      */
-    public void visitNeighboursUntil(final int id, final SequenceDirection direction,
-                                     final Predicate<Integer> condition, final Consumer<Integer> catchAction,
-                                     final Consumer<Integer> action) {
-        visitNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), catchAction, action);
+    public void visitDirectNeighboursUntil(final int id, final SequenceDirection direction,
+                                           final Predicate<Integer> condition, final Consumer<Integer> catchAction,
+                                           final Consumer<Integer> action) {
+        visitDirectNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), catchAction, action);
+    }
+
+    /**
+     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitIndirectNeighbours(final int id, final SequenceDirection direction,
+                                        final Consumer<Integer> action) {
+        final boolean[] visited = new boolean[nodeArrays.length];
+        visitIndirectNeighbours(id, direction, node -> visited[node], node -> {
+            visited[node] = true;
+            action.accept(node);
+        });
+    }
+
+    /**
+     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param visited   a function that returns true if the node with the supplied id has been visited during this
+     *                  iteration
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitIndirectNeighbours(final int id, final SequenceDirection direction,
+                                        final Predicate<Integer> visited, final Consumer<Integer> action) {
+        final Queue<Integer> queue = new LinkedList<>();
+        queue.add(id);
+
+        while (!queue.isEmpty()) {
+            final int head = queue.remove();
+            if (visited.test(head)) {
+                continue;
+            }
+
+            action.accept(head);
+            visitDirectNeighbours(head, direction, index -> {
+                if (!visited.test(index)) {
+                    queue.add(index);
+                }
+            });
+        }
+    }
+
+    /**
+     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours that can be reached within
+     * the given number of hops in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitIndirectNeighboursWithinRange(final int id, final SequenceDirection direction, final int maxDepth,
+                                                   final Consumer<Integer> action) {
+        final boolean[] visited = new boolean[nodeArrays.length];
+        visitIndirectNeighboursWithinRange(id, direction, maxDepth, node -> visited[node], node -> {
+            visited[node] = true;
+            action.accept(node);
+        });
+    }
+
+    /**
+     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours that can be reached within
+     * the given number of hops in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to visit
+     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
+     * @param visited   a function that returns true if the node with the supplied id has been visited during this
+     *                  iteration
+     * @param action    the function to apply to each neighbour's identifier
+     */
+    public void visitIndirectNeighboursWithinRange(final int id, final SequenceDirection direction, final int maxDepth,
+                                                   final Predicate<Integer> visited, final Consumer<Integer> action) {
+        final Queue<Integer> queue = new LinkedList<>();
+        queue.add(id);
+
+        int currentDepth = 0;
+        final int[] depthIncreaseTimes = {1, 0};
+        while (!queue.isEmpty()) {
+            final int head = queue.remove();
+            if (visited.test(head)) {
+                continue;
+            }
+
+            action.accept(head);
+            visitDirectNeighbours(head, direction, index -> {
+                if (!visited.test(index)) {
+                    depthIncreaseTimes[1]++;
+                    queue.add(index);
+                }
+            });
+
+            depthIncreaseTimes[0]--;
+            if (depthIncreaseTimes[0] == 0) {
+                currentDepth++;
+                if (currentDepth > maxDepth) {
+                    return;
+                }
+
+                depthIncreaseTimes[0] = depthIncreaseTimes[1];
+                depthIncreaseTimes[1] = 0;
+            }
+        }
     }
 
     /**
@@ -124,11 +239,8 @@ public final class GraphIterator {
      * @param action    the function to apply to each node's identifier
      */
     public void visitAll(final SequenceDirection direction, final Consumer<Integer> action) {
-        final boolean[] visited = new boolean[nodeArrays.length];
-        visitAll(direction, node -> visited[node], node -> {
-            visited[node] = true;
-            action.accept(node);
-        });
+        final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
+        visitIndirectNeighbours(sentinelId, direction, action);
     }
 
     /**
@@ -141,22 +253,51 @@ public final class GraphIterator {
      */
     public void visitAll(final SequenceDirection direction, final Predicate<Integer> visited,
                          final Consumer<Integer> action) {
-        final Queue<Integer> queue = new LinkedList<>();
-        queue.add(0);
+        final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
+        visitIndirectNeighbours(sentinelId, direction, visited, action);
+    }
 
-        while (!queue.isEmpty()) {
-            final int head = queue.remove();
-            if (visited.test(head)) {
-                continue;
-            }
+    /**
+     * Visits all nodes in this {@code Graph} that can be reached within the given number of hops from the sentinel
+     * node and, applies the given {@code Consumer} to their identifiers.
+     *
+     * @param direction the direction to visit the nodes in
+     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
+     * @param action    the function to apply to each node's identifier
+     */
+    public void visitAllWithinRange(final SequenceDirection direction, final int maxDepth,
+                                    final Consumer<Integer> action) {
+        final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
+        visitIndirectNeighboursWithinRange(sentinelId, direction, maxDepth, action);
+    }
 
-            action.accept(head);
+    /**
+     * Visits all nodes in this {@code Graph} that can be reached within the given number of hops from the sentinel
+     * node and, applies the given {@code Consumer} to their identifiers.
+     *
+     * @param direction the direction to visit the nodes in
+     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
+     * @param visited   a function that returns true if the node with the supplied id has been visited during this
+     *                  iteration
+     * @param action    the function to apply to each node's identifier
+     */
+    public void visitAllWithinRange(final SequenceDirection direction, final int maxDepth,
+                                    final Predicate<Integer> visited, final Consumer<Integer> action) {
+        final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
+        visitIndirectNeighboursWithinRange(sentinelId, direction, maxDepth, visited, action);
+    }
 
-            visitNeighbours(head, direction, index -> {
-                if (!visited.test(index)) {
-                    queue.add(index);
-                }
-            });
-        }
+
+    /**
+     * Returns the offset within a node array where the neighbours in the given direction begin.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of the neighbours
+     * @return the offset within a node array where the neighbours in the given direction begin
+     */
+    private int getNeighbourOffset(final int id, final SequenceDirection direction) {
+        return 1 + Node.NODE_OUTGOING_EDGES_INDEX + direction.ternary(
+                graph.getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE,
+                0);
     }
 }
