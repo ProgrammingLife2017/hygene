@@ -115,7 +115,7 @@ tasks.withType(JavaCompile).all { JavaCompile compile ->
 }
 
 /* Plugin settings */
-mainClassName = "org.dnacronym.hygene.ui.runnable.Hygene"
+mainClassName = mainClass
 
 checkstyle {
     ignoreFailures = true
