@@ -39,7 +39,7 @@ public final class MenuController implements Initializable {
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
 
-    private @MonotonicNonNull ConsoleWrapper consoleStage;
+    private @MonotonicNonNull ConsoleWrapper consoleWrapper;
 
 
     /**
@@ -100,12 +100,12 @@ public final class MenuController implements Initializable {
     @FXML
     void openConsoleAction(final ActionEvent event) throws IOException {
         try {
-            if (consoleStage == null) {
-                consoleStage = new ConsoleWrapper();
+            if (consoleWrapper == null) {
+                consoleWrapper = new ConsoleWrapper();
                 LOGGER.info("Launched GUI console window");
             }
 
-            consoleStage.bringToFront();
+            consoleWrapper.bringToFront();
         } catch (UIInitialisationException e) {
             LOGGER.error(e);
         }
@@ -190,6 +190,15 @@ public final class MenuController implements Initializable {
      */
     void setFileChooser(final FileChooser fileChooser) {
         this.fileChooser = fileChooser;
+    }
+
+    /**
+     * Returns the {@link ConsoleWrapper} attached to this menu.
+     *
+     * @return the {@link ConsoleWrapper}.
+     */
+    public @Nullable ConsoleWrapper getConsoleWrapper() {
+        return consoleWrapper;
     }
 
     /**
