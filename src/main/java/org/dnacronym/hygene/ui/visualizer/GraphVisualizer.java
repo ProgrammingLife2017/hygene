@@ -12,6 +12,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.Graph;
@@ -32,6 +34,8 @@ import java.util.List;
  * @see GraphicsContext
  */
 public final class GraphVisualizer {
+    private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
+
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
     private static final double ARC_SIZE = 20;
@@ -146,8 +150,8 @@ public final class GraphVisualizer {
             final int[] laneCount = {1};
 
             final List<Integer> neighbours = new LinkedList<>();
-            graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
-                    nodeId -> false,
+            graph.iterator().visitIndirectNeighboursWithinRange(
+                    centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
                     nodeId -> {
                         if (graph != null) {
                             neighbours.add(nodeId);
@@ -155,8 +159,8 @@ public final class GraphVisualizer {
                             minX = Math.min(minX, graph.getUnscaledXPosition(nodeId));
                         }
                     });
-            graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(),
-                    nodeId -> false,
+            graph.iterator().visitIndirectNeighboursWithinRange(
+                    centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(),
                     nodeId -> {
                         if (graph != null) {
                             neighbours.add(nodeId);
@@ -168,7 +172,10 @@ public final class GraphVisualizer {
             laneHeight = laneCount[0] / canvas.getHeight();
 
             drawNode(graph, centerNodeId, minX, maxX, laneHeight);
+            LOGGER.info("Neighbours: " + neighbours.size());
             for (Integer nodeId : neighbours) {
+                LOGGER.info("Node x: " + graph.getUnscaledXPosition(nodeId));
+                LOGGER.info("Node y: " + graph.getUnscaledYPosition(nodeId));
                 drawNode(graph, nodeId, minX, maxX, laneHeight);
             }
 
@@ -222,10 +229,7 @@ public final class GraphVisualizer {
             final int nodeLane = positions[1];
 
             if (graph != null) {
-                final int nodeId = graph.getNode(centerNodeIdProperty.get(), hopsProperty.get(), nodeX, nodeLane);
-                if (nodeId != -1) {
-                    selectedNodeProperty.set(graph.getNode(nodeId));
-                }
+                // TODO write get edge or node method
             }
         });
     }

@@ -1,10 +1,9 @@
 package org.dnacronym.hygene.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.dnacronym.hygene.parser.GfaFile;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.parser.NewGfaFile;
+import org.dnacronym.hygene.parser.GfaFile;
 
 
 /**
@@ -147,33 +146,6 @@ public final class Graph {
             iterator = new GraphIterator(this);
         }
         return iterator;
-    }
-
-
-    /**
-     * Finds the first node whose vertical and horizontal positions match.
-     * <p>
-     * This gives the {@link Node} where the node's x is in bounds and the band is equal to the given band, or
-     * {@code null} if no such band is found
-     *
-     * @param centerNodeId      node id to search around
-     * @param range             range which specifies how far to search for
-     * @param unscaledXPosition x position of the node
-     * @param unscaledYPosition band the node is in
-     * @return node              id of found node, -1 if not found
-     */
-    public int getNode(final int centerNodeId, final int range,
-                       final int unscaledXPosition, final int unscaledYPosition) {
-        final int[] foundNode = {-1};
-        visitNeighbours(centerNodeId, SequenceDirection.LEFT, nodeId -> {
-            if (unscaledYPosition == getUnscaledYPosition(nodeId)
-                    && unscaledXPosition > getUnscaledXPosition(nodeId)
-                    && unscaledXPosition < getUnscaledXPosition(nodeId) + getSequenceLength(nodeId)) {
-                foundNode[0] = nodeId;
-            }
-        });
-
-        return foundNode[0];
     }
 
     /**
