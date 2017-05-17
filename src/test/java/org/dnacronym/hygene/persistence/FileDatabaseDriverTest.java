@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link FileDatabaseDriver} class.
  */
-final class FileDatabaseDriverTest extends FileDatabaseTest {
+final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
     private FileDatabaseDriver fileDatabaseDriver;
 
 

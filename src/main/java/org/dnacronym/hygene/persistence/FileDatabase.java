@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 
 /**
- * Class representing the database corresponding to a file.
+ * Class representing the database corresponding to a GFA file.
  */
 @SuppressWarnings("initialization") // due to setup actions that need to be executed in the constructor
 public final class FileDatabase {
@@ -54,5 +54,16 @@ public final class FileDatabase {
      */
     FileDatabaseDriver getFileDatabaseDriver() {
         return fileDatabaseDriver;
+    }
+
+    /**
+     * Closes the database connection.
+     * <p>
+     * To be called when this instance is no longer needed.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    void close() throws SQLException {
+        fileDatabaseDriver.close();
     }
 }

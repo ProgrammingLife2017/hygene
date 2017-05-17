@@ -2,39 +2,51 @@ package org.dnacronym.hygene.persistence;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 
 /**
- * Test suite for the {@link FileDatabaseDriver} class.
+ * Test suite for the {@link FileDatabase} class.
  */
-abstract class FileDatabaseTest {
-    static final String GFA_FILE_NAME = "src/test/resources/gfa/simple.gfa";
-    static final File GFA_FILE_DB = new File(GFA_FILE_NAME + FileDatabaseDriver.DB_FILE_EXTENSION);
+final class FileDatabaseTest extends FileDatabaseBaseTest {
+    private FileDatabase fileDatabase;
 
 
     @BeforeEach
     void setUp() throws IOException, SQLException {
-        deleteDatabaseFile();
+        super.setUp();
+        fileDatabase = new FileDatabase(GFA_FILE_NAME);
     }
+
+
+    @Test
+    void testExistingDatabase() throws SQLException, IOException {
+        fileDatabase.close();
+        final Throwable throwable = catchThrowable(() -> fileDatabase = new FileDatabase(GFA_FILE_NAME));
+
+        assertThat(throwable).isNull();
+    }
+
+    @Test
+    void testGetFileName() {
+        assertThat(fileDatabase.getFileName()).isEqualTo(GFA_FILE_NAME);
+    }
+
+    @Test
+    void testGetFileDatabaseDriver() {
+        assertThat(fileDatabase.getFileDatabaseDriver()).isNotNull();
+    }
+
 
     @AfterEach
     void tearDown() throws IOException, SQLException {
-        deleteDatabaseFile();
-    }
-
-
-    /**
-     * Deletes the database file belonging to the GFA source file.
-     *
-     * @throws IOException in case the file did exist and could not be deleted successfully
-     */
-    private void deleteDatabaseFile() throws IOException {
-        if (GFA_FILE_DB.exists() && !GFA_FILE_DB.delete()) {
-            throw new IOException("Failed to delete existing database file.");
-        }
+        fileDatabase.close();
+        super.tearDown();
     }
 }
