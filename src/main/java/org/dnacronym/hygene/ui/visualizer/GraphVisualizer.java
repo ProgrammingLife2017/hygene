@@ -185,8 +185,6 @@ public final class GraphVisualizer {
 
             laneHeight = calculator.getLaneHeight();
 
-            System.out.println(calculator.getLaneCount());
-
             for (Integer nodeId : neighbours) {
                 drawNode(calculator, graph, nodeId);
 
@@ -262,7 +260,7 @@ public final class GraphVisualizer {
         this.graph = graph;
 
         centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
-        hopsProperty.set((int) Math.min(DEFAULT_RANGE, graph.getNodeArrays().length / 2));
+        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) graph.getNodeArrays().length / 2));
     }
 
     /**
