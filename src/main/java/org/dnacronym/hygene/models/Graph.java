@@ -174,18 +174,20 @@ public final class Graph {
             final Integer head = queue.remove();
 
             // Horizontal position may have been set since it was added to the queue
-            if (getUnscaledXPosition(head) < 0) {
-                fafospX(head);
+            if (getUnscaledXPosition(head) >= 0) {
+                continue;
+            }
 
-                // Horizontal position cannot always be determined by FAFOSP-X
-                if (getUnscaledXPosition(head) >= 0) {
-                    // Add neighbours of which horizontal position was not set
-                    iterator().visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
-                        if (getUnscaledXPosition(neighbour) < 0) {
-                            queue.add(neighbour);
-                        }
-                    });
-                }
+            fafospX(head);
+
+            // Horizontal position cannot always be determined by FAFOSP-X
+            if (getUnscaledXPosition(head) >= 0) {
+                // Add neighbours of which horizontal position was not set
+                iterator().visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+                    if (getUnscaledXPosition(neighbour) < 0) {
+                        queue.add(neighbour);
+                    }
+                });
             }
         }
     }
