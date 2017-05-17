@@ -62,7 +62,7 @@ public final class ConfigController implements Initializable {
             range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
             currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
-            currentRange.textProperty().bind(graphVisualizer.getRangeProperty().asString());
+            currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
 
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
@@ -100,10 +100,10 @@ public final class ConfigController implements Initializable {
     void setRange() {
         if (graphVisualizer != null && range != null) {
             final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d.]", ""));
-            graphVisualizer.getRangeProperty().set(newValue);
+            graphVisualizer.getHopsProperty().set(newValue);
             range.clear();
 
-            LOGGER.info("Range set set: " + graphVisualizer.getRangeProperty().get());
+            LOGGER.info("Range set set: " + graphVisualizer.getHopsProperty().get());
         }
     }
 
