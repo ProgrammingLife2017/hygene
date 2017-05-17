@@ -166,10 +166,8 @@ public final class Graph {
      * breadth-first order.
      */
     public void fafospX() {
-        final GraphIterator iterator = iterator();
-
         final Queue<Integer> queue = new LinkedList<>();
-        iterator.visitNeighbours(0, SequenceDirection.RIGHT, queue::add);
+        iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, node -> queue.add(node));
         setUnscaledXPosition(0, 0);
 
         while (!queue.isEmpty()) {
@@ -182,7 +180,7 @@ public final class Graph {
                 // Horizontal position cannot always be determined by FAFOSP-X
                 if (getUnscaledXPosition(head) >= 0) {
                     // Add neighbours of which horizontal position was not set
-                    iterator.visitNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+                    iterator().visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
                         if (getUnscaledXPosition(neighbour) < 0) {
                             queue.add(neighbour);
                         }
@@ -199,23 +197,17 @@ public final class Graph {
      * @param id the node's identifier
      */
     private void fafospX(final int id) {
-        final GraphIterator iterator = iterator();
-
-        final boolean[] continuxe = {true};
         final int[] width = {-1};
-        iterator.visitNeighbours(id, SequenceDirection.LEFT, neighbour -> {
-            if (!continuxe[0]) {
-                return;
-            }
-            final int newWidth = getUnscaledXPosition(neighbour);
-            if (newWidth < 0) {
-                continuxe[0] = false;
-                width[0] = -1;
-                return;
-            } else if (newWidth + 1 > width[0]) {
-                width[0] = newWidth + 1;
-            }
-        });
+        iterator().visitDirectNeighboursWhile(id, SequenceDirection.LEFT,
+                neighbour -> getUnscaledXPosition(neighbour) >= 0,
+                ignored -> width[0] = -1,
+                neighbour -> {
+                    final int newWidth = getUnscaledXPosition(neighbour) + 1;
+                    if (newWidth > width[0]) {
+                        width[0] = newWidth;
+                    }
+                }
+        );
 
         if (width[0] >= 0) {
             setUnscaledXPosition(id, width[0] + getSequenceLength(id));
