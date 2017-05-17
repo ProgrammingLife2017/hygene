@@ -6,8 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  * Controller for the node properties window. Shows the properties of the selected node.
  */
 public class NodePropertiesController implements Initializable {
-    private final org.apache.logging.log4j.Logger logger = LogManager.getLogger(NodePropertiesController.class);
+    private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
     private @MonotonicNonNull NeighbourVisualizer neighbourVisualizer;
@@ -47,7 +47,7 @@ public class NodePropertiesController implements Initializable {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
         } catch (UIInitialisationException e) {
-            logger.error("Failed to initialize NodePropertiesController.", e);
+            LOGGER.error("Failed to initialize NodePropertiesController.", e);
             return;
         }
 
@@ -55,9 +55,8 @@ public class NodePropertiesController implements Initializable {
             final ObjectProperty<Node> selectedNodeProperty = new SimpleObjectProperty<>();
 
             neighbourVisualizer = new NeighbourVisualizer(
-                    new SimpleObjectProperty<>(Color.BLACK),
                     graphVisualizer.getEdgeColorProperty(),
-                    new SimpleObjectProperty<>()
+                    new SimpleObjectProperty<>() // graphVisualizer.getSelectedNodeProperty()
             );
             neighbourVisualizer.setCanvas(neighbourCanvas);
 
@@ -67,7 +66,7 @@ public class NodePropertiesController implements Initializable {
                     try {
                         sequence.setText(newNode.retrieveMetadata().getSequence());
                     } catch (ParseException e) {
-                        logger.error("Error when parsing a node.", e);
+                        LOGGER.error("Error when parsing a node.", e);
                     }
 
                     leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
