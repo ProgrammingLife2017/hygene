@@ -23,9 +23,8 @@ public final class SequenceNode {
 
     private int leftHeight = -1;
     private int rightHeight = -1;
-    private int maxHeight = -1;
 
-    private boolean visited = false;
+    private boolean visited;
 
 
     /**
@@ -177,6 +176,15 @@ public final class SequenceNode {
     }
 
     /**
+     * Sets the horizontal position of the right end of the node.
+     *
+     * @param horizontalRightEnd the horizontal position of the right end of the node
+     */
+    public void setHorizontalRightEnd(final int horizontalRightEnd) {
+        this.horizontalRightEnd = horizontalRightEnd;
+    }
+
+    /**
      * Returns the vertical position of the centre of the node as calculated by FAFOSP.
      *
      * @return vertical position of the centre of the node as calculated by FAFOSP.
@@ -221,26 +229,6 @@ public final class SequenceNode {
         return rightHeight;
     }
 
-    /**
-     * Returns the maximal height of any node that is connected to this node.
-     * <p>
-     * This method has a complexity of O(1) as it returns a precomputed value.
-     *
-     * @return the maximal height of any node that is connected to this node.
-     */
-    public int getMaxHeight() {
-        return maxHeight;
-    }
-
-    /**
-     * Sets the maximal height.
-     *
-     * @param maxHeight the new maximal height
-     */
-    void setMaxHeight(final int maxHeight) {
-        this.maxHeight = maxHeight;
-    }
-
 
     /**
      * Calculates the optimal horizontal position for this {@code SequenceNode} relative to its left neighbours using
@@ -249,6 +237,9 @@ public final class SequenceNode {
     void fafospX() {
         int width = 0;
         for (final SequenceNode neighbour : leftNeighbours) {
+            if (neighbour.horizontalRightEnd < 0) {
+                return;
+            }
             final int newWidth = neighbour.horizontalRightEnd + 1;
             if (newWidth > width) {
                 width = newWidth;
@@ -306,10 +297,12 @@ public final class SequenceNode {
 
     /**
      * Calculates the vertical position for the right neighbour(s) of this {@code SequenceNode}.
+     *
+     * @param defaultPosition the position a node should be placed at by default
      */
-    void fafospYCalculate() {
+    void fafospYCalculate(final int defaultPosition) {
         if (verticalPosition < 0) {
-            verticalPosition = maxHeight / 2;
+            verticalPosition = defaultPosition;
         }
 
         if (rightNeighbours.size() == 1) {

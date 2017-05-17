@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -27,13 +28,24 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 public final class MenuController implements Initializable {
-    private final Logger logger = LogManager.getLogger(MenuController.class);
+    private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
     private @MonotonicNonNull FileChooser fileChooser;
     private @MonotonicNonNull GraphStore graphStore;
 
+    private File parentDirectory;
+
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
+
+
+    /**
+     * Create an instance of a {@link MenuController} and set the directory for use by {@link FileChooser}.
+     */
+    public MenuController() {
+        super();
+        parentDirectory = new File(System.getProperty("user.home"));
+    }
 
 
     @Override
@@ -43,34 +55,38 @@ public final class MenuController implements Initializable {
 
             populateRecentFilesMenu();
             initFileChooser();
-        } catch (UIInitialisationException e) {
-            logger.error("Failed to initialize MenuController.", e);
+        } catch (final UIInitialisationException e) {
+            LOGGER.error("Failed to initialize MenuController.", e);
         }
     }
-
 
     /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
      * {@link Hygene#getPrimaryStage()#getOwner()}.
      *
-     * @param event {@link ActionEvent} associated with the event.
-     * @throws Exception if Unable to open the file, or parse the file.
+     * @param event {@link ActionEvent} associated with the event
+     * @throws IOException               if unable to open or parse the file
+     * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
      * @see GraphStore#load(File)
      */
     @FXML
-    protected void openFileAction(final ActionEvent event) throws Exception {
+    void openFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
         if (fileChooser == null || graphStore == null) {
             return;
         }
 
         final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
+
+        if (parentDirectory != null) {
+            fileChooser.setInitialDirectory(parentDirectory);
+        }
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
             loadFile(gfaFile);
+            parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
         }
     }
-
 
     /**
      * Initializes the file chooser dialog.
@@ -110,15 +126,16 @@ public final class MenuController implements Initializable {
             // Remove default information item (telling the user that there are no recent files)
             recentFilesMenu.getItems().clear();
 
+            MenuItem menuItem;
             for (final File file : recentFiles) {
-                final MenuItem menuItem = new MenuItem(file.getPath());
+                menuItem = new MenuItem(file.getPath());
                 recentFilesMenu.getItems().add(menuItem);
 
                 menuItem.addEventHandler(ActionEvent.ACTION, event -> {
                     try {
                         loadFile(file);
-                    } catch (Exception e) {
-                        logger.error("Failed to load the selected recent file.", e);
+                    } catch (final IOException | UIInitialisationException e) {
+                        LOGGER.error("Failed to load the selected recent file.", e);
                     }
                 });
             }
@@ -170,12 +187,11 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
-        if (graphStore != null) {
-            graphStore.load(file);
-        } else {
+        if (graphStore == null) {
             throw new UIInitialisationException("Unable to load file.");
         }
 
+        graphStore.load(file);
         RecentFiles.add(file);
 
         // Update menu only in initialized state (not in test-cases)

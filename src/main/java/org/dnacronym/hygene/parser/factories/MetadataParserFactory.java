@@ -32,7 +32,7 @@ public final class MetadataParserFactory {
      *
      * @return an instance of {@code GfaParser}
      */
-    public static MetadataParser getInstance() {
+    public static MetadataParser createInstance() {
         if (instance == null) {
             return new MetadataParser();
         }

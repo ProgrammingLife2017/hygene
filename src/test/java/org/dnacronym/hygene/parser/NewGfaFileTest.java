@@ -4,13 +4,15 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -20,10 +22,17 @@ import static org.mockito.Mockito.verify;
  */
 class NewGfaFileTest {
     private static final String GFA_TEST_FILE = "src/test/resources/gfa/simple.gfa";
-    private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
-            + "S\t11\tACCTT%n"
-            + "S\t12\tTCAAGG%n"
-            + "L\t11\t+\t12\t-\t4M%n");
+    private static final String SIMPLE_GFA_CONTENTS = "H\tVN:Z:1.0\n"
+            + "S\t11\tACCTT\n"
+            + "S\t12\tTCAAGG\n"
+            + "L\t11\t+\t12\t-\t4M\n";
+
+
+    @AfterAll
+    static void resetFactories() {
+        NewGfaParserFactory.setInstance(null);
+        MetadataParserFactory.setInstance(null);
+    }
 
 
     @Test
@@ -51,7 +60,7 @@ class NewGfaFileTest {
     void testReadFile() throws ParseException {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
 
-        assertThat(gfaFile.readFile()).isEqualTo(SIMPLE_GFA_CONTENTS);
+        assertThat(bufferedReaderToString(gfaFile.readFile())).isEqualTo(SIMPLE_GFA_CONTENTS);
     }
 
     @Test
@@ -62,7 +71,7 @@ class NewGfaFileTest {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
-        verify(gfaParser).parse(any(NewGfaFile.class));
+        verify(gfaParser).parse(gfaFile);
         assertThat(gfaFile.getGraph()).isNotNull();
     }
 
@@ -74,7 +83,7 @@ class NewGfaFileTest {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
 
-        verify(metadataParser).parseNodeMetadata(SIMPLE_GFA_CONTENTS, 2);
+        verify(metadataParser).parseNodeMetadata(gfaFile, 2);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
     }
 
@@ -86,7 +95,11 @@ class NewGfaFileTest {
         NewGfaFile gfaFile = new NewGfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
-        verify(metadataParser).parseEdgeMetadata(SIMPLE_GFA_CONTENTS, 4);
+        verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
+    }
+
+    private String bufferedReaderToString(final BufferedReader reader) {
+        return reader.lines().collect(Collectors.joining("\n")) + "\n";
     }
 }

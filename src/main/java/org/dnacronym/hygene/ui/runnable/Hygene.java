@@ -13,6 +13,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -20,10 +21,10 @@ import java.net.URL;
  *
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
-public class Hygene extends Application {
+public final class Hygene extends Application {
     static final String TITLE = "Hygene";
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
-    private static Logger logger = LogManager.getLogger(Hygene.class);
+    private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
     private static @MonotonicNonNull Hygene hygene;
 
     private @MonotonicNonNull GraphStore graphStore;
@@ -67,13 +68,13 @@ public class Hygene extends Application {
     }
 
     @Override
-    public final void init() {
+    public void init() {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer();
     }
 
     @Override
-    public final void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws IOException, UIInitialisationException {
         this.primaryStage = primaryStage;
         setInstance(this);
 
@@ -90,7 +91,7 @@ public class Hygene extends Application {
         primaryStage.setScene(rootScene);
         primaryStage.show();
 
-        logger.info("Launching Hygene GUI");
+        LOGGER.info("Launching Hygene GUI");
     }
 
     /**
@@ -102,7 +103,7 @@ public class Hygene extends Application {
      * @see GraphStore
      * @see #init()
      */
-    public final GraphStore getGraphStore() throws UIInitialisationException {
+    public GraphStore getGraphStore() throws UIInitialisationException {
         if (graphStore == null) {
             throw new UIInitialisationException("GraphStore not present.");
         }
@@ -117,7 +118,7 @@ public class Hygene extends Application {
      *                                   in {@link #init()}.
      * @see #init()
      */
-    public final GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
+    public GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
         if (graphVisualizer == null) {
             throw new UIInitialisationException("GraphVisualiser not present.");
         }
@@ -135,7 +136,7 @@ public class Hygene extends Application {
      *                                   #start(Stage)}.
      * @see #start(Stage)
      */
-    public final Stage getPrimaryStage() throws UIInitialisationException {
+    public Stage getPrimaryStage() throws UIInitialisationException {
         if (primaryStage == null) {
             throw new UIInitialisationException("Stage not present.");
         }

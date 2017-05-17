@@ -8,7 +8,7 @@ import org.dnacronym.hygene.parser.NewGfaFile;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeLineNumber, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
+ * [[nodeLineNumber, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
  */
 public final class Graph {
     private final int[][] nodeArrays;
@@ -75,6 +75,16 @@ public final class Graph {
     }
 
     /**
+     * Getter for the sequence length of a {@link Node}.
+     *
+     * @param id the {@link Node}'s id
+     * @return the {@link Node}'s sequence length.
+     */
+    public int getSequenceLength(final int id) {
+        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
+    }
+
+    /**
      * Getter for the color of a {@link Node}.
      *
      * @param id the {@link Node}'s id
@@ -102,6 +112,32 @@ public final class Graph {
      */
     public int getUnscaledYPosition(final int id) {
         return nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX];
+    }
+
+    /**
+     * Returns the number of neighbours of a node in the given direction.
+     *
+     * @param id        the node's identifier
+     * @param direction the direction of neighbours to count
+     * @return the number of neighbours of a node in the given direction.
+     */
+    public int getNeighbourCount(final int id, final SequenceDirection direction) {
+        return direction.ternary(
+                (nodeArrays[id].length
+                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE
+                        - (Node.NODE_OUTGOING_EDGES_INDEX + 1)
+                ) / Node.EDGE_DATA_SIZE,
+                nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
+        );
+    }
+
+    /**
+     * Returns a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it.
+     *
+     * @return a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it
+     */
+    public GraphIterator iterator() {
+        return new GraphIterator(this);
     }
 
     /**

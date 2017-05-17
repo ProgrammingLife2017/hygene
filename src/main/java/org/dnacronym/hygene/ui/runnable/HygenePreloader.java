@@ -11,6 +11,7 @@ import javafx.stage.StageStyle;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.Files;
 
+import java.io.IOException;
 import java.net.URL;
 
 
@@ -19,7 +20,7 @@ import java.net.URL;
  * <p>
  * The view is located at {@value PRELOADER_VIEW}.
  */
-public class HygenePreloader extends Preloader {
+public final class HygenePreloader extends Preloader {
 
     private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
 
@@ -29,7 +30,7 @@ public class HygenePreloader extends Preloader {
     private @Nullable Stage stage;
 
     @Override
-    public final void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws IOException, UIInitialisationException {
         stage = primaryStage;
         primaryStage.setTitle(Hygene.TITLE);
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -53,7 +54,7 @@ public class HygenePreloader extends Preloader {
      * @param pn Progress notification, which contains a progress.
      */
     @Override
-    public final void handleProgressNotification(final ProgressNotification pn) {
+    public void handleProgressNotification(final ProgressNotification pn) {
         if (progress != null) {
             progress.setProgress(pn.getProgress());
         }
@@ -67,7 +68,7 @@ public class HygenePreloader extends Preloader {
      * @see Stage#hide
      */
     @Override
-    public final void handleStateChangeNotification(final StateChangeNotification evt) {
+    public void handleStateChangeNotification(final StateChangeNotification evt) {
         if (evt.getType() == StateChangeNotification.Type.BEFORE_START && stage != null) {
             stage.hide();
         }
