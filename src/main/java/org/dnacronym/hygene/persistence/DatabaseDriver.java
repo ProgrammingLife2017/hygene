@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.persistence;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Class responsible for reading and writing from the file-database.
  */
+@SuppressFBWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE") // not relevant for a local, isolated file database
 final class DatabaseDriver {
     static final String DB_FILE_EXTENSION = ".db";
 
@@ -29,7 +30,6 @@ final class DatabaseDriver {
      * @throws SQLException in the case of erroneous SQL behaviour
      */
     DatabaseDriver(final String fileName) throws SQLException {
-        final boolean databaseAlreadyExisted = (new File(fileName + DB_FILE_EXTENSION)).exists();
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION);
     }
 
@@ -41,15 +41,13 @@ final class DatabaseDriver {
      * @throws SQLException in the case of an error during SQL operations
      */
     void setupTable(final DatabaseTable table) throws SQLException {
-        final Statement statement = connection.createStatement();
+        try (final Statement statement = connection.createStatement()) {
+            final String columnList = String.join(", ", table.getColumns().stream().map(
+                    (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
+            ).collect(Collectors.toList()));
 
-        final String columnList = String.join(", ", table.getColumns().stream().map(
-                (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
-        ).collect(Collectors.toList()));
-
-        statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
-
-        statement.close();
+            statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
+        }
     }
 
     /**
@@ -62,36 +60,46 @@ final class DatabaseDriver {
      * @throws SQLException in the case of an error during SQL operations
      */
     void insertRow(final String tableName, final List<String> values) throws SQLException {
-        final Statement statement = connection.createStatement();
-
-        final String concatenatedValues = String.join(", ", values.stream().map(
-                value -> {
-                    if (StringUtils.isNumeric(value)) {
-                        return value;
-                    } else {
-                        return "'" + value + "'";
+        try (final Statement statement = connection.createStatement()) {
+            final String concatenatedValues = String.join(", ", values.stream().map(
+                    value -> {
+                        if (StringUtils.isNumeric(value)) {
+                            return value;
+                        } else {
+                            return "'" + value + "'";
+                        }
                     }
-                }
-        ).collect(Collectors.toList()));
-        statement.executeUpdate("INSERT INTO " + tableName + " VALUES (" + concatenatedValues + ")");
-
-        statement.close();
+            ).collect(Collectors.toList()));
+            statement.executeUpdate("INSERT INTO " + tableName + " VALUES (" + concatenatedValues + ")");
+        }
     }
 
+    /**
+     * Queries the database for the value of a single key.
+     *
+     * @param tableName       the name of the table
+     * @param keyColumnName   the name of the key column
+     * @param keyColumnValue  the key to be queried for
+     * @param valueColumnName the name of the column in which the result value lies
+     * @return the value corresponding to that key
+     * @throws SQLException in the case of an error during SQL operations
+     */
     String getSingleValue(final String tableName, final String keyColumnName, final String keyColumnValue,
                           final String valueColumnName) throws SQLException {
-        final Statement statement = connection.createStatement();
+        final String sql = "SELECT * FROM " + tableName + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
 
-        final ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName
-                + " WHERE " + keyColumnName + "='" + keyColumnValue + "'");
+        try (final Statement statement = connection.createStatement()) {
+            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+                if (!resultSet.next()) {
+                    throw new SQLException("Expected at least one row in ResultSet.");
+                }
+                final String value = resultSet.getString(valueColumnName);
+                if (value == null) {
+                    throw new SQLException("Expected at non-null ResultSet value.");
+                }
 
-        if (!resultSet.next()) {
-            throw new SQLException("Expected at least one row in ResultSet.");
+                return value;
+            }
         }
-        final String value = resultSet.getString(valueColumnName);
-
-        statement.close();
-
-        return value;
     }
 }

@@ -14,10 +14,16 @@ final class DatabaseTable {
     private final List<Pair<String, String>> columns;
 
 
-    DatabaseTable(String name) {
+    /**
+     * Constructs a new table instance.
+     *
+     * @param name the name of that table
+     */
+    DatabaseTable(final String name) {
         this.name = name;
         this.columns = new ArrayList<>();
     }
+
 
     /**
      * Returns the name of the table.

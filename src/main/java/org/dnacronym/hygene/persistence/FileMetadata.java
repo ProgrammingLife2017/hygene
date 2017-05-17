@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.persistence;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +31,7 @@ final class FileMetadata {
      *
      * @param fileDatabase the file to be
      */
-    public FileMetadata(final FileDatabase fileDatabase) {
+    FileMetadata(@NonNull final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
         this.databaseDriver = fileDatabase.getDatabaseDriver();
     }
@@ -113,8 +114,8 @@ final class FileMetadata {
      * @throws SQLException in the case of an error during SQL operations
      */
     private boolean checkVersionCompatibility() throws SQLException {
-        final int currentMajorVersion = Integer.parseInt(DB_VERSION.split(".")[0]);
-        final int fileMajorVersion = Integer.parseInt(getMetadataValue(VERSION_KEY_NAME).split(".")[0]);
+        final int currentMajorVersion = Integer.parseInt(DB_VERSION.split("\\.")[0]);
+        final int fileMajorVersion = Integer.parseInt(getMetadataValue(VERSION_KEY_NAME).split("\\.")[0]);
 
         return currentMajorVersion == fileMajorVersion;
     }

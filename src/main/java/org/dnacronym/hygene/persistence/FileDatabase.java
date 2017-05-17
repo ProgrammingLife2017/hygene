@@ -8,7 +8,8 @@ import java.sql.SQLException;
 /**
  * Class representing the database corresponding to a file.
  */
-public class FileDatabase {
+@SuppressWarnings("initialization")
+public final class FileDatabase {
     private final String fileName;
     private final DatabaseDriver databaseDriver;
 
@@ -20,13 +21,14 @@ public class FileDatabase {
      * @throws SQLException in the case of an error during SQL operations
      * @throws IOException  in the case of an error during IO operations
      */
-    public FileDatabase(String fileName) throws SQLException, IOException {
+    public FileDatabase(final String fileName) throws SQLException, IOException {
         this.fileName = fileName;
 
         final boolean databaseAlreadyExisted = (new File(fileName + DatabaseDriver.DB_FILE_EXTENSION)).exists();
         databaseDriver = new DatabaseDriver(fileName);
 
         final FileMetadata fileMetadata = new FileMetadata(this);
+
         if (!databaseAlreadyExisted) {
             databaseDriver.setupTable(fileMetadata.getTable());
             fileMetadata.storeMetadata();
