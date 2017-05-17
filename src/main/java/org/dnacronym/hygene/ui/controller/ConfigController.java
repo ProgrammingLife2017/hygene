@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -37,10 +36,6 @@ public final class ConfigController implements Initializable {
     private @MonotonicNonNull TextField nodeId;
     @FXML
     private @MonotonicNonNull TextField range;
-    @FXML
-    private @MonotonicNonNull Button setNodeId;
-    @FXML
-    private @MonotonicNonNull Button setRange;
 
     @FXML
     private @MonotonicNonNull Slider nodeHeight;
@@ -58,6 +53,7 @@ public final class ConfigController implements Initializable {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialise Configuration Controller.", e);
+            return;
         }
 
         if (nodeId != null && range != null && currentNodeId != null && currentRange != null && nodeHeight != null
@@ -80,13 +76,16 @@ public final class ConfigController implements Initializable {
      * current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
-     * can be entered in the {@link TextField}.
+     * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
      */
     @FXML
     void setNodeId() {
-        if (nodeId != null && graphVisualizer != null) {
-            graphVisualizer.getCenterNodeIdProperty().set(Integer.valueOf(nodeId.getText()));
+        if (graphVisualizer != null && nodeId != null) {
+            final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d.]", ""));
+            graphVisualizer.getCenterNodeIdProperty().set(newValue);
             nodeId.clear();
+
+            LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
         }
     }
 
@@ -95,13 +94,16 @@ public final class ConfigController implements Initializable {
      * current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
-     * can be entered in the {@link TextField}.
+     * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
      */
     @FXML
     void setRange() {
-        if (range != null && graphVisualizer != null) {
-            graphVisualizer.getRangeProperty().set(Integer.valueOf(range.getText()));
+        if (graphVisualizer != null && range != null) {
+            final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d.]", ""));
+            graphVisualizer.getRangeProperty().set(newValue);
             range.clear();
+
+            LOGGER.info("Range set set: " + graphVisualizer.getRangeProperty().get());
         }
     }
 
