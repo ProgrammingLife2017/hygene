@@ -41,7 +41,6 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 2;
     private static final double DEFAULT_DASH_LENGTH = 10;
-    private static final double ARC_SIZE = 20;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
@@ -113,7 +112,7 @@ public final class GraphVisualizer {
         final double rectHeight = calculator.getNodeHeight();
 
         graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
-        graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
+        graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
     }
 
     /**
