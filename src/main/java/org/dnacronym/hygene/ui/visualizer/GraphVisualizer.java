@@ -61,7 +61,8 @@ public final class GraphVisualizer {
     private final DoubleProperty borderDashLengthProperty;
 
     private double laneHeight;
-    private int minX, maxX;
+    private int minX;
+    private int maxX;
 
     private @Nullable Graph graph;
 
