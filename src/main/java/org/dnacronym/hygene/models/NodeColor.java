@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.models;
 
-
 import javafx.scene.paint.Color;
+
 
 /**
  * Represents the color of node for the graph.
@@ -30,7 +30,7 @@ public enum NodeColor {
      * Converts a DNA sequence to the appropriate color.
      *
      * @param sequence DNA sequence
-     * @return appropriate color for DNA sequence.
+     * @return appropriate color for DNA sequence
      */
     public static NodeColor sequenceToColor(final String sequence) {
         switch (sequence.charAt(0)) {
