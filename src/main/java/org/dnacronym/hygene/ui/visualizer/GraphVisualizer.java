@@ -146,20 +146,24 @@ public final class GraphVisualizer {
             final int[] laneCount = {1};
 
             final List<Integer> neighbours = new ArrayList<>();
-            graph.visitNeighbours(centerNodeId, SequenceDirection.LEFT, nodeId -> {
-                neighbours.add(nodeId);
-                if (graph != null) {
-                    laneCount[0] = Math.max(laneCount[0], graph.getUnscaledYPosition(nodeId));
-                    minX = Math.min(minX, graph.getUnscaledXPosition(nodeId));
-                }
-            });
-            graph.visitNeighbours(centerNodeId, SequenceDirection.RIGHT, nodeId -> {
-                neighbours.add(nodeId);
-                if (graph != null) {
-                    laneCount[0] = Math.max(laneCount[0], graph.getUnscaledYPosition(nodeId));
-                    maxX = Math.max(maxX, graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
-                }
-            });
+            graph.visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
+                    nodeId -> false,
+                    nodeId -> {
+                        if (graph != null) {
+                            neighbours.add(nodeId);
+                            laneCount[0] = Math.max(laneCount[0], graph.getUnscaledYPosition(nodeId));
+                            minX = Math.min(minX, graph.getUnscaledXPosition(nodeId));
+                        }
+                    });
+            graph.visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(),
+                    nodeId -> false,
+                    nodeId -> {
+                        if (graph != null) {
+                            neighbours.add(nodeId);
+                            laneCount[0] = Math.max(laneCount[0], graph.getUnscaledYPosition(nodeId));
+                            maxX = Math.max(maxX, graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
+                        }
+                    });
 
             laneHeight = laneCount[0] / canvas.getHeight();
 
