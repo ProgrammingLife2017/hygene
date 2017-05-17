@@ -131,7 +131,7 @@ public final class GraphDimensionsCalculator {
      * @return the height of a lane.
      */
     public double getLaneHeight() {
-        if (laneHeight == -1) {
+        if (Double.compare(laneHeight, -1) == 0) {
             laneHeight = canvasHeight / getLaneCount();
         }
 
@@ -144,7 +144,7 @@ public final class GraphDimensionsCalculator {
      * @return the lane count.
      */
     public int getLaneCount() {
-        if (laneCount == -1) {
+        if (Double.compare(laneCount, -1) == 0) {
             laneCount = Math.abs(maxY - minY) + 1;
         }
 
