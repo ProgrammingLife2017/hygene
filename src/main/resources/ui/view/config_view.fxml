@@ -44,7 +44,7 @@
                                             <children>
                                                 <Label text="Node Id"/>
                                                 <Label text="Range" GridPane.rowIndex="2"/>
-                                                <TextField fx:id="nodeId" promptText="range" GridPane.columnIndex="1"
+                                                <TextField fx:id="nodeId" promptText="Node Id" GridPane.columnIndex="1"
                                                            GridPane.rowIndex="1">
                                                     <tooltip>
                                                         <Tooltip
