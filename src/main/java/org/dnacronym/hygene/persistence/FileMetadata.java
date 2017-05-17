@@ -39,12 +39,12 @@ final class FileMetadata {
         return globalTable;
     }
 
-    void setGlobalMetadata() throws SQLException, IOException {
+    void storeMetadata() throws SQLException, IOException {
         databaseDriver.insertRow(GLOBAL_TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, DB_VERSION));
         databaseDriver.insertRow(GLOBAL_TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
     }
 
-    private void verifyGlobalMetadata() throws IOException, SQLException {
+    void verifyMetadata() throws IOException, SQLException {
         if (!checkVersionCompatibility()) {
             throw new IncompatibleDatabaseVersionException("File database version not compatible with this version of "
                     + "the program.");

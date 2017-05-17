@@ -1,8 +1,9 @@
 package org.dnacronym.hygene.persistence;
 
-
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
+
 
 /**
  * Class representing the database corresponding to a file.
@@ -10,22 +11,46 @@ import java.sql.SQLException;
 public class FileDatabase {
     private final String fileName;
     private final DatabaseDriver databaseDriver;
-    private final FileMetadata fileMetadata;
 
 
-    public FileDatabase(String fileName) throws SQLException {
+    /**
+     * Constructs a FileDatabase instance.
+     *
+     * @param fileName the name / path of the GFA file that this database should correspond to
+     * @throws SQLException in the case of an error during SQL operations
+     * @throws IOException  in the case of an error during IO operations
+     */
+    public FileDatabase(String fileName) throws SQLException, IOException {
         this.fileName = fileName;
 
         final boolean databaseAlreadyExisted = (new File(fileName + DatabaseDriver.DB_FILE_EXTENSION)).exists();
-        this.databaseDriver = new DatabaseDriver(fileName);
-        this.fileMetadata = new FileMetadata(this);
+        databaseDriver = new DatabaseDriver(fileName);
+
+        final FileMetadata fileMetadata = new FileMetadata(this);
+        if (!databaseAlreadyExisted) {
+            databaseDriver.setupTable(fileMetadata.getTable());
+            fileMetadata.storeMetadata();
+        } else {
+            fileMetadata.verifyMetadata();
+        }
     }
 
-    public String getFileName() {
+
+    /**
+     * Returns the file name.
+     *
+     * @return the file name.
+     */
+    String getFileName() {
         return fileName;
     }
 
-    public DatabaseDriver getDatabaseDriver() {
+    /**
+     * Returns the {@link DatabaseDriver}.
+     *
+     * @return the {@link DatabaseDriver}
+     */
+    DatabaseDriver getDatabaseDriver() {
         return databaseDriver;
     }
 }

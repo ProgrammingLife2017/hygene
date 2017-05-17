@@ -36,18 +36,17 @@ final class DatabaseDriver {
     /**
      * Creates the given tables in the database.
      *
+     * @param table the table to be set up
      * @throws SQLException in the case of erroneous SQL behaviour
      */
-    private void setupTables(final List<DatabaseTable> tables) throws SQLException {
+    void setupTable(final DatabaseTable table) throws SQLException {
         final Statement statement = connection.createStatement();
 
-        for (DatabaseTable table : tables) {
-            final String columnList = String.join(", ", table.getColumns().stream().map(
-                    (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
-            ).collect(Collectors.toList()));
+        final String columnList = String.join(", ", table.getColumns().stream().map(
+                (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
+        ).collect(Collectors.toList()));
 
-            statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
-        }
+        statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
 
         statement.close();
     }
