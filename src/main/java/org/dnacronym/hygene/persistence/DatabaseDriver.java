@@ -2,6 +2,7 @@ package org.dnacronym.hygene.persistence;
 
 import javafx.util.Pair;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * Class responsible for reading and writing from the file-database.
  */
 final class DatabaseDriver {
+    private static final String GLOBAL_TABLE_NAME = "global";
     private static final String DB_FILE_EXTENSION = ".db";
 
     private final String fileName;
@@ -29,7 +31,8 @@ final class DatabaseDriver {
      * Constructs a DatabaseDriver.
      *
      * @param fileName the file name of the corresponding GFA-file
-     * @param tables   the list of tables (assumed to have at least one element)  @throws SQLException in the case of erroneous SQL behaviour
+     * @param tables   the list of tables (assumed to have at least one element)
+     * @throws SQLException in the case of erroneous SQL behaviour
      */
     DatabaseDriver(final String fileName, List<DatabaseTable> tables) throws SQLException {
         this.fileName = fileName;
@@ -39,6 +42,7 @@ final class DatabaseDriver {
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION);
 
         if (!databaseAlreadyExisted) {
+            addGlobalTable();
             setupTables();
         }
     }
@@ -57,8 +61,45 @@ final class DatabaseDriver {
                     (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
             ).collect(Collectors.toList()));
 
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table.getName() + "(" + columnList + ")");
+            statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
         }
+
+        statement.close();
+    }
+
+    private void addGlobalTable() {
+        final DatabaseTable globalTable = new DatabaseTable(GLOBAL_TABLE_NAME);
+        globalTable.addColumn("key", "string");
+        globalTable.addColumn("value", "string");
+
+        tables.add(globalTable);
+    }
+
+    private void setGlobalMetadata() {
+
+    }
+
+    private void insertRow(final String tableName, final List<String> values) throws SQLException {
+        final Statement statement = connection.createStatement();
+
+        final String concatenatedValues = String.join(", ", values.stream().map(
+                value -> {
+                    if (StringUtils.isNumeric(value)) {
+                        return value;
+                    } else {
+                        return "'" + value + "'";
+                    }
+                }
+        ).collect(Collectors.toList()));
+        statement.executeUpdate("INSERT INTO " + tableName + "(" + concatenatedValues + ")");
+
+        statement.close();
+    }
+
+    private void checkFileDigest() throws IOException {
+        final String currentDigest = computeFileDigest();
+
+
     }
 
     /**

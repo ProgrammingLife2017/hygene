@@ -73,8 +73,9 @@ dependencies {
     // SQLite driver
     compile("org.xerial:sqlite-jdbc:${sqliteVersion}")
 
-    // Apache Commons Codec
+    // Apache Commons
     compile("commons-codec:commons-codec:${commonsCodecVersion}")
+    compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 }
 
 jar {
