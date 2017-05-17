@@ -94,8 +94,8 @@ public final class Hygene extends Application {
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
 
-        final Image HygeneIcon = new Image(String.valueOf(Files.getInstance().getResourceUrl(APPLICATION_ICON)));
-        primaryStage.getIcons().add(HygeneIcon);
+        final Image hygeneIcon = new Image(String.valueOf(Files.getInstance().getResourceUrl(APPLICATION_ICON)));
+        primaryStage.getIcons().add(hygeneIcon);
 
         primaryStage.show();
 
