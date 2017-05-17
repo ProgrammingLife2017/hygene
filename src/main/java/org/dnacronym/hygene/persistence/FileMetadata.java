@@ -5,9 +5,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 
 
@@ -17,7 +15,9 @@ import java.util.Arrays;
 final class FileMetadata {
     private static final String DB_VERSION = "0.0.1";
 
-    private static final String GLOBAL_TABLE_NAME = "global";
+    private static final String TABLE_NAME = "global";
+    private static final String KEY_COLUMN_NAME = "global_key";
+    private static final String VALUE_COLUMN_NAME = "global_value";
     private static final String VERSION_KEY_NAME = "version";
     private static final String DIGEST_KEY_NAME = "digest";
 
@@ -25,25 +25,49 @@ final class FileMetadata {
     private final DatabaseDriver databaseDriver;
 
 
-    public FileMetadata(FileDatabase fileDatabase) {
+    /**
+     * Constructs a FileMetadata instance.
+     *
+     * @param fileDatabase the file to be
+     */
+    public FileMetadata(final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
         this.databaseDriver = fileDatabase.getDatabaseDriver();
     }
 
 
+    /**
+     * Generates a {@link DatabaseTable} instance for the table holding metadata.
+     *
+     * @return a {@link DatabaseTable} instance for the table holding metadata
+     */
     DatabaseTable getTable() {
-        final DatabaseTable globalTable = new DatabaseTable(GLOBAL_TABLE_NAME);
-        globalTable.addColumn("global_key", "string");
-        globalTable.addColumn("global_value", "string");
+        final DatabaseTable globalTable = new DatabaseTable(TABLE_NAME);
+        globalTable.addColumn(KEY_COLUMN_NAME, "string");
+        globalTable.addColumn(VALUE_COLUMN_NAME, "string");
 
         return globalTable;
     }
 
-    void storeMetadata() throws SQLException, IOException {
-        databaseDriver.insertRow(GLOBAL_TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, DB_VERSION));
-        databaseDriver.insertRow(GLOBAL_TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
+    /**
+     * Stores all metadata key-value pairs in the DB.
+     *
+     * @throws IOException  in the case of an error during IO operations
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    void storeMetadata() throws IOException, SQLException {
+        databaseDriver.insertRow(TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, DB_VERSION));
+        databaseDriver.insertRow(TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
     }
 
+    /**
+     * Verifies the consistency and validity of the metadata present in the DB.
+     * <p>
+     * Throws corresponding exceptions if any of these verifications fail.
+     *
+     * @throws IOException  in the case of an error during IO operations, or in the case of verification failure(s)
+     * @throws SQLException in the case of an error during SQL operations
+     */
     void verifyMetadata() throws IOException, SQLException {
         if (!checkVersionCompatibility()) {
             throw new IncompatibleDatabaseVersionException("File database version not compatible with this version of "
@@ -55,26 +79,28 @@ final class FileMetadata {
         }
     }
 
-    private String getGlobalMetadataValue(final String keyName) throws SQLException {
-        final Statement statement = databaseDriver.getConnection().createStatement();
-
-        final ResultSet resultSet = statement.executeQuery("SELECT * FROM " + GLOBAL_TABLE_NAME
-                + " WHERE global_key='" + keyName + "'");
-
-        if (!resultSet.next()) {
-            throw new SQLException("Expected global metadata values to be stored.");
-        }
-        final String value = resultSet.getString("global_value");
-
-        statement.close();
-
-        return value;
+    /**
+     * Fetches the value corresponding to the given key.
+     *
+     * @param keyName the name of the key
+     * @return the value associated with that key in the file database
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    private String getMetadataValue(final String keyName) throws SQLException {
+        return databaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, keyName, VALUE_COLUMN_NAME);
     }
 
+    /**
+     * Check whether the digest stored in the DB and the digest of the file on disk correspond.
+     *
+     * @return {@code} true iff. the two digests are equal
+     * @throws IOException  in the case of an error during IO operations
+     * @throws SQLException in the case of an error during SQL operations
+     */
     private boolean checkFileDigest() throws IOException, SQLException {
         final String currentDigest = computeFileDigest();
 
-        return getGlobalMetadataValue(DIGEST_KEY_NAME).equals(currentDigest);
+        return getMetadataValue(DIGEST_KEY_NAME).equals(currentDigest);
     }
 
     /**
@@ -84,11 +110,11 @@ final class FileMetadata {
      * Assumes the Semantic Versioning standard and compares only the 'major' components of the two versions.
      *
      * @return {@code true} iff. the versions are compatible
-     * @throws SQLException in the case of an error during IO operations
+     * @throws SQLException in the case of an error during SQL operations
      */
     private boolean checkVersionCompatibility() throws SQLException {
         final int currentMajorVersion = Integer.parseInt(DB_VERSION.split(".")[0]);
-        final int fileMajorVersion = Integer.parseInt(getGlobalMetadataValue(VERSION_KEY_NAME).split(".")[0]);
+        final int fileMajorVersion = Integer.parseInt(getMetadataValue(VERSION_KEY_NAME).split(".")[0]);
 
         return currentMajorVersion == fileMajorVersion;
     }

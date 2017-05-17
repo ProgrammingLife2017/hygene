@@ -39,7 +39,7 @@ public class FileDatabase {
     /**
      * Returns the file name.
      *
-     * @return the file name.
+     * @return the file name
      */
     String getFileName() {
         return fileName;
