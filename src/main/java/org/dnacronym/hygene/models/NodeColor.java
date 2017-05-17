@@ -48,7 +48,7 @@ public enum NodeColor {
     }
 
     /**
-     * Get the {@link Color} of this color for use by {@code JavaFX}.
+     * Get the {@link Color} of this color for use by JavaFX.
      *
      * @return color for use by JavaFX
      */
