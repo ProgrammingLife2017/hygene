@@ -13,14 +13,16 @@ public final class GraphDimensionsCalculator {
     private static final Logger LOGGER = LogManager.getLogger(GraphDimensionsCalculator.class);
 
     private final Graph graph;
-    private final int laneCount;
     private final double canvasHeight;
     private final double canvasWidth;
     private final int minX;
     private final int maxX;
+    private final int minY;
+    private final int maxY;
     private final double nodeHeight;
 
     private double laneHeight = -1;
+    private int laneCount = -1;
 
 
     /**
@@ -28,19 +30,21 @@ public final class GraphDimensionsCalculator {
      *
      * @param graph      a reference to the current {@link Graph}, used to get node properties
      * @param canvas     a reference to the current {@link Canvas}, used for determining width and height
-     * @param laneCount  the total number of lanes
      * @param minX       the lowest x position in the current subgraph
      * @param maxX       the highest x position in the current subgraph
+     * @param minY       the lowest y position in the current subgraph
+     * @param maxY       the highest y position in the current subgraph
      * @param nodeHeight the height of a single node
      */
-    public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int laneCount,
-                                     final int minX, final int maxX, final double nodeHeight) {
+    public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int minX, final int maxX,
+                                     final int minY, final int maxY, final double nodeHeight) {
         this.graph = graph;
-        this.laneCount = laneCount;
         this.canvasHeight = canvas.getHeight();
         this.canvasWidth = canvas.getWidth();
         this.minX = minX;
         this.maxX = maxX;
+        this.minY = minY;
+        this.maxY = maxY;
         this.nodeHeight = nodeHeight;
     }
 
@@ -89,7 +93,7 @@ public final class GraphDimensionsCalculator {
     public double computeYPosition(final int nodeId) {
         final int fafospPosition = graph.getUnscaledYPosition(nodeId);
 
-        return fafospPosition * getLaneHeight() + getLaneHeight() / 2 - nodeHeight / 2;
+        return (fafospPosition - minY) * getLaneHeight() + getLaneHeight() / 2 - nodeHeight / 2;
     }
 
     /**
@@ -128,9 +132,22 @@ public final class GraphDimensionsCalculator {
      */
     public double getLaneHeight() {
         if (laneHeight == -1) {
-            laneHeight = canvasHeight / laneCount;
+            laneHeight = canvasHeight / getLaneCount();
         }
 
         return laneHeight;
+    }
+
+    /**
+     * Gets the lane count.
+     *
+     * @return the lane count.
+     */
+    public int getLaneCount() {
+        if (laneCount == -1) {
+            laneCount = Math.abs(maxY - minY) + 1;
+        }
+
+        return laneCount;
     }
 }

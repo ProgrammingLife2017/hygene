@@ -158,7 +158,8 @@ public final class GraphVisualizer {
 
             minX = unscaledCenterX;
             maxX = unscaledCenterX;
-            final int[] laneCount = {1};
+            final int[] minY = {graph.getUnscaledYPosition(centerNodeId)};
+            final int[] maxY = {graph.getUnscaledYPosition(centerNodeId)};
 
             final List<Integer> neighbours = new LinkedList<>();
             neighbours.add(centerNodeId);
@@ -167,7 +168,8 @@ public final class GraphVisualizer {
                     nodeId -> {
                         if (graph != null) {
                             neighbours.add(nodeId);
-                            laneCount[0] = Math.max(laneCount[0], graph.getUnscaledYPosition(nodeId));
+                            minY[0] = Math.min(minY[0], graph.getUnscaledYPosition(nodeId));
+                            maxY[0] = Math.max(maxY[0], graph.getUnscaledYPosition(nodeId));
                             minX = Math.min(minX, graph.getUnscaledXPosition(nodeId));
                         }
                     });
@@ -176,16 +178,19 @@ public final class GraphVisualizer {
                     nodeId -> {
                         if (graph != null) {
                             neighbours.add(nodeId);
-                            laneCount[0] = Math.max(laneCount[0], graph.getUnscaledYPosition(nodeId));
+                            minY[0] = Math.min(minY[0], graph.getUnscaledYPosition(nodeId));
+                            maxY[0] = Math.max(maxY[0], graph.getUnscaledYPosition(nodeId));
                             maxX = Math.max(maxX, graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
                         }
                     });
 
             GraphDimensionsCalculator calculator = new GraphDimensionsCalculator(
-                    graph, canvas, laneCount[0], minX, maxX, nodeHeightProperty.get()
+                    graph, canvas, minX, maxX, minY[0], maxY[0], nodeHeightProperty.get()
             );
 
             laneHeight = calculator.getLaneHeight();
+
+            System.out.println(calculator.getLaneCount());
 
             for (Integer nodeId : neighbours) {
                 drawNode(calculator, graph, nodeId);
@@ -196,7 +201,7 @@ public final class GraphVisualizer {
             }
 
             if (displayLaneBordersProperty.get()) {
-                drawLaneBorders(laneCount[0], laneHeight);
+                drawLaneBorders(calculator.getLaneCount(), laneHeight);
             }
         }
     }
