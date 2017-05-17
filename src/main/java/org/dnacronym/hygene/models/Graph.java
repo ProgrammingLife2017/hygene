@@ -165,7 +165,7 @@ public final class Graph {
      * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
      * breadth-first order.
      */
-    private void fafospX() {
+    public void fafospX() {
         final GraphIterator iterator = iterator();
 
         final Queue<Integer> queue = new LinkedList<>();
@@ -203,7 +203,7 @@ public final class Graph {
 
         final boolean[] continuxe = {true};
         final int[] width = {-1};
-        iterator().visitNeighbours(id, SequenceDirection.LEFT, neighbour -> {
+        iterator.visitNeighbours(id, SequenceDirection.LEFT, neighbour -> {
             if (!continuxe[0]) {
                 return;
             }

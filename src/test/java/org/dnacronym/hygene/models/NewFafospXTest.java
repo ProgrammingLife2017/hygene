@@ -8,113 +8,54 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for FAFOSP-X.
  */
-class NewFafospXTest {
+class NewFafospXTest extends GraphBasedTest {
     @Test
     void testNoNeighboursLength() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .toArray();
-        final int[] node1 = NodeBuilder.start()
-                .withSequenceLength(6)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(2, 1)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(1, 1)
-                .toArray();
+        createGraph(3);
+        addEdges(new int[][] {{0, 1}, {1, 2}});
+        setSequenceLengths(new int[][] {{1, 6}});
 
-        final Graph graph = createGraphWithNodes(source, node1, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 6);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 6);
     }
 
     @Test
     void testOneNeighbour() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .toArray();
-        final int[] node1 = NodeBuilder.start()
-                .withSequenceLength(7)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(2, 1)
-                .toArray();
-        final int[] node2 = NodeBuilder.start()
-                .withSequenceLength(4)
-                .withIncomingEdge(1, 1)
-                .withOutgoingEdge(3, 2)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(2, 2)
-                .toArray();
+        createGraph(4);
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}});
+        setSequenceLengths(new int[][] {{1, 7}, {2, 4}});
 
-        final Graph graph = createGraphWithNodes(source, node1, node2, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 7);
-        assertThat(graph.getUnscaledXPosition(2)).isEqualTo(1 + 11 + 1);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 7);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1 + 11 + 1);
     }
 
     @Test
     void testTwoNeighbours() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .withOutgoingEdge(2, 1)
-                .toArray();
-        final int[] nodeA = NodeBuilder.start()
-                .withSequenceLength(3)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(3, 2)
-                .toArray();
-        final int[] nodeB = NodeBuilder.start()
-                .withSequenceLength(13)
-                .withIncomingEdge(0, 1)
-                .withOutgoingEdge(2, 3)
-                .toArray();
-        final int[] nodeC = NodeBuilder.start()
-                .withSequenceLength(4)
-                .withIncomingEdge(1, 2)
-                .withIncomingEdge(2, 3)
-                .withOutgoingEdge(4, 4)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(3, 4)
-                .toArray();
+        createGraph(5);
+        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}});
+        setSequenceLengths(new int[][] {{1, 3}, {2, 13}, {3, 4}});
 
-        final Graph graph = createGraphWithNodes(source, nodeA, nodeB, nodeC, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 3);
-        assertThat(graph.getUnscaledXPosition(2)).isEqualTo(1 + 13);
-        assertThat(graph.getUnscaledXPosition(3)).isEqualTo(1 + 17 + 1);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 3);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1 + 13);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1 + 17 + 1);
     }
 
     @Test
     void testChainOfThree() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .toArray();
-        final int[] node1 = NodeBuilder.start()
-                .withSequenceLength(9)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(2, 1)
-                .toArray();
-        final int[] node2 = NodeBuilder.start()
-                .withSequenceLength(19)
-                .withIncomingEdge(1, 1)
-                .withOutgoingEdge(3, 2)
-                .toArray();
-        final int[] node3 = NodeBuilder.start()
-                .withSequenceLength(5)
-                .withIncomingEdge(2, 2)
-                .withOutgoingEdge(4, 3)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(3, 3)
-                .toArray();
+        createGraph(5);
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}});
+        setSequenceLengths(new int[][] {{1, 9}, {2, 19}, {3, 5}});
 
-        final Graph graph = createGraphWithNodes(source, node1, node2, node3, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 9);
-        assertThat(graph.getUnscaledXPosition(2)).isEqualTo(1 + 28 + 1);
-        assertThat(graph.getUnscaledXPosition(3)).isEqualTo(1 + 33 + 2);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 9);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1 + 28 + 1);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1 + 33 + 2);
     }
 
     /**
@@ -122,41 +63,16 @@ class NewFafospXTest {
      */
     @Test
     void testDiamondShape() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .toArray();
-        final int[] node1 = NodeBuilder.start()
-                .withSequenceLength(7)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(2, 1)
-                .withOutgoingEdge(3, 2)
-                .toArray();
-        final int[] node2 = NodeBuilder.start()
-                .withSequenceLength(5)
-                .withIncomingEdge(1, 1)
-                .withOutgoingEdge(4, 3)
-                .toArray();
-        final int[] node3 = NodeBuilder.start()
-                .withSequenceLength(14)
-                .withIncomingEdge(1, 2)
-                .withOutgoingEdge(4, 4)
-                .toArray();
-        final int[] node4 = NodeBuilder.start()
-                .withSequenceLength(12)
-                .withIncomingEdge(2, 3)
-                .withIncomingEdge(3, 4)
-                .withOutgoingEdge(5, 5)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(4, 5)
-                .toArray();
+        createGraph(6);
+        addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 4}, {3, 4}, {4, 5}});
+        setSequenceLengths(new int[][] {{1, 7}, {2, 5}, {3, 14}, {4, 12}});
 
-        final Graph graph = createGraphWithNodes(source, node1, node2, node3, node4, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 7);
-        assertThat(graph.getUnscaledXPosition(2)).isEqualTo(1 + 12 + 1);
-        assertThat(graph.getUnscaledXPosition(3)).isEqualTo(1 + 21 + 1);
-        assertThat(graph.getUnscaledXPosition(4)).isEqualTo(1 + 33 + 2);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 7);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1 + 12 + 1);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1 + 21 + 1);
+        assertThat(getGraph().getUnscaledXPosition(4)).isEqualTo(1 + 33 + 2);
     }
 
     /**
@@ -164,72 +80,27 @@ class NewFafospXTest {
      */
     @Test
     void testBreadthFirstVisitTwice() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .toArray();
-        final int[] node1 = NodeBuilder.start()
-                .withSequenceLength(14)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(2, 1)
-                .withOutgoingEdge(3, 2)
-                .toArray();
-        final int[] node2 = NodeBuilder.start()
-                .withSequenceLength(15)
-                .withIncomingEdge(1, 1)
-                .withOutgoingEdge(3, 3)
-                .toArray();
-        final int[] node3 = NodeBuilder.start()
-                .withSequenceLength(8)
-                .withIncomingEdge(1, 2)
-                .withIncomingEdge(2, 3)
-                .withOutgoingEdge(4, 4)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(3, 4)
-                .toArray();
+        createGraph(5);
+        addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 3}, {3, 4}});
+        setSequenceLengths(new int[][] {{1, 14}, {2, 15}, {3, 8}});
 
-        final Graph graph = createGraphWithNodes(source, node1, node2, node3, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 14);
-        assertThat(graph.getUnscaledXPosition(2)).isEqualTo(1 + 29 + 1);
-        assertThat(graph.getUnscaledXPosition(3)).isEqualTo(1 + 37 + 2);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 14);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1 + 29 + 1);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1 + 37 + 2);
     }
 
     @Test
     void testInsertionBubble() {
-        final int[] source = NodeBuilder.start()
-                .withOutgoingEdge(1, 0)
-                .toArray();
-        final int[] node1 = NodeBuilder.start()
-                .withSequenceLength(3)
-                .withIncomingEdge(0, 0)
-                .withOutgoingEdge(2, 1)
-                .withOutgoingEdge(3, 2)
-                .toArray();
-        final int[] node2 = NodeBuilder.start()
-                .withSequenceLength(5)
-                .withIncomingEdge(1, 1)
-                .withIncomingEdge(3, 3)
-                .withOutgoingEdge(4, 4)
-                .toArray();
-        final int[] node3 = NodeBuilder.start()
-                .withSequenceLength(7)
-                .withIncomingEdge(1, 2)
-                .withOutgoingEdge(2, 3)
-                .toArray();
-        final int[] sink = NodeBuilder.start()
-                .withIncomingEdge(2, 4)
-                .toArray();
+        createGraph(5);
+        addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 4}, {3, 2}});
+        setSequenceLengths(new int[][] {{1, 3}, {2, 5}, {3, 7}});
 
-        final Graph graph = createGraphWithNodes(source, node1, node2, node3, sink);
+        getGraph().fafospX();
 
-        assertThat(graph.getUnscaledXPosition(1)).isEqualTo(1 + 3);
-        assertThat(graph.getUnscaledXPosition(2)).isEqualTo(1 + 15 + 2);
-        assertThat(graph.getUnscaledXPosition(3)).isEqualTo(1 + 10 + 1);
-    }
-
-
-    private Graph createGraphWithNodes(final int[]... nodes) {
-        return new Graph(nodes, null);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1 + 3);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1 + 15 + 2);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1 + 10 + 1);
     }
 }
