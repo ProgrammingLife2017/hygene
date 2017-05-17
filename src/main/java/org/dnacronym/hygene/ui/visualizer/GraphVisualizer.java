@@ -19,6 +19,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.SequenceDirection;
+import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,7 @@ public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
+    private static final double DEFAULT_EDGE_WIDTH = 2;
     private static final double DEFAULT_DASH_LENGTH = 10;
     private static final double ARC_SIZE = 20;
     /**
@@ -97,26 +99,35 @@ public final class GraphVisualizer {
      * <p>
      * The minimum and maximum x positions are assumed to be unscaled.
      *
+     * @param calculator reference to the {@link GraphDimensionsCalculator} for the current drawing
      * @param graph      graph which contains all the nodes and their information
      * @param nodeId     id of node to draw
-     * @param minX       unscaled minimum x position
-     * @param maxX       unscaled maximum x position
-     * @param laneHeight height of a single lane in pixels
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
-    private void drawNode(final Graph graph, final int nodeId, final double minX, final double maxX,
-                          final double laneHeight) {
-        final double diameter = maxX - minX;
-        final double xPosition = graph.getUnscaledXPosition(nodeId);
-        final double yPosition = graph.getUnscaledYPosition(nodeId);
-
-        final double rectX = (xPosition - minX) / diameter * canvas.getWidth();
-        final double rectY = yPosition * laneHeight + laneHeight / 2 - nodeHeightProperty.get() / 2;
-        final double rectWidth = graph.getSequenceLength(nodeId) / diameter * canvas.getWidth();
-        final double rectHeight = nodeHeightProperty.get();
+    private void drawNode(final GraphDimensionsCalculator calculator, final Graph graph, final int nodeId) {
+        final double rectX = calculator.computeXPosition(nodeId);
+        final double rectY = calculator.computeYPosition(nodeId);
+        final double rectWidth = calculator.computeWidth(nodeId);
+        final double rectHeight = calculator.getNodeHeight();
 
         graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
         graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
+    }
+
+    /**
+     * Draws an edge on the canvas.
+     *
+     * @param calculator reference to the {@link GraphDimensionsCalculator} for the current drawing
+     * @param fromNodeId edge origin node ID
+     * @param toNodeId   edge destination node ID
+     */
+    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
+    private void drawEdge(final GraphDimensionsCalculator calculator, final int fromNodeId, final int toNodeId) {
+        graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
+        graphicsContext.strokeLine(
+                calculator.computeRightXPosition(fromNodeId), calculator.computeMiddleYPosition(fromNodeId),
+                calculator.computeXPosition(toNodeId), calculator.computeMiddleYPosition(toNodeId)
+        );
     }
 
     /**
@@ -150,6 +161,7 @@ public final class GraphVisualizer {
             final int[] laneCount = {1};
 
             final List<Integer> neighbours = new LinkedList<>();
+            neighbours.add(centerNodeId);
             graph.iterator().visitIndirectNeighboursWithinRange(
                     centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
                     nodeId -> {
@@ -169,11 +181,18 @@ public final class GraphVisualizer {
                         }
                     });
 
-            laneHeight = canvas.getHeight() / laneCount[0];
+            GraphDimensionsCalculator calculator = new GraphDimensionsCalculator(
+                    graph, canvas, laneCount[0], minX, maxX, nodeHeightProperty.get()
+            );
 
-            drawNode(graph, centerNodeId, minX, maxX, laneHeight);
+            laneHeight = calculator.getLaneHeight();
+
             for (Integer nodeId : neighbours) {
-                drawNode(graph, nodeId, minX, maxX, laneHeight);
+                drawNode(calculator, graph, nodeId);
+
+                graph.iterator().visitDirectNeighbours(nodeId, SequenceDirection.RIGHT,
+                        neighbourId -> drawEdge(calculator, nodeId, neighbourId)
+                );
             }
 
             if (displayLaneBordersProperty.get()) {
@@ -239,11 +258,10 @@ public final class GraphVisualizer {
      *
      * @param graph graph to set in the {@link GraphVisualizer}
      */
-    public void setGraph(@Nullable final Graph graph) {
+    public void setGraph(final Graph graph) {
         this.graph = graph;
 
-        // TODO get node count from graph metadata and pick middle node
-        centerNodeIdProperty.set((int) Math.round(DEFAULT_RANGE));
+        centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
         // TODO get node count from graph metadata
         hopsProperty.set((int) Math.min(DEFAULT_RANGE, Integer.MAX_VALUE));
     }
