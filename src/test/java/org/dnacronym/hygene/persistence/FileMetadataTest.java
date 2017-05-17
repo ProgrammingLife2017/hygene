@@ -43,7 +43,7 @@ class FileMetadataTest extends FileDatabaseBaseTest {
     }
 
     @Test
-    void verifyMetadata() throws IOException, SQLException {
+    void testVerifyMetadata() throws IOException, SQLException {
         final String testFileName = "src/test/resources/persistence-test.gfa";
         try (final PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
                 "UTF-8"))) {

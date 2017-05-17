@@ -29,7 +29,7 @@ final class FileMetadata {
     /**
      * Constructs a FileMetadata instance.
      *
-     * @param fileDatabase the file to be
+     * @param fileDatabase the database to contain that metadata
      */
     FileMetadata(@NonNull final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
@@ -96,7 +96,7 @@ final class FileMetadata {
     /**
      * Check whether the digest stored in the DB and the digest of the file on disk correspond.
      *
-     * @return {@code} true iff. the two digests are equal
+     * @return {@code true} iff. the two digests are equal
      * @throws IOException  in the case of an error during IO operations
      * @throws SQLException in the case of an error during SQL operations
      */

@@ -15,7 +15,7 @@ final class FileDatabaseTable {
 
 
     /**
-     * Constructs a new table instance.
+     * Constructs a new {@link FileDatabaseTable} instance.
      *
      * @param name the name of that table
      */

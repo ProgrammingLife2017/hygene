@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Class responsible for reading and writing from the file-database.
+ * Class responsible for reading from and writing to the file-database.
  */
 @SuppressFBWarnings(
         value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE",
@@ -29,7 +29,7 @@ final class FileDatabaseDriver {
     /**
      * Constructs a FileDatabaseDriver.
      *
-     * @param fileName the file name of the corresponding GFA-file
+     * @param fileName the file name of the corresponding GFA-file (including file extension, e.g. '.gfa')
      * @throws SQLException in the case of erroneous SQL behaviour
      */
     FileDatabaseDriver(final String fileName) throws SQLException {
