@@ -36,6 +36,8 @@ import java.util.function.Consumer;
  * @see GraphicsContext
  */
 public final class GraphVisualizer {
+    private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
+
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 2;
     private static final double DEFAULT_DASH_LENGTH = 10;
@@ -243,7 +245,7 @@ public final class GraphVisualizer {
             final int nodeLane = positions[1];
 
             if (graph != null) {
-                // TODO write get edge or node method
+                LOGGER.info("You clicked a node at x-position " + nodeX + " in lane " + nodeLane);
             }
         });
     }
