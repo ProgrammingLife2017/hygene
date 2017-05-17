@@ -111,7 +111,7 @@ public final class GraphVisualizer {
         final double yPosition = graph.getUnscaledYPosition(nodeId);
 
         final double rectX = (xPosition - minX) / diameter * canvas.getWidth();
-        final double rectY = yPosition * laneHeight + yPosition * laneHeight / 2 - nodeHeightProperty.get() / 2;
+        final double rectY = yPosition * laneHeight + laneHeight / 2 - nodeHeightProperty.get() / 2;
         final double rectWidth = graph.getSequenceLength(nodeId) / diameter * canvas.getWidth();
         final double rectHeight = nodeHeightProperty.get();
 
@@ -169,13 +169,10 @@ public final class GraphVisualizer {
                         }
                     });
 
-            laneHeight = laneCount[0] / canvas.getHeight();
+            laneHeight = canvas.getHeight() / laneCount[0];
 
             drawNode(graph, centerNodeId, minX, maxX, laneHeight);
-            LOGGER.info("Neighbours: " + neighbours.size());
             for (Integer nodeId : neighbours) {
-                LOGGER.info("Node x: " + graph.getUnscaledXPosition(nodeId));
-                LOGGER.info("Node y: " + graph.getUnscaledYPosition(nodeId));
                 drawNode(graph, nodeId, minX, maxX, laneHeight);
             }
 
