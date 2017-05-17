@@ -53,7 +53,7 @@ public final class ConsoleController implements Initializable {
                     try {
                         console.appendText("Sequence: " + newNode.retrieveMetadata().getSequence() + "\n");
                     } catch (ParseException e) {
-                        console.appendText("Metadata of node " + newNode.getId() + " could not be loaded");
+                        LOGGER.error("Metadata of node " + newNode.getId() + " could not be loaded");
                     }
                 }
             });
