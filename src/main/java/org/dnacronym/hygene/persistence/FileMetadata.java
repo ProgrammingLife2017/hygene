@@ -23,7 +23,7 @@ final class FileMetadata {
     private static final String DIGEST_KEY_NAME = "digest";
 
     private final FileDatabase fileDatabase;
-    private final DatabaseDriver databaseDriver;
+    private final FileDatabaseDriver fileDatabaseDriver;
 
 
     /**
@@ -33,17 +33,17 @@ final class FileMetadata {
      */
     FileMetadata(@NonNull final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
-        this.databaseDriver = fileDatabase.getDatabaseDriver();
+        this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
     }
 
 
     /**
-     * Generates a {@link DatabaseTable} instance for the table holding metadata.
+     * Generates a {@link FileDatabaseTable} instance for the table holding metadata.
      *
-     * @return a {@link DatabaseTable} instance for the table holding metadata
+     * @return a {@link FileDatabaseTable} instance for the table holding metadata
      */
-    DatabaseTable getTable() {
-        final DatabaseTable globalTable = new DatabaseTable(TABLE_NAME);
+    FileDatabaseTable getTable() {
+        final FileDatabaseTable globalTable = new FileDatabaseTable(TABLE_NAME);
         globalTable.addColumn(KEY_COLUMN_NAME, "string");
         globalTable.addColumn(VALUE_COLUMN_NAME, "string");
 
@@ -57,8 +57,8 @@ final class FileMetadata {
      * @throws SQLException in the case of an error during SQL operations
      */
     void storeMetadata() throws IOException, SQLException {
-        databaseDriver.insertRow(TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, DB_VERSION));
-        databaseDriver.insertRow(TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
+        fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, DB_VERSION));
+        fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
     }
 
     /**
@@ -88,7 +88,7 @@ final class FileMetadata {
      * @throws SQLException in the case of an error during SQL operations
      */
     private String getMetadataValue(final String keyName) throws SQLException {
-        return databaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, keyName, VALUE_COLUMN_NAME);
+        return fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, keyName, VALUE_COLUMN_NAME);
     }
 
     /**

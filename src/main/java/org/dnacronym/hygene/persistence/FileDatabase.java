@@ -8,10 +8,10 @@ import java.sql.SQLException;
 /**
  * Class representing the database corresponding to a file.
  */
-@SuppressWarnings("initialization")
+@SuppressWarnings("initialization") // due to setup actions that need to be executed in the constructor
 public final class FileDatabase {
     private final String fileName;
-    private final DatabaseDriver databaseDriver;
+    private final FileDatabaseDriver fileDatabaseDriver;
 
 
     /**
@@ -24,13 +24,13 @@ public final class FileDatabase {
     public FileDatabase(final String fileName) throws SQLException, IOException {
         this.fileName = fileName;
 
-        final boolean databaseAlreadyExisted = (new File(fileName + DatabaseDriver.DB_FILE_EXTENSION)).exists();
-        databaseDriver = new DatabaseDriver(fileName);
+        final boolean databaseAlreadyExisted = (new File(fileName + FileDatabaseDriver.DB_FILE_EXTENSION)).exists();
+        fileDatabaseDriver = new FileDatabaseDriver(fileName);
 
         final FileMetadata fileMetadata = new FileMetadata(this);
 
         if (!databaseAlreadyExisted) {
-            databaseDriver.setupTable(fileMetadata.getTable());
+            fileDatabaseDriver.setupTable(fileMetadata.getTable());
             fileMetadata.storeMetadata();
         } else {
             fileMetadata.verifyMetadata();
@@ -48,11 +48,11 @@ public final class FileDatabase {
     }
 
     /**
-     * Returns the {@link DatabaseDriver}.
+     * Returns the {@link FileDatabaseDriver}.
      *
-     * @return the {@link DatabaseDriver}
+     * @return the {@link FileDatabaseDriver}
      */
-    DatabaseDriver getDatabaseDriver() {
-        return databaseDriver;
+    FileDatabaseDriver getFileDatabaseDriver() {
+        return fileDatabaseDriver;
     }
 }

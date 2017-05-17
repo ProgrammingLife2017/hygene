@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class representing a DB table.
  */
-final class DatabaseTable {
+final class FileDatabaseTable {
     private final String name;
     private final List<Pair<String, String>> columns;
 
@@ -19,7 +19,7 @@ final class DatabaseTable {
      *
      * @param name the name of that table
      */
-    DatabaseTable(final String name) {
+    FileDatabaseTable(final String name) {
         this.name = name;
         this.columns = new ArrayList<>();
     }

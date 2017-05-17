@@ -17,19 +17,19 @@ import java.util.stream.Collectors;
  * Class responsible for reading and writing from the file-database.
  */
 @SuppressFBWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE") // not relevant for a local, isolated file database
-final class DatabaseDriver {
+final class FileDatabaseDriver {
     static final String DB_FILE_EXTENSION = ".db";
 
     private final Connection connection;
 
 
     /**
-     * Constructs a DatabaseDriver.
+     * Constructs a FileDatabaseDriver.
      *
      * @param fileName the file name of the corresponding GFA-file
      * @throws SQLException in the case of erroneous SQL behaviour
      */
-    DatabaseDriver(final String fileName) throws SQLException {
+    FileDatabaseDriver(final String fileName) throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION);
     }
 
@@ -40,7 +40,7 @@ final class DatabaseDriver {
      * @param table the table to be set up
      * @throws SQLException in the case of an error during SQL operations
      */
-    void setupTable(final DatabaseTable table) throws SQLException {
+    void setupTable(final FileDatabaseTable table) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
             final String columnList = String.join(", ", table.getColumns().stream().map(
                     (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
