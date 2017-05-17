@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 /**
  * Class responsible for reading and writing from the file-database.
  */
-@SuppressFBWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE") // not relevant for a local, isolated file database
+@SuppressFBWarnings(
+        value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE",
+        justification = "Neither relevant nor practical for a local, isolated file database"
+)
 final class FileDatabaseDriver {
     static final String DB_FILE_EXTENSION = ".db";
 
