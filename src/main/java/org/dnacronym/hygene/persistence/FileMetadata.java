@@ -14,13 +14,13 @@ import java.util.Arrays;
  * Class responsible for storing and checking metadata on a file-level.
  */
 final class FileMetadata {
-    private static final String DB_VERSION = "0.0.1";
+    static final String TABLE_NAME = "global";
+    static final String VERSION_KEY_NAME = "version";
+    static final String DIGEST_KEY_NAME = "digest";
+    static final String DB_VERSION = "0.0.1";
 
-    private static final String TABLE_NAME = "global";
     private static final String KEY_COLUMN_NAME = "global_key";
     private static final String VALUE_COLUMN_NAME = "global_value";
-    private static final String VERSION_KEY_NAME = "version";
-    private static final String DIGEST_KEY_NAME = "digest";
 
     private final FileDatabase fileDatabase;
     private final FileDatabaseDriver fileDatabaseDriver;
@@ -71,11 +71,13 @@ final class FileMetadata {
      */
     void verifyMetadata() throws IOException, SQLException {
         if (!checkVersionCompatibility()) {
+            fileDatabase.close();
             throw new IncompatibleDatabaseVersionException("File database version not compatible with this version of "
                     + "the program.");
         }
 
         if (!checkFileDigest()) {
+            fileDatabase.close();
             throw new FileDigestDatabaseException("Stored digest and computed digest of file did not match.");
         }
     }
@@ -87,7 +89,7 @@ final class FileMetadata {
      * @return the value associated with that key in the file database
      * @throws SQLException in the case of an error during SQL operations
      */
-    private String getMetadataValue(final String keyName) throws SQLException {
+    String getMetadataValue(final String keyName) throws SQLException {
         return fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, keyName, VALUE_COLUMN_NAME);
     }
 

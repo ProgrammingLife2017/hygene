@@ -40,7 +40,7 @@ final class FileDatabaseDriver {
      * @param table the table to be set up
      * @throws SQLException in the case of an error during SQL operations
      */
-    void setupTable(final FileDatabaseTable table) throws SQLException {
+    synchronized void setupTable(final FileDatabaseTable table) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
             final String columnList = String.join(", ", table.getColumns().stream().map(
                     (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
@@ -59,7 +59,7 @@ final class FileDatabaseDriver {
      * @param values    the values to be added as a row
      * @throws SQLException in the case of an error during SQL operations
      */
-    void insertRow(final String tableName, final List<String> values) throws SQLException {
+    synchronized void insertRow(final String tableName, final List<String> values) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
             final String concatenatedValues = String.join(", ", values.stream().map(
                     value -> {
@@ -84,8 +84,8 @@ final class FileDatabaseDriver {
      * @return the value corresponding to that key
      * @throws SQLException in the case of an error during SQL operations
      */
-    String getSingleValue(final String tableName, final String keyColumnName, final String keyColumnValue,
-                          final String valueColumnName) throws SQLException {
+    synchronized String getSingleValue(final String tableName, final String keyColumnName, final String keyColumnValue,
+                                       final String valueColumnName) throws SQLException {
         final String sql = "SELECT * FROM " + tableName + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
 
         try (final Statement statement = connection.createStatement()) {
@@ -110,7 +110,7 @@ final class FileDatabaseDriver {
      *
      * @throws SQLException in the case of an error during SQL operations
      */
-    void close() throws SQLException {
+    synchronized void close() throws SQLException {
         connection.close();
     }
 }
