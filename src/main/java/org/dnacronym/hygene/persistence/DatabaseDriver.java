@@ -102,4 +102,15 @@ final class DatabaseDriver {
             }
         }
     }
+
+    /**
+     * Closes the database connection.
+     * <p>
+     * To be called when this instance is no longer needed.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    void close() throws SQLException {
+        connection.close();
+    }
 }
