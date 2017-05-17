@@ -133,4 +133,26 @@ public final class MenuControllerTest extends UITest {
 
         assertThat(future.get().getStage().isShowing()).isTrue();
     }
+
+    @Test
+    void testConsoleWindowPersistence() throws Exception {
+        ActionEvent action = mock(ActionEvent.class);
+
+        CompletableFuture<ConsoleWrapper> future1 = new CompletableFuture<>();
+        CompletableFuture<ConsoleWrapper> future2 = new CompletableFuture<>();
+
+        interact(() -> {
+            try {
+                menuController.openConsoleAction(action);
+                future1.complete(menuController.getConsoleWrapper());
+                menuController.openConsoleAction(action);
+                future2.complete(menuController.getConsoleWrapper());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // We want the actions object reference to be the same.
+        assertThat(future1.get()).isEqualTo(future2.get());
+    }
 }
