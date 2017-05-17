@@ -146,7 +146,7 @@ public final class GraphVisualizer {
             final int[] laneCount = {1};
 
             final List<Integer> neighbours = new LinkedList<>();
-            graph.visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
+            graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
                     nodeId -> false,
                     nodeId -> {
                         if (graph != null) {
@@ -155,7 +155,7 @@ public final class GraphVisualizer {
                             minX = Math.min(minX, graph.getUnscaledXPosition(nodeId));
                         }
                     });
-            graph.visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(),
+            graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(),
                     nodeId -> false,
                     nodeId -> {
                         if (graph != null) {
