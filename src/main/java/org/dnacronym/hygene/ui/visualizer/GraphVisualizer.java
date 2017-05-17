@@ -36,8 +36,6 @@ import java.util.function.Consumer;
  * @see GraphicsContext
  */
 public final class GraphVisualizer {
-    private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
-
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 2;
     private static final double DEFAULT_DASH_LENGTH = 10;
