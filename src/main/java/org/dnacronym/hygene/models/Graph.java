@@ -167,7 +167,7 @@ public final class Graph {
      */
     public void fafospX() {
         final Queue<Integer> queue = new LinkedList<>();
-        iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, node -> queue.add(node));
+        iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, queue::add);
         setUnscaledXPosition(0, 0);
 
         while (!queue.isEmpty()) {
