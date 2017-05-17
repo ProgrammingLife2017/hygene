@@ -18,7 +18,7 @@ import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.SequenceDirection;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -145,7 +145,7 @@ public final class GraphVisualizer {
             maxX = unscaledCenterX;
             final int[] laneCount = {1};
 
-            final List<Integer> neighbours = new ArrayList<>();
+            final List<Integer> neighbours = new LinkedList<>();
             graph.visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hopsProperty.get(),
                     nodeId -> false,
                     nodeId -> {
