@@ -263,8 +263,7 @@ public final class GraphVisualizer {
         this.graph = graph;
 
         centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
-        // TODO get node count from graph metadata
-        hopsProperty.set((int) Math.min(DEFAULT_RANGE, Integer.MAX_VALUE));
+        hopsProperty.set((int) Math.min(DEFAULT_RANGE, graph.getNodeArrays().length / 2));
     }
 
     /**
