@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.NewGfaFile;
 
 
@@ -13,6 +15,8 @@ import org.dnacronym.hygene.parser.NewGfaFile;
 public final class Graph {
     private final int[][] nodeArrays;
     private final NewGfaFile gfaFile;
+
+    private @MonotonicNonNull GraphIterator iterator;
 
 
     /**
@@ -136,8 +140,12 @@ public final class Graph {
      *
      * @return a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it
      */
+    @EnsuresNonNull("iterator")
     public GraphIterator iterator() {
-        return new GraphIterator(this);
+        if (iterator == null) {
+            iterator = new GraphIterator(this);
+        }
+        return iterator;
     }
 
     /**
