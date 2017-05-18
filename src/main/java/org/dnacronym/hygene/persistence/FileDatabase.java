@@ -24,7 +24,7 @@ public final class FileDatabase implements AutoCloseable {
     public FileDatabase(final String fileName) throws SQLException, IOException {
         this.fileName = fileName;
 
-        final boolean databaseAlreadyExisted = (new File(fileName + FileDatabaseDriver.DB_FILE_EXTENSION)).exists();
+        final boolean databaseAlreadyExisted = new File(fileName + FileDatabaseDriver.DB_FILE_EXTENSION).exists();
         fileDatabaseDriver = new FileDatabaseDriver(fileName);
 
         final FileMetadata fileMetadata = new FileMetadata(this);

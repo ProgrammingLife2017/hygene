@@ -68,9 +68,8 @@ final class FileDatabaseDriver implements AutoCloseable {
                     value -> {
                         if (StringUtils.isNumeric(value)) {
                             return value;
-                        } else {
-                            return "'" + value + "'";
                         }
+                        return "'" + value + "'";
                     }
             ).collect(Collectors.toList()));
             statement.executeUpdate("INSERT INTO " + tableName + " VALUES (" + concatenatedValues + ")");
