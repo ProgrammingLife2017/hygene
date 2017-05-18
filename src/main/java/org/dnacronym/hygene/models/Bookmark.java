@@ -4,7 +4,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 
 /**
- * Model of a bookmark.
+ * Model of a base bookmark.
  */
 public final class Bookmark {
     private final int nodeId;
