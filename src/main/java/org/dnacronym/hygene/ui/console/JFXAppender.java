@@ -19,7 +19,7 @@ import java.io.Serializable;
  */
 @Plugin(name = "JFXAppender", category = "Core", elementType = "appender", printObject = true)
 public final class JFXAppender extends AbstractAppender {
-    private static volatile StringProperty consoleBinding = new SimpleStringProperty();
+    private static volatile ObjectProperty<ConsoleMessage> latestLogEvent = new SimpleObjectProperty<>();
 
     /**
      * Constructor for creating a new JFXAppender.
@@ -36,12 +36,12 @@ public final class JFXAppender extends AbstractAppender {
     }
 
     /**
-     * Getter for the console binding.
+     * Gets for the console message binding represented by {@link ObjectProperty<ConsoleMessage>}.
      *
-     * @return the console binding.
+     * @return the {@link ObjectProperty<ConsoleMessage>}.
      */
-    public static StringProperty getConsoleBinding() {
-        return consoleBinding;
+    public static ObjectProperty<ConsoleMessage> getLatestLogEvent() {
+        return latestLogEvent;
     }
 
     /**
@@ -61,6 +61,6 @@ public final class JFXAppender extends AbstractAppender {
 
     @Override
     public void append(final LogEvent event) {
-        consoleBinding.setValue(event.getMessage().getFormattedMessage() + "\n");
+        latestLogEvent.setValue(new ConsoleMessage(this, event));
     }
 }

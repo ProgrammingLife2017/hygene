@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+<?import javafx.scene.text.TextFlow?>
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.ConsoleController">
-    <children>
-        <TextArea fx:id="console" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                  AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
-    </children>
-</AnchorPane>
+    <content>
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity">
+            <children>
+                <TextFlow fx:id="consoleTextFlow" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
+                          AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

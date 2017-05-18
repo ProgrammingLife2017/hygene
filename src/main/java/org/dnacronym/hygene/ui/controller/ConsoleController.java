@@ -2,17 +2,17 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextArea;
+import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.ui.console.ConsoleMessage;
+import org.dnacronym.hygene.ui.console.JFXAppender;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.console.JFXAppender;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -24,9 +24,9 @@ public final class ConsoleController implements Initializable {
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
-
     @FXML
-    private @MonotonicNonNull TextArea console;
+    private @MonotonicNonNull TextFlow consoleTextFlow;
+
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -37,14 +37,12 @@ public final class ConsoleController implements Initializable {
             return;
         }
 
-        Optional.ofNullable(console).orElseThrow(() ->
-                new IllegalStateException("Invalid or uninitialized JavaFX FXML element")).setEditable(false);
+        JFXAppender.getLatestLogEvent().addListener((observable, oldValue, newValue) -> appendLogItem(newValue));
 
-        JFXAppender.getConsoleBinding().addListener((observable, oldValue, newValue) -> {
-            if (console != null) {
-                console.appendText(newValue);
-            }
-        });
+        if (graphVisualizer != null) {
+            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
+                    appendLogItem(new ConsoleMessage("Sequence: " + newNode.getSequence())));
+        }
     }
 
     /**
@@ -54,5 +52,17 @@ public final class ConsoleController implements Initializable {
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * Append a new Console Message to the consoleTextFlow.
+     *
+     * @param message the message
+     */
+    void appendLogItem(final ConsoleMessage message) {
+
+        if (consoleTextFlow != null) {
+            consoleTextFlow.getChildren().add(message.getNode());
+        }
     }
 }
