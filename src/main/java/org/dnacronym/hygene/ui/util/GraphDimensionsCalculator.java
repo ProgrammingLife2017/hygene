@@ -70,7 +70,6 @@ public final class GraphDimensionsCalculator {
         };
 
         graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, hops, consumer);
-//        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hops, consumer);
 
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
