@@ -4,7 +4,6 @@ import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
 
 
 /**
@@ -42,6 +41,7 @@ public final class GraphDimensionsCalculator {
         this.graph = graph;
         this.canvasHeight = canvas.getHeight();
         this.canvasWidth = canvas.getWidth();
+
         this.minX = minX;
         this.maxX = maxX;
         this.minY = minY;
@@ -66,13 +66,13 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     public double computeXPosition(final int nodeId) {
-        final int fafospPosition = graph.getUnscaledXPosition(nodeId);
-
         if (computeDiameter() == 0) {
             LOGGER.warn("Diameter of graph is 0");
             return 0;
         }
-        return (double) (fafospPosition - minX) / computeDiameter() * canvasWidth;
+
+        final int xPosition = graph.getUnscaledXPosition(nodeId);
+        return (double) (xPosition - minX) / computeDiameter() * canvasWidth;
     }
 
     /**
@@ -92,9 +92,9 @@ public final class GraphDimensionsCalculator {
      * @return the absolute y position of a node within the current canvas
      */
     public double computeYPosition(final int nodeId) {
-        final int fafospPosition = graph.getUnscaledYPosition(nodeId);
+        final int yPosition = graph.getUnscaledYPosition(nodeId);
 
-        return (fafospPosition - minY) * getLaneHeight() + getLaneHeight() / 2 - nodeHeight / 2;
+        return (yPosition - minY) * getLaneHeight() + getLaneHeight() / 2 - nodeHeight / 2;
     }
 
     /**
@@ -157,7 +157,7 @@ public final class GraphDimensionsCalculator {
      *
      * @param xPos x position onscreen
      * @param yPos y position onscreen
-     * @return x and y position in a double array of size 2 which correspond with x and y position of {@link Node}
+     * @return x and y position in a double array of size 2 which correspond with x and y position of a node
      */
     public int[] toNodeCoordinates(final double xPos, final double yPos) {
         final int diameter = maxX - minX;
@@ -165,8 +165,9 @@ public final class GraphDimensionsCalculator {
         final int unscaledX = (int) (xPos / canvasWidth) * diameter + minX;
         final int unscaledY = (int) (yPos / laneHeight);
 
-        LOGGER.info("User clicked on x: " + xPos + ", y: " + yPos + "\n"
+        LOGGER.info("User clicked on x: " + xPos + ", y: " + yPos + ", "
                 + "Unscaled x: " + unscaledX + ", unscaled Y: " + unscaledY);
+
         return new int[]{unscaledX, unscaledY};
     }
 }
