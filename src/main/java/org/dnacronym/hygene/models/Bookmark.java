@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+
 /**
  * Model of a base bookmark.
  */
