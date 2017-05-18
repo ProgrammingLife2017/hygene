@@ -77,6 +77,44 @@ final class FileDatabaseDriver implements AutoCloseable {
     }
 
     /**
+     * Deletes the given row.
+     *
+     * @param tableName      the name of the table
+     * @param keyColumnName  the name of the key column
+     * @param keyColumnValue the key to be queried for
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    synchronized void deleteRow(final String tableName, final String keyColumnName, final String keyColumnValue)
+            throws SQLException {
+        final String sql = "DELETE FROM " + tableName + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
+
+        try (final Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql);
+        }
+    }
+
+    /**
+     * Queries the database whether the indicated row exists.
+     *
+     * @param tableName      the name of the table
+     * @param keyColumnName  the name of the key column
+     * @param keyColumnValue the key to be queried for
+     * @return {@code true} iff. the row exists
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    synchronized boolean hasRow(final String tableName, final String keyColumnName, final String keyColumnValue)
+            throws SQLException {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM " + tableName + " WHERE " + keyColumnName + "='"
+                + keyColumnValue + "')";
+
+        try (final Statement statement = connection.createStatement()) {
+            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+                return resultSet.getInt(1) == 1;
+            }
+        }
+    }
+
+    /**
      * Queries the database for the value of a single key.
      *
      * @param tableName       the name of the table
