@@ -7,7 +7,7 @@ import java.util.List;
 
 
 /**
- * Class representing a DB table.
+ * Class representing a database table.
  */
 final class FileDatabaseTable {
     private final String name;
@@ -17,7 +17,7 @@ final class FileDatabaseTable {
     /**
      * Constructs a new {@link FileDatabaseTable} instance.
      *
-     * @param name the name of that table
+     * @param name the name of the table this instance should correspond to
      */
     FileDatabaseTable(final String name) {
         this.name = name;
