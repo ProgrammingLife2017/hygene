@@ -29,11 +29,11 @@ public final class FileDatabase implements AutoCloseable {
 
         final FileMetadata fileMetadata = new FileMetadata(this);
 
-        if (!databaseAlreadyExisted) {
+        if (databaseAlreadyExisted) {
+            fileMetadata.verifyMetadata();
+        } else {
             fileDatabaseDriver.setUpTable(fileMetadata.getTable());
             fileMetadata.storeMetadata();
-        } else {
-            fileMetadata.verifyMetadata();
         }
     }
 
