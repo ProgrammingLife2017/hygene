@@ -92,7 +92,7 @@ public final class Hygene extends Application {
             throw new UIInitialisationException("Root of Application could not be found.");
         }
 
-        primaryStage.setOnCloseRequest((e) -> Platform.exit());
+        primaryStage.setOnCloseRequest(e -> Platform.exit());
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);

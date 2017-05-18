@@ -4,13 +4,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.TextFlow?>
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            styleClass="consoleScrollPane" stylesheets="@../css/console_style.css"
+            xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.ConsoleController">
     <content>
         <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity">
             <children>
-                <TextFlow fx:id="consoleTextFlow" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                          AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
+                <TextFlow fx:id="consoleTextFlow" styleClass="consoleTextFlow" AnchorPane.bottomAnchor="5.0"
+                          AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
             </children>
         </AnchorPane>
     </content>

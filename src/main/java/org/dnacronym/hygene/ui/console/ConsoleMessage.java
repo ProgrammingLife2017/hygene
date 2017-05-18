@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.console;
 
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Appender;
@@ -15,8 +14,6 @@ import java.nio.charset.StandardCharsets;
  * This class is a generic wrapper representing console messages.
  */
 public class ConsoleMessage {
-    static final Font CONSOLE_FONT = new Font("Arial", 12);
-
     private final Text node;
 
 
@@ -27,8 +24,6 @@ public class ConsoleMessage {
      */
     public ConsoleMessage(final String message) {
         node = new Text(message);
-
-        node.setFont(CONSOLE_FONT);
     }
 
     /**
@@ -74,7 +69,7 @@ public class ConsoleMessage {
             case "TRACE":
                 return Color.GREEN;
             case "INFO;":
-            default: // This includes INFO
+            default:
                 return Color.BLACK;
         }
     }
