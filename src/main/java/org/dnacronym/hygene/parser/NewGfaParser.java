@@ -48,7 +48,7 @@ public final class NewGfaParser {
      * @throws ParseException if the given {@code String} is not GFA-compliant
      */
     @EnsuresNonNull("nodeArrays")
-    public Graph parse(final NewGfaFile gfaFile) throws ParseException {
+    public Graph parse(final GfaFile gfaFile) throws ParseException {
         BufferedReader gfa = gfaFile.readFile();
 
         allocateNodes(gfa);

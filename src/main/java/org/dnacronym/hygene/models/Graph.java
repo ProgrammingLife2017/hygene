@@ -3,7 +3,7 @@ package org.dnacronym.hygene.models;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.parser.NewGfaFile;
+import org.dnacronym.hygene.parser.GfaFile;
 
 
 /**
@@ -14,7 +14,7 @@ import org.dnacronym.hygene.parser.NewGfaFile;
  */
 public final class Graph {
     private final int[][] nodeArrays;
-    private final NewGfaFile gfaFile;
+    private final GfaFile gfaFile;
 
     private @MonotonicNonNull GraphIterator iterator;
 
@@ -29,7 +29,7 @@ public final class Graph {
             value = "EI_EXPOSE_REP2",
             justification = "For performance reasons, we don't want to create a copy here"
     )
-    public Graph(final int[][] nodeArrays, final NewGfaFile gfaFile) {
+    public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
         this.nodeArrays = nodeArrays;
         this.gfaFile = gfaFile;
     }
@@ -174,7 +174,7 @@ public final class Graph {
      *
      * @return the {@code GfaFile} instance where the graph belongs to.
      */
-    public NewGfaFile getGfaFile() {
+    public GfaFile getGfaFile() {
         return gfaFile;
     }
 }

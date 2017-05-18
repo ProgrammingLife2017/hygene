@@ -91,9 +91,9 @@ final class MetadataParserTest {
         assertThat(e).hasMessageContaining("Expected line 1 to start with L");
     }
 
-    private NewGfaFile createGfaFile(final String gfa) throws ParseException {
+    private GfaFile createGfaFile(final String gfa) throws ParseException {
         final byte[] gfaBytes = replaceSpacesWithTabs(gfa).getBytes(StandardCharsets.UTF_8);
-        final NewGfaFile gfaFile = mock(NewGfaFile.class);
+        final GfaFile gfaFile = mock(GfaFile.class);
         when(gfaFile.readFile()).thenAnswer(invocationOnMock ->
                 new BufferedReader(new InputStreamReader(new ByteArrayInputStream(gfaBytes)))
         );
