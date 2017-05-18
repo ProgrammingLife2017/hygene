@@ -25,6 +25,14 @@ final class FileDatabaseTest extends FileDatabaseBaseTest {
     }
 
 
+    /**
+     * Tests that the {@link FileDatabase} can properly handle opening existing databases.
+     * <p>
+     * A part of that is not throwing a digest mismatch exception on opening it again.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     * @throws IOException  in the case of an error during IO operations
+     */
     @Test
     void testExistingDatabase() throws SQLException, IOException {
         fileDatabase.close();
