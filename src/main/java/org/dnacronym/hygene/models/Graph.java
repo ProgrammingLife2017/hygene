@@ -129,6 +129,16 @@ public final class Graph {
     }
 
     /**
+     * Sets the unscaled y position.
+     *
+     * @param id                the node's id
+     * @param unscaledYPosition the unscaled y position
+     */
+    void setUnscaledYPosition(final int id, final int unscaledYPosition) {
+        nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX] = unscaledYPosition;
+    }
+
+    /**
      * Returns the number of neighbours of a node in the given direction.
      *
      * @param id        the node's identifier
