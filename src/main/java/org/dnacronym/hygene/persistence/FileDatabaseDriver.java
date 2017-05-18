@@ -43,7 +43,7 @@ final class FileDatabaseDriver {
      * @param table the table to be set up
      * @throws SQLException in the case of an error during SQL operations
      */
-    synchronized void setupTable(final FileDatabaseTable table) throws SQLException {
+    synchronized void setUpTable(final FileDatabaseTable table) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
             final String columnList = String.join(", ", table.getColumns().stream().map(
                     (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
