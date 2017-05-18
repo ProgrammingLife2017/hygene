@@ -80,7 +80,7 @@ public final class ConfigController implements Initializable {
     @FXML
     void setNodeId() {
         if (graphVisualizer != null && nodeId != null) {
-            final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d.]", ""));
+            final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
             graphVisualizer.getCenterNodeIdProperty().set(newValue);
             nodeId.clear();
 
@@ -97,7 +97,7 @@ public final class ConfigController implements Initializable {
     @FXML
     void setRange() {
         if (graphVisualizer != null && range != null) {
-            final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d.]", ""));
+            final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
             graphVisualizer.getHopsProperty().set(newValue);
             range.clear();
 
