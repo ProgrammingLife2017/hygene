@@ -214,20 +214,22 @@ public final class GraphIterator {
 
             action.accept(head);
 
-            if (currentDepth < maxDepth) {
-                visitDirectNeighbours(head, SequenceDirection.LEFT, index -> {
-                    if (!visited.test(index)) {
-                        depthIncreaseTimes[1]++;
-                        queue.add(index);
-                    }
-                });
-                visitDirectNeighbours(head, SequenceDirection.RIGHT, index -> {
-                    if (!visited.test(index)) {
-                        depthIncreaseTimes[1]++;
-                        queue.add(index);
-                    }
-                });
+            if (currentDepth >= maxDepth) {
+                continue;
             }
+
+            visitDirectNeighbours(head, SequenceDirection.LEFT, index -> {
+                if (!visited.test(index)) {
+                    depthIncreaseTimes[1]++;
+                    queue.add(index);
+                }
+            });
+            visitDirectNeighbours(head, SequenceDirection.RIGHT, index -> {
+                if (!visited.test(index)) {
+                    depthIncreaseTimes[1]++;
+                    queue.add(index);
+                }
+            });
 
 
             depthIncreaseTimes[0]--;
