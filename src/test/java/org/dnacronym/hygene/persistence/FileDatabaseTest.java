@@ -46,11 +46,6 @@ final class FileDatabaseTest extends FileDatabaseBaseTest {
         assertThat(fileDatabase.getFileName()).isEqualTo(GFA_FILE_NAME);
     }
 
-    @Test
-    void testGetFileDatabaseDriver() {
-        assertThat(fileDatabase.getFileDatabaseDriver()).isNotNull();
-    }
-
 
     @AfterEach
     void tearDown() throws IOException, SQLException {
