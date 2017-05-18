@@ -19,9 +19,7 @@ import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -54,8 +52,6 @@ public final class GraphVisualizer {
 
     private final BooleanProperty displayLaneBordersProperty;
     private final DoubleProperty borderDashLengthProperty;
-
-    private GraphDimensionsCalculator graphDimensionsCalculator;
 
     private @Nullable Graph graph;
 
@@ -147,38 +143,13 @@ public final class GraphVisualizer {
         clear();
         if (graph != null && canvas != null) {
             final int centerNodeId = centerNodeIdProperty.get();
-            final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
 
-            final int[] minX = {unscaledCenterX};
-            final int[] maxX = {unscaledCenterX};
-            final int[] minY = {graph.getUnscaledYPosition(centerNodeId)};
-            final int[] maxY = {graph.getUnscaledYPosition(centerNodeId)};
-
-            final List<Integer> neighbours = new LinkedList<>();
-            neighbours.add(centerNodeId);
-
-            final Consumer<Integer> iteratorAction = nodeId -> {
-                if (graph != null) {
-                    neighbours.add(nodeId);
-                    minX[0] = Math.min(minX[0], graph.getUnscaledXPosition(nodeId));
-                    maxX[0] = Math.max(maxX[0], graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
-
-                    minY[0] = Math.min(minY[0], graph.getUnscaledYPosition(nodeId));
-                    maxY[0] = Math.max(maxY[0], graph.getUnscaledYPosition(nodeId));
-
-                }
-            };
-
-            graph.iterator().visitIndirectNeighboursWithinRange(
-                    centerNodeId, SequenceDirection.LEFT, hopsProperty.get(), iteratorAction);
-            graph.iterator().visitIndirectNeighboursWithinRange(
-                    centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(), iteratorAction);
-
-            this.graphDimensionsCalculator = new GraphDimensionsCalculator(
-                    graph, canvas, minX[0], maxX[0], minY[0], maxY[0], nodeHeightProperty.get()
+            final GraphDimensionsCalculator graphDimensionsCalculator = new GraphDimensionsCalculator(
+                    graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get()
             );
+            final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
 
-            for (Integer nodeId : neighbours) {
+            for (final Integer nodeId : neighbours) {
                 drawNode(graphDimensionsCalculator, graph, nodeId);
 
                 graph.iterator().visitDirectNeighbours(
@@ -232,14 +203,6 @@ public final class GraphVisualizer {
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
-
-        canvas.setOnMouseClicked(event -> {
-            final int[] positions = graphDimensionsCalculator.toNodeCoordinates(event.getX(), event.getY());
-            final int nodeX = positions[0];
-            final int nodeY = positions[1];
-
-            // TODO write findNode(x, y) in Graph class
-        });
     }
 
     /**
@@ -252,6 +215,7 @@ public final class GraphVisualizer {
      */
     public void setGraph(final Graph graph) {
         this.graph = graph;
+        clear();
 
         centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
         hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) graph.getNodeArrays().length / 2));

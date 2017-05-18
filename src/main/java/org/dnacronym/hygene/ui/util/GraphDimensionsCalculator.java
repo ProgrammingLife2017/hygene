@@ -4,6 +4,11 @@ import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.SequenceDirection;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
 
 
 /**
@@ -24,29 +29,53 @@ public final class GraphDimensionsCalculator {
     private double laneHeight = -1;
     private int laneCount = -1;
 
+    private final List<Integer> neighbours;
+
 
     /**
      * Constructs and initializes an instance of {@link GraphDimensionsCalculator}.
+     * <p>
+     * The calculator also internally stores the id of all the neighbours of a set center node id.
      *
-     * @param graph      a reference to the current {@link Graph}, used to get node properties
-     * @param canvas     a reference to the current {@link Canvas}, used for determining width and height
-     * @param minX       the lowest x position in the current subgraph
-     * @param maxX       the highest x position in the current subgraph
-     * @param minY       the lowest y position in the current subgraph
-     * @param maxY       the highest y position in the current subgraph
-     * @param nodeHeight the height of a single node
+     * @param graph        a reference to the current {@link Graph}, used to get node properties
+     * @param canvas       a reference to the current {@link Canvas}, used for determining width and height
+     * @param centerNodeId node id of the center node
+     * @param hops         Amount of hops allowed from center node
+     * @param nodeHeight   the height of a single node
+     * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, SequenceDirection, int,
+     * Consumer)
      */
-    public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int minX, final int maxX,
-                                     final int minY, final int maxY, final double nodeHeight) {
+    public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
+                                     final double nodeHeight) {
         this.graph = graph;
         this.canvasHeight = canvas.getHeight();
         this.canvasWidth = canvas.getWidth();
-
-        this.minX = minX;
-        this.maxX = maxX;
-        this.minY = minY;
-        this.maxY = maxY;
         this.nodeHeight = nodeHeight;
+
+        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
+        final int[] tempMinX = {unscaledCenterX};
+        final int[] tempMaxX = {unscaledCenterX};
+        final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
+        final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
+
+        neighbours = new LinkedList<>();
+        neighbours.add(centerNodeId);
+
+        final Consumer<Integer> consumer = nodeId -> {
+            neighbours.add(nodeId);
+            tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId));
+            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
+            tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
+            tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
+        };
+
+        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hops, consumer);
+        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hops, consumer);
+
+        this.minX = tempMinX[0];
+        this.maxX = tempMaxX[0];
+        this.minY = tempMinY[0];
+        this.maxY = tempMaxY[0];
     }
 
 
@@ -169,5 +198,14 @@ public final class GraphDimensionsCalculator {
                 + "Unscaled x: " + unscaledX + ", unscaled Y: " + unscaledY);
 
         return new int[]{unscaledX, unscaledY};
+    }
+
+    /**
+     * Get the neighbours of the set center node, no more than set hops away.
+     *
+     * @return neighbours of set center node
+     */
+    public List<Integer> getNeighbours() {
+        return neighbours;
     }
 }
