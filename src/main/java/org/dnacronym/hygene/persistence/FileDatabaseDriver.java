@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
         value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE",
         justification = "Neither relevant nor practical for a local, isolated file database"
 )
-final class FileDatabaseDriver {
+final class FileDatabaseDriver implements AutoCloseable {
     static final String DB_FILE_EXTENSION = ".db";
 
     private final Connection connection;
@@ -45,9 +45,9 @@ final class FileDatabaseDriver {
      */
     synchronized void setUpTable(final FileDatabaseTable table) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
-            final String columnList = String.join(", ", table.getColumns().stream().map(
-                    (Pair<String, String> column) -> column.getKey() + " " + column.getValue()
-            ).collect(Collectors.toList()));
+            final String columnList = String.join(", ", table.getColumns().stream()
+                    .map((Pair<String, String> column) -> column.getKey() + " " + column.getValue())
+                    .collect(Collectors.toList()));
 
             statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
         }
@@ -106,14 +106,8 @@ final class FileDatabaseDriver {
         }
     }
 
-    /**
-     * Closes the database connection.
-     * <p>
-     * To be called when this instance is no longer needed.
-     *
-     * @throws SQLException in the case of an error during SQL operations
-     */
-    synchronized void close() throws SQLException {
+
+    public synchronized void close() throws SQLException {
         connection.close();
     }
 }
