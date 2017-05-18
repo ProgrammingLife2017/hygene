@@ -78,7 +78,7 @@ public final class Hygene extends Application {
         this.primaryStage = primaryStage;
         setInstance(this);
 
-        primaryStage.setTitle(TITLE);
+        formatTitle("");
         primaryStage.setMaximized(true);
 
         final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
@@ -92,6 +92,22 @@ public final class Hygene extends Application {
         primaryStage.show();
 
         LOGGER.info("Launching Hygene GUI");
+    }
+
+    /**
+     * Format the title of the application to include the information given.
+     * <p>
+     * The title is formatted as {@value TITLE} - [filePath].
+     *
+     * @param filePath filepath to set the in the title of the application
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
+     *                                   #start(Stage)}.
+     */
+    public void formatTitle(final String filePath) throws UIInitialisationException {
+        if (primaryStage == null) {
+            throw new UIInitialisationException("Stage not present.");
+        }
+        primaryStage.setTitle(TITLE + " - [" + filePath + "]");
     }
 
     /**

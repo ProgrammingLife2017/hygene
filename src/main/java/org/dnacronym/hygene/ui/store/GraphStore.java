@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +35,9 @@ public final class GraphStore {
             gfaFile.parse();
 
             gfaFileProperty.set(gfaFile);
-        } catch (final ParseException e) {
+
+            Hygene.getInstance().formatTitle(file.getPath());
+        } catch (final ParseException | UIInitialisationException e) {
             throw new IOException(e);
         }
     }
