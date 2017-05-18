@@ -72,8 +72,7 @@ public final class ConfigController implements Initializable {
     }
 
     /**
-     * Set the node id property in the {@link GraphVisualizer} integer value of the
-     * current {@link TextField}.
+     * Set the node id property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
@@ -90,8 +89,7 @@ public final class ConfigController implements Initializable {
     }
 
     /**
-     * Set the range property in the {@link GraphVisualizer} integer value of the
-     * current {@link TextField}.
+     * Set the range property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.

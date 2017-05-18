@@ -12,8 +12,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.Graph;
@@ -36,8 +34,6 @@ import java.util.function.Consumer;
  * @see GraphicsContext
  */
 public final class GraphVisualizer {
-    private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
-
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 2;
     private static final double DEFAULT_DASH_LENGTH = 10;
@@ -59,6 +55,7 @@ public final class GraphVisualizer {
     private final BooleanProperty displayLaneBordersProperty;
     private final DoubleProperty borderDashLengthProperty;
 
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private double laneHeight;
     private int minX;
     private int maxX;
@@ -180,22 +177,22 @@ public final class GraphVisualizer {
             graph.iterator().visitIndirectNeighboursWithinRange(
                     centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(), iteratorAction);
 
-            GraphDimensionsCalculator calculator = new GraphDimensionsCalculator(
+            this.graphDimensionsCalculator = new GraphDimensionsCalculator(
                     graph, canvas, minX, maxX, minY[0], maxY[0], nodeHeightProperty.get()
             );
 
-            laneHeight = calculator.getLaneHeight();
+            laneHeight = graphDimensionsCalculator.getLaneHeight();
 
             for (Integer nodeId : neighbours) {
-                drawNode(calculator, graph, nodeId);
+                drawNode(graphDimensionsCalculator, graph, nodeId);
 
                 graph.iterator().visitDirectNeighbours(nodeId, SequenceDirection.RIGHT,
-                        neighbourId -> drawEdge(calculator, nodeId, neighbourId)
+                        neighbourId -> drawEdge(graphDimensionsCalculator, nodeId, neighbourId)
                 );
             }
 
             if (displayLaneBordersProperty.get()) {
-                drawLaneBorders(calculator.getLaneCount(), laneHeight);
+                drawLaneBorders(graphDimensionsCalculator.getLaneCount(), laneHeight);
             }
         }
     }
@@ -239,13 +236,11 @@ public final class GraphVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.setOnMouseClicked(event -> {
-            final int[] positions = toNodeCoordinates(canvas, event.getX(), event.getY());
+            final int[] positions = graphDimensionsCalculator.toNodeCoordinates(event.getX(), event.getY());
             final int nodeX = positions[0];
             final int nodeLane = positions[1];
 
-            if (graph != null) {
-                LOGGER.info("You clicked a node at x-position " + nodeX + " in lane " + nodeLane);
-            }
+            // TODO write findNode(x, y) in Graph class
         });
     }
 
@@ -262,22 +257,6 @@ public final class GraphVisualizer {
 
         centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
         hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) graph.getNodeArrays().length / 2));
-    }
-
-    /**
-     * Converts onscreen coordinates to coordinates which can be used to find the correct node.
-     *
-     * @param canvas canvas who's width is used to get unscaled x position
-     * @param xPos   x position onscreen
-     * @param yPos   y position onscreen
-     * @return x and y position in a double array of size 2 which correspond with x and y position of {@link Node}
-     */
-    private int[] toNodeCoordinates(final Canvas canvas, final double xPos, final double yPos) {
-        final int diameter = maxX - minX;
-
-        final int unscaledX = (int) (xPos / canvas.getWidth()) * diameter + minX;
-        final int unscaledY = (int) (yPos / laneHeight);
-        return new int[]{unscaledX, unscaledY};
     }
 
     /**

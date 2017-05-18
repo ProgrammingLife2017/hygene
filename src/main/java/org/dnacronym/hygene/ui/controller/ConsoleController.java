@@ -6,7 +6,6 @@ import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.util.JFXAppender;
@@ -46,18 +45,6 @@ public final class ConsoleController implements Initializable {
                 console.appendText(newValue);
             }
         });
-
-        if (graphVisualizer != null) {
-            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) -> {
-                if (console != null) {
-                    try {
-                        console.appendText("Sequence: " + newNode.retrieveMetadata().getSequence() + "\n");
-                    } catch (ParseException e) {
-                        LOGGER.error("Metadata of node " + newNode.getId() + " could not be loaded");
-                    }
-                }
-            });
-        }
     }
 
     /**

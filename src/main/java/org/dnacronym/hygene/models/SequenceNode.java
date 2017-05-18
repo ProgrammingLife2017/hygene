@@ -194,6 +194,20 @@ public final class SequenceNode {
     }
 
     /**
+     * Check if a given horizontal position is in bounds of node, and that the vertical position of node is equal to the
+     * given vertical position.
+     *
+     * @param targetHorizontalPosition position that should be in bounds
+     * @param targetVerticalPosition   vertical position node should be in
+     * @return true iff in bounds.
+     */
+    public boolean inBounds(final int targetHorizontalPosition, final int targetVerticalPosition) {
+        return targetVerticalPosition == this.verticalPosition
+                && targetHorizontalPosition < this.horizontalRightEnd
+                && targetHorizontalPosition >= this.horizontalRightEnd - this.sequence.length();
+    }
+
+    /**
      * Returns the sum of left heights of its left neighbours.
      * <p>
      * This method has a complexity of O(1) as it returns a precomputed value.

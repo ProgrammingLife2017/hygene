@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.Node;
 
 
 /**
@@ -52,7 +53,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the diameter of the graph.
      *
-     * @return the diameter of the graph.
+     * @return the diameter of the graph
      */
     public int computeDiameter() {
         return maxX - minX;
@@ -62,13 +63,13 @@ public final class GraphDimensionsCalculator {
      * Computes the absolute x position of a node within the current canvas.
      *
      * @param nodeId ID of the node
-     * @return the absolute x position of a node within the current canvas.
+     * @return the absolute x position of a node within the current canvas
      */
     public double computeXPosition(final int nodeId) {
         final int fafospPosition = graph.getUnscaledXPosition(nodeId);
 
         if (computeDiameter() == 0) {
-            LOGGER.info("Diameter was 0");
+            LOGGER.warn("Diameter of graph is 0");
             return 0;
         }
         return (double) (fafospPosition - minX) / computeDiameter() * canvasWidth;
@@ -78,7 +79,7 @@ public final class GraphDimensionsCalculator {
      * Computes the absolute right x position of a node within the current canvas.
      *
      * @param nodeId ID of the node
-     * @return the absolute right x position of a node within the current canvas.
+     * @return the absolute right x position of a node within the current canvas
      */
     public double computeRightXPosition(final int nodeId) {
         return computeXPosition(nodeId) + computeWidth(nodeId);
@@ -88,7 +89,7 @@ public final class GraphDimensionsCalculator {
      * Computes the absolute y position of a node within the current canvas.
      *
      * @param nodeId ID of the node
-     * @return the absolute y position of a node within the current canvas.
+     * @return the absolute y position of a node within the current canvas
      */
     public double computeYPosition(final int nodeId) {
         final int fafospPosition = graph.getUnscaledYPosition(nodeId);
@@ -100,7 +101,7 @@ public final class GraphDimensionsCalculator {
      * Computes the absolute middle y position of a node within the current canvas.
      *
      * @param nodeId ID of the node
-     * @return the absolute middle y position of a node within the current canvas.
+     * @return the absolute middle y position of a node within the current canvas
      */
     public double computeMiddleYPosition(final int nodeId) {
         return computeYPosition(nodeId) + getNodeHeight() / 2;
@@ -110,7 +111,7 @@ public final class GraphDimensionsCalculator {
      * Computes the width of a node.
      *
      * @param nodeId ID of the node
-     * @return the width of a node.
+     * @return the width of a node
      */
     public double computeWidth(final int nodeId) {
         return (double) graph.getSequenceLength(nodeId) / computeDiameter() * canvasWidth;
@@ -119,7 +120,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Gets the height of a node.
      *
-     * @return the height of a node.
+     * @return the height of a node
      */
     public double getNodeHeight() {
         return nodeHeight;
@@ -128,7 +129,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Gets the lane height.
      *
-     * @return the height of a lane.
+     * @return the height of a lane
      */
     public double getLaneHeight() {
         if (Double.compare(laneHeight, -1) == 0) {
@@ -141,7 +142,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Gets the lane count.
      *
-     * @return the lane count.
+     * @return the lane count
      */
     public int getLaneCount() {
         if (Double.compare(laneCount, -1) == 0) {
@@ -149,5 +150,23 @@ public final class GraphDimensionsCalculator {
         }
 
         return laneCount;
+    }
+
+    /**
+     * Converts onscreen coordinates to coordinates which can be used to find the correct node.
+     *
+     * @param xPos x position onscreen
+     * @param yPos y position onscreen
+     * @return x and y position in a double array of size 2 which correspond with x and y position of {@link Node}
+     */
+    public int[] toNodeCoordinates(final double xPos, final double yPos) {
+        final int diameter = maxX - minX;
+
+        final int unscaledX = (int) (xPos / canvasWidth) * diameter + minX;
+        final int unscaledY = (int) (yPos / laneHeight);
+
+        LOGGER.info("User clicked on x: " + xPos + ", y: " + yPos + "\n"
+                + "Unscaled x: " + unscaledX + ", unscaled Y: " + unscaledY);
+        return new int[]{unscaledX, unscaledY};
     }
 }
