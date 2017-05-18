@@ -53,6 +53,7 @@ public final class GraphVisualizer {
     private final BooleanProperty displayLaneBordersProperty;
     private final DoubleProperty borderDashLengthProperty;
 
+    private final IntegerProperty nodeCountProperty;
     private @Nullable Graph graph;
 
     private @MonotonicNonNull Canvas canvas;
@@ -80,6 +81,8 @@ public final class GraphVisualizer {
         borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
         borderDashLengthProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        nodeCountProperty = new SimpleIntegerProperty();
     }
 
 
@@ -216,10 +219,11 @@ public final class GraphVisualizer {
      */
     public void setGraph(final Graph graph) {
         this.graph = graph;
+        nodeCountProperty.set(graph.getNodeArrays().length);
         clear();
 
         centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
-        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) graph.getNodeArrays().length / 2));
+        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) nodeCountProperty.get() / 2));
     }
 
     /**
@@ -287,5 +291,14 @@ public final class GraphVisualizer {
      */
     public DoubleProperty getBorderDashLengthProperty() {
         return borderDashLengthProperty;
+    }
+
+    /**
+     * The property which describes the amount of node in the set graph.
+     *
+     * @return property which describes the amount of nodes in the set graph
+     */
+    public IntegerProperty getNodeCountProperty() {
+        return nodeCountProperty;
     }
 }
