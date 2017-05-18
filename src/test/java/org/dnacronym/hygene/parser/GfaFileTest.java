@@ -100,6 +100,7 @@ class GfaFileTest {
     }
 
     private String bufferedReaderToString(final BufferedReader reader) {
-        return reader.lines().collect(Collectors.joining("\n")) + "\n";
+        final String newline = String.format("%n");
+        return reader.lines().collect(Collectors.joining(newline)) + newline;
     }
 }
