@@ -101,7 +101,7 @@ public final class ConfigController implements Initializable {
             graphVisualizer.getHopsProperty().set(newValue);
             range.clear();
 
-            LOGGER.info("Range set set: " + graphVisualizer.getHopsProperty().get());
+            LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
         }
     }
 
