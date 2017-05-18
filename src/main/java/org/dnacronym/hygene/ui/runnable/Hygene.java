@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.runnable;
 
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -90,6 +91,8 @@ public final class Hygene extends Application {
         if (parent == null) {
             throw new UIInitialisationException("Root of Application could not be found.");
         }
+
+        primaryStage.setOnCloseRequest((e) -> Platform.exit());
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
