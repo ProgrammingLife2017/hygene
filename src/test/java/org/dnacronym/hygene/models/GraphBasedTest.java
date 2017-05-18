@@ -21,7 +21,7 @@ abstract class GraphBasedTest {
      * Resets this {@link GraphBasedTest}'s fields.
      */
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         graph = null;
         nodeArrays = null;
     }
@@ -111,7 +111,6 @@ abstract class GraphBasedTest {
      *
      * @param expected the expected values
      * @param actual   the {@link Function} to apply to each identifier
-     * @param <T>      the expected type
      */
     final void assertForEachNode(final int[] expected, final Function<Integer, Integer> actual) {
         assert (expected.length == nodeArrays.length);
