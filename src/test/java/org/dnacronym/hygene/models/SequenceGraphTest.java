@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,56 +62,5 @@ class SequenceGraphTest {
     @Test
     void testSize() {
         assertThat(sequenceGraph.size()).isEqualTo(4);
-    }
-
-    @Test
-    void testGetNode1InBounds() {
-        assertThat(sequenceGraph.getNode(3, 1)).isEqualTo(node1);
-    }
-
-    @Test
-    void testGetNode2InBounds() {
-        assertThat(sequenceGraph.getNode(8, 1)).isEqualTo(node2);
-    }
-
-    @Test
-    void testGetNodeOnLeftEdge() {
-        assertThat(sequenceGraph.getNode(7, 1)).isEqualTo(node2);
-    }
-
-    @Test
-    void testGetNodeOnRightEdge() {
-        assertThat(sequenceGraph.getNode(4, 1)).isEqualTo(node1);
-    }
-
-    @Test
-    void testBetweenNodes() {
-        assertThat(sequenceGraph.getNode(5, 1)).isNull();
-    }
-
-    @Test
-    void testOnlyHorizontalPositionInBounds() {
-        assertThat(sequenceGraph.getNode(7, 2)).isNull();
-    }
-
-    @Test
-    void testOnlyVerticalPositionInBounds() {
-        assertThat(sequenceGraph.getNode(21, 1)).isNull();
-    }
-
-    @Test
-    void testNegativeVerticalPosition() {
-        assertThat(sequenceGraph.getNode(7, -1)).isNull();
-    }
-
-    @Test
-    void testNegativeHorizontalPosition() {
-        assertThat(sequenceGraph.getNode(-1, 1)).isNull();
-    }
-
-    @Test
-    void testGetNodeEmptyGraph() {
-        final SequenceGraph emptyGraph = new SequenceGraph(Collections.emptyList());
-        assertThat(emptyGraph.getNode(1, 1)).isNull();
     }
 }

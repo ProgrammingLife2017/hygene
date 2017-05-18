@@ -2,6 +2,10 @@ package org.dnacronym.hygene.models;
 
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * Utility methods for testing {@link Graph}s.
@@ -17,7 +21,7 @@ abstract class GraphBasedTest {
      * Resets this {@link GraphBasedTest}'s fields.
      */
     @BeforeEach
-    private void beforeEach() {
+    void beforeEach() {
         graph = null;
         nodeArrays = null;
     }
@@ -98,6 +102,36 @@ abstract class GraphBasedTest {
             nodeArrays[to] = NodeBuilder.fromArray(to, nodeArrays[to])
                     .withIncomingEdge(from, 0)
                     .toArray();
+        }
+    }
+
+    /**
+     * Applies the {@code actual} {@link Function} to each identifier in the current {@link Graph} and compares it
+     * against the {@code expected} value.
+     *
+     * @param expected the expected values
+     * @param actual   the {@link Function} to apply to each identifier
+     */
+    final void assertForEachNode(final int[] expected, final Function<Integer, Integer> actual) {
+        assert (expected.length == nodeArrays.length);
+
+        for (int i = 0; i < expected.length; i++) {
+            assertThat(actual.apply(i)).isEqualTo(expected[i]);
+        }
+    }
+
+    /**
+     * Sets the sequence lengths for the indicated nodes.
+     * <p>
+     * Each given array has a length of two, where the first integer is the node's identifier and the second integer
+     * is the new sequence length for that node.
+     */
+    final void setSequenceLengths(final int[][] sequenceLengths) {
+        for (int[] sequenceLength : sequenceLengths) {
+            assert (sequenceLength.length == 2);
+
+            final int id = sequenceLength[0];
+            nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequenceLength[1];
         }
     }
 }

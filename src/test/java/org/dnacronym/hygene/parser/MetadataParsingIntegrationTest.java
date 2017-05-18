@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class MetadataParsingIntegrationTest {
     @Test
     void testGetNodeMetadata() throws ParseException {
-        NewGfaFile gfaFile = new NewGfaFile("src/test/resources/gfa/simple.gfa");
+        GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse();
         Node node = gfaFile.getGraph().getNode(1);
 
@@ -27,7 +27,7 @@ final class MetadataParsingIntegrationTest {
 
     @Test
     void testGetEdgeMetadata() throws ParseException {
-        NewGfaFile gfaFile = new NewGfaFile("src/test/resources/gfa/simple.gfa");
+        GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse();
         Edge edge = gfaFile.getGraph().getNode(1).getOutgoingEdges().iterator().next();
 

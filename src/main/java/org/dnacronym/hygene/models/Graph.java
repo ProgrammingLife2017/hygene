@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.dnacronym.hygene.parser.NewGfaFile;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.parser.GfaFile;
 
 
 /**
@@ -12,7 +14,9 @@ import org.dnacronym.hygene.parser.NewGfaFile;
  */
 public final class Graph {
     private final int[][] nodeArrays;
-    private final NewGfaFile gfaFile;
+    private final GfaFile gfaFile;
+
+    private @MonotonicNonNull GraphIterator iterator;
 
 
     /**
@@ -25,7 +29,7 @@ public final class Graph {
             value = "EI_EXPOSE_REP2",
             justification = "For performance reasons, we don't want to create a copy here"
     )
-    public Graph(final int[][] nodeArrays, final NewGfaFile gfaFile) {
+    public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
         this.nodeArrays = nodeArrays;
         this.gfaFile = gfaFile;
     }
@@ -105,6 +109,16 @@ public final class Graph {
     }
 
     /**
+     * Sets the unscaled x position.
+     *
+     * @param id                the {@link Node}'s id
+     * @param unscaledXPosition the unscaled x position
+     */
+    void setUnscaledXPosition(final int id, final int unscaledXPosition) {
+        nodeArrays[id][Node.UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
+    }
+
+    /**
      * Getter for the unscaled y position.
      *
      * @param id the {@link Node}'s id
@@ -112,6 +126,16 @@ public final class Graph {
      */
     public int getUnscaledYPosition(final int id) {
         return nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX];
+    }
+
+    /**
+     * Sets the unscaled y position.
+     *
+     * @param id                the node's id
+     * @param unscaledYPosition the unscaled y position
+     */
+    void setUnscaledYPosition(final int id, final int unscaledYPosition) {
+        nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX] = unscaledYPosition;
     }
 
     /**
@@ -132,12 +156,27 @@ public final class Graph {
     }
 
     /**
-     * Returns a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it.
+     * Returns the {@link GraphIterator} for this {@link Graph} for iterating over its node.
      *
-     * @return a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it
+     * @return the {@link GraphIterator} for this {@link Graph} for iterating over its node
      */
+    @EnsuresNonNull("iterator")
     public GraphIterator iterator() {
-        return new GraphIterator(this);
+        if (iterator == null) {
+            iterator = new GraphIterator(this);
+        }
+        return iterator;
+    }
+
+    /**
+     * Returns a new {@link Fafosp} for invoking FAFOSP-related methods.
+     * <p>
+     * FAFOSP is the Felix Algorithm For Optimal Segment Positioning.
+     *
+     * @return a new {@link Fafosp}
+     */
+    Fafosp fafosp() {
+        return new Fafosp(this);
     }
 
     /**
@@ -145,7 +184,7 @@ public final class Graph {
      *
      * @return the {@code GfaFile} instance where the graph belongs to.
      */
-    public NewGfaFile getGfaFile() {
+    public GfaFile getGfaFile() {
         return gfaFile;
     }
 }

@@ -23,7 +23,7 @@ public final class MetadataParser {
      * @return a {@link NodeMetadata} object containing a segment's metadata.
      * @throws ParseException if the GFA file or given line is invalid
      */
-    public NodeMetadata parseNodeMetadata(final NewGfaFile gfa, final int lineNumber) throws ParseException {
+    public NodeMetadata parseNodeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
         final String line = getLine(gfa.readFile(), lineNumber);
 
         validateLine(line, "S", lineNumber);
@@ -49,7 +49,7 @@ public final class MetadataParser {
      * @return an {@link EdgeMetadata} object containing a link's metadata.
      * @throws ParseException if the GFA file or given line is invalid
      */
-    public EdgeMetadata parseEdgeMetadata(final NewGfaFile gfa, final int lineNumber) throws ParseException {
+    public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
         final String line = getLine(gfa.readFile(), lineNumber);
 
         validateLine(line, "L", lineNumber);

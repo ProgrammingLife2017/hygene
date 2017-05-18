@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,10 +23,13 @@ import java.net.URL;
  * @see LauncherImpl#launchApplication(Class, Class, String[])
  */
 public final class Hygene extends Application {
-    static final String TITLE = "Hygene";
-    private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
     private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
     private static @MonotonicNonNull Hygene hygene;
+
+    private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
+    private static final String APPLICATION_ICON = "/ui/icons/hygene_logo_small.png";
+
+    static final String TITLE = "Hygene";
 
     private @MonotonicNonNull GraphStore graphStore;
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
@@ -89,9 +93,29 @@ public final class Hygene extends Application {
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
+
+        final Image hygeneIcon = new Image(String.valueOf(Files.getInstance().getResourceUrl(APPLICATION_ICON)));
+        primaryStage.getIcons().add(hygeneIcon);
+
         primaryStage.show();
 
         LOGGER.info("Launching Hygene GUI");
+    }
+
+    /**
+     * Format the title of the application to include the information given.
+     * <p>
+     * The title is formatted as {@value TITLE} - [filePath].
+     *
+     * @param filePath filepath to set the in the title of the application
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
+     *                                   #start(Stage)}.
+     */
+    public void formatTitle(final String filePath) throws UIInitialisationException {
+        if (primaryStage == null) {
+            throw new UIInitialisationException("Stage not present.");
+        }
+        primaryStage.setTitle(TITLE + " - [" + filePath + "]");
     }
 
     /**

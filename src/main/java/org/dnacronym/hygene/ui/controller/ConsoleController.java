@@ -45,14 +45,6 @@ public final class ConsoleController implements Initializable {
                 console.appendText(newValue);
             }
         });
-
-        if (graphVisualizer != null) {
-            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) -> {
-                if (console != null) {
-                    console.appendText("Sequence: " + newNode.getSequence() + "\n");
-                }
-            });
-        }
     }
 
     /**
