@@ -69,7 +69,6 @@ public final class GraphVisualizer {
     /**
      * Create a new {@link GraphVisualizer} instance.
      */
-    @SuppressWarnings("nullness") // For passing redraw method to listeners whilst object uninitialized
     public GraphVisualizer() {
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
@@ -102,7 +101,6 @@ public final class GraphVisualizer {
      * @param graph      graph which contains all the nodes and their information
      * @param nodeId     id of node to draw
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawNode(final GraphDimensionsCalculator calculator, final Graph graph, final int nodeId) {
         final double rectX = calculator.computeXPosition(nodeId);
         final double rectY = calculator.computeYPosition(nodeId);
@@ -122,7 +120,6 @@ public final class GraphVisualizer {
      * @param fromNodeId edge origin node ID
      * @param toNodeId   edge destination node ID
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdge(final GraphDimensionsCalculator calculator, final int fromNodeId, final int toNodeId) {
         final double fromX = calculator.computeRightXPosition(fromNodeId);
         final double fromY = calculator.computeMiddleYPosition(fromNodeId);
@@ -139,7 +136,6 @@ public final class GraphVisualizer {
     /**
      * Clear the canvas.
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
@@ -151,7 +147,6 @@ public final class GraphVisualizer {
      *
      * @throws IllegalStateException if the {@link Canvas} has not been set
      */
-    @SuppressWarnings("nullness")
     public void draw() {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
@@ -191,7 +186,6 @@ public final class GraphVisualizer {
      * @param laneCount  amount of bands onscreen
      * @param laneHeight height of each band
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
         final double originalLineWidth = graphicsContext.getLineWidth();
