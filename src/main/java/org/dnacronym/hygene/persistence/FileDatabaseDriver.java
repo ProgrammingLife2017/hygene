@@ -107,6 +107,7 @@ final class FileDatabaseDriver implements AutoCloseable {
     }
 
 
+    @Override
     public synchronized void close() throws SQLException {
         connection.close();
     }

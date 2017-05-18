@@ -46,8 +46,10 @@ final class FileDatabaseTable {
     /**
      * Adds the given column.
      *
+     * See <a href="https://sqlite.org/datatype3.html">the documentation</a> for a full list of supported column types.
+     *
      * @param name the name of the column
-     * @param type the SQL type of it (e.g. integer, string)
+     * @param type the SQL type of it
      */
     void addColumn(final String name, final String type) {
         columns.add(new Pair<>(name, type));

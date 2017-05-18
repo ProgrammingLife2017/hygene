@@ -39,8 +39,8 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
         final FileDatabaseTable fileDatabaseTable;
 
         fileDatabaseTable = new FileDatabaseTable(testTableName);
-        fileDatabaseTable.addColumn("col1", "string");
-        fileDatabaseTable.addColumn("col2", "string");
+        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseTable.addColumn("col2", "TEXT");
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow(testTableName, Arrays.asList("1", "2"));
