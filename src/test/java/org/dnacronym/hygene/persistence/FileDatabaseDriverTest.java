@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,6 +46,28 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
 
         fileDatabaseDriver.insertRow(testTableName, Arrays.asList("1", "2"));
         assertThat(fileDatabaseDriver.getSingleValue(testTableName, "col1", "1", "col2")).isEqualTo("2");
+    }
+
+    @Test
+    void testHasRowFalse() throws SQLException {
+        final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
+        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseDriver.setUpTable(fileDatabaseTable);
+
+        fileDatabaseDriver.insertRow("test", Collections.singletonList("val1"));
+
+        assertThat(fileDatabaseDriver.hasRow("test", "col1", "val2")).isFalse();
+    }
+
+    @Test
+    void testHasRowTrue() throws SQLException {
+        final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
+        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseDriver.setUpTable(fileDatabaseTable);
+
+        fileDatabaseDriver.insertRow("test", Collections.singletonList("val1"));
+
+        assertThat(fileDatabaseDriver.hasRow("test", "col1", "val1")).isTrue();
     }
 
 
