@@ -335,13 +335,9 @@ public final class Graph {
             final int neighbourLeftNeighbourCount = getNeighbourCount(neighbour, SequenceDirection.LEFT);
 
             if (neighbourLeftNeighbourCount == 1) {
-                // Current neighbour has only one neighbour
-                if (getUnscaledYPosition(neighbour) >= 0) {
-                    relativeHeight[0] = getUnscaledYPosition(neighbour) + meta[2 * neighbour + 1] / 2;
-                } else {
-                    setUnscaledYPosition(neighbour, relativeHeight[0] + meta[2 * neighbour + 1] / 2);
-                    relativeHeight[0] += meta[2 * neighbour + 1];
-                }
+                // Current neighbour has only one neighbour; this neighbour cannot have been visited before
+                setUnscaledYPosition(neighbour, relativeHeight[0] + meta[2 * neighbour + 1] / 2);
+                relativeHeight[0] += meta[2 * neighbour + 1];
             } else {
                 // Current neighbour has multiple neighbours, so the left width is different from the current node
                 if (getUnscaledYPosition(neighbour) >= 0) {
