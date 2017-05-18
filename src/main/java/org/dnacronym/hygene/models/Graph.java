@@ -198,8 +198,6 @@ public final class Graph {
      * @param meta an array to store the left and right heights in
      */
     private void fafospYInit(final int[] meta) {
-        assert meta.length == nodeArrays.length * 2;
-
         iterator().visitAll(SequenceDirection.RIGHT,
                 node -> meta[2 * node] < 0,
                 node -> fafospYInit(node, SequenceDirection.LEFT, meta)
@@ -254,8 +252,6 @@ public final class Graph {
      * @param meta the array to read the left and right heights from
      */
     private void fafospYCalculate(final int[] meta) {
-        assert meta.length == nodeArrays.length * 2;
-
         final Queue<Integer> queue = new LinkedList<>();
         queue.add(0);
 
