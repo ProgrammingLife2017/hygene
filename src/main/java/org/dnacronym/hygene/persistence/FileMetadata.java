@@ -31,7 +31,7 @@ final class FileMetadata {
      *
      * @param fileDatabase the database to contain that metadata
      */
-    FileMetadata(@NonNull final FileDatabase fileDatabase) {
+    FileMetadata(final @NonNull FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
     }
