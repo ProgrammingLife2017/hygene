@@ -95,14 +95,8 @@ public final class Fafosp {
      * @param meta an array to store the left and right heights in
      */
     private void verticalInit(final int[] meta) {
-        graph.iterator().visitAll(SequenceDirection.RIGHT,
-                node -> meta[2 * node] < 0,
-                node -> verticalInit(node, SequenceDirection.LEFT, meta)
-        );
-        graph.iterator().visitAll(SequenceDirection.LEFT,
-                node -> meta[2 * node + 1] < 0,
-                node -> verticalInit(node, SequenceDirection.RIGHT, meta)
-        );
+        graph.iterator().visitAll(SequenceDirection.RIGHT, node -> verticalInit(node, SequenceDirection.LEFT, meta));
+        graph.iterator().visitAll(SequenceDirection.LEFT, node -> verticalInit(node, SequenceDirection.RIGHT, meta));
     }
 
     /**
@@ -121,13 +115,13 @@ public final class Fafosp {
             height[0] = 2;
         } else if (neighbourSize == 1) {
             final int neighbour = nodeArrays[node][Node.NODE_EDGE_DATA_OFFSET + direction.ternary(
-                    2 * graph.getNeighbourCount(node, SequenceDirection.RIGHT),
+                    graph.getNeighbourCount(node, SequenceDirection.RIGHT) * Node.EDGE_DATA_SIZE,
                     0
             )];
 
             final int neighbourNeighbourSize = graph.getNeighbourCount(neighbour, direction.opposite());
             if (neighbourNeighbourSize == 1) {
-                height[0] = direction.ternary(meta[neighbour * 2], meta[neighbour * 2 + 1]);
+                height[0] = direction.ternary(meta[2 * neighbour], meta[2 * neighbour + 1]);
             } else {
                 height[0] = 2;
             }
