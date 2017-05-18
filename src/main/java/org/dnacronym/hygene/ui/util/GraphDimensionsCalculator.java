@@ -69,8 +69,8 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         };
 
-        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hops, consumer);
-        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hops, consumer);
+        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, hops, consumer);
+//        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hops, consumer);
 
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];

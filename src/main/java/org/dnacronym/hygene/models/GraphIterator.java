@@ -171,17 +171,17 @@ public final class GraphIterator {
 
     /**
      * Applies the given {@code Consumer} to the identifiers of the indirect neighbours that can be reached within
-     * the given number of hops in the given direction.
+     * the given number of hops in both directions.
+     * <p>
+     * Visits left neighbours first.
      *
-     * @param id        the node's identifier
-     * @param direction the direction of neighbours to visit
-     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
-     * @param action    the function to apply to each neighbour's identifier
+     * @param id       the node's identifier
+     * @param maxDepth the maximum number of hops a neighbour can be removed from the node
+     * @param action   the function to apply to each neighbour's identifier
      */
-    public void visitIndirectNeighboursWithinRange(final int id, final SequenceDirection direction, final int maxDepth,
-                                                   final Consumer<Integer> action) {
+    public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth, final Consumer<Integer> action) {
         final boolean[] visited = new boolean[nodeArrays.length];
-        visitIndirectNeighboursWithinRange(id, direction, maxDepth, node -> visited[node], node -> {
+        visitIndirectNeighboursWithinRange(id, maxDepth, node -> visited[node], node -> {
             visited[node] = true;
             action.accept(node);
         });
@@ -189,17 +189,18 @@ public final class GraphIterator {
 
     /**
      * Applies the given {@code Consumer} to the identifiers of the indirect neighbours that can be reached within
-     * the given number of hops in the given direction.
+     * the given number of hops in both directions.
+     * <p>
+     * Visits left neighbours first.
      *
-     * @param id        the node's identifier
-     * @param direction the direction of neighbours to visit
-     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
-     * @param visited   a function that returns true if the node with the supplied id has been visited during this
-     *                  iteration
-     * @param action    the function to apply to each neighbour's identifier
+     * @param id       the node's identifier
+     * @param maxDepth the maximum number of hops a neighbour can be removed from the node
+     * @param visited  a function that returns true if the node with the supplied id has been visited during this
+     *                 iteration
+     * @param action   the function to apply to each neighbour's identifier
      */
-    public void visitIndirectNeighboursWithinRange(final int id, final SequenceDirection direction, final int maxDepth,
-                                                   final Predicate<Integer> visited, final Consumer<Integer> action) {
+    public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth, final Predicate<Integer> visited,
+                                                   final Consumer<Integer> action) {
         final Queue<Integer> queue = new LinkedList<>();
         queue.add(id);
 
@@ -212,12 +213,22 @@ public final class GraphIterator {
             }
 
             action.accept(head);
-            visitDirectNeighbours(head, direction, index -> {
-                if (!visited.test(index)) {
-                    depthIncreaseTimes[1]++;
-                    queue.add(index);
-                }
-            });
+
+            if (currentDepth < maxDepth) {
+                visitDirectNeighbours(head, SequenceDirection.LEFT, index -> {
+                    if (!visited.test(index)) {
+                        depthIncreaseTimes[1]++;
+                        queue.add(index);
+                    }
+                });
+                visitDirectNeighbours(head, SequenceDirection.RIGHT, index -> {
+                    if (!visited.test(index)) {
+                        depthIncreaseTimes[1]++;
+                        queue.add(index);
+                    }
+                });
+            }
+
 
             depthIncreaseTimes[0]--;
             if (depthIncreaseTimes[0] == 0) {
@@ -268,7 +279,7 @@ public final class GraphIterator {
     public void visitAllWithinRange(final SequenceDirection direction, final int maxDepth,
                                     final Consumer<Integer> action) {
         final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
-        visitIndirectNeighboursWithinRange(sentinelId, direction, maxDepth, action);
+        visitIndirectNeighboursWithinRange(sentinelId, maxDepth, action);
     }
 
     /**
@@ -284,7 +295,7 @@ public final class GraphIterator {
     public void visitAllWithinRange(final SequenceDirection direction, final int maxDepth,
                                     final Predicate<Integer> visited, final Consumer<Integer> action) {
         final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
-        visitIndirectNeighboursWithinRange(sentinelId, direction, maxDepth, visited, action);
+        visitIndirectNeighboursWithinRange(sentinelId, maxDepth, visited, action);
     }
 
 
@@ -297,7 +308,6 @@ public final class GraphIterator {
      */
     private int getNeighbourOffset(final int id, final SequenceDirection direction) {
         return 1 + Node.NODE_OUTGOING_EDGES_INDEX + direction.ternary(
-                graph.getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE,
-                0);
+                graph.getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
     }
 }
