@@ -45,6 +45,13 @@ dependencies {
     compile("com.github.davidmoten:rtree:${rTreeVersion}")
     compile("com.vividsolutions:jts-core:${jtsCoreVersion}")
 
+    // SQLite driver
+    compile("org.xerial:sqlite-jdbc:${sqliteVersion}")
+
+    // Apache Commons
+    compile("commons-codec:commons-codec:${commonsCodecVersion}")
+    compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
+
     // FindBugs annotations
     compile("com.google.code.findbugs:annotations:${findBugsAnnotations}")
 
@@ -69,13 +76,6 @@ dependencies {
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
     compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
-
-    // SQLite driver
-    compile("org.xerial:sqlite-jdbc:${sqliteVersion}")
-
-    // Apache Commons
-    compile("commons-codec:commons-codec:${commonsCodecVersion}")
-    compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
 }
 
 jar {
