@@ -5,9 +5,6 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.NewGfaFile;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 
 /**
  * Class wraps around the graph data represented as a nested array and provides utility methods.
@@ -149,9 +146,9 @@ public final class Graph {
     }
 
     /**
-     * Returns a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it.
+     * Returns the {@link GraphIterator} for this {@link Graph} for iterating over its node.
      *
-     * @return a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it
+     * @return the {@link GraphIterator} for this {@link Graph} for iterating over its node
      */
     @EnsuresNonNull("iterator")
     public GraphIterator iterator() {
@@ -162,58 +159,14 @@ public final class Graph {
     }
 
     /**
-     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
-     * breadth-first order.
-     */
-    public void fafospX() {
-        final Queue<Integer> queue = new LinkedList<>();
-        iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, queue::add);
-        setUnscaledXPosition(0, 0);
-
-        while (!queue.isEmpty()) {
-            final Integer head = queue.remove();
-
-            // Horizontal position may have been set since it was added to the queue
-            if (getUnscaledXPosition(head) >= 0) {
-                continue;
-            }
-
-            fafospX(head);
-
-            // Horizontal position cannot always be determined by FAFOSP-X
-            if (getUnscaledXPosition(head) >= 0) {
-                // Add neighbours of which horizontal position was not set
-                iterator().visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
-                    if (getUnscaledXPosition(neighbour) < 0) {
-                        queue.add(neighbour);
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * Calculates the optimal horizontal position relative to its left neighbours for the node with the given
-     * identifier using FAFOSP.
+     * Returns a new {@link Fafosp} for invoking FAFOSP-related methods.
+     * <p>
+     * FAFOSP is the Felix Algorithm For Optimal Segment Positioning.
      *
-     * @param id the node's identifier
+     * @return a new {@link Fafosp}
      */
-    private void fafospX(final int id) {
-        final int[] width = {-1};
-        iterator().visitDirectNeighboursWhile(id, SequenceDirection.LEFT,
-                neighbour -> getUnscaledXPosition(neighbour) >= 0,
-                ignored -> width[0] = -1,
-                neighbour -> {
-                    final int newWidth = getUnscaledXPosition(neighbour) + 1;
-                    if (newWidth > width[0]) {
-                        width[0] = newWidth;
-                    }
-                }
-        );
-
-        if (width[0] >= 0) {
-            setUnscaledXPosition(id, width[0] + getSequenceLength(id));
-        }
+    Fafosp fafosp() {
+        return new Fafosp(this);
     }
 
     /**
