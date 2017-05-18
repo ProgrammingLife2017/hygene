@@ -78,7 +78,7 @@ public final class Hygene extends Application {
         this.primaryStage = primaryStage;
         setInstance(this);
 
-        formatTitle("");
+        primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
         final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
