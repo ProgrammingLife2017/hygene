@@ -87,7 +87,7 @@ public final class NewGfaParser {
      */
     private void allocateNodes(final BufferedReader gfa) {
         addNodeId(SOURCE_NAME);
-        gfa.lines().parallel().filter(line -> line.startsWith("S\t")).forEach(line -> addNodeId(parseNodeName(line)));
+        gfa.lines().filter(line -> line.startsWith("S\t")).forEach(line -> addNodeId(parseNodeName(line)));
         addNodeId(SINK_NAME);
     }
 

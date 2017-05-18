@@ -46,6 +46,8 @@ public class GfaFile {
      */
     public final Graph parse() throws ParseException {
         graph = gfaParser.parse(this);
+        graph.fafosp().horizontal();
+        graph.fafosp().vertical();
         return graph;
     }
 

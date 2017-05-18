@@ -33,7 +33,7 @@ import java.util.List;
  */
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_EDGE_WIDTH = 2;
+    private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final double DEFAULT_DASH_LENGTH = 10;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
@@ -112,6 +112,7 @@ public final class GraphVisualizer {
      */
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdge(final GraphDimensionsCalculator calculator, final int fromNodeId, final int toNodeId) {
+        graphicsContext.setStroke(edgeColorProperty.getValue());
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
         graphicsContext.strokeLine(
                 calculator.computeRightXPosition(fromNodeId), calculator.computeMiddleYPosition(fromNodeId),
