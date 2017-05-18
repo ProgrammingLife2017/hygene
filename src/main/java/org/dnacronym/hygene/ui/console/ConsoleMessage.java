@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 public class ConsoleMessage {
     private final Text node;
 
-
     /**
      * Constructor for {@link ConsoleMessage}.
      *
@@ -24,6 +23,7 @@ public class ConsoleMessage {
      */
     public ConsoleMessage(final String message) {
         node = new Text(message);
+        node.setFill(Color.LIGHTGRAY);
     }
 
     /**
@@ -70,7 +70,7 @@ public class ConsoleMessage {
                 return Color.GREEN;
             case "INFO;":
             default:
-                return Color.BLACK;
+                return Color.LIGHTGRAY;
         }
     }
 }

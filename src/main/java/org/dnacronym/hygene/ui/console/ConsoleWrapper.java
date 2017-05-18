@@ -17,8 +17,6 @@ import java.net.URL;
 public class ConsoleWrapper {
     private static final String TITLE = "Console";
     private static final String CONSOLE_VIEW = "/ui/view/console_view.fxml";
-    private static final int CONSOLE_WINDOW_WIDTH = 780;
-    private static final int CONSOLE_WIDTH_HEIGHT = 600;
 
     private Stage stage;
 
@@ -41,7 +39,7 @@ public class ConsoleWrapper {
             throw new UIInitialisationException("Could not initialize the provided FXML resource.");
         }
 
-        final Scene rootScene = new Scene(parent, CONSOLE_WINDOW_WIDTH, CONSOLE_WIDTH_HEIGHT);
+        final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);
 
         Platform.runLater(stage::show);
@@ -63,7 +61,7 @@ public class ConsoleWrapper {
         if (stage.isShowing()) {
             stage.toFront();
         } else {
-            stage.show();
+            Platform.runLater(stage::show);
         }
     }
 }
