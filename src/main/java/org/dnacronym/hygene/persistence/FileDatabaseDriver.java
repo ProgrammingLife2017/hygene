@@ -49,7 +49,7 @@ final class FileDatabaseDriver implements AutoCloseable {
                     .map((Pair<String, String> column) -> column.getKey() + " " + column.getValue())
                     .collect(Collectors.toList()));
 
-            statement.executeUpdate("CREATE TABLE " + table.getName() + "(" + columnList + ")");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table.getName() + "(" + columnList + ")");
         }
     }
 

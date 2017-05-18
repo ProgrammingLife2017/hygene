@@ -1,23 +1,30 @@
 package org.dnacronym.hygene.parser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
+import org.dnacronym.hygene.persistence.FileDatabase;
+import org.dnacronym.hygene.persistence.GraphLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 
 /**
  * Represents a GFA file with its contents and metadata.
  */
 public class GfaFile {
+    private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
+
     private final String fileName;
     private final NewGfaParser gfaParser;
     private final MetadataParser metadataParser;
@@ -45,9 +52,22 @@ public class GfaFile {
      * @throws IOException    if the file cannot be read
      */
     public final Graph parse() throws ParseException {
-        graph = gfaParser.parse(this);
-        graph.fafosp().horizontal();
-        graph.fafosp().vertical();
+        try (final FileDatabase fileDatabase = new FileDatabase(fileName)) {
+            final GraphLoader graphLoader = new GraphLoader(fileDatabase);
+
+            if (graphLoader.hasGraph()) {
+                graph = new Graph(graphLoader.restoreGraph(), this);
+            } else {
+                graph = gfaParser.parse(this);
+                graph.fafosp().horizontal();
+                graph.fafosp().vertical();
+
+                graphLoader.dumpGraph(graph.getNodeArrays());
+            }
+        } catch (final IOException | SQLException e) {
+            LOGGER.error("Could not open file database to restore graph.", e);
+        }
+
         return graph;
     }
 
