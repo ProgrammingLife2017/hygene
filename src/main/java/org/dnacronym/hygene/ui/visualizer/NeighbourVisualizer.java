@@ -17,6 +17,7 @@ import org.dnacronym.hygene.models.Node;
  */
 public class NeighbourVisualizer {
     private static final double NODE_WIDTH_PORTION_OF_CANVAS = 0.25;
+    private static final double ARC_PORTION_OF_CANVAS = 0.1;
 
     private final ObjectProperty<Node> nodeProperty;
     private final ObjectProperty<Color> edgeColorProperty;
@@ -41,6 +42,7 @@ public class NeighbourVisualizer {
         this.nodeProperty.bind(nodeProperty);
 
         this.nodeProperty.addListener((observable, oldNode, newNode) -> draw());
+        this.edgeColorProperty.addListener((observable, oldNode, newNode) -> draw());
     }
 
 
@@ -68,38 +70,46 @@ public class NeighbourVisualizer {
     @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void draw() {
         final Node node = nodeProperty.get();
+        clear();
+
         if (node != null) {
             final int leftNeighbours = node.getNumberOfIncomingEdges();
             final int rightNeighbours = node.getNumberOfOutgoingEdges();
-            final Color nodeColor = Color.BLACK; // node.getColor().getFxColor();
+            final Color nodeColor = node.getColor().getFXColor();
 
-            graphicsContext.setFill(nodeColor);
-            graphicsContext.fillOval(
-                    canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS,
-                    canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS,
-                    canvas.getWidth() / 2,
-                    canvas.getWidth() / 2
-            );
+            final double topLeftX = canvas.getWidth() / 2 - canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
+            final double topLeftY = canvas.getHeight() / 2 - canvas.getHeight() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
+            final double width = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getWidth();
+            final double height = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getHeight();
 
             graphicsContext.setFill(edgeColorProperty.get());
 
             for (int left = 0; left < leftNeighbours; left++) {
                 graphicsContext.strokeLine(
                         0,
-                        left * (canvas.getHeight() / 2 / leftNeighbours),
+                        topLeftY + (height / (leftNeighbours + 1)) * (left + 1),
                         canvas.getWidth() / 2,
-                        left * (canvas.getHeight() / leftNeighbours)
+                        topLeftY + (height / (leftNeighbours + 1)) * (left + 1)
                 );
             }
 
             for (int right = 0; right < rightNeighbours; right++) {
                 graphicsContext.strokeLine(
                         canvas.getWidth() / 2,
-                        right * (canvas.getHeight() / 2 / rightNeighbours),
-                        0,
-                        right * (canvas.getHeight() / rightNeighbours)
+                        topLeftY + (height / (rightNeighbours + 1)) * (right + 1),
+                        canvas.getWidth(),
+                        topLeftY + (height / (rightNeighbours + 1)) * (right + 1)
                 );
             }
+
+            graphicsContext.setFill(nodeColor);
+            graphicsContext.fillRoundRect(
+                    topLeftX,
+                    topLeftY,
+                    width,
+                    height,
+                    ARC_PORTION_OF_CANVAS * canvas.getWidth(),
+                    ARC_PORTION_OF_CANVAS * canvas.getHeight());
         }
     }
 }

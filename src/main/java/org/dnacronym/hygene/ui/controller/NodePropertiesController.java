@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.controller;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -43,6 +42,7 @@ public class NodePropertiesController implements Initializable {
     private @MonotonicNonNull TextField position;
 
     @Override
+    @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public final void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
@@ -51,13 +51,10 @@ public class NodePropertiesController implements Initializable {
             return;
         }
 
-        if (graphVisualizer != null && neighbourVisualizer != null && neighbourCanvas != null) {
-            final ObjectProperty<Node> selectedNodeProperty = new SimpleObjectProperty<>();
+        if (graphVisualizer != null && neighbourCanvas != null) {
+            final ObjectProperty<Node> selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
-            neighbourVisualizer = new NeighbourVisualizer(
-                    graphVisualizer.getEdgeColorProperty(),
-                    new SimpleObjectProperty<>() // graphVisualizer.getSelectedNodeProperty()
-            );
+            neighbourVisualizer = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
             neighbourVisualizer.setCanvas(neighbourCanvas);
 
             selectedNodeProperty.addListener((observable, oldNode, newNode) -> {

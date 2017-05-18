@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="400.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="400.0"
+           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <items>
+        <fx:include source="config_view.fxml"/>
+        <fx:include source="node_properties_view.fxml"/>
+    </items>
+</SplitPane>
