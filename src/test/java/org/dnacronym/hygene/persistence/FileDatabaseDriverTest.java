@@ -49,6 +49,18 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
     }
 
     @Test
+    void testDeleteRow() throws SQLException {
+        final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
+        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseDriver.setUpTable(fileDatabaseTable);
+
+        fileDatabaseDriver.insertRow("test", Collections.singletonList("val1"));
+        fileDatabaseDriver.deleteRow("test", "col1", "val1");
+
+        assertThat(fileDatabaseDriver.hasRow("test", "col1", "val1")).isFalse();
+    }
+
+    @Test
     void testHasRowFalse() throws SQLException {
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
         fileDatabaseTable.addColumn("col1", "TEXT");
