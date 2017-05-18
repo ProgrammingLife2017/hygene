@@ -100,4 +100,19 @@ abstract class GraphBasedTest {
                     .toArray();
         }
     }
+
+    /**
+     * Sets the sequence lengths for the indicated nodes.
+     * <p>
+     * Each given array has a length of two, where the first integer is the node's identifier and the second integer
+     * is the new sequence length for that node.
+     */
+    final void setSequenceLengths(final int[][] sequenceLengths) {
+        for (int[] sequenceLength : sequenceLengths) {
+            assert (sequenceLength.length == 2);
+
+            final int id = sequenceLength[0];
+            nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequenceLength[1];
+        }
+    }
 }

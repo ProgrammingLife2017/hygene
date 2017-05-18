@@ -109,6 +109,16 @@ public final class Graph {
     }
 
     /**
+     * Sets the unscaled x position.
+     *
+     * @param id                the {@link Node}'s id
+     * @param unscaledXPosition the unscaled x position
+     */
+    void setUnscaledXPosition(final int id, final int unscaledXPosition) {
+        nodeArrays[id][Node.UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
+    }
+
+    /**
      * Getter for the unscaled y position.
      *
      * @param id the {@link Node}'s id
@@ -136,9 +146,9 @@ public final class Graph {
     }
 
     /**
-     * Returns a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it.
+     * Returns the {@link GraphIterator} for this {@link Graph} for iterating over its node.
      *
-     * @return a new {@link GraphIterator} that can be used to iterate over this {@link Graph} or parts of it
+     * @return the {@link GraphIterator} for this {@link Graph} for iterating over its node
      */
     @EnsuresNonNull("iterator")
     public GraphIterator iterator() {
@@ -146,6 +156,17 @@ public final class Graph {
             iterator = new GraphIterator(this);
         }
         return iterator;
+    }
+
+    /**
+     * Returns a new {@link Fafosp} for invoking FAFOSP-related methods.
+     * <p>
+     * FAFOSP is the Felix Algorithm For Optimal Segment Positioning.
+     *
+     * @return a new {@link Fafosp}
+     */
+    Fafosp fafosp() {
+        return new Fafosp(this);
     }
 
     /**
