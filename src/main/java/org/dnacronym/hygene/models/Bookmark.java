@@ -21,7 +21,7 @@ public final class Bookmark {
      * @param radius      the number of hops that a center-point query should take for this bookmark
      * @param description a description of this bookmark
      */
-    public Bookmark(final int nodeId, final int baseOffset, int radius, final @NonNull String description) {
+    public Bookmark(final int nodeId, final int baseOffset, final int radius, final @NonNull String description) {
         this.nodeId = nodeId;
         this.baseOffset = baseOffset;
         this.radius = radius;
