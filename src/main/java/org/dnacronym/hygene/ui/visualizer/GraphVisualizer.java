@@ -56,9 +56,6 @@ public final class GraphVisualizer {
     private final DoubleProperty borderDashLengthProperty;
 
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    private double laneHeight;
-    private int minX;
-    private int maxX;
 
     private @Nullable Graph graph;
 
@@ -82,8 +79,6 @@ public final class GraphVisualizer {
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
-
-        laneHeight = DEFAULT_NODE_HEIGHT;
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
@@ -154,8 +149,8 @@ public final class GraphVisualizer {
             final int centerNodeId = centerNodeIdProperty.get();
             final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
 
-            minX = unscaledCenterX;
-            maxX = unscaledCenterX;
+            final int[] minX = {unscaledCenterX};
+            final int[] maxX = {unscaledCenterX};
             final int[] minY = {graph.getUnscaledYPosition(centerNodeId)};
             final int[] maxY = {graph.getUnscaledYPosition(centerNodeId)};
 
@@ -165,10 +160,12 @@ public final class GraphVisualizer {
             final Consumer<Integer> iteratorAction = nodeId -> {
                 if (graph != null) {
                     neighbours.add(nodeId);
+                    minX[0] = Math.min(minX[0], graph.getUnscaledXPosition(nodeId));
+                    maxX[0] = Math.max(maxX[0], graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
+
                     minY[0] = Math.min(minY[0], graph.getUnscaledYPosition(nodeId));
                     maxY[0] = Math.max(maxY[0], graph.getUnscaledYPosition(nodeId));
-                    minX = Math.min(minX, graph.getUnscaledXPosition(nodeId));
-                    maxX = Math.max(maxX, graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
+
                 }
             };
 
@@ -178,21 +175,22 @@ public final class GraphVisualizer {
                     centerNodeId, SequenceDirection.RIGHT, hopsProperty.get(), iteratorAction);
 
             this.graphDimensionsCalculator = new GraphDimensionsCalculator(
-                    graph, canvas, minX, maxX, minY[0], maxY[0], nodeHeightProperty.get()
+                    graph, canvas, minX[0], maxX[0], minY[0], maxY[0], nodeHeightProperty.get()
             );
-
-            laneHeight = graphDimensionsCalculator.getLaneHeight();
 
             for (Integer nodeId : neighbours) {
                 drawNode(graphDimensionsCalculator, graph, nodeId);
 
-                graph.iterator().visitDirectNeighbours(nodeId, SequenceDirection.RIGHT,
+                graph.iterator().visitDirectNeighbours(
+                        nodeId, SequenceDirection.RIGHT,
                         neighbourId -> drawEdge(graphDimensionsCalculator, nodeId, neighbourId)
                 );
             }
 
             if (displayLaneBordersProperty.get()) {
-                drawLaneBorders(graphDimensionsCalculator.getLaneCount(), laneHeight);
+                drawLaneBorders(
+                        graphDimensionsCalculator.getLaneCount(),
+                        graphDimensionsCalculator.getLaneHeight());
             }
         }
     }
@@ -238,7 +236,7 @@ public final class GraphVisualizer {
         canvas.setOnMouseClicked(event -> {
             final int[] positions = graphDimensionsCalculator.toNodeCoordinates(event.getX(), event.getY());
             final int nodeX = positions[0];
-            final int nodeLane = positions[1];
+            final int nodeY = positions[1];
 
             // TODO write findNode(x, y) in Graph class
         });
