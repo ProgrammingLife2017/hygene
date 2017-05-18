@@ -103,6 +103,22 @@ public final class Hygene extends Application {
     }
 
     /**
+     * Format the title of the application to include the information given.
+     * <p>
+     * The title is formatted as {@value TITLE} - [filePath].
+     *
+     * @param filePath filepath to set the in the title of the application
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
+     *                                   #start(Stage)}.
+     */
+    public void formatTitle(final String filePath) throws UIInitialisationException {
+        if (primaryStage == null) {
+            throw new UIInitialisationException("Stage not present.");
+        }
+        primaryStage.setTitle(TITLE + " - [" + filePath + "]");
+    }
+
+    /**
      * Gets the {@link GraphStore} of the {@link Hygene}.
      *
      * @return {@link GraphStore} of the {@link Hygene}.
