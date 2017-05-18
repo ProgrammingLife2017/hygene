@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.NoSuchElementException;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.github.davidmoten.rtree.geometry.Geometries.line;
@@ -23,7 +24,7 @@ public final class RTree {
 
     private static final double MAX_NEARNESS_DISTANCE = 20;
 
-    private com.github.davidmoten.rtree.RTree<Integer, Geometry> tree;
+    private com.github.davidmoten.rtree.RTree<Integer[], Geometry> tree;
 
     /**
      * Constructs and initializes an instance of {@link RTree}.
@@ -42,21 +43,22 @@ public final class RTree {
      * @param height the absolute height of the node
      */
     public void addNode(final int nodeId, final double x, final double y, final double width, final double height) {
-        tree = tree.add(nodeId, rectangle(x, y, x + width, y + height));
+        tree = tree.add(new Integer[]{nodeId}, rectangle(x, y, x + width, y + height));
     }
 
     /**
      * Adds an edge to the RTree.
      *
-     * @param edgeLineNumber the line number of the edge
+     * @param fromNodeId the node id of the from node
+     * @param toNodeId the node id of the to node
      * @param fromX          the absolute right x position of the from node of the edge
      * @param fromY          the absolute y position of the from node of the edge
      * @param toX            the absolute x position of the to node of the edge
      * @param toY            the absolute y position of the to node of the edge
      */
-    public void addEdge(final int edgeLineNumber, final double fromX, final double fromY,
+    public void addEdge(final int fromNodeId, final int toNodeId, final double fromX, final double fromY,
                         final double toX, final double toY) {
-        tree = tree.add(edgeLineNumber, line(fromX, fromY, toX, toY));
+        tree = tree.add(new Integer[]{fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
     }
 
     /**
@@ -68,16 +70,16 @@ public final class RTree {
      * @param edgeAction the action that needs to be executed when an edge is found
      */
     public void find(final double x, final double y,
-                     final Consumer<Integer> nodeAction, final Consumer<Integer> edgeAction) {
+                     final Consumer<Integer> nodeAction, final BiConsumer<Integer, Integer> edgeAction) {
         try {
-            final Entry<Integer, Geometry> result = tree.nearest(point(x, y), MAX_NEARNESS_DISTANCE, 1)
+            final Entry<Integer[], Geometry> result = tree.nearest(point(x, y), MAX_NEARNESS_DISTANCE, 1)
                     .toBlocking()
                     .first();
 
             if (result.geometry() instanceof Rectangle) {
-                nodeAction.accept(result.value());
+                nodeAction.accept(result.value()[0]);
             } else if (result.geometry() instanceof Line) {
-                edgeAction.accept(result.value());
+                edgeAction.accept(result.value()[0], result.value()[1]);
             }
         } catch (final NoSuchElementException e) {
             LOGGER.info("No node or edge found at position (" + x + ", " + y + ").", e);
