@@ -1,10 +1,10 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
-import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeBuilder;
+import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.io.BufferedReader;
