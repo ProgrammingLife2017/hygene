@@ -80,7 +80,7 @@ public final class ConsoleController implements Initializable {
     private void logSelectedSequence() {
         if (graphVisualizer != null) {
             graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
-                    appendLogItem(new ConsoleMessage("Sequence: " + newNode.getSequence() + "\n")));
+                    appendLogItem(new ConsoleMessage("Sequence: " + newNode.getSequenceLength() + "\n")));
         }
     }
 
