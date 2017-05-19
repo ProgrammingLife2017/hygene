@@ -9,6 +9,8 @@ import java.util.Queue;
  * using FAFOSP, the Felix Algorithm For Optimal Segment Positioning.
  */
 public final class Fafosp {
+    static final int EDGE_WIDTH = 1000;
+
     private final Graph graph;
     private final int[][] nodeArrays;
 
@@ -66,7 +68,7 @@ public final class Fafosp {
                 neighbour -> graph.getUnscaledXPosition(neighbour) >= 0,
                 ignored -> width[0] = -1,
                 neighbour -> {
-                    final int newWidth = graph.getUnscaledXPosition(neighbour) + 1;
+                    final int newWidth = graph.getUnscaledXPosition(neighbour) + EDGE_WIDTH;
                     if (newWidth > width[0]) {
                         width[0] = newWidth;
                     }

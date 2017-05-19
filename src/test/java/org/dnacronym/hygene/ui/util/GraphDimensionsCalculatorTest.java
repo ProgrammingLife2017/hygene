@@ -20,7 +20,7 @@ final class GraphDimensionsCalculatorTest {
                 createGraph(), mockCanvas(), 0, 25, 0
         );
 
-        assertThat(calculator.computeDiameter()).isEqualTo(10);
+        assertThat(calculator.computeDiameter()).isEqualTo(500);
     }
 
     @Test
@@ -29,7 +29,7 @@ final class GraphDimensionsCalculatorTest {
                 createGraph(), mockCanvas(), 0, 10, 0
         );
 
-        assertThat(calculator.computeXPosition(0)).isEqualTo(0);
+        assertThat(calculator.computeXPosition(0)).isEqualTo(-400);
     }
 
     @Test
@@ -38,7 +38,7 @@ final class GraphDimensionsCalculatorTest {
                 createGraph(), mockCanvas(), 0, 10, 0
         );
 
-        assertThat(calculator.computeRightXPosition(0)).isEqualTo(400);
+        assertThat(calculator.computeRightXPosition(0)).isEqualTo(0);
     }
 
     @Test
@@ -89,8 +89,8 @@ final class GraphDimensionsCalculatorTest {
     private Graph createGraph() {
         return new Graph(new int[][]{
                 NodeBuilder.start()
-                        .withSequenceLength(10)
-                        .withUnscaledXPosition(20)
+                        .withSequenceLength(500)
+                        .withUnscaledXPosition(600)
                         .withUnscaledYPosition(30)
                         .toArray()
         }, null);

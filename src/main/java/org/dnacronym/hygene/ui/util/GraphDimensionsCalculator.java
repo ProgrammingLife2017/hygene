@@ -100,7 +100,7 @@ public final class GraphDimensionsCalculator {
             return 0;
         }
 
-        final int xPosition = graph.getUnscaledXPosition(nodeId);
+        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getSequenceLength(nodeId);
         return (double) (xPosition - minX) / computeDiameter() * canvasWidth;
     }
 
