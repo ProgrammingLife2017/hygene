@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.persistence;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -23,6 +24,10 @@ public final class FileDatabase implements AutoCloseable {
      */
     public FileDatabase(final String fileName) throws SQLException, IOException {
         this.fileName = fileName;
+
+        if (!new File(fileName).exists()) {
+            throw new FileNotFoundException("GFA file not found.");
+        }
 
         final boolean databaseAlreadyExisted = new File(fileName + FileDatabaseDriver.DB_FILE_EXTENSION).exists();
         fileDatabaseDriver = new FileDatabaseDriver(fileName);
