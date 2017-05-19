@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -40,10 +39,6 @@ public final class ConfigController implements Initializable {
     private Slider nodeHeight;
     @FXML
     private ColorPicker edgeColors;
-    @FXML
-    private CheckBox showBorders;
-    @FXML
-    private Slider dashWidth;
 
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
@@ -68,8 +63,6 @@ public final class ConfigController implements Initializable {
 
         nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
         edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
-        showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
-        dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
     }
 
     /**
