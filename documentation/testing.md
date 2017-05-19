@@ -29,3 +29,12 @@ In the first sprint we started testing immediately from the start of the project
 ## Sprint 2
 As mentioned in the section about 'Sprint 1', during this sprint we have removed our GraphStream integration and replaced this with drawing primitives ourselves. Drawing primitives cannot be 'well tested' in the sense that we cannot test if something is actually displayed. The other features such as the new data structure and recent files are well tested.
 We reached a total amount of line coverage of 83% (CodeCov 80%).
+
+## Sprint 3
+In this sprint we worked on porting to a new data structure. Also, we have changed/improved our UI a lot, especially our graph rendering. As mentioned in 'Sprint 2', this works with the drawing of primitives which is hard to test. 
+
+For the database implementation we had to deal with some tests that were interfering each other, and therefore were not completely isolated. The issue was hard to track down, but is fixed now.
+
+For our GFA file parser we have added some integration tests, especially for parsing metadata. This improves our confidence in our parsing pipeline.
+
+Therefore, our coverage of thise week decreased a little to 81% (CodeCov 77%).
