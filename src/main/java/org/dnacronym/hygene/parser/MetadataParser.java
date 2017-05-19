@@ -20,7 +20,7 @@ public final class MetadataParser {
      *
      * @param gfa        string containing the contents of the GFA file
      * @param lineNumber the line number where the node should be located
-     * @return a {@link NodeMetadata} object containing a segment's metadata.
+     * @return a {@link NodeMetadata} object containing a segment's metadata
      * @throws ParseException if the GFA file or given line is invalid
      */
     public NodeMetadata parseNodeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
@@ -46,7 +46,7 @@ public final class MetadataParser {
      *
      * @param gfa        string containing the contents of the GFA file
      * @param lineNumber the line number where the edge should be located
-     * @return an {@link EdgeMetadata} object containing a link's metadata.
+     * @return an {@link EdgeMetadata} object containing a link's metadata
      * @throws ParseException if the GFA file or given line is invalid
      */
     public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
@@ -75,7 +75,7 @@ public final class MetadataParser {
      *
      * @param gfa        string containing the contents of the GFA file
      * @param lineNumber the line number where the node or edge should be located
-     * @return the line of the file belonging to the node or edge.
+     * @return the line of the file belonging to the node or edge
      * @throws ParseException if the line number is out of bounds
      */
     private String getLine(final BufferedReader gfa, final int lineNumber) throws ParseException {
@@ -108,7 +108,7 @@ public final class MetadataParser {
      *
      * @param line       the line of the GFA file belonging to a node or an edge
      * @param lineNumber the line number where the node or edge is located
-     * @return an initialized {@link StringTokenizer} object.
+     * @return an initialized {@link StringTokenizer} object
      * @throws ParseException if the given line does not contain any tabs
      */
     private StringTokenizer initializeStringTokenizer(final String line, final int lineNumber) throws ParseException {

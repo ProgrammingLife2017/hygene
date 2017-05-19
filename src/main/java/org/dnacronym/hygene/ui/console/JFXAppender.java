@@ -38,7 +38,7 @@ public final class JFXAppender extends AbstractAppender {
     /**
      * Gets the console message binding represented by {@link ObjectProperty<ConsoleMessage>}.
      *
-     * @return the {@link ObjectProperty<ConsoleMessage>}.
+     * @return the {@link ObjectProperty<ConsoleMessage>}
      */
     public static ObjectProperty<ConsoleMessage> getLatestLogEvent() {
         return latestLogEvent;
@@ -47,7 +47,7 @@ public final class JFXAppender extends AbstractAppender {
     /**
      * Method for initializing a new instance of JFXAppender; used by Log4j.
      *
-     * @param layout the layout for events.
+     * @param layout the layout for events
      * @param filter the initial filter of the appender
      * @return the newly created JFXAppender
      */

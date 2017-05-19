@@ -42,8 +42,8 @@ public final class Hygene extends Application {
     /**
      * Get an instance of an {@link Hygene}.
      *
-     * @return instance of {@link Hygene}.
-     * @throws UIInitialisationException if the UI has not be initialized.
+     * @return instance of {@link Hygene}
+     * @throws UIInitialisationException if the UI has not be initialized
      */
     public static synchronized Hygene getInstance() throws UIInitialisationException {
         if (hygene == null) {
@@ -55,7 +55,7 @@ public final class Hygene extends Application {
     /**
      * Set the {@link Hygene} instance.
      *
-     * @param application {@link Hygene} instance.
+     * @param application {@link Hygene} instance
      */
     protected static synchronized void setInstance(final Hygene application) {
         hygene = application;
@@ -67,7 +67,7 @@ public final class Hygene extends Application {
      * Uses {@link LauncherImpl} to launch a {@link HygenePreloader} before it launches the
      * {@link Hygene}.
      *
-     * @param args arguments of application.
+     * @param args arguments of application
      * @see LauncherImpl
      */
     public static void main(final String[] args) {
@@ -149,7 +149,7 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphStore} of the {@link Hygene}.
      *
-     * @return {@link GraphStore} of the {@link Hygene}.
+     * @return {@link GraphStore} of the {@link Hygene}
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
      *                                   in {@link #init()}.
      * @see GraphStore
@@ -165,7 +165,7 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphVisualizer} of the {@link Hygene}.
      *
-     * @return {@link GraphVisualizer} of the {@link Hygene}.
+     * @return {@link GraphVisualizer} of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
      *                                   in {@link #init()}.
      * @see #init()
@@ -183,7 +183,7 @@ public final class Hygene extends Application {
      * If there is not an instance, then it will throw a {@link UIInitialisationException} as opposed to creating a
      * new one.
      *
-     * @return instance of the {@link Hygene}.
+     * @return instance of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
      *                                   #start(Stage)}.
      * @see #start(Stage)

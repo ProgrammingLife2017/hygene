@@ -73,7 +73,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     /**
      * Returns the start node.
      *
-     * @return the start node.
+     * @return the start node
      */
     public SequenceNode getSourceNode() {
         return sourceNode;
@@ -82,7 +82,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     /**
      * Returns the end node.
      *
-     * @return the end node.
+     * @return the end node
      */
     public SequenceNode getSinkNode() {
         return sinkNode;
@@ -91,7 +91,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     /**
      * Returns the size of the graph, measured in terms of the number of nodes.
      *
-     * @return the number of nodes in the graph.
+     * @return the number of nodes in the graph
      */
     public int size() {
         return nodeCount;
@@ -101,7 +101,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     /**
      * Returns a breadth-first {@code Iterator} that traverses from left to right.
      *
-     * @return a breadth-first {@code Iterator} that traverses from left to right.
+     * @return a breadth-first {@code Iterator} that traverses from left to right
      */
     @Override
     public Iterator<SequenceNode> iterator() {
@@ -113,7 +113,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      *
      * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
      *                          visited
-     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
+     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right
      */
     public Iterator<SequenceNode> iterator(final Function<SequenceNode, Boolean> duplicateDetector) {
         return new BreadthFirstIterator(sourceNode, SequenceDirection.RIGHT, duplicateDetector);
@@ -122,7 +122,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     /**
      * Returns a breadth-first {@code Iterator} that traverses from right to left.
      *
-     * @return a breadth-first {@code Iterator} that traverses from right to left.
+     * @return a breadth-first {@code Iterator} that traverses from right to left
      */
     public Iterator<SequenceNode> reverseIterator() {
         return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT);
@@ -133,7 +133,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      *
      * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
      *                          visited
-     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
+     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left
      */
     public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
         return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT, duplicateDetector);
@@ -215,7 +215,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
      *
      * @param horizontalPosition x position of the node
      * @param verticalPosition   band the node is in
-     * @return the {@link SequenceNode} which satisfies these conditions.
+     * @return the {@link SequenceNode} which satisfies these conditions
      */
     public @Nullable SequenceNode getNode(final int horizontalPosition, final int verticalPosition) {
         SequenceNode foundNode = null;

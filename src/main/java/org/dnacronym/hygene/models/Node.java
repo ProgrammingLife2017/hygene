@@ -52,7 +52,7 @@ public final class Node {
     /**
      * Creates an empty node array without edge details used to initialize a new node.
      *
-     * @return an empty node array.
+     * @return an empty node array
      */
     public static int[] createEmptyNodeArray() {
         return new int[]{0, 0, 0, -1, -1, 0};
@@ -111,7 +111,7 @@ public final class Node {
     /**
      * Getter for the computed unscaled X position.
      *
-     * @return the computed unscaled X position.
+     * @return the computed unscaled X position
      */
     public int getUnscaledXPosition() {
         return data[UNSCALED_X_POSITION_INDEX];
@@ -120,7 +120,7 @@ public final class Node {
     /**
      * Getter for the computed unscaled Y position.
      *
-     * @return the computed unscaled Y position.
+     * @return the computed unscaled Y position
      */
     public int getUnscaledYPosition() {
         return data[UNSCALED_Y_POSITION_INDEX];
@@ -142,7 +142,7 @@ public final class Node {
      * from the length of the array. This result is divided by the length of a single edge, in
      * order to get the total number of incoming edges.
      *
-     * @return the number of incoming edges.
+     * @return the number of incoming edges
      */
     public int getNumberOfIncomingEdges() {
         final int metadataLength = NODE_EDGE_DATA_OFFSET - 1;
@@ -156,7 +156,7 @@ public final class Node {
      * <p>
      * Warning: This method creates of copy of the edges data and should be used with caution.
      *
-     * @return set containing the outgoing edges of the {@code Node}.
+     * @return set containing the outgoing edges of the {@code Node}
      */
     public Set<Edge> getOutgoingEdges() {
         if (outgoingEdges == null) {
@@ -185,7 +185,7 @@ public final class Node {
      * <p>
      * Warning: This method creates of copy of the edges data and should be used with caution.
      *
-     * @return set containing the incoming edges of the {@code Node}.
+     * @return set containing the incoming edges of the {@code Node}
      */
     public Set<Edge> getIncomingEdges() {
         if (incomingEdges == null) {
@@ -213,7 +213,7 @@ public final class Node {
     /**
      * Getter for the {@link Graph} reference.
      *
-     * @return a reference to the {@link Graph} the edge belongs to.
+     * @return a reference to the {@link Graph} the edge belongs to
      */
     public @Nullable Graph getGraph() {
         return graph;
@@ -222,7 +222,7 @@ public final class Node {
     /**
      * Retrieves metadata of the node.
      *
-     * @return metadata of the bode.
+     * @return metadata of the bode
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public NodeMetadata retrieveMetadata() throws ParseException {

@@ -22,7 +22,7 @@ public final class NodeBuilder {
     /**
      * Creates a new instance of the builder.
      *
-     * @return a new instance of the builder.
+     * @return a new instance of the builder
      */
     public static NodeBuilder start() {
         return new NodeBuilder();
@@ -33,7 +33,7 @@ public final class NodeBuilder {
      *
      * @param nodeId    internal node ID
      * @param nodeArray array representation of a node
-     * @return a new instance of the builder.
+     * @return a new instance of the builder
      */
     public static NodeBuilder fromArray(final int nodeId, final int[] nodeArray) {
         final Node node = new Node(nodeId, nodeArray, null);
@@ -55,7 +55,7 @@ public final class NodeBuilder {
      * Sets the node id for the {@code Node} under construction.
      *
      * @param nodeId the id of the node
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withNodeId(final int nodeId) {
         this.nodeId = nodeId;
@@ -67,7 +67,7 @@ public final class NodeBuilder {
      * Sets the line number for the {@code Node} under construction.
      *
      * @param lineNumber the line number of the GFA file
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withLineNumber(final int lineNumber) {
         this.lineNumber = lineNumber;
@@ -79,7 +79,7 @@ public final class NodeBuilder {
      * Sets the sequence length for the {@code Node} under construction.
      *
      * @param sequenceLength the length of the sequence belonging to the node
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withSequenceLength(final int sequenceLength) {
         this.sequenceLength = sequenceLength;
@@ -91,7 +91,7 @@ public final class NodeBuilder {
      * Sets the color of the {@code Node} under construction.
      *
      * @param color the color of the node
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withColor(final NodeColor color) {
         this.color = color;
@@ -103,7 +103,7 @@ public final class NodeBuilder {
      * Sets the unscaled y position of the {@code Node} under construction.
      *
      * @param unscaledYPosition the unscaled y position of the node
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withUnscaledYPosition(final int unscaledYPosition) {
         this.unscaledYPosition = unscaledYPosition;
@@ -115,7 +115,7 @@ public final class NodeBuilder {
      * Sets the unscaled x position of the {@code Node} under construction.
      *
      * @param unscaledXPosition the unscaled y position of the node
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withUnscaledXPosition(final int unscaledXPosition) {
         this.unscaledXPosition = unscaledXPosition;
@@ -128,7 +128,7 @@ public final class NodeBuilder {
      *
      * @param from       ID of the node where the edge is coming from
      * @param lineNumber line number of the edge in the GFA file
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withIncomingEdge(final int from, final int lineNumber) {
         incomingEdges.add(new Edge(from, nodeId, lineNumber, null));
@@ -141,7 +141,7 @@ public final class NodeBuilder {
      *
      * @param to         ID of the node where the edge is going to
      * @param lineNumber line number of the edge in the GFA file
-     * @return current instance of the builder to provide a fluent interface.
+     * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withOutgoingEdge(final int to, final int lineNumber) {
         outgoingEdges.add(new Edge(nodeId, to, lineNumber, null));
@@ -152,7 +152,7 @@ public final class NodeBuilder {
     /**
      * Creates an array representation of the currently known node details.
      *
-     * @return array representation of the currently known node details.
+     * @return array representation of the currently known node details
      */
     public int[] toArray() {
         final IntStream detailsArray = Arrays.stream(new int[] {
@@ -174,7 +174,7 @@ public final class NodeBuilder {
     /**
      * Creates the node instance based on the given parameters.
      *
-     * @return the node instance based on the given parameters.
+     * @return the node instance based on the given parameters
      */
     public Node create() {
         return new Node(nodeId, toArray(), null);

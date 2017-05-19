@@ -84,7 +84,7 @@ class BreadthFirstIterator implements Iterator<SequenceNode> {
      * Returns the neighbours of the node relevant to this iterator.
      *
      * @param node a {@code SequenceNode}
-     * @return the neighbours of the node relevant to this iterator.
+     * @return the neighbours of the node relevant to this iterator
      */
     private List<SequenceNode> getNeighbours(final SequenceNode node) {
         return direction.ternary(node.getLeftNeighbours(), node.getRightNeighbours());

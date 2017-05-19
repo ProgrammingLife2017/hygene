@@ -20,7 +20,7 @@ public final class Link {
      *
      * @param from       the {@code Segment}. Cannot be {@code null}
      * @param to         the {@code Segment}. Cannot be {@code null}
-     * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive.
+     * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive
      */
     public Link(final String from, final String to, final int overlap) {
         if (overlap < 0) {
@@ -36,7 +36,7 @@ public final class Link {
     /**
      * Returns the from {@code Segment}.
      *
-     * @return the from {@code Segment}.
+     * @return the from {@code Segment}
      */
     public String getFrom() {
         return from;
@@ -45,7 +45,7 @@ public final class Link {
     /**
      * Returns the to {@code Segment}.
      *
-     * @return the to {@code Segment}.
+     * @return the to {@code Segment}
      */
     public String getTo() {
         return to;
@@ -54,7 +54,7 @@ public final class Link {
     /**
      * Returns the number of overlapping bases in this {@code Link}.
      *
-     * @return the number of overlapping bases in this {@code Link}.
+     * @return the number of overlapping bases in this {@code Link}
      */
     public int getOverlap() {
         return overlap;

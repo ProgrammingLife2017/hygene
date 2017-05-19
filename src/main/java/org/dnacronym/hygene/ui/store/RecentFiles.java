@@ -34,7 +34,7 @@ public final class RecentFiles {
     /**
      * Reads and returns the list of files stored in the data file.
      *
-     * @return the list of files.
+     * @return the list of files
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized List<File> getAll() throws IOException {
@@ -95,7 +95,7 @@ public final class RecentFiles {
      * Does not modify the original list.
      *
      * @param fileList the original list
-     * @return the truncated list.
+     * @return the truncated list
      */
     private static LinkedHashSet<File> truncate(final LinkedHashSet<File> fileList) {
         final LinkedHashSet<File> truncatedSet = new LinkedHashSet<>();

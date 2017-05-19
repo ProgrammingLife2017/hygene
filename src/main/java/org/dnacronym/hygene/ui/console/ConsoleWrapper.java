@@ -24,8 +24,8 @@ public class ConsoleWrapper {
     /**
      * Constructor for {@link ConsoleWrapper}.
      *
-     * @throws IOException               if there was an error locating or reading the FXML.
-     * @throws UIInitialisationException if there was an error initializing the provided FXML resource.
+     * @throws IOException               if there was an error locating or reading the FXML
+     * @throws UIInitialisationException if there was an error initializing the provided FXML resource
      */
     public ConsoleWrapper() throws IOException, UIInitialisationException {
         stage = new Stage();
@@ -48,7 +48,7 @@ public class ConsoleWrapper {
     /**
      * Gets the {@link Stage} in {@link ConsoleWrapper}.
      *
-     * @return the {@link Stage}.
+     * @return the {@link Stage}
      */
     public final Stage getStage() {
         return stage;

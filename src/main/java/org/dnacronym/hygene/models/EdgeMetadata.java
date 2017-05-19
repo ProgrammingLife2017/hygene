@@ -32,7 +32,7 @@ public final class EdgeMetadata {
      * Retrieves metadata of the given {@link Edge}.
      *
      * @param edge the edge to retrieve metadata of
-     * @return metadata of the edge.
+     * @return metadata of the edge
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public static EdgeMetadata retrieveFor(final Edge edge) throws ParseException {
@@ -46,7 +46,7 @@ public final class EdgeMetadata {
     /**
      * Gets the orient of the from node.
      *
-     * @return the orient of the from node.
+     * @return the orient of the from node
      */
     public String getFromOrient() {
         return fromOrient;
@@ -55,7 +55,7 @@ public final class EdgeMetadata {
     /**
      * Gets the orient of the to node.
      *
-     * @return the orient of the to node.
+     * @return the orient of the to node
      */
     public String getToOrient() {
         return toOrient;
@@ -64,7 +64,7 @@ public final class EdgeMetadata {
     /**
      * Gets the overlap.
      *
-     * @return the overlap.
+     * @return the overlap
      */
     public String getOverlap() {
         return overlap;

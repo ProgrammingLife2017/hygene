@@ -29,7 +29,7 @@ public final class NodeMetadata {
      * Retrieves metadata of the given edge.
      *
      * @param node the edge to retrieve metadata of
-     * @return metadata of the edge.
+     * @return metadata of the edge
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public static NodeMetadata retrieveFor(final Node node) throws ParseException {
@@ -43,7 +43,7 @@ public final class NodeMetadata {
     /**
      * Gets the original node ID of the GFA file.
      *
-     * @return the original node ID of the GFA file.
+     * @return the original node ID of the GFA file
      */
     public String getName() {
         return name;
@@ -52,7 +52,7 @@ public final class NodeMetadata {
     /**
      * Gets the DNA sequence of the node.
      *
-     * @return the DNA sequence of the node.
+     * @return the DNA sequence of the node
      */
     public String getSequence() {
         return sequence;
