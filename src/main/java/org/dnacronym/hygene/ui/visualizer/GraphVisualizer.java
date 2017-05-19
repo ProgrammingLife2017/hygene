@@ -14,10 +14,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
+import org.dnacronym.hygene.ui.util.RTree;
 
 import java.util.List;
 
@@ -31,9 +33,10 @@ import java.util.List;
  * @see Canvas
  * @see GraphicsContext
  */
+@SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_EDGE_WIDTH = 2;
+    private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final double DEFAULT_DASH_LENGTH = 10;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
@@ -43,6 +46,7 @@ public final class GraphVisualizer {
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
 
     private final ObjectProperty<Node> selectedNodeProperty;
+    private final ObjectProperty<Edge> selectedEdgeProperty;
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty hopsProperty;
@@ -53,18 +57,21 @@ public final class GraphVisualizer {
     private final BooleanProperty displayLaneBordersProperty;
     private final DoubleProperty borderDashLengthProperty;
 
+    private final IntegerProperty nodeCountProperty;
     private @Nullable Graph graph;
 
     private @MonotonicNonNull Canvas canvas;
     private @MonotonicNonNull GraphicsContext graphicsContext;
 
+    private @MonotonicNonNull RTree rTree;
+
 
     /**
      * Create a new {@link GraphVisualizer} instance.
      */
-    @SuppressWarnings("nullness") // For passing redraw method to listeners whilst object uninitialized
     public GraphVisualizer() {
         selectedNodeProperty = new SimpleObjectProperty<>();
+        selectedEdgeProperty = new SimpleObjectProperty<>();
 
         centerNodeIdProperty = new SimpleIntegerProperty(0);
         hopsProperty = new SimpleIntegerProperty(0);
@@ -80,6 +87,8 @@ public final class GraphVisualizer {
         borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
         borderDashLengthProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        nodeCountProperty = new SimpleIntegerProperty();
     }
 
 
@@ -92,7 +101,6 @@ public final class GraphVisualizer {
      * @param graph      graph which contains all the nodes and their information
      * @param nodeId     id of node to draw
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawNode(final GraphDimensionsCalculator calculator, final Graph graph, final int nodeId) {
         final double rectX = calculator.computeXPosition(nodeId);
         final double rectY = calculator.computeYPosition(nodeId);
@@ -101,6 +109,8 @@ public final class GraphVisualizer {
 
         graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
+
+        rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
     }
 
     /**
@@ -110,19 +120,22 @@ public final class GraphVisualizer {
      * @param fromNodeId edge origin node ID
      * @param toNodeId   edge destination node ID
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawEdge(final GraphDimensionsCalculator calculator, final int fromNodeId, final int toNodeId) {
+        final double fromX = calculator.computeRightXPosition(fromNodeId);
+        final double fromY = calculator.computeMiddleYPosition(fromNodeId);
+        final double toX = calculator.computeXPosition(toNodeId);
+        final double toY = calculator.computeMiddleYPosition(toNodeId);
+
+        graphicsContext.setStroke(edgeColorProperty.getValue());
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
-        graphicsContext.strokeLine(
-                calculator.computeRightXPosition(fromNodeId), calculator.computeMiddleYPosition(fromNodeId),
-                calculator.computeXPosition(toNodeId), calculator.computeMiddleYPosition(toNodeId)
-        );
+        graphicsContext.strokeLine(fromX, fromY, toX, toY);
+
+        rTree.addEdge(fromNodeId, toNodeId, fromX, fromY, toX, toY);
     }
 
     /**
      * Clear the canvas.
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
@@ -134,7 +147,6 @@ public final class GraphVisualizer {
      *
      * @throws IllegalStateException if the {@link Canvas} has not been set
      */
-    @SuppressWarnings("nullness")
     public void draw() {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
@@ -142,6 +154,8 @@ public final class GraphVisualizer {
 
         clear();
         if (graph != null && canvas != null) {
+            rTree = new RTree();
+
             final int centerNodeId = centerNodeIdProperty.get();
 
             final GraphDimensionsCalculator graphDimensionsCalculator = new GraphDimensionsCalculator(
@@ -172,7 +186,6 @@ public final class GraphVisualizer {
      * @param laneCount  amount of bands onscreen
      * @param laneHeight height of each band
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
         final double originalLineWidth = graphicsContext.getLineWidth();
@@ -203,6 +216,19 @@ public final class GraphVisualizer {
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
+
+        canvas.setOnMouseClicked(event -> {
+            selectedNodeProperty.setValue(null);
+            selectedEdgeProperty.setValue(null);
+
+            rTree.find(event.getX(), event.getY(),
+                    nodeId -> selectedNodeProperty.setValue(graph.getNode(nodeId)),
+                    (fromNodeId, toNodeId) -> graph.getNode(fromNodeId).getOutgoingEdges().stream()
+                            .filter(edge -> edge.getTo() == toNodeId)
+                            .findFirst()
+                            .ifPresent(selectedEdgeProperty::setValue)
+            );
+        });
     }
 
     /**
@@ -217,19 +243,31 @@ public final class GraphVisualizer {
         this.graph = graph;
         clear();
 
+        nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
-        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) graph.getNodeArrays().length / 2));
+        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) nodeCountProperty.get() / 2));
     }
 
     /**
      * The property of the selected node.
      * <p>
-     * This node is updated every time the user clicks on the canvas.
+     * This node is updated every time the user clicks on a node in the canvas.
      *
      * @return Selected {@link Node} by the user, which can be {@code null}
      */
     public ObjectProperty<Node> getSelectedNodeProperty() {
         return selectedNodeProperty;
+    }
+
+    /**
+     * The property of the selected edge.
+     * <p>
+     * This edge is updated every time the user clicks on an edge in the canvas.
+     *
+     * @return Selected {@link Edge} by the user, which can be {@code null}
+     */
+    public ObjectProperty<Edge> getSelectedEdgeProperty() {
+        return selectedEdgeProperty;
     }
 
     /**
@@ -286,5 +324,14 @@ public final class GraphVisualizer {
      */
     public DoubleProperty getBorderDashLengthProperty() {
         return borderDashLengthProperty;
+    }
+
+    /**
+     * The property which describes the amount of node in the set graph.
+     *
+     * @return property which describes the amount of nodes in the set graph
+     */
+    public IntegerProperty getNodeCountProperty() {
+        return nodeCountProperty;
     }
 }

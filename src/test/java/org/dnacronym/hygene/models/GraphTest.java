@@ -17,10 +17,17 @@ class GraphTest {
     }
 
     @Test
-    void testGetSequenceLength() {
+    void testGetSequenceLengthSmall() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withSequenceLength(5).create().toArray());
 
-        assertThat(graph.getSequenceLength(0)).isEqualTo(5);
+        assertThat(graph.getSequenceLength(0)).isEqualTo(100);
+    }
+
+    @Test
+    void testGetSequenceLength() {
+        final Graph graph = createGraphWithNodes(NodeBuilder.start().withSequenceLength(500).create().toArray());
+
+        assertThat(graph.getSequenceLength(0)).isEqualTo(500);
     }
 
     @Test
