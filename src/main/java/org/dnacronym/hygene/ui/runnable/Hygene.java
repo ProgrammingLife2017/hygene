@@ -14,8 +14,10 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Main class of the application. Launches a {@link HygenePreloader}, and afterwards a {@link Hygene}.
@@ -99,7 +101,30 @@ public final class Hygene extends Application {
 
         primaryStage.show();
 
+        parseArguments();
+
         LOGGER.info("Launching Hygene GUI");
+    }
+
+    /**
+     * Parse the command line arguments.
+     *
+     * @throws UIInitialisationException when GUI was not you initialized
+     * @throws IOException when file could not be opened
+     */
+    private void parseArguments() throws UIInitialisationException {
+        if (getParameters() != null && getParameters().getNamed() != null) {
+            Map<String, String> parameters = getParameters().getNamed();
+
+            String fileName = parameters.get("file");
+            if (fileName != null) {
+                try {
+                    getGraphStore().load(new File(fileName));
+                } catch (IOException e) {
+                    LOGGER.error(String.format("File %s could not be found.", fileName));
+                }
+            }
+        }
     }
 
     /**
