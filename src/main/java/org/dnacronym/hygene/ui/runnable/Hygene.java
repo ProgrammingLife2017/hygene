@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
@@ -37,6 +38,7 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
+    private SimpleBookmarkStore bookmarkStore;
 
     private Stage primaryStage;
 
@@ -78,8 +80,9 @@ public final class Hygene extends Application {
     @Override
     public void init() {
         graphStore = new GraphStore();
-        graphVisualizer = new GraphVisualizer(graphStore);
-        settings = new Settings(graphStore);
+        graphVisualizer = new GraphVisualizer();
+        settings = new Settings();
+        bookmarkStore = new BookmarkStore();
     }
 
     @Override
@@ -161,6 +164,7 @@ public final class Hygene extends Application {
      * @return {@link GraphVisualizer} of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
      *                                   in {@link #init()}.
+     * @see GraphVisualizer
      * @see #init()
      */
     public GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
@@ -176,6 +180,22 @@ public final class Hygene extends Application {
      */
     public Settings getSettings() throws UIInitialisationException {
         return settings;
+    }
+
+    /**
+     * Gets the {@link BookmarkStore} of {@link Hygene}.
+     *
+     * @return {@link BookmarkStore} of the {@link Hygene}
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link BookmarkStore} was not set
+     *                                   in {@link #init()}.
+     * @see BookmarkStore
+     * @see #init()
+     */
+    public BookmarkStore getBookmarkStore() throws UIInitialisationException {
+        if (bookmarkStore == null) {
+            throw new UIInitialisationException("BookmarkStore not present.");
+        }
+        return bookmarkStore;
     }
 
     /**
