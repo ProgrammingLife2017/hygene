@@ -419,6 +419,17 @@ class GraphIteratorTest extends GraphBasedTest {
         assertThat(nodes).containsExactlyInAnyOrder(0, 2, 3, 4, 5, 6, 7);
     }
 
+    @Test
+    void testVisitAllNeighboursWithinRangeUnbalanced() {
+        createGraph(8);
+        addEdges(new int[][]{{0, 1}, {0, 2}, {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}, {6, 7}});
+
+        final List<Integer> nodes = new ArrayList<>();
+        getGraph().iterator().visitIndirectNeighboursWithinRange(6, 2, nodes::add);
+
+        assertThat(nodes).containsExactlyInAnyOrder(2, 4, 5, 6, 7);
+    }
+
 
     /*
      * visitAll
