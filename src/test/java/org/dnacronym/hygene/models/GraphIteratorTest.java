@@ -422,7 +422,7 @@ class GraphIteratorTest extends GraphBasedTest {
     @Test
     void testVisitAllNeighboursWithinRangeUnbalanced() {
         createGraph(8);
-        addEdges(new int[][]{{0, 1}, {0, 2}, {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}, {6, 7}});
+        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}, {6, 7}});
 
         final List<Integer> nodes = new ArrayList<>();
         getGraph().iterator().visitIndirectNeighboursWithinRange(6, 2, nodes::add);

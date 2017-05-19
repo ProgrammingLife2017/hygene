@@ -216,7 +216,7 @@ public final class GraphIterator {
 
             if (currentDepth == maxDepth) {
                 continue;
-            } else if(currentDepth > maxDepth) {
+            } else if (currentDepth > maxDepth) {
                 return;
             }
 

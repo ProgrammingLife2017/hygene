@@ -45,7 +45,7 @@ final class FileDatabaseTable {
 
     /**
      * Adds a new column with given name and type to the table.
-     *
+     * <p>
      * See <a href="https://sqlite.org/datatype3.html">the documentation</a> for a full list of supported column types.
      *
      * @param name the name of the column

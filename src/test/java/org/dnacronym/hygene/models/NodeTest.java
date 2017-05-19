@@ -62,7 +62,7 @@ class NodeTest {
                 .withIncomingEdge(1, 30)
                 .create();
 
-        assertThat(node.toArray()).isEqualTo(new int[]{
+        assertThat(node.toArray()).isEqualTo(new int[] {
                 1, 5, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }

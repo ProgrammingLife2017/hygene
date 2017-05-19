@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

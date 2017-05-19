@@ -13,7 +13,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testNoNeighboursLength() {
         createGraph(3);
         addEdges(new int[][] {{0, 1}, {1, 2}});
-        setSequenceLengths(new int[][]{{1, 600}});
+        setSequenceLengths(new int[][] {{1, 600}});
 
         getGraph().fafosp().horizontal();
 
@@ -24,7 +24,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testOneNeighbour() {
         createGraph(4);
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}});
-        setSequenceLengths(new int[][]{{1, 700}, {2, 400}});
+        setSequenceLengths(new int[][] {{1, 700}, {2, 400}});
 
         getGraph().fafosp().horizontal();
 
@@ -36,7 +36,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testTwoNeighbours() {
         createGraph(5);
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}});
-        setSequenceLengths(new int[][]{{1, 300}, {2, 1300}, {3, 400}});
+        setSequenceLengths(new int[][] {{1, 300}, {2, 1300}, {3, 400}});
 
         getGraph().fafosp().horizontal();
 
@@ -49,7 +49,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testChainOfThree() {
         createGraph(5);
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}});
-        setSequenceLengths(new int[][]{{1, 900}, {2, 1900}, {3, 500}});
+        setSequenceLengths(new int[][] {{1, 900}, {2, 1900}, {3, 500}});
 
         getGraph().fafosp().horizontal();
 
@@ -65,7 +65,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testDiamondShape() {
         createGraph(6);
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 4}, {3, 4}, {4, 5}});
-        setSequenceLengths(new int[][]{{1, 700}, {2, 500}, {3, 1400}, {4, 1200}});
+        setSequenceLengths(new int[][] {{1, 700}, {2, 500}, {3, 1400}, {4, 1200}});
 
         getGraph().fafosp().horizontal();
 
@@ -82,7 +82,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testBreadthFirstVisitTwice() {
         createGraph(5);
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 3}, {3, 4}});
-        setSequenceLengths(new int[][]{{1, 1400}, {2, 1500}, {3, 800}});
+        setSequenceLengths(new int[][] {{1, 1400}, {2, 1500}, {3, 800}});
 
         getGraph().fafosp().horizontal();
 
@@ -95,7 +95,7 @@ class NewFafospXTest extends GraphBasedTest {
     void testInsertionBubble() {
         createGraph(5);
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 4}, {3, 2}});
-        setSequenceLengths(new int[][]{{1, 300}, {2, 500}, {3, 700}});
+        setSequenceLengths(new int[][] {{1, 300}, {2, 500}, {3, 700}});
 
         getGraph().fafosp().horizontal();
 

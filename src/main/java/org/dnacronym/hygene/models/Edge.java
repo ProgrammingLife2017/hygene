@@ -22,8 +22,8 @@ public final class Edge implements Comparable<Edge> {
      * @param from       node from which the edge originates
      * @param to         node at which the edge ends
      * @param lineNumber line number of GFA file where the edge is specified
-     * @param graph      a reference to the graph that the edge belongs to, in case there is no graph (yet)
-     *                   for this edge to be on, null is accepted
+     * @param graph      a reference to the graph that the edge belongs to, in case there is no graph (yet) for this
+     *                   edge to be on, null is accepted
      */
     public Edge(final int from, final int to, final int lineNumber, final @Nullable Graph graph) {
         this.from = from;
@@ -85,9 +85,9 @@ public final class Edge implements Comparable<Edge> {
      * First the destination 'to' is compared. If {@code to == other.to}, the source 'from' will be used for comparison.
      *
      * @param other {@link Edge} to compare this edge with
-     * @return the value {@code 0} if {@code to == other.to} and {@code from == other.from};
-     * a value less than {@code 0} if {@code to < other.to} or {@code from < other.from}; and
-     * a value greater than {@code 0} if {@code to > other.to} or {@code from > other.from}
+     * @return the value {@code 0} if {@code to == other.to} and {@code from == other.from}; a value less than {@code 0}
+     * if {@code to < other.to} or {@code from < other.from}; and a value greater than {@code 0} if {@code to >
+     * other.to} or {@code from > other.from}
      */
     @Override
     public int compareTo(final Edge other) {

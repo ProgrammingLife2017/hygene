@@ -18,9 +18,9 @@ public final class Link {
      * The orientation of a {@code Segment} indicates how the segment is placed in the link. If the orientation is
      * {@code false}, it is treated in reverse and is inverted.
      *
-     * @param from       the {@code Segment}. Cannot be {@code null}
-     * @param to         the {@code Segment}. Cannot be {@code null}
-     * @param overlap    the number of bases that overlap between the two {@code Segment}s. Must be positive
+     * @param from    the {@code Segment}. Cannot be {@code null}
+     * @param to      the {@code Segment}. Cannot be {@code null}
+     * @param overlap the number of bases that overlap between the two {@code Segment}s. Must be positive
      */
     public Link(final String from, final String to, final int overlap) {
         if (overlap < 0) {

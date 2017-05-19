@@ -43,22 +43,22 @@ public final class RTree {
      * @param height the absolute height of the node
      */
     public void addNode(final int nodeId, final double x, final double y, final double width, final double height) {
-        tree = tree.add(new Integer[]{nodeId}, rectangle(x, y, x + width, y + height));
+        tree = tree.add(new Integer[] {nodeId}, rectangle(x, y, x + width, y + height));
     }
 
     /**
      * Adds an edge to the RTree.
      *
      * @param fromNodeId the node id of the from node
-     * @param toNodeId the node id of the to node
-     * @param fromX          the absolute right x position of the from node of the edge
-     * @param fromY          the absolute y position of the from node of the edge
-     * @param toX            the absolute x position of the to node of the edge
-     * @param toY            the absolute y position of the to node of the edge
+     * @param toNodeId   the node id of the to node
+     * @param fromX      the absolute right x position of the from node of the edge
+     * @param fromY      the absolute y position of the from node of the edge
+     * @param toX        the absolute x position of the to node of the edge
+     * @param toY        the absolute y position of the to node of the edge
      */
     public void addEdge(final int fromNodeId, final int toNodeId, final double fromX, final double fromY,
                         final double toX, final double toY) {
-        tree = tree.add(new Integer[]{fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
+        tree = tree.add(new Integer[] {fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
     }
 
     /**
