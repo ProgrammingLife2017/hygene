@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.controller.ConsoleController">
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
+<VBox maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0"
+      styleClass="console" stylesheets="@../css/console_style.css" xmlns="http://javafx.com/javafx/8.0.112"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.controller.ConsoleController">
     <children>
-        <TextArea fx:id="console" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                  AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+        <ScrollPane fx:id="consoleScrollPane" fitToWidth="true" maxHeight="1.7976931348623157E308" prefHeight="386.0"
+                    prefWidth="600.0" styleClass="consoleScrollPane">
+            <content>
+                <TextFlow fx:id="consoleTextFlow" styleClass="consoleTextFlow"/>
+            </content>
+        </ScrollPane>
+        <TextField fx:id="consoleInput" maxHeight="20.0" onKeyPressed="#handleInput" prefHeight="20.0"
+                   prefWidth="600.0" styleClass="consoleInput"/>
     </children>
-</AnchorPane>
+</VBox>

@@ -1,18 +1,25 @@
 package org.dnacronym.hygene.ui.controller;
 
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextArea;
+import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.dnacronym.hygene.ui.console.ConsoleMessage;
+import org.dnacronym.hygene.ui.console.JFXAppender;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.util.JFXAppender;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -24,9 +31,15 @@ public final class ConsoleController implements Initializable {
 
     private @MonotonicNonNull GraphVisualizer graphVisualizer;
 
+    @FXML
+    private @MonotonicNonNull TextFlow consoleTextFlow;
 
     @FXML
-    private @MonotonicNonNull TextArea console;
+    private @MonotonicNonNull ScrollPane consoleScrollPane;
+
+    @FXML
+    private @MonotonicNonNull TextField consoleInput;
+
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -37,14 +50,38 @@ public final class ConsoleController implements Initializable {
             return;
         }
 
-        Optional.ofNullable(console).orElseThrow(() ->
-                new IllegalStateException("Invalid or uninitialized JavaFX FXML element")).setEditable(false);
+        JFXAppender.getLatestLogEvent().addListener((observable, oldValue, newValue) -> appendLogItem(newValue));
 
-        JFXAppender.getConsoleBinding().addListener((observable, oldValue, newValue) -> {
-            if (console != null) {
-                console.appendText(newValue);
-            }
-        });
+        enableAutoScrolling();
+
+        logSelectedSequence();
+    }
+
+    /**
+     * Allows the text the console window to automatically scroll down when new input is introduced.
+     */
+    private void enableAutoScrolling() {
+        if (consoleTextFlow != null && consoleScrollPane != null) {
+            consoleTextFlow.getChildren().addListener(
+                    (ListChangeListener<Node>) (change -> {
+                        if (consoleTextFlow != null && consoleScrollPane != null) {
+                            consoleTextFlow.layout();
+                            consoleScrollPane.layout();
+                            consoleScrollPane.setVvalue(1.0f);
+                        }
+                    }));
+            consoleScrollPane.setContent(consoleTextFlow);
+        }
+    }
+
+    /**
+     * When a user clicks on a node in the graph the base pairs of that node will be displayed.
+     */
+    private void logSelectedSequence() {
+        if (graphVisualizer != null) {
+            graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
+                    appendLogItem(new ConsoleMessage("Sequence: " + newNode.getSequenceLength() + "\n")));
+        }
     }
 
     /**
@@ -54,5 +91,32 @@ public final class ConsoleController implements Initializable {
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * Append a new Console Message to the consoleTextFlow.
+     *
+     * @param message the message
+     */
+    void appendLogItem(final ConsoleMessage message) {
+        if (consoleTextFlow != null) {
+            consoleTextFlow.getChildren().add(message.getNode());
+        }
+    }
+
+    /**
+     * Handle the user's console input; one {@link KeyEvent} at the time.
+     *
+     * @param keyEvent the {@link KeyEvent}
+     */
+    public void handleInput(@NonNull final KeyEvent keyEvent) {
+        if (consoleInput != null && keyEvent.getCode().equals(KeyCode.ENTER)) {
+            final String input = consoleInput.getCharacters().toString();
+
+            consoleInput.clear();
+
+            // Todo: Handle commands
+            appendLogItem(new ConsoleMessage("> " + input + "\n"));
+        }
     }
 }

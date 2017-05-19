@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -37,6 +38,8 @@ public final class MenuController implements Initializable {
 
     @FXML
     private @MonotonicNonNull Menu recentFilesMenu;
+
+    private @MonotonicNonNull ConsoleWrapper consoleWrapper;
 
 
     /**
@@ -85,6 +88,26 @@ public final class MenuController implements Initializable {
         if (gfaFile != null) {
             loadFile(gfaFile);
             parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
+        }
+    }
+
+    /**
+     * Opens the an independent stage showing the current.
+     *
+     * @param event {@link ActionEvent} associated with the event
+     * @throws IOException if unable to located the FXML resource
+     */
+    @FXML
+    void openConsoleAction(final ActionEvent event) throws IOException {
+        try {
+            if (consoleWrapper == null) {
+                consoleWrapper = new ConsoleWrapper();
+                LOGGER.info("Launched GUI console window");
+            }
+
+            consoleWrapper.bringToFront();
+        } catch (final UIInitialisationException e) {
+            LOGGER.error(e);
         }
     }
 
@@ -170,6 +193,15 @@ public final class MenuController implements Initializable {
     }
 
     /**
+     * Returns the {@link ConsoleWrapper} attached to this menu.
+     *
+     * @return the {@link ConsoleWrapper}.
+     */
+    public @Nullable ConsoleWrapper getConsoleWrapper() {
+        return consoleWrapper;
+    }
+
+    /**
      * Sets the recentFilesMenu.
      *
      * @param recentFilesMenu the menu to be set
@@ -177,7 +209,6 @@ public final class MenuController implements Initializable {
     void setRecentFilesMenu(final Menu recentFilesMenu) {
         this.recentFilesMenu = recentFilesMenu;
     }
-
 
     /**
      * Loads the given file and updates recent files history accordingly.

@@ -7,6 +7,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -93,5 +95,63 @@ public final class MenuControllerTest extends UITest {
 
         // Clean up file history
         RecentFiles.reset();
+    }
+
+    @Test
+    void testOpenConsoleActionInit() throws Exception {
+        ActionEvent action = mock(ActionEvent.class);
+
+        CompletableFuture<Object> future = new CompletableFuture<>();
+
+        interact(() -> {
+            try {
+                menuController.openConsoleAction(action);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            future.complete(menuController.getConsoleWrapper());
+        });
+
+        assertThat(future.get()).isNotNull();
+    }
+
+    @Test
+    void testOpenConsoleActionWindowState() throws Exception {
+        ActionEvent action = mock(ActionEvent.class);
+
+        CompletableFuture<ConsoleWrapper> future = new CompletableFuture<>();
+
+        interact(() -> {
+            try {
+                menuController.openConsoleAction(action);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            future.complete(menuController.getConsoleWrapper());
+        });
+
+        assertThat(future.get().getStage().isShowing()).isTrue();
+    }
+
+    @Test
+    void testConsoleWindowPersistence() throws Exception {
+        ActionEvent action = mock(ActionEvent.class);
+
+        CompletableFuture<ConsoleWrapper> future1 = new CompletableFuture<>();
+        CompletableFuture<ConsoleWrapper> future2 = new CompletableFuture<>();
+
+        interact(() -> {
+            try {
+                menuController.openConsoleAction(action);
+                future1.complete(menuController.getConsoleWrapper());
+                menuController.openConsoleAction(action);
+                future2.complete(menuController.getConsoleWrapper());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // We want the actions object reference to be the same.
+        assertThat(future1.get()).isEqualTo(future2.get());
     }
 }
