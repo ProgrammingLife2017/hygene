@@ -35,7 +35,8 @@ final class GraphStoreTest extends UITest {
 
         interact(() -> {
             try {
-                graphStore.load(file);
+                graphStore.load(file, progress -> {
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }

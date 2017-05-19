@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/8">
+    <Text strokeType="OUTSIDE"
+          strokeWidth="0.0"
+          text="Loading file..."/>
+    <ProgressBar fx:id="progressBar"
+                 prefWidth="200.0"
+                 progress="0.0"/>
+</VBox>

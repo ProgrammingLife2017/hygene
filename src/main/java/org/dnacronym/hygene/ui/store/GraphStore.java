@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -26,13 +27,14 @@ public final class GraphStore {
      * Load a sequence graph into memory.
      *
      * @param file {@link File} to load. This should be a {@value GFA_EXTENSION} file
+     * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
      * @see GfaFile#parse()
      */
-    public void load(@NonNull final File file) throws IOException {
+    public void load(@NonNull final File file, final ProgressUpdater progressUpdater) throws IOException {
         try {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
-            gfaFile.parse();
+            gfaFile.parse(progressUpdater);
 
             gfaFileProperty.set(gfaFile);
 
