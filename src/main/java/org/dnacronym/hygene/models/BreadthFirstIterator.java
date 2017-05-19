@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 
 /**
- * An iterator that iterates in breadth-first order over {@code SequenceNode}s.
+ * An iterator that iterates in breadth-first order over {@link SequenceNode}s.
  */
 class BreadthFirstIterator implements Iterator<SequenceNode> {
     private final Queue<SequenceNode> queue;
@@ -18,9 +18,9 @@ class BreadthFirstIterator implements Iterator<SequenceNode> {
 
 
     /**
-     * Creates a new {@code BreadthFirstIterator} over the nodes connected to the given node.
+     * Creates a new {@link BreadthFirstIterator} over the nodes connected to the given node.
      *
-     * @param startNode the root {@code SequenceNode}
+     * @param startNode the root {@link SequenceNode}
      * @param direction {@code true} if the iterator should go to the right, or {@code false} if the iterator should go
      *                  to the left
      */
@@ -29,16 +29,16 @@ class BreadthFirstIterator implements Iterator<SequenceNode> {
     }
 
     /**
-     * Creates a new {@code BreadthFirstIterator} with custom duplicate detection over the nodes connected to the
+     * Creates a new {@link BreadthFirstIterator} with custom duplicate detection over the nodes connected to the
      * given node.
      * <p>
      * The custom {@code duplicateDetector} can be used to indicate that a node has already been visited. This
      * can be used when you change the nodes while iterating, and this change results in a detectable property.
      *
-     * @param startNode         the root {@code SequenceNode}
+     * @param startNode         the root {@link SequenceNode}
      * @param direction         {@code true} if the iterator should go to the right, or {@code false} if the iterator
      *                          should go to the left
-     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
+     * @param duplicateDetector a {@link Function} that returns {@code true} iff. the {@link SequenceNode} has been
      *                          visited
      */
     BreadthFirstIterator(final SequenceNode startNode, final SequenceDirection direction,
@@ -83,7 +83,7 @@ class BreadthFirstIterator implements Iterator<SequenceNode> {
     /**
      * Returns the neighbours of the node relevant to this iterator.
      *
-     * @param node a {@code SequenceNode}
+     * @param node a {@link SequenceNode}
      * @return the neighbours of the node relevant to this iterator
      */
     private List<SequenceNode> getNeighbours(final SequenceNode node) {

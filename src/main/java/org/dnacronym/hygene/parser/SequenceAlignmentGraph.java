@@ -9,8 +9,8 @@ import java.util.Optional;
 
 
 /**
- * A {@code SequenceAlignmentGraph} is a collection of {@code Segment}s and {@code Link}s between those
- * {@code Segment}s.
+ * A {@link SequenceAlignmentGraph} is a collection of {@link Segment}s and {@link Link}s between those
+ * {@link Segment}s.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
@@ -20,7 +20,7 @@ public final class SequenceAlignmentGraph {
 
 
     /**
-     * Constructs a new, empty {@code SequenceAlignmentGraph}.
+     * Constructs a new, empty {@link SequenceAlignmentGraph}.
      */
     public SequenceAlignmentGraph() {
         segments = new HashMap<>();
@@ -29,10 +29,10 @@ public final class SequenceAlignmentGraph {
 
 
     /**
-     * Returns the {@code Segment} with the given name, or throws an exception if it doesn't exist.
+     * Returns the {@link Segment} with the given name, or throws an exception if it doesn't exist.
      *
-     * @param name the name of the {@code Segment}
-     * @return the {@code Segment} with the given name if it exists
+     * @param name the name of the {@link Segment}
+     * @return the {@link Segment} with the given name if it exists
      * @throws ParseException if segment with given name is not present
      */
     public Segment getSegment(final String name) throws ParseException {
@@ -41,36 +41,36 @@ public final class SequenceAlignmentGraph {
     }
 
     /**
-     * Returns the {@code Collection} of {@code Segment}s.
+     * Returns the {@link Collection} of {@link Segment}s.
      *
-     * @return the {@code Collection} of {@code Segment}s
+     * @return the {@link Collection} of {@link Segment}s
      */
     public Collection<Segment> getSegments() {
         return segments.values();
     }
 
     /**
-     * Adds a {@code Segment} to this {@code SequenceAlignmentGraph}.
+     * Adds a {@link Segment} to this {@link SequenceAlignmentGraph}.
      *
-     * @param segment a {@code Segment}
+     * @param segment a {@link Segment}
      */
     public void addSegment(final Segment segment) {
         segments.put(segment.getName(), segment);
     }
 
     /**
-     * Adds a {@code Link} to this {@code SequenceAlignmentGraph}.
+     * Adds a {@link Link} to this {@link SequenceAlignmentGraph}.
      *
-     * @param link a {@code Link}
+     * @param link a {@link Link}
      */
     public void addLink(final Link link) {
         links.add(link);
     }
 
     /**
-     * Returns the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}.
+     * Returns the {@link List} of {@link Link}s in this {@link SequenceAlignmentGraph}.
      *
-     * @return the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}
+     * @return the {@link List} of {@link Link}s in this {@link SequenceAlignmentGraph}
      */
     public List<Link> getLinks() {
         return links;

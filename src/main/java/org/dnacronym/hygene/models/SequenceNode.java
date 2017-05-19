@@ -5,7 +5,7 @@ import java.util.List;
 
 
 /**
- * A {@code SequenceNode} represents a node in a DNA Sequence Alignment Graph.
+ * A {@link SequenceNode} represents a node in a DNA Sequence Alignment Graph.
  * <p>
  * Each node contains a base-sequence, held in the {@code sequence} field. Each node also is associated with one or more
  * reads (runs of DNA analysis). Finally, each node is linked with its adjacent nodes, either backward or forward (left
@@ -28,7 +28,7 @@ public final class SequenceNode {
 
 
     /**
-     * Constructs a new {@code SequenceNode}, with empty lists of read-IDs and adjacent nodes.
+     * Constructs a new {@link SequenceNode}, with empty lists of read-IDs and adjacent nodes.
      *
      * @param id       the ID of this sequence segment
      * @param sequence the sequence of bases this node contains
@@ -231,7 +231,7 @@ public final class SequenceNode {
 
 
     /**
-     * Calculates the optimal horizontal position for this {@code SequenceNode} relative to its left neighbours using
+     * Calculates the optimal horizontal position for this {@link SequenceNode} relative to its left neighbours using
      * FAFOSP.
      */
     void fafospX() {
@@ -296,7 +296,7 @@ public final class SequenceNode {
     }
 
     /**
-     * Calculates the vertical position for the right neighbour(s) of this {@code SequenceNode}.
+     * Calculates the vertical position for the right neighbour(s) of this {@link SequenceNode}.
      *
      * @param defaultPosition the position a node should be placed at by default
      */
@@ -314,7 +314,7 @@ public final class SequenceNode {
     }
 
     /**
-     * Calculates the vertical position for the single right neighbour of this {@code SequenceNode}.
+     * Calculates the vertical position for the single right neighbour of this {@link SequenceNode}.
      *
      * @param neighbour the neighbour of whom the height should be calculated
      */
@@ -346,7 +346,7 @@ public final class SequenceNode {
     }
 
     /**
-     * Calculates the vertical positions for each right neighbour of this {@code SequenceNode}.
+     * Calculates the vertical positions for each right neighbour of this {@link SequenceNode}.
      *
      * @param neighbours the neighbours of whom the height should be calculated
      */

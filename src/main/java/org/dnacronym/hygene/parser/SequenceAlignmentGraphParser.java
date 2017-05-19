@@ -9,14 +9,14 @@ import java.util.Map;
 
 
 /**
- * Parses a {@code SequenceAlignmentGraph} to a {@code SequenceGraph}.
+ * Parses a {@link SequenceAlignmentGraph} to a {@link SequenceGraph}.
  */
 public final class SequenceAlignmentGraphParser {
     /**
-     * Translates a {@code SequenceAlignmentGraph} into a {@code GraphSequence}.
+     * Translates a {@link SequenceAlignmentGraph} into a {@link SequenceGraph}.
      *
-     * @param graph a {@code SequenceAlignmentGraph}
-     * @return a {@code GraphSequence}
+     * @param graph a {@link SequenceAlignmentGraph}
+     * @return a {@link SequenceGraph}
      * @throws ParseException if the graph is not according to the specification
      */
     public SequenceGraph parse(final SequenceAlignmentGraph graph) throws ParseException {
@@ -41,12 +41,12 @@ public final class SequenceAlignmentGraphParser {
 
 
     /**
-     * Returns the {@code SequenceNode} corresponding to the given {@code Segment} from the {@code Map}, or adds it to
-     * the {@code Map} if it does not exist.
+     * Returns the {@link SequenceNode} corresponding to the given {@link Segment} from the {@link Map}, or adds it to
+     * the {@link Map} if it does not exist.
      *
-     * @param nodes   a {@code Map} of {@code SequenceNode}s
-     * @param segment the {@code Segment} to look for
-     * @return {@code SequenceNode} corresponding to the given {@code Segment}
+     * @param nodes   a {@link Map} of {@link SequenceNode}s
+     * @param segment the {@link Segment} to look for
+     * @return {@link SequenceNode} corresponding to the given {@link Segment}
      */
     private SequenceNode getNode(final Map<String, SequenceNode> nodes, final Segment segment) {
         final SequenceNode node = nodes.get(segment.getName());

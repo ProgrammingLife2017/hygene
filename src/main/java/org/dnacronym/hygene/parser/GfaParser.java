@@ -5,17 +5,17 @@ import java.util.StringTokenizer;
 
 
 /**
- * Parses GFA to a {@code SequenceAlignmentGraph}.
+ * Parses GFA to a {@link SequenceAlignmentGraph}.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class GfaParser {
     /**
-     * Parses a GFA-compliant {@code String} to a {@code SequenceAlignmentGraph}.
+     * Parses a GFA-compliant {@link String} to a {@link SequenceAlignmentGraph}.
      *
-     * @param gfa a GFA-compliant {@code String}
-     * @return a {@code SequenceAlignmentGraph}
-     * @throws ParseException if the given {@code String} is not GFA-compliant
+     * @param gfa a GFA-compliant {@link String}
+     * @return a {@link SequenceAlignmentGraph}
+     * @throws ParseException if the given {@link String} is not GFA-compliant
      */
     public SequenceAlignmentGraph parse(final String gfa) throws ParseException {
         final SequenceAlignmentGraph graph = new SequenceAlignmentGraph();
@@ -30,12 +30,12 @@ public final class GfaParser {
 
 
     /**
-     * Parses a line of a GFA-compliant {@code String} and adds it to the {@code SequenceAlignmentGraph}.
+     * Parses a line of a GFA-compliant {@link String} and adds it to the {@link SequenceAlignmentGraph}.
      *
-     * @param graph  the {@code SequenceAlignmentGraph} to which this line should be added
-     * @param line   a line of a GFA-compliant {@code String}
+     * @param graph  the {@link SequenceAlignmentGraph} to which this line should be added
+     * @param line   a line of a GFA-compliant {@link String}
      * @param offset the current line number
-     * @throws ParseException if the given {@code String}s are not GFA-compliant
+     * @throws ParseException if the given {@link String}s are not GFA-compliant
      */
     private void parseLine(final SequenceAlignmentGraph graph, final String line, final int offset)
             throws ParseException {
@@ -65,12 +65,12 @@ public final class GfaParser {
     }
 
     /**
-     * Parses a line to a {@code Segment}.
+     * Parses a line to a {@link Segment}.
      *
-     * @param st     the {@code StringTokenizer} in which each token is a GFA field
+     * @param st     the {@link StringTokenizer} in which each token is a GFA field
      * @param offset the current line number, used for debugging
-     * @return a {@code Segment}
-     * @throws ParseException if the {@code Segment} is not GFA-compliant
+     * @return a {@link Segment}
+     * @throws ParseException if the {@link Segment} is not GFA-compliant
      */
     private Segment parseSegment(final StringTokenizer st, final int offset) throws ParseException {
         try {
@@ -84,12 +84,12 @@ public final class GfaParser {
     }
 
     /**
-     * Parses a line to a {@code Link}.
+     * Parses a line to a {@link Link}.
      *
-     * @param st     the {@code StringTokenizer} in which each token is a GFA field
+     * @param st     the {@link StringTokenizer} in which each token is a GFA field
      * @param offset the current line number, used for debugging
-     * @return a {@code Link}
-     * @throws ParseException if the {@code Link} is not GFA-compliant
+     * @return a {@link Link}
+     * @throws ParseException if the {@link Link} is not GFA-compliant
      */
     private Link parseLink(final StringTokenizer st, final int offset) throws ParseException {
         try {
@@ -106,9 +106,9 @@ public final class GfaParser {
     }
 
     /**
-     * Parses a CIGAR-compliant {@code String}.
+     * Parses a CIGAR-compliant {@link String}.
      *
-     * @param cigar  a CIGAR-compliant {@code String}
+     * @param cigar  a CIGAR-compliant {@link String}
      * @param offset the current line number, used for debugging
      * @return the overlap in indicated by the CIGAR string
      * @throws ParseException if the CIGAR string is invalid

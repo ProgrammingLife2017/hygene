@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@code Segment}s.
+ * Unit tests for {@link Segment}s.
  */
 class SegmentTest {
     @Test

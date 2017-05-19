@@ -185,9 +185,9 @@ public final class Graph {
     }
 
     /**
-     * Getter for the {@code GfaFile} instance where the graph belongs to.
+     * Getter for the {@link GfaFile} instance where the graph belongs to.
      *
-     * @return the {@code GfaFile} instance where the graph belongs to
+     * @return the {@link GfaFile} instance where the graph belongs to
      */
     public GfaFile getGfaFile() {
         return gfaFile;

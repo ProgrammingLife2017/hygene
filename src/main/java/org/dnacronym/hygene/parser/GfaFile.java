@@ -3,8 +3,10 @@ package org.dnacronym.hygene.parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
@@ -32,7 +34,7 @@ public class GfaFile {
 
 
     /**
-     * Constructs a new {@code GfaFile}.
+     * Constructs a new {@link GfaFile}.
      *
      * @param fileName the name of the GFA file
      */
@@ -45,11 +47,10 @@ public class GfaFile {
 
 
     /**
-     * Parses the GFA file into a {@code SequenceGraph}.
+     * Parses the GFA file into a {@link Graph}.
      *
-     * @return a {@code SequenceGraph} based on the contents of the GFA file
+     * @return a {@link Graph} based on the contents of the GFA file
      * @throws ParseException if the file content is not GFA-compliant
-     * @throws IOException    if the file cannot be read
      */
     public final Graph parse() throws ParseException {
         try (final FileDatabase fileDatabase = new FileDatabase(fileName)) {
@@ -73,10 +74,10 @@ public class GfaFile {
     }
 
     /**
-     * Parses a {@code Node}'s metadata to a {@code NodeMetadata} object.
+     * Parses a {@link Node}'s metadata to a {@link NodeMetadata} object.
      *
      * @param lineNumber line number of the node within the GFA file
-     * @return a {@code NodeMetadata} object
+     * @return a {@link NodeMetadata} object
      * @throws ParseException if the node metadata cannot be parsed
      */
     public final NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
@@ -84,10 +85,10 @@ public class GfaFile {
     }
 
     /**
-     * Parses an {@code Edge}'s metadata to a {@code EdgeMetaData} object.
+     * Parses an {@link Edge}'s metadata to a {@link EdgeMetadata} object.
      *
      * @param lineNumber Line number of the edge within the GFA file
-     * @return a {@code EdgeMetaData} object
+     * @return a {@link EdgeMetadata} object
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public final EdgeMetadata parseEdgeMetadata(final int lineNumber) throws ParseException {
@@ -117,7 +118,7 @@ public class GfaFile {
     }
 
     /**
-     * Reads a GFA file into memory and gives its contents as a {@code String}.
+     * Reads a GFA file into memory and gives its contents as a {@link String}.
      *
      * @return contents of the GFA file
      * @throws ParseException if the given file name cannot be read

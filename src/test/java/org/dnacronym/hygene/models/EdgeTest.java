@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@code Edge}s.
+ * Unit tests for {@link Edge}s.
  */
 class EdgeTest {
 

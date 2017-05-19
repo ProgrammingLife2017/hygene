@@ -2,7 +2,7 @@ package org.dnacronym.hygene.parser;
 
 
 /**
- * A {@code Link} connects two {@code Segment}s, possibly with some overlap.
+ * A {@link Link} connects two {@link Segment}s, possibly with some overlap.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
@@ -13,14 +13,14 @@ public final class Link {
 
 
     /**
-     * Constructs a new {@code Link}.
+     * Constructs a new {@link Link}.
      * <p>
-     * The orientation of a {@code Segment} indicates how the segment is placed in the link. If the orientation is
+     * The orientation of a {@link Segment} indicates how the segment is placed in the link. If the orientation is
      * {@code false}, it is treated in reverse and is inverted.
      *
-     * @param from    the {@code Segment}. Cannot be {@code null}
-     * @param to      the {@code Segment}. Cannot be {@code null}
-     * @param overlap the number of bases that overlap between the two {@code Segment}s. Must be positive
+     * @param from    the {@link Segment}. Cannot be {@code null}
+     * @param to      the {@link Segment}. Cannot be {@code null}
+     * @param overlap the number of bases that overlap between the two {@link Segment}s. Must be positive
      */
     public Link(final String from, final String to, final int overlap) {
         if (overlap < 0) {
@@ -34,27 +34,27 @@ public final class Link {
 
 
     /**
-     * Returns the from {@code Segment}.
+     * Returns the from {@link Segment}.
      *
-     * @return the from {@code Segment}
+     * @return the from {@link Segment}
      */
     public String getFrom() {
         return from;
     }
 
     /**
-     * Returns the to {@code Segment}.
+     * Returns the to {@link Segment}.
      *
-     * @return the to {@code Segment}
+     * @return the to {@link Segment}
      */
     public String getTo() {
         return to;
     }
 
     /**
-     * Returns the number of overlapping bases in this {@code Link}.
+     * Returns the number of overlapping bases in this {@link Link}.
      *
-     * @return the number of overlapping bases in this {@code Link}
+     * @return the number of overlapping bases in this {@link Link}
      */
     public int getOverlap() {
         return overlap;

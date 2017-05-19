@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
- * Unit tests for {@code Link}s.
+ * Unit tests for {@link Link}s.
  */
 final class LinkTest {
     @Test

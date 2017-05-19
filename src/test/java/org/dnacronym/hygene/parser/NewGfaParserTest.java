@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests for {@code GfaParser}s.
+ * Unit tests for {@link GfaParser}s.
  */
 class NewGfaParserTest {
     private NewGfaParser parser;
