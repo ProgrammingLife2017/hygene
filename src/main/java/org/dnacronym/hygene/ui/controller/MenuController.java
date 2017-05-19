@@ -95,7 +95,7 @@ public final class MenuController implements Initializable {
      * Opens the an independent stage showing the current.
      *
      * @param event {@link ActionEvent} associated with the event
-     * @throws IOException if unable to located the FXML resource.
+     * @throws IOException if unable to located the FXML resource
      */
     @FXML
     void openConsoleAction(final ActionEvent event) throws IOException {
@@ -106,7 +106,7 @@ public final class MenuController implements Initializable {
             }
 
             consoleWrapper.bringToFront();
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
     }

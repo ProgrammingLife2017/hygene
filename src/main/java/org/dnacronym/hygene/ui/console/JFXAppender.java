@@ -36,7 +36,7 @@ public final class JFXAppender extends AbstractAppender {
     }
 
     /**
-     * Gets for the console message binding represented by {@link ObjectProperty<ConsoleMessage>}.
+     * Gets the console message binding represented by {@link ObjectProperty<ConsoleMessage>}.
      *
      * @return the {@link ObjectProperty<ConsoleMessage>}.
      */
