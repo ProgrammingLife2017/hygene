@@ -4,7 +4,6 @@ import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +41,7 @@ public final class GraphDimensionsCalculator {
      * @param centerNodeId node id of the center node
      * @param hops         Amount of hops allowed from center node
      * @param nodeHeight   the height of a single node
-     * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, SequenceDirection, int,
+     * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, int,
      * Consumer)
      */
     public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
@@ -69,8 +68,7 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         };
 
-        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.LEFT, hops, consumer);
-        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, SequenceDirection.RIGHT, hops, consumer);
+        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, hops, consumer);
 
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
