@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.console;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -16,7 +15,7 @@ import java.io.Serializable;
 
 
 /**
- * Custom Appender plugin for Log4j2 that will cause the logger output appended to a JavaFX {@link TextArea} in the GUI.
+ * Custom Appender plugin for Log4j2 that will cause the logger output appended to a JavaFX TextArea in the GUI.
  */
 @Plugin(name = "JFXAppender", category = "Core", elementType = "appender", printObject = true)
 public final class JFXAppender extends AbstractAppender {

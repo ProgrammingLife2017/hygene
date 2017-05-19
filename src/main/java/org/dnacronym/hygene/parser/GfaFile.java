@@ -3,10 +3,8 @@ package org.dnacronym.hygene.parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
@@ -74,7 +72,7 @@ public class GfaFile {
     }
 
     /**
-     * Parses a {@link Node}'s metadata to a {@link NodeMetadata} object.
+     * Parses a node's metadata to a {@link NodeMetadata} object.
      *
      * @param lineNumber line number of the node within the GFA file
      * @return a {@link NodeMetadata} object
@@ -85,7 +83,7 @@ public class GfaFile {
     }
 
     /**
-     * Parses an {@link Edge}'s metadata to a {@link EdgeMetadata} object.
+     * Parses an edge's metadata to a {@link EdgeMetadata} object.
      *
      * @param lineNumber Line number of the edge within the GFA file
      * @return a {@link EdgeMetadata} object

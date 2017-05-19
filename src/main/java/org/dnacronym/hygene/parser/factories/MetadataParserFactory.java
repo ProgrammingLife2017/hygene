@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.parser.factories;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.parser.GfaParser;
 import org.dnacronym.hygene.parser.MetadataParser;
 
 
@@ -29,9 +28,9 @@ public final class MetadataParserFactory {
     }
 
     /**
-     * Returns a new instance of {@link GfaParser} if no preferred instance is set.
+     * Returns a new instance of {@link MetadataParser} if no preferred instance is set.
      *
-     * @return an instance of {@link GfaParser}
+     * @return an instance of {@link MetadataParser}
      */
     public static MetadataParser createInstance() {
         if (instance == null) {

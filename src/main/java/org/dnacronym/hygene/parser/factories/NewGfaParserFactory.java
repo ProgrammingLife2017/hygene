@@ -1,12 +1,11 @@
 package org.dnacronym.hygene.parser.factories;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.parser.GfaParser;
 import org.dnacronym.hygene.parser.NewGfaParser;
 
 
 /**
- * Constructs {@link GfaParser} objects.
+ * Constructs {@link NewGfaParser} objects.
  */
 public final class NewGfaParserFactory {
     private static @MonotonicNonNull NewGfaParser instance;
@@ -20,18 +19,18 @@ public final class NewGfaParserFactory {
 
 
     /**
-     * Sets a custom instance of {@link GfaParser}.
+     * Sets a custom instance of {@link NewGfaParser}.
      *
-     * @param gfaParser custom instance of {@link GfaParser}
+     * @param gfaParser custom instance of {@link NewGfaParser}
      */
     public static void setInstance(final NewGfaParser gfaParser) {
         instance = gfaParser;
     }
 
     /**
-     * Returns a new instance of {@link GfaParser} if no preferred instance is set.
+     * Returns a new instance of {@link NewGfaParser} if no preferred instance is set.
      *
-     * @return an instance of {@link GfaParser}
+     * @return an instance of {@link NewGfaParser}
      */
     public static NewGfaParser createInstance() {
         if (instance == null) {
