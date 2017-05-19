@@ -214,8 +214,10 @@ public final class GraphIterator {
 
             action.accept(head);
 
-            if (currentDepth >= maxDepth) {
+            if (currentDepth == maxDepth) {
                 continue;
+            } else if(currentDepth > maxDepth) {
+                return;
             }
 
             visitDirectNeighbours(head, SequenceDirection.LEFT, index -> {
@@ -235,9 +237,6 @@ public final class GraphIterator {
             depthIncreaseTimes[0]--;
             if (depthIncreaseTimes[0] == 0) {
                 currentDepth++;
-                if (currentDepth > maxDepth) {
-                    return;
-                }
 
                 depthIncreaseTimes[0] = depthIncreaseTimes[1];
                 depthIncreaseTimes[1] = 0;
