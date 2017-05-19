@@ -66,6 +66,7 @@ public class GfaFile {
             }
         } catch (final IOException | SQLException e) {
             LOGGER.error("Could not open file database to restore graph.", e);
+            throw new ParseException("Could not open file database to restore graph.", e);
         }
 
         return graph;
