@@ -182,25 +182,6 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Converts onscreen coordinates to coordinates which can be used to find the correct node.
-     *
-     * @param xPos x position onscreen
-     * @param yPos y position onscreen
-     * @return x and y position in a double array of size 2 which correspond with x and y position of a node
-     */
-    public int[] toNodeCoordinates(final double xPos, final double yPos) {
-        final int diameter = maxX - minX;
-
-        final int unscaledX = (int) (xPos / canvasWidth) * diameter + minX;
-        final int unscaledY = (int) (yPos / laneHeight);
-
-        LOGGER.info("User clicked on x: " + xPos + ", y: " + yPos + ", "
-                + "Unscaled x: " + unscaledX + ", unscaled Y: " + unscaledY);
-
-        return new int[]{unscaledX, unscaledY};
-    }
-
-    /**
      * Get the neighbours of the set center node, no more than set hops away.
      *
      * @return neighbours of set center node

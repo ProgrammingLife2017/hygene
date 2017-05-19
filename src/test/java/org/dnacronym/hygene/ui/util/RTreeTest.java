@@ -17,7 +17,7 @@ final class RTreeTest {
 
         tree.find(15, 15,
                 nodeId -> assertThat(nodeId).isEqualTo(45),
-                edgeLineNumber -> fail("Found an edge, while expecting a node")
+                (fromNodeId, toNodeId) -> fail("Found an edge, while expecting a node")
         );
     }
 
@@ -28,29 +28,35 @@ final class RTreeTest {
 
         tree.find(9, 9,
                 nodeId -> assertThat(nodeId).isEqualTo(45),
-                edgeLineNumber -> fail("Found an edge, while expecting a node")
+                (fromNodeId, toNodeId) -> fail("Found an edge, while expecting a node")
         );
     }
 
     @Test
     void testFindEdge() {
         RTree tree = new RTree();
-        tree.addEdge(30, 25, 25, 50, 50);
+        tree.addEdge(30, 31, 25, 25, 50, 50);
 
         tree.find(40, 40,
                 nodeId -> fail("Found a node, while expecting an edge"),
-                edgeLineNumber -> assertThat(edgeLineNumber).isEqualTo(30)
+                (fromNodeId, toNodeId) -> {
+                    assertThat(fromNodeId).isEqualTo(30);
+                    assertThat(toNodeId).isEqualTo(31);
+                }
         );
     }
 
     @Test
     void testFindNearEdge() {
         RTree tree = new RTree();
-        tree.addEdge(30, 25, 25, 50, 50);
+        tree.addEdge(30, 31, 25, 25, 50, 50);
 
         tree.find(41, 40,
                 nodeId -> fail("Found a node, while expecting an edge"),
-                edgeLineNumber -> assertThat(edgeLineNumber).isEqualTo(30)
+                (fromNodeId, toNodeId) -> {
+                    assertThat(fromNodeId).isEqualTo(30);
+                    assertThat(toNodeId).isEqualTo(31);
+                }
         );
     }
 
@@ -61,7 +67,7 @@ final class RTreeTest {
 
         tree.find(1000, 1000,
                 nodeId -> fail("Found a node, while expecting no results"),
-                edgeLineNumber -> fail("Found an edge, while expecting no results")
+                (fromNodeId, toNodeId) -> fail("Found an edge, while expecting no results")
         );
     }
 }

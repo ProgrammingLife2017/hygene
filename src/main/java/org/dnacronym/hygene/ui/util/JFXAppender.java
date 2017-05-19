@@ -12,7 +12,6 @@ import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -62,6 +61,6 @@ public final class JFXAppender extends AbstractAppender {
 
     @Override
     public void append(final LogEvent event) {
-        consoleBinding.setValue(new String(getLayout().toByteArray(event), StandardCharsets.UTF_8));
+        consoleBinding.setValue(event.getMessage().getFormattedMessage() + "\n");
     }
 }
