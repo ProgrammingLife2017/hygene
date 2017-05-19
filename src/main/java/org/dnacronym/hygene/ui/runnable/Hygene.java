@@ -110,18 +110,18 @@ public final class Hygene extends Application {
      * Parse the command line arguments.
      *
      * @throws UIInitialisationException when GUI was not you initialized
-     * @throws IOException when file could not be opened
+     * @throws IOException               when file could not be opened
      */
     private void parseArguments() throws UIInitialisationException {
         if (getParameters() != null && getParameters().getNamed() != null) {
-            Map<String, String> parameters = getParameters().getNamed();
+            final Map<String, String> parameters = getParameters().getNamed();
 
-            String fileName = parameters.get("file");
+            final String fileName = parameters.get("file");
             if (fileName != null) {
                 try {
                     getGraphStore().load(new File(fileName));
-                } catch (IOException e) {
-                    LOGGER.error(String.format("File %s could not be found.", fileName));
+                } catch (final IOException e) {
+                    LOGGER.error(String.format("File %s could not be found.", fileName), e);
                 }
             }
         }
