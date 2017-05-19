@@ -41,7 +41,7 @@ public final class GraphVisualizer {
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
-    private static final double DEFAULT_RANGE = 100;
+    private static final double DEFAULT_RANGE = 10;
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
 
