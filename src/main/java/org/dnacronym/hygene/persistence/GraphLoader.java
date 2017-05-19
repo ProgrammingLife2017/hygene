@@ -41,7 +41,7 @@ public final class GraphLoader {
         try {
             fileDatabaseDriver.setUpTable(fileDatabaseTable);
         } catch (final SQLException e) {
-            throw new RuntimeException("Failed to set up graph dump table.", e);
+            throw new UnexpectedDatabaseException("Failed to set up graph dump table.", e);
         }
     }
 
@@ -67,7 +67,7 @@ public final class GraphLoader {
         try {
             fileDatabaseDriver.deleteRow(TABLE_NAME, KEY_COLUMN_NAME, KEY_COLUMN_VALUE);
         } catch (final SQLException e) {
-            throw new RuntimeException("Failed to delete graph dump.", e);
+            throw new UnexpectedDatabaseException("Failed to delete graph dump.", e);
         }
     }
 
@@ -97,7 +97,7 @@ public final class GraphLoader {
             fileDatabaseDriver.insertRow(TABLE_NAME,
                     Arrays.asList(KEY_COLUMN_VALUE, Integer.toString(graph.length), graphDump.toString()));
         } catch (final SQLException e) {
-            throw new RuntimeException("Failed to dump graph into database.", e);
+            throw new UnexpectedDatabaseException("Failed to dump graph into database.", e);
         }
     }
 
@@ -122,7 +122,7 @@ public final class GraphLoader {
             graphDump = fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, KEY_COLUMN_VALUE,
                     DUMP_COLUMN_NAME);
         } catch (final SQLException e) {
-            throw new RuntimeException("Failed to retrieve graph dump.", e);
+            throw new UnexpectedDatabaseException("Failed to retrieve graph dump.", e);
         }
 
         final int[][] graph = new int[nodeCount][];
