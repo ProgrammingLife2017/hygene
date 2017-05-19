@@ -25,8 +25,8 @@ public final class GraphStore {
     /**
      * Load a sequence graph into memory.
      *
-     * @param file {@link File} to load. This should be a {@value GFA_EXTENSION} file.
-     * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file.
+     * @param file {@link File} to load. This should be a {@value GFA_EXTENSION} file
+     * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
      * @see GfaFile#parse()
      */
     public void load(@NonNull final File file) throws IOException {
@@ -45,7 +45,7 @@ public final class GraphStore {
     /**
      * Get the {@link ObjectProperty} that stores the {@link GfaFile}.
      *
-     * @return {@link ObjectProperty} that stores the {@link GfaFile}.
+     * @return {@link ObjectProperty} that stores the {@link GfaFile}
      */
     public ObjectProperty<GfaFile> getGfaFileProperty() {
         return gfaFileProperty;

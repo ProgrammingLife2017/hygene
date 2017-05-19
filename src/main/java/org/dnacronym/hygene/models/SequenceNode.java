@@ -45,7 +45,7 @@ public final class SequenceNode {
     /**
      * Returns the ID.
      *
-     * @return the ID.
+     * @return the ID
      */
     public String getId() {
         return id;
@@ -54,7 +54,7 @@ public final class SequenceNode {
     /**
      * Returns the sequence.
      *
-     * @return the sequence.
+     * @return the sequence
      */
     public String getSequence() {
         return sequence;
@@ -68,7 +68,7 @@ public final class SequenceNode {
      * This method is preferred over calling {@code getSequence().length()} because the definition of a node's length
      * may be changed in future releases.
      *
-     * @return the sequence length.
+     * @return the sequence length
      */
     public int getLength() {
         return sequence.length();
@@ -77,7 +77,7 @@ public final class SequenceNode {
     /**
      * Returns the read identifiers.
      *
-     * @return the read identifiers.
+     * @return the read identifiers
      */
     public List<String> getReadIdentifiers() {
         return readIdentifiers;
@@ -95,7 +95,7 @@ public final class SequenceNode {
     /**
      * Returns the left neighbours.
      *
-     * @return the left neighbours.
+     * @return the left neighbours
      */
     public List<SequenceNode> getLeftNeighbours() {
         return leftNeighbours;
@@ -104,7 +104,7 @@ public final class SequenceNode {
     /**
      * Returns true iff. the node has 1 or more left neighbours.
      *
-     * @return true iff. the node has 1 or more left neighbours.
+     * @return true iff. the node has 1 or more left neighbours
      */
     public boolean hasLeftNeighbours() {
         return !leftNeighbours.isEmpty();
@@ -132,7 +132,7 @@ public final class SequenceNode {
     /**
      * Returns the right neighbours.
      *
-     * @return the right neighbours.
+     * @return the right neighbours
      */
     public List<SequenceNode> getRightNeighbours() {
         return rightNeighbours;
@@ -141,7 +141,7 @@ public final class SequenceNode {
     /**
      * Returns true iff. the node has 1 or more right neighbours.
      *
-     * @return true iff. the node has 1 or more right neighbours.
+     * @return true iff. the node has 1 or more right neighbours
      */
     public boolean hasRightNeighbours() {
         return !rightNeighbours.isEmpty();
@@ -169,7 +169,7 @@ public final class SequenceNode {
     /**
      * Returns horizontal position of the right end of the node as calculated by FAFOSP.
      *
-     * @return horizontal position of the right end of the node as calculated by FAFOSP.
+     * @return horizontal position of the right end of the node as calculated by FAFOSP
      */
     public int getHorizontalRightEnd() {
         return horizontalRightEnd;
@@ -187,7 +187,7 @@ public final class SequenceNode {
     /**
      * Returns the vertical position of the centre of the node as calculated by FAFOSP.
      *
-     * @return vertical position of the centre of the node as calculated by FAFOSP.
+     * @return vertical position of the centre of the node as calculated by FAFOSP
      */
     public int getVerticalPosition() {
         return verticalPosition;
@@ -199,7 +199,7 @@ public final class SequenceNode {
      *
      * @param targetHorizontalPosition position that should be in bounds
      * @param targetVerticalPosition   vertical position node should be in
-     * @return true iff in bounds.
+     * @return true iff in bounds
      */
     public boolean inBounds(final int targetHorizontalPosition, final int targetVerticalPosition) {
         return targetVerticalPosition == this.verticalPosition
@@ -212,7 +212,7 @@ public final class SequenceNode {
      * <p>
      * This method has a complexity of O(1) as it returns a precomputed value.
      *
-     * @return the sum of left heights of its left neighbours.
+     * @return the sum of left heights of its left neighbours
      */
     int getLeftHeight() {
         return leftHeight;
@@ -223,7 +223,7 @@ public final class SequenceNode {
      * <p>
      * This method has a complexity of O(1) as it returns a precomputed value.
      *
-     * @return the sum of right heights of its right neighbours.
+     * @return the sum of right heights of its right neighbours
      */
     int getRightHeight() {
         return rightHeight;
@@ -379,7 +379,7 @@ public final class SequenceNode {
     /**
      * Returns the visited.
      *
-     * @return the visited.
+     * @return the visited
      */
     public boolean isVisited() {
         return visited;

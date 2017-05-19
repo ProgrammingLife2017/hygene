@@ -108,7 +108,7 @@ public final class ConfigController implements Initializable {
     /**
      * Set the {@link GraphVisualizer}. This allows the sliders to change the properties of the {@link GraphVisualizer}.
      *
-     * @param graphVisualiser graph pane to set in the controller.
+     * @param graphVisualiser graph pane to set in the controller
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
         this.graphVisualizer = graphVisualiser;

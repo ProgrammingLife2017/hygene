@@ -115,7 +115,7 @@ class RecentFilesTest {
     /**
      * Gets a {@code File} instance representing the data file under test.
      *
-     * @return the data file.
+     * @return the data file
      */
     private File getDataFile() {
         return Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME);

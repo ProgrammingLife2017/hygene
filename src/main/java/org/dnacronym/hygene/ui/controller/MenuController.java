@@ -168,7 +168,7 @@ public final class MenuController implements Initializable {
     /**
      * Sets the {@link GraphStore} in the controller.
      *
-     * @param graphStore the {@link GraphStore}.
+     * @param graphStore the {@link GraphStore}
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
@@ -177,7 +177,7 @@ public final class MenuController implements Initializable {
     /**
      * Returns the {@link FileChooser} used by the menu.
      *
-     * @return the {@link FileChooser}.
+     * @return the {@link FileChooser}
      */
     @Nullable FileChooser getFileChooser() {
         return fileChooser;
@@ -186,7 +186,7 @@ public final class MenuController implements Initializable {
     /**
      * Sets the {@link FileChooser} used by the menu.
      *
-     * @param fileChooser the {@link FileChooser}.
+     * @param fileChooser the {@link FileChooser}
      */
     void setFileChooser(final FileChooser fileChooser) {
         this.fileChooser = fileChooser;
@@ -195,7 +195,7 @@ public final class MenuController implements Initializable {
     /**
      * Returns the {@link ConsoleWrapper} attached to this menu.
      *
-     * @return the {@link ConsoleWrapper}.
+     * @return the {@link ConsoleWrapper}
      */
     public @Nullable ConsoleWrapper getConsoleWrapper() {
         return consoleWrapper;

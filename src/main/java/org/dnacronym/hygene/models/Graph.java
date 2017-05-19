@@ -51,7 +51,7 @@ public final class Graph {
      * Getter for the array representing a {@link Node}'s metadata.
      *
      * @param id the {@link Node}'s id
-     * @return the array representing a {@link Node}'s metadata.
+     * @return the array representing a {@link Node}'s metadata
      */
     public int[] getNodeArray(final int id) {
         return nodeArrays[id];
@@ -60,7 +60,7 @@ public final class Graph {
     /**
      * Gets the array representation of all node arrays.
      *
-     * @return the array representation of all node arrays.
+     * @return the array representation of all node arrays
      */
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP",
@@ -74,7 +74,7 @@ public final class Graph {
      * Getter for the line number where the {@link Node}'s metadata resides.
      *
      * @param id the {@link Node}'s id
-     * @return the {@link Node}'s line number.
+     * @return the {@link Node}'s line number
      */
     public int getLineNumber(final int id) {
         return nodeArrays[id][Node.NODE_LINE_NUMBER_INDEX];
@@ -84,7 +84,7 @@ public final class Graph {
      * Getter for the sequence length of a {@link Node}.
      *
      * @param id the {@link Node}'s id
-     * @return the {@link Node}'s sequence length.
+     * @return the {@link Node}'s sequence length
      */
     public int getSequenceLength(final int id) {
         if (nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] < MINIMUM_SEQUENCE_LENGTH) {
@@ -97,7 +97,7 @@ public final class Graph {
      * Getter for the color of a {@link Node}.
      *
      * @param id the {@link Node}'s id
-     * @return the {@link Node}'s color.
+     * @return the {@link Node}'s color
      */
     public NodeColor getColor(final int id) {
         return NodeColor.values()[nodeArrays[id][Node.NODE_COLOR_INDEX]];
@@ -107,7 +107,7 @@ public final class Graph {
      * Getter for the unscaled x position.
      *
      * @param id the {@link Node}'s id
-     * @return the unscaled x position.
+     * @return the unscaled x position
      */
     public int getUnscaledXPosition(final int id) {
         return nodeArrays[id][Node.UNSCALED_X_POSITION_INDEX];
@@ -127,7 +127,7 @@ public final class Graph {
      * Getter for the unscaled y position.
      *
      * @param id the {@link Node}'s id
-     * @return the unscaled y position.
+     * @return the unscaled y position
      */
     public int getUnscaledYPosition(final int id) {
         return nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX];
@@ -148,7 +148,7 @@ public final class Graph {
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to count
-     * @return the number of neighbours of a node in the given direction.
+     * @return the number of neighbours of a node in the given direction
      */
     public int getNeighbourCount(final int id, final SequenceDirection direction) {
         return direction.ternary(
@@ -187,7 +187,7 @@ public final class Graph {
     /**
      * Getter for the {@code GfaFile} instance where the graph belongs to.
      *
-     * @return the {@code GfaFile} instance where the graph belongs to.
+     * @return the {@code GfaFile} instance where the graph belongs to
      */
     public GfaFile getGfaFile() {
         return gfaFile;

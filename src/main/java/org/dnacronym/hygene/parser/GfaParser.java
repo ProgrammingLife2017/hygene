@@ -110,7 +110,7 @@ public final class GfaParser {
      *
      * @param cigar  a CIGAR-compliant {@code String}
      * @param offset the current line number, used for debugging
-     * @return the overlap in indicated by the CIGAR string.
+     * @return the overlap in indicated by the CIGAR string
      * @throws ParseException if the CIGAR string is invalid
      * @see <a href="http://genome.sph.umich.edu/wiki/SAM#What_is_a_CIGAR.3F">What is a CIGAR?</a>
      */

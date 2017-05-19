@@ -31,7 +31,7 @@ public final class SequenceAlignmentGraph {
     /**
      * Returns the {@code Segment} with the given name, or throws an exception if it doesn't exist.
      *
-     * @param name the name of the {@code Segment}.
+     * @param name the name of the {@code Segment}
      * @return the {@code Segment} with the given name if it exists
      * @throws ParseException if segment with given name is not present
      */
@@ -43,7 +43,7 @@ public final class SequenceAlignmentGraph {
     /**
      * Returns the {@code Collection} of {@code Segment}s.
      *
-     * @return the {@code Collection} of {@code Segment}s.
+     * @return the {@code Collection} of {@code Segment}s
      */
     public Collection<Segment> getSegments() {
         return segments.values();
@@ -52,7 +52,7 @@ public final class SequenceAlignmentGraph {
     /**
      * Adds a {@code Segment} to this {@code SequenceAlignmentGraph}.
      *
-     * @param segment a {@code Segment}.
+     * @param segment a {@code Segment}
      */
     public void addSegment(final Segment segment) {
         segments.put(segment.getName(), segment);
@@ -61,7 +61,7 @@ public final class SequenceAlignmentGraph {
     /**
      * Adds a {@code Link} to this {@code SequenceAlignmentGraph}.
      *
-     * @param link a {@code Link}.
+     * @param link a {@code Link}
      */
     public void addLink(final Link link) {
         links.add(link);
@@ -70,7 +70,7 @@ public final class SequenceAlignmentGraph {
     /**
      * Returns the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}.
      *
-     * @return the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}.
+     * @return the {@code List} of {@code Link}s in this {@code SequenceAlignmentGraph}
      */
     public List<Link> getLinks() {
         return links;

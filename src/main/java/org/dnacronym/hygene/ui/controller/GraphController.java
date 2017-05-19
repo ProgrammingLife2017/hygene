@@ -59,7 +59,7 @@ public final class GraphController implements Initializable {
     /**
      * Set the {@link GraphStore} in the controller.
      *
-     * @param graphStore {@link GraphStore} to store in the {@link GraphController}.
+     * @param graphStore {@link GraphStore} to store in the {@link GraphController}
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
@@ -68,7 +68,7 @@ public final class GraphController implements Initializable {
     /**
      * Set the {@link GraphVisualizer} in the controller.
      *
-     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}.
+     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
@@ -104,7 +104,7 @@ public final class GraphController implements Initializable {
     /**
      * Update the swing node to display graph of the given {@link GfaFile}.
      *
-     * @param gfaFile with internal graph to display.
+     * @param gfaFile with internal graph to display
      * @see GfaFile#getGraph()
      */
     void updateGraph(final GfaFile gfaFile) {

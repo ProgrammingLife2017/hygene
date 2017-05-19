@@ -24,7 +24,7 @@ public abstract class UITest extends FxRobot {
      * Set up application before each test.
      * Afterwards, calls the {@link #beforeEach()} method.
      *
-     * @throws TimeoutException if unable to set up application.
+     * @throws TimeoutException if unable to set up application
      * @see FxToolkit#setupApplication(Class, String...)
      */
     @BeforeEach
@@ -41,7 +41,7 @@ public abstract class UITest extends FxRobot {
      * Hide the application after each test.
      * Afterwards, calls the {@link #afterEach()} method.
      *
-     * @throws TimeoutException if unable to hide application.
+     * @throws TimeoutException if unable to hide application
      */
     @AfterEach
     public final void basicAfterEach() throws TimeoutException, UIInitialisationException {
@@ -69,7 +69,7 @@ public abstract class UITest extends FxRobot {
     /**
      * Get the {@link Hygene} used for UI testing.
      *
-     * @return {@link Hygene} used for UI testing.
+     * @return {@link Hygene} used for UI testing
      */
     public final Hygene getApplication() {
         return application;
@@ -78,7 +78,7 @@ public abstract class UITest extends FxRobot {
     /**
      * Get the {@link Stage} used for UI testing.
      *
-     * @return {@link Stage} used for UI testing.
+     * @return {@link Stage} used for UI testing
      */
     public final Stage getPrimaryStage() {
         return primaryStage;

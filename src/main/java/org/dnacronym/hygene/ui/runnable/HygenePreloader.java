@@ -51,7 +51,7 @@ public final class HygenePreloader extends Preloader {
     /**
      * Update {@link #progress} of the application.
      *
-     * @param pn Progress notification, which contains a progress.
+     * @param pn Progress notification, which contains a progress
      */
     @Override
     public void handleProgressNotification(final ProgressNotification pn) {
@@ -64,7 +64,7 @@ public final class HygenePreloader extends Preloader {
      * Notify the preloader of the state of the application. If {@link StateChangeNotification#getType()} is
      * {@link StateChangeNotification.Type#BEFORE_START}, {@link #stage} of preloader is hidden.
      *
-     * @param evt State change notification, notifying the preloader what it should do.
+     * @param evt State change notification, notifying the preloader what it should do
      * @see Stage#hide
      */
     @Override

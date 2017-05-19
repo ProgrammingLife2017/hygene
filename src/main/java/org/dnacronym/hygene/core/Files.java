@@ -57,7 +57,7 @@ public final class Files {
      * Returns an empty string if no file with the given name is found.
      *
      * @param fileName the name of the data file to be read
-     * @return the contents of that file.
+     * @return the contents of that file
      * @throws IOException if an exception occurs during file IO
      */
     public String getAppData(final String fileName) throws IOException {
@@ -91,7 +91,7 @@ public final class Files {
      * Returns a {@code File} instance for the given data file name.
      *
      * @param fileName the file name
-     * @return the application data {@code File} object.
+     * @return the application data {@code File} object
      */
     public File getAppDataFile(final String fileName) {
         final String operatingSystemName = System.getProperty("os.name").toUpperCase();
@@ -111,7 +111,7 @@ public final class Files {
      * Reads the given file and saves its contents to a {@code String}s.
      *
      * @param file the file to be read from
-     * @return a {@code String}s, representing the contents of the file.
+     * @return a {@code String}s, representing the contents of the file
      * @throws IOException if an exception occurs during file IO
      */
     private String readFile(final File file) throws IOException {

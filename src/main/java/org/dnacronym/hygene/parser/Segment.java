@@ -26,7 +26,7 @@ public final class Segment {
     /**
      * Returns the name.
      *
-     * @return the name.
+     * @return the name
      */
     public String getName() {
         return name;
@@ -35,7 +35,7 @@ public final class Segment {
     /**
      * Returns the sequence.
      *
-     * @return the sequence.
+     * @return the sequence
      */
     public String getSequence() {
         return sequence;
@@ -44,7 +44,7 @@ public final class Segment {
     /**
      * Returns the sequence length. This is the same as calling {@code getSequence().length()}.
      *
-     * @return the sequence length.
+     * @return the sequence length
      */
     public int getLength() {
         return sequence.length();
@@ -53,7 +53,7 @@ public final class Segment {
     /**
      * Returns the reversed sequence.
      *
-     * @return the reversed sequence.
+     * @return the reversed sequence
      */
     public String getReversedSequence() {
         return new StringBuilder(sequence).reverse().toString();

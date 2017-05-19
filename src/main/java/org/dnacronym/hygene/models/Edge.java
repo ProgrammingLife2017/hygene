@@ -63,7 +63,7 @@ public final class Edge implements Comparable<Edge> {
     /**
      * Getter for the {@link Graph} reference.
      *
-     * @return a reference to the {@link Graph} the edge belongs to.
+     * @return a reference to the {@link Graph} the edge belongs to
      */
     public @Nullable Graph getGraph() {
         return graph;
@@ -72,7 +72,7 @@ public final class Edge implements Comparable<Edge> {
     /**
      * Retrieves metadata of the edge.
      *
-     * @return metadata of the edge.
+     * @return metadata of the edge
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public EdgeMetadata retrieveMetadata() throws ParseException {
@@ -84,7 +84,7 @@ public final class Edge implements Comparable<Edge> {
      * <p>
      * First the destination 'to' is compared. If {@code to == other.to}, the source 'from' will be used for comparison.
      *
-     * @param other {@link Edge} to compare this edge with.
+     * @param other {@link Edge} to compare this edge with
      * @return the value {@code 0} if {@code to == other.to} and {@code from == other.from};
      * a value less than {@code 0} if {@code to < other.to} or {@code from < other.from}; and
      * a value greater than {@code 0} if {@code to > other.to} or {@code from > other.from}

@@ -62,7 +62,7 @@ public enum SequenceDirection {
     /**
      * Returns the opposite direction.
      *
-     * @return the opposite direction.
+     * @return the opposite direction
      */
     public SequenceDirection opposite() {
         return this.ternary(RIGHT, LEFT);
