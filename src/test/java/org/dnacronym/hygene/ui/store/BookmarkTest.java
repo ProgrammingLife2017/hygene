@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.store;
 
-import org.dnacronym.hygene.ui.store.Bookmark;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

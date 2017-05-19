@@ -14,12 +14,13 @@
                     prefHeight="400.0" prefWidth="600.0">
             <children>
                 <Label AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" text="Bookmarks"/>
-                <TableView AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0" AnchorPane.rightAnchor="10.0"
-                           AnchorPane.bottomAnchor="10.0" prefHeight="200.0" prefWidth="200.0">
+                <TableView fx:id="bookmarksTable" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0"
+                           AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0" prefHeight="200.0"
+                           prefWidth="200.0">
                     <columns>
                         <TableColumn fx:id="nodeIdColumn" prefWidth="75.0" text="Node ID"/>
                         <TableColumn fx:id="baseColumn" prefWidth="75.0" text="Base"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="75.0" text="Description"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="150.0" text="Description"/>
                     </columns>
                 </TableView>
             </children>
