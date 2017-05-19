@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="50.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.controller.GraphSliderController">
+    <children>
+        <Slider fx:id="graphSlider" layoutX="247.0" layoutY="122.0" majorTickUnit="10.0" minorTickCount="5"
+                onMouseReleased="#sliderDragDone" showTickLabels="true" showTickMarks="true"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0">
+            <tooltip>
+                <Tooltip text="Set the current center node id."/>
+            </tooltip>
+        </Slider>
+    </children>
+</AnchorPane>
