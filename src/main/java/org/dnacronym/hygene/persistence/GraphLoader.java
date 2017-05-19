@@ -28,7 +28,7 @@ public final class GraphLoader {
     /**
      * Constructs a new {@link GraphLoader}.
      *
-     * @param fileDatabase the {@link FileDatabase} to dump the graphs to
+     * @param fileDatabase the {@link FileDatabase} to dump the graph to
      */
     public GraphLoader(final FileDatabase fileDatabase) {
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
