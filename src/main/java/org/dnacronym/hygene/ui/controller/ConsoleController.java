@@ -110,15 +110,13 @@ public final class ConsoleController implements Initializable {
      * @param keyEvent the {@link KeyEvent}
      */
     public void handleInput(@NonNull final KeyEvent keyEvent) {
-        if (consoleInput != null) {
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                final String input = consoleInput.getCharacters().toString();
+        if (consoleInput != null && keyEvent.getCode().equals(KeyCode.ENTER)) {
+            final String input = consoleInput.getCharacters().toString();
 
-                consoleInput.clear();
+            consoleInput.clear();
 
-                // Todo: Handle commands
-                appendLogItem(new ConsoleMessage("> " + input + "\n"));
-            }
+            // Todo: Handle commands
+            appendLogItem(new ConsoleMessage("> " + input + "\n"));
         }
     }
 }

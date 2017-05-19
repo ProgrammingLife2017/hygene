@@ -44,7 +44,7 @@ public class ConsoleMessage {
      *
      * @return the {@link Text} node
      */
-    public @NonNull Text getNode() {
+    public final @NonNull Text getNode() {
         return node;
     }
 
