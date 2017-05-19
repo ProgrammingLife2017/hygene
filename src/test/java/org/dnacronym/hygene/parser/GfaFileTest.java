@@ -5,10 +5,13 @@ import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
@@ -27,6 +30,15 @@ class GfaFileTest {
             + "S\t12\tTCAAGG%n"
             + "L\t11\t+\t12\t-\t4M%n");
 
+    private String currentFileName;
+
+
+    @AfterEach
+    void afterEach() throws IOException {
+        if (currentFileName != null) {
+            Files.deleteIfExists(Paths.get(currentFileName + ".db"));
+        }
+    }
 
     @AfterAll
     static void resetFactories() {
@@ -37,27 +49,31 @@ class GfaFileTest {
 
     @Test
     void testGfaFileObjectCanBeConstructed() {
-        final GfaFile gfaFile = new GfaFile("name_of_the_file.gfa");
+        currentFileName = "name_of_the_file.gfa";
+        final GfaFile gfaFile = new GfaFile(currentFileName);
 
-        assertThat(gfaFile.getFileName()).isEqualTo("name_of_the_file.gfa");
+        assertThat(gfaFile.getFileName()).isEqualTo(currentFileName);
     }
 
     @Test
     void testCannotReadNonExistingFile() {
-        final Throwable e = catchThrowable(() -> new GfaFile("random-file-name").parse());
+        currentFileName = "random-file-name";
+        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse());
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
     void testGetGraphWithoutParsing() {
-        final Throwable e = catchThrowable(() -> new GfaFile("random-file-name").getGraph());
+        currentFileName = "random-file-name";
+        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).getGraph());
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
     void testReadFile() throws ParseException {
+        currentFileName = GFA_TEST_FILE;
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
         assertThat(bufferedReaderToString(gfaFile.readFile())).isEqualTo(SIMPLE_GFA_CONTENTS);
@@ -68,6 +84,7 @@ class GfaFileTest {
         NewGfaParser gfaParser = spy(NewGfaParser.class);
         NewGfaParserFactory.setInstance(gfaParser);
 
+        currentFileName = GFA_TEST_FILE;
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
@@ -80,6 +97,7 @@ class GfaFileTest {
         MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
+        currentFileName = GFA_TEST_FILE;
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
 
@@ -92,12 +110,14 @@ class GfaFileTest {
         MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
+        currentFileName = GFA_TEST_FILE;
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
         verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
     }
+
 
     private String bufferedReaderToString(final BufferedReader reader) {
         final String newline = String.format("%n");
