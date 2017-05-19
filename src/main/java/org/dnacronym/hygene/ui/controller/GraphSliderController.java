@@ -42,24 +42,13 @@ public class GraphSliderController implements Initializable {
             graphSlider.majorTickUnitProperty().bind(Bindings.divide(
                     Bindings.max(GRAPH_SLIDER_SEGMENTS, graphVisualizer.getNodeCountProperty()),
                     GRAPH_SLIDER_SEGMENTS));
+            graphSlider.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
 
             graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldNodeId, newNodeId) -> {
                 if (graphSlider != null) {
                     graphSlider.setValue(newNodeId.doubleValue());
                 }
             });
-        }
-    }
-
-    /**
-     * Fires when the user is finished sliding the graph slider, and sets the center
-     * {@link org.dnacronym.hygene.models.Node} in {@link GraphVisualizer} to the new value of the graph slider.
-     */
-    @FXML
-    final void sliderDragDone() {
-        if (graphSlider != null && graphVisualizer != null) {
-            final int sliderCenterNodeId = (int) Math.round(graphSlider.getValue());
-            graphVisualizer.getCenterNodeIdProperty().setValue(sliderCenterNodeId);
         }
     }
 }
