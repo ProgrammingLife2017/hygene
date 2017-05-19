@@ -5,7 +5,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.models.Bookmark;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.store.Bookmark;
+import org.dnacronym.hygene.ui.store.BookmarkStore;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,6 +20,8 @@ import java.util.ResourceBundle;
 public class BookmarksController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(ConfigController.class);
 
+    private @MonotonicNonNull BookmarkStore bookmarkStore;
+
     @FXML
     private TableColumn<Bookmark, Integer> nodeIdColumn;
     @FXML
@@ -25,5 +31,10 @@ public class BookmarksController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            bookmarkStore = Hygene.getInstance().getBookmarkStore();
+        } catch (UIInitialisationException e) {
+            LOGGER.error("Unable to initialize BookmarksController.", e);
+        }
     }
 }

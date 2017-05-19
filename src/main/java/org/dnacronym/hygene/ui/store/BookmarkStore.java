@@ -2,13 +2,12 @@ package org.dnacronym.hygene.ui.store;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.dnacronym.hygene.models.Bookmark;
 
 
 /**
  * Stores all bookmarks associated with the current graph.
  */
-public class BookmarkStore {
+public final class BookmarkStore {
     private final ObservableList<Bookmark> bookmarks;
 
 
@@ -19,6 +18,24 @@ public class BookmarkStore {
         bookmarks = FXCollections.observableArrayList();
     }
 
+
+    /**
+     * Add an {@link java.util.Collection} of {@link Bookmark}s.
+     *
+     * @param bookmarks bookmarks to add
+     */
+    public void addBookmarks(final Bookmark... bookmarks) {
+        this.bookmarks.addAll(bookmarks);
+    }
+
+    /**
+     * Add a single {@link Bookmark}.
+     *
+     * @param bookmark bookmark to add
+     */
+    public void addBookmark(final Bookmark bookmark) {
+        bookmarks.add(bookmark);
+    }
 
     /**
      * Get an {@link ObservableList} of {@link Bookmark}s.
