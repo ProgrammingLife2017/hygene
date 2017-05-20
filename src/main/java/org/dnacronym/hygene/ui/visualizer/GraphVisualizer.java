@@ -1,8 +1,10 @@
 package org.dnacronym.hygene.ui.visualizer;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -32,6 +34,7 @@ import java.util.List;
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 1;
+    private static final double DASH_LENGTH = 10;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
@@ -47,6 +50,8 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
+
+    private final BooleanProperty displayLaneBordersProperty;
 
     private final IntegerProperty nodeCountProperty;
     private Graph graph;
@@ -73,6 +78,9 @@ public final class GraphVisualizer {
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        displayLaneBordersProperty = new SimpleBooleanProperty();
+        displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
         nodeCountProperty = new SimpleIntegerProperty();
     }
@@ -162,6 +170,33 @@ public final class GraphVisualizer {
                     graphDimensionsCalculator.getLaneCount(),
                     graphDimensionsCalculator.getLaneHeight());
             }
+
+            if (displayLaneBordersProperty.get()) {
+                drawLaneBorders(
+                        graphDimensionsCalculator.getLaneCount(),
+                        graphDimensionsCalculator.getLaneHeight());
+            }
+        }
+    }
+
+    /**
+     * Draw the border between bands as {@link Color#BLACK}.
+     *
+     * @param laneCount  amount of bands onscreen
+     * @param laneHeight height of each band
+     */
+    private void drawLaneBorders(final int laneCount, final double laneHeight) {
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineDashes(DASH_LENGTH);
+
+        for (int band = 1; band < laneCount; band++) {
+            graphicsContext.strokeLine(
+                    0,
+                    band * laneHeight,
+                    canvas.getWidth(),
+                    band * laneHeight
+            );
         }
     }
 
@@ -263,6 +298,15 @@ public final class GraphVisualizer {
      */
     public DoubleProperty getNodeHeightProperty() {
         return nodeHeightProperty;
+    }
+
+    /**
+     * The property which determines whether to display the border between bands as black bands.
+     *
+     * @return property which decides whether to display the border between bands
+     */
+    public BooleanProperty getDisplayBordersProperty() {
+        return displayLaneBordersProperty;
     }
 
     /**
