@@ -3,20 +3,19 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                 prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="40.0"
-                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <Tab text="Basic display">
-                    <fx:include source="basic_settings_view.fxml"/>
+                    <fx:include source="basic_settings_view.fxml" />
                 </Tab>
                 <Tab text="Advanced display">
-                    <fx:include source="advanced_settings_view.fxml"/>
+                    <fx:include source="advanced_settings_view.fxml" />
                 </Tab>
             </tabs>
         </TabPane>
-        <fx:include source="settings_button_view.fxml"/>
+        <fx:include source="settings_button_view.fxml" />
     </children>
 </AnchorPane>

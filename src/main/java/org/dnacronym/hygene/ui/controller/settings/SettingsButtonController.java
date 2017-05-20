@@ -2,8 +2,10 @@ package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -23,11 +25,8 @@ public class SettingsButtonController implements Initializable {
 
     private @MonotonicNonNull Settings settings;
 
-    private @MonotonicNonNull Stage stage;
-
     @FXML
     private @MonotonicNonNull ButtonBar buttonBar;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -35,11 +34,6 @@ public class SettingsButtonController implements Initializable {
             settings = Hygene.getInstance().getSettings();
         } catch (UIInitialisationException e) {
             LOGGER.error("Unable to initialize SettingsButtonController.", e);
-            return;
-        }
-
-        if (buttonBar != null) {
-            stage = (Stage) buttonBar.getScene().getWindow();
         }
     }
 
@@ -49,6 +43,7 @@ public class SettingsButtonController implements Initializable {
     @FXML
     void okAction() {
         settings.executeAll();
+        final Stage stage = (Stage) buttonBar.getScene().getWindow();
         if (stage != null) {
             stage.getScene().getWindow().hide();
         }
@@ -60,6 +55,7 @@ public class SettingsButtonController implements Initializable {
     @FXML
     void cancelAction() {
         settings.clearAll();
+        final Stage stage = (Stage) buttonBar.getScene().getWindow();
         if (stage != null) {
             stage.hide();
         }
