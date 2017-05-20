@@ -35,10 +35,17 @@ public final class AdvancedSettingsViewController implements Initializable {
             settings = Hygene.getInstance().getSettings();
         } catch (UIInitialisationException e) {
             LOGGER.error("Unable to initialize AdvancedSettingsViewController.", e);
-            return;
         }
+    }
 
-        showLaneBorders.selectedProperty().addListener(((observable, oldValue, newValue) ->
-                settings.addCallable(() -> graphVisualizer.getDisplayBordersProperty().setValue(newValue))));
+    /**
+     * When user clicks on show lane borders {@link CheckBox}.
+     */
+    @FXML
+    void showLaneBordersClicked() {
+        settings.addCallable(() -> {
+            final boolean newValue = showLaneBorders.isSelected();
+            graphVisualizer.getDisplayBordersProperty().setValue(newValue);
+        });
     }
 }

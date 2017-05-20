@@ -22,7 +22,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <CheckBox fx:id="showLaneBorders" mnemonicParsing="false" text="Show lane borders"/>
+                <CheckBox fx:id="showLaneBorders" onAction="#showLaneBordersClicked" mnemonicParsing="false"
+                          text="Show lane borders"/>
             </children>
         </GridPane>
     </children>

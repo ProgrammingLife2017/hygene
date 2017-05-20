@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -38,12 +39,32 @@ public class BasicSettingsViewController implements Initializable {
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
         } catch (UIInitialisationException e) {
             LOGGER.error("Unable to initialize BasicSettingsViewController.", e);
-            return;
         }
+    }
 
-        nodeHeight.valueProperty().addListener((observable, oldValue, newValue) ->
-                settings.addCallable(() -> graphVisualizer.getNodeHeightProperty().setValue(newValue)));
-        edgeColors.valueProperty().addListener(((observable, oldValue, newValue) ->
-                settings.addCallable(() -> graphVisualizer.getEdgeColorProperty().setValue(newValue))));
+    /**
+     * When user finishes sliding the node height {@link Slider}.
+     */
+    @FXML
+    void nodeHeightSliderDone() {
+        settings.addCallable(() -> {
+            if (nodeHeight != null && graphVisualizer != null) {
+                final double newValue = nodeHeight.getValue();
+                graphVisualizer.getNodeHeightProperty().setValue(newValue);
+            }
+        });
+    }
+
+    /**
+     * When the user finishes picking the color for edges in the {@link ColorPicker}.
+     */
+    @FXML
+    void edgeColorDone() {
+        settings.addCallable(() -> {
+            if (edgeColors != null && graphVisualizer != null) {
+                final Color newValue = edgeColors.getValue();
+                graphVisualizer.getEdgeColorProperty().setValue(newValue);
+            }
+        });
     }
 }

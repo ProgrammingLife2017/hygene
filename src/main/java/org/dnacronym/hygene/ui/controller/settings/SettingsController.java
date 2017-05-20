@@ -1,12 +1,8 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
-import javafx.beans.binding.Bindings;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -18,62 +14,37 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.Settings;
 
 import java.net.URL;
-import java.util.ResourceBundle;
 
 
 /**
  * Controller of the display window.
  */
-public final class SettingsController implements Initializable {
+public final class SettingsController {
     private static final Logger LOGGER = LogManager.getLogger(SettingsController.class);
     private static final String TITLE = "Settings";
     private static final String SETTINGS_VIEW = "/ui/view/setting/setting_view.fxml";
 
     private @MonotonicNonNull Settings settings;
 
-    private @MonotonicNonNull Stage primaryStage;
     private @MonotonicNonNull Stage stage;
-
-    @FXML
-    private @MonotonicNonNull Button apply;
 
 
     /**
-     *
+     * Create a new instance of a {@link SettingsController}.
      */
     public SettingsController() {
         try {
             settings = Hygene.getInstance().getSettings();
-            primaryStage = Hygene.getInstance().getPrimaryStage();
-        } catch (Exception e) {
-            LOGGER.error("Unable to initialize SettingsController.", e);
-            return;
-        }
-    }
-
-
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        if (apply != null) {
-            apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
-        }
-    }
-
-    /**
-     * Show the settings window.
-     */
-    public void show() {
-        final URL resource;
-        try {
-            resource = Files.getInstance().getResourceUrl(SETTINGS_VIEW);
-            final FXMLLoader loader = new FXMLLoader(resource);
-            final Parent parent = loader.load();
-            if (parent == null) {
-                throw new UIInitialisationException("Root of Settings could not be found.");
-            }
+            final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
             stage = new Stage();
             stage.setTitle(TITLE);
+
+            final URL resource = Files.getInstance().getResourceUrl(SETTINGS_VIEW);
+            final Parent parent = FXMLLoader.load(resource);
+            if (parent == null) {
+                throw new UIInitialisationException("Root of Settings could not be found.");
+            }
 
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(primaryStage);
@@ -81,37 +52,14 @@ public final class SettingsController implements Initializable {
 
             stage.show();
         } catch (Exception e) {
-            LOGGER.error("Unable to show settings view.", e);
+            LOGGER.error("Unable to initialize SettingsController.", e);
         }
     }
 
     /**
-     *
+     * Show the settings window.
      */
-    @FXML
-    void okAction() {
-        settings.executeAll();
-        if (stage != null) {
-            stage.close();
-        }
-    }
-
-    /**
-     *
-     */
-    @FXML
-    void cancelAction() {
-        settings.clearAll();
-        if (stage != null) {
-            stage.close();
-        }
-    }
-
-    /**
-     *
-     */
-    @FXML
-    void applyAction() {
-        settings.executeAll();
+    public void show() {
+        stage.show();
     }
 }

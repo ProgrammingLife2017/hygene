@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.controller.settings.SettingsController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
                  prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="40.0"
@@ -20,13 +17,6 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <ButtonBar layoutX="407.0" layoutY="406.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
-                   AnchorPane.rightAnchor="5.0">
-            <buttons>
-                <Button fx:id="ok" mnemonicParsing="false" onAction="#okAction" text="OK"/>
-                <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancelAction" text="Cancel"/>
-                <Button fx:id="apply" mnemonicParsing="false" onAction="#applyAction" text="Apply"/>
-            </buttons>
-        </ButtonBar>
+        <fx:include source="settings_button_view.fxml"/>
     </children>
 </AnchorPane>

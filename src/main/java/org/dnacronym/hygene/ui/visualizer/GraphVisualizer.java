@@ -34,7 +34,7 @@ import java.util.List;
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 1;
-    private static final double DASH_LENGTH = 10;
+    private static final double DEFAULT_DASH_LENGTH = 10;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
@@ -186,9 +186,12 @@ public final class GraphVisualizer {
      * @param laneHeight height of each band
      */
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
+        final Paint originalStroke = graphicsContext.getStroke();
+        final double originalLineWidth = graphicsContext.getLineWidth();
+
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.setLineWidth(1);
-        graphicsContext.setLineDashes(DASH_LENGTH);
+        graphicsContext.setLineDashes(DEFAULT_DASH_LENGTH);
 
         for (int band = 1; band < laneCount; band++) {
             graphicsContext.strokeLine(
@@ -198,6 +201,10 @@ public final class GraphVisualizer {
                     band * laneHeight
             );
         }
+
+        graphicsContext.setStroke(originalStroke);
+        graphicsContext.setLineWidth(originalLineWidth);
+        graphicsContext.setLineDashes(1);
     }
 
     /**
