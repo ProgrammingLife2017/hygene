@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.controller.left;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -31,7 +31,7 @@ public final class LeftPaneController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             graphStore = Hygene.getInstance().getGraphStore();
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize LeftPaneController.", e);
             return;
         }
