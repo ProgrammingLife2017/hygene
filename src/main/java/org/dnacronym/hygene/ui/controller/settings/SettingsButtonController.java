@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +28,9 @@ public final class SettingsButtonController implements Initializable {
     @FXML
     private @MonotonicNonNull ButtonBar buttonBar;
 
+    @FXML
+    private @MonotonicNonNull Button apply;
+
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -33,6 +38,11 @@ public final class SettingsButtonController implements Initializable {
             settings = Hygene.getInstance().getSettings();
         } catch (UIInitialisationException e) {
             LOGGER.error("Unable to initialize SettingsButtonController.", e);
+            return;
+        }
+
+        if (apply != null) {
+            apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
         }
     }
 
