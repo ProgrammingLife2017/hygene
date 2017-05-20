@@ -5,7 +5,7 @@ import org.dnacronym.hygene.parser.MetadataParser;
 
 
 /**
- * Constructs {@code MetadataParser} objects.
+ * Constructs {@link MetadataParser} objects.
  */
 public final class MetadataParserFactory {
     private static @MonotonicNonNull MetadataParser instance;
@@ -19,18 +19,18 @@ public final class MetadataParserFactory {
 
 
     /**
-     * Sets a custom instance of {@code MetadataParser}.
+     * Sets a custom instance of {@link MetadataParser}.
      *
-     * @param metadataParser custom instance of {@code MetadataParser}
+     * @param metadataParser custom instance of {@link MetadataParser}
      */
     public static void setInstance(final MetadataParser metadataParser) {
         instance = metadataParser;
     }
 
     /**
-     * Returns a new instance of {@code GfaParser} if no preferred instance is set.
+     * Returns a new instance of {@link MetadataParser} if no preferred instance is set.
      *
-     * @return an instance of {@code GfaParser}
+     * @return an instance of {@link MetadataParser}
      */
     public static MetadataParser createInstance() {
         if (instance == null) {

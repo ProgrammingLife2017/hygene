@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
- * Unit tests for {@code GfaParser}s.
+ * Unit tests for {@link GfaParser}s.
  */
 class GfaParserTest {
     private GfaParser parser;

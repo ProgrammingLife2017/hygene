@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests for {@code SequenceAlignmentGraph}s.
+ * Unit tests for {@link SequenceAlignmentGraph}s.
  */
 class SequenceAlignmentGraphTest {
     private SequenceAlignmentGraph graph;

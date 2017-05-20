@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for the {@code RecentFiles} class.
+ * Unit tests for the {@link RecentFiles} class.
  */
 class RecentFilesTest {
     @BeforeEach
@@ -113,7 +113,7 @@ class RecentFilesTest {
 
 
     /**
-     * Gets a {@code File} instance representing the data file under test.
+     * Gets a {@link File} instance representing the data file under test.
      *
      * @return the data file
      */

@@ -31,7 +31,7 @@ public final class GraphIterator {
 
 
     /**
-     * Applies the given {@code Consumer} to the identifiers of the direct neighbours in the given direction.
+     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction.
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to visit
@@ -125,7 +125,7 @@ public final class GraphIterator {
     }
 
     /**
-     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours in the given direction.
+     * Applies the given {@link Consumer} to the identifiers of the indirect neighbours in the given direction.
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to visit
@@ -141,7 +141,7 @@ public final class GraphIterator {
     }
 
     /**
-     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours in the given direction.
+     * Applies the given {@link Consumer} to the identifiers of the indirect neighbours in the given direction.
      *
      * @param id        the node's identifier
      * @param direction the direction of neighbours to visit
@@ -170,7 +170,7 @@ public final class GraphIterator {
     }
 
     /**
-     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours that can be reached within
+     * Applies the given {@link Consumer} to the identifiers of the indirect neighbours that can be reached within
      * the given number of hops in both directions.
      * <p>
      * Visits left neighbours first.
@@ -188,7 +188,7 @@ public final class GraphIterator {
     }
 
     /**
-     * Applies the given {@code Consumer} to the identifiers of the indirect neighbours that can be reached within
+     * Applies the given {@link Consumer} to the identifiers of the indirect neighbours that can be reached within
      * the given number of hops in both directions.
      * <p>
      * Visits left neighbours first.
@@ -245,7 +245,7 @@ public final class GraphIterator {
     }
 
     /**
-     * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
+     * Visits all nodes in this {@link Graph} and applies the given {@link Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
      * @param action    the function to apply to each node's identifier
@@ -256,7 +256,7 @@ public final class GraphIterator {
     }
 
     /**
-     * Visits all nodes in this {@code Graph} and applies the given {@code Consumer} to their identifiers.
+     * Visits all nodes in this {@link Graph} and applies the given {@link Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
      * @param visited   a function that returns true if the node with the supplied id has been visited during this
@@ -270,8 +270,8 @@ public final class GraphIterator {
     }
 
     /**
-     * Visits all nodes in this {@code Graph} that can be reached within the given number of hops from the sentinel
-     * node and, applies the given {@code Consumer} to their identifiers.
+     * Visits all nodes in this {@link Graph} that can be reached within the given number of hops from the sentinel
+     * node and, applies the given {@link Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
      * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
@@ -284,8 +284,8 @@ public final class GraphIterator {
     }
 
     /**
-     * Visits all nodes in this {@code Graph} that can be reached within the given number of hops from the sentinel
-     * node and, applies the given {@code Consumer} to their identifiers.
+     * Visits all nodes in this {@link Graph} that can be reached within the given number of hops from the sentinel
+     * node and, applies the given {@link Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
      * @param maxDepth  the maximum number of hops a neighbour can be removed from the node

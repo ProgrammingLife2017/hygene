@@ -52,7 +52,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the node id for the {@code Node} under construction.
+     * Sets the node id for the {@link Node} under construction.
      *
      * @param nodeId the id of the node
      * @return current instance of the builder to provide a fluent interface
@@ -64,7 +64,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the line number for the {@code Node} under construction.
+     * Sets the line number for the {@link Node} under construction.
      *
      * @param lineNumber the line number of the GFA file
      * @return current instance of the builder to provide a fluent interface
@@ -76,7 +76,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the sequence length for the {@code Node} under construction.
+     * Sets the sequence length for the {@link Node} under construction.
      *
      * @param sequenceLength the length of the sequence belonging to the node
      * @return current instance of the builder to provide a fluent interface
@@ -88,7 +88,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the color of the {@code Node} under construction.
+     * Sets the color of the {@link Node} under construction.
      *
      * @param color the color of the node
      * @return current instance of the builder to provide a fluent interface
@@ -100,7 +100,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the unscaled y position of the {@code Node} under construction.
+     * Sets the unscaled y position of the {@link Node} under construction.
      *
      * @param unscaledYPosition the unscaled y position of the node
      * @return current instance of the builder to provide a fluent interface
@@ -112,7 +112,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the unscaled x position of the {@code Node} under construction.
+     * Sets the unscaled x position of the {@link Node} under construction.
      *
      * @param unscaledXPosition the unscaled y position of the node
      * @return current instance of the builder to provide a fluent interface
@@ -124,7 +124,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Adds a new incoming edge to the {@code Node} under construction.
+     * Adds a new incoming edge to the {@link Node} under construction.
      *
      * @param from       ID of the node where the edge is coming from
      * @param lineNumber line number of the edge in the GFA file
@@ -137,7 +137,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Adds a new outgoing edge to the {@code Node} under construction.
+     * Adds a new outgoing edge to the {@link Node} under construction.
      *
      * @param to         ID of the node where the edge is going to
      * @param lineNumber line number of the edge in the GFA file

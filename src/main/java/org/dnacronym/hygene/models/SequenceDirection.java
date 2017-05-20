@@ -19,14 +19,14 @@ public enum SequenceDirection {
 
 
     /**
-     * Returns parameter {@code left} if this {@code SequenceDirection} is {@code LEFT} and returns parameter {@code
-     * right} if this {@code SequenceDirection} is {@code RIGHT}.
+     * Returns parameter {@code left} if this {@link SequenceDirection} is {@link #LEFT} and returns parameter {@code
+     * right} if this {@link SequenceDirection} is {@link #RIGHT}.
      *
-     * @param left  the value to return if this {@code SequenceDirection} is {@code LEFT}
-     * @param right the value to return if this {@code SequenceDirection} is {@code RIGHT}
+     * @param left  the value to return if this {@link SequenceDirection} is {@link #LEFT}
+     * @param right the value to return if this {@link SequenceDirection} is {@link #RIGHT}
      * @param <T>   the type of the given values
-     * @return parameter {@code left} if this {@code SequenceDirection} is {@code LEFT} and returns parameter {@code
-     * right} if this {@code SequenceDirection} is {@code RIGHT}.
+     * @return parameter {@code left} if this {@link SequenceDirection} is {@link #LEFT} and returns parameter {@code
+     * right} if this {@link SequenceDirection} is {@link #RIGHT}.
      */
     public <T> T ternary(final T left, final T right) {
         switch (this) {
@@ -40,11 +40,11 @@ public enum SequenceDirection {
     }
 
     /**
-     * Runs the {@code Runnable} {@code left} if this {@code SequenceDirection} is {@code LEFT} and runs {@code
-     * Runnable} {@code right} if this {@code SequenceDirection} is {@code RIGHT}.
+     * Runs the {@link Runnable} {@code left} if this {@link SequenceDirection} is {@link #LEFT} and runs {@link
+     * Runnable} {@code right} if this {@link SequenceDirection} is {@link #RIGHT}.
      *
-     * @param left  the {@code Runnable} to run if this {@code SequenceDirection} is {@code LEFT}
-     * @param right the {@code Runnable} to run if this {@code SequenceDirection} is {@code RIGHT}
+     * @param left  the {@link Runnable} to run if this {@link SequenceDirection} is {@link #LEFT}
+     * @param right the {@link Runnable} to run if this {@link SequenceDirection} is {@link #RIGHT}
      */
     public void ternary(final Runnable left, final Runnable right) {
         switch (this) {

@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 
 
 /**
- * A {@code SequenceGraph} contains {@code SequenceNode}s.
+ * A {@link SequenceGraph} contains {@link SequenceNode}s.
  * <p>
  * This graph has all its nodes passed to it on construction. It then adds two sentinel nodes (a 'source' and a 'sink'),
  * to the start and end of the graph structure. The source node connects to all vertices without incoming edges on the
  * left side, while the sink node is connected to all vertices without incoming edges on the right side. These two nodes
  * allow for simplified and more unified graph processing.
  * <p>
- * The construction of a {@code SequenceGraph} may take some time as the entire structure is fed to FAFOSP, the Felix
+ * The construction of a {@link SequenceGraph} may take some time as the entire structure is fed to FAFOSP, the Felix
  * Algorithm For Optimal Segment Positioning.
  */
 public final class SequenceGraph implements Iterable<SequenceNode> {
@@ -31,7 +31,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
 
     /**
-     * Constructs a new {@code SequenceGraph} with the given nodes.
+     * Constructs a new {@link SequenceGraph} with the given nodes.
      *
      * @param nodes the list of nodes
      */
@@ -99,9 +99,9 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
 
     /**
-     * Returns a breadth-first {@code Iterator} that traverses from left to right.
+     * Returns a breadth-first {@link Iterator} that traverses from left to right.
      *
-     * @return a breadth-first {@code Iterator} that traverses from left to right
+     * @return a breadth-first {@link Iterator} that traverses from left to right
      */
     @Override
     public Iterator<SequenceNode> iterator() {
@@ -109,31 +109,31 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     }
 
     /**
-     * Returns a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right.
+     * Returns a breadth-first {@link Iterator} with custom duplicate detection that traverses from left to right.
      *
-     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
+     * @param duplicateDetector a {@link Function} that returns {@code true} iff. the {@link SequenceNode} has been
      *                          visited
-     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from left to right
+     * @return a breadth-first {@link Iterator} with custom duplicate detection that traverses from left to right
      */
     public Iterator<SequenceNode> iterator(final Function<SequenceNode, Boolean> duplicateDetector) {
         return new BreadthFirstIterator(sourceNode, SequenceDirection.RIGHT, duplicateDetector);
     }
 
     /**
-     * Returns a breadth-first {@code Iterator} that traverses from right to left.
+     * Returns a breadth-first {@link Iterator} that traverses from right to left.
      *
-     * @return a breadth-first {@code Iterator} that traverses from right to left
+     * @return a breadth-first {@link Iterator} that traverses from right to left
      */
     public Iterator<SequenceNode> reverseIterator() {
         return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT);
     }
 
     /**
-     * Returns a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left.
+     * Returns a breadth-first {@link Iterator} with custom duplicate detection that traverses from right to left.
      *
-     * @param duplicateDetector a {@code Function} that returns {@code true} iff. the {@code SequenceNode} has been
+     * @param duplicateDetector a {@link Function} that returns {@code true} iff. the {@link SequenceNode} has been
      *                          visited
-     * @return a breadth-first {@code Iterator} with custom duplicate detection that traverses from right to left
+     * @return a breadth-first {@link Iterator} with custom duplicate detection that traverses from right to left
      */
     public Iterator<SequenceNode> reverseIterator(final Function<SequenceNode, Boolean> duplicateDetector) {
         return new BreadthFirstIterator(sinkNode, SequenceDirection.LEFT, duplicateDetector);
@@ -141,7 +141,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
 
     /**
-     * Calculates the optimal horizontal position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
+     * Calculates the optimal horizontal position of each {@link SequenceNode} using FAFOSP; the nodes are visited in
      * breadth-first search order.
      */
     private void fafospX() {
@@ -168,7 +168,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     }
 
     /**
-     * Calculates the optimal vertical position of each {@code SequenceNode} using FAFOSP; the nodes are visited in
+     * Calculates the optimal vertical position of each {@link SequenceNode} using FAFOSP; the nodes are visited in
      * breadth-first search order.
      */
     private void fafospY() {
@@ -178,7 +178,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
     /**
      * Calculates the {@code leftHeight}, {@code rightHeight}, and {@code maximumHeight} properties for all
-     * {@code SequenceNode}s (including the sentinels).
+     * {@link SequenceNode}s (including the sentinels).
      */
     private void fafospYInit() {
         iterator(node -> node.getLeftHeight() >= 0)
@@ -188,7 +188,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
     }
 
     /**
-     * Calculates the vertical positions for all {@code SequenceNode}s (including the sentinels).
+     * Calculates the vertical positions for all {@link SequenceNode}s (including the sentinels).
      */
     private void fafospYCalculate() {
         final Queue<SequenceNode> queue = new LinkedList<>();
@@ -222,7 +222,7 @@ public final class SequenceGraph implements Iterable<SequenceNode> {
 
         iterator(n -> !n.isVisited()).forEachRemaining(n -> n.setVisited(false));
 
-        for (final Iterator<SequenceNode> it = iterator(SequenceNode::isVisited); it.hasNext(); ) {
+        for (final Iterator<SequenceNode> it = iterator(SequenceNode::isVisited); it.hasNext();) {
             final SequenceNode node = it.next();
             node.setVisited(true);
             if (node.inBounds(horizontalPosition, verticalPosition)) {

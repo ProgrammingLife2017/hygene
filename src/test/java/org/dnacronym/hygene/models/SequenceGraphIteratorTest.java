@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
- * Unit tests for the iterators in {@code SequenceGraph}s.
+ * Unit tests for the iterators in {@link SequenceGraph}s.
  */
 class SequenceGraphIteratorTest {
     private static final Consumer<SequenceNode> DUPLICATE_MODIFIER = node -> node.addReadIdentifier("");
@@ -254,9 +254,9 @@ class SequenceGraphIteratorTest {
     /**
      * Applies the {@code modifier} to each element it iterates over during iteration, and collects the results.
      *
-     * @param iterator an {@code Iterator} over {@code SequenceNode}s
-     * @param modifier a {@code Consumer} of {@code SequenceNode}s
-     * @return the {@code SequenceNode}s returned by the {@code Iterator}
+     * @param iterator an {@link Iterator} over {@link SequenceNode}s
+     * @param modifier a {@link Consumer} of {@link SequenceNode}s
+     * @return the {@link SequenceNode}s returned by the {@link Iterator}
      */
     private List<SequenceNode> iterateModifyCollect(final Iterator<SequenceNode> iterator,
                                                     final Consumer<SequenceNode> modifier) {

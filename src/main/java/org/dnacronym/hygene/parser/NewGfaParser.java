@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 
 
 /**
- * Parses GFA to a {@code Graph}.
+ * Parses GFA to a {@link Graph}.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
@@ -33,7 +33,7 @@ public final class NewGfaParser {
     private int[][] nodeArrays;
 
     /**
-     * Constructs and initializes a new instance of {@code GfaParser}.
+     * Constructs and initializes a new instance of {@link GfaParser}.
      */
     public NewGfaParser() {
         this.nodeIds = new ConcurrentHashMap<>();
@@ -41,11 +41,11 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a GFA file to a {@code Graph}.
+     * Parses a GFA file to a {@link Graph}.
      *
-     * @param gfaFile an instance of {@code GfaFile}
-     * @return a {@code Graph}
-     * @throws ParseException if the given {@code String} is not GFA-compliant
+     * @param gfaFile an instance of {@link GfaFile}
+     * @return a {@link Graph}
+     * @throws ParseException if the given {@link String} is not GFA-compliant
      */
     @EnsuresNonNull("nodeArrays")
     public Graph parse(final GfaFile gfaFile) throws ParseException {
@@ -83,7 +83,7 @@ public final class NewGfaParser {
      * This step is necessary because we need to know the internal node IDs
      * upfront to be able to add edges to the correct node vectors.
      *
-     * @param gfa lines of a GFA-compliant {@code String}
+     * @param gfa lines of a GFA-compliant {@link String}
      */
     private void allocateNodes(final BufferedReader gfa) {
         addNodeId(SOURCE_NAME);
@@ -102,11 +102,11 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a line of a GFA-compliant {@code String} and adds it to the node vectors.
+     * Parses a line of a GFA-compliant {@link String} and adds it to the node vectors.
      *
-     * @param line   a line of a GFA-compliant {@code String}
+     * @param line   a line of a GFA-compliant {@link String}
      * @param offset the current line number
-     * @throws ParseException if the given {@code String}s are not GFA-compliant
+     * @throws ParseException if the given {@link String}s are not GFA-compliant
      */
     private void parseLine(final String line, final int offset) throws ParseException {
         final StringTokenizer st = new StringTokenizer(line, "\t");
@@ -135,11 +135,11 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a line to a {@code Segment}.
+     * Parses a line to a {@link Segment}.
      *
-     * @param st     the {@code StringTokenizer} in which each token is a GFA field
+     * @param st     the {@link StringTokenizer} in which each token is a GFA field
      * @param offset the current line number, used for debugging
-     * @throws ParseException if the {@code Segment} is not GFA-compliant
+     * @throws ParseException if the {@link Segment} is not GFA-compliant
      */
     private void parseSegment(final StringTokenizer st, final int offset) throws ParseException {
         try {
@@ -160,11 +160,11 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a line to a {@code Link}.
+     * Parses a line to a {@link Link}.
      *
-     * @param st     the {@code StringTokenizer} in which each token is a GFA field
+     * @param st     the {@link StringTokenizer} in which each token is a GFA field
      * @param offset the current line number, used for debugging
-     * @throws ParseException if the {@code Link} is not GFA-compliant
+     * @throws ParseException if the {@link Link} is not GFA-compliant
      */
     private void parseLink(final StringTokenizer st, final int offset) throws ParseException {
         try {

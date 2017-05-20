@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 
 /**
- * The {@code Node} class wraps around a node array and provides convenience methods.
+ * The {@link Node} class wraps around a node array and provides convenience methods.
  * <p>
  * Node array format:
  * [[nodeLineNumber, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
@@ -35,7 +35,7 @@ public final class Node {
 
 
     /**
-     * Constructor for {@code Node}.
+     * Constructor for {@link Node}.
      *
      * @param id    the node's id
      * @param data  the node array representing the node's data
@@ -73,7 +73,7 @@ public final class Node {
     }
 
     /**
-     * Getter for {@code Node} id.
+     * Getter for {@link Node} id.
      *
      * @return the id
      */
@@ -100,7 +100,7 @@ public final class Node {
     }
 
     /**
-     * Getter for {@code Node} color.
+     * Getter for {@link Node} color.
      *
      * @return the node color
      */
@@ -152,11 +152,11 @@ public final class Node {
     }
 
     /**
-     * Creates a set containing the outgoing edges of the {@code Node}.
+     * Creates a set containing the outgoing edges of the {@link Node}.
      * <p>
      * Warning: This method creates of copy of the edges data and should be used with caution.
      *
-     * @return set containing the outgoing edges of the {@code Node}
+     * @return set containing the outgoing edges of the {@link Node}
      */
     public Set<Edge> getOutgoingEdges() {
         if (outgoingEdges == null) {
@@ -181,11 +181,11 @@ public final class Node {
     }
 
     /**
-     * Creates a set containing the incoming edges of the {@code Node}.
+     * Creates a set containing the incoming edges of the {@link Node}.
      * <p>
      * Warning: This method creates of copy of the edges data and should be used with caution.
      *
-     * @return set containing the incoming edges of the {@code Node}
+     * @return set containing the incoming edges of the {@link Node}
      */
     public Set<Edge> getIncomingEdges() {
         if (incomingEdges == null) {

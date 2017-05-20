@@ -30,9 +30,9 @@ public final class Files {
 
 
     /**
-     * Gets the instance of {@code Files}.
+     * Gets the instance of {@link Files}.
      *
-     * @return the instance of {@code Files}
+     * @return the instance of {@link Files}
      */
     public static Files getInstance() {
         return instance;
@@ -66,7 +66,7 @@ public final class Files {
     }
 
     /**
-     * Writes the given {@code String} to the file with given {@code fileName}.
+     * Writes the given {@link String} to the file with given {@code fileName}.
      * <p>
      * Overwrites the current content of the file with the new content.
      *
@@ -88,10 +88,10 @@ public final class Files {
     }
 
     /**
-     * Returns a {@code File} instance for the given data file name.
+     * Returns a {@link File} instance for the given data file name.
      *
      * @param fileName the file name
-     * @return the application data {@code File} object
+     * @return the application data {@link File} object
      */
     public File getAppDataFile(final String fileName) {
         final String operatingSystemName = System.getProperty("os.name").toUpperCase();
@@ -108,10 +108,10 @@ public final class Files {
 
 
     /**
-     * Reads the given file and saves its contents to a {@code String}s.
+     * Reads the given file and saves its contents to a {@link String}s.
      *
      * @param file the file to be read from
-     * @return a {@code String}s, representing the contents of the file
+     * @return a {@link String}s, representing the contents of the file
      * @throws IOException if an exception occurs during file IO
      */
     private String readFile(final File file) throws IOException {

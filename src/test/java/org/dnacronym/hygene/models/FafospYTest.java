@@ -246,7 +246,7 @@ class FafospYTest {
      */
 
     /**
-     * Creates an array of {@code SequenceNode}s, each with a locally unique identifier and sequence.
+     * Creates an array of {@link SequenceNode}s, each with a locally unique identifier and sequence.
      *
      * @param count the number of nodes to create
      */
@@ -262,7 +262,8 @@ class FafospYTest {
     /**
      * Links nodes together in the given direction.
      *
-     * @param direction {@code LEFT} iff. the first node in a link is the node from which each the edge leaves
+     * @param direction {@link SequenceDirection#LEFT} iff. the first node in a link is the node from which each the
+     *                  edge leaves
      * @param links     an array of links, where each link is described as a pair of node identifiers representing the
      *                  from and to nodes of the link
      */
@@ -283,7 +284,7 @@ class FafospYTest {
     }
 
     /**
-     * Indirectly calls the fafosp methods through the {@code SequenceGraph}'s constructor.
+     * Indirectly calls the fafosp methods through the {@link SequenceGraph}'s constructor.
      */
     private void initGraph() {
         assert (nodes != null);
@@ -292,7 +293,8 @@ class FafospYTest {
     }
 
     /**
-     * Calls the {@code fafospYInit} method using the given direction on all nodes in the array in reverse order.
+     * Calls the {@link SequenceNode#fafospYInit} method using the given direction on all nodes in the array in
+     * reverse order.
      *
      * @param direction which height to calculate
      */
@@ -312,7 +314,7 @@ class FafospYTest {
      * equal the {@code i}th value in the array.
      *
      * @param expected an array of expected values
-     * @param actual   a getter for a {@code SequenceNode}
+     * @param actual   a getter for a {@link SequenceNode}
      */
     private void assertNodes(final int[] expected, final Function<SequenceNode, Integer> actual) {
         assert (nodes != null);

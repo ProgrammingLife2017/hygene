@@ -2,7 +2,7 @@ package org.dnacronym.hygene.parser;
 
 
 /**
- * A {@code Segment} is a sequence of bases.
+ * A {@link Segment} is a sequence of bases.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
@@ -12,7 +12,7 @@ public final class Segment {
 
 
     /**
-     * Constructs a new {@code Segment}.
+     * Constructs a new {@link Segment}.
      *
      * @param name     the name
      * @param sequence the sequence

@@ -5,7 +5,7 @@ import org.dnacronym.hygene.parser.NewGfaParser;
 
 
 /**
- * Constructs {@code GfaParser} objects.
+ * Constructs {@link NewGfaParser} objects.
  */
 public final class NewGfaParserFactory {
     private static @MonotonicNonNull NewGfaParser instance;
@@ -19,18 +19,18 @@ public final class NewGfaParserFactory {
 
 
     /**
-     * Sets a custom instance of {@code GfaParser}.
+     * Sets a custom instance of {@link NewGfaParser}.
      *
-     * @param gfaParser custom instance of {@code GfaParser}
+     * @param gfaParser custom instance of {@link NewGfaParser}
      */
     public static void setInstance(final NewGfaParser gfaParser) {
         instance = gfaParser;
     }
 
     /**
-     * Returns a new instance of {@code GfaParser} if no preferred instance is set.
+     * Returns a new instance of {@link NewGfaParser} if no preferred instance is set.
      *
-     * @return an instance of {@code GfaParser}
+     * @return an instance of {@link NewGfaParser}
      */
     public static NewGfaParser createInstance() {
         if (instance == null) {

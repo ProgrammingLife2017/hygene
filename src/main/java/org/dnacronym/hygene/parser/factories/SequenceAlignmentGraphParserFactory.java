@@ -5,7 +5,7 @@ import org.dnacronym.hygene.parser.SequenceAlignmentGraphParser;
 
 
 /**
- * Constructs {@code SequenceAlignmentGraphParser} objects.
+ * Constructs {@link SequenceAlignmentGraphParser} objects.
  */
 public final class SequenceAlignmentGraphParserFactory {
     private static @MonotonicNonNull SequenceAlignmentGraphParser instance;
@@ -19,18 +19,18 @@ public final class SequenceAlignmentGraphParserFactory {
 
 
     /**
-     * Sets a custom instance of {@code SequenceAlignmentGraphParser}.
+     * Sets a custom instance of {@link SequenceAlignmentGraphParser}.
      *
-     * @param sagParser custom instance of {@code SequenceAlignmentGraphParser}
+     * @param sagParser custom instance of {@link SequenceAlignmentGraphParser}
      */
     public static void setInstance(final SequenceAlignmentGraphParser sagParser) {
         instance = sagParser;
     }
 
     /**
-     * Returns a new instance of {@code SequenceAlignmentGraphParser} if no preferred instance is set.
+     * Returns a new instance of {@link SequenceAlignmentGraphParser} if no preferred instance is set.
      *
-     * @return an instance of {@code SequenceAlignmentGraphParser}
+     * @return an instance of {@link SequenceAlignmentGraphParser}
      */
     public static SequenceAlignmentGraphParser createInstance() {
         if (instance == null) {
