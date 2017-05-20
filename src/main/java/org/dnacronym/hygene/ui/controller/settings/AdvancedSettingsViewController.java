@@ -43,9 +43,13 @@ public final class AdvancedSettingsViewController implements Initializable {
      */
     @FXML
     void showLaneBordersClicked() {
-        settings.addCallable(() -> {
-            final boolean newValue = showLaneBorders.isSelected();
-            graphVisualizer.getDisplayBordersProperty().setValue(newValue);
-        });
+        if (settings != null) {
+            settings.addCallable(() -> {
+                if (showLaneBorders != null && graphVisualizer != null) {
+                    final boolean newValue = showLaneBorders.isSelected();
+                    graphVisualizer.getDisplayBordersProperty().setValue(newValue);
+                }
+            });
+        }
     }
 }

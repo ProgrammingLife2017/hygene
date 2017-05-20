@@ -19,14 +19,14 @@ import java.net.URL;
 /**
  * Controller of the display window.
  */
-public class SettingsController {
+public final class SettingsController {
     private static final Logger LOGGER = LogManager.getLogger(SettingsController.class);
     private static final String TITLE = "Settings";
     private static final String SETTINGS_VIEW = "/ui/view/setting/setting_view.fxml";
 
-    private @MonotonicNonNull Settings settings;
+    private @MonotonicNonNull Stage stage;
 
-    @MonotonicNonNull Stage stage;
+    private @MonotonicNonNull Settings settings;
 
 
     /**
@@ -59,7 +59,9 @@ public class SettingsController {
     /**
      * Show the settings window.
      */
-    public final void show() {
-        stage.show();
+    public void show() {
+        if (stage != null) {
+            stage.show();
+        }
     }
 }

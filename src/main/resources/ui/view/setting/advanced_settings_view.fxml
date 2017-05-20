@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102"
-            xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/8.0.102"
             fx:controller="org.dnacronym.hygene.ui.controller.settings.AdvancedSettingsViewController">
     <children>
         <GridPane layoutX="35.0" layoutY="155.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"

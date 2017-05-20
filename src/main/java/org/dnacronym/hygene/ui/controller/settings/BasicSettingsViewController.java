@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the basic settings view.
  */
-public class BasicSettingsViewController implements Initializable {
+public final class BasicSettingsViewController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
 
     private @MonotonicNonNull Settings settings;
@@ -33,7 +33,7 @@ public class BasicSettingsViewController implements Initializable {
 
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         try {
             settings = Hygene.getInstance().getSettings();
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
@@ -47,12 +47,14 @@ public class BasicSettingsViewController implements Initializable {
      */
     @FXML
     void nodeHeightSliderDone() {
-        settings.addCallable(() -> {
-            if (nodeHeight != null && graphVisualizer != null) {
-                final double newValue = nodeHeight.getValue();
-                graphVisualizer.getNodeHeightProperty().setValue(newValue);
-            }
-        });
+        if (settings != null) {
+            settings.addCallable(() -> {
+                if (nodeHeight != null && graphVisualizer != null) {
+                    final double newValue = nodeHeight.getValue();
+                    graphVisualizer.getNodeHeightProperty().setValue(newValue);
+                }
+            });
+        }
     }
 
     /**
@@ -60,11 +62,13 @@ public class BasicSettingsViewController implements Initializable {
      */
     @FXML
     void edgeColorDone() {
-        settings.addCallable(() -> {
-            if (edgeColors != null && graphVisualizer != null) {
-                final Color newValue = edgeColors.getValue();
-                graphVisualizer.getEdgeColorProperty().setValue(newValue);
-            }
-        });
+        if (settings != null) {
+            settings.addCallable(() -> {
+                if (edgeColors != null && graphVisualizer != null) {
+                    final Color newValue = edgeColors.getValue();
+                    graphVisualizer.getEdgeColorProperty().setValue(newValue);
+                }
+            });
+        }
     }
 }
