@@ -33,7 +33,7 @@ public final class AdvancedSettingsViewController implements Initializable {
         try {
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
             settings = Hygene.getInstance().getSettings();
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize AdvancedSettingsViewController.", e);
             return;
         }

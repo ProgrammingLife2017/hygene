@@ -37,7 +37,7 @@ public final class BasicSettingsViewController implements Initializable {
         try {
             settings = Hygene.getInstance().getSettings();
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize BasicSettingsViewController.", e);
             return;
         }

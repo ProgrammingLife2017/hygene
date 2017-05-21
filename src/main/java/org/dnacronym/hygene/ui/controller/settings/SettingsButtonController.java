@@ -36,7 +36,7 @@ public final class SettingsButtonController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             settings = Hygene.getInstance().getSettings();
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize SettingsButtonController.", e);
             return;
         }

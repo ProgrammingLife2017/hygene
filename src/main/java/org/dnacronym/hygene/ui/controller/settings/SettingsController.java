@@ -25,6 +25,7 @@ public final class SettingsController {
 
     private @MonotonicNonNull Stage stage;
 
+
     /**
      * Create a new instance of a {@link SettingsController}.
      */
@@ -46,7 +47,7 @@ public final class SettingsController {
             stage.setScene(new Scene(parent));
 
             stage.show();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.error("Unable to initialize SettingsController.", e);
         }
     }
