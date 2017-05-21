@@ -11,7 +11,6 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.store.Settings;
 
 import java.net.URL;
 
@@ -26,15 +25,11 @@ public final class SettingsController {
 
     private @MonotonicNonNull Stage stage;
 
-    private @MonotonicNonNull Settings settings;
-
-
     /**
      * Create a new instance of a {@link SettingsController}.
      */
     public SettingsController() {
         try {
-            settings = Hygene.getInstance().getSettings();
             final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
             stage = new Stage();

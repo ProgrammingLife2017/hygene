@@ -39,6 +39,12 @@ public final class BasicSettingsViewController implements Initializable {
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
         } catch (UIInitialisationException e) {
             LOGGER.error("Unable to initialize BasicSettingsViewController.", e);
+            return;
+        }
+
+        if (nodeHeight != null && edgeColors != null) {
+            nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
+            edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
         }
     }
 

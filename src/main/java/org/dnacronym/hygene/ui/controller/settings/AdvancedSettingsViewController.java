@@ -25,7 +25,7 @@ public final class AdvancedSettingsViewController implements Initializable {
     private @MonotonicNonNull Settings settings;
 
     @FXML
-    private @MonotonicNonNull CheckBox showLaneBorders;
+    private @MonotonicNonNull CheckBox displayLaneBorders;
 
 
     @Override
@@ -35,6 +35,11 @@ public final class AdvancedSettingsViewController implements Initializable {
             settings = Hygene.getInstance().getSettings();
         } catch (UIInitialisationException e) {
             LOGGER.error("Unable to initialize AdvancedSettingsViewController.", e);
+            return;
+        }
+
+        if (displayLaneBorders != null) {
+            displayLaneBorders.setSelected(graphVisualizer.getDisplayBordersProperty().get());
         }
     }
 
@@ -45,8 +50,8 @@ public final class AdvancedSettingsViewController implements Initializable {
     void showLaneBordersClicked() {
         if (settings != null) {
             settings.addCallable(() -> {
-                if (showLaneBorders != null && graphVisualizer != null) {
-                    final boolean newValue = showLaneBorders.isSelected();
+                if (displayLaneBorders != null && graphVisualizer != null) {
+                    final boolean newValue = displayLaneBorders.isSelected();
                     graphVisualizer.getDisplayBordersProperty().setValue(newValue);
                 }
             });
