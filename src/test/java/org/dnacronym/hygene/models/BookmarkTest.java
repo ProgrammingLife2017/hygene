@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.store;
+package org.dnacronym.hygene.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,21 +26,21 @@ final class BookmarkTest {
 
     @Test
     void getNodeId() {
-        assertThat(bookmark.getNodeIdProperty().get()).isEqualTo(NODE_ID);
+        assertThat(bookmark.getNodeId()).isEqualTo(NODE_ID);
     }
 
     @Test
     void getBaseOffset() {
-        assertThat(bookmark.getBaseOffsetProperty().get()).isEqualTo(BASE_OFFSET);
+        assertThat(bookmark.getBaseOffset()).isEqualTo(BASE_OFFSET);
     }
 
     @Test
     void getRadius() {
-        assertThat(bookmark.getRadiusProperty().get()).isEqualTo(RADIUS);
+        assertThat(bookmark.getRadius()).isEqualTo(RADIUS);
     }
 
     @Test
     void getDescription() {
-        assertThat(bookmark.getDescriptionProperty().get()).isEqualTo(DESCRIPTION);
+        assertThat(bookmark.getDescription()).isEqualTo(DESCRIPTION);
     }
 }

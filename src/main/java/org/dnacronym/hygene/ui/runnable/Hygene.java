@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
+
 /**
  * Main class of the application. Launches a {@link HygenePreloader}, and afterwards a {@link Hygene}.
  *
@@ -82,7 +83,7 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer();
         settings = new Settings();
-        bookmarkStore = new BookmarkStore();
+        simpleBookmarkStore = new SimpleBookmarkStore();
     }
 
     @Override
@@ -148,7 +149,7 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphStore} of the {@link Hygene}.
      *
-     * @return {@link GraphStore} of the {@link Hygene}
+     * @return {@link GraphStore} of the {@link Hygene}.
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
      *                                   in {@link #init()}.
      * @see GraphStore
@@ -161,7 +162,7 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphVisualizer} of the {@link Hygene}.
      *
-     * @return {@link GraphVisualizer} of the {@link Hygene}
+     * @return {@link GraphVisualizer} of the {@link Hygene}.
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
      *                                   in {@link #init()}.
      * @see GraphVisualizer
@@ -183,19 +184,19 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link BookmarkStore} of {@link Hygene}.
+     * Gets the {@link SimpleBookmarkStore} of {@link Hygene}.
      *
-     * @return {@link BookmarkStore} of the {@link Hygene}
-     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link BookmarkStore} was not set
-     *                                   in {@link #init()}.
-     * @see BookmarkStore
+     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link SimpleBookmarkStore} was not
+     *                                   set in {@link #init()}.
+     * @see SimpleBookmarkStore
      * @see #init()
      */
-    public BookmarkStore getBookmarkStore() throws UIInitialisationException {
-        if (bookmarkStore == null) {
-            throw new UIInitialisationException("BookmarkStore not present.");
+    public SimpleBookmarkStore getSimpleBookmarkStore() throws UIInitialisationException {
+        if (simpleBookmarkStore == null) {
+            throw new UIInitialisationException("SimpleBookmarkStore not present.");
         }
-        return bookmarkStore;
+        return simpleBookmarkStore;
     }
 
     /**

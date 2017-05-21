@@ -19,9 +19,6 @@
     <left>
         <fx:include source="left_panel/left_panel.fxml"/>
     </left>
-    <bottom>
-        <fx:include source="console_view.fxml"/>
-    </bottom>
     <right>
         <fx:include source="bookmarks_view.fxml"/>
     </right>

@@ -1,19 +1,14 @@
-package org.dnacronym.hygene.ui.store;
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+package org.dnacronym.hygene.models;
 
 
 /**
  * Model of a base bookmark.
  */
 public final class Bookmark {
-    private final IntegerProperty nodeId;
-    private final IntegerProperty baseOffset;
-    private final IntegerProperty radius;
-    private final StringProperty description;
+    private final int nodeId;
+    private final int baseOffset;
+    private final int radius;
+    private final String description;
 
 
     /**
@@ -25,10 +20,10 @@ public final class Bookmark {
      * @param description a description of this bookmark
      */
     public Bookmark(final int nodeId, final int baseOffset, final int radius, final String description) {
-        this.nodeId = new SimpleIntegerProperty(nodeId);
-        this.baseOffset = new SimpleIntegerProperty(baseOffset);
-        this.radius = new SimpleIntegerProperty(radius);
-        this.description = new SimpleStringProperty(description);
+        this.nodeId = nodeId;
+        this.baseOffset = baseOffset;
+        this.radius = radius;
+        this.description = description;
     }
 
 
@@ -37,7 +32,7 @@ public final class Bookmark {
      *
      * @return the ID of that node
      */
-    public IntegerProperty getNodeIdProperty() {
+    public int getNodeId() {
         return nodeId;
     }
 
@@ -46,7 +41,7 @@ public final class Bookmark {
      *
      * @return the base offset in that node
      */
-    public IntegerProperty getBaseOffsetProperty() {
+    public int getBaseOffset() {
         return baseOffset;
     }
 
@@ -55,7 +50,7 @@ public final class Bookmark {
      *
      * @return the radius
      */
-    public IntegerProperty getRadiusProperty() {
+    public int getRadius() {
         return radius;
     }
 
@@ -64,7 +59,7 @@ public final class Bookmark {
      *
      * @return the description
      */
-    public StringProperty getDescriptionProperty() {
+    public String getDescription() {
         return description;
     }
 }
