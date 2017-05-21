@@ -140,7 +140,7 @@ public final class Hygene extends Application {
      *
      * @param filePath filepath to set the in the title of the application
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
-     *                                   #start(Stage)}.
+     *                                   #start(Stage)}
      */
     public void formatTitle(final String filePath) throws UIInitialisationException {
         primaryStage.setTitle(TITLE + " - [" + filePath + "]");
@@ -149,9 +149,9 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphStore} of the {@link Hygene}.
      *
-     * @return {@link GraphStore} of the {@link Hygene}.
+     * @return {@link GraphStore} of the {@link Hygene}
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
-     *                                   in {@link #init()}.
+     *                                   in {@link #init()}
      * @see GraphStore
      * @see #init()
      */
@@ -162,9 +162,9 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphVisualizer} of the {@link Hygene}.
      *
-     * @return {@link GraphVisualizer} of the {@link Hygene}.
+     * @return {@link GraphVisualizer} of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
-     *                                   in {@link #init()}.
+     *                                   in {@link #init()}
      * @see GraphVisualizer
      * @see #init()
      */
@@ -188,7 +188,7 @@ public final class Hygene extends Application {
      *
      * @return {@link SimpleBookmarkStore} of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link SimpleBookmarkStore} was not
-     *                                   set in {@link #init()}.
+     *                                   set in {@link #init()}
      * @see SimpleBookmarkStore
      * @see #init()
      */
@@ -207,7 +207,7 @@ public final class Hygene extends Application {
      *
      * @return instance of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
-     *                                   #start(Stage)}.
+     *                                   #start(Stage)}
      * @see #start(Stage)
      */
     public Stage getPrimaryStage() throws UIInitialisationException {
