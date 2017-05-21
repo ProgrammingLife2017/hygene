@@ -8,7 +8,7 @@
             fx:controller="org.dnacronym.hygene.ui.controller.GraphSliderController">
     <children>
         <Slider fx:id="graphSlider" layoutX="247.0" layoutY="122.0" majorTickUnit="10.0" minorTickCount="5"
-                onMouseReleased="#sliderDragDone" showTickLabels="true" showTickMarks="true"
+                showTickLabels="true" showTickMarks="true"
                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                 AnchorPane.topAnchor="0.0">
             <tooltip>
