@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.ui.store;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 
 /**
  * Settings class. This stores a bunch of commands.
@@ -12,7 +12,7 @@ public final class Settings {
 
 
     /**
-     * Create new settings instance.
+     * Create new {@link Settings} instance.
      */
     public Settings() {
         commands = FXCollections.observableArrayList();
@@ -20,7 +20,7 @@ public final class Settings {
 
 
     /**
-     * Add an action to the queue.
+     * Add an action to the list of commands.
      *
      * @param runnable action to execute
      */

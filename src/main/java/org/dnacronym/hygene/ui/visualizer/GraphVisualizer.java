@@ -183,7 +183,7 @@ public final class GraphVisualizer {
      * Draw the border between bands as {@link Color#BLACK}.
      *
      * @param laneCount  amount of bands onscreen
-     * @param laneHeight height of each band
+     * @param laneHeight height of each lane
      */
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
@@ -308,9 +308,9 @@ public final class GraphVisualizer {
     }
 
     /**
-     * The property which determines whether to display the border between bands as black bands.
+     * The property which determines whether to display the border between lanes as black lines.
      *
-     * @return property which decides whether to display the border between bands
+     * @return property which decides whether to display the border between lanes
      */
     public BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;

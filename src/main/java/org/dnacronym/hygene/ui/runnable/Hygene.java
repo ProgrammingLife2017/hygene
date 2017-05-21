@@ -172,7 +172,7 @@ public final class Hygene extends Application {
      *
      * @return {@link Settings} of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Settings} was not set
-     *                                   in {@link #init()}.
+     *                                   in {@link #init()}
      */
     public Settings getSettings() throws UIInitialisationException {
         return settings;
