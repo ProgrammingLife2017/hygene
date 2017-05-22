@@ -36,6 +36,8 @@ class GfaFileTest {
 
     @AfterEach
     void afterEach() throws IOException {
+        NewGfaParserFactory.setInstance(null);
+        MetadataParserFactory.setInstance(null);
         if (currentFileName != null) {
             Files.deleteIfExists(Paths.get(currentFileName + ".db"));
         }
@@ -75,7 +77,7 @@ class GfaFileTest {
     @Test
     void testReadFile() throws ParseException {
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
         assertThat(bufferedReaderToString(gfaFile.readFile())).isEqualTo(SIMPLE_GFA_CONTENTS);
     }
@@ -86,7 +88,7 @@ class GfaFileTest {
         NewGfaParserFactory.setInstance(gfaParser);
 
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
         verify(gfaParser).parse(gfaFile);
@@ -112,7 +114,7 @@ class GfaFileTest {
         MetadataParserFactory.setInstance(metadataParser);
 
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
         verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
@@ -122,7 +124,7 @@ class GfaFileTest {
     @Test
     void testGetNodeIds() throws ParseException {
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
         gfaFile.parse();
 
