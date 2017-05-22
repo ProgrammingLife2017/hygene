@@ -115,9 +115,9 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onGraphPaneMousePressed(final MouseEvent mouseEvent) {
-        LOGGER.info("Mouse pressed");
-        if (graphPaneDragger != null) {
-            graphPaneDragger.onMousePressed(mouseEvent.getX());
+        if (graphPaneDragger != null && primaryStage != null) {
+            graphPaneDragger.onMousePressed(-mouseEvent.getSceneX());
+            primaryStage.getScene().setCursor(Cursor.OPEN_HAND);
         }
         mouseEvent.consume();
     }
@@ -130,7 +130,7 @@ public final class GraphController implements Initializable {
     @FXML
     void onGraphPaneMouseDragged(final MouseEvent mouseEvent) {
         if (graphPaneDragger != null && primaryStage != null) {
-            graphPaneDragger.onMousePressed(mouseEvent.getX());
+            graphPaneDragger.onMouseDragged(-mouseEvent.getSceneX());
             primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
         }
         mouseEvent.consume();
@@ -138,11 +138,14 @@ public final class GraphController implements Initializable {
 
     /**
      * When finished drag on the graph pane.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with the event
      */
     @FXML
-    void onGraphPaneMouseDragExited() {
+    void onGraphPaneMouseReleased(final MouseEvent mouseEvent) {
         if (primaryStage != null) {
             primaryStage.getScene().setCursor(Cursor.DEFAULT);
         }
+        mouseEvent.consume();
     }
 }
