@@ -76,7 +76,7 @@ public final class Fafosp {
         );
 
         if (width[0] >= 0) {
-            graph.setUnscaledXPosition(id, width[0] + graph.getSequenceLength(id));
+            graph.setUnscaledXPosition(id, width[0] + graph.getLength(id));
         }
     }
 
