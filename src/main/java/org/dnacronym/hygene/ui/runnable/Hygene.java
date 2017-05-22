@@ -187,17 +187,6 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link SimpleBookmarkStore} of {@link Hygene}.
-     *
-     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
-     * @see SimpleBookmarkStore
-     * @see #init()
-     */
-    public SimpleBookmarkStore getSimpleBookmarkStore() {
-        return simpleBookmarkStore;
-    }
-
-    /**
      * Gets the {@link GraphMovementCalculator} of the {@link Hygene}.
      *
      * @return {@link GraphMovementCalculator} of the {@link Hygene}
