@@ -64,6 +64,17 @@ public final class ConfigController implements Initializable {
             currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
             currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
 
+            graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) -> {
+                if (nodeId != null) {
+                    nodeId.setText(String.valueOf(newValue));
+                }
+            });
+            graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) -> {
+                if (range != null) {
+                    range.setText(String.valueOf(newValue));
+                }
+            });
+
             nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
             edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
             showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
@@ -82,7 +93,6 @@ public final class ConfigController implements Initializable {
         if (graphVisualizer != null && nodeId != null) {
             final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
             graphVisualizer.getCenterNodeIdProperty().set(newValue);
-            nodeId.clear();
 
             LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
         }
@@ -99,7 +109,6 @@ public final class ConfigController implements Initializable {
         if (graphVisualizer != null && range != null) {
             final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
             graphVisualizer.getHopsProperty().set(newValue);
-            range.clear();
 
             LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
         }
