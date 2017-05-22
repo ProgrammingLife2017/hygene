@@ -109,11 +109,11 @@ public class GfaFile {
      * Returns the contents of the GFA file.
      *
      * @return the contents of the GFA file
-     * @throws ParseException if the file is not yet parsed to a graph
+     * @throws IllegalStateException if the file is not yet parsed to a graph
      */
-    public final Graph getGraph() throws ParseException {
+    public final Graph getGraph() throws IllegalStateException {
         if (graph == null) {
-            throw new ParseException("Cannot get the graph before parsing the file");
+            throw new IllegalStateException("Cannot get the graph before parsing the file");
         }
         return graph;
     }
@@ -122,11 +122,11 @@ public class GfaFile {
      * Returns the mapping of node names to IDs in the GFA file.
      *
      * @return the mapping of node names to IDs
-     * @throws ParseException if the file is not yet parsed to a graph
+     * @throws IllegalStateException if the file is not yet parsed to a graph
      */
-    public final Map<String, Integer> getNodeIds() throws ParseException {
+    public final Map<String, Integer> getNodeIds() throws IllegalStateException {
         if (nodeIds == null) {
-            throw new ParseException("Cannot get the node ID mapping before parsing the file");
+            throw new IllegalStateException("Cannot get the node ID mapping before parsing the file");
         }
         return nodeIds;
     }
