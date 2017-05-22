@@ -62,7 +62,7 @@ public final class GraphDimensionsCalculator {
         final Consumer<Integer> consumer = nodeId -> {
             neighbours.add(nodeId);
             tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId));
-            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getSequenceLength(nodeId));
+            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId));
             tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         };
@@ -97,7 +97,7 @@ public final class GraphDimensionsCalculator {
             return 0;
         }
 
-        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getSequenceLength(nodeId);
+        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId);
         return (double) (xPosition - minX) / computeDiameter() * canvasWidth;
     }
 
@@ -140,7 +140,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     public double computeWidth(final int nodeId) {
-        return (double) graph.getSequenceLength(nodeId) / computeDiameter() * canvasWidth;
+        return (double) graph.getLength(nodeId) / computeDiameter() * canvasWidth;
     }
 
     /**

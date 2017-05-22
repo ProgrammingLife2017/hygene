@@ -13,7 +13,7 @@ import org.dnacronym.hygene.parser.GfaFile;
  * [[nodeLineNumber, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
  */
 public final class Graph {
-    private static final int MINIMUM_SEQUENCE_LENGTH = 100;
+    static final int MINIMUM_SEQUENCE_LENGTH = 100;
 
     private final int[][] nodeArrays;
     private final GfaFile gfaFile;
@@ -81,15 +81,25 @@ public final class Graph {
     }
 
     /**
-     * Getter for the sequence length of a {@link Node}.
+     * Getter for the length of a {@link Node} (capped at a lower bound).
+     *
+     * @param id the {@link Node}'s id
+     * @return the {@link Node}'s (capped) sequence length
+     */
+    public int getLength(final int id) {
+        if (nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] < MINIMUM_SEQUENCE_LENGTH) {
+            return MINIMUM_SEQUENCE_LENGTH;
+        }
+        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
+    }
+
+    /**
+     * Getter for the raw sequence length (number of base pairs) of a {@link Node}.
      *
      * @param id the {@link Node}'s id
      * @return the {@link Node}'s sequence length
      */
     public int getSequenceLength(final int id) {
-        if (nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] < MINIMUM_SEQUENCE_LENGTH) {
-            return MINIMUM_SEQUENCE_LENGTH;
-        }
         return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
     }
 
