@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for FAFOSP-Y.
  */
-class FafospYTest {
+final class FafospYTest {
     private SequenceNode[] nodes;
 
 
@@ -27,6 +27,7 @@ class FafospYTest {
         assertThat(node.getRightHeight()).isEqualTo(-1);
         assertThat(node.getVerticalPosition()).isEqualTo(-1);
     }
+
 
     /*
      * Left height.
@@ -90,6 +91,7 @@ class FafospYTest {
 
         assertNodes(new int[] {4, 2, 2, 4, 2, 2, 2}, SequenceNode::getLeftHeight);
     }
+
 
     /*
      * Right height.

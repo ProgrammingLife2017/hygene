@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * Exception class used to indicate database version incompatibility.
  */
-public class IncompatibleDatabaseVersionException extends IOException {
+public final class IncompatibleDatabaseVersionException extends IOException {
     /**
      * Constructs the exception instance.
      *

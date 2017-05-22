@@ -11,14 +11,15 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import java.io.IOException;
 import java.net.URL;
 
+
 /**
  * Custom stage used for creating the console window in the GUI.
  */
-public class ConsoleWrapper {
+public final class ConsoleWrapper {
     private static final String TITLE = "Console";
     private static final String CONSOLE_VIEW = "/ui/view/console_view.fxml";
 
-    private Stage stage;
+    private final Stage stage;
 
 
     /**
@@ -40,19 +41,20 @@ public class ConsoleWrapper {
         Platform.runLater(stage::show);
     }
 
+
     /**
      * Gets the {@link Stage} in {@link ConsoleWrapper}.
      *
      * @return the {@link Stage}
      */
-    public final Stage getStage() {
+    public Stage getStage() {
         return stage;
     }
 
     /**
      * Brings the console window back to the from of the screen.
      */
-    public final void bringToFront() {
+    public void bringToFront() {
         if (stage.isShowing()) {
             stage.toFront();
         } else {

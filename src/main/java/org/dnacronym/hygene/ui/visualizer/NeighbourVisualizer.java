@@ -15,7 +15,7 @@ import org.dnacronym.hygene.models.Node;
  * A neighbour visualizer is a simple visualisation tool which draws a circle in the middle of the canvas,
  * and lines on the left and right side representing the neighbours.
  */
-public class NeighbourVisualizer {
+public final class NeighbourVisualizer {
     private static final double NODE_WIDTH_PORTION_OF_CANVAS = 0.25;
     private static final double ARC_PORTION_OF_CANVAS = 0.1;
 
@@ -50,7 +50,7 @@ public class NeighbourVisualizer {
      *
      * @param canvas canvas on which the node shall be drawn
      */
-    public final void setCanvas(final Canvas canvas) {
+    public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
     }

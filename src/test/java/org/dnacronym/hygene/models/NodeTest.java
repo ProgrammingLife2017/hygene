@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class NodeTest {
+/**
+ * Unit tests for {@link Node}s.
+ */
+final class NodeTest {
     @Test
     void testGetId() {
         final Node node = NodeBuilder.start().withNodeId(5).create();

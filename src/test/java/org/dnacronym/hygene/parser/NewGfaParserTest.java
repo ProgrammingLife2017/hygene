@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link GfaParser}s.
  */
-class NewGfaParserTest {
+final class NewGfaParserTest {
     private NewGfaParser parser;
 
 
@@ -158,6 +158,7 @@ class NewGfaParserTest {
     void testGetNodeIds() throws ParseException {
         assertThat(parser.getNodeIds()).isEmpty();
     }
+
 
     private String replaceSpacesWithTabs(final String string) {
         return string.replaceAll(" ", "\t");

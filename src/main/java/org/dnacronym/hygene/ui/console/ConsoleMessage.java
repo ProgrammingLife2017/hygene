@@ -9,11 +9,13 @@ import org.checkerframework.checker.initialization.qual.Initialized;
 
 import java.nio.charset.StandardCharsets;
 
+
 /**
  * This class is a generic wrapper representing console messages.
  */
-public class ConsoleMessage {
+public final class ConsoleMessage {
     private final Text node;
+
 
     /**
      * Constructor for {@link ConsoleMessage}.
@@ -38,12 +40,13 @@ public class ConsoleMessage {
         node.setFill(getColor(event.getLevel()));
     }
 
+
     /**
      * Gets the {@link Text} node.
      *
      * @return the {@link Text} node
      */
-    public final Text getNode() {
+    public Text getNode() {
         return node;
     }
 

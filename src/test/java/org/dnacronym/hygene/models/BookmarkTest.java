@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link Bookmark} class.
  */
-class BookmarkTest {
+final class BookmarkTest {
     private static final int NODE_ID = 23;
     private static final int BASE_OFFSET = 254;
     private static final int RADIUS = 15;

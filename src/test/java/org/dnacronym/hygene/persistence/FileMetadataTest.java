@@ -18,15 +18,22 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 /**
  * Test suite for the {@link FileMetadata} class.
  */
-class FileMetadataTest extends FileDatabaseBaseTest {
+final class FileMetadataTest extends FileDatabaseBaseTest {
     private FileMetadata fileMetadata;
     private FileDatabase fileDatabase;
+
 
     @BeforeEach
     void setUp() throws IOException, SQLException {
         super.setUp();
         fileDatabase = new FileDatabase(GFA_FILE_NAME);
         fileMetadata = new FileMetadata(fileDatabase);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException, SQLException {
+        fileDatabase.close();
+        super.tearDown();
     }
 
 
@@ -66,12 +73,5 @@ class FileMetadataTest extends FileDatabaseBaseTest {
                 || !(new File(testFileName + FileDatabaseDriver.DB_FILE_EXTENSION)).delete()) {
             throw new IOException("Failed to clean up test file and database.");
         }
-    }
-
-
-    @AfterEach
-    void tearDown() throws IOException, SQLException {
-        fileDatabase.close();
-        super.tearDown();
     }
 }

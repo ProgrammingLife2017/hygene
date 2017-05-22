@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Tests the behavior of the {@link GfaFile} class.
  */
-class GfaFileTest {
+final class GfaFileTest {
     private static final String GFA_TEST_FILE = "src/test/resources/gfa/simple.gfa";
     private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
             + "S\t11\tACCTT%n"

@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for the {@link RecentFiles} class.
  */
-class RecentFilesTest {
+final class RecentFilesTest {
     @BeforeEach
     void setUp() throws IOException {
         RecentFiles.reset();

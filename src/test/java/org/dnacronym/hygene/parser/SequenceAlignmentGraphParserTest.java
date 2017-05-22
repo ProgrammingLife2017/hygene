@@ -9,7 +9,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 
-class SequenceAlignmentGraphParserTest {
+/**
+ * Tests for {@link SequenceAlignmentGraphParser}s.
+ */
+final class SequenceAlignmentGraphParserTest {
     private SequenceAlignmentGraphParser parser;
 
 

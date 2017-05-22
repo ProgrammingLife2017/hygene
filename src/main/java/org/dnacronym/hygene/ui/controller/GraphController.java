@@ -76,7 +76,7 @@ public final class GraphController implements Initializable {
             try {
                 LOGGER.info("Selected node id: " + node.getId() + "\n"
                         + "Sequence: " + node.retrieveMetadata().getSequence() + "\n");
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 LOGGER.error("Metadata of node " + node.getId() + " could not be loaded");
             }
         });
@@ -89,7 +89,7 @@ public final class GraphController implements Initializable {
             try {
                 LOGGER.info("Selected edge from node id: " + edge.getFrom() + " to node id: " + edge.getTo() + "\n"
                         + "Overlap: " + edge.retrieveMetadata().getOverlap() + "\n");
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 LOGGER.error("Metadata of edge from node id: " + edge.getFrom()
                         + " to node id: " + edge.getTo() + " could not be loaded");
             }

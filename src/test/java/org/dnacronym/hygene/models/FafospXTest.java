@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for FAFOSP-X.
  */
-class FafospXTest {
+final class FafospXTest {
     @Test
     void testNoNeighboursEvenLength() {
         final SequenceNode node = new SequenceNode("1", "123456");

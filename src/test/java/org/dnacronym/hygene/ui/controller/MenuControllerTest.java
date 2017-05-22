@@ -106,7 +106,7 @@ public final class MenuControllerTest extends UITest {
         interact(() -> {
             try {
                 menuController.openConsoleAction(action);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
             future.complete(menuController.getConsoleWrapper());
@@ -124,7 +124,7 @@ public final class MenuControllerTest extends UITest {
         interact(() -> {
             try {
                 menuController.openConsoleAction(action);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
             future.complete(menuController.getConsoleWrapper());
@@ -146,7 +146,7 @@ public final class MenuControllerTest extends UITest {
                 future1.complete(menuController.getConsoleWrapper());
                 menuController.openConsoleAction(action);
                 future2.complete(menuController.getConsoleWrapper());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         });

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Represents a GFA file with its contents and metadata.
  */
-public class GfaFile {
+public final class GfaFile {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
     private final String fileName;
@@ -52,7 +52,7 @@ public class GfaFile {
      * @return a {@link Graph} based on the contents of the GFA file
      * @throws ParseException if the file content is not GFA-compliant
      */
-    public final Graph parse() throws ParseException {
+    public Graph parse() throws ParseException {
         try (final FileDatabase fileDatabase = new FileDatabase(fileName)) {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
@@ -81,7 +81,7 @@ public class GfaFile {
      * @return a {@link NodeMetadata} object
      * @throws ParseException if the node metadata cannot be parsed
      */
-    public final NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
+    public NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
         return metadataParser.parseNodeMetadata(this, lineNumber);
     }
 
@@ -92,7 +92,7 @@ public class GfaFile {
      * @return a {@link EdgeMetadata} object
      * @throws ParseException if the edge metadata cannot be parsed
      */
-    public final EdgeMetadata parseEdgeMetadata(final int lineNumber) throws ParseException {
+    public EdgeMetadata parseEdgeMetadata(final int lineNumber) throws ParseException {
         return metadataParser.parseEdgeMetadata(this, lineNumber);
     }
 
@@ -101,7 +101,7 @@ public class GfaFile {
      *
      * @return the name of the GFA file
      */
-    public final String getFileName() {
+    public String getFileName() {
         return fileName;
     }
 
@@ -111,7 +111,7 @@ public class GfaFile {
      * @return the contents of the GFA file
      * @throws IllegalStateException if the file is not yet parsed to a graph
      */
-    public final Graph getGraph() {
+    public Graph getGraph() {
         if (graph == null) {
             throw new IllegalStateException("Cannot get the graph before parsing the file");
         }
@@ -124,7 +124,7 @@ public class GfaFile {
      * @return the mapping of node names to IDs
      * @throws IllegalStateException if the file is not yet parsed to a graph
      */
-    public final Map<String, Integer> getNodeIds() {
+    public Map<String, Integer> getNodeIds() {
         if (nodeIds == null) {
             throw new IllegalStateException("Cannot get the node ID mapping before parsing the file");
         }
@@ -137,7 +137,7 @@ public class GfaFile {
      * @return contents of the GFA file
      * @throws ParseException if the given file name cannot be read
      */
-    public final BufferedReader readFile() throws ParseException {
+    public BufferedReader readFile() throws ParseException {
         try {
             return Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (final IOException e) {

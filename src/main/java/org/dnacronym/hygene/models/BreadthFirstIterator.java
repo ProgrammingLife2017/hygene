@@ -11,7 +11,7 @@ import java.util.function.Function;
 /**
  * An iterator that iterates in breadth-first order over {@link SequenceNode}s.
  */
-class BreadthFirstIterator implements Iterator<SequenceNode> {
+final class BreadthFirstIterator implements Iterator<SequenceNode> {
     private final Queue<SequenceNode> queue;
     private final SequenceDirection direction;
     private final Function<SequenceNode, Boolean> duplicateDetector;

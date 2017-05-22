@@ -228,12 +228,12 @@ public final class NewGfaParser {
      * @throws ParseException if the graph has an invalid number of nodes
      */
     private void addEdgesToSentinelNodes(final Graph graph) throws ParseException {
-        final int source = getNodeId(SOURCE_NAME);
-        final int sink = getNodeId(SINK_NAME);
-
         if (nodeArrays.length == 2) {
             throw new ParseException("The GFA file should contain at least one segment.");
         }
+
+        final int source = getNodeId(SOURCE_NAME);
+        final int sink = getNodeId(SINK_NAME);
 
         IntStream.range(1, nodeArrays.length - 1).parallel().forEach(nodeId -> {
             if (graph.getNeighbourCount(nodeId, SequenceDirection.LEFT) == 0) {
