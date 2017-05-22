@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -22,10 +21,10 @@ public class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
     private static final int GRAPH_SLIDER_SEGMENTS = 10;
 
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
+    private GraphVisualizer graphVisualizer;
 
     @FXML
-    private @MonotonicNonNull Slider graphSlider;
+    private Slider graphSlider;
 
 
     @Override
@@ -37,18 +36,14 @@ public class GraphSliderController implements Initializable {
             return;
         }
 
-        if (graphSlider != null) {
-            graphSlider.maxProperty().bind(graphVisualizer.getNodeCountProperty());
-            graphSlider.majorTickUnitProperty().bind(Bindings.divide(
-                    Bindings.max(GRAPH_SLIDER_SEGMENTS, graphVisualizer.getNodeCountProperty()),
-                    GRAPH_SLIDER_SEGMENTS));
-            graphSlider.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
+        graphSlider.maxProperty().bind(graphVisualizer.getNodeCountProperty());
+        graphSlider.majorTickUnitProperty().bind(Bindings.divide(
+                Bindings.max(GRAPH_SLIDER_SEGMENTS, graphVisualizer.getNodeCountProperty()),
+                GRAPH_SLIDER_SEGMENTS));
+        graphSlider.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
 
-            graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldNodeId, newNodeId) -> {
-                if (graphSlider != null) {
-                    graphSlider.setValue(newNodeId.doubleValue());
-                }
-            });
-        }
+        graphVisualizer.getCenterNodeIdProperty().addListener(
+                (observable, oldNodeId, newNodeId) -> graphSlider.setValue(newNodeId.doubleValue())
+        );
     }
 }

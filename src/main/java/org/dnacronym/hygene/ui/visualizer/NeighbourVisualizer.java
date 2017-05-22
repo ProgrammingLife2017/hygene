@@ -32,7 +32,6 @@ public class NeighbourVisualizer {
      * @param edgeColorProperty property which determines the color of edges to neighbours
      * @param nodeProperty      property which determines what node should actually be visualised
      */
-    @SuppressWarnings("nullness")
     public NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty,
                                final ObjectProperty<Node> nodeProperty) {
         this.edgeColorProperty = new SimpleObjectProperty<>();
@@ -59,7 +58,6 @@ public class NeighbourVisualizer {
     /**
      * Clear the canvas.
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void clear() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
@@ -67,7 +65,6 @@ public class NeighbourVisualizer {
     /**
      * Draw the node and outgoing edges.
      */
-    @SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
     private void draw() {
         final Node node = nodeProperty.get();
         clear();

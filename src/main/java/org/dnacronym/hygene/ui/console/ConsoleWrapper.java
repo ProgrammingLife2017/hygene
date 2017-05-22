@@ -34,11 +34,6 @@ public class ConsoleWrapper {
 
         final URL resource = Files.getInstance().getResourceUrl(CONSOLE_VIEW);
         final Parent parent = FXMLLoader.load(resource);
-
-        if (parent == null) {
-            throw new UIInitialisationException("Could not initialize the provided FXML resource.");
-        }
-
         final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);
 

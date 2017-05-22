@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -27,17 +26,17 @@ import java.util.Map;
  */
 public final class Hygene extends Application {
     private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
-    private static @MonotonicNonNull Hygene hygene;
+    private static Hygene hygene;
 
     private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
     private static final String APPLICATION_ICON = "/ui/icons/hygene_logo_small.png";
 
     static final String TITLE = "Hygene";
 
-    private @MonotonicNonNull GraphStore graphStore;
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
+    private GraphStore graphStore;
+    private GraphVisualizer graphVisualizer;
 
-    private @MonotonicNonNull Stage primaryStage;
+    private Stage primaryStage;
 
     /**
      * Get an instance of an {@link Hygene}.
@@ -90,9 +89,6 @@ public final class Hygene extends Application {
 
         final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
-        if (parent == null) {
-            throw new UIInitialisationException("Root of Application could not be found.");
-        }
 
         primaryStage.setOnCloseRequest(e -> Platform.exit());
 
@@ -140,9 +136,6 @@ public final class Hygene extends Application {
      *                                   #start(Stage)}.
      */
     public void formatTitle(final String filePath) throws UIInitialisationException {
-        if (primaryStage == null) {
-            throw new UIInitialisationException("Stage not present.");
-        }
         primaryStage.setTitle(TITLE + " - [" + filePath + "]");
     }
 
@@ -156,9 +149,6 @@ public final class Hygene extends Application {
      * @see #init()
      */
     public GraphStore getGraphStore() throws UIInitialisationException {
-        if (graphStore == null) {
-            throw new UIInitialisationException("GraphStore not present.");
-        }
         return graphStore;
     }
 
@@ -171,9 +161,6 @@ public final class Hygene extends Application {
      * @see #init()
      */
     public GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
-        if (graphVisualizer == null) {
-            throw new UIInitialisationException("GraphVisualiser not present.");
-        }
         return graphVisualizer;
     }
 
@@ -189,9 +176,6 @@ public final class Hygene extends Application {
      * @see #start(Stage)
      */
     public Stage getPrimaryStage() throws UIInitialisationException {
-        if (primaryStage == null) {
-            throw new UIInitialisationException("Stage not present.");
-        }
         return primaryStage;
     }
 }

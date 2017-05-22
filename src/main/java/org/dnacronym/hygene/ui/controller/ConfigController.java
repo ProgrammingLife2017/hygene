@@ -11,7 +11,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -26,25 +25,25 @@ import java.util.ResourceBundle;
 public final class ConfigController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(ConfigController.class);
 
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
+    private GraphVisualizer graphVisualizer;
 
     @FXML
-    private @MonotonicNonNull Label currentNodeId;
+    private Label currentNodeId;
     @FXML
-    private @MonotonicNonNull Label currentRange;
+    private Label currentRange;
     @FXML
-    private @MonotonicNonNull TextField nodeId;
+    private TextField nodeId;
     @FXML
-    private @MonotonicNonNull TextField range;
+    private TextField range;
 
     @FXML
-    private @MonotonicNonNull Slider nodeHeight;
+    private Slider nodeHeight;
     @FXML
-    private @MonotonicNonNull ColorPicker edgeColors;
+    private ColorPicker edgeColors;
     @FXML
-    private @MonotonicNonNull CheckBox showBorders;
+    private CheckBox showBorders;
     @FXML
-    private @MonotonicNonNull Slider dashWidth;
+    private Slider dashWidth;
 
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
@@ -56,30 +55,27 @@ public final class ConfigController implements Initializable {
             return;
         }
 
-        if (nodeId != null && range != null && currentNodeId != null && currentRange != null && nodeHeight != null
-                && edgeColors != null && graphVisualizer != null && showBorders != null && dashWidth != null) {
-            nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-            range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
-            currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
-            currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
+        currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
+        currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
 
-            graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) -> {
-                if (nodeId != null) {
-                    nodeId.setText(String.valueOf(newValue));
-                }
-            });
-            graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) -> {
-                if (range != null) {
-                    range.setText(String.valueOf(newValue));
-                }
-            });
+       graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) -> {
+            if (nodeId != null) {
+                nodeId.setText(String.valueOf(newValue));
+            }
+        });
+        graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) -> {
+            if (range != null) {
+                range.setText(String.valueOf(newValue));
+            }
+        });
 
-            nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
-            edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
-            showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
-            dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
-        }
+        nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
+        edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
+        showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
+        dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
     }
 
     /**
@@ -90,12 +86,10 @@ public final class ConfigController implements Initializable {
      */
     @FXML
     void setNodeId() {
-        if (graphVisualizer != null && nodeId != null) {
-            final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
-            graphVisualizer.getCenterNodeIdProperty().set(newValue);
+        final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
+        graphVisualizer.getCenterNodeIdProperty().set(newValue);
 
-            LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
-        }
+        LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
     }
 
     /**
@@ -106,12 +100,10 @@ public final class ConfigController implements Initializable {
      */
     @FXML
     void setRange() {
-        if (graphVisualizer != null && range != null) {
-            final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
-            graphVisualizer.getHopsProperty().set(newValue);
+        final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
+        graphVisualizer.getHopsProperty().set(newValue);
 
-            LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
-        }
+        LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
     }
 
     /**

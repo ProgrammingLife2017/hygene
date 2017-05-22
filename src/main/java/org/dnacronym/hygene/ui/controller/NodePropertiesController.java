@@ -7,7 +7,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -25,21 +24,21 @@ import java.util.ResourceBundle;
 public class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
-    private @MonotonicNonNull NeighbourVisualizer neighbourVisualizer;
+    private GraphVisualizer graphVisualizer;
+    private NeighbourVisualizer neighbourVisualizer;
 
     @FXML
-    private @MonotonicNonNull TextField sequence;
+    private TextField sequence;
 
     @FXML
-    private @MonotonicNonNull Canvas neighbourCanvas;
+    private Canvas neighbourCanvas;
     @FXML
-    private @MonotonicNonNull TextField leftNeighbours;
+    private TextField leftNeighbours;
     @FXML
-    private @MonotonicNonNull TextField rightNeighbours;
+    private TextField rightNeighbours;
 
     @FXML
-    private @MonotonicNonNull TextField position;
+    private TextField position;
 
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
@@ -51,28 +50,23 @@ public class NodePropertiesController implements Initializable {
             return;
         }
 
-        if (graphVisualizer != null && neighbourCanvas != null) {
-            final ObjectProperty<Node> selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+        final ObjectProperty<Node> selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
-            neighbourVisualizer = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
-            neighbourVisualizer.setCanvas(neighbourCanvas);
+        neighbourVisualizer = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
+        neighbourVisualizer.setCanvas(neighbourCanvas);
 
-            selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
-                if (newNode != null && sequence != null && leftNeighbours != null && rightNeighbours != null
-                        && position != null) {
-                    try {
-                        sequence.setText(newNode.retrieveMetadata().getSequence());
-                    } catch (ParseException e) {
-                        LOGGER.error("Error when parsing a node.", e);
-                    }
+        selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
+            try {
+                sequence.setText(newNode.retrieveMetadata().getSequence());
+            } catch (ParseException e) {
+                LOGGER.error("Error when parsing a node.", e);
+            }
 
-                    leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
-                    rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
+            leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
+            rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
 
-                    position.setText(String.valueOf(newNode.getId()));
-                }
-            });
-        }
+            position.setText(String.valueOf(newNode.getId()));
+        });
     }
 
     /**
