@@ -41,9 +41,7 @@ public final class SettingsButtonController implements Initializable {
             return;
         }
 
-        if (apply != null && settings != null) {
-            apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
-        }
+        apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
     }
 
     /**

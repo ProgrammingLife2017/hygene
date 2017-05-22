@@ -7,10 +7,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.store.Settings;
 
 import java.net.URL;
 
@@ -23,17 +23,20 @@ public final class SettingsView {
     private static final String TITLE = "Settings";
     private static final String SETTINGS_VIEW = "/ui/view/setting/setting_view.fxml";
 
-    private @MonotonicNonNull Stage stage;
+    private Stage stage;
 
 
     /**
      * Create a new instance of a {@link SettingsView}.
+     *
+     * @param settings {@link Settings} of the application
      */
-    public SettingsView() {
+    public SettingsView(final Settings settings) {
         try {
             final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
             final Stage newStage = new Stage();
+            newStage.setResizable(false);
             newStage.setTitle(TITLE);
 
             final URL resource = Files.getInstance().getResourceUrl(SETTINGS_VIEW);
@@ -45,6 +48,9 @@ public final class SettingsView {
             newStage.initModality(Modality.WINDOW_MODAL);
             newStage.initOwner(primaryStage);
             newStage.setScene(new Scene(parent));
+
+            // TODO show prompt box asking the user if they want to close if they have unsaved settings.
+            newStage.setOnCloseRequest(request -> settings.clearAll());
 
             setStage(newStage);
         } catch (final Exception e) {

@@ -5,7 +5,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.Settings;
@@ -21,11 +20,11 @@ import java.util.ResourceBundle;
 public final class AdvancedSettingsViewController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
 
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
-    private @MonotonicNonNull Settings settings;
+    private GraphVisualizer graphVisualizer;
+    private Settings settings;
 
     @FXML
-    private @MonotonicNonNull CheckBox displayLaneBorders;
+    private CheckBox displayLaneBorders;
 
 
     @Override
@@ -38,9 +37,7 @@ public final class AdvancedSettingsViewController implements Initializable {
             return;
         }
 
-        if (displayLaneBorders != null && graphVisualizer != null) {
-            displayLaneBorders.setSelected(graphVisualizer.getDisplayBordersProperty().get());
-        }
+        displayLaneBorders.setSelected(graphVisualizer.getDisplayBordersProperty().get());
     }
 
     /**
@@ -66,13 +63,9 @@ public final class AdvancedSettingsViewController implements Initializable {
      */
     @FXML
     void showLaneBordersClicked() {
-        if (settings != null) {
-            settings.addRunnable(() -> {
-                if (displayLaneBorders != null && graphVisualizer != null) {
-                    final boolean newValue = displayLaneBorders.isSelected();
-                    graphVisualizer.getDisplayBordersProperty().setValue(newValue);
-                }
-            });
-        }
+        settings.addRunnable(() -> {
+            final boolean newValue = displayLaneBorders.isSelected();
+            graphVisualizer.getDisplayBordersProperty().setValue(newValue);
+        });
     }
 }

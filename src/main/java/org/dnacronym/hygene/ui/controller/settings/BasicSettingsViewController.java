@@ -7,7 +7,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.Settings;
@@ -23,13 +22,13 @@ import java.util.ResourceBundle;
 public final class BasicSettingsViewController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
 
-    private @MonotonicNonNull Settings settings;
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
+    private Settings settings;
+    private GraphVisualizer graphVisualizer;
 
     @FXML
-    private @MonotonicNonNull Slider nodeHeight;
+    private Slider nodeHeight;
     @FXML
-    private @MonotonicNonNull ColorPicker edgeColors;
+    private ColorPicker edgeColors;
 
 
     @Override
@@ -42,10 +41,8 @@ public final class BasicSettingsViewController implements Initializable {
             return;
         }
 
-        if (nodeHeight != null && edgeColors != null && graphVisualizer != null) {
-            nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
-            edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
-        }
+        nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
+        edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
     }
 
     /**
@@ -71,14 +68,10 @@ public final class BasicSettingsViewController implements Initializable {
      */
     @FXML
     void nodeHeightSliderDone() {
-        if (settings != null) {
-            settings.addRunnable(() -> {
-                if (nodeHeight != null && graphVisualizer != null) {
-                    final double newValue = nodeHeight.getValue();
-                    graphVisualizer.getNodeHeightProperty().setValue(newValue);
-                }
-            });
-        }
+        settings.addRunnable(() -> {
+            final double newValue = nodeHeight.getValue();
+            graphVisualizer.getNodeHeightProperty().setValue(newValue);
+        });
     }
 
     /**
@@ -86,13 +79,9 @@ public final class BasicSettingsViewController implements Initializable {
      */
     @FXML
     void edgeColorDone() {
-        if (settings != null) {
-            settings.addRunnable(() -> {
-                if (edgeColors != null && graphVisualizer != null) {
-                    final Color newValue = edgeColors.getValue();
-                    graphVisualizer.getEdgeColorProperty().setValue(newValue);
-                }
-            });
-        }
+        settings.addRunnable(() -> {
+            final Color newValue = edgeColors.getValue();
+            graphVisualizer.getEdgeColorProperty().setValue(newValue);
+        });
     }
 }

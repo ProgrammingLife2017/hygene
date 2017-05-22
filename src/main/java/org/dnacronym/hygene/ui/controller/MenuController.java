@@ -16,6 +16,7 @@ import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.store.RecentFiles;
+import org.dnacronym.hygene.ui.store.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public final class MenuController implements Initializable {
 
     private FileChooser fileChooser;
     private GraphStore graphStore;
+    private Settings settings;
 
     private File parentDirectory;
 
@@ -42,25 +44,29 @@ public final class MenuController implements Initializable {
     private ConsoleWrapper consoleWrapper;
 
 
-    /**
-     * Create an instance of a {@link MenuController} and set the directory for use by {@link FileChooser}.
-     */
-    public MenuController() {
-        super();
-        parentDirectory = new File(System.getProperty("user.home"));
-    }
-
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphStore(Hygene.getInstance().getGraphStore());
+            setSettings(Hygene.getInstance().getSettings());
 
             populateRecentFilesMenu();
             initFileChooser();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
+            return;
         }
+
+        parentDirectory = new File(System.getProperty("user.home"));
+    }
+
+    /**
+     * Set the {@link Settings} for use by the controller.
+     *
+     * @param settings {@link Settings} for use by the controller
+     */
+    void setSettings(final Settings settings) {
+        this.settings = settings;
     }
 
     /**
@@ -93,7 +99,7 @@ public final class MenuController implements Initializable {
      */
     @FXML
     void settingsAction() {
-        final SettingsView settingsView = new SettingsView();
+        final SettingsView settingsView = new SettingsView(settings);
         settingsView.show();
     }
 
