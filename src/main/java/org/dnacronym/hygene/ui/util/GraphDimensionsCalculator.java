@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 
 /**
- * Performs calculations for determinging node/graph positions and dimensions.
+ * Performs calculations for determining node/graph positions and dimensions.
  */
 public final class GraphDimensionsCalculator {
     private static final Logger LOGGER = LogManager.getLogger(GraphDimensionsCalculator.class);
