@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link BasicSettingsViewController}s.
  */
-public class BasicSettingsViewControllerTest extends UITest {
+final class BasicSettingsViewControllerTest extends UITest {
     private BasicSettingsViewController basicSettingsViewController;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
