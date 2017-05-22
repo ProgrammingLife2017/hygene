@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
-import org.dnacronym.hygene.ui.controller.settings.SettingsController;
+import org.dnacronym.hygene.ui.controller.settings.SettingsView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -89,12 +89,12 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Open a blocking settings window.
+     * Opens a blocking settings window.
      */
     @FXML
     void settingsAction() {
-        final SettingsController settingsController = new SettingsController();
-        settingsController.show();
+        final SettingsView settingsView = new SettingsView();
+        settingsView.show();
     }
 
     /**

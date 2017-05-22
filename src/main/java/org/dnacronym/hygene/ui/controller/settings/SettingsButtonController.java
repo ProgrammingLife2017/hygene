@@ -35,15 +35,24 @@ public final class SettingsButtonController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            settings = Hygene.getInstance().getSettings();
+            setSettings(Hygene.getInstance().getSettings());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize SettingsButtonController.", e);
             return;
         }
 
-        if (apply != null) {
+        if (apply != null && settings != null) {
             apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
         }
+    }
+
+    /**
+     * Set the {@link Settings} for use by the controller.
+     *
+     * @param settings {@link Settings} for use by the controller
+     */
+    void setSettings(final Settings settings) {
+        this.settings = settings;
     }
 
     /**

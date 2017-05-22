@@ -35,17 +35,35 @@ public final class BasicSettingsViewController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            settings = Hygene.getInstance().getSettings();
-            graphVisualizer = Hygene.getInstance().getGraphVisualizer();
+            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setSettings(Hygene.getInstance().getSettings());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize BasicSettingsViewController.", e);
             return;
         }
 
-        if (nodeHeight != null && edgeColors != null) {
+        if (nodeHeight != null && edgeColors != null && graphVisualizer != null) {
             nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
             edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
         }
+    }
+
+    /**
+     * Set the {@link GraphVisualizer} for use by the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
+     */
+    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * Set the {@link Settings} for use by the controller.
+     *
+     * @param settings {@link Settings} for use by the controller
+     */
+    void setSettings(final Settings settings) {
+        this.settings = settings;
     }
 
     /**

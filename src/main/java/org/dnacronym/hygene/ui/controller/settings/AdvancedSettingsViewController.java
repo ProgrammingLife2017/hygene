@@ -31,16 +31,34 @@ public final class AdvancedSettingsViewController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            graphVisualizer = Hygene.getInstance().getGraphVisualizer();
-            settings = Hygene.getInstance().getSettings();
+            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setSettings(Hygene.getInstance().getSettings());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize AdvancedSettingsViewController.", e);
             return;
         }
 
-        if (displayLaneBorders != null) {
+        if (displayLaneBorders != null && graphVisualizer != null) {
             displayLaneBorders.setSelected(graphVisualizer.getDisplayBordersProperty().get());
         }
+    }
+
+    /**
+     * Set the {@link GraphVisualizer} for use by the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
+     */
+    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * Set the {@link Settings} for use by the controller.
+     *
+     * @param settings {@link Settings} for use by the controller
+     */
+    void setSettings(final Settings settings) {
+        this.settings = settings;
     }
 
     /**

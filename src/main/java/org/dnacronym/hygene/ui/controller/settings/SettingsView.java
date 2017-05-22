@@ -18,8 +18,8 @@ import java.net.URL;
 /**
  * Controller of the display window.
  */
-public final class SettingsController {
-    private static final Logger LOGGER = LogManager.getLogger(SettingsController.class);
+public final class SettingsView {
+    private static final Logger LOGGER = LogManager.getLogger(SettingsView.class);
     private static final String TITLE = "Settings";
     private static final String SETTINGS_VIEW = "/ui/view/setting/setting_view.fxml";
 
@@ -27,14 +27,14 @@ public final class SettingsController {
 
 
     /**
-     * Create a new instance of a {@link SettingsController}.
+     * Create a new instance of a {@link SettingsView}.
      */
-    public SettingsController() {
+    public SettingsView() {
         try {
             final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
-            stage = new Stage();
-            stage.setTitle(TITLE);
+            final Stage newStage = new Stage();
+            newStage.setTitle(TITLE);
 
             final URL resource = Files.getInstance().getResourceUrl(SETTINGS_VIEW);
             final Parent parent = FXMLLoader.load(resource);
@@ -42,14 +42,23 @@ public final class SettingsController {
                 throw new UIInitialisationException("Root of Settings could not be found.");
             }
 
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(primaryStage);
-            stage.setScene(new Scene(parent));
+            newStage.initModality(Modality.WINDOW_MODAL);
+            newStage.initOwner(primaryStage);
+            newStage.setScene(new Scene(parent));
 
-            stage.show();
+            setStage(newStage);
         } catch (final Exception e) {
-            LOGGER.error("Unable to initialize SettingsController.", e);
+            LOGGER.error("Unable to initialize SettingsView.", e);
         }
+    }
+
+    /**
+     * Set the stage.
+     *
+     * @param stage stage for use by the view
+     */
+    void setStage(final Stage stage) {
+        this.stage = stage;
     }
 
     /**

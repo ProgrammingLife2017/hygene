@@ -32,7 +32,7 @@ public final class Settings {
      * Execute all actions in queue, and clear the actions afterwards.
      */
     public void executeAll() {
-        for (Runnable runnable : commands) {
+        for (final Runnable runnable : commands) {
             runnable.run();
         }
         clearAll();
