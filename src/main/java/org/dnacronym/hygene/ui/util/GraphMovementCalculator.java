@@ -4,10 +4,11 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
+
 /**
  * Deals with translating user input into something the {@link GraphVisualizer} can use and understand.
  */
-public final class GraphMovement {
+public final class GraphMovementCalculator {
     private static final double DEFAULT_SENSITIVITY = 0.005;
 
     private final GraphVisualizer graphVisualizer;
@@ -15,12 +16,13 @@ public final class GraphMovement {
 
     private double centerX;
 
+
     /**
-     * Create instance of {@link GraphMovement}.
+     * Create instance of {@link GraphMovementCalculator}.
      *
      * @param graphVisualizer {@link GraphVisualizer} to drag
      */
-    public GraphMovement(final GraphVisualizer graphVisualizer) {
+    public GraphMovementCalculator(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
         sensitivityProperty = new SimpleDoubleProperty(DEFAULT_SENSITIVITY);
     }

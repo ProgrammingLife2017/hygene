@@ -82,7 +82,7 @@ public final class RTree {
                 edgeAction.accept(result.value()[0], result.value()[1]);
             }
         } catch (final NoSuchElementException e) {
-            LOGGER.info("No node or edge found at position (" + x + ", " + y + ").");
+            LOGGER.info("No node or edge found at position (" + x + ", " + y + ").", e);
         }
     }
 }

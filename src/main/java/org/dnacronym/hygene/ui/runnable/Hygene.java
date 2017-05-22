@@ -12,9 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.util.GraphMovement;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.io.File;
@@ -40,8 +40,8 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
+    private GraphMovementCalculator graphMovementCalculator;
     private SimpleBookmarkStore simpleBookmarkStore;
-    private GraphMovement graphMovement;
 
     private Stage primaryStage;
 
@@ -198,12 +198,12 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link GraphMovement} of the {@link Hygene}.
+     * Gets the {@link GraphMovementCalculator} of the {@link Hygene}.
      *
-     * @return {@link GraphMovement} of the {@link Hygene}
+     * @return {@link GraphMovementCalculator} of the {@link Hygene}
      */
-    public GraphMovement getGraphMovement() {
-        return graphMovement;
+    public GraphMovementCalculator getGraphMovementCalculator() {
+        return graphMovementCalculator;
     }
 
     /**
