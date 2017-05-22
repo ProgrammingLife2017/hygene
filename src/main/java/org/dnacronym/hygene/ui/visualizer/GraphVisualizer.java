@@ -169,13 +169,6 @@ public final class GraphVisualizer {
             drawLaneBorders(
                     graphDimensionsCalculator.getLaneCount(),
                     graphDimensionsCalculator.getLaneHeight());
-            }
-
-            if (displayLaneBordersProperty.get()) {
-                drawLaneBorders(
-                        graphDimensionsCalculator.getLaneCount(),
-                        graphDimensionsCalculator.getLaneHeight());
-            }
         }
     }
 

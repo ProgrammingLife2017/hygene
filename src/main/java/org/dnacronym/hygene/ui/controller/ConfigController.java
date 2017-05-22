@@ -33,11 +33,6 @@ public final class ConfigController implements Initializable {
     @FXML
     private TextField range;
 
-    @FXML
-    private Slider nodeHeight;
-    @FXML
-    private ColorPicker edgeColors;
-
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -54,13 +49,10 @@ public final class ConfigController implements Initializable {
         currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
         currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
 
-        graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) ->
-                nodeId.setText(String.valueOf(newValue)));
-        graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) ->
-                range.setText(String.valueOf(newValue)));
-
-        nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
-        edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
+        graphVisualizer.getCenterNodeIdProperty().addListener(
+                (observable, oldValue, newValue) -> nodeId.setText(String.valueOf(newValue)));
+        graphVisualizer.getHopsProperty().addListener(
+                (observable, oldValue, newValue) -> range.setText(String.valueOf(newValue)));
     }
 
     /**
