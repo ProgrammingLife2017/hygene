@@ -16,20 +16,4 @@ public class DNAApplicationExceptionTest {
 
         assertThat(e).isInstanceOf(UIInitialisationException.class);
     }
-
-    @Test
-    public final void testGetGraphStore() {
-        Hygene.setInstance(new Hygene());
-        Throwable e = catchThrowable(() -> Hygene.getInstance().getGraphStore());
-
-        assertThat(e).isInstanceOf(UIInitialisationException.class);
-    }
-
-    @Test
-    public final void testGetPrimaryStage() {
-        Hygene.setInstance(new Hygene());
-        Throwable e = catchThrowable(() -> Hygene.getInstance().getGraphStore());
-
-        assertThat(e).isInstanceOf(UIInitialisationException.class);
-    }
 }
