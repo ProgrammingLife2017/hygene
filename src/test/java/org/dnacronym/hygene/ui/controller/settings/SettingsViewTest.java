@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class SettingsViewTest extends UITest {
+final class SettingsViewTest extends UITest {
     private SettingsView settingsView;
     private Stage stage;
 
