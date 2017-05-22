@@ -12,8 +12,8 @@ public final class Fafosp {
     static final int EDGE_WIDTH = 1000;
 
     private final Graph graph;
-    private final GraphIterator iterator;
     private final int[][] nodeArrays;
+    private final GraphIterator iterator;
 
 
     /**
@@ -23,8 +23,8 @@ public final class Fafosp {
      */
     public Fafosp(final Graph graph) {
         this.graph = graph;
-        this.iterator = graph.iterator();
         this.nodeArrays = graph.getNodeArrays();
+        this.iterator = new GraphIterator(graph);
     }
 
 

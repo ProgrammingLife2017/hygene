@@ -25,7 +25,7 @@ public final class GraphIterator {
      *
      * @param graph the {@link Graph} to iterate over
      */
-    GraphIterator(final Graph graph) {
+    public GraphIterator(final Graph graph) {
         this.graph = graph;
         this.nodeArrays = graph.getNodeArrays();
     }

@@ -39,6 +39,15 @@ abstract class GraphBasedTest {
     }
 
     /**
+     * Returns a new {@link GraphIterator} for the current {@link Graph}.
+     *
+     * @return a new {@link GraphIterator} for the current {@link Graph}
+     */
+    final GraphIterator getGraphIterator() {
+        return new GraphIterator(graph);
+    }
+
+    /**
      * Returns the current {@link GraphQuery}.
      *
      * @return the current {@link GraphQuery}
@@ -59,13 +68,6 @@ abstract class GraphBasedTest {
         }
 
         graph = new Graph(nodeArrays, null);
-    }
-
-    /**
-     * Creates a new {@link GraphQuery} for the current {@link Graph}, and sets it in this {@link GraphBasedTest}.
-     */
-    final void createGraphQuery() {
-        graphQuery = new GraphQuery(graph);
     }
 
     /**

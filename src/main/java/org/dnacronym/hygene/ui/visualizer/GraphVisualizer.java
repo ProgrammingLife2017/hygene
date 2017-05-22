@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
@@ -55,6 +56,7 @@ public final class GraphVisualizer {
 
     private final IntegerProperty nodeCountProperty;
     private Graph graph;
+    private GraphIterator graphIterator;
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -159,7 +161,7 @@ public final class GraphVisualizer {
         for (final Integer nodeId : neighbours) {
             drawNode(graphDimensionsCalculator, graph, nodeId);
 
-            graph.iterator().visitDirectNeighbours(
+            graphIterator.visitDirectNeighbours(
                     nodeId, SequenceDirection.RIGHT,
                     neighbourId -> drawEdge(graphDimensionsCalculator, nodeId, neighbourId)
             );
@@ -233,6 +235,7 @@ public final class GraphVisualizer {
      */
     public void setGraph(final Graph graph) {
         this.graph = graph;
+        this.graphIterator = new GraphIterator(graph);
         clear();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
