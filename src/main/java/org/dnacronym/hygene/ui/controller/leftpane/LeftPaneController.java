@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller.left;
+package org.dnacronym.hygene.ui.controller.leftpane;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="400.0"
             prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.controller.left.ConfigController">
+            fx:controller="org.dnacronym.hygene.ui.controller.leftpane.ConfigController">
     <children>
         <Accordion AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="0.0">
