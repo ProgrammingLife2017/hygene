@@ -13,7 +13,7 @@ import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.util.GraphPaneDragger;
+import org.dnacronym.hygene.ui.util.GraphMovement;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -43,6 +43,7 @@ public final class GraphController implements Initializable {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setPrimaryStage(Hygene.getInstance().getPrimaryStage());
+            setGraphMovement(Hygene.getInstance().getGraphMovement());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
             return;
@@ -55,12 +56,12 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphPaneDragger} for use by the controller.
+     * Set the {@link GraphMovement} for use by the controller.
      *
-     * @param graphPaneDragger {@link GraphPaneDragger} for use by the controller
+     * @param graphMovement {@link GraphMovement} for use by the controller
      */
-    void setGraphPaneDragger(final GraphPaneDragger graphPaneDragger) {
-        this.graphPaneDragger = graphPaneDragger;
+    void setGraphMovement(final GraphMovement graphMovement) {
+        this.graphMovement = graphMovement;
     }
 
     /**
@@ -115,8 +116,8 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onGraphPaneMousePressed(final MouseEvent mouseEvent) {
-        if (graphPaneDragger != null && primaryStage != null) {
-            graphPaneDragger.onMousePressed(-mouseEvent.getSceneX());
+        if (graphMovement != null && primaryStage != null) {
+            graphMovement.onMousePressed(-mouseEvent.getSceneX());
             primaryStage.getScene().setCursor(Cursor.OPEN_HAND);
         }
         mouseEvent.consume();
@@ -129,8 +130,8 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onGraphPaneMouseDragged(final MouseEvent mouseEvent) {
-        if (graphPaneDragger != null && primaryStage != null) {
-            graphPaneDragger.onMouseDragged(-mouseEvent.getSceneX());
+        if (graphMovement != null && primaryStage != null) {
+            graphMovement.onMouseDragged(-mouseEvent.getSceneX());
             primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
         }
         mouseEvent.consume();

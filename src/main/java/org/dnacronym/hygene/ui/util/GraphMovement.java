@@ -5,10 +5,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 /**
- * Deals with dragging in the graph pane. Translates dragging to new center node queries.
+ * Deals with translating user input into something the {@link GraphVisualizer} can use and understand.
  */
-public final class GraphPaneDragger {
-    private static final double DEFAULT_SENSITIVITY = 0.01;
+public final class GraphMovement {
+    private static final double DEFAULT_SENSITIVITY = 0.005;
 
     private final GraphVisualizer graphVisualizer;
     private final DoubleProperty sensitivityProperty;
@@ -16,11 +16,11 @@ public final class GraphPaneDragger {
     private double centerX;
 
     /**
-     * Create instance of {@link GraphPaneDragger}.
+     * Create instance of {@link GraphMovement}.
      *
      * @param graphVisualizer {@link GraphVisualizer} to drag
      */
-    public GraphPaneDragger(final GraphVisualizer graphVisualizer) {
+    public GraphMovement(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
         sensitivityProperty = new SimpleDoubleProperty(DEFAULT_SENSITIVITY);
     }
