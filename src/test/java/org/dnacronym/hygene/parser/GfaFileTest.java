@@ -71,7 +71,7 @@ class GfaFileTest {
         currentFileName = "random-file-name";
         final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).getGraph());
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
