@@ -77,4 +77,22 @@ public final class GraphSliderController implements Initializable {
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
     }
+
+    /**
+     * Set the {@link GraphVisualizer}. This allows the sliders to change the properties of the {@link GraphVisualizer}.
+     *
+     * @param graphVisualiser graph pane to set in the controller
+     */
+    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
+        this.graphVisualizer = graphVisualiser;
+    }
+
+    /**
+     * Set the {@link GraphStore} in the controller.
+     *
+     * @param graphStore {@link GraphStore} to store in the {@link GraphController}
+     */
+    void setGraphStore(final GraphStore graphStore) {
+        this.graphStore = graphStore;
+    }
 }
