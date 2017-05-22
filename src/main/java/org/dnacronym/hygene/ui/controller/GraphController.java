@@ -115,7 +115,7 @@ public final class GraphController implements Initializable {
         try {
             graphVisualizer.setGraph(gfaFile.getGraph());
             graphVisualizer.draw();
-        } catch (final ParseException e) {
+        } catch (final IllegalStateException e) {
             LOGGER.error("Failed to update graph.", e);
         }
     }

@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.AbstractMap;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
@@ -35,6 +36,8 @@ class GfaFileTest {
 
     @AfterEach
     void afterEach() throws IOException {
+        NewGfaParserFactory.setInstance(null);
+        MetadataParserFactory.setInstance(null);
         if (currentFileName != null) {
             Files.deleteIfExists(Paths.get(currentFileName + ".db"));
         }
@@ -68,13 +71,13 @@ class GfaFileTest {
         currentFileName = "random-file-name";
         final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).getGraph());
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     void testReadFile() throws ParseException {
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
         assertThat(bufferedReaderToString(gfaFile.readFile())).isEqualTo(SIMPLE_GFA_CONTENTS);
     }
@@ -85,7 +88,7 @@ class GfaFileTest {
         NewGfaParserFactory.setInstance(gfaParser);
 
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         gfaFile.parse();
 
         verify(gfaParser).parse(gfaFile);
@@ -111,13 +114,22 @@ class GfaFileTest {
         MetadataParserFactory.setInstance(metadataParser);
 
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
         verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
     }
 
+    @Test
+    void testGetNodeIds() throws ParseException {
+        currentFileName = GFA_TEST_FILE;
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+
+        gfaFile.parse();
+
+        assertThat(gfaFile.getNodeIds()).contains(new AbstractMap.SimpleEntry<>("11", 1));
+    }
 
     private String bufferedReaderToString(final BufferedReader reader) {
         final String newline = String.format("%n");
