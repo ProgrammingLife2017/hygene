@@ -1,8 +1,8 @@
-.slider .track {
+#graphSlider .track {
     -fx-pref-height: 20;
 }
 
-.slider .thumb {
+#graphSlider .thumb {
     -fx-pref-height: 30;
     -fx-pref-width: 20;
     -fx-arc-height: 0;

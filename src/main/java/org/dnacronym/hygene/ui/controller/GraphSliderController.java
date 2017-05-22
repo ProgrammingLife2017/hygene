@@ -34,7 +34,6 @@ public final class GraphSliderController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final GraphVisualizer graphVisualizer;
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphStore(Hygene.getInstance().getGraphStore());
@@ -52,6 +51,9 @@ public final class GraphSliderController implements Initializable {
         graphVisualizer.getCenterNodeIdProperty().addListener(
                 (observable, oldNodeId, newNodeId) -> graphSlider.setValue(newNodeId.doubleValue())
         );
+
+        graphSliderPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        graphSliderPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
 
     /**

@@ -2,8 +2,11 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
@@ -26,6 +29,8 @@ public final class GraphController implements Initializable {
     private GraphVisualizer graphVisualizer;
     private GraphPaneDragger graphPaneDragger;
 
+    private Stage primaryStage;
+
     @FXML
     private Canvas graphCanvas;
 
@@ -37,6 +42,7 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setPrimaryStage(Hygene.getInstance().getPrimaryStage());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
             return;
@@ -55,6 +61,15 @@ public final class GraphController implements Initializable {
      */
     void setGraphPaneDragger(final GraphPaneDragger graphPaneDragger) {
         this.graphPaneDragger = graphPaneDragger;
+    }
+
+    /**
+     * Set the {@link String} for use by the controller.
+     *
+     * @param primaryStage {@link Stage} for use by the controller
+     */
+    void setPrimaryStage(final Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 
     /**
@@ -91,5 +106,43 @@ public final class GraphController implements Initializable {
                         + " to node id: " + edge.getTo() + " could not be loaded");
             }
         });
+    }
+
+    /**
+     * When starting to drag on the graph pane.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with the event
+     */
+    @FXML
+    void onGraphPaneMousePressed(final MouseEvent mouseEvent) {
+        LOGGER.info("Mouse pressed");
+        if (graphPaneDragger != null) {
+            graphPaneDragger.onMousePressed(mouseEvent.getX());
+        }
+        mouseEvent.consume();
+    }
+
+    /**
+     * When dragging to drag on the graph pane.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with the event
+     */
+    @FXML
+    void onGraphPaneMouseDragged(final MouseEvent mouseEvent) {
+        if (graphPaneDragger != null && primaryStage != null) {
+            graphPaneDragger.onMousePressed(mouseEvent.getX());
+            primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
+        }
+        mouseEvent.consume();
+    }
+
+    /**
+     * When finished drag on the graph pane.
+     */
+    @FXML
+    void onGraphPaneMouseDragExited() {
+        if (primaryStage != null) {
+            primaryStage.getScene().setCursor(Cursor.DEFAULT);
+        }
     }
 }
