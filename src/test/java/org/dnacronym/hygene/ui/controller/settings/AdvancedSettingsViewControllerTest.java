@@ -34,6 +34,6 @@ final class AdvancedSettingsViewControllerTest extends UITest {
     @Test
     void testShowBorders() {
         interact(() -> advancedSettingsViewController.showLaneBordersClicked());
-        verify(settings, times(1)).addCallable(any(Runnable.class));
+        verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 }

@@ -72,7 +72,7 @@ public final class BasicSettingsViewController implements Initializable {
     @FXML
     void nodeHeightSliderDone() {
         if (settings != null) {
-            settings.addCallable(() -> {
+            settings.addRunnable(() -> {
                 if (nodeHeight != null && graphVisualizer != null) {
                     final double newValue = nodeHeight.getValue();
                     graphVisualizer.getNodeHeightProperty().setValue(newValue);
@@ -87,7 +87,7 @@ public final class BasicSettingsViewController implements Initializable {
     @FXML
     void edgeColorDone() {
         if (settings != null) {
-            settings.addCallable(() -> {
+            settings.addRunnable(() -> {
                 if (edgeColors != null && graphVisualizer != null) {
                     final Color newValue = edgeColors.getValue();
                     graphVisualizer.getEdgeColorProperty().setValue(newValue);

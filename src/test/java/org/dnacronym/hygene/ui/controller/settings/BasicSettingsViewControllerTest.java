@@ -34,12 +34,12 @@ final class BasicSettingsViewControllerTest extends UITest {
     @Test
     void testNodeHeightSliderDone() {
         interact(() -> basicSettingsViewController.nodeHeightSliderDone());
-        verify(settings, times(1)).addCallable(any(Runnable.class));
+        verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 
     @Test
     void testEdgeColorDone() {
         interact(() -> basicSettingsViewController.edgeColorDone());
-        verify(settings, times(1)).addCallable(any(Runnable.class));
+        verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 }

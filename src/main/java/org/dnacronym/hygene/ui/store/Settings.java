@@ -24,7 +24,7 @@ public final class Settings {
      *
      * @param runnable action to execute
      */
-    public void addCallable(final Runnable runnable) {
+    public void addRunnable(final Runnable runnable) {
         commands.add(runnable);
     }
 

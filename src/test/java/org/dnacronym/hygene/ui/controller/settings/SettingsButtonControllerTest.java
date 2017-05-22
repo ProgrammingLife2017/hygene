@@ -26,6 +26,7 @@ final class SettingsButtonControllerTest extends UITest {
         settingsButtonController.setSettings(settings);
     }
 
+
     @Test
     void testOk() {
         interact(() -> settingsButtonController.okAction());

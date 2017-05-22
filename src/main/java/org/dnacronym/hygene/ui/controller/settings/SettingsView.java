@@ -52,6 +52,7 @@ public final class SettingsView {
         }
     }
 
+
     /**
      * Set the stage.
      *
