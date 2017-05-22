@@ -25,20 +25,18 @@ public class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
     private GraphVisualizer graphVisualizer;
-    private NeighbourVisualizer neighbourVisualizer;
 
     @FXML
     private TextField sequence;
-
     @FXML
     private Canvas neighbourCanvas;
     @FXML
     private TextField leftNeighbours;
     @FXML
     private TextField rightNeighbours;
-
     @FXML
     private TextField position;
+
 
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
@@ -52,7 +50,8 @@ public class NodePropertiesController implements Initializable {
 
         final ObjectProperty<Node> selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
-        neighbourVisualizer = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
+        final NeighbourVisualizer neighbourVisualizer
+                = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
         neighbourVisualizer.setCanvas(neighbourCanvas);
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
