@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.util.GraphPaneDragger;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -22,6 +24,7 @@ public final class GraphController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
 
     private GraphVisualizer graphVisualizer;
+    private GraphPaneDragger graphPaneDragger;
 
     @FXML
     private Canvas graphCanvas;
@@ -43,6 +46,15 @@ public final class GraphController implements Initializable {
         graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
         graphVisualizer.setCanvas(graphCanvas);
+    }
+
+    /**
+     * Set the {@link GraphPaneDragger} for use by the controller.
+     *
+     * @param graphPaneDragger {@link GraphPaneDragger} for use by the controller
+     */
+    void setGraphPaneDragger(final GraphPaneDragger graphPaneDragger) {
+        this.graphPaneDragger = graphPaneDragger;
     }
 
     /**
