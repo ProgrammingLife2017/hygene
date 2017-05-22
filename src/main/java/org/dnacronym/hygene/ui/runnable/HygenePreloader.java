@@ -55,9 +55,7 @@ public final class HygenePreloader extends Preloader {
      */
     @Override
     public void handleProgressNotification(final ProgressNotification pn) {
-        if (progress != null) {
-            progress.setProgress(pn.getProgress());
-        }
+        progress.setProgress(pn.getProgress());
     }
 
     /**

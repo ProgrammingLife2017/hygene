@@ -9,7 +9,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -31,15 +30,15 @@ import java.util.ResourceBundle;
 public final class MenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
-    private @MonotonicNonNull FileChooser fileChooser;
-    private @MonotonicNonNull GraphStore graphStore;
+    private FileChooser fileChooser;
+    private GraphStore graphStore;
 
     private File parentDirectory;
 
     @FXML
-    private @MonotonicNonNull Menu recentFilesMenu;
+    private Menu recentFilesMenu;
 
-    private @MonotonicNonNull ConsoleWrapper consoleWrapper;
+    private ConsoleWrapper consoleWrapper;
 
 
     /**
@@ -74,15 +73,12 @@ public final class MenuController implements Initializable {
      */
     @FXML
     void openFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
-        if (fileChooser == null || graphStore == null) {
-            return;
-        }
-
         final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
         if (parentDirectory != null) {
             fileChooser.setInitialDirectory(parentDirectory);
         }
+
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
 
         if (gfaFile != null) {
@@ -134,10 +130,6 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     void populateRecentFilesMenu() throws UIInitialisationException {
-        if (recentFilesMenu == null) {
-            throw new UIInitialisationException("Recent files menu instance not initialised by framework.");
-        }
-
         final List<File> recentFiles;
         try {
             recentFiles = RecentFiles.getAll();
@@ -218,10 +210,6 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
-        if (graphStore == null) {
-            throw new UIInitialisationException("Unable to load file.");
-        }
-
         graphStore.load(file);
         RecentFiles.add(file);
 

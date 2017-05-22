@@ -6,7 +6,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -24,14 +23,14 @@ import java.util.ResourceBundle;
 public final class GraphController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
 
-    private @MonotonicNonNull GraphVisualizer graphVisualizer;
-    private @MonotonicNonNull GraphStore graphStore;
+    private GraphVisualizer graphVisualizer;
+    private GraphStore graphStore;
 
     @FXML
-    private @MonotonicNonNull Canvas graphCanvas;
+    private Canvas graphCanvas;
 
     @FXML
-    private @MonotonicNonNull Pane graphPane;
+    private Pane graphPane;
 
 
     @Override
@@ -44,16 +43,12 @@ public final class GraphController implements Initializable {
             return;
         }
 
-        if (graphVisualizer != null && graphCanvas != null && graphPane != null) {
-            graphCanvas.heightProperty().bind(graphPane.heightProperty());
-            graphCanvas.widthProperty().bind(graphPane.widthProperty());
+        graphCanvas.heightProperty().bind(graphPane.heightProperty());
+        graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
-            graphVisualizer.setCanvas(graphCanvas);
-        }
+        graphVisualizer.setCanvas(graphCanvas);
 
-        if (graphPane != null && graphStore != null) {
-            graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
-        }
+        graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
     }
 
     /**
@@ -108,10 +103,6 @@ public final class GraphController implements Initializable {
      * @see GfaFile#getGraph()
      */
     void updateGraph(final GfaFile gfaFile) {
-        if (graphPane == null || graphVisualizer == null) {
-            return;
-        }
-
         try {
             graphVisualizer.setGraph(gfaFile.getGraph());
             graphVisualizer.draw();

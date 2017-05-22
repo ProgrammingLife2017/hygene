@@ -12,8 +12,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
@@ -33,7 +31,6 @@ import java.util.List;
  * @see Canvas
  * @see GraphicsContext
  */
-@SuppressWarnings("nullness") // For performance, to prevent null checks during every draw.
 public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 1;
@@ -58,12 +55,12 @@ public final class GraphVisualizer {
     private final DoubleProperty borderDashLengthProperty;
 
     private final IntegerProperty nodeCountProperty;
-    private @Nullable Graph graph;
+    private Graph graph;
 
-    private @MonotonicNonNull Canvas canvas;
-    private @MonotonicNonNull GraphicsContext graphicsContext;
+    private Canvas canvas;
+    private GraphicsContext graphicsContext;
 
-    private @MonotonicNonNull RTree rTree;
+    private RTree rTree;
 
 
     /**
@@ -153,30 +150,28 @@ public final class GraphVisualizer {
         }
 
         clear();
-        if (graph != null && canvas != null) {
-            rTree = new RTree();
+        rTree = new RTree();
 
-            final int centerNodeId = centerNodeIdProperty.get();
+        final int centerNodeId = centerNodeIdProperty.get();
 
-            final GraphDimensionsCalculator graphDimensionsCalculator = new GraphDimensionsCalculator(
-                    graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get()
+        final GraphDimensionsCalculator graphDimensionsCalculator = new GraphDimensionsCalculator(
+                graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get()
+        );
+        final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
+
+        for (final Integer nodeId : neighbours) {
+            drawNode(graphDimensionsCalculator, graph, nodeId);
+
+            graph.iterator().visitDirectNeighbours(
+                    nodeId, SequenceDirection.RIGHT,
+                    neighbourId -> drawEdge(graphDimensionsCalculator, nodeId, neighbourId)
             );
-            final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
+        }
 
-            for (final Integer nodeId : neighbours) {
-                drawNode(graphDimensionsCalculator, graph, nodeId);
-
-                graph.iterator().visitDirectNeighbours(
-                        nodeId, SequenceDirection.RIGHT,
-                        neighbourId -> drawEdge(graphDimensionsCalculator, nodeId, neighbourId)
-                );
-            }
-
-            if (displayLaneBordersProperty.get()) {
-                drawLaneBorders(
-                        graphDimensionsCalculator.getLaneCount(),
-                        graphDimensionsCalculator.getLaneHeight());
-            }
+        if (displayLaneBordersProperty.get()) {
+            drawLaneBorders(
+                    graphDimensionsCalculator.getLaneCount(),
+                    graphDimensionsCalculator.getLaneHeight());
         }
     }
 
