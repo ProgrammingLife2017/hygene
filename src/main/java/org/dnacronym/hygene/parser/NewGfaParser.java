@@ -32,6 +32,7 @@ public final class NewGfaParser {
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeArrays;
 
+
     /**
      * Constructs and initializes a new instance of {@link GfaParser}.
      */
@@ -39,6 +40,7 @@ public final class NewGfaParser {
         this.nodeIds = new ConcurrentHashMap<>();
         this.nodeArrays = new int[0][];
     }
+
 
     /**
      * Parses a GFA file to a {@link Graph}.
@@ -257,5 +259,14 @@ public final class NewGfaParser {
         return Optional.ofNullable(nodeIds.get(nodeName)).orElseThrow(
                 () -> new ParseException("Link has reference to non existing node " + nodeName)
         );
+    }
+
+    /**
+     * Returns the mapping of node names to IDs.
+     *
+     * @return the mapping of node names to IDs
+     */
+    Map<String, Integer> getNodeIds() {
+        return nodeIds;
     }
 }

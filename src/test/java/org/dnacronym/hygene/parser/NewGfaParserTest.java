@@ -154,6 +154,10 @@ class NewGfaParserTest {
         assertThat(graph.getNode(3).getNumberOfIncomingEdges()).isEqualTo(1);
     }
 
+    @Test
+    void testGetNodeIds() throws ParseException {
+        assertThat(parser.getNodeIds()).isEmpty();
+    }
 
     private String replaceSpacesWithTabs(final String string) {
         return string.replaceAll(" ", "\t");
