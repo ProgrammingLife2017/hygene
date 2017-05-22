@@ -22,6 +22,28 @@ class GraphIteratorTest extends GraphBasedTest {
      */
 
     @Test
+    void testVisitDirectNeighboursEitherNoNeighbours() {
+        createGraph(1);
+
+        final List<Integer> neighbours = new ArrayList<>();
+        getGraph().iterator().visitDirectNeighbours(0, neighbours::add);
+
+        assertThat(neighbours).isEmpty();
+    }
+
+    @Test
+    void testVisitDirectNeighboursEither() {
+        createGraph(1);
+        addOutgoingEdges(new int[][] {{0, 1}, {0, 2}, {0, 3}});
+        addIncomingEdges(new int[][] {{4, 0}, {5, 0}, {6, 0}});
+
+        final List<Integer> neighbours = new ArrayList<>();
+        getGraph().iterator().visitDirectNeighbours(0, neighbours::add);
+
+        assertThat(neighbours).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6);
+    }
+
+    @Test
     void testVisitDirectNeighboursLeftNoLeftNeighbours() {
         createGraph(1);
         addOutgoingEdges(new int[][] {{0, 22}, {0, 29}, {0, 18}});
