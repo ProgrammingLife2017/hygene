@@ -31,6 +31,17 @@ public final class GraphIterator {
 
 
     /**
+     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in either direction.
+     *
+     * @param id     the node's identifier
+     * @param action the function to apply to each neighbour's identifier
+     */
+    public void visitDirectNeighbours(final int id, final Consumer<Integer> action) {
+        visitDirectNeighbours(id, SequenceDirection.LEFT, action);
+        visitDirectNeighbours(id, SequenceDirection.RIGHT, action);
+    }
+
+    /**
      * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction.
      *
      * @param id        the node's identifier
