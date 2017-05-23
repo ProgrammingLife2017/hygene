@@ -2,6 +2,7 @@ package org.dnacronym.hygene.models;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -104,38 +105,6 @@ public final class GraphIterator {
     }
 
     /**
-     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction until the
-     * given {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more
-     * neighbours.
-     *
-     * @param id        the node's identifier
-     * @param direction the direction of neighbours to visit
-     * @param condition the {@link Predicate} that fails until no more neighbours should be visited
-     * @param action    the function to apply to each neighbour's identifier
-     */
-    public void visitDirectNeighboursUntil(final int id, final SequenceDirection direction,
-                                           final Predicate<Integer> condition, final Consumer<Integer> action) {
-        visitDirectNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), action);
-    }
-
-    /**
-     * Applies the given {@link Consumer} to the identifiers of the direct neighbours in the given direction until the
-     * given {@link Predicate} returns {@code true} for that neighbour's identifier or until there are no more
-     * neighbours.
-     *
-     * @param id          the node's identifier
-     * @param direction   the direction of neighbours to visit
-     * @param condition   the {@link Predicate} that fails until no more neighbours should be visited
-     * @param catchAction the {@link Consumer} to execute as soon as the condition holds
-     * @param action      the function to apply to each neighbour's identifier
-     */
-    public void visitDirectNeighboursUntil(final int id, final SequenceDirection direction,
-                                           final Predicate<Integer> condition, final Consumer<Integer> catchAction,
-                                           final Consumer<Integer> action) {
-        visitDirectNeighboursWhile(id, direction, neighbour -> !condition.test(neighbour), catchAction, action);
-    }
-
-    /**
      * Applies the given {@link Consumer} to the identifiers of the indirect neighbours in the given direction.
      *
      * @param id        the node's identifier
@@ -188,30 +157,11 @@ public final class GraphIterator {
      *
      * @param id       the node's identifier
      * @param maxDepth the maximum number of hops a neighbour can be removed from the node
-     * @param action   the function to apply to each neighbour's identifier
+     * @param action   the function to apply to each neighbour's depth and identifier
      */
-    public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth, final Consumer<Integer> action) {
+    public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth,
+                                                   final BiConsumer<Integer, Integer> action) {
         final boolean[] visited = new boolean[nodeArrays.length];
-        visitIndirectNeighboursWithinRange(id, maxDepth, node -> visited[node], node -> {
-            visited[node] = true;
-            action.accept(node);
-        });
-    }
-
-    /**
-     * Applies the given {@link Consumer} to the identifiers of the indirect neighbours that can be reached within
-     * the given number of hops in both directions.
-     * <p>
-     * Visits left neighbours first.
-     *
-     * @param id       the node's identifier
-     * @param maxDepth the maximum number of hops a neighbour can be removed from the node
-     * @param visited  a function that returns true if the node with the supplied id has been visited during this
-     *                 iteration
-     * @param action   the function to apply to each neighbour's identifier
-     */
-    public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth, final Predicate<Integer> visited,
-                                                   final Consumer<Integer> action) {
         final Queue<Integer> queue = new LinkedList<>();
         queue.add(id);
 
@@ -219,11 +169,12 @@ public final class GraphIterator {
         final int[] depthIncreaseTimes = {1, 0};
         while (!queue.isEmpty()) {
             final int head = queue.remove();
-            if (visited.test(head)) {
+            if (visited[head]) {
                 continue;
             }
 
-            action.accept(head);
+            visited[head] = true;
+            action.accept(currentDepth, head);
 
             if (currentDepth == maxDepth) {
                 continue;
@@ -231,16 +182,16 @@ public final class GraphIterator {
                 return;
             }
 
-            visitDirectNeighbours(head, SequenceDirection.LEFT, index -> {
-                if (!visited.test(index)) {
+            visitDirectNeighbours(head, SequenceDirection.LEFT, neighbour -> {
+                if (!visited[neighbour]) {
                     depthIncreaseTimes[1]++;
-                    queue.add(index);
+                    queue.add(neighbour);
                 }
             });
-            visitDirectNeighbours(head, SequenceDirection.RIGHT, index -> {
-                if (!visited.test(index)) {
+            visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+                if (!visited[neighbour]) {
                     depthIncreaseTimes[1]++;
-                    queue.add(index);
+                    queue.add(neighbour);
                 }
             });
 
@@ -267,47 +218,17 @@ public final class GraphIterator {
     }
 
     /**
-     * Visits all nodes in this {@link Graph} and applies the given {@link Consumer} to their identifiers.
-     *
-     * @param direction the direction to visit the nodes in
-     * @param visited   a function that returns true if the node with the supplied id has been visited during this
-     *                  iteration
-     * @param action    the function to apply to each node's identifier
-     */
-    public void visitAll(final SequenceDirection direction, final Predicate<Integer> visited,
-                         final Consumer<Integer> action) {
-        final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
-        visitIndirectNeighbours(sentinelId, direction, visited, action);
-    }
-
-    /**
      * Visits all nodes in this {@link Graph} that can be reached within the given number of hops from the sentinel
      * node and, applies the given {@link Consumer} to their identifiers.
      *
      * @param direction the direction to visit the nodes in
      * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
-     * @param action    the function to apply to each node's identifier
+     * @param action    the function to apply to each node's depth and identifier
      */
     public void visitAllWithinRange(final SequenceDirection direction, final int maxDepth,
-                                    final Consumer<Integer> action) {
+                                    final BiConsumer<Integer, Integer> action) {
         final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
         visitIndirectNeighboursWithinRange(sentinelId, maxDepth, action);
-    }
-
-    /**
-     * Visits all nodes in this {@link Graph} that can be reached within the given number of hops from the sentinel
-     * node and, applies the given {@link Consumer} to their identifiers.
-     *
-     * @param direction the direction to visit the nodes in
-     * @param maxDepth  the maximum number of hops a neighbour can be removed from the node
-     * @param visited   a function that returns true if the node with the supplied id has been visited during this
-     *                  iteration
-     * @param action    the function to apply to each node's identifier
-     */
-    public void visitAllWithinRange(final SequenceDirection direction, final int maxDepth,
-                                    final Predicate<Integer> visited, final Consumer<Integer> action) {
-        final int sentinelId = direction.ternary(nodeArrays.length - 1, 0);
-        visitIndirectNeighboursWithinRange(sentinelId, maxDepth, visited, action);
     }
 
 

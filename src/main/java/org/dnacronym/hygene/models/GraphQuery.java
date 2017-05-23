@@ -54,7 +54,8 @@ public final class GraphQuery {
         this.centre = centre;
 
         current.clear();
-        graph.iterator().visitIndirectNeighboursWithinRange(centre, radius, node -> current.setDistance(node, 1));
+        graph.iterator().visitIndirectNeighboursWithinRange(centre, radius,
+                (depth, node) -> current.setDistance(node, depth));
     }
 
     /**

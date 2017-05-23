@@ -201,8 +201,8 @@ public final class Fafosp {
             // Neighbour has multiple neighbours
             final int[] neighbourLeftNeighboursHeight = {0};
 
-            graph.iterator().visitDirectNeighboursUntil(neighbour, SequenceDirection.LEFT,
-                    neighbourLeftNeighbour -> neighbourLeftNeighbour == node,
+            graph.iterator().visitDirectNeighboursWhile(neighbour, SequenceDirection.LEFT,
+                    neighbourLeftNeighbour -> neighbourLeftNeighbour != node,
                     neighbourLeftNeighbour -> neighbourLeftNeighboursHeight[0] += meta[2 * neighbourLeftNeighbour]
             );
 
