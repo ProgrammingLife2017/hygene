@@ -218,133 +218,6 @@ final class GraphIteratorTest extends GraphBasedTest {
 
 
     /*
-     * visitDirectNeighboursUntil
-     */
-
-    @Test
-    void testVisitDirectNeighboursUntilLeftTrue() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{65, 0}, {79, 0}});
-        addOutgoingEdges(new int[][] {{0, 56}, {0, 62}, {0, 38}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.LEFT, ignored -> true,
-                neighbours::add);
-
-        assertThat(neighbours).isEmpty();
-    }
-
-    @Test
-    void testVisitDirectNeighboursUntilLeftFalse() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{94, 0}, {13, 0}, {23, 0}});
-        addOutgoingEdges(new int[][] {{0, 46}, {0, 99}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.LEFT, ignored -> false,
-                neighbours::add);
-
-        assertThat(neighbours).containsExactlyInAnyOrder(94, 13, 23);
-    }
-
-    /**
-     * Tests that left neighbours are visited until the number of visited neighbours exceeds a particular value.
-     */
-    @Test
-    void testVisitDirectNeighboursUntilLeftSize() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{54, 0}, {50, 0}, {24, 0}, {5, 0}, {42, 0}, {32, 0}});
-        addOutgoingEdges(new int[][] {{0, 45}, {0, 65}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.LEFT,
-                ignored -> neighbours.size() > 4, neighbours::add);
-
-        assertThat(neighbours).hasSize(5);
-    }
-
-    /**
-     * Tests that the exit action is performed on the expected node.
-     */
-    @Test
-    void testVisitDirectNeighbourUntilLeftCatchAction() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{98, 0}, {82, 0}, {35, 0}});
-        addOutgoingEdges(new int[][] {{0, 83}, {0, 19}});
-
-        final int[] exitNeighbour = new int[1];
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.LEFT,
-                neighbour -> neighbour == 82,
-                neighbour -> exitNeighbour[0] = neighbour,
-                dummyConsumer
-        );
-
-        assertThat(exitNeighbour[0]).isEqualTo(82);
-    }
-
-    @Test
-    void testVisitDirectNeighboursUntilRightTrue() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{21, 0}, {88, 0}});
-        addOutgoingEdges(new int[][] {{0, 38}, {0, 49}, {0, 24}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.RIGHT, ignored -> true,
-                neighbours::add);
-
-        assertThat(neighbours).isEmpty();
-    }
-
-    @Test
-    void testVisitDirectNeighboursUntilRightFalse() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{89, 0}, {17, 0}, {61, 0}});
-        addOutgoingEdges(new int[][] {{0, 32}, {0, 40}, {0, 57}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.RIGHT, ignored -> false,
-                neighbours::add);
-
-        assertThat(neighbours).containsExactlyInAnyOrder(32, 40, 57);
-    }
-
-    /**
-     * Tests that right neighbours are visited until the number of visited neighbours exceeds a particular value.
-     */
-    @Test
-    void testVisitDirectNeighboursUntilRightSize() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{48, 0}, {82, 0}, {22, 0}});
-        addOutgoingEdges(new int[][] {{0, 85}, {0, 31}, {0, 15}, {0, 92}, {0, 13}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.RIGHT,
-                ignored -> neighbours.size() > 3, neighbours::add);
-
-        assertThat(neighbours).hasSize(4);
-    }
-
-    /**
-     * Tests that the exit action is performed on the expected node.
-     */
-    @Test
-    void testVisitDirectNeighbourUntilRightCatchAction() {
-        createGraph(1);
-        addIncomingEdges(new int[][] {{13, 0}, {35, 0}, {57, 0}});
-        addOutgoingEdges(new int[][] {{0, 43}, {0, 32}, {0, 25}, {0, 41}});
-
-        final int[] exitNeighbour = new int[1];
-        getGraph().iterator().visitDirectNeighboursUntil(0, SequenceDirection.RIGHT,
-                neighbour -> neighbour == 32,
-                neighbour -> exitNeighbour[0] = neighbour,
-                dummyConsumer
-        );
-
-        assertThat(exitNeighbour[0]).isEqualTo(32);
-    }
-
-
-    /*
      * visitIndirectNeighbours
      */
 
@@ -458,17 +331,6 @@ final class GraphIteratorTest extends GraphBasedTest {
      */
 
     @Test
-    void testVisitAllLeftWithDuplicates() {
-        createGraph(8);
-        addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {2, 5}, {3, 5}, {3, 6}, {3, 7}, {4, 7}});
-
-        final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitAll(SequenceDirection.LEFT, ignored -> false, nodes::add);
-
-        assertThat(nodes).containsExactlyInAnyOrder(7, 4, 3, 2, 2, 1, 1, 0, 0);
-    }
-
-    @Test
     void testVisitAllLeftWithoutDuplicates() {
         createGraph(8);
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {2, 5}, {3, 5}, {3, 7}, {4, 7}});
@@ -477,17 +339,6 @@ final class GraphIteratorTest extends GraphBasedTest {
         getGraph().iterator().visitAll(SequenceDirection.LEFT, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(7, 4, 3, 2, 1, 0);
-    }
-
-    @Test
-    void testVisitAllRightWithDuplicates() {
-        createGraph(5);
-        addEdges(new int[][] {{0, 1}, {0, 2}, {0, 4}, {1, 2}, {1, 3}, {3, 4}});
-
-        final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitAll(SequenceDirection.RIGHT, node -> false, neighbours::add);
-
-        assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 4, 2, 3, 4);
     }
 
     @Test
@@ -512,7 +363,8 @@ final class GraphIteratorTest extends GraphBasedTest {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 5}, {4, 6}, {5, 6}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.LEFT, 2, neighbours::add);
+        getGraph().iterator().visitAllWithinRange(SequenceDirection.LEFT, 2,
+                (width, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(6, 5, 4, 3, 1);
     }
@@ -523,7 +375,8 @@ final class GraphIteratorTest extends GraphBasedTest {
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {3, 6}, {4, 6}, {5, 6}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 2, neighbours::add);
+        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 2,
+                (width, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 3, 4);
     }
