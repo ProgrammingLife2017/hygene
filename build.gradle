@@ -48,6 +48,9 @@ dependencies {
     // SQLite driver
     compile("org.xerial:sqlite-jdbc:${sqliteVersion}")
 
+    // Guava
+    compile("com.google.guava:guava:${guavaVersion}")
+
     // Apache Commons
     compile("commons-codec:commons-codec:${commonsCodecVersion}")
     compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
