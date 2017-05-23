@@ -121,7 +121,7 @@ public final class Hygene extends Application {
             final String fileName = parameters.get("file");
             if (fileName != null) {
                 try {
-                    getGraphStore().load(new File(fileName));
+                    getGraphStore().load(new File(fileName), progress -> System.out.println(progress + "%"));
                 } catch (final IOException e) {
                     LOGGER.error(String.format("File %s could not be found.", fileName), e);
                 }
