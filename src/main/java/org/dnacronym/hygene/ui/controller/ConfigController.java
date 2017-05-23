@@ -61,12 +61,10 @@ public final class ConfigController implements Initializable {
         currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
         currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
 
-        graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) -> {
-            nodeId.setText(String.valueOf(newValue));
-        });
-        graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) -> {
-            range.setText(String.valueOf(newValue));
-        });
+        graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) ->
+                nodeId.setText(String.valueOf(newValue)));
+        graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) ->
+                range.setText(String.valueOf(newValue)));
 
         nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
         edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());

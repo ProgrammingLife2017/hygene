@@ -21,14 +21,13 @@ public class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
     private static final int GRAPH_SLIDER_SEGMENTS = 10;
 
-    private GraphVisualizer graphVisualizer;
-
     @FXML
     private Slider graphSlider;
 
 
     @Override
     public final void initialize(final URL location, final ResourceBundle resources) {
+        final GraphVisualizer graphVisualizer;
         try {
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
         } catch (UIInitialisationException e) {
