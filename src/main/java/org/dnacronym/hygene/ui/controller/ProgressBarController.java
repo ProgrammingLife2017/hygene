@@ -58,7 +58,7 @@ public class ProgressBarController {
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
                 task.accept(progress -> {
                     if (progress == PROGRESS_TOTAL) {
-                        Platform.runLater(() -> progressBarController.dialogStage.close());
+                        Platform.runLater(progressBarController.dialogStage::close);
                     }
                     updateProgress(progress, PROGRESS_TOTAL);
                 });
@@ -85,7 +85,7 @@ public class ProgressBarController {
 
             dialogStage.setScene(new Scene(root.load()));
         } catch (final IOException e) {
-            throw new UIInitialisationException("Progress bar view could not be loaded.");
+            throw new UIInitialisationException("Progress bar view could not be loaded.", e);
         }
     }
 
