@@ -43,7 +43,7 @@ public final class GraphDimensionsCalculator {
      * @param hops         Amount of hops allowed from center node
      * @param nodeHeight   the height of a single node
      * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, int,
-     * java.util.function.Consumer)
+     * java.util.function.BiConsumer)
      */
     public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
                                      final double nodeHeight) {
