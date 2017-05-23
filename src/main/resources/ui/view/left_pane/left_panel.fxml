@@ -7,7 +7,6 @@
            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.dnacronym.hygene.ui.controller.leftpane.LeftPaneController">
     <items>
-        <fx:include source="config_view.fxml"/>
         <fx:include source="node_properties_view.fxml"/>
     </items>
 </SplitPane>

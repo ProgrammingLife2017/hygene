@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller.leftpane;
+package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -19,9 +20,10 @@ import java.util.ResourceBundle;
 /**
  * Controller for the configuration window.
  */
-public final class ConfigController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(ConfigController.class);
+public final class QuerySettingsController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(QuerySettingsController.class);
 
+    private Settings settings;
     private GraphVisualizer graphVisualizer;
 
     @FXML
@@ -38,6 +40,7 @@ public final class ConfigController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
+            setSettings(Hygene.getInstance().getSettings());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialise Configuration Controller.", e);
             return;
@@ -56,6 +59,24 @@ public final class ConfigController implements Initializable {
     }
 
     /**
+     * Set the {@link Settings} for use by the controller.
+     *
+     * @param settings {@link Settings} for use by the controller
+     */
+    void setSettings(final Settings settings) {
+        this.settings = settings;
+    }
+
+    /**
+     * Set the {@link GraphVisualizer}. This allows the sliders to change the properties of the {@link GraphVisualizer}.
+     *
+     * @param graphVisualiser graph pane to set in the controller
+     */
+    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
+        this.graphVisualizer = graphVisualiser;
+    }
+
+    /**
      * Set the node id property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
@@ -63,10 +84,12 @@ public final class ConfigController implements Initializable {
      */
     @FXML
     void setNodeId() {
-        final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
-        graphVisualizer.getCenterNodeIdProperty().set(newValue);
+        settings.addRunnable(() -> {
+            final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
+            graphVisualizer.getCenterNodeIdProperty().set(newValue);
 
-        LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
+            LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
+        });
     }
 
     /**
@@ -77,18 +100,11 @@ public final class ConfigController implements Initializable {
      */
     @FXML
     void setRange() {
-        final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
-        graphVisualizer.getHopsProperty().set(newValue);
+        settings.addRunnable(() -> {
+            final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
+            graphVisualizer.getHopsProperty().set(newValue);
 
-        LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
-    }
-
-    /**
-     * Set the {@link GraphVisualizer}. This allows the sliders to change the properties of the {@link GraphVisualizer}.
-     *
-     * @param graphVisualiser graph pane to set in the controller
-     */
-    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
-        this.graphVisualizer = graphVisualiser;
+            LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
+        });
     }
 }
