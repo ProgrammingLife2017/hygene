@@ -30,6 +30,7 @@ public class ProgressBarController {
     @FXML
     private ProgressBar progressBar;
 
+
     /**
      * Initializes the new {@link Stage} and creates the {@link Scene}.
      */
@@ -39,6 +40,7 @@ public class ProgressBarController {
         dialogStage.setResizable(false);
         dialogStage.initModality(Modality.APPLICATION_MODAL);
     }
+
 
     /**
      * Creates an instance of the {@link ProgressBarController} and starts executing the task in a new thread.

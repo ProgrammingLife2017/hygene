@@ -237,7 +237,7 @@ public final class MenuController implements Initializable {
             try {
                 graphStore.load(file, progressUpdater);
                 RecentFiles.add(file);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 LOGGER.error("Failed to load: " + file.getName(), e);
             }
         });
