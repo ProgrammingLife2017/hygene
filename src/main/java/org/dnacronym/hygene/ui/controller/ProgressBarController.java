@@ -53,7 +53,7 @@ public class ProgressBarController {
 
         progressBarController.createScene();
 
-        Task<Void> progressTask = new Task<Void>() {
+        final Task<Void> progressTask = new Task<Void>() {
             @Override
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
                 task.accept(progress -> {
