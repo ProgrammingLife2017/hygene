@@ -66,6 +66,8 @@
                                         <Tooltip text="Amount of neighbours on the right side of the node."/>
                                     </tooltip>
                                 </TextField>
+                                <Label text="Node id" GridPane.rowIndex="1"/>
+                                <TextField fx:id="nodeId" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>
                     </children>

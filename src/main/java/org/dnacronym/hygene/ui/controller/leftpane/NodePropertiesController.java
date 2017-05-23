@@ -27,6 +27,8 @@ public final class NodePropertiesController implements Initializable {
     private GraphVisualizer graphVisualizer;
 
     @FXML
+    private TextField nodeId;
+    @FXML
     private TextField sequence;
     @FXML
     private Canvas neighbourCanvas;
@@ -57,6 +59,8 @@ public final class NodePropertiesController implements Initializable {
             if (newNode == null) {
                 return;
             }
+
+            nodeId.setText(String.valueOf(newNode.getId()));
 
             try {
                 sequence.setText(newNode.retrieveMetadata().getSequence());
