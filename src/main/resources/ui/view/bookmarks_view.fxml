@@ -4,10 +4,10 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <ScrollPane fx:id="bookmarksPane" fitToHeight="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308"
-            pannable="true"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            pannable="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.BookmarksController">
     <content>
         <AnchorPane maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
@@ -20,6 +20,9 @@
                         <TableColumn fx:id="baseColumn" prefWidth="75.0" text="Base"/>
                         <TableColumn fx:id="descriptionColumn" prefWidth="150.0" text="Description"/>
                     </columns>
+                    <tooltip>
+                        <Tooltip text="Overview of all bases of the current genome sequence."/>
+                    </tooltip>
                 </TableView>
             </children>
         </AnchorPane>

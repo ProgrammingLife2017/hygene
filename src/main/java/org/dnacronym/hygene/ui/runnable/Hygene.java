@@ -12,8 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.store.Settings;
+import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
-    private SimpleBookmarkStore bookmarkStore;
+    private SimpleBookmarkStore simpleBookmarkStore;
 
     private Stage primaryStage;
 
