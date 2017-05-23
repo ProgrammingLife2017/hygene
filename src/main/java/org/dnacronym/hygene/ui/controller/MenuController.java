@@ -230,7 +230,7 @@ public final class MenuController implements Initializable {
     private void loadFile(final File file) throws IOException, UIInitialisationException {
         ProgressBarController.performTask(progressUpdater -> {
             if (graphStore == null) {
-                LOGGER.error("Failed to load: " + file.getName());
+                LOGGER.error("Failed to load: " + file.getName() + ".");
                 return;
             }
 
@@ -238,7 +238,7 @@ public final class MenuController implements Initializable {
                 graphStore.load(file, progressUpdater);
                 RecentFiles.add(file);
             } catch (final IOException e) {
-                LOGGER.error("Failed to load: " + file.getName(), e);
+                LOGGER.error("Failed to load: " + file.getName() + ".", e);
             }
         });
 
