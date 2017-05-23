@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.stage.Stage;
 import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.store.Settings;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
@@ -11,12 +12,14 @@ import static org.mockito.Mockito.verify;
 
 final class SettingsViewTest extends UITest {
     private SettingsView settingsView;
+    private Settings settings;
     private Stage stage;
 
 
     @Override
     public void beforeEach() {
-        settingsView = new SettingsView();
+        settings = mock(Settings.class);
+        settingsView = new SettingsView(settings);
 
         stage = mock(Stage.class);
         settingsView.setStage(stage);

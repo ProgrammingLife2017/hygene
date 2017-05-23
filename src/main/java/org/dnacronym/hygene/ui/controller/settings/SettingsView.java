@@ -72,8 +72,6 @@ public final class SettingsView {
      * Show the settings window.
      */
     public void show() {
-        if (stage != null) {
-            stage.show();
-        }
+        stage.show();
     }
 }

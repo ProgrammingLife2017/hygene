@@ -8,7 +8,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.Settings;
@@ -23,19 +22,21 @@ import java.util.ResourceBundle;
 public final class SettingsButtonController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(SettingsButtonController.class);
 
-    private @MonotonicNonNull Settings settings;
+    private Settings settings;
+    private Stage stage;
 
     @FXML
-    private @MonotonicNonNull ButtonBar buttonBar;
+    private ButtonBar buttonBar;
 
     @FXML
-    private @MonotonicNonNull Button apply;
+    private Button apply;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setSettings(Hygene.getInstance().getSettings());
+            setStage((Stage) buttonBar.getScene().getWindow());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize SettingsButtonController.", e);
             return;
@@ -54,20 +55,21 @@ public final class SettingsButtonController implements Initializable {
     }
 
     /**
+     * Set the {@link Stage} for use by the controller.
+     *
+     * @param stage {@link Stage} for use by the controller
+     */
+    void setStage(final Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
      * When the user clicks the "OK" button execute all actions and close the window.
      */
     @FXML
     void okAction() {
-        if (settings != null) {
-            settings.executeAll();
-        }
-
-        if (buttonBar != null) {
-            final Stage stage = (Stage) buttonBar.getScene().getWindow();
-            if (stage != null) {
-                stage.hide();
-            }
-        }
+        settings.executeAll();
+        stage.hide();
     }
 
     /**
@@ -75,16 +77,8 @@ public final class SettingsButtonController implements Initializable {
      */
     @FXML
     void cancelAction() {
-        if (settings != null) {
-            settings.clearAll();
-        }
-
-        if (buttonBar != null) {
-            final Stage stage = (Stage) buttonBar.getScene().getWindow();
-            if (stage != null) {
-                stage.hide();
-            }
-        }
+        settings.clearAll();
+        stage.hide();
     }
 
     /**
@@ -92,8 +86,6 @@ public final class SettingsButtonController implements Initializable {
      */
     @FXML
     void applyAction() {
-        if (settings != null) {
-            settings.executeAll();
-        }
+        settings.executeAll();
     }
 }
