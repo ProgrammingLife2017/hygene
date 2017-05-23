@@ -76,16 +76,22 @@ public final class NodeDistanceMap {
     }
 
     /**
-     * Sets the given node's distance to the given distance.
+     * Sets the given node's distance to the given distance, unless the current distance is smaller.
      * <p>
      * If the node was registered to have another distance, the old distance pair will be removed.
      *
      * @param node     a node id
      * @param distance a distance
-     * @return the previous distance of the given node, or {@code null} if there was none
+     * @return the previous distance of the given node, or {@code null} if there was none or the current distance is
+     * smaller
      */
     public @Nullable Integer setDistance(final Integer node, final Integer distance) {
-        final Integer oldDistance = removeNode(node);
+        final Integer oldDistance = getDistance(node);
+        if (oldDistance != null && oldDistance < distance) {
+            return null;
+        }
+
+        removeNode(node);
         distanceNodes.put(distance, node);
         nodeDistances.put(node, distance);
         return oldDistance;

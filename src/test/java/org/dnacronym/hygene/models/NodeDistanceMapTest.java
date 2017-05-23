@@ -106,18 +106,20 @@ class NodeDistanceMapTest {
     }
 
     @Test
-    void testGetSetDistanceUpdate() {
+    void testGetSetDistanceUpdateLower() {
         map.setDistance(111, 471);
         map.setDistance(111, 368);
 
         assertThat(map.getDistance(111)).isEqualTo(368);
+        assertThat(map.getNodes(471)).doesNotContain(923);
     }
 
     @Test
-    void testGetSetDistanceOverwrite() {
-        map.setDistance(923, 316);
+    void testGetSetDistanceOverwriteHigher() {
         map.setDistance(923, 115);
+        map.setDistance(923, 316);
 
+        assertThat(map.getDistance(923)).isEqualTo(115);
         assertThat(map.getNodes(316)).doesNotContain(923);
     }
 
