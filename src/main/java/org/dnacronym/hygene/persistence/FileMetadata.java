@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.persistence;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +30,7 @@ final class FileMetadata {
      *
      * @param fileDatabase the database to contain that metadata
      */
-    FileMetadata(final @NonNull FileDatabase fileDatabase) {
+    FileMetadata(final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
     }
