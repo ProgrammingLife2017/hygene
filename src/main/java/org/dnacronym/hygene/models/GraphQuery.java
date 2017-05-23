@@ -5,9 +5,17 @@ import java.util.function.Consumer;
 
 /**
  * Enables dynamic centre point queries for a {@link Graph}.
+ *
+ * Query results are cached and can be used later.
  */
 public final class GraphQuery {
+    /**
+     * The queried {@link Graph}.
+     */
     private final Graph graph;
+    /**
+     * Maps each node in the cache to the distance from the centre point of the query.
+     */
     private final NodeDistanceMap current;
 
 
@@ -44,7 +52,7 @@ public final class GraphQuery {
     }
 
     /**
-     * Visits all nodes in the query and applies the given {@link Consumer} to them.
+     * Visits all nodes in the cache and applies the given {@link Consumer} to them.
      *
      * @param action a {@link Consumer} for node ids
      */
