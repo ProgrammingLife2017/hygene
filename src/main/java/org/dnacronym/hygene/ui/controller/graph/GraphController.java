@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.controller.graph;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -117,10 +117,9 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onGraphPaneMousePressed(final MouseEvent mouseEvent) {
-        if (graphMovementCalculator != null && primaryStage != null) {
-            graphMovementCalculator.onMousePressed(-mouseEvent.getSceneX());
-            primaryStage.getScene().setCursor(Cursor.OPEN_HAND);
-        }
+        graphMovementCalculator.onMousePressed(mouseEvent.getSceneX());
+        primaryStage.getScene().setCursor(Cursor.OPEN_HAND);
+
         mouseEvent.consume();
     }
 
@@ -131,10 +130,9 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onGraphPaneMouseDragged(final MouseEvent mouseEvent) {
-        if (graphMovementCalculator != null && primaryStage != null) {
-            graphMovementCalculator.onMouseDragged(-mouseEvent.getSceneX());
-            primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
-        }
+        graphMovementCalculator.onMouseDragged(mouseEvent.getSceneX());
+        primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
+
         mouseEvent.consume();
     }
 
@@ -145,9 +143,8 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onGraphPaneMouseReleased(final MouseEvent mouseEvent) {
-        if (primaryStage != null) {
-            primaryStage.getScene().setCursor(Cursor.DEFAULT);
-        }
+        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+
         mouseEvent.consume();
     }
 }

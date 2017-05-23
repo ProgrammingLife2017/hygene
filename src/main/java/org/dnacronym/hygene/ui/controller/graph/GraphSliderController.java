@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.controller.graph;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -42,15 +42,15 @@ public final class GraphSliderController implements Initializable {
             return;
         }
 
-        graphSlider.maxProperty().bind(graphVisualizer.getNodeCountProperty());
+        graphSlider.maxProperty().bind(Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1));
         graphSlider.majorTickUnitProperty().bind(Bindings.divide(
                 Bindings.max(GRAPH_SLIDER_SEGMENTS, graphVisualizer.getNodeCountProperty()),
                 GRAPH_SLIDER_SEGMENTS));
+
         graphSlider.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
 
         graphVisualizer.getCenterNodeIdProperty().addListener(
-                (observable, oldNodeId, newNodeId) -> graphSlider.setValue(newNodeId.doubleValue())
-        );
+                (observable, oldNodeId, newNodeId) -> graphSlider.setValue(newNodeId.doubleValue()));
 
         graphSliderPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         graphSliderPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));

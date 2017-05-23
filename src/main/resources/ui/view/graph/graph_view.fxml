@@ -3,7 +3,7 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane fx:id="graphPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-            fx:controller="org.dnacronym.hygene.ui.controller.GraphController"
+            fx:controller="org.dnacronym.hygene.ui.controller.graph.GraphController"
             onMouseDragged="#onGraphPaneMouseDragged" onMousePressed="#onGraphPaneMousePressed"
             onMouseReleased="#onGraphPaneMouseReleased"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">

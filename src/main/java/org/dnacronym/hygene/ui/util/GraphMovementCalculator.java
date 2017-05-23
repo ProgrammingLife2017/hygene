@@ -10,12 +10,18 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_SENSITIVITY = 0.005;
+    /**
+     * Minimum distance for a drag to be considered a drag.
+     */
+//    private static final double MINIMUM_DRAG_DISTANCE = 4;
 
     private final GraphVisualizer graphVisualizer;
     private final DoubleProperty sensitivityProperty;
 
     private double centerX;
 
+    private double lastX;
+    private boolean dragginLeft;
 
     /**
      * Create instance of {@link GraphMovementCalculator}.
@@ -24,7 +30,7 @@ public final class GraphMovementCalculator {
      */
     public GraphMovementCalculator(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
-        sensitivityProperty = new SimpleDoubleProperty(DEFAULT_SENSITIVITY);
+        this.sensitivityProperty = new SimpleDoubleProperty(DEFAULT_SENSITIVITY);
     }
 
 
@@ -39,13 +45,21 @@ public final class GraphMovementCalculator {
 
     /**
      * The new x every time the mouse is dragged.
+     * <p>
+     * if the drag direciton changes, it resets the drag by calling {@link #onMousePressed(double)} again.
      *
      * @param x new x of mouse when dragged
      */
     public void onMouseDragged(final double x) {
+        if (lastX < x && dragginLeft || lastX > x && !dragginLeft) {
+            onMousePressed(x);
+        }
+        dragginLeft = lastX > x;
+
+        lastX = x;
         final double currentCenterNodeId = graphVisualizer.getCenterNodeIdProperty().get();
 
-        final double translation = x - centerX;
+        final double translation = centerX - x;
         final int newCenterNodeId = (int) (currentCenterNodeId + Math.round(sensitivityProperty.get() * translation));
         graphVisualizer.getCenterNodeIdProperty().set(newCenterNodeId);
     }
