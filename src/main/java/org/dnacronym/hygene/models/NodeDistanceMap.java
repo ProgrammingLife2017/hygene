@@ -114,10 +114,6 @@ public final class NodeDistanceMap {
      * @return the distance of the given node, or {@code null} if the node was not in this map
      */
     public @Nullable Integer removeNode(final Integer node) {
-        if (!containsNode(node)) {
-            return null;
-        }
-
         final Integer distance = getDistance(node);
         if (distance == null) {
             return null;
