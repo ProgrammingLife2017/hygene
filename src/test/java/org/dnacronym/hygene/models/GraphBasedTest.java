@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.models;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 
 import java.util.function.Function;
 
@@ -15,15 +15,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 abstract class GraphBasedTest {
     private Graph graph;
     private int[][] nodeArrays;
+    private GraphQuery graphQuery;
 
 
     /**
      * Resets this {@link GraphBasedTest}'s fields.
      */
-    @BeforeEach
-    void beforeEach() {
+    @AfterEach
+    void afterEach() {
         graph = null;
         nodeArrays = null;
+        graphQuery = null;
     }
 
 
@@ -34,6 +36,15 @@ abstract class GraphBasedTest {
      */
     final Graph getGraph() {
         return graph;
+    }
+
+    /**
+     * Returns the current {@link GraphQuery}.
+     *
+     * @return the current {@link GraphQuery}
+     */
+    final GraphQuery getGraphQuery() {
+        return graphQuery;
     }
 
     /**
@@ -48,6 +59,13 @@ abstract class GraphBasedTest {
         }
 
         graph = new Graph(nodeArrays, null);
+    }
+
+    /**
+     * Creates a new {@link GraphQuery} for the current {@link Graph}, and sets it in this {@link GraphBasedTest}.
+     */
+    final void createGraphQuery() {
+        graphQuery = new GraphQuery(graph);
     }
 
     /**

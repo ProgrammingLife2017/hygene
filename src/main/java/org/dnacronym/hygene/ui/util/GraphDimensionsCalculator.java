@@ -4,10 +4,10 @@ import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.GraphQuery;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -17,6 +17,7 @@ public final class GraphDimensionsCalculator {
     private static final Logger LOGGER = LogManager.getLogger(GraphDimensionsCalculator.class);
 
     private final Graph graph;
+    private final GraphQuery query;
     private final double canvasHeight;
     private final double canvasWidth;
     private final int minX;
@@ -41,7 +42,8 @@ public final class GraphDimensionsCalculator {
      * @param centerNodeId node id of the center node
      * @param hops         Amount of hops allowed from center node
      * @param nodeHeight   the height of a single node
-     * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, int, Consumer)
+     * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, int,
+     * java.util.function.Consumer)
      */
     public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
                                      final double nodeHeight) {
@@ -59,15 +61,15 @@ public final class GraphDimensionsCalculator {
         neighbours = new LinkedList<>();
         neighbours.add(centerNodeId);
 
-        final Consumer<Integer> consumer = nodeId -> {
+        query = new GraphQuery(graph);
+        query.query(centerNodeId, hops);
+        query.visit(nodeId -> {
             neighbours.add(nodeId);
             tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId));
             tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId));
             tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
-        };
-
-        graph.iterator().visitIndirectNeighboursWithinRange(centerNodeId, hops, consumer);
+        });
 
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
