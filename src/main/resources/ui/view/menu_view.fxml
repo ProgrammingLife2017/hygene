@@ -43,6 +43,9 @@
                     </accelerator>
                 </MenuItem>
             </items>
+            <items>
+                <MenuItem fx:id="openHelp" mnemonicParsing="false" onAction="#openHelpAction" text="Help"/>
+            </items>
         </Menu>
     </menus>
 </MenuBar>

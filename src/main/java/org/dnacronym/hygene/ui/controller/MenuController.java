@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.controller.settings.SettingsView;
+import org.dnacronym.hygene.ui.help.HelpMenuWrapper;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -45,6 +46,7 @@ public final class MenuController implements Initializable {
     private Menu recentFilesMenu;
 
     private ConsoleWrapper consoleWrapper;
+    private HelpMenuWrapper helpMenuWrapper;
 
     private SettingsView settingsView;
 
@@ -111,7 +113,7 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Opens the an independent stage showing the current.
+     * Opens an independent stage showing the console window,
      *
      * @param event {@link ActionEvent} associated with the event
      * @throws IOException if unable to located the FXML resource
@@ -122,6 +124,25 @@ public final class MenuController implements Initializable {
             if (consoleWrapper == null) {
                 consoleWrapper = new ConsoleWrapper();
                 LOGGER.info("Launched GUI console window");
+            }
+
+            consoleWrapper.bringToFront();
+        } catch (final UIInitialisationException e) {
+            LOGGER.error(e);
+        }
+    }
+
+    /**
+     * Opens an independent stage showing the help menu.
+     *
+     * @param actionEvent {@link ActionEvent} associated with the event
+     * @throws IOException if unable to locate FXML resource
+     */
+    public void openHelpAction(final ActionEvent actionEvent) throws IOException {
+        try {
+            if (helpMenuWrapper == null) {
+                helpMenuWrapper = new HelpMenuWrapper();
+                LOGGER.info("Launched GUI help menu");
             }
 
             consoleWrapper.bringToFront();
