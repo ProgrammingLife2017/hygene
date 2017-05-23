@@ -10,10 +10,6 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_SENSITIVITY = 0.005;
-    /**
-     * Minimum distance for a drag to be considered a drag.
-     */
-//    private static final double MINIMUM_DRAG_DISTANCE = 4;
 
     private final GraphVisualizer graphVisualizer;
     private final DoubleProperty sensitivityProperty;
@@ -21,7 +17,8 @@ public final class GraphMovementCalculator {
     private double centerX;
 
     private double lastX;
-    private boolean dragginLeft;
+    private boolean draggingRight;
+
 
     /**
      * Create instance of {@link GraphMovementCalculator}.
@@ -51,10 +48,10 @@ public final class GraphMovementCalculator {
      * @param x new x of mouse when dragged
      */
     public void onMouseDragged(final double x) {
-        if (lastX < x && dragginLeft || lastX > x && !dragginLeft) {
+        if (lastX < x && draggingRight || lastX > x && !draggingRight) {
             onMousePressed(x);
         }
-        dragginLeft = lastX > x;
+        draggingRight = lastX > x;
 
         lastX = x;
         final double currentCenterNodeId = graphVisualizer.getCenterNodeIdProperty().get();
