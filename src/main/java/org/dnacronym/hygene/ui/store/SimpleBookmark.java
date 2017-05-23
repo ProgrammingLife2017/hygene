@@ -8,7 +8,9 @@ import org.dnacronym.hygene.parser.ParseException;
 
 
 /**
- * A simple bookmark. This is used to create a representation of a {@link Bookmark} for the user and leaves out all
+ * A simple bookmark.
+ * <p>
+ * This is used to create a representation of a {@link Bookmark} for the user and leaves out all
  * non-UI related information.
  */
 public final class SimpleBookmark {
