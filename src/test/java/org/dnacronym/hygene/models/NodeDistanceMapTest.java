@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link NodeDistanceMap}s.
+ * Unit tests for {@link NodeDistanceMap}.
  */
 class NodeDistanceMapTest {
     private NodeDistanceMap map;
