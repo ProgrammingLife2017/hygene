@@ -2,10 +2,7 @@ package org.dnacronym.hygene.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
@@ -36,15 +33,6 @@ public final class ConfigController implements Initializable {
     @FXML
     private TextField range;
 
-    @FXML
-    private Slider nodeHeight;
-    @FXML
-    private ColorPicker edgeColors;
-    @FXML
-    private CheckBox showBorders;
-    @FXML
-    private Slider dashWidth;
-
     @Override
     @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -61,15 +49,10 @@ public final class ConfigController implements Initializable {
         currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
         currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
 
-        graphVisualizer.getCenterNodeIdProperty().addListener((observable, oldValue, newValue) ->
-                nodeId.setText(String.valueOf(newValue)));
-        graphVisualizer.getHopsProperty().addListener((observable, oldValue, newValue) ->
-                range.setText(String.valueOf(newValue)));
-
-        nodeHeight.valueProperty().bindBidirectional(graphVisualizer.getNodeHeightProperty());
-        edgeColors.valueProperty().bindBidirectional(graphVisualizer.getEdgeColorProperty());
-        showBorders.selectedProperty().bindBidirectional(graphVisualizer.getDisplayBordersProperty());
-        dashWidth.valueProperty().bindBidirectional(graphVisualizer.getBorderDashLengthProperty());
+        graphVisualizer.getCenterNodeIdProperty().addListener(
+                (observable, oldValue, newValue) -> nodeId.setText(String.valueOf(newValue)));
+        graphVisualizer.getHopsProperty().addListener(
+                (observable, oldValue, newValue) -> range.setText(String.valueOf(newValue)));
     }
 
     /**

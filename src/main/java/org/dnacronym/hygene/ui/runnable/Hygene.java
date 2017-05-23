@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.io.File;
@@ -35,6 +36,7 @@ public final class Hygene extends Application {
 
     private GraphStore graphStore;
     private GraphVisualizer graphVisualizer;
+    private Settings settings;
 
     private Stage primaryStage;
 
@@ -77,6 +79,7 @@ public final class Hygene extends Application {
     public void init() {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer();
+        settings = new Settings();
     }
 
     @Override
@@ -162,6 +165,17 @@ public final class Hygene extends Application {
      */
     public GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
         return graphVisualizer;
+    }
+
+    /**
+     * Gets the {@link Settings} of the {@link Hygene}.
+     *
+     * @return {@link Settings} of the {@link Hygene}
+     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Settings} was not set
+     *                                   in {@link #init()}
+     */
+    public Settings getSettings() throws UIInitialisationException {
+        return settings;
     }
 
     /**

@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.ui.store;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.dnacronym.hygene.ui.UITest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -14,26 +14,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests of {@link GraphStore}s.
  */
-public class GraphStoreTest {
+final class GraphStoreTest extends UITest {
     private GraphStore graphStore;
 
 
-    @BeforeEach
-    final void beforeEach() {
+    @Override
+    public void beforeEach() {
         graphStore = new GraphStore();
     }
 
 
     @Test
-    public final void testInitialGraphNull() {
+    void testInitialGraphNull() {
         assertThat(graphStore.getGfaFileProperty().get()).isNull();
     }
 
     @Test
-    public final void testOpenGfaFile() throws IOException {
+    void testOpenGfaFile() throws IOException {
         final File file = new File("src/test/resources/gfa/simple.gfa");
 
-        graphStore.load(file);
+        interact(() -> {
+            try {
+                graphStore.load(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         assertThat(graphStore.getGfaFileProperty().get()).isNotNull();
         Files.deleteIfExists(Paths.get(file.getPath() + ".db"));

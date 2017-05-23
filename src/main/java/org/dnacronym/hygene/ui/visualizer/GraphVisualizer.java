@@ -52,7 +52,6 @@ public final class GraphVisualizer {
     private final DoubleProperty nodeHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
-    private final DoubleProperty borderDashLengthProperty;
 
     private final IntegerProperty nodeCountProperty;
     private Graph graph;
@@ -81,9 +80,7 @@ public final class GraphVisualizer {
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
-        borderDashLengthProperty = new SimpleDoubleProperty(DEFAULT_DASH_LENGTH);
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
-        borderDashLengthProperty.addListener((observable, oldValue, newValue) -> draw());
 
         nodeCountProperty = new SimpleIntegerProperty();
     }
@@ -179,7 +176,7 @@ public final class GraphVisualizer {
      * Draw the border between bands as {@link Color#BLACK}.
      *
      * @param laneCount  amount of bands onscreen
-     * @param laneHeight height of each band
+     * @param laneHeight height of each lane
      */
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
@@ -187,7 +184,7 @@ public final class GraphVisualizer {
 
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.setLineWidth(1);
-        graphicsContext.setLineDashes(borderDashLengthProperty.get());
+        graphicsContext.setLineDashes(DEFAULT_DASH_LENGTH);
 
         for (int band = 1; band < laneCount; band++) {
             graphicsContext.strokeLine(
@@ -200,7 +197,7 @@ public final class GraphVisualizer {
 
         graphicsContext.setStroke(originalStroke);
         graphicsContext.setLineWidth(originalLineWidth);
-        graphicsContext.setLineDashes(0);
+        graphicsContext.setLineDashes(1);
     }
 
     /**
@@ -304,21 +301,12 @@ public final class GraphVisualizer {
     }
 
     /**
-     * The property which determines whether to display the border between bands as black bands.
+     * The property which determines whether to display the border between lanes as black lines.
      *
-     * @return property which decides whether to display the border between bands
+     * @return property which decides whether to display the border between lanes
      */
     public BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;
-    }
-
-    /**
-     * The property which determines how long the onscreen dashes should be.
-     *
-     * @return property which determines the dash length
-     */
-    public DoubleProperty getBorderDashLengthProperty() {
-        return borderDashLengthProperty;
     }
 
     /**
