@@ -8,7 +8,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -25,21 +24,20 @@ import java.util.ResourceBundle;
 public final class BookmarksController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(ConfigController.class);
 
-    private @MonotonicNonNull SimpleBookmarkStore simpleBookmarkStore;
-    private @MonotonicNonNull GraphStore graphStore;
+    private SimpleBookmarkStore simpleBookmarkStore;
+    private GraphStore graphStore;
 
     @FXML
-    private @MonotonicNonNull ScrollPane bookmarksPane;
+    private ScrollPane bookmarksPane;
     @FXML
-    private @MonotonicNonNull TableView<SimpleBookmark> bookmarksTable;
+    private TableView<SimpleBookmark> bookmarksTable;
     @FXML
-    private @MonotonicNonNull TableColumn<SimpleBookmark, String> baseColumn;
+    private TableColumn<SimpleBookmark, String> baseColumn;
     @FXML
-    private @MonotonicNonNull TableColumn<SimpleBookmark, String> descriptionColumn;
+    private TableColumn<SimpleBookmark, String> descriptionColumn;
 
 
     @Override
-    @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
@@ -49,16 +47,13 @@ public final class BookmarksController implements Initializable {
             return;
         }
 
-        if (bookmarksPane != null && bookmarksTable != null && baseColumn != null && descriptionColumn != null
-                && graphStore != null && simpleBookmarkStore != null) {
-            baseColumn.setCellValueFactory(cell -> cell.getValue().getBaseProperty());
-            descriptionColumn.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
+        baseColumn.setCellValueFactory(cell -> cell.getValue().getBaseProperty());
+        descriptionColumn.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
 
-            bookmarksTable.setItems(simpleBookmarkStore.getBookmarks());
+        bookmarksTable.setItems(simpleBookmarkStore.getBookmarks());
 
-            bookmarksPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-            bookmarksPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        }
+        bookmarksPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        bookmarksPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
 
     /**

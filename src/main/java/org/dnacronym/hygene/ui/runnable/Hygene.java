@@ -192,10 +192,7 @@ public final class Hygene extends Application {
      * @see SimpleBookmarkStore
      * @see #init()
      */
-    public SimpleBookmarkStore getSimpleBookmarkStore() throws UIInitialisationException {
-        if (simpleBookmarkStore == null) {
-            throw new UIInitialisationException("SimpleBookmarkStore not present.");
-        }
+    public SimpleBookmarkStore getSimpleBookmarkStore() {
         return simpleBookmarkStore;
     }
 
