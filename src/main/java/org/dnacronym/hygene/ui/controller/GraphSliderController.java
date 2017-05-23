@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 /**
  * Controller of the slider which allows traversing the graph.
  */
-public class GraphSliderController implements Initializable {
+public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
     private static final int GRAPH_SLIDER_SEGMENTS = 10;
 
@@ -26,11 +26,11 @@ public class GraphSliderController implements Initializable {
 
 
     @Override
-    public final void initialize(final URL location, final ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         final GraphVisualizer graphVisualizer;
         try {
             graphVisualizer = Hygene.getInstance().getGraphVisualizer();
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize GraphSliderController.", e);
             return;
         }

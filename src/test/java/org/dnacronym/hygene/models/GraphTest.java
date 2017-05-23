@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link SequenceGraph}s.
+ * Unit tests for {@link SequenceGraph}.
  */
-class GraphTest {
+final class GraphTest {
     @Test
     void testGetLineNumber() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withLineNumber(3).create().toArray());

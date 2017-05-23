@@ -4,7 +4,7 @@ package org.dnacronym.hygene.parser;
 /**
  * Indicates that an error has occurred during the parsing of a text.
  */
-public class ParseException extends Exception {
+public final class ParseException extends Exception {
     /**
      * Constructs a new exception with the specified detail message. The cause is not initialized, and may subsequently
      * be initialized by a call to {@link Throwable#initCause(java.lang.Throwable)}.

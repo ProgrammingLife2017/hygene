@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link Segment}s.
+ * Unit tests for {@link Segment}.
  */
-class SegmentTest {
+final class SegmentTest {
     @Test
     void testGetName() {
         final Segment segment = new Segment("94ShLJ3ytpoXBiQxaxJ1", "aTeYVYR38z6AWbV2OgGh");

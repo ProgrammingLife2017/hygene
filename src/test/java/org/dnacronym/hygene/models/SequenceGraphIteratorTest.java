@@ -16,9 +16,9 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
- * Unit tests for the iterators in {@link SequenceGraph}s.
+ * Unit tests for the iterators in {@link SequenceGraph}.
  */
-class SequenceGraphIteratorTest {
+final class SequenceGraphIteratorTest {
     private static final Consumer<SequenceNode> DUPLICATE_MODIFIER = node -> node.addReadIdentifier("");
     private static final Function<SequenceNode, Boolean> DUPLICATE_DETECTOR =
             node -> !node.getReadIdentifiers().isEmpty();

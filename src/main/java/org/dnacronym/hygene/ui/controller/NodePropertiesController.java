@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the node properties window. Shows the properties of the selected node.
  */
-public class NodePropertiesController implements Initializable {
+public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
     private GraphVisualizer graphVisualizer;
@@ -39,11 +39,10 @@ public class NodePropertiesController implements Initializable {
 
 
     @Override
-    @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
-    public final void initialize(final URL location, final ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-        } catch (UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize NodePropertiesController.", e);
             return;
         }
@@ -57,7 +56,7 @@ public class NodePropertiesController implements Initializable {
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
             try {
                 sequence.setText(newNode.retrieveMetadata().getSequence());
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 LOGGER.error("Error when parsing a node.", e);
             }
 
@@ -74,7 +73,7 @@ public class NodePropertiesController implements Initializable {
      * @param graphVisualizer {@link GraphVisualizer} who's selected node we are interested in
      * @see GraphVisualizer#selectedNodeProperty
      */
-    final void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
+    void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
     }
 }

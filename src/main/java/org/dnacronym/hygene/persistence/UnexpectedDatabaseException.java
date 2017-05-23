@@ -4,7 +4,7 @@ package org.dnacronym.hygene.persistence;
 /**
  * Indicates an unexpected and unrecoverable error during database interaction.
  */
-public class UnexpectedDatabaseException extends RuntimeException {
+public final class UnexpectedDatabaseException extends RuntimeException {
     /**
      * Constructs a new {@link UnexpectedDatabaseException} with the specified detail message. The cause is not
      * initialized, and may subsequently be initialized by a call to {@link #initCause}.

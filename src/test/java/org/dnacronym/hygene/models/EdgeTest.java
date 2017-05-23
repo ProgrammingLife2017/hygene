@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Unit tests for {@link Edge}s.
- */
-class EdgeTest {
 
+/**
+ * Unit tests for {@link Edge}.
+ */
+final class EdgeTest {
     @Test
     void testGetTo() {
         final Edge edge = new Edge(1, 2, 42, null);
