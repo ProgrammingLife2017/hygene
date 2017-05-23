@@ -27,7 +27,7 @@ public final class GraphStore {
     /**
      * Load a sequence graph into memory.
      *
-     * @param file {@link File} to load. This should be a {@value GFA_EXTENSION} file
+     * @param file            {@link File} to load. This should be a {@value GFA_EXTENSION} file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
      * @see GfaFile#parse()
