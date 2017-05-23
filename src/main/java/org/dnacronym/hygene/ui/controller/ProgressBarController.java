@@ -9,14 +9,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 
@@ -30,7 +28,7 @@ public class ProgressBarController {
     private Stage dialogStage;
 
     @FXML
-    private @MonotonicNonNull ProgressBar progressBar;
+    private ProgressBar progressBar;
 
     /**
      * Initializes the new {@link Stage} and creates the {@link Scene}.
@@ -96,9 +94,7 @@ public class ProgressBarController {
      * @throws UIInitialisationException if the progress view cannot be loaded
      */
     private void activateProgressBar(final Task<?> task) throws UIInitialisationException {
-        Optional.ofNullable(progressBar).orElseThrow(
-                () -> new UIInitialisationException("Progress bar view could not be loaded, progress bar is missing.")
-        ).progressProperty().bind(task.progressProperty());
+        progressBar.progressProperty().bind(task.progressProperty());
 
         dialogStage.show();
     }
