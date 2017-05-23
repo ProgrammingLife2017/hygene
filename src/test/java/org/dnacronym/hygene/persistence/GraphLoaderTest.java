@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link GraphLoader}s.
+ * Unit tests for {@link GraphLoader}.
  */
 final class GraphLoaderTest extends FileDatabaseBaseTest {
     private FileDatabase fileDatabase;

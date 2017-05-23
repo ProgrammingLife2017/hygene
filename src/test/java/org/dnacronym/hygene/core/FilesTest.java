@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
 /**
- * Unit tests for the {@link Files} class.
+ * Unit tests for {@link Files}.
  */
 final class FilesTest {
     private static final String TEST_FILE_NAME = "appdata-test.txt";

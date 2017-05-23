@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link Node}s.
+ * Unit tests for {@link Node}.
  */
 final class NodeTest {
     @Test

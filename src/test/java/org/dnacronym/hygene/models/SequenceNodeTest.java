@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link SequenceNode}s.
+ * Unit tests for {@link SequenceNode}.
  */
 final class SequenceNodeTest {
     private static final String SEQUENCE_ID = "1";

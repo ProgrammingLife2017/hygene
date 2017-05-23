@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for the {@link RecentFiles} class.
+ * Unit tests for {@link RecentFiles}.
  */
 final class RecentFilesTest {
     @BeforeEach

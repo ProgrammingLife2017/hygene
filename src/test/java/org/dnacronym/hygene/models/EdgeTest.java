@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link Edge}s.
+ * Unit tests for {@link Edge}.
  */
 final class EdgeTest {
     @Test

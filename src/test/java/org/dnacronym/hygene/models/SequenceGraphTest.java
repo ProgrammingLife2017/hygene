@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link SequenceGraph}s.
+ * Unit tests for {@link SequenceGraph}.
  */
 final class SequenceGraphTest {
     private SequenceNode node1;

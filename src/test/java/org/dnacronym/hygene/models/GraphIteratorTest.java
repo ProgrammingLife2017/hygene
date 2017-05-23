@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link GraphIterator}s.
+ * Unit tests for {@link GraphIterator}.
  */
 final class GraphIteratorTest extends GraphBasedTest {
     private final Consumer<Integer> dummyConsumer = ignored -> {

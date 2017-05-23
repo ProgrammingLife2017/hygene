@@ -7,7 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 /**
- * Unit tests for the {@link Hygene} instance.
+ * Unit tests for {@link Hygene}.
  */
 public class DNAApplicationTest extends UITest {
     @Test
