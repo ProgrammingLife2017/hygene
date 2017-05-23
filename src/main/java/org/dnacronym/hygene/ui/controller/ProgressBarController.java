@@ -57,7 +57,7 @@ public class ProgressBarController {
             @Override
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
                 task.accept(progress -> {
-                    if (progress == 100) {
+                    if (progress == PROGRESS_TOTAL) {
                         Platform.runLater(() -> progressBarController.dialogStage.close());
                     }
                     updateProgress(progress, PROGRESS_TOTAL);

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Represents a GFA file with its contents and metadata.
  */
-public class GfaFile {
+public final class GfaFile {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
     private static final int PROGRESS_TOTAL = 100;
 

@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.store;
 
+import javafx.application.Platform;
 import org.dnacronym.hygene.ui.UITest;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,19 +33,27 @@ final class GraphStoreTest extends UITest {
     }
 
     @Test
-    void testOpenGfaFile() throws IOException {
+   void testOpenGfaFile() throws IOException, ExecutionException, InterruptedException {
         final File file = new File("src/test/resources/gfa/simple.gfa");
 
-        interact(() -> {
+        CompletableFuture<Object> future = new CompletableFuture<>();
+
+        Platform.runLater(() -> {
             try {
                 graphStore.load(file, progress -> {
                 });
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
+
+            Platform.runLater(() -> {
+                assertThat(graphStore.getGfaFileProperty().get()).isNotNull();
+                future.complete(null);
+            });
         });
 
-        assertThat(graphStore.getGfaFileProperty().get()).isNotNull();
+        assertThat(future.get()).isNull();
+
         Files.deleteIfExists(Paths.get(file.getPath() + ".db"));
     }
 }
