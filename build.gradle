@@ -105,6 +105,7 @@ if (project.hasProperty('headless') ? project.headless : false) {
 }
 
 tasks.withType(JavaCompile).all { JavaCompile compile ->
+    System.setProperty("line.separator", "\n")
     compile.options.compilerArgs = [
             '-processor', 'org.checkerframework.checker.nullness.NullnessChecker',
             '-processorpath', "${configurations.checkerFramework.asPath}",
