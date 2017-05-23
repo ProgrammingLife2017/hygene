@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.store;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -36,7 +37,7 @@ public final class GraphStore {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
             gfaFile.parse(progressUpdater);
 
-            gfaFileProperty.set(gfaFile);
+            Platform.runLater(() -> gfaFileProperty.set(gfaFile));
 
             Hygene.getInstance().formatTitle(file.getPath());
         } catch (final ParseException | UIInitialisationException e) {

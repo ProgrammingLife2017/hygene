@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class NewGfaParser {
-    private static final int PROGRESS_UPDATE_INTERVAL = 10000;
+    private static final int PROGRESS_UPDATE_INTERVAL = 10;
     private static final int PROGRESS_TOTAL = 100;
     private static final String SOURCE_NAME = "<source>";
     private static final String SINK_NAME = "<sink>";
@@ -56,6 +56,11 @@ public final class NewGfaParser {
     public Graph parse(final GfaFile gfaFile, final ProgressUpdater progressUpdater) throws ParseException {
         BufferedReader gfa = gfaFile.readFile();
 
+        final int totalLines = (int) gfa.lines().count();
+
+        // Get new buffered reader
+        gfa = gfaFile.readFile();
+
         allocateNodes(gfa);
 
         nodeArrays = new int[nodeIds.size()][];
@@ -69,7 +74,7 @@ public final class NewGfaParser {
             String line;
             while ((line = gfa.readLine()) != null) {
                 if (offset % PROGRESS_UPDATE_INTERVAL == 0) {
-                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / nodeIds.size());
+                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / totalLines);
                 }
                 parseLine(line, offset + 1);
                 offset++;
