@@ -71,6 +71,13 @@ abstract class GraphBasedTest {
     }
 
     /**
+     * Creates a new {@link GraphQuery} for the current {@link Graph}, and sets it in this {@link GraphBasedTest}.
+     */
+    final void createGraphQuery() {
+        graphQuery = new GraphQuery(graph);
+    }
+
+    /**
      * Adds the given edges to the nodes in the {@link Graph}.
      * <p>
      * Each edge is described as a pair of two identifiers, the first being the {@code from} node and the second
