@@ -4,7 +4,6 @@ import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.GraphQuery;
 
 import java.util.LinkedList;

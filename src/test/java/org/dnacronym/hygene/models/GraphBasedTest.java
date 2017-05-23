@@ -44,7 +44,7 @@ abstract class GraphBasedTest {
      * @return a new {@link GraphIterator} for the current {@link Graph}
      */
     final GraphIterator getGraphIterator() {
-        return new GraphIterator(graph);
+        return graph.iterator();
     }
 
     /**
