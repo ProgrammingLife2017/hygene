@@ -130,7 +130,8 @@ final class GfaFileTest {
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
-        gfaFile.parse();
+        gfaFile.parse(progress -> {
+        });
 
         assertThat(gfaFile.getNodeIds()).contains(new AbstractMap.SimpleEntry<>("11", 1));
     }
