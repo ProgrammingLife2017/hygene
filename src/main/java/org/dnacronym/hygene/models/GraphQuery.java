@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 /**
  * Enables dynamic centre point queries for a {@link Graph}.
- *
+ * <p>
  * Query results are cached and can be used later.
  */
 public final class GraphQuery {
@@ -17,6 +17,9 @@ public final class GraphQuery {
      * Maps each node in the cache to the distance from the centre point of the query.
      */
     private final NodeDistanceMap current;
+
+    private int radius;
+    private int centre;
 
 
     /**
@@ -47,8 +50,39 @@ public final class GraphQuery {
             throw new IllegalArgumentException("Radius must cannot be negative.");
         }
 
+        this.radius = radius;
+        this.centre = centre;
+
         current.clear();
         graph.iterator().visitIndirectNeighboursWithinRange(centre, radius, node -> current.setDistance(node, 1));
+    }
+
+    /**
+     * Increases the radius by one.
+     */
+    public void incrementRadius() {
+        query(centre, radius + 1);
+    }
+
+    /**
+     * Decreases the radius by one.
+     */
+    public void decrementRadius() {
+        query(centre, radius - 1);
+    }
+
+    /**
+     * Increases the centre node by one, i.e. moves it to the right.
+     */
+    public void incrementCentre() {
+        query(centre + 1, radius);
+    }
+
+    /**
+     * Decreases the centre node by one, i.e. moves it to the left.
+     */
+    public void decrementCentre() {
+        query(centre - 1, radius);
     }
 
     /**
