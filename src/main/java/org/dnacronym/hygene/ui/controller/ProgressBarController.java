@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 /**
  * This class creates progress bars and starts tasks that are measured with the progress bar.
  */
+//TODO: Split into ProgressBarView and ProgressBarController
 public class ProgressBarController {
     private static final int PROGRESS_TOTAL = 100;
     private static final String PROGRESS_BAR_VIEW = "/ui/view/progress_bar_view.fxml";
