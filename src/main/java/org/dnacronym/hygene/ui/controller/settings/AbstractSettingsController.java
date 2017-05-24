@@ -35,7 +35,7 @@ public abstract class AbstractSettingsController implements Initializable {
     /**
      * Gets the {@link Settings} for use by the controller.
      *
-     * @return the {@link Settings} for use by the controller.
+     * @return the {@link Settings} for use by the controller
      */
     public final Settings getSettings() {
         return settings;

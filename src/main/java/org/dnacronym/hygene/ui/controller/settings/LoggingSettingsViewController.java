@@ -9,7 +9,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 /**
@@ -17,7 +20,7 @@ import java.util.ResourceBundle;
  */
 public final class LoggingSettingsViewController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);
-    private static final String[] LOG_LEVELS = {"ALL", "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"};
+    private static final List<String> LOG_LEVELS = Arrays.stream(Level.values()).map(Level::name).collect(Collectors.toList());
 
     @FXML
     private ChoiceBox<String> choiceBox;
@@ -39,9 +42,9 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
     @FXML
     public void onLogLevelChanged(final ActionEvent event) {
         getSettings().addRunnable(() -> {
-            String logLevel = choiceBox.getSelectionModel().getSelectedItem();
+            final String logLevel = choiceBox.getSelectionModel().getSelectedItem();
 
-            Logger logger = LogManager.getRootLogger();
+            final Logger logger = LogManager.getRootLogger();
             Configurator.setLevel(logger.getName(), Level.toLevel(logLevel));
 
             LOGGER.info("Log level was set to: " + Level.toLevel(logLevel));
@@ -62,7 +65,7 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
      *
      * @return String[] the LogLevels
      */
-    static String[] getLogLevels() {
+    static List<String> getLogLevels() {
         return LOG_LEVELS;
     }
 }

@@ -10,9 +10,7 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.util.Arrays;
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -74,7 +72,7 @@ final class LoggingSettingsViewControllerTest extends UITest {
 
         assertThat(currentLevel).isNotEqualTo(newLevel);
 
-        loggingSettingsViewController.setChoiceBox(new ChoiceBox<>());
+        loggingSettingsViewController.setChoiceBox(choiceBox);
 
         ActionEvent event = new ActionEvent();
         interact(() -> loggingSettingsViewController.onLogLevelChanged(event));
@@ -86,7 +84,7 @@ final class LoggingSettingsViewControllerTest extends UITest {
 
         currentLevel = LogManager.getRootLogger().getLevel().toString();
 
-        assertThat(currentLevel.equals(newLevel));
+        assertThat(currentLevel).isEqualTo(newLevel);
     }
 
     @Test
@@ -96,7 +94,7 @@ final class LoggingSettingsViewControllerTest extends UITest {
         loggingSettingsViewController.setChoiceBox(choiceBox);
         loggingSettingsViewController.initialize(null, null);
 
-        assertThat(choiceBox.getItems()).isEqualTo(Arrays.asList(LoggingSettingsViewController.getLogLevels()));
+        assertThat(choiceBox.getItems()).isEqualTo(LoggingSettingsViewController.getLogLevels());
     }
 
     @Test
