@@ -35,4 +35,22 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
             LOGGER.info("Displaying lane borders has now been " + (newValue ? "enabled." : "disabled."));
         });
     }
+
+    /**
+     * Gets display lane borders.
+     *
+     * @return the display lane borders
+     */
+    public CheckBox getDisplayLaneBorders() {
+        return displayLaneBorders;
+    }
+
+    /**
+     * Sets display lane borders.
+     *
+     * @param displayLaneBorders the display lane borders
+     */
+    public void setDisplayLaneBorders(final CheckBox displayLaneBorders) {
+        this.displayLaneBorders = displayLaneBorders;
+    }
 }

@@ -33,12 +33,6 @@ final class BasicSettingsViewControllerTest extends UITest {
         basicSettingsViewController = new BasicSettingsViewController();
 
         graphVisualizer = mock(GraphVisualizer.class);
-        settings = mock(Settings.class);
-        basicSettingsViewController.setGraphVisualizer(graphVisualizer);
-        basicSettingsViewController.setSettings(settings);
-        basicSettingsViewController.setNodeHeight(new Slider());
-        basicSettingsViewController.setEdgeColor(new ColorPicker());
-
         SimpleDoubleProperty height = new SimpleDoubleProperty();
         height.setValue(20);
         when(graphVisualizer.getNodeHeightProperty()).thenReturn(height);
@@ -46,6 +40,12 @@ final class BasicSettingsViewControllerTest extends UITest {
         ObjectProperty<Color> color = new SimpleObjectProperty<>();
         color.set(Color.RED);
         when(graphVisualizer.getEdgeColorProperty()).thenReturn(color);
+
+        settings = mock(Settings.class);
+        basicSettingsViewController.setGraphVisualizer(graphVisualizer);
+        basicSettingsViewController.setSettings(settings);
+        basicSettingsViewController.setNodeHeight(new Slider());
+        basicSettingsViewController.setEdgeColor(new ColorPicker());
     }
 
 
