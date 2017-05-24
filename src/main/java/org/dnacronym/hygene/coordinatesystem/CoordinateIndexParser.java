@@ -47,6 +47,14 @@ public final class CoordinateIndexParser {
                     if (previousBaseCount == null) {
                         throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
                     }
+
+                    final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
+                    if (previousBaseCount + nodeBaseCount >= BASE_CACHE_INTERVAL) {
+                        // TODO save position
+                        genomeBaseCounts.put(genome, 0);
+                    } else {
+                        genomeBaseCounts.put(genome, previousBaseCount + nodeBaseCount);
+                    }
                 }
             } catch (final ParseException e) {
                 LOGGER.warn("Failed to read metadata of node " + nodeId + ".");
