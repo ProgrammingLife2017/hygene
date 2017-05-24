@@ -10,6 +10,7 @@ import org.dnacronym.hygene.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,47 +20,28 @@ import java.util.StringTokenizer;
 /**
  * Class responsible for indexing the genome coordinate system of a file.
  */
-public final class CoordinateIndexParser {
+public final class CoordinateSystemIndex {
     static final int BASE_CACHE_INTERVAL = 1000;
 
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
-    private GfaFile gfaFile;
-    private Map<String, Integer> genomeBaseCounts;
+    private final GfaFile gfaFile;
+    private final Map<String, Integer> genomeBaseCounts;
+    private final Map<String, Integer> genomeBaseDiffCounts;
+    private final List<String> genomeNames;
 
 
-    public CoordinateIndexParser(GfaFile gfaFile) {
+    public CoordinateSystemIndex(GfaFile gfaFile) {
         this.gfaFile = gfaFile;
         this.genomeBaseCounts = new HashMap<>();
+        this.genomeBaseDiffCounts = new HashMap<>();
+        this.genomeNames = new ArrayList<>();
     }
 
-    void parse() throws ParseException {
+
+    void populateIndex() throws ParseException {
         loadGenomeList();
-
-        final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
-        graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
-            try {
-                final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
-
-                for (final String genome : nodeGenomes) {
-                    final Integer previousBaseCount = genomeBaseCounts.get(genome);
-
-                    if (previousBaseCount == null) {
-                        throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
-                    }
-
-                    final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                    if (previousBaseCount + nodeBaseCount >= BASE_CACHE_INTERVAL) {
-                        // TODO save position
-                        genomeBaseCounts.put(genome, 0);
-                    } else {
-                        genomeBaseCounts.put(genome, previousBaseCount + nodeBaseCount);
-                    }
-                }
-            } catch (final ParseException e) {
-                LOGGER.warn("Failed to read metadata of node " + nodeId + ".");
-            }
-        });
+        saveIndexPoints();
     }
 
     /**
@@ -103,11 +85,42 @@ public final class CoordinateIndexParser {
 
             if (!nextGenome.equals("")) {
                 genomeBaseCounts.put(nextGenome, 0);
+                genomeBaseDiffCounts.put(nextGenome, 0);
+                genomeNames.add(nextGenome);
             }
         }
 
         if (genomeBaseCounts.isEmpty()) {
             throw new ParseException("Expected at least one genome to be present in GFA file.");
         }
+    }
+
+    private void saveIndexPoints() {
+        final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
+        graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
+            try {
+                final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
+
+                for (final String genome : nodeGenomes) {
+                    final Integer previousBaseCount = genomeBaseDiffCounts.get(genome);
+
+                    if (previousBaseCount == null) {
+                        throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
+                    }
+
+                    final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
+                    if (previousBaseCount + nodeBaseCount >= BASE_CACHE_INTERVAL) {
+                        final int baseIndexPosition = previousBaseCount + nodeBaseCount + genomeBaseCounts.get(genome);
+                        // TODO save position (genomeNames.indexOf(genome) for the genome ID)
+                        genomeBaseDiffCounts.put(genome, 0);
+                        genomeBaseCounts.put(genome, baseIndexPosition);
+                    } else {
+                        genomeBaseCounts.put(genome, previousBaseCount + nodeBaseCount);
+                    }
+                }
+            } catch (final ParseException e) {
+                LOGGER.warn("Failed to read metadata of node " + nodeId + ".");
+            }
+        });
     }
 }
