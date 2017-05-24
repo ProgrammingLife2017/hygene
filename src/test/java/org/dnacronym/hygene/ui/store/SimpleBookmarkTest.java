@@ -26,7 +26,7 @@ final class SimpleBookmarkTest {
 
 
     @BeforeEach
-    void setUp() throws ParseException {
+    void beforeEach() throws ParseException {
         bookmark = mock(Bookmark.class);
 
         // mock bookmark properties that determine what is displayed in the ui
@@ -49,6 +49,11 @@ final class SimpleBookmarkTest {
     @Test
     void getBookmark() {
         assertThat(simpleBookmark.getBookmark()).isEqualTo(bookmark);
+    }
+
+    @Test
+    void testGetGraph() {
+        assertThat(simpleBookmark.getGraph()).isEqualTo(graph);
     }
 
     @Test
