@@ -16,15 +16,15 @@ import java.util.TreeSet;
  * [[nodeLineNumber, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
 public final class Node {
-    static final int NODE_LINE_NUMBER_INDEX = 0;
-    static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
-    static final int NODE_COLOR_INDEX = 2;
-    static final int UNSCALED_X_POSITION_INDEX = 3;
-    static final int UNSCALED_Y_POSITION_INDEX = 4;
-    static final int NODE_OUTGOING_EDGES_INDEX = 5;
-    static final int NODE_EDGE_DATA_OFFSET = 6;
-    static final int EDGE_LINE_NUMBER_OFFSET = 1;
-    static final int EDGE_DATA_SIZE = 2;
+    public static final int NODE_LINE_NUMBER_INDEX = 0;
+    public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
+    public static final int NODE_COLOR_INDEX = 2;
+    public static final int UNSCALED_X_POSITION_INDEX = 3;
+    public static final int UNSCALED_Y_POSITION_INDEX = 4;
+    public static final int NODE_OUTGOING_EDGES_INDEX = 5;
+    public static final int NODE_EDGE_DATA_OFFSET = 6;
+    public static final int EDGE_LINE_NUMBER_OFFSET = 1;
+    public static final int EDGE_DATA_SIZE = 2;
 
     private final int id;
     private final int[] data;

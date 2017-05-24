@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.parser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
@@ -25,6 +27,7 @@ import java.util.stream.IntStream;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class NewGfaParser {
+    private static final Logger LOGGER = LogManager.getLogger(NewGfaParser.class);
     private static final int PROGRESS_UPDATE_INTERVAL = 10;
     private static final int PROGRESS_TOTAL = 100;
     private static final String SOURCE_NAME = "<source>";
@@ -33,6 +36,7 @@ public final class NewGfaParser {
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeArrays;
+    private int lineCount;
 
 
     /**
@@ -56,29 +60,28 @@ public final class NewGfaParser {
     public Graph parse(final GfaFile gfaFile, final ProgressUpdater progressUpdater) throws ParseException {
         BufferedReader gfa = gfaFile.readFile();
 
-        final int totalLines = (int) gfa.lines().count();
-
-        // Get new buffered reader
-        gfa = gfaFile.readFile();
-
-        allocateNodes(gfa);
-
-        nodeArrays = new int[nodeIds.size()][];
-        Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
-
-        // Get new buffered reader
-        gfa = gfaFile.readFile();
-
         try {
+            LOGGER.info("Start allocate nodes");
+            allocateNodes(gfa);
+            LOGGER.info("End allocate nodes");
+
+            nodeArrays = new int[nodeIds.size()][];
+            Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
+
+            // Get new buffered reader
+            gfa = gfaFile.readFile();
+
             int offset = 0;
             String line;
+            LOGGER.info("Start parse lines");
             while ((line = gfa.readLine()) != null) {
                 if (offset % PROGRESS_UPDATE_INTERVAL == 0) {
-                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / totalLines);
+                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / lineCount);
                 }
                 parseLine(line, offset + 1);
                 offset++;
             }
+            LOGGER.info("End parse lines");
         } catch (final IOException e) {
             throw new ParseException("An error while reading the GFA file.", e);
         }
@@ -98,9 +101,15 @@ public final class NewGfaParser {
      *
      * @param gfa lines of a GFA-compliant {@link String}
      */
-    private void allocateNodes(final BufferedReader gfa) {
+    private void allocateNodes(final BufferedReader gfa) throws IOException {
         addNodeId(SOURCE_NAME);
-        gfa.lines().filter(line -> line.startsWith("S\t")).forEach(line -> addNodeId(parseNodeName(line)));
+        String line;
+        while ((line = gfa.readLine()) != null) {
+            if (line.startsWith("S\t")) {
+                addNodeId(parseNodeName(line));
+            }
+            lineCount++;
+        }
         addNodeId(SINK_NAME);
     }
 
@@ -161,11 +170,9 @@ public final class NewGfaParser {
 
             final int nodeId = getNodeId(name);
 
-            nodeArrays[nodeId] = NodeBuilder.fromArray(nodeId, nodeArrays[nodeId])
-                    .withLineNumber(offset)
-                    .withSequenceLength(sequence.length())
-                    .withColor(NodeColor.sequenceToColor(sequence))
-                    .toArray();
+            nodeArrays[nodeId][Node.NODE_LINE_NUMBER_INDEX] = offset;
+            nodeArrays[nodeId][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
+            nodeArrays[nodeId][Node.NODE_COLOR_INDEX] = NodeColor.sequenceToColor(sequence).ordinal();
 
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for segment on line " + offset, e);
