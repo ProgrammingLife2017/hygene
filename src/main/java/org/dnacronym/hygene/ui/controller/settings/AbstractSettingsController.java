@@ -8,8 +8,6 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * Abstract Settings Controller.
@@ -20,9 +18,10 @@ public abstract class AbstractSettingsController implements Initializable {
     private Settings settings;
     private GraphVisualizer graphVisualizer;
 
-    @Override
-    @SuppressWarnings("checkstyle:DesignForExtension") // All subclasses are marked final
-    public void initialize(final URL location, final ResourceBundle resources) {
+    /**
+     * Constructor for {@link AbstractSettingsController}.
+     */
+    AbstractSettingsController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSettings(Hygene.getInstance().getSettings());
@@ -53,7 +52,7 @@ public abstract class AbstractSettingsController implements Initializable {
     /**
      * Gets the {@link GraphVisualizer} for use by the controller.
      *
-     * @return the {@link GraphVisualizer} for use by the controller.
+     * @return the {@link GraphVisualizer} for use by the controller
      */
     public final GraphVisualizer getGraphVisualizer() {
         return graphVisualizer;

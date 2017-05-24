@@ -28,7 +28,6 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
         choiceBox.getItems().addAll(LOG_LEVELS);
         choiceBox.setValue(LogManager.getRootLogger().getLevel().toString());
     }

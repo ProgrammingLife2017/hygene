@@ -25,7 +25,6 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
         nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
         edgeColors.setValue(getGraphVisualizer().getEdgeColorProperty().get());
     }

@@ -21,7 +21,6 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
         displayLaneBorders.setSelected(getGraphVisualizer().getDisplayBordersProperty().get());
     }
 
