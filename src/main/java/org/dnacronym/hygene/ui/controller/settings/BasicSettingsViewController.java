@@ -20,13 +20,13 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     @FXML
     private Slider nodeHeight;
     @FXML
-    private ColorPicker edgeColors;
+    private ColorPicker edgeColor;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
-        edgeColors.setValue(getGraphVisualizer().getEdgeColorProperty().get());
+        edgeColor.setValue(getGraphVisualizer().getEdgeColorProperty().get());
     }
 
     /**
@@ -47,7 +47,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     @FXML
     void edgeColorDone() {
         getSettings().addRunnable(() -> {
-            final Color newValue = edgeColors.getValue();
+            final Color newValue = edgeColor.getValue();
             getGraphVisualizer().getEdgeColorProperty().setValue(newValue);
             LOGGER.info("Edge color has now been set to " + newValue + ".");
         });
@@ -76,16 +76,16 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      *
      * @return the edge colors
      */
-    public ColorPicker getEdgeColors() {
-        return edgeColors;
+    public ColorPicker getEdgeColor() {
+        return edgeColor;
     }
 
     /**
      * Sets edge colors.
      *
-     * @param edgeColors the edge colors
+     * @param edgeColor the edge colors
      */
-    public void setEdgeColors(ColorPicker edgeColors) {
-        this.edgeColors = edgeColors;
+    public void setEdgeColor(ColorPicker edgeColor) {
+        this.edgeColor = edgeColor;
     }
 }

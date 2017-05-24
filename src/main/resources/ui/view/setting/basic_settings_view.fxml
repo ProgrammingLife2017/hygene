@@ -24,7 +24,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <children>
-            <ColorPicker fx:id="edgeColors" onAction="#edgeColorDone" editable="true" minWidth="150.0"
+            <ColorPicker fx:id="edgeColor" onAction="#edgeColorDone" editable="true" minWidth="150.0"
                          prefWidth="150.0" GridPane.columnIndex="2"
                          GridPane.rowIndex="1">
                 <tooltip>

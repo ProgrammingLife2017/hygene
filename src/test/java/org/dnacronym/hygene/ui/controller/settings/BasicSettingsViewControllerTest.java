@@ -37,7 +37,7 @@ final class BasicSettingsViewControllerTest extends UITest {
         basicSettingsViewController.setGraphVisualizer(graphVisualizer);
         basicSettingsViewController.setSettings(settings);
         basicSettingsViewController.setNodeHeight(new Slider());
-        basicSettingsViewController.setEdgeColors(new ColorPicker());
+        basicSettingsViewController.setEdgeColor(new ColorPicker());
 
         SimpleDoubleProperty height = new SimpleDoubleProperty();
         height.setValue(20);
@@ -70,6 +70,6 @@ final class BasicSettingsViewControllerTest extends UITest {
     @Test
     void testInitializationOfEdgeColor() {
         basicSettingsViewController.initialize(null, null);
-        assertThat(basicSettingsViewController.getEdgeColors().getValue()).isEqualTo(Color.RED);
+        assertThat(basicSettingsViewController.getEdgeColor().getValue()).isEqualTo(Color.RED);
     }
 }
