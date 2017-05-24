@@ -51,7 +51,7 @@ public final class NewGfaParser {
     /**
      * Parses a GFA file to a {@link Graph}.
      *
-     * @param gfaFile an instance of {@link GfaFile}
+     * @param gfaFile         an instance of {@link GfaFile}
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return a {@link Graph}
      * @throws ParseException if the given {@link String} is not GFA-compliant
@@ -223,8 +223,10 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
-        nodeArrays[toId] = NodeBuilder.fromArray(toId, nodeArrays[toId])
-                .withIncomingEdge(fromId, offset).toArray();
+        nodeArrays[toId] = Arrays.copyOf(nodeArrays[toId], nodeArrays[toId].length + 2);
+
+        nodeArrays[toId][nodeArrays[toId].length - 2] = fromId;
+        nodeArrays[toId][nodeArrays[toId].length - 1] = offset;
     }
 
     /**
@@ -235,8 +237,31 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
-        nodeArrays[fromId] = NodeBuilder.fromArray(fromId, nodeArrays[fromId])
-                .withOutgoingEdge(toId, offset).toArray();
+        final int lastOutgoingEdgePosition = Node.NODE_EDGE_DATA_OFFSET + nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE;
+        nodeArrays[fromId] = insertAtPosition(nodeArrays[fromId], lastOutgoingEdgePosition, toId, offset);
+        nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX]++;
+    }
+
+    /**
+     * Inserts one or more elements at a certain position in a given array.
+     *
+     * @param array    array in which new elements need to be added
+     * @param position insertion position index
+     * @param inserts  the values that need to be inserted
+     * @return array with the elements inserted
+     */
+    private int[] insertAtPosition(final int[] array, final int position, final int... inserts) {
+        final int[] result = new int[array.length + inserts.length];
+
+        System.arraycopy(array, 0, result, 0, position);
+
+        for (int i = 0; i < inserts.length; i++) {
+            result[position + i] = inserts[i];
+        }
+
+        System.arraycopy(array, position, result, position + inserts.length, array.length - position);
+
+        return result;
     }
 
     /**
