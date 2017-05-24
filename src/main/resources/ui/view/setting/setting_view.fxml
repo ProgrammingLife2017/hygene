@@ -14,6 +14,9 @@
                 <Tab text="Advanced display">
                     <fx:include source="advanced_settings_view.fxml"/>
                 </Tab>
+                <Tab text="Logging">
+                    <fx:include source="logging_settings_view.fxml"/>
+                </Tab>
             </tabs>
         </TabPane>
         <fx:include source="settings_button_view.fxml"/>
