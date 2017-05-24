@@ -78,7 +78,7 @@ public final class Hygene extends Application {
     @Override
     public void init() {
         graphStore = new GraphStore();
-        graphVisualizer = new GraphVisualizer();
+        graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
     }
 

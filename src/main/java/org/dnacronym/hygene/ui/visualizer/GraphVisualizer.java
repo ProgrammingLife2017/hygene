@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -16,6 +17,7 @@ import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.SequenceDirection;
+import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.util.RTree;
 
@@ -64,23 +66,42 @@ public final class GraphVisualizer {
 
     /**
      * Create a new {@link GraphVisualizer} instance.
+     * <p>
+     * The passed {@link GraphStore} is observed by this class. If the {@link GraphStore}
+     * {@link org.dnacronym.hygene.parser.GfaFile} is updated, it will prompt a redraw. Changing the properties of this
+     * class will also prompt a redraw if the {@link org.dnacronym.hygene.parser.GfaFile} in {@link GraphStore} is not
+     * null.
+     *
+     * @param graphStore {@link GraphStore} which is observed by this class
      */
-    public GraphVisualizer() {
+    public GraphVisualizer(final GraphStore graphStore) {
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
 
         centerNodeIdProperty = new SimpleIntegerProperty(0);
         hopsProperty = new SimpleIntegerProperty(0);
-        centerNodeIdProperty.addListener((observable, oldValue, newValue) -> draw());
-        hopsProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
+            setGraph(newValue.getGraph());
+            draw();
+        });
+
+        final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
+            if (graphStore.getGfaFileProperty().get() != null) {
+                draw();
+            }
+        };
+
+        centerNodeIdProperty.addListener(changeListener);
+        hopsProperty.addListener(changeListener);
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
-        edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
-        nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
+        edgeColorProperty.addListener(changeListener);
+        nodeHeightProperty.addListener(changeListener);
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
-        displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
+        displayLaneBordersProperty.addListener(changeListener);
 
         nodeCountProperty = new SimpleIntegerProperty();
     }
@@ -201,6 +222,23 @@ public final class GraphVisualizer {
     }
 
     /**
+     * Sets the {@link Graph} reference, which may be {@code null}.
+     * <p>
+     * This graph is used when {@link #draw()} is called. The center node id is set to the center of the graph, and the
+     * range property to the minimum of {@value DEFAULT_RANGE} and the radius of the graph.
+     *
+     * @param graph graph to set in the {@link GraphVisualizer}
+     */
+    private void setGraph(final Graph graph) {
+        this.graph = graph;
+        clear();
+
+        nodeCountProperty.set(graph.getNodeArrays().length);
+        centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
+        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) nodeCountProperty.get() / 2));
+    }
+
+    /**
      * Set {@link Canvas} which the {@link GraphVisualizer} use to draw.
      *
      * @param canvas canvas to be used to {@link GraphVisualizer}
@@ -221,23 +259,6 @@ public final class GraphVisualizer {
                             .ifPresent(selectedEdgeProperty::setValue)
             );
         });
-    }
-
-    /**
-     * Set the {@link Graph} reference, which may be {@code null}.
-     * <p>
-     * This graph is used when {@link #draw()} is called. The center node id is set to the center of the graph, and the
-     * range property to the minimum of {@value DEFAULT_RANGE} and the radius of the graph.
-     *
-     * @param graph graph to set in the {@link GraphVisualizer}
-     */
-    public void setGraph(final Graph graph) {
-        this.graph = graph;
-        clear();
-
-        nodeCountProperty.set(graph.getNodeArrays().length);
-        centerNodeIdProperty.set(graph.getNodeArrays().length / 2);
-        hopsProperty.set((int) Math.min(DEFAULT_RANGE, (double) nodeCountProperty.get() / 2));
     }
 
     /**
