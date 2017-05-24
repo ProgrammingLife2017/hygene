@@ -9,13 +9,15 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
  * Deals with translating user input into something the {@link GraphVisualizer} can use and understand.
  */
 public final class GraphMovementCalculator {
-    private static final double DEFAULT_SENSITIVITY = 0.005;
+    private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
 
     private final GraphVisualizer graphVisualizer;
-    private final DoubleProperty sensitivityProperty;
+    private final DoubleProperty panningSensitivityProperty;
 
+    /**
+     * {@code x} position where the panning started.
+     */
     private double centerX;
-
     private double lastX;
     private boolean draggingRight;
     private boolean dragging;
@@ -28,7 +30,7 @@ public final class GraphMovementCalculator {
      */
     public GraphMovementCalculator(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
-        this.sensitivityProperty = new SimpleDoubleProperty(DEFAULT_SENSITIVITY);
+        this.panningSensitivityProperty = new SimpleDoubleProperty(DEFAULT_PANNING_SENSITIVITY);
     }
 
 
@@ -70,7 +72,8 @@ public final class GraphMovementCalculator {
         final double currentCenterNodeId = graphVisualizer.getCenterNodeIdProperty().get();
 
         final double translation = centerX - x;
-        final int newCenterNodeId = (int) (currentCenterNodeId + Math.round(sensitivityProperty.get() * translation));
+        final int newCenterNodeId = (int) (currentCenterNodeId
+                + Math.round(panningSensitivityProperty.get() * translation));
 
         if (newCenterNodeId >= 0 && newCenterNodeId < graphVisualizer.getNodeCountProperty().get()) {
             graphVisualizer.getCenterNodeIdProperty().set(newCenterNodeId);
@@ -86,7 +89,7 @@ public final class GraphMovementCalculator {
      *
      * @return property which determines the drag sensitivity
      */
-    public DoubleProperty getSensitivityProperty() {
-        return sensitivityProperty;
+    public DoubleProperty getPanningSensitivityProperty() {
+        return panningSensitivityProperty;
     }
 }
