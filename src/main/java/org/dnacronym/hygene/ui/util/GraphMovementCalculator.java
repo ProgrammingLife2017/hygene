@@ -52,7 +52,8 @@ public final class GraphMovementCalculator {
      * <p>
      * If not, the method checks if the user is dragging right or left, and makes sure that the dragging variable is set
      * to {@code true}. It also stores the current {@code x} position for the next time this method is called, which can
-     * be used as reference to check whether the user is dragging their mouse.
+     * be used as reference to check whether the user is dragging their mouse. If the user drags out of bounds, the
+     * lowest/highest possible value is set, and dragging is set to {@code false}.
      *
      * @param x new x of mouse when dragged
      */
@@ -70,7 +71,12 @@ public final class GraphMovementCalculator {
 
         final double translation = centerX - x;
         final int newCenterNodeId = (int) (currentCenterNodeId + Math.round(sensitivityProperty.get() * translation));
-        graphVisualizer.getCenterNodeIdProperty().set(newCenterNodeId);
+
+        if (newCenterNodeId >= 0 && newCenterNodeId < graphVisualizer.getNodeCountProperty().get()) {
+            graphVisualizer.getCenterNodeIdProperty().set(newCenterNodeId);
+        } else {
+            dragging = false;
+        }
     }
 
     /**

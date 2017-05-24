@@ -42,7 +42,9 @@ public final class GraphSliderController implements Initializable {
             return;
         }
 
-        graphSlider.maxProperty().bind(Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1));
+        graphSlider.maxProperty().bind(Bindings.max(
+                0,
+                Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1)));
         graphSlider.majorTickUnitProperty().bind(Bindings.divide(
                 Bindings.max(GRAPH_SLIDER_SEGMENTS, graphVisualizer.getNodeCountProperty()),
                 GRAPH_SLIDER_SEGMENTS));
