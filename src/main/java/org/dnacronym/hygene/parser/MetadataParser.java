@@ -5,6 +5,8 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,8 @@ import java.util.StringTokenizer;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class MetadataParser {
+    public static final String GENOME_LIST_HEADER_PREFIX = "ORI:Z:";
+
     private int readerPosition;
 
 
@@ -68,8 +72,9 @@ public final class MetadataParser {
                 st.nextToken();
                 final String name = st.nextToken();
                 final String sequence = st.nextToken();
+            final List<String> genomes = parseGenomes(st);
 
-                result.put(entry.getKey(), new NodeMetadata(name, sequence));
+                result.put(entry.getKey(), new NodeMetadata(name, sequence, genomes));
             } catch (final NoSuchElementException e) {
                 throw new ParseException("Not enough parameters for segment on line " + lineNumber + ".", e);
             }
@@ -181,5 +186,31 @@ public final class MetadataParser {
     private BufferedReader createReader(final GfaFile gfaFile) throws ParseException {
         readerPosition = 0;
         return gfaFile.readFile();
+    }
+
+    private List<String> parseGenomes(final StringTokenizer stringTokenizer) throws ParseException {
+        stringTokenizer.nextToken(); // Ignore asterisk
+
+        final String genomeMetadata = stringTokenizer.nextToken();
+        if (!genomeMetadata.startsWith(GENOME_LIST_HEADER_PREFIX)) {
+            throw new ParseException("Expected genome header at this position.");
+        }
+
+        final String genomeListString = genomeMetadata.substring(GENOME_LIST_HEADER_PREFIX.length());
+        final StringTokenizer bodyTokenizer = new StringTokenizer(genomeListString, ";");
+        final List<String> genomes = new ArrayList<>();
+
+        while (bodyTokenizer.hasMoreTokens()) {
+            final String nextGenome = bodyTokenizer.nextToken();
+
+            if (nextGenome.equals("")) {
+                // In the case of a trailing semi-colon at the end of the genome list
+                continue;
+            }
+
+            genomes.add(nextGenome);
+        }
+
+        return genomes;
     }
 }

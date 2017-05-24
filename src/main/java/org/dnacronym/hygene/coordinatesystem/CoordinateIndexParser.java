@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.coordinatesystem;
 
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.MetadataParser;
 import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.StringTokenizer;
  * Created by gandr on 5/23/2017.
  */
 public class CoordinateIndexParser {
-    private static final String GENOME_HEADER_SEQUENCE = "ORI:Z:";
 
     private GfaFile gfaFile;
     private Map<String, Integer> genomeBaseCounts;
@@ -56,11 +56,11 @@ public class CoordinateIndexParser {
         }
 
         final String headerBody = stringTokenizer.nextToken();
-        if (!headerBody.startsWith(GENOME_HEADER_SEQUENCE)) {
+        if (!headerBody.startsWith(MetadataParser.GENOME_LIST_HEADER_PREFIX)) {
             return;
         }
 
-        final String genomeListString = headerBody.substring(GENOME_HEADER_SEQUENCE.length());
+        final String genomeListString = headerBody.substring(MetadataParser.GENOME_LIST_HEADER_PREFIX.length());
         final StringTokenizer bodyTokenizer = new StringTokenizer(genomeListString, ";");
 
         while (bodyTokenizer.hasMoreTokens()) {
@@ -83,11 +83,11 @@ public class CoordinateIndexParser {
         stringTokenizer.nextToken(); // Ignore asterisk
 
         final String genomeMetadata = stringTokenizer.nextToken();
-        if (!genomeMetadata.startsWith(GENOME_HEADER_SEQUENCE)) {
+        if (!genomeMetadata.startsWith(MetadataParser.GENOME_LIST_HEADER_PREFIX)) {
             return;
         }
 
-        final String genomeListString = genomeMetadata.substring(GENOME_HEADER_SEQUENCE.length());
+        final String genomeListString = genomeMetadata.substring(MetadataParser.GENOME_LIST_HEADER_PREFIX.length());
         final StringTokenizer bodyTokenizer = new StringTokenizer(genomeListString, ";");
 
         while (bodyTokenizer.hasMoreTokens()) {
