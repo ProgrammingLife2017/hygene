@@ -52,4 +52,40 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
             LOGGER.info("Edge color has now been set to " + newValue + ".");
         });
     }
+
+    /**
+     * Gets node height.
+     *
+     * @return the node height
+     */
+    public Slider getNodeHeight() {
+        return nodeHeight;
+    }
+
+    /**
+     * Sets node height.
+     *
+     * @param nodeHeight the node height
+     */
+    public void setNodeHeight(Slider nodeHeight) {
+        this.nodeHeight = nodeHeight;
+    }
+
+    /**
+     * Gets edge colors.
+     *
+     * @return the edge colors
+     */
+    public ColorPicker getEdgeColors() {
+        return edgeColors;
+    }
+
+    /**
+     * Sets edge colors.
+     *
+     * @param edgeColors the edge colors
+     */
+    public void setEdgeColors(ColorPicker edgeColors) {
+        this.edgeColors = edgeColors;
+    }
 }
