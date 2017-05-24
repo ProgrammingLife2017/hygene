@@ -24,6 +24,7 @@ public final class SimpleBookmarkStore {
      * Create an instance of a {@link SimpleBookmarkStore}.
      */
     public SimpleBookmarkStore() {
+        // TODO observe when the graph changes and load the new bookmarks accordingly.
         bookmarks = FXCollections.observableArrayList();
     }
 

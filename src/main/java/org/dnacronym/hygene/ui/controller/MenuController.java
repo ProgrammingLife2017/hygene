@@ -242,8 +242,6 @@ public final class MenuController implements Initializable {
             }
         });
 
-        // TODO load bookmarks associated with current graph
-
         // Update menu only in initialized state (not in test-cases)
         if (recentFilesMenu != null) {
             populateRecentFilesMenu();
