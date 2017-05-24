@@ -375,7 +375,7 @@ final class GraphIteratorTest extends GraphBasedTest {
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {3, 6}, {4, 6}, {5, 6}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraphIterator().visitAllWithinRange(SequenceDirection.RIGHT, 2,
+        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 2,
                 (width, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 3, 4);

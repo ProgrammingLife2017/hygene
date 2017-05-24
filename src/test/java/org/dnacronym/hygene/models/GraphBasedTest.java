@@ -2,6 +2,8 @@ package org.dnacronym.hygene.models;
 
 import org.junit.jupiter.api.AfterEach;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,33 +32,6 @@ abstract class GraphBasedTest {
 
 
     /**
-     * Returns the current {@link Graph}.
-     *
-     * @return the current {@link Graph}
-     */
-    final Graph getGraph() {
-        return graph;
-    }
-
-    /**
-     * Returns a new {@link GraphIterator} for the current {@link Graph}.
-     *
-     * @return a new {@link GraphIterator} for the current {@link Graph}
-     */
-    final GraphIterator getGraphIterator() {
-        return graph.iterator();
-    }
-
-    /**
-     * Returns the current {@link GraphQuery}.
-     *
-     * @return the current {@link GraphQuery}
-     */
-    final GraphQuery getGraphQuery() {
-        return graphQuery;
-    }
-
-    /**
      * Creates a new {@link Graph} with the given size, and sets it in this {@link GraphBasedTest}.
      *
      * @param size the size of the {@link Graph} to create
@@ -75,6 +50,24 @@ abstract class GraphBasedTest {
      */
     final void createGraphQuery() {
         graphQuery = new GraphQuery(graph);
+    }
+
+    /**
+     * Returns the current {@link Graph}.
+     *
+     * @return the current {@link Graph}
+     */
+    final Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * Returns the current {@link GraphQuery}.
+     *
+     * @return the current {@link GraphQuery}
+     */
+    final GraphQuery getGraphQuery() {
+        return graphQuery;
     }
 
     /**
@@ -133,21 +126,6 @@ abstract class GraphBasedTest {
     }
 
     /**
-     * Applies the {@code actual} {@link Function} to each identifier in the current {@link Graph} and compares it
-     * against the {@code expected} value.
-     *
-     * @param expected the expected values
-     * @param actual   the {@link Function} to apply to each identifier
-     */
-    final void assertForEachNode(final int[] expected, final Function<Integer, Integer> actual) {
-        assert (expected.length == nodeArrays.length);
-
-        for (int i = 0; i < expected.length; i++) {
-            assertThat(actual.apply(i)).isEqualTo(expected[i]);
-        }
-    }
-
-    /**
      * Sets the sequence lengths for the indicated nodes.
      * <p>
      * Each given array has a length of two, where the first integer is the node's identifier and the second integer
@@ -159,6 +137,32 @@ abstract class GraphBasedTest {
 
             final int id = sequenceLength[0];
             nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequenceLength[1];
+        }
+    }
+
+    /**
+     * Returns all nodes that can be visited by the current {@link GraphQuery}.
+     *
+     * @return all nodes that can be visited by the current {@link GraphQuery}
+     */
+    final List<Integer> collectGraphQueryNodes() {
+        final List<Integer> nodes = new ArrayList<>();
+        graphQuery.visit(nodes::add);
+        return nodes;
+    }
+
+    /**
+     * Applies the {@code actual} {@link Function} to each identifier in the current {@link Graph} and compares it
+     * against the {@code expected} value.
+     *
+     * @param expected the expected values
+     * @param actual   the {@link Function} to apply to each identifier
+     */
+    final void assertForEachNode(final int[] expected, final Function<Integer, Integer> actual) {
+        assert (expected.length == nodeArrays.length);
+
+        for (int i = 0; i < expected.length; i++) {
+            assertThat(actual.apply(i)).isEqualTo(expected[i]);
         }
     }
 }
