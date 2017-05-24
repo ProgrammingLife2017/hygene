@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -44,6 +45,17 @@
             <Label text="Nodes"/>
             <Label text="Edges" GridPane.rowIndex="1"/>
             <Label text="Height" GridPane.columnIndex="1"/>
+            <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2"/>
+            <Label text="Movement" GridPane.rowIndex="3"/>
+            <Label text="Panning Sensitivty" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Slider fx:id="panningSensitivity" majorTickUnit="0.003" max="0.01" min="0.001" showTickLabels="true"
+                    showTickMarks="true" snapToTicks="true" GridPane.columnIndex="2" GridPane.rowIndex="3"
+                    onMouseReleased="#panningSensivitySliderDone">
+                <tooltip>
+                    <Tooltip
+                            text="Change the sensitivity of panning. A higher number means faster, but less accurate panning."/>
+                </tooltip>
+            </Slider>
         </children>
     </GridPane>
 </AnchorPane>
