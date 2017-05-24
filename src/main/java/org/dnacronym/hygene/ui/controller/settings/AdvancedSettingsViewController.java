@@ -41,7 +41,7 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
      *
      * @return the display lane borders
      */
-    public CheckBox getDisplayLaneBorders() {
+    CheckBox getDisplayLaneBorders() {
         return displayLaneBorders;
     }
 
@@ -50,7 +50,7 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
      *
      * @param displayLaneBorders the display lane borders
      */
-    public void setDisplayLaneBorders(final CheckBox displayLaneBorders) {
+    void setDisplayLaneBorders(final CheckBox displayLaneBorders) {
         this.displayLaneBorders = displayLaneBorders;
     }
 }

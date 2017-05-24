@@ -7,6 +7,7 @@ import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,6 +23,7 @@ final class AdvancedSettingsViewControllerTest extends UITest {
     private AdvancedSettingsViewController advancedSettingsViewController;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
+    private CheckBox checkBox;
 
 
     @Override
@@ -36,9 +38,9 @@ final class AdvancedSettingsViewControllerTest extends UITest {
         settings = mock(Settings.class);
         advancedSettingsViewController.setGraphVisualizer(graphVisualizer);
         advancedSettingsViewController.setSettings(settings);
-        CheckBox cb = new CheckBox();
-        cb.setSelected(true);
-        advancedSettingsViewController.setDisplayLaneBorders(cb);
+        checkBox = new CheckBox();
+        checkBox.setSelected(true);
+        advancedSettingsViewController.setDisplayLaneBorders(checkBox);
     }
 
 
@@ -46,6 +48,21 @@ final class AdvancedSettingsViewControllerTest extends UITest {
     void testShowBorders() {
         interact(() -> advancedSettingsViewController.showLaneBordersClicked());
         verify(settings, times(1)).addRunnable(any(Runnable.class));
+    }
+
+    @Test
+    void testShowBorderRunnable() {
+        assertThat(checkBox.isSelected()).isTrue();
+        assertThat(graphVisualizer.getDisplayBordersProperty().getValue()).isFalse();
+
+        interact(() -> advancedSettingsViewController.showLaneBordersClicked());
+
+        ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+        verify(settings).addRunnable(captor.capture());
+        Runnable command = captor.getValue();
+        command.run();
+
+        assertThat(graphVisualizer.getDisplayBordersProperty().getValue()).isTrue();
     }
 
     @Test
