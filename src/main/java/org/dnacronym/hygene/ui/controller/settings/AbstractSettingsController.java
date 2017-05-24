@@ -18,8 +18,9 @@ public abstract class AbstractSettingsController implements Initializable {
     private Settings settings;
     private GraphVisualizer graphVisualizer;
 
+
     /**
-     * Constructor for {@link AbstractSettingsController}.
+     * Initializes a new instance of {@link AbstractSettingsController}.
      */
     AbstractSettingsController() {
         try {
@@ -30,6 +31,7 @@ public abstract class AbstractSettingsController implements Initializable {
             return;
         }
     }
+
 
     /**
      * Gets the {@link Settings} for use by the controller.
