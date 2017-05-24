@@ -39,10 +39,11 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
     @FXML
     public void onLogLevelChanged(final ActionEvent event) {
         getSettings().addRunnable(() -> {
-            Logger logger = LogManager.getRootLogger();
-            Configurator.setLevel(logger.getName(), Level.DEBUG);
-
             String logLevel = choiceBox.getSelectionModel().getSelectedItem();
+
+            Logger logger = LogManager.getRootLogger();
+            Configurator.setLevel(logger.getName(), Level.toLevel(logLevel));
+
             LOGGER.info("Log level was set to: " + Level.toLevel(logLevel));
         });
     }
