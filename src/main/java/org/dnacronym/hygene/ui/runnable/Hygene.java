@@ -86,7 +86,7 @@ public final class Hygene extends Application {
         graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
         simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
-        graphMovement = new GraphMovement(graphVisualizer);
+        graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
     }
 
     @Override

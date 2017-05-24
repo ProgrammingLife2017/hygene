@@ -1,16 +1,12 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -20,11 +16,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for the configuration window.
  */
-public final class QuerySettingsController implements Initializable {
+public final class QuerySettingsController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(QuerySettingsController.class);
-
-    private Settings settings;
-    private GraphVisualizer graphVisualizer;
 
     @FXML
     private Label currentNodeId;
@@ -38,43 +31,16 @@ public final class QuerySettingsController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        try {
-            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-            setSettings(Hygene.getInstance().getSettings());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Failed to initialise Configuration Controller.", e);
-            return;
-        }
-
         nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
         range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
-        currentNodeId.textProperty().bind(graphVisualizer.getCenterNodeIdProperty().asString());
-        currentRange.textProperty().bind(graphVisualizer.getHopsProperty().asString());
+        currentNodeId.textProperty().bind(getGraphVisualizer().getCenterNodeIdProperty().asString());
+        currentRange.textProperty().bind(getGraphVisualizer().getHopsProperty().asString());
 
-        graphVisualizer.getCenterNodeIdProperty().addListener(
+        getGraphVisualizer().getCenterNodeIdProperty().addListener(
                 (observable, oldValue, newValue) -> nodeId.setText(String.valueOf(newValue)));
-        graphVisualizer.getHopsProperty().addListener(
+        getGraphVisualizer().getHopsProperty().addListener(
                 (observable, oldValue, newValue) -> range.setText(String.valueOf(newValue)));
-    }
-
-    /**
-     * Sets the {@link Settings} for use by the controller.
-     *
-     * @param settings {@link Settings} for use by the controller
-     */
-    void setSettings(final Settings settings) {
-        this.settings = settings;
-    }
-
-    /**
-     * Sets the {@link GraphVisualizer}. This allows the sliders to change the properties of the
-     * {@link GraphVisualizer}.
-     *
-     * @param graphVisualiser graph pane to set in the controller
-     */
-    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
-        this.graphVisualizer = graphVisualiser;
     }
 
     /**
@@ -85,11 +51,11 @@ public final class QuerySettingsController implements Initializable {
      */
     @FXML
     void setNodeId() {
-        settings.addRunnable(() -> {
+        getSettings().addRunnable(() -> {
             final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
-            graphVisualizer.getCenterNodeIdProperty().set(newValue);
+            getGraphVisualizer().getCenterNodeIdProperty().set(newValue);
 
-            LOGGER.info("Center node id set to: " + graphVisualizer.getCenterNodeIdProperty().get());
+            LOGGER.info("Center node id set to: " + getGraphVisualizer().getCenterNodeIdProperty().get());
         });
     }
 
@@ -101,11 +67,11 @@ public final class QuerySettingsController implements Initializable {
      */
     @FXML
     void setRange() {
-        settings.addRunnable(() -> {
+        getSettings().addRunnable(() -> {
             final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
-            graphVisualizer.getHopsProperty().set(newValue);
+            getGraphVisualizer().getHopsProperty().set(newValue);
 
-            LOGGER.info("Range set to: " + graphVisualizer.getHopsProperty().get());
+            LOGGER.info("Range set to: " + getGraphVisualizer().getHopsProperty().get());
         });
     }
 }

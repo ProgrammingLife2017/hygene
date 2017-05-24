@@ -68,7 +68,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     void panningSensitivitySliderDone() {
         getSettings().addRunnable(() -> {
             final double newValue = panningSensitivity.getValue();
-            graphMovementCalculator.getPanningSensitivityProperty().setValue(newValue);
+            getGraphMovementCalculator().getPanningSensitivityProperty().setValue(newValue);
         });
     }
 }

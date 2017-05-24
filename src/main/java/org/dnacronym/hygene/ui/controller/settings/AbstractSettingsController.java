@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.Settings;
+import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 
@@ -17,6 +18,7 @@ public abstract class AbstractSettingsController implements Initializable {
 
     private Settings settings;
     private GraphVisualizer graphVisualizer;
+    private GraphMovementCalculator graphMovementCalculator;
 
 
     /**
@@ -26,9 +28,9 @@ public abstract class AbstractSettingsController implements Initializable {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSettings(Hygene.getInstance().getSettings());
+            setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-            return;
         }
     }
 
@@ -67,5 +69,23 @@ public abstract class AbstractSettingsController implements Initializable {
      */
     final void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * Gets the {@link GraphMovementCalculator} for use by the controller.
+     *
+     * @return the {@link GraphMovementCalculator} for use by the controller
+     */
+    public final GraphMovementCalculator getGraphMovementCalculator() {
+        return graphMovementCalculator;
+    }
+
+    /**
+     * Sets the {@link GraphMovementCalculator} for use by the controller.
+     *
+     * @param graphMovementCalculator {@link GraphMovementCalculator} for use by the controller
+     */
+    final void setGraphMovementCalculator(final GraphMovementCalculator graphMovementCalculator) {
+        this.graphMovementCalculator = graphMovementCalculator;
     }
 }

@@ -3,14 +3,10 @@ package org.dnacronym.hygene.ui.controller.settings;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.store.Settings;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,10 +15,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for the three buttons of the settings window.
  */
-public final class SettingsButtonController implements Initializable {
+public final class SettingsButtonController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(SettingsButtonController.class);
-
-    private Settings settings;
 
     @FXML
     private Button apply;
@@ -30,23 +24,7 @@ public final class SettingsButtonController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        try {
-            setSettings(Hygene.getInstance().getSettings());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize SettingsButtonController.", e);
-            return;
-        }
-
-        apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
-    }
-
-    /**
-     * Set the {@link Settings} for use by the controller.
-     *
-     * @param settings {@link Settings} for use by the controller
-     */
-    void setSettings(final Settings settings) {
-        this.settings = settings;
+        apply.disableProperty().bind(Bindings.isEmpty(getSettings().getCommands()));
     }
 
     /**
@@ -56,7 +34,7 @@ public final class SettingsButtonController implements Initializable {
      */
     @FXML
     void okAction(final ActionEvent actionEvent) {
-        settings.executeAll();
+        getSettings().executeAll();
 
         final Node source = (Node) actionEvent.getSource();
         source.getScene().getWindow().hide();
@@ -71,7 +49,7 @@ public final class SettingsButtonController implements Initializable {
      */
     @FXML
     void cancelAction(final ActionEvent actionEvent) {
-        settings.clearAll();
+        getSettings().clearAll();
 
         final Node source = (Node) actionEvent.getSource();
         source.getScene().getWindow().hide();
@@ -86,7 +64,7 @@ public final class SettingsButtonController implements Initializable {
      */
     @FXML
     void applyAction(final ActionEvent actionEvent) {
-        settings.executeAll();
+        getSettings().executeAll();
         actionEvent.consume();
     }
 }
