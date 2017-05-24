@@ -13,6 +13,7 @@ public final class Fafosp {
 
     private final Graph graph;
     private final int[][] nodeArrays;
+    private final GraphIterator iterator;
 
 
     /**
@@ -23,6 +24,7 @@ public final class Fafosp {
     public Fafosp(final Graph graph) {
         this.graph = graph;
         this.nodeArrays = graph.getNodeArrays();
+        this.iterator = graph.iterator();
     }
 
 
@@ -31,7 +33,7 @@ public final class Fafosp {
      */
     public void horizontal() {
         final Queue<Integer> queue = new LinkedList<>();
-        graph.iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, queue::add);
+        iterator.visitDirectNeighbours(0, SequenceDirection.RIGHT, queue::add);
         graph.setUnscaledXPosition(0, 0);
 
         while (!queue.isEmpty()) {
@@ -47,7 +49,7 @@ public final class Fafosp {
             // Horizontal position cannot always be determined by FAFOSP-X
             if (graph.getUnscaledXPosition(head) >= 0) {
                 // Add neighbours of which horizontal position was not set
-                graph.iterator().visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+                iterator.visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
                     if (graph.getUnscaledXPosition(neighbour) < 0) {
                         queue.add(neighbour);
                     }
@@ -64,7 +66,7 @@ public final class Fafosp {
      */
     private void horizontal(final int id) {
         final int[] width = {-1};
-        graph.iterator().visitDirectNeighboursWhile(id, SequenceDirection.LEFT,
+        iterator.visitDirectNeighboursWhile(id, SequenceDirection.LEFT,
                 neighbour -> graph.getUnscaledXPosition(neighbour) >= 0,
                 ignored -> width[0] = -1,
                 neighbour -> {
@@ -97,8 +99,8 @@ public final class Fafosp {
      * @param meta an array to store the left and right heights in
      */
     private void verticalInit(final int[] meta) {
-        graph.iterator().visitAll(SequenceDirection.RIGHT, node -> verticalInit(node, SequenceDirection.LEFT, meta));
-        graph.iterator().visitAll(SequenceDirection.LEFT, node -> verticalInit(node, SequenceDirection.RIGHT, meta));
+        iterator.visitAll(SequenceDirection.RIGHT, node -> verticalInit(node, SequenceDirection.LEFT, meta));
+        iterator.visitAll(SequenceDirection.LEFT, node -> verticalInit(node, SequenceDirection.RIGHT, meta));
     }
 
     /**
@@ -128,7 +130,7 @@ public final class Fafosp {
                 height[0] = 2;
             }
         } else {
-            graph.iterator().visitDirectNeighbours(node, direction,
+            iterator.visitDirectNeighbours(node, direction,
                     neighbour -> height[0] += direction.ternary(meta[2 * neighbour], meta[2 * neighbour + 1])
             );
         }
@@ -152,7 +154,7 @@ public final class Fafosp {
             final Integer head = queue.remove();
 
             // Do not revisit visited nodes
-            graph.iterator().visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+            iterator.visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
                 if (graph.getUnscaledYPosition(neighbour) < 0) {
                     queue.add(neighbour);
                 }
@@ -201,7 +203,7 @@ public final class Fafosp {
             // Neighbour has multiple neighbours
             final int[] neighbourLeftNeighboursHeight = {0};
 
-            graph.iterator().visitDirectNeighboursWhile(neighbour, SequenceDirection.LEFT,
+            iterator.visitDirectNeighboursWhile(neighbour, SequenceDirection.LEFT,
                     neighbourLeftNeighbour -> neighbourLeftNeighbour != node,
                     neighbourLeftNeighbour -> neighbourLeftNeighboursHeight[0] += meta[2 * neighbourLeftNeighbour]
             );
@@ -224,7 +226,7 @@ public final class Fafosp {
     private void verticalCalculateNeighbours(final int[] meta, final int node) {
         final int[] relativeHeight = {graph.getUnscaledYPosition(node) - meta[2 * node + 1] / 2};
 
-        graph.iterator().visitDirectNeighbours(node, SequenceDirection.RIGHT, neighbour -> {
+        iterator.visitDirectNeighbours(node, SequenceDirection.RIGHT, neighbour -> {
             final int neighbourLeftNeighbourCount = graph.getNeighbourCount(neighbour, SequenceDirection.LEFT);
 
             if (neighbourLeftNeighbourCount == 1) {

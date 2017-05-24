@@ -39,6 +39,15 @@ abstract class GraphBasedTest {
     }
 
     /**
+     * Returns a new {@link GraphIterator} for the current {@link Graph}.
+     *
+     * @return a new {@link GraphIterator} for the current {@link Graph}
+     */
+    final GraphIterator getGraphIterator() {
+        return graph.iterator();
+    }
+
+    /**
      * Returns the current {@link GraphQuery}.
      *
      * @return the current {@link GraphQuery}
