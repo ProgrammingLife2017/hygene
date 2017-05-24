@@ -11,10 +11,10 @@
                 <Tab text="Query">
                     <fx:include source="query_settings_view.fxml"/>
                 </Tab>
-                <Tab text="Basic display">
+                <Tab text="Basic">
                     <fx:include source="basic_settings_view.fxml"/>
                 </Tab>
-                <Tab text="Advanced display">
+                <Tab text="Advanced">
                     <fx:include source="advanced_settings_view.fxml"/>
                 </Tab>
                 <Tab text="Logging">

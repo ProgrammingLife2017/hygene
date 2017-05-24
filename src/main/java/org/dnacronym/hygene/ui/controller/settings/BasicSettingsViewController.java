@@ -61,6 +61,9 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         });
     }
 
+    /**
+     * When the user finishes sliding the panning sensitivity {@link Slider}.
+     */
     @FXML
     void panningSensivitySliderDone() {
         getSettings().addRunnable(() -> {
