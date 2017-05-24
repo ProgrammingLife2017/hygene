@@ -7,19 +7,46 @@ import java.util.function.Consumer;
  * Enables dynamic centre point queries for a {@link Graph}.
  * <p>
  * Query results are cached and can be used later.
+ * <p>
+ * This class functions lazily, which means that the cache is only approximately correct. While the intended nodes
+ * will always be in the cache, the cache may contain more nodes. The excessive nodes are flushed from the cache by
+ * rebuilding the cache after a number of calls.
  */
 public final class GraphQuery {
+    /**
+     * The maximal acceptable difference between the preferred radius and the cached radius.
+     */
+    private static final int MAX_RADIUS_DIFFERENCE = 10;
+    /**
+     * The maximum cached radius before the cached is "too large".
+     */
+    private static final int MAX_RADIUS_FACTOR = 2;
+
     /**
      * The queried {@link Graph}.
      */
     private final Graph graph;
     /**
+     * The iterator with which to iterate over the {@link Graph}.
+     */
+    private final GraphIterator iterator;
+    /**
      * Maps each node in the cache to the distance from the centre point of the query.
      */
-    private final NodeDistanceMap current;
+    private final NodeDistanceMap cache;
 
-    private int radius;
+    /**
+     * The node id of the centre node in the current query.
+     */
     private int centre;
+    /**
+     * The maximum distance to the centre the nodes in the cache should have.
+     */
+    private int radius;
+    /**
+     * The maximum distance to the centre the nodes in the cache actually have.
+     */
+    private int cacheRadius;
 
 
     /**
@@ -29,7 +56,8 @@ public final class GraphQuery {
      */
     public GraphQuery(final Graph graph) {
         this.graph = graph;
-        this.current = new NodeDistanceMap();
+        this.iterator = new GraphIterator(graph);
+        this.cache = new NodeDistanceMap();
     }
 
 
@@ -50,40 +78,58 @@ public final class GraphQuery {
             throw new IllegalArgumentException("Radius must cannot be negative.");
         }
 
-        this.radius = radius;
         this.centre = centre;
+        this.radius = radius;
+        this.cacheRadius = radius;
 
-        current.clear();
-        graph.iterator().visitIndirectNeighboursWithinRange(centre, radius,
-                (depth, node) -> current.setDistance(node, depth));
+        cache.clear();
+        iterator.visitIndirectNeighboursWithinRange(centre, radius,
+                (depth, node) -> cache.setDistance(node, depth));
+    }
+
+    /**
+     * Moves the centre to the given node.
+     *
+     * @param centre a node id
+     */
+    public void moveTo(final int centre) {
+        if (centre < 0) {
+            throw new IllegalArgumentException("Centre point node id cannot be negative.");
+        }
+        if (centre >= graph.getNodeArrays().length) {
+            throw new IllegalArgumentException("Centre point node id cannot exceed graph size.");
+        }
+
+        this.centre = centre;
+        fixCentre();
     }
 
     /**
      * Increases the radius by one.
      */
     public void incrementRadius() {
-        query(centre, radius + 1);
+        radius++;
+        if (radius <= cacheRadius) {
+            return;
+        }
+
+        incrementCacheRadius();
     }
 
     /**
      * Decreases the radius by one.
+     * <p>
+     * An actual update is deferred because it would be a waste to throw away the outer layer.
      */
     public void decrementRadius() {
-        query(centre, radius - 1);
-    }
+        if (radius <= 0) {
+            return;
+        }
 
-    /**
-     * Increases the centre node by one, i.e. moves it to the right.
-     */
-    public void incrementCentre() {
-        query(centre + 1, radius);
-    }
-
-    /**
-     * Decreases the centre node by one, i.e. moves it to the left.
-     */
-    public void decrementCentre() {
-        query(centre - 1, radius);
+        radius--;
+        if (cacheRadius - radius > MAX_RADIUS_DIFFERENCE) {
+            query(centre, radius);
+        }
     }
 
     /**
@@ -92,6 +138,51 @@ public final class GraphQuery {
      * @param action a {@link Consumer} for node ids
      */
     public void visit(final Consumer<Integer> action) {
-        current.keySet().forEach(action::accept);
+        cache.keySet().forEach(action::accept);
+    }
+
+    /**
+     * Returns the query's current centre node id.
+     *
+     * @return the query's current centre node id
+     */
+    public int getCentre() {
+        return centre;
+    }
+
+    /**
+     * Returns the query's current radius.
+     *
+     * @return the query's current radius
+     */
+    public int getRadius() {
+        return radius;
+    }
+
+
+    /**
+     * Ensures that the query on the cached centre and radius are a superset of the preferred centre and radius.
+     */
+    private void fixCentre() {
+        final Integer centreDistance = cache.getDistance(centre);
+        if (centreDistance == null || cacheRadius >= radius * MAX_RADIUS_FACTOR) {
+            query(centre, radius);
+            return;
+        }
+
+        int offset = centreDistance + (radius - cacheRadius);
+        while (offset > 0) {
+            incrementCacheRadius();
+            offset--;
+        }
+    }
+
+    /**
+     * Increments the cached radius and adds the nodes that are now within range.
+     */
+    private void incrementCacheRadius() {
+        cacheRadius++;
+        cache.getNodes(cacheRadius - 1).forEach(node ->
+                iterator.visitDirectNeighbours(node, neighbour -> cache.setDistance(neighbour, cacheRadius)));
     }
 }
