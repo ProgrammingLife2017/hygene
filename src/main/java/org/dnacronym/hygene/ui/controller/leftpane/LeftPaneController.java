@@ -20,14 +20,13 @@ import java.util.ResourceBundle;
 public final class LeftPaneController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(LeftPaneController.class);
 
-    private GraphStore graphStore;
-
     @FXML
     private SplitPane leftPane;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        final GraphStore graphStore;
         try {
             graphStore = Hygene.getInstance().getGraphStore();
         } catch (final UIInitialisationException e) {
