@@ -5,10 +5,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.store.Settings;
-import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,11 +13,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for the border.
  */
-public final class AdvancedSettingsViewController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
-
-    private GraphVisualizer graphVisualizer;
-    private Settings settings;
+public final class AdvancedSettingsViewController extends AbstractSettingsController implements Initializable {
+    protected static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
 
     @FXML
     private CheckBox displayLaneBorders;
@@ -29,33 +22,8 @@ public final class AdvancedSettingsViewController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setSettings(Hygene.getInstance().getSettings());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize AdvancedSettingsViewController.", e);
-            return;
-        }
-
+        super.initialize(location, resources);
         displayLaneBorders.setSelected(graphVisualizer.getDisplayBordersProperty().get());
-    }
-
-    /**
-     * Set the {@link GraphVisualizer} for use by the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
-     */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
-     * Set the {@link Settings} for use by the controller.
-     *
-     * @param settings {@link Settings} for use by the controller
-     */
-    void setSettings(final Settings settings) {
-        this.settings = settings;
     }
 
     /**
