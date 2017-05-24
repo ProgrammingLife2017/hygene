@@ -106,6 +106,13 @@ final class MetadataParserTest {
     }
 
     @Test
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws ParseException {
+        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC *"), 1));
+
+        assertThat(e).isInstanceOf(ParseException.class);
+    }
+
+    @Test
     void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws ParseException {
         final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("L 12 + 24"), 1));
 
