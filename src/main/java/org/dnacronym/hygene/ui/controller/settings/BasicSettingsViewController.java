@@ -58,7 +58,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      *
      * @return the node height
      */
-    public Slider getNodeHeight() {
+    Slider getNodeHeight() {
         return nodeHeight;
     }
 
@@ -67,7 +67,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      *
      * @param nodeHeight the node height
      */
-    public void setNodeHeight(Slider nodeHeight) {
+    void setNodeHeight(final Slider nodeHeight) {
         this.nodeHeight = nodeHeight;
     }
 
@@ -76,7 +76,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      *
      * @return the edge colors
      */
-    public ColorPicker getEdgeColor() {
+    ColorPicker getEdgeColor() {
         return edgeColor;
     }
 
@@ -85,7 +85,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      *
      * @param edgeColor the edge colors
      */
-    public void setEdgeColor(ColorPicker edgeColor) {
+    void setEdgeColor(final ColorPicker edgeColor) {
         this.edgeColor = edgeColor;
     }
 }
