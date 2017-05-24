@@ -37,6 +37,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         getSettings().addRunnable(() -> {
             final double newValue = nodeHeight.getValue();
             getGraphVisualizer().getNodeHeightProperty().setValue(newValue);
+            LOGGER.info("Node height has now been set to " + newValue + ".");
         });
     }
 
@@ -48,6 +49,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         getSettings().addRunnable(() -> {
             final Color newValue = edgeColors.getValue();
             getGraphVisualizer().getEdgeColorProperty().setValue(newValue);
+            LOGGER.info("Edge color has now been set to " + newValue + ".");
         });
     }
 }

@@ -32,6 +32,7 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
         getSettings().addRunnable(() -> {
             final boolean newValue = displayLaneBorders.isSelected();
             getGraphVisualizer().getDisplayBordersProperty().setValue(newValue);
+            LOGGER.info("Displaying lane borders has now been " + (newValue ? "enabled." : "disabled."));
         });
     }
 }
