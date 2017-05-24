@@ -1,9 +1,12 @@
 package org.dnacronym.hygene.persistence;
 
+import java.sql.SQLException;
+import java.util.Arrays;
+
 /**
  * Class responsible for storing and retrieving genome coordinate system index points.
  */
-final class FileGenomeIndex {
+public final class FileGenomeIndex {
     static final String TABLE_NAME = "genome_index";
 
     private static final String GENOME_ID_COLUMN_NAME = "genome_id";
@@ -19,7 +22,7 @@ final class FileGenomeIndex {
      *
      * @param fileDatabase the database to contain that genome index
      */
-    FileGenomeIndex(final FileDatabase fileDatabase) {
+    public FileGenomeIndex(final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
     }
@@ -37,5 +40,26 @@ final class FileGenomeIndex {
         globalTable.addColumn(NODE_ID_COLUMN_NAME, "INTEGER");
 
         return globalTable;
+    }
+
+
+    /**
+     * Adds a new genome index point with the given data attributes.
+     *
+     * @param genomeId a numeric ID representing the genome this index belongs to
+     * @param base     the base count at this index point
+     * @param nodeId   the ID of the node that belongs to that index point
+     * @throws SQLException
+     */
+    public void addGenomeIndexPoint(final int genomeId, final int base, final int nodeId) throws SQLException {
+        fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(
+                String.valueOf(genomeId),
+                String.valueOf(base),
+                String.valueOf(nodeId)
+        ));
+    }
+
+    public int getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
+        return -1;
     }
 }
