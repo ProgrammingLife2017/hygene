@@ -7,7 +7,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,7 +43,8 @@ public final class QuerySettingsController extends AbstractSettingsController {
     }
 
     /**
-     * Sets the node id property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
+     * Sets the node id property in the {@link org.dnacronym.hygene.ui.visualizer.GraphVisualizer} integer value of the
+     * current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
@@ -60,7 +60,8 @@ public final class QuerySettingsController extends AbstractSettingsController {
     }
 
     /**
-     * Sets the range property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
+     * Sets the range property in the {@link org.dnacronym.hygene.ui.visualizer.GraphVisualizer} integer value of the
+     * current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.

@@ -59,8 +59,9 @@ public final class GraphSliderController implements Initializable {
     }
 
     /**
-     * Sets the {@link GraphVisualizer}. This allows the sliders to change the properties of the
-     * {@link GraphVisualizer}.
+     * Sets the {@link GraphVisualizer}.
+     * <p>
+     * This allows the sliders to change the properties of the {@link GraphVisualizer}.
      *
      * @param graphVisualiser graph pane to set in the controller
      */

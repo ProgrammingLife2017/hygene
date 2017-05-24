@@ -5,8 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,8 +14,6 @@ import java.util.ResourceBundle;
  * Controller for the three buttons of the settings window.
  */
 public final class SettingsButtonController extends AbstractSettingsController {
-    private static final Logger LOGGER = LogManager.getLogger(SettingsButtonController.class);
-
     @FXML
     private Button apply;
 

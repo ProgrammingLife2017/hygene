@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
@@ -27,7 +26,6 @@ public final class GraphController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
 
     private GraphVisualizer graphVisualizer;
-    private GraphStore graphStore;
     private GraphMovementCalculator graphMovementCalculator;
 
     private Stage primaryStage;
@@ -57,7 +55,7 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphMovementCalculator} for use by the controller.
+     * Sets the {@link GraphMovementCalculator} for use by the controller.
      *
      * @param graphMovementCalculator {@link GraphMovementCalculator} for use by the controller
      */
@@ -66,7 +64,7 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Set the {@link String} for use by the controller.
+     * Sets the {@link String} for use by the controller.
      *
      * @param primaryStage {@link Stage} for use by the controller
      */
@@ -75,7 +73,7 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphVisualizer} in the controller.
+     * Sets the {@link GraphVisualizer} in the controller.
      *
      * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}
      */
