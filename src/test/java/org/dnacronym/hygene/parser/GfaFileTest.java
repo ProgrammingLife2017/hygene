@@ -4,6 +4,7 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
+import org.dnacronym.hygene.persistence.FileDatabaseDriver;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ final class GfaFileTest {
         NewGfaParserFactory.setInstance(null);
         MetadataParserFactory.setInstance(null);
         if (currentFileName != null) {
-            Files.deleteIfExists(Paths.get(currentFileName + ".db"));
+            Files.deleteIfExists(Paths.get(currentFileName + FileDatabaseDriver.DB_FILE_EXTENSION));
         }
     }
 
