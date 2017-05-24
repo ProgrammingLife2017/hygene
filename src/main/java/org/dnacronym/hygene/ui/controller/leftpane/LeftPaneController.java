@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.SplitPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -21,10 +20,10 @@ import java.util.ResourceBundle;
 public final class LeftPaneController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(LeftPaneController.class);
 
-    private @MonotonicNonNull GraphStore graphStore;
+    private GraphStore graphStore;
 
     @FXML
-    private @MonotonicNonNull SplitPane leftPane;
+    private SplitPane leftPane;
 
 
     @Override
@@ -36,9 +35,7 @@ public final class LeftPaneController implements Initializable {
             return;
         }
 
-        if (leftPane != null) {
-            leftPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-            leftPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        }
+        leftPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        leftPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
 }
