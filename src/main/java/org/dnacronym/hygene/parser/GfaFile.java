@@ -25,6 +25,7 @@ import java.util.Map;
  */
 public final class GfaFile {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
+    private static final int PROGRESS_TOTAL = 100;
 
     private final String fileName;
     private final NewGfaParser gfaParser;
@@ -49,17 +50,18 @@ public final class GfaFile {
     /**
      * Parses the GFA file into a {@link Graph}.
      *
+     * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return a {@link Graph} based on the contents of the GFA file
      * @throws ParseException if the file content is not GFA-compliant
      */
-    public Graph parse() throws ParseException {
+    public Graph parse(final ProgressUpdater progressUpdater) throws ParseException {
         try (final FileDatabase fileDatabase = new FileDatabase(fileName)) {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
             if (graphLoader.hasGraph()) {
                 graph = new Graph(graphLoader.restoreGraph(), this);
             } else {
-                graph = gfaParser.parse(this);
+                graph = gfaParser.parse(this, progressUpdater);
                 nodeIds = gfaParser.getNodeIds();
                 graph.fafosp().horizontal();
                 graph.fafosp().vertical();
@@ -70,6 +72,8 @@ public final class GfaFile {
             LOGGER.error("Could not open file database to restore graph.", e);
             throw new ParseException("Could not open file database to restore graph.", e);
         }
+
+        progressUpdater.updateProgress(PROGRESS_TOTAL);
 
         return graph;
     }

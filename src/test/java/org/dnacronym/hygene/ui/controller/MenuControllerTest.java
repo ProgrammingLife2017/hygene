@@ -6,6 +6,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -19,10 +20,11 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,19 +44,31 @@ public final class MenuControllerTest extends UITest {
 
     @Test
     public void testFileOpenerAccept() throws Exception {
-        final GraphStore graphStore = mock(GraphStore.class);
-        final FileChooser fileChooser = mock(FileChooser.class);
-        final File file = mock(File.class);
+        CompletableFuture<Object> future = new CompletableFuture<>();
 
-        // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
-        final Window owner = Hygene.getInstance().getPrimaryStage().getOwner();
-        when(fileChooser.showOpenDialog(owner)).thenReturn(file, file);
+        interact(() -> {
+            try {
+                final GraphStore graphStore = spy(GraphStore.class);
+                final FileChooser fileChooser = mock(FileChooser.class);
+                final File file = mock(File.class);
 
-        menuController.setFileChooser(fileChooser);
-        menuController.setGraphStore(graphStore);
-        menuController.openFileAction(mock(ActionEvent.class));
+                // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
+                final Window owner = Hygene.getInstance().getPrimaryStage().getOwner();
+                when(fileChooser.showOpenDialog(owner)).thenReturn(file);
+                menuController.setFileChooser(fileChooser);
+                menuController.setGraphStore(graphStore);
+                menuController.openFileAction(mock(ActionEvent.class));
 
-        verify(graphStore, times(1)).load(file);
+                verify(file).getParentFile();
+
+                future.complete(null);
+            } catch (Exception e) {
+                future.complete(null);
+                fail(e.getMessage());
+            }
+        });
+
+        future.get();
     }
 
     @Test
@@ -66,7 +80,7 @@ public final class MenuControllerTest extends UITest {
         menuController.setGraphStore(graphStore);
         menuController.openFileAction(mock(ActionEvent.class));
 
-        verify(graphStore, never()).load(any(File.class));
+        verify(graphStore, never()).load(any(File.class), any(ProgressUpdater.class));
     }
 
     @Test

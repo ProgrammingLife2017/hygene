@@ -170,6 +170,7 @@ final class NewGfaParserTest {
         when(gfaFile.readFile()).thenAnswer(invocationOnMock ->
                 new BufferedReader(new InputStreamReader(new ByteArrayInputStream(gfaBytes)))
         );
-        return parser.parse(gfaFile);
+        return parser.parse(gfaFile, progress -> {
+        });
     }
 }

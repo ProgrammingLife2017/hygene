@@ -87,11 +87,13 @@ public final class MenuController implements Initializable {
         }
 
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
-
-        if (gfaFile != null) {
-            loadFile(gfaFile);
-            parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
+        if (gfaFile == null) {
+            return;
         }
+
+        parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
+
+        loadFile(gfaFile);
     }
 
     /**
@@ -226,8 +228,19 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
-        graphStore.load(file);
-        RecentFiles.add(file);
+        ProgressBarController.performTask(progressUpdater -> {
+            if (graphStore == null) {
+                LOGGER.error("Failed to load: " + file.getName() + ".");
+                return;
+            }
+
+            try {
+                graphStore.load(file, progressUpdater);
+                RecentFiles.add(file);
+            } catch (final IOException e) {
+                LOGGER.error("Failed to load: " + file.getName() + ".", e);
+            }
+        });
 
         // Update menu only in initialized state (not in test-cases)
         if (recentFilesMenu != null) {

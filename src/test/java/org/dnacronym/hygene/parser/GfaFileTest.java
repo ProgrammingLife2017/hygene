@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -61,7 +63,8 @@ final class GfaFileTest {
     @Test
     void testCannotReadNonExistingFile() {
         currentFileName = "random-file-name";
-        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse());
+        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse(progress -> {
+        }));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
@@ -89,9 +92,10 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        gfaFile.parse();
+        gfaFile.parse(progress -> {
+        });
 
-        verify(gfaParser).parse(gfaFile);
+        verify(gfaParser).parse(eq(gfaFile), any(ProgressUpdater.class));
         assertThat(gfaFile.getGraph()).isNotNull();
     }
 
@@ -126,7 +130,8 @@ final class GfaFileTest {
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
-        gfaFile.parse();
+        gfaFile.parse(progress -> {
+        });
 
         assertThat(gfaFile.getNodeIds()).contains(new AbstractMap.SimpleEntry<>("11", 1));
     }
