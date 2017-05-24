@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
  */
 public final class LoggingSettingsViewController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);
-    private static final List<String> LOG_LEVELS = Arrays.stream(Level.values()).map(Level::name).collect(Collectors.toList());
+    private static final List<String> LOG_LEVELS =
+            Arrays.stream(Level.values()).map(Level::name).collect(Collectors.toList());
 
     @FXML
     private ChoiceBox<String> choiceBox;
@@ -48,6 +49,8 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
 
             LOGGER.info("Log level was set to: " + Level.toLevel(logLevel));
         });
+
+        event.consume();
     }
 
     /**
@@ -55,7 +58,7 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
      *
      * @param choiceBox the new value for {@link LoggingSettingsViewController#choiceBox}
      */
-    void setChoiceBox(ChoiceBox<String> choiceBox) {
+    void setChoiceBox(final ChoiceBox<String> choiceBox) {
         this.choiceBox = choiceBox;
     }
 
