@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.controller.leftpane;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,8 +33,8 @@ public final class ConfigController implements Initializable {
     @FXML
     private TextField range;
 
+
     @Override
-    @SuppressWarnings("squid:S1067") // Suppress complex if statements for CF
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
