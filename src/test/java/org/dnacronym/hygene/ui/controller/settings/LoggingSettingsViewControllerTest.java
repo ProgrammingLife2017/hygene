@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.ChoiceBox;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.store.Settings;
