@@ -6,11 +6,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -24,7 +22,6 @@ public final class GraphController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
 
     private GraphVisualizer graphVisualizer;
-    private GraphStore graphStore;
 
     @FXML
     private Canvas graphCanvas;
@@ -36,7 +33,6 @@ public final class GraphController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            setGraphStore(Hygene.getInstance().getGraphStore());
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
@@ -47,17 +43,6 @@ public final class GraphController implements Initializable {
         graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
         graphVisualizer.setCanvas(graphCanvas);
-
-        graphStore.getGfaFileProperty().addListener((observable, oldFile, newFile) -> updateGraph(newFile));
-    }
-
-    /**
-     * Set the {@link GraphStore} in the controller.
-     *
-     * @param graphStore {@link GraphStore} to store in the {@link GraphController}
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
     }
 
     /**
@@ -94,20 +79,5 @@ public final class GraphController implements Initializable {
                         + " to node id: " + edge.getTo() + " could not be loaded");
             }
         });
-    }
-
-    /**
-     * Update the swing node to display graph of the given {@link GfaFile}.
-     *
-     * @param gfaFile with internal graph to display
-     * @see GfaFile#getGraph()
-     */
-    void updateGraph(final GfaFile gfaFile) {
-        try {
-            graphVisualizer.setGraph(gfaFile.getGraph());
-            graphVisualizer.draw();
-        } catch (final IllegalStateException e) {
-            LOGGER.error("Failed to update graph.", e);
-        }
     }
 }
