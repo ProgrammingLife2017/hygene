@@ -79,7 +79,7 @@ public final class Hygene extends Application {
     public void init() {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer();
-        settings = new Settings();
+        settings = new Settings(graphStore);
     }
 
     @Override
