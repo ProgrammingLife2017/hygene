@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeBuilder;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.SequenceDirection;
 
@@ -99,7 +98,8 @@ public final class NewGfaParser {
      * This step is necessary because we need to know the internal node IDs
      * upfront to be able to add edges to the correct node vectors.
      *
-     * @param gfa lines of a GFA-compliant {@link String}
+     * @param gfa a buffered reader of a GFA file
+     * @throws IOException if the given GFA file is not valid
      */
     private void allocateNodes(final BufferedReader gfa) throws IOException {
         addNodeId(SOURCE_NAME);
@@ -237,7 +237,9 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
-        final int lastOutgoingEdgePosition = Node.NODE_EDGE_DATA_OFFSET + nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE;
+        final int lastOutgoingEdgePosition = Node.NODE_EDGE_DATA_OFFSET
+                + nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE;
+
         nodeArrays[fromId] = insertAtPosition(nodeArrays[fromId], lastOutgoingEdgePosition, toId, offset);
         nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX]++;
     }
