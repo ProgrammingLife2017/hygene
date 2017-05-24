@@ -1,8 +1,7 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
-import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -16,9 +15,9 @@ import java.util.ResourceBundle;
 /**
  * Controller for the basic settings view.
  */
-public final class LoggingSettingsViewController extends AbstractSettingsController implements Initializable {
-    protected static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);
-    final String[] LOG_LEVELS = {"ALL", "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"};
+public final class LoggingSettingsViewController extends AbstractSettingsController {
+    private static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);
+    private static final String[] LOG_LEVELS = {"ALL", "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"};
 
     @FXML
     private ChoiceBox<String> choiceBox;
@@ -26,25 +25,25 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        super.initialize(location, resources);
         choiceBox.getItems().addAll(LOG_LEVELS);
         choiceBox.setValue(LogManager.getRootLogger().getLevel().toString());
     }
 
     /**
-     * When the user changes the log level.
+     * When the user changes the log level and new {@link Runnable} command is added to
+     * {@link org.dnacronym.hygene.ui.store.Settings}. Command run when the user applies the change in settings.
      *
-     * @param inputMethodEvent
+     * @param event action event
      */
     @FXML
-    public void onLogLevelChanged(Event inputMethodEvent) {
-        settings.addRunnable(() -> {
+    public void onLogLevelChanged(final ActionEvent event) {
+        getSettings().addRunnable(() -> {
             Logger logger = LogManager.getRootLogger();
             Configurator.setLevel(logger.getName(), Level.DEBUG);
 
             String logLevel = choiceBox.getSelectionModel().getSelectedItem();
-            System.out.println(("Log level was set to: " + Level.toLevel(logLevel)));
-
+            LOGGER.info("Log level was set to: " + Level.toLevel(logLevel));
         });
-        System.out.println("CHANGED LOG");
     }
 }

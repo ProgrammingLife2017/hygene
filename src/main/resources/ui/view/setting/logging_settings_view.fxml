@@ -21,7 +21,7 @@
          </rowConstraints>
          <children>
             <Label text="Log Level" />
-            <ChoiceBox fx:id="choiceBox" prefWidth="150.0" GridPane.columnIndex="2" />
+            <ChoiceBox fx:id="choiceBox" prefWidth="150.0" onAction="#onLogLevelChanged" GridPane.columnIndex="2"/>
          </children>
       </GridPane>
    </children>

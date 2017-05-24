@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the border.
  */
-public final class AdvancedSettingsViewController extends AbstractSettingsController implements Initializable {
+public final class AdvancedSettingsViewController extends AbstractSettingsController {
     protected static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
 
     @FXML
@@ -23,7 +22,7 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         super.initialize(location, resources);
-        displayLaneBorders.setSelected(graphVisualizer.getDisplayBordersProperty().get());
+        displayLaneBorders.setSelected(getGraphVisualizer().getDisplayBordersProperty().get());
     }
 
     /**
@@ -31,9 +30,9 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
      */
     @FXML
     void showLaneBordersClicked() {
-        settings.addRunnable(() -> {
+        getSettings().addRunnable(() -> {
             final boolean newValue = displayLaneBorders.isSelected();
-            graphVisualizer.getDisplayBordersProperty().setValue(newValue);
+            getGraphVisualizer().getDisplayBordersProperty().setValue(newValue);
         });
     }
 }

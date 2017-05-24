@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
@@ -15,7 +14,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the basic settings view.
  */
-public final class BasicSettingsViewController extends AbstractSettingsController implements Initializable {
+public final class BasicSettingsViewController extends AbstractSettingsController {
     protected static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
 
     @FXML
@@ -27,8 +26,8 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         super.initialize(location, resources);
-        nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
-        edgeColors.setValue(graphVisualizer.getEdgeColorProperty().get());
+        nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
+        edgeColors.setValue(getGraphVisualizer().getEdgeColorProperty().get());
     }
 
     /**
@@ -36,9 +35,9 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      */
     @FXML
     void nodeHeightSliderDone() {
-        settings.addRunnable(() -> {
+        getSettings().addRunnable(() -> {
             final double newValue = nodeHeight.getValue();
-            graphVisualizer.getNodeHeightProperty().setValue(newValue);
+            getGraphVisualizer().getNodeHeightProperty().setValue(newValue);
         });
     }
 
@@ -47,9 +46,9 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
      */
     @FXML
     void edgeColorDone() {
-        settings.addRunnable(() -> {
+        getSettings().addRunnable(() -> {
             final Color newValue = edgeColors.getValue();
-            graphVisualizer.getEdgeColorProperty().setValue(newValue);
+            getGraphVisualizer().getEdgeColorProperty().setValue(newValue);
         });
     }
 }

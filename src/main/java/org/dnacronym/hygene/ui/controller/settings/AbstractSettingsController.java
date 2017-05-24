@@ -14,13 +14,14 @@ import java.util.ResourceBundle;
 /**
  * Abstract Settings Controller.
  */
-public class AbstractSettingsController implements Initializable {
-    protected static final Logger LOGGER = LogManager.getLogger(AbstractSettingsController.class);
+public abstract class AbstractSettingsController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractSettingsController.class);
 
-    protected Settings settings;
-    protected GraphVisualizer graphVisualizer;
+    private Settings settings;
+    private GraphVisualizer graphVisualizer;
 
     @Override
+    @SuppressWarnings("checkstyle:DesignForExtension") // All subclasses are marked final
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
@@ -32,12 +33,12 @@ public class AbstractSettingsController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphVisualizer} for use by the controller.
+     * Gets the {@link Settings} for use by the controller.
      *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
+     * @return the {@link Settings} for use by the controller.
      */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
+    public final Settings getSettings() {
+        return settings;
     }
 
     /**
@@ -45,7 +46,25 @@ public class AbstractSettingsController implements Initializable {
      *
      * @param settings {@link Settings} for use by the controller
      */
-    void setSettings(final Settings settings) {
+    final void setSettings(final Settings settings) {
         this.settings = settings;
+    }
+
+    /**
+     * Gets the {@link GraphVisualizer} for use by the controller.
+     *
+     * @return the {@link GraphVisualizer} for use by the controller.
+     */
+    public final GraphVisualizer getGraphVisualizer() {
+        return graphVisualizer;
+    }
+
+    /**
+     * Set the {@link GraphVisualizer} for use by the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
+     */
+    final void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
     }
 }
