@@ -59,7 +59,7 @@ public final class QuerySettingsController implements Initializable {
     }
 
     /**
-     * Set the {@link Settings} for use by the controller.
+     * Sets the {@link Settings} for use by the controller.
      *
      * @param settings {@link Settings} for use by the controller
      */
@@ -68,7 +68,8 @@ public final class QuerySettingsController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphVisualizer}. This allows the sliders to change the properties of the {@link GraphVisualizer}.
+     * Sets the {@link GraphVisualizer}. This allows the sliders to change the properties of the
+     * {@link GraphVisualizer}.
      *
      * @param graphVisualiser graph pane to set in the controller
      */
@@ -77,7 +78,7 @@ public final class QuerySettingsController implements Initializable {
     }
 
     /**
-     * Set the node id property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
+     * Sets the node id property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
@@ -93,7 +94,7 @@ public final class QuerySettingsController implements Initializable {
     }
 
     /**
-     * Set the range property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
+     * Sets the range property in the {@link GraphVisualizer} integer value of the current {@link TextField}.
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.

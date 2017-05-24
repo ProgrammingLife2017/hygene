@@ -18,6 +18,7 @@ public final class GraphMovementCalculator {
 
     private double lastX;
     private boolean draggingRight;
+    private boolean dragging;
 
 
     /**
@@ -33,27 +34,38 @@ public final class GraphMovementCalculator {
 
     /**
      * Center the x to use as offset when dragging.
+     * <p>
+     * Sets the dragging variable to {@code false}. Only once the user continues to drag will it be set to true.
      *
      * @param x x as offset when dragging
      */
     public void onMousePressed(final double x) {
         centerX = x;
+        dragging = false;
     }
 
     /**
      * The new x every time the mouse is dragged.
      * <p>
-     * if the drag direciton changes, it resets the drag by calling {@link #onMousePressed(double)} again.
+     * If the drag direction changes, and the user is currently dragging, it resets the drag by calling
+     * {@link #onMousePressed(double)} again.
+     * <p>
+     * If not, the method checks if the user is dragging right or left, and makes sure that the dragging variable is set
+     * to {@code true}. It also stores the current {@code x} position for the next time this method is called, which can
+     * be used as reference to check whether the user is dragging their mouse.
      *
      * @param x new x of mouse when dragged
      */
     public void onMouseDragged(final double x) {
-        if (lastX < x && draggingRight || lastX > x && !draggingRight) {
+        final boolean startedDraggingOppositeDirection = lastX < x && draggingRight || lastX > x && !draggingRight;
+        if (dragging && startedDraggingOppositeDirection) {
             onMousePressed(x);
         }
-        draggingRight = lastX > x;
 
+        draggingRight = lastX > x;
+        dragging = true;
         lastX = x;
+
         final double currentCenterNodeId = graphVisualizer.getCenterNodeIdProperty().get();
 
         final double translation = centerX - x;
