@@ -17,6 +17,10 @@ public final class GraphQuery {
      * The maximal acceptable difference between the preferred radius and the cached radius.
      */
     private static final int MAX_RADIUS_DIFFERENCE = 10;
+    /**
+     * The maximum cached radius before the cached is "too large".
+     */
+    private static final int MAX_RADIUS_FACTOR = 2;
 
     /**
      * The queried {@link Graph}.
@@ -109,9 +113,7 @@ public final class GraphQuery {
             return;
         }
 
-        cacheRadius++;
-        cache.getNodes(cacheRadius - 1).forEach(node ->
-                iterator.visitDirectNeighbours(node, neighbour -> cache.setDistance(neighbour, cacheRadius)));
+        incrementCacheRadius();
     }
 
     /**
@@ -163,16 +165,24 @@ public final class GraphQuery {
      */
     private void fixCentre() {
         final Integer centreDistance = cache.getDistance(centre);
-        if (centreDistance == null) {
+        if (centreDistance == null || cacheRadius >= radius * MAX_RADIUS_FACTOR) {
             query(centre, radius);
             return;
         }
 
-        int offset = (centreDistance + radius) - cacheRadius;
+        int offset = centreDistance + (radius - cacheRadius);
         while (offset > 0) {
-            incrementRadius();
+            incrementCacheRadius();
             offset--;
         }
     }
-}
 
+    /**
+     * Increments the cached radius and adds the nodes that are now within range.
+     */
+    private void incrementCacheRadius() {
+        cacheRadius++;
+        cache.getNodes(cacheRadius - 1).forEach(node ->
+                iterator.visitDirectNeighbours(node, neighbour -> cache.setDistance(neighbour, cacheRadius)));
+    }
+}

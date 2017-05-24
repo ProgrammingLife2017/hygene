@@ -200,10 +200,28 @@ class GraphQueryTest extends GraphBasedTest {
     }
 
     /**
+     * Tests that the cache is emptied if the cache becomes too large relative to the actual query.
+     */
+    @Test
+    void testMoveToManyTimes() {
+        createGraph(5);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}});
+
+        getGraphQuery().query(0, 1);
+        getGraphQuery().moveTo(1);
+        getGraphQuery().moveTo(2);
+        getGraphQuery().moveTo(3);
+        getGraphQuery().moveTo(4);
+
+        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(3, 4);
+    }
+
+    /**
      * Tests that all nodes within the specified range of the new centre are in the cache.
      */
     @Test
-    void testDecrementCentreRandomGraph() {
+    void testMoveToInRandomGraph() {
         createGraph(16);
         createGraphQuery();
         addEdges(new int[][] {{0, 1}, {0, 3}, {1, 2}, {2, 4}, {3, 4}, {4, 5}, {4, 6}, {5, 7}, {5, 8}, {6, 9}, {6, 10},
