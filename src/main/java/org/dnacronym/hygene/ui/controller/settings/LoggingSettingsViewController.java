@@ -47,4 +47,22 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
             LOGGER.info("Log level was set to: " + Level.toLevel(logLevel));
         });
     }
+
+    /**
+     * Sets {@link LoggingSettingsViewController#choiceBox} to a new value.
+     *
+     * @param choiceBox the new value for {@link LoggingSettingsViewController#choiceBox}
+     */
+    void setChoiceBox(ChoiceBox<String> choiceBox) {
+        this.choiceBox = choiceBox;
+    }
+
+    /**
+     * Gets a list of log levels.
+     *
+     * @return String[] the LogLevels
+     */
+    static String[] getLogLevels() {
+        return LOG_LEVELS;
+    }
 }
