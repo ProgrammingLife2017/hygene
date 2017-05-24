@@ -48,7 +48,7 @@
                 <Label text="Movement" GridPane.rowIndex="3"/>
                 <Label text="Panning Sensitivty" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <Slider fx:id="panningSensitivity" majorTickUnit="0.003" max="0.01" min="0.001"
-                        onMouseReleased="#panningSensivitySliderDone" showTickLabels="true" showTickMarks="true"
+                        onMouseReleased="#panningSensitivitySliderDone" showTickLabels="true" showTickMarks="true"
                         snapToTicks="true" GridPane.columnIndex="2" GridPane.rowIndex="3">
                     <tooltip>
                         <Tooltip
