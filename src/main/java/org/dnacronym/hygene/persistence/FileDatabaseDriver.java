@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
         value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE",
         justification = "Neither relevant nor practical for a local, isolated file database"
 )
-final class FileDatabaseDriver implements AutoCloseable {
-    static final String DB_FILE_EXTENSION = ".db";
+public final class FileDatabaseDriver implements AutoCloseable {
+    public static final String DB_FILE_EXTENSION = ".hygene";
 
     private final Connection connection;
 

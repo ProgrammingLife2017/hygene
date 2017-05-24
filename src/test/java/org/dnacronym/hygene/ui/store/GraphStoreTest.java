@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.store;
 
+import org.dnacronym.hygene.persistence.FileDatabaseDriver;
 import javafx.application.Platform;
 import org.dnacronym.hygene.ui.UITest;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,6 @@ final class GraphStoreTest extends UITest {
 
         assertThat(future.get()).isNull();
 
-        Files.deleteIfExists(Paths.get(file.getPath() + ".db"));
+        Files.deleteIfExists(Paths.get(file.getPath() + FileDatabaseDriver.DB_FILE_EXTENSION));
     }
 }
