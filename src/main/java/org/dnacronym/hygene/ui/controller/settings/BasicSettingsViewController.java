@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  * Controller for the basic settings view.
  */
 public final class BasicSettingsViewController extends AbstractSettingsController {
-    protected static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
+    private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
 
     @FXML
     private Slider nodeHeight;

@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  * Controller for the border.
  */
 public final class AdvancedSettingsViewController extends AbstractSettingsController {
-    protected static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
+    private static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
 
     @FXML
     private CheckBox displayLaneBorders;
