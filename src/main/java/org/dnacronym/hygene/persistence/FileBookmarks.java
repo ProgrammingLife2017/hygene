@@ -24,7 +24,6 @@ public final class FileBookmarks {
     private static final String RADIUS_COLUMN_NAME = "radius";
     private static final String DESCRIPTION_COLUMN_NAME = "description";
 
-    private final FileDatabase fileDatabase;
     private final FileDatabaseDriver fileDatabaseDriver;
 
 
@@ -34,7 +33,6 @@ public final class FileBookmarks {
      * @param fileDatabase the {@link FileDatabase} instance to read from and write to
      */
     public FileBookmarks(final FileDatabase fileDatabase) {
-        this.fileDatabase = fileDatabase;
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
     }
 
