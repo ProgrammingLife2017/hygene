@@ -10,13 +10,15 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Custom stage used for creating the console window in the GUI.
  */
 public class HelpMenuWrapper {
     private static final String TITLE = "Help";
-    private static final String HELP_MENU_VIEW = "/ui/view/help_view.fxml";
+    private static final String HELP_MENU_VIEW = "/ui/view/help/help_view.fxml";
+    private static final List<HelpArticle> HELP_MENU_ARTICLES = (new HelpArticleParser()).parse();
 
     private Stage stage;
 
@@ -42,8 +44,6 @@ public class HelpMenuWrapper {
         final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);
 
-        loadData();
-
         Platform.runLater(stage::show);
     }
 
@@ -68,9 +68,11 @@ public class HelpMenuWrapper {
     }
 
     /**
-     * Load the data
+     * Gets help menu articles.
+     *
+     * @return the help menu articles
      */
-    public final void loadData() {
-        HelpArticleLoader.loadHelpData();
+    public static List<HelpArticle> getHelpMenuArticles() {
+        return HELP_MENU_ARTICLES;
     }
 }
