@@ -45,6 +45,11 @@ final class SimpleBookmarkTest {
 
 
     @Test
+    void testGetBookmark() {
+        assertThat(simpleBookmark.getBookmark()).isEqualTo(bookmark);
+    }
+
+    @Test
     void testGetNodeId() {
         assertThat(simpleBookmark.getNodeIdProperty().get()).isEqualTo(10);
     }

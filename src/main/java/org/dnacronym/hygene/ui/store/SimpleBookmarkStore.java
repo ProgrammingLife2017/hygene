@@ -40,10 +40,28 @@ public final class SimpleBookmarkStore {
         bookmarks = FXCollections.observableArrayList();
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-            // TODO observe when the graph changes and load the new bookmarks accordingly.
+            // TODO get all bookmarks.
         });
     }
 
+
+    /**
+     * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
+     */
+    void writeBookmakrsToFile() {
+        // TODO store all bookmarks.
+    }
+
+    /**
+     * Add all {@link Bookmark}s in a given collection.
+     *
+     * @param bookmarks {@link java.util.Collection} of {@link Bookmark}s
+     */
+    void addAllBookmarks(final Bookmark... bookmarks) {
+        for (Bookmark bookmark : bookmarks) {
+            addBookmark(bookmark);
+        }
+    }
 
     /**
      * Adds a single {@link SimpleBookmark}.

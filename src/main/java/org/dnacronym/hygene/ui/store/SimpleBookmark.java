@@ -16,6 +16,8 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
  * non-UI related information.
  */
 public final class SimpleBookmark {
+    private final Bookmark bookmark;
+
     private final IntegerProperty nodeIdProperty;
     private final IntegerProperty baseOffsetProperty;
     private final IntegerProperty radiusProperty;
@@ -32,6 +34,8 @@ public final class SimpleBookmark {
      * @throws ParseException if unable to get the sequence of the node in the bookmark
      */
     public SimpleBookmark(final Bookmark bookmark, final GraphVisualizer graphVisualizer) throws ParseException {
+        this.bookmark = bookmark;
+
         nodeIdProperty = new SimpleIntegerProperty(bookmark.getNodeId());
         baseOffsetProperty = new SimpleIntegerProperty(bookmark.getBaseOffset());
         descriptionProperty = new SimpleStringProperty(bookmark.getDescription());
@@ -43,6 +47,15 @@ public final class SimpleBookmark {
         };
     }
 
+
+    /**
+     * Returns the {@link Bookmark} associated with this {@link SimpleBookmark}.
+     *
+     * @return {@link Bookmark} associated with this {@link SimpleBookmark}
+     */
+    public Bookmark getBookmark() {
+        return bookmark;
+    }
 
     /**
      * Returns the node id {@link IntegerProperty}.
