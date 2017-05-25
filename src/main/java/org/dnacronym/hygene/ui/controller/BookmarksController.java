@@ -19,10 +19,10 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for keeping track of bookmarks.
+ * Controller for showing of {@link SimpleBookmark}s.
  */
 public final class BookmarksController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(ConfigController.class);
+    private static final Logger LOGGER = LogManager.getLogger(BookmarksController.class);
 
     private SimpleBookmarkStore simpleBookmarkStore;
     private GraphStore graphStore;
@@ -37,16 +37,21 @@ public final class BookmarksController implements Initializable {
     private TableColumn<SimpleBookmark, String> descriptionColumn;
 
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    /**
+     * Create new instance of a {@link BookmarksController}.
+     */
+    public BookmarksController() {
         try {
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize BookmarksController.", e);
-            return;
         }
+    }
 
+
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
         baseColumn.setCellValueFactory(cell -> cell.getValue().getBaseProperty());
         descriptionColumn.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
 
