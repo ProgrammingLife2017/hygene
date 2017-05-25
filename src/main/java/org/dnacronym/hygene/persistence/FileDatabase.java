@@ -11,6 +11,8 @@ import java.sql.SQLException;
  */
 @SuppressWarnings("initialization") // due to setup actions that need to be executed in the constructor
 public final class FileDatabase implements AutoCloseable {
+    static final int DB_VERSION = 1;
+
     private final String fileName;
     private final FileDatabaseDriver fileDatabaseDriver;
     private final FileBookmarks fileBookmarks;

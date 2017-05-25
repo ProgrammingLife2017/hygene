@@ -46,7 +46,8 @@ final class FileMetadataTest extends FileDatabaseBaseTest {
     void testStoreMetadata() throws IOException, SQLException {
         fileMetadata.storeMetadata();
 
-        assertThat(fileMetadata.getMetadataValue(FileMetadata.VERSION_KEY_NAME)).isEqualTo(FileMetadata.DB_VERSION);
+        assertThat(fileMetadata.getMetadataValue(FileMetadata.VERSION_KEY_NAME))
+                .isEqualTo(String.valueOf(FileDatabase.DB_VERSION));
     }
 
     @Test
