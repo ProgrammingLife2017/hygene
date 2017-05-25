@@ -35,7 +35,10 @@ public final class SimpleBookmark {
         baseOffsetProperty = new SimpleIntegerProperty(bookmark.getBaseOffset());
         descriptionProperty = new SimpleStringProperty(bookmark.getDescription());
 
-        onClick = () -> graphVisualizer.getCenterNodeIdProperty().set(nodeIdProperty.get());
+        onClick = () -> {
+            graphVisualizer.getCenterNodeIdProperty().set(nodeIdProperty.get());
+            graphVisualizer.setSelectedNode(nodeIdProperty.get());
+        };
     }
 
 
@@ -69,8 +72,8 @@ public final class SimpleBookmark {
     /**
      * Return the {@link Runnable} which should be fired when the user double clicks on a bookmark
      * <p>
-     * This {@link Runnable} updates the center node id in the given {@link GraphVisualizer} to the one stored
-     * internally.
+     * This {@link Runnable} updates the center node id and the current node in the given {@link GraphVisualizer} to the
+     * one stored internally.
      *
      * @return {@link Runnable} to be fired when user clicks on bookmark
      * @see GraphVisualizer#getCenterNodeIdProperty()
