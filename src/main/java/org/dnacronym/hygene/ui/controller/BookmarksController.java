@@ -42,6 +42,8 @@ public final class BookmarksController implements Initializable {
     @FXML
     private TableColumn<SimpleBookmark, Number> baseOffset;
     @FXML
+    private TableColumn<SimpleBookmark, Number> radius;
+    @FXML
     private TableColumn<SimpleBookmark, String> description;
 
 
@@ -63,6 +65,7 @@ public final class BookmarksController implements Initializable {
         nodeId.setCellValueFactory(cell -> cell.getValue().getNodeIdProperty());
         baseOffset.setCellValueFactory(cell -> cell.getValue().getBaseOffsetProperty());
         description.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
+        radius.setCellValueFactory(cell -> cell.getValue().getRadiusProperty());
 
         bookmarksTable.setRowFactory(tableView -> {
             final TableRow<SimpleBookmark> simpleBookmarkTableRow = new TableRow<>();

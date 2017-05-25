@@ -19,6 +19,7 @@
                     <columns>
                         <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
                         <TableColumn fx:id="baseOffset" editable="false" prefWidth="100.0" text="Base Offset"/>
+                        <TableColumn fx:id="radius" editable="false" prefWidth="75" text="Radius"/>
                         <TableColumn fx:id="description" editable="false" prefWidth="150.0" text="Description"/>
                     </columns>
                     <tooltip>

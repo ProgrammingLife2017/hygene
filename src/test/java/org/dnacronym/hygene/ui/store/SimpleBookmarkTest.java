@@ -33,6 +33,7 @@ final class SimpleBookmarkTest {
         when(bookmark.getNodeId()).thenReturn(10);
         when(bookmark.getDescription()).thenReturn("1234");
         when(bookmark.getBaseOffset()).thenReturn(1);
+        when(bookmark.getRadius()).thenReturn(500);
 
         // ensure tests get a certain node with certain metadata
         graphVisualizer = mock(GraphVisualizer.class);
@@ -46,6 +47,11 @@ final class SimpleBookmarkTest {
     @Test
     void testGetNodeId() {
         assertThat(simpleBookmark.getNodeIdProperty().get()).isEqualTo(10);
+    }
+
+    @Test
+    void testGetRadius() {
+        assertThat(simpleBookmark.getRadiusProperty().get()).isEqualTo(500);
     }
 
     @Test

@@ -18,6 +18,7 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 public final class SimpleBookmark {
     private final IntegerProperty nodeIdProperty;
     private final IntegerProperty baseOffsetProperty;
+    private final IntegerProperty radiusProperty;
     private final StringProperty descriptionProperty;
 
     private final Runnable onClick;
@@ -34,6 +35,7 @@ public final class SimpleBookmark {
         nodeIdProperty = new SimpleIntegerProperty(bookmark.getNodeId());
         baseOffsetProperty = new SimpleIntegerProperty(bookmark.getBaseOffset());
         descriptionProperty = new SimpleStringProperty(bookmark.getDescription());
+        radiusProperty = new SimpleIntegerProperty(bookmark.getRadius());
 
         onClick = () -> {
             graphVisualizer.getCenterNodeIdProperty().set(nodeIdProperty.get());
@@ -58,6 +60,15 @@ public final class SimpleBookmark {
      */
     public IntegerProperty getBaseOffsetProperty() {
         return baseOffsetProperty;
+    }
+
+    /**
+     * Returns the radius {@link IntegerProperty}.
+     *
+     * @return the radius {@link IntegerProperty}
+     */
+    public IntegerProperty getRadiusProperty() {
+        return radiusProperty;
     }
 
     /**
