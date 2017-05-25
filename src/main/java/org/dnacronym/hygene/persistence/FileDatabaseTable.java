@@ -11,7 +11,7 @@ import java.util.List;
  */
 final class FileDatabaseTable {
     private final String name;
-    private final List<Pair<String, String>> columns;
+    private final List<Pair<String, ColumnType>> columns;
 
 
     /**
@@ -39,19 +39,17 @@ final class FileDatabaseTable {
      *
      * @return the columns
      */
-    List<Pair<String, String>> getColumns() {
+    List<Pair<String, ColumnType>> getColumns() {
         return columns;
     }
 
     /**
      * Adds a new column with given name and type to the table.
-     * <p>
-     * See <a href="https://sqlite.org/datatype3.html">the documentation</a> for a full list of supported column types.
      *
      * @param name the name of the column
-     * @param type the SQL type of it
+     * @param type the SQLite type of it
      */
-    void addColumn(final String name, final String type) {
+    void addColumn(final String name, final ColumnType type) {
         columns.add(new Pair<>(name, type));
     }
 }

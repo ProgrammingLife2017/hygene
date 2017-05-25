@@ -44,8 +44,8 @@ final class FileMetadata {
      */
     FileDatabaseTable getTable() {
         final FileDatabaseTable globalTable = new FileDatabaseTable(TABLE_NAME);
-        globalTable.addColumn(KEY_COLUMN_NAME, "TEXT");
-        globalTable.addColumn(VALUE_COLUMN_NAME, "TEXT");
+        globalTable.addColumn(KEY_COLUMN_NAME, ColumnType.TEXT);
+        globalTable.addColumn(VALUE_COLUMN_NAME, ColumnType.TEXT);
 
         return globalTable;
     }
