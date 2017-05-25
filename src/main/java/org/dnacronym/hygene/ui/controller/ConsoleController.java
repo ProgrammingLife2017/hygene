@@ -75,8 +75,8 @@ public final class ConsoleController implements Initializable {
      */
     private void logSelectedSequence() {
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
-                Optional.ofNullable(newNode).ifPresent(i ->
-                        appendLogItem(new ConsoleMessage("Sequence: " + i.getSequenceLength() + "\n"))));
+                Optional.ofNullable(newNode).ifPresent(node ->
+                        appendLogItem(new ConsoleMessage("Sequence: " + node.getSequenceLength() + "\n"))));
     }
 
     /**
