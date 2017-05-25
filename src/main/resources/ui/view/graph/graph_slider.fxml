@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:id="graphSliderPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="70.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.102"
+<AnchorPane fx:id="graphSliderPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="70.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.102"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.graph.GraphSliderController">
     <children>
-        <Slider fx:id="graphSlider" layoutX="247.0" layoutY="122.0" majorTickUnit="10.0"
-                maxWidth="Infinity" minorTickCount="5" showTickLabels="true" showTickMarks="true"
-                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <ScrollBar fx:id="graphScrollBar" layoutX="178.0" layoutY="28.0" AnchorPane.bottomAnchor="10.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <tooltip>
-                <Tooltip text="Set the current center node id."/>
+                <Tooltip text="Slide through the graph."/>
             </tooltip>
-        </Slider>
+        </ScrollBar>
     </children>
 </AnchorPane>
