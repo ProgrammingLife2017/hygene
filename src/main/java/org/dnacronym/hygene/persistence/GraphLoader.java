@@ -89,7 +89,7 @@ public final class GraphLoader {
 
             LOGGER.info("Load temporary file into the database.");
             fileDatabaseDriver.enableFileIO();
-            fileDatabaseDriver.rawUpdate("INSERT INTO " + TABLE_NAME + " VALUES(" + KEY_COLUMN_VALUE + "," +
+            fileDatabaseDriver.raw("INSERT INTO " + TABLE_NAME + " VALUES(" + KEY_COLUMN_VALUE + "," +
                     graph.length + ",readfile('" + cache.getAbsolutePath() + "'))");
         } catch (SQLException | IOException e) {
             throw new UnexpectedDatabaseException("Failed to dump graph into database.", e);
@@ -118,7 +118,7 @@ public final class GraphLoader {
 
             LOGGER.info("Creating temporary file with internal data structure representation.");
             fileDatabaseDriver.enableFileIO();
-            fileDatabaseDriver.rawUpdate(
+            fileDatabaseDriver.raw(
                     "SELECT writefile('" + cache.getAbsolutePath() + "', dump) FROM " + TABLE_NAME + " LIMIT 1");
 
             LOGGER.info("Load temporary file into memory and parse to internal data structure.");

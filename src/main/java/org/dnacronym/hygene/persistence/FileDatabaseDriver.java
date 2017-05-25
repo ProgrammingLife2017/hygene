@@ -48,9 +48,9 @@ public final class FileDatabaseDriver implements AutoCloseable {
      *
      * @throws SQLException
      */
-    public synchronized void enableFileIO() throws SQLException {
+    synchronized void enableFileIO() throws SQLException {
         if (!fileIOEnabled) {
-            rawUpdate("SELECT load_extension('src/main/resources/sqlite-fileio/fileio')");
+            raw("SELECT load_extension('src/main/resources/sqlite-fileio/fileio')");
             fileIOEnabled = true;
         }
     }
@@ -198,7 +198,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      *
      * @param query a raw SQL query
      */
-    public synchronized void rawUpdate(final String query) throws SQLException {
+    synchronized void raw(final String query) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         }
