@@ -57,6 +57,7 @@ public final class NodePropertiesController implements Initializable {
             if (newNode == null) {
                 return;
             }
+
             try {
                 sequence.setText(newNode.retrieveMetadata().getSequence());
             } catch (final ParseException e) {

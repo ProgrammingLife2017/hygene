@@ -79,6 +79,8 @@ public final class GraphVisualizer {
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
 
+        getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
+
         centerNodeIdProperty = new SimpleIntegerProperty(0);
         hopsProperty = new SimpleIntegerProperty(0);
 
@@ -92,8 +94,6 @@ public final class GraphVisualizer {
                 draw();
             }
         };
-
-        getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
 
         centerNodeIdProperty.addListener(changeListener);
         hopsProperty.addListener(changeListener);
