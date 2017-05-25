@@ -5,11 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -31,6 +33,7 @@ public final class GraphSliderController implements Initializable {
                     "-fx-arc-width: 0;\n";
 
     private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphStore graphStore;
 
     @FXML
@@ -39,16 +42,22 @@ public final class GraphSliderController implements Initializable {
     private Slider graphSlider;
 
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    /**
+     * Create new instance of a {@link GraphSliderController}.
+     */
+    public GraphSliderController() {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
+            setGraphDimensionCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize GraphSliderController.", e);
-            return;
         }
+    }
 
+
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
         graphSlider.maxProperty().bind(Bindings.max(
                 0,
                 Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1)));
@@ -60,6 +69,17 @@ public final class GraphSliderController implements Initializable {
 
         graphVisualizer.getCenterNodeIdProperty().addListener(
                 (observable, oldNodeId, newNodeId) -> graphSlider.setValue(newNodeId.doubleValue()));
+
+        graphDimensionsCalculator.getMinXNodeIdProperty().addListener(
+                (observable, oldValue, newValue) -> updateGraphSlider(
+                        newValue.intValue(),
+                        graphDimensionsCalculator.getMaxXNodeIdProperty().get(),
+                        graphVisualizer.getNodeCountProperty().get()));
+        graphDimensionsCalculator.getMaxXNodeIdProperty().addListener(
+                (observable, oldValue, newValue) -> updateGraphSlider(
+                        graphDimensionsCalculator.getMinXNodeIdProperty().get(),
+                        newValue.intValue(),
+                        graphVisualizer.getNodeCountProperty().get()));
 
         graphSliderPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         graphSliderPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
@@ -74,6 +94,17 @@ public final class GraphSliderController implements Initializable {
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
         this.graphVisualizer = graphVisualiser;
+    }
+
+    /**
+     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
+     * <p>
+     * This allows the slider to change the width of the thumb when zooming.
+     *
+     * @param graphDimensionCalculator {@link GraphDimensionsCalculator} for use by the controller
+     */
+    void setGraphDimensionCalculator(final GraphDimensionsCalculator graphDimensionCalculator) {
+        this.graphDimensionsCalculator = graphDimensionCalculator;
     }
 
     /**
@@ -103,7 +134,20 @@ public final class GraphSliderController implements Initializable {
         this.graphStore = graphStore;
     }
 
-    void updateGraphSlider(final int minX, final int maxX) {
+    /**
+     * Update the width of the width of the slider of the slider.
+     *
+     * @param minXNodeId {@link org.dnacronym.hygene.models.Node} id of node at the leftmost position onscreen
+     * @param maxXNodeId {@link org.dnacronym.hygene.models.Node} id of node of the rightmost position onscreen
+     * @param nodeCount  total amount of {@link org.dnacronym.hygene.models.Node}s in the
+     *                   {@link org.dnacronym.hygene.models.Graph}.
+     */
+    void updateGraphSlider(final int minXNodeId, final int maxXNodeId, final int nodeCount) {
+        final double sliderWidth = graphSlider.getWidth();
+        final double thumbPortionOfSlider = (double) (maxXNodeId - minXNodeId) / nodeCount;
+        final int newThumbWidth = (int) Math.round(sliderWidth * thumbPortionOfSlider);
 
+        final StackPane thumb = (StackPane) graphSlider.lookup(".thumb");
+        thumb.setStyle(String.format(GRAPH_SLIDER_STYLE, Math.max(newThumbWidth, MINIMUM_GRAH_THUMB_WIDTH)));
     }
 }
