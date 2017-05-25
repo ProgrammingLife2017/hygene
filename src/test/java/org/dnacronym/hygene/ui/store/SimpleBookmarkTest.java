@@ -1,15 +1,16 @@
 package org.dnacronym.hygene.ui.store;
 
+import javafx.beans.property.IntegerProperty;
 import org.dnacronym.hygene.models.Bookmark;
-import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -18,9 +19,8 @@ import static org.mockito.Mockito.when;
  */
 final class SimpleBookmarkTest {
     private Bookmark bookmark;
-    private Graph graph;
-    private Node node;
-    private NodeMetadata nodeMetadata;
+    private GraphVisualizer graphVisualizer;
+    private IntegerProperty centerNodeIdProperty;
 
     private SimpleBookmark simpleBookmark;
 
@@ -30,39 +30,38 @@ final class SimpleBookmarkTest {
         bookmark = mock(Bookmark.class);
 
         // mock bookmark properties that determine what is displayed in the ui
-        when(bookmark.getNodeId()).thenReturn(0);
+        when(bookmark.getNodeId()).thenReturn(10);
         when(bookmark.getDescription()).thenReturn("1234");
         when(bookmark.getBaseOffset()).thenReturn(1);
 
         // ensure tests get a certain node with certain metadata
-        graph = mock(Graph.class);
-        node = mock(Node.class);
-        nodeMetadata = mock(NodeMetadata.class);
-        when(nodeMetadata.getSequence()).thenReturn("abcd");
-        when(node.retrieveMetadata()).thenReturn(nodeMetadata);
-        when(graph.getNode(0)).thenReturn(node);
+        graphVisualizer = mock(GraphVisualizer.class);
+        centerNodeIdProperty = mock(IntegerProperty.class);
+        when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
 
-        simpleBookmark = new SimpleBookmark(bookmark, graph);
+        simpleBookmark = new SimpleBookmark(bookmark, graphVisualizer);
     }
 
 
     @Test
-    void getBookmark() {
-        assertThat(simpleBookmark.getBookmark()).isEqualTo(bookmark);
+    void testGetNodeId() {
+        assertThat(simpleBookmark.getNodeIdProperty().get()).isEqualTo(10);
     }
 
     @Test
-    void testGetGraph() {
-        assertThat(simpleBookmark.getGraph()).isEqualTo(graph);
+    void testGetBaseOffset() {
+        assertThat(simpleBookmark.getBaseOffsetProperty().get()).isEqualTo(1);
     }
 
     @Test
-    void getBase() {
-        assertThat(simpleBookmark.getBaseProperty().get()).isEqualTo("b");
-    }
-
-    @Test
-    void getDescription() {
+    void testGetDescription() {
         assertThat(simpleBookmark.getDescriptionProperty().get()).isEqualTo("1234");
+    }
+
+    @Test
+    void testClickOn() {
+        simpleBookmark.getOnClick().run();
+
+        verify(centerNodeIdProperty, times(1)).set(10);
     }
 }

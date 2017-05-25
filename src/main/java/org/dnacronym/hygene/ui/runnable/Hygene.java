@@ -83,7 +83,7 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore);
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
     }
 
     @Override
@@ -187,8 +187,6 @@ public final class Hygene extends Application {
      * Gets the {@link SimpleBookmarkStore} of {@link Hygene}.
      *
      * @return {@link SimpleBookmarkStore} of the {@link Hygene}
-     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link SimpleBookmarkStore} was not
-     *                                   set in {@link #init()}
      * @see SimpleBookmarkStore
      * @see #init()
      */

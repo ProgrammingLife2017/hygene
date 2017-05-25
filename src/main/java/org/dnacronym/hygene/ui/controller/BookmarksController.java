@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,12 +30,19 @@ public final class BookmarksController implements Initializable {
 
     @FXML
     private ScrollPane bookmarksPane;
+    /**
+     * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
+     * center node id in {@link org.dnacronym.hygene.ui.visualizer.GraphVisualizer} is updated to the one in the
+     * bookmark.
+     */
     @FXML
     private TableView<SimpleBookmark> bookmarksTable;
     @FXML
-    private TableColumn<SimpleBookmark, String> baseColumn;
+    private TableColumn<SimpleBookmark, Number> nodeId;
     @FXML
-    private TableColumn<SimpleBookmark, String> descriptionColumn;
+    private TableColumn<SimpleBookmark, Number> baseOffset;
+    @FXML
+    private TableColumn<SimpleBookmark, String> description;
 
 
     /**
@@ -52,8 +60,19 @@ public final class BookmarksController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        baseColumn.setCellValueFactory(cell -> cell.getValue().getBaseProperty());
-        descriptionColumn.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
+        nodeId.setCellValueFactory(cell -> cell.getValue().getNodeIdProperty());
+        baseOffset.setCellValueFactory(cell -> cell.getValue().getBaseOffsetProperty());
+        description.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
+
+        bookmarksTable.setRowFactory(tableView -> {
+            final TableRow<SimpleBookmark> simpleBookmarkTableRow = new TableRow<>();
+            simpleBookmarkTableRow.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !simpleBookmarkTableRow.isEmpty()) {
+                    simpleBookmarkTableRow.getItem().getOnClick().run();
+                }
+            });
+            return simpleBookmarkTableRow;
+        });
 
         bookmarksTable.setItems(simpleBookmarkStore.getBookmarks());
 

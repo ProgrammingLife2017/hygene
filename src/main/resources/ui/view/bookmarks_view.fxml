@@ -6,19 +6,20 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
-<ScrollPane fx:id="bookmarksPane" fitToHeight="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308"
-            pannable="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<ScrollPane fx:id="bookmarksPane" fitToHeight="true" hbarPolicy="NEVER" maxHeight="Infinity" pannable="true"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.BookmarksController">
     <content>
-        <AnchorPane maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+        <AnchorPane maxHeight="Infinity" minHeight="-Infinity" minWidth="-Infinity">
             <children>
                 <Label text="Bookmarks" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
-                <TableView fx:id="bookmarksTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
                            AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
                            AnchorPane.topAnchor="30.0">
                     <columns>
-                        <TableColumn fx:id="baseColumn" prefWidth="75.0" text="Base"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="150.0" text="Description"/>
+                        <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
+                        <TableColumn fx:id="baseOffset" editable="false" prefWidth="100.0" text="Base Offset"/>
+                        <TableColumn fx:id="description" editable="false" prefWidth="150.0" text="Description"/>
                     </columns>
                     <tooltip>
                         <Tooltip text="Overview of all bases of the current genome sequence."/>

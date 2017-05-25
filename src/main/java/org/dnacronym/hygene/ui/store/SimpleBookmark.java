@@ -1,77 +1,79 @@
 package org.dnacronym.hygene.ui.store;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.dnacronym.hygene.models.Bookmark;
-import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 
 /**
- * A simple bookmark.
+ * A simple bookmark for display in the UI.
  * <p>
  * This is used to create a representation of a {@link Bookmark} for the user and leaves out all
  * non-UI related information.
  */
 public final class SimpleBookmark {
-    private final Bookmark bookmark;
-    private final Graph graph;
-
-    private final StringProperty baseProperty;
+    private final IntegerProperty nodeIdProperty;
+    private final IntegerProperty baseOffsetProperty;
     private final StringProperty descriptionProperty;
 
+    private final Runnable onClick;
 
     /**
      * Constructs a new {@link SimpleBookmark} instance.
      *
-     * @param bookmark bookmark associated with this {@link SimpleBookmark}
-     * @param graph    graph used to retreive information about the node
+     * @param bookmark        bookmark associated with this {@link SimpleBookmark}
+     * @param graphVisualizer {@link GraphVisualizer} that bookmark is associated with
      * @throws ParseException if unable to get the sequence of the node in the bookmark
      */
-    public SimpleBookmark(final Bookmark bookmark, final Graph graph) throws ParseException {
-        this.bookmark = bookmark;
-        this.graph = graph;
-
-        final String sequence = graph.getNode(bookmark.getNodeId()).retrieveMetadata().getSequence();
-        baseProperty = new SimpleStringProperty(String.valueOf(sequence.charAt(bookmark.getBaseOffset())));
-
+    public SimpleBookmark(final Bookmark bookmark, final GraphVisualizer graphVisualizer) throws ParseException {
+        nodeIdProperty = new SimpleIntegerProperty(bookmark.getNodeId());
+        baseOffsetProperty = new SimpleIntegerProperty(bookmark.getBaseOffset());
         descriptionProperty = new SimpleStringProperty(bookmark.getDescription());
+
+        onClick = () -> graphVisualizer.getCenterNodeIdProperty().set(nodeIdProperty.get());
     }
 
-
     /**
-     * Get the {@link Bookmark} associated with this {@link SimpleBookmark}.
+     * Returns the node id {@link IntegerProperty}.
      *
-     * @return {@link Bookmark} associated with this {@link SimpleBookmark}
+     * @return the node id {@link IntegerProperty}
      */
-    public Bookmark getBookmark() {
-        return bookmark;
+    public IntegerProperty getNodeIdProperty() {
+        return nodeIdProperty;
     }
 
     /**
-     * Get the {@link Graph} associated with this {@link SimpleBookmark}.
+     * Returns the base offset {@link IntegerProperty}.
      *
-     * @return {@link Graph} associated with this {@link SimpleBookmark}
+     * @return the base offset {@link IntegerProperty}
      */
-    public Graph getGraph() {
-        return graph;
+    public IntegerProperty getBaseOffsetProperty() {
+        return baseOffsetProperty;
     }
 
     /**
-     * Returns the base property.
+     * Returns the description {@link StringProperty}.
      *
-     * @return the base property
-     */
-    public StringProperty getBaseProperty() {
-        return baseProperty;
-    }
-
-    /**
-     * Returns the description property.
-     *
-     * @return the description property
+     * @return the description {@link StringProperty}
      */
     public StringProperty getDescriptionProperty() {
         return descriptionProperty;
+    }
+
+    /**
+     * Return the {@link Runnable} which should be fired when the user double clicks on a bookmark
+     * <p>
+     * This {@link Runnable} updates the center node id in the given {@link GraphVisualizer} to the one stored
+     * internally.
+     *
+     * @return {@link Runnable} to be fired when user clicks on bookmark
+     * @see GraphVisualizer#getCenterNodeIdProperty()
+     */
+    public Runnable getOnClick() {
+        return onClick;
     }
 }
