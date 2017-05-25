@@ -125,9 +125,9 @@ public final class GraphVisualizer {
         final double rectWidth = calculator.computeWidth(nodeId);
         final double rectHeight = calculator.getNodeHeight();
 
-        Node selectedNode = getSelectedNodeProperty().get();
+        final Node selectedNode = getSelectedNodeProperty().get();
         if (selectedNode != null && selectedNode.getId() == nodeId) {
-            graphicsContext.setFill(NodeColor.GREEN_HIGHLIGHT.getFXColor());
+            graphicsContext.setFill(NodeColor.BRIGHT_GREEN.getFXColor());
         } else {
             graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
         }
