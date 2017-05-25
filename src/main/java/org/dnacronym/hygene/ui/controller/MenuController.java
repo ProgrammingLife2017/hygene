@@ -130,7 +130,7 @@ public final class MenuController implements Initializable {
     /**
      * Will quit Hygene.
      *
-     * @param actionEvent the action
+     * @param actionEvent {@link ActionEvent} associated with the event
      */
     @FXML
     void exitAction(final ActionEvent actionEvent) {
