@@ -111,12 +111,16 @@ final class FileMetadata {
      *
      * @return {@code true} iff. the versions are compatible
      * @throws SQLException in the case of an error during SQL operations
+     * @throws IncompatibleDatabaseVersionException in the case of an incompatible DB format
      */
-    private boolean checkVersionCompatibility() throws SQLException {
-        final int currentMajorVersion = FileDatabase.DB_VERSION;
-        final int fileMajorVersion = Integer.parseInt(getMetadataValue(VERSION_KEY_NAME));
-
-        return currentMajorVersion == fileMajorVersion;
+    private boolean checkVersionCompatibility() throws SQLException, IncompatibleDatabaseVersionException {
+        final int fileVersion;
+        try {
+            fileVersion = Integer.parseInt(getMetadataValue(VERSION_KEY_NAME));
+        } catch (final NumberFormatException e) {
+            throw new IncompatibleDatabaseVersionException("Database version format incompatible.");
+        }
+        return FileDatabase.DB_VERSION == fileVersion;
     }
 
     /**
