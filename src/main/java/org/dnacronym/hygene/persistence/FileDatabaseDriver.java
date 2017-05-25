@@ -147,7 +147,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
     /**
      * Performs the given action on each row of the given table.
      *
-     * @param tableName         the name of the table to query
+     * @param tableName    the name of the table to query
      * @param itemCallback the action to perform on each row of the table
      * @throws SQLException in the case of an error during SQL operations
      */

@@ -71,7 +71,7 @@ public final class FileBookmarks {
                 );
                 bookmarks.add(bookmark);
             } catch (final SQLException e) {
-                LOGGER.warn("Failed to load bookmark.", e);
+                LOGGER.error("Failed to load bookmark.", e);
             }
         });
 
@@ -100,7 +100,7 @@ public final class FileBookmarks {
             try {
                 fileDatabaseDriver.insertRow(TABLE_NAME, values);
             } catch (final SQLException e) {
-                LOGGER.warn("Storing of bookmark failed.", e);
+                LOGGER.error("Storing of bookmark failed.", e);
             }
         });
     }
