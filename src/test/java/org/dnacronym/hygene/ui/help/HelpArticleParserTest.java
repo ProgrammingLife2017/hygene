@@ -23,5 +23,4 @@ class HelpArticleParserTest {
     void loadHelpData() {
         helpArticleLoader.parse();
     }
-
 }
