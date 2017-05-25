@@ -11,7 +11,8 @@ public enum NodeColor {
     ORANGE(Color.ORANGE),
     PURPLE(Color.PURPLE),
     YELLOW(Color.YELLOW),
-    BLACK(Color.BLACK);
+    BLACK(Color.BLACK),
+    GREEN_HIGHLIGHT(Color.rgb(0, 255, 46));
 
     private Color color;
 

@@ -54,6 +54,9 @@ public final class NodePropertiesController implements Initializable {
         neighbourVisualizer.setCanvas(neighbourCanvas);
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
+            if (newNode == null) {
+                return;
+            }
             try {
                 sequence.setText(newNode.retrieveMetadata().getSequence());
             } catch (final ParseException e) {
