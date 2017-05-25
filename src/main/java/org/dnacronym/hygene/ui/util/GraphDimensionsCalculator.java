@@ -3,8 +3,6 @@ package org.dnacronym.hygene.ui.util;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
 
@@ -18,9 +16,6 @@ import java.util.List;
  * Every time {@link #calculate(Graph, Canvas, int, int, double)} is called, all internal values are updated.
  */
 public final class GraphDimensionsCalculator {
-    private static final Logger LOGGER = LogManager.getLogger(GraphDimensionsCalculator.class);
-    private static final int EDGE_WIDTH = 1000;
-
     private Graph graph;
     private GraphQuery graphQuery;
 
@@ -69,8 +64,7 @@ public final class GraphDimensionsCalculator {
         this.canvasWidth = canvas.getWidth();
         this.nodeHeight = nodeHeight;
 
-        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
-                + graph.getUnscaledXEdgeCount(centerNodeId) * EDGE_WIDTH;
+        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
         final int[] tempMinX = {unscaledCenterX};
         final int[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
