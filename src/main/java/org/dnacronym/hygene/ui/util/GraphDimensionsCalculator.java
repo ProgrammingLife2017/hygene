@@ -140,7 +140,6 @@ public final class GraphDimensionsCalculator {
      */
     public double computeYPosition(final int nodeId) {
         final int yPosition = graph.getUnscaledYPosition(nodeId);
-
         return (yPosition - minY) * getLaneHeight() + getLaneHeight() / 2 - nodeHeight / 2;
     }
 

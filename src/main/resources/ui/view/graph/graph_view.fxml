@@ -5,7 +5,8 @@
 <AnchorPane fx:id="graphPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             fx:controller="org.dnacronym.hygene.ui.controller.graph.GraphController"
             onMouseDragged="#onGraphPaneMouseDragged" onMousePressed="#onGraphPaneMousePressed"
-            onMouseReleased="#onGraphPaneMouseReleased"
+            onMouseReleased="#onGraphPaneMouseReleased" onScroll="#onScroll" onScrollStarted="#onScrollStarted"
+            onScrollFinished="#onScrollFinished"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Canvas fx:id="graphCanvas" height="400.0" width="400.0" AnchorPane.bottomAnchor="0.0"

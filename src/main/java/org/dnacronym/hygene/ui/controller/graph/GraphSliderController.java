@@ -25,12 +25,11 @@ public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
     private static final int GRAPH_SLIDER_SEGMENTS = 10;
 
-    private static final int MINIMUM_GRAH_THUMB_WIDTH = 20;
-    private static final String GRAPH_SLIDER_STYLE =
-            "-fx-pref-height: 30;\n" +
-                    "-fx-pref-width: %d;\n" +
-                    "-fx-arc-height: 0;\n" +
-                    "-fx-arc-width: 0;\n";
+    private static final int MINIMUM_GRAPH_THUMB_WIDTH = 20;
+    private static final String GRAPH_SLIDER_STYLE = "-fx-pref-height: 30;"
+            + "-fx-pref-width: %d;"
+            + "-fx-arc-height: 0;"
+            + "-fx-arc-width: 0;";
 
     private GraphVisualizer graphVisualizer;
     private GraphDimensionsCalculator graphDimensionsCalculator;
@@ -148,6 +147,6 @@ public final class GraphSliderController implements Initializable {
         final int newThumbWidth = (int) Math.round(sliderWidth * thumbPortionOfSlider);
 
         final StackPane thumb = (StackPane) graphSlider.lookup(".thumb");
-        thumb.setStyle(String.format(GRAPH_SLIDER_STYLE, Math.max(newThumbWidth, MINIMUM_GRAH_THUMB_WIDTH)));
+        thumb.setStyle(String.format(GRAPH_SLIDER_STYLE, Math.max(newThumbWidth, MINIMUM_GRAPH_THUMB_WIDTH)));
     }
 }

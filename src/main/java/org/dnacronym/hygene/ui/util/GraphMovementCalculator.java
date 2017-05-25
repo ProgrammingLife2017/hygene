@@ -10,9 +10,11 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
+    private static final double DEFAULT_ZOOMING_SENSITIVITY = 0.05;
 
     private final GraphVisualizer graphVisualizer;
     private final DoubleProperty panningSensitivityProperty;
+    private final DoubleProperty zoomingSensitivtyProperty;
 
     /**
      * {@code x} position where the panning started.
@@ -84,6 +86,18 @@ public final class GraphMovementCalculator {
     }
 
     /**
+     * When the user scrolls.
+     *
+     * @param deltaY delta in the y direction
+     */
+    public void onScroll(final double deltaY) {
+        final int oldHops = graphVisualizer.getHopsProperty().get();
+        final int newHops = (int) Math.round(oldHops + deltaY * getZoomingSensitivtyProperty().get());
+
+        graphVisualizer.getHopsProperty().set(newHops);
+    }
+
+    /**
      * Property which determines the sensitivity of dragging.
      * <p>
      * A higher value results in a drag changing the center node id by a larger amount.
@@ -92,5 +106,16 @@ public final class GraphMovementCalculator {
      */
     public DoubleProperty getPanningSensitivityProperty() {
         return panningSensitivityProperty;
+    }
+
+    /**
+     * Property which determines the sensitivty of zooming.
+     * <p>
+     * A higher value results in zooming changing the hops by a larger amount.
+     *
+     * @return property which determines the zoom sensitivity
+     */
+    public DoubleProperty getZoomingSensitivtyProperty() {
+        return zoomingSensitivtyProperty;
     }
 }
