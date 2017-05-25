@@ -84,7 +84,7 @@ public final class GraphArrayFile {
      * @throws IOException if we cannot write to the cache file
      */
     public void write(final int[][] graph) throws IOException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(
+        try (final BufferedWriter bufferedWriter = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {
                 final StringBuilder a = new StringBuilder();

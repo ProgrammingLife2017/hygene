@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 )
 public final class FileDatabaseDriver implements AutoCloseable {
     public static final String DB_FILE_EXTENSION = ".hygene";
+    public static final String FILE_IO_EXTENSION_PATH = "src/main/resources/sqlite-fileio/fileio";
 
     private final Connection connection;
     private boolean fileIOEnabled = false;
@@ -36,7 +37,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException in the case of erroneous SQL behaviour
      */
     FileDatabaseDriver(final String fileName) throws SQLException {
-        SQLiteConfig config = new SQLiteConfig();
+        final SQLiteConfig config = new SQLiteConfig();
         config.enableLoadExtension(true);
 
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION, config.toProperties());
@@ -50,7 +51,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      */
     synchronized void enableFileIO() throws SQLException {
         if (!fileIOEnabled) {
-            raw("SELECT load_extension('src/main/resources/sqlite-fileio/fileio')");
+            raw("SELECT load_extension('" + FILE_IO_EXTENSION_PATH + "')");
             fileIOEnabled = true;
         }
     }
