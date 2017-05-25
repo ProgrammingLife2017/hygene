@@ -113,7 +113,7 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Opens an independent stage showing the console window,
+     * Opens an independent stage showing the console window.
      *
      * @param event {@link ActionEvent} associated with the event
      * @throws IOException if unable to located the FXML resource

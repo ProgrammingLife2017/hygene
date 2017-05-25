@@ -3,9 +3,15 @@ package org.dnacronym.hygene.ui.help;
 /**
  * This class contains all data required for a displaying a help-article in hte the GUI.
  */
-public class HelpArticle {
-    protected String title;
-    protected String content;
+public final class HelpArticle {
+    /**
+     * The Title.
+     */
+    private String title;
+    /**
+     * The Content.
+     */
+    private String content;
 
     /**
      * Constructs a new HelpArticle.
@@ -13,26 +19,26 @@ public class HelpArticle {
      * @param title   the title of the article
      * @param content the content nof the article
      */
-    public HelpArticle(final String title, final String content) {
+    HelpArticle(final String title, final String content) {
         this.title = title;
         this.content = content;
     }
 
     /**
-     * Gets title.
+     * Gets the article's title.
      *
      * @return the title
      */
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
     /**
-     * Sets title.
+     * Sets the article's title.
      *
      * @param title the title
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -50,15 +56,14 @@ public class HelpArticle {
      *
      * @param content the content
      */
-    public void setContent(String content) {
+    public void setContent(final String content) {
         this.content = content;
     }
 
     @Override
     public String toString() {
-        return "HelpArticle{" +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                '}';
+        return "HelpArticle{"
+                + "title='" + title + '\''
+                + ", content='" + content + '\'' + '}';
     }
 }

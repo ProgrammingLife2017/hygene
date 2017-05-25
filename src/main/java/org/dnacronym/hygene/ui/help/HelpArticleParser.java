@@ -16,12 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Help article loader
+ * This class parses {@link HelpArticle}s.
  */
-public class HelpArticleParser {
-    public static final String DEFAULT_HELP_MENU_FILE = "src/main/resources/ui/help/articles.xml";
+public final class HelpArticleParser {
+    static final String DEFAULT_HELP_MENU_FILE = "src/main/resources/ui/help/articles.xml";
     private static final Logger LOGGER = LogManager.getLogger(HelpArticleParser.class);
 
+    /**
+     * Load and XML document.
+     *
+     * @param filename the file name
+     * @return the {@link Document}
+     */
     Document loadXML(final String filename) {
         Document document = null;
         try {
@@ -35,10 +41,21 @@ public class HelpArticleParser {
         return document;
     }
 
+    /**
+     * Will call {@link HelpArticleParser#parse(String)} with default location for help articles.
+     *
+     * @return A {@link List} of {@link HelpArticle}
+     */
     public List<HelpArticle> parse() {
         return parse(DEFAULT_HELP_MENU_FILE);
     }
 
+    /**
+     * Will load the provided XML file and parse its contents into {@link HelpArticle}s.
+     *
+     * @param filename the filename
+     * @return A {@link List} of {@link HelpArticle}
+     */
     public List<HelpArticle> parse(final String filename) {
         Document document = loadXML(filename);
 
@@ -50,6 +67,13 @@ public class HelpArticleParser {
         return articles;
     }
 
+
+    /**
+     * Will parse the articles {@link Element} node in the help articles XML document.
+     *
+     * @param articlesElement the {@link Element} node
+     * @return A {@link List} of {@link HelpArticle}
+     */
     List<HelpArticle> parseArticles(final Element articlesElement) {
         List<HelpArticle> articles = new ArrayList<>();
 
@@ -70,6 +94,12 @@ public class HelpArticleParser {
         return articles;
     }
 
+    /**
+     * Parses {@link Element} node into an {@link HelpArticle}.
+     *
+     * @param article the article {@link Element} node
+     * @return the {@link HelpArticle}
+     */
     HelpArticle parseArticleElement(final Element article) {
         String title = article.getElementsByTagName("title").item(0).getTextContent();
         String content = article.getElementsByTagName("content").item(0).getTextContent();

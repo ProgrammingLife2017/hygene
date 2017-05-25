@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 /**
  * The controller for the help menu.
  */
-public class HelpMenuController implements Initializable {
-    private final static String LEFT_MENU_BTN = "/ui/view/help/help_sidebar_btn.fxml";
+public final class HelpMenuController implements Initializable {
+    private static final String LEFT_MENU_BTN = "/ui/view/help/help_sidebar_btn.fxml";
 
     @FXML
     private VBox sidebar;
@@ -29,10 +29,13 @@ public class HelpMenuController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        generateLeftMenu();
+        generateSidebarMenu();
     }
 
-    public void generateLeftMenu() {
+    /**
+     * Generate sidebar menu.
+     */
+    void generateSidebarMenu() {
         List<Button> leftMenuBTN = HelpMenuWrapper.getHelpMenuArticles().stream().map(art -> {
             Button btn = generateLeftMenuBTN(art);
             return btn;
@@ -42,7 +45,13 @@ public class HelpMenuController implements Initializable {
         sidebar.getChildren().addAll(leftMenuBTN);
     }
 
-    public Button generateLeftMenuBTN(HelpArticle article) {
+    /**
+     * Generate left menu btn button.
+     *
+     * @param article the article
+     * @return the button
+     */
+    Button generateLeftMenuBTN(final HelpArticle article) {
         Button btn = new Button();
         try {
             final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
@@ -53,7 +62,6 @@ public class HelpMenuController implements Initializable {
 
         btn.setText(article.getTitle());
         btn.setOnMouseClicked(event -> {
-            System.out.println("clicked");
             contentArea.setText(article.getContent());
         });
 
