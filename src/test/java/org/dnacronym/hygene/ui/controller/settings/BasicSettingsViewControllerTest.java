@@ -5,11 +5,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,6 +28,10 @@ final class BasicSettingsViewControllerTest extends UITest {
     private BasicSettingsViewController basicSettingsViewController;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
+    private MouseEvent mouseEvent;
+    private ColorPicker colorPickerMock;
+    private Slider sliderMock;
+    private ArgumentCaptor<Runnable> captor;
 
 
     @Override
@@ -44,32 +50,58 @@ final class BasicSettingsViewControllerTest extends UITest {
         settings = mock(Settings.class);
         basicSettingsViewController.setGraphVisualizer(graphVisualizer);
         basicSettingsViewController.setSettings(settings);
-        basicSettingsViewController.setNodeHeight(new Slider());
-        basicSettingsViewController.setEdgeColor(new ColorPicker());
+
+        colorPickerMock = mock(ColorPicker.class);
+        when(colorPickerMock.getValue()).thenReturn(Color.YELLOW);
+
+        sliderMock = mock(Slider.class);
+        when(sliderMock.getValue()).thenReturn(42.42);
+
+        mouseEvent = mock(MouseEvent.class);
+
+        captor = ArgumentCaptor.forClass(Runnable.class);
     }
 
 
     @Test
     void testNodeHeightSliderDone() {
-        interact(() -> basicSettingsViewController.nodeHeightSliderDone());
+        when(mouseEvent.getSource()).thenReturn(sliderMock);
+        interact(() -> basicSettingsViewController.nodeHeightSliderDone(mouseEvent));
         verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 
     @Test
     void testEdgeColorDone() {
-        interact(() -> basicSettingsViewController.edgeColorDone());
+        when(mouseEvent.getSource()).thenReturn(colorPickerMock);
+        interact(() -> basicSettingsViewController.edgeColorDone(mouseEvent));
         verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 
     @Test
-    void testInitializationOfNodeHeight() {
-        basicSettingsViewController.initialize(null, null);
-        assertThat(basicSettingsViewController.getNodeHeight().getValue()).isEqualTo(20.0);
+    void testNodeHeightUpdate() {
+        assertThat(graphVisualizer.getNodeHeightProperty().getValue()).isEqualTo(20.0);
+
+        when(mouseEvent.getSource()).thenReturn(sliderMock);
+        interact(() -> basicSettingsViewController.nodeHeightSliderDone(mouseEvent));
+
+        verify(settings).addRunnable(captor.capture());
+        Runnable command = captor.getValue();
+        command.run();
+
+        assertThat(graphVisualizer.getNodeHeightProperty().getValue()).isEqualTo(42.42);
     }
 
     @Test
-    void testInitializationOfEdgeColor() {
-        basicSettingsViewController.initialize(null, null);
-        assertThat(basicSettingsViewController.getEdgeColor().getValue()).isEqualTo(Color.RED);
+    void testEdgeColorUpdate() {
+        assertThat(graphVisualizer.getEdgeColorProperty().getValue()).isEqualTo(Color.RED);
+
+        when(mouseEvent.getSource()).thenReturn(colorPickerMock);
+        interact(() -> basicSettingsViewController.edgeColorDone(mouseEvent));
+
+        verify(settings).addRunnable(captor.capture());
+        Runnable command = captor.getValue();
+        command.run();
+
+        assertThat(graphVisualizer.getEdgeColorProperty().getValue()).isEqualTo(Color.YELLOW);
     }
 }
