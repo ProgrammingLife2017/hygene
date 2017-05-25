@@ -63,7 +63,7 @@ public final class GfaFile {
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
-                LOGGER.info("Parsing done");
+                LOGGER.info("Finished parsing");
 
                 nodeIds = gfaParser.getNodeIds();
 

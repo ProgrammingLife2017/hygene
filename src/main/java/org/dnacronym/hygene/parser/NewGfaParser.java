@@ -60,9 +60,9 @@ public final class NewGfaParser {
         BufferedReader gfa = gfaFile.readFile();
 
         try {
-            LOGGER.info("Start allocate nodes");
+            LOGGER.info("Start allocating nodes");
             allocateNodes(gfa);
-            LOGGER.info("End allocate nodes");
+            LOGGER.info("Finished allocating nodes");
 
             nodeArrays = new int[nodeIds.size()][];
             Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
@@ -72,7 +72,7 @@ public final class NewGfaParser {
 
             int offset = 0;
             String line;
-            LOGGER.info("Start parse lines");
+            LOGGER.info("Start parsing lines");
             while ((line = gfa.readLine()) != null) {
                 if (offset % PROGRESS_UPDATE_INTERVAL == 0) {
                     progressUpdater.updateProgress(PROGRESS_TOTAL * offset / lineCount);
@@ -80,7 +80,7 @@ public final class NewGfaParser {
                 parseLine(line, offset + 1);
                 offset++;
             }
-            LOGGER.info("End parse lines");
+            LOGGER.info("Finished parsing lines");
         } catch (final IOException e) {
             throw new ParseException("An error while reading the GFA file.", e);
         }
@@ -223,7 +223,7 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
-        nodeArrays[toId] = Arrays.copyOf(nodeArrays[toId], nodeArrays[toId].length + 2);
+        nodeArrays[toId] = Arrays.copyOf(nodeArrays[toId], nodeArrays[toId].length + Node.EDGE_DATA_SIZE);
 
         nodeArrays[toId][nodeArrays[toId].length - 2] = fromId;
         nodeArrays[toId][nodeArrays[toId].length - 1] = offset;
@@ -248,7 +248,7 @@ public final class NewGfaParser {
      * Inserts one or more elements at a certain position in a given array.
      *
      * @param array    array in which new elements need to be added
-     * @param position insertion position index
+     * @param position insertion position
      * @param inserts  the values that need to be inserted
      * @return array with the elements inserted
      */
