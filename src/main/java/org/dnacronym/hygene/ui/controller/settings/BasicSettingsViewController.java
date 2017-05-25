@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
@@ -47,12 +48,12 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     /**
      * When the user finishes picking the color for edges in the {@link ColorPicker}.
      *
-     * @param mouseEvent the {@link MouseEvent}
+     * @param actionEvent the {@link ActionEvent}
      */
     @FXML
-    void edgeColorDone(final MouseEvent mouseEvent) {
+    void edgeColorDone(final ActionEvent actionEvent) {
         getSettings().addRunnable(() -> {
-            final Color newValue = ((ColorPicker) mouseEvent.getSource()).getValue();
+            final Color newValue = ((ColorPicker) actionEvent.getSource()).getValue();
             getGraphVisualizer().getEdgeColorProperty().setValue(newValue);
             LOGGER.info("Edge color has now been set to " + newValue + ".");
         });

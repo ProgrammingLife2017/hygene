@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.controller.settings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +30,7 @@ final class BasicSettingsViewControllerTest extends UITest {
     private GraphVisualizer graphVisualizer;
     private Settings settings;
     private MouseEvent mouseEvent;
+    private ActionEvent actionEvent;
     private ColorPicker colorPickerMock;
     private Slider sliderMock;
     private ArgumentCaptor<Runnable> captor;
@@ -58,6 +60,7 @@ final class BasicSettingsViewControllerTest extends UITest {
         when(sliderMock.getValue()).thenReturn(42.42);
 
         mouseEvent = mock(MouseEvent.class);
+        actionEvent = mock(ActionEvent.class);
 
         captor = ArgumentCaptor.forClass(Runnable.class);
     }
@@ -72,8 +75,8 @@ final class BasicSettingsViewControllerTest extends UITest {
 
     @Test
     void testEdgeColorDone() {
-        when(mouseEvent.getSource()).thenReturn(colorPickerMock);
-        interact(() -> basicSettingsViewController.edgeColorDone(mouseEvent));
+        when(actionEvent.getSource()).thenReturn(colorPickerMock);
+        interact(() -> basicSettingsViewController.edgeColorDone(actionEvent));
         verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 
@@ -95,8 +98,8 @@ final class BasicSettingsViewControllerTest extends UITest {
     void testEdgeColorUpdate() {
         assertThat(graphVisualizer.getEdgeColorProperty().getValue()).isEqualTo(Color.RED);
 
-        when(mouseEvent.getSource()).thenReturn(colorPickerMock);
-        interact(() -> basicSettingsViewController.edgeColorDone(mouseEvent));
+        when(actionEvent.getSource()).thenReturn(colorPickerMock);
+        interact(() -> basicSettingsViewController.edgeColorDone(actionEvent));
 
         verify(settings).addRunnable(captor.capture());
         Runnable command = captor.getValue();
