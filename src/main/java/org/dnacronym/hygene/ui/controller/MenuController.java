@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -124,6 +125,16 @@ public final class MenuController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
+    }
+
+    /**
+     * Will quit Hygene.
+     *
+     * @param actionEvent the action
+     */
+    @FXML
+    void exitAction(final ActionEvent actionEvent) {
+        Platform.runLater(Platform::exit);
     }
 
     /**
