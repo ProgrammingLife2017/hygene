@@ -46,7 +46,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
     /**
      * Enables the file IO extension for SQLite.
      *
-     * @throws SQLException
+     * @throws SQLException if the file IO extension cannot be loaded
      */
     synchronized void enableFileIO() throws SQLException {
         if (!fileIOEnabled) {
@@ -197,6 +197,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * Performs a raw SQL update query on the database.
      *
      * @param query a raw SQL query
+     * @throws SQLException if execution of the raw query went wrong
      */
     synchronized void raw(final String query) throws SQLException {
         try (final Statement statement = connection.createStatement()) {

@@ -7,8 +7,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -19,7 +17,7 @@ import java.util.StringTokenizer;
 /**
  * Represents a file containing a cached graph array representation of a GFA file.
  */
-public class GraphArrayFile {
+public final class GraphArrayFile {
     private static final int PROGRESS_UPDATE_INTERVAL = 50000;
     private static final int PROGRESS_TOTAL = 100;
 
@@ -83,8 +81,9 @@ public class GraphArrayFile {
      * Writes a representation of the internal graph array data structure to the cache file.
      *
      * @param graph the internal graph array data structure
+     * @throws IOException if we cannot write to the cache file
      */
-    public void write(int[][] graph) throws IOException {
+    public void write(final int[][] graph) throws IOException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {

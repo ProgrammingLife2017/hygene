@@ -106,16 +106,16 @@ public final class Files {
         return new File(String.format("%s/%s", baseDirectory, APPLICATION_FOLDER_NAME), fileName);
     }
 
-
     /**
      * Returns a {@link File} instance for the given data file name.
      *
+     * @param prefix the prefix of the temporary filename
      * @return the application data {@link File} object
+     * @throws IOException if the temporary file cannot be created
      */
     public File getTemporaryFile(final String prefix) throws IOException {
         return File.createTempFile(prefix, ".tmp");
     }
-
 
     /**
      * Reads the given file and saves its contents to a {@link String}s.
