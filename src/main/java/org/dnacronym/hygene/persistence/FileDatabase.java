@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public final class FileDatabase implements AutoCloseable {
     private final String fileName;
     private final FileDatabaseDriver fileDatabaseDriver;
+    private final FileBookmarks fileBookmarks;
 
 
     /**
@@ -33,12 +34,15 @@ public final class FileDatabase implements AutoCloseable {
         fileDatabaseDriver = new FileDatabaseDriver(fileName);
 
         final FileMetadata fileMetadata = new FileMetadata(this);
+        fileBookmarks = new FileBookmarks(this);
 
         if (databaseAlreadyExisted) {
             fileMetadata.verifyMetadata();
         } else {
             fileDatabaseDriver.setUpTable(fileMetadata.getTable());
             fileMetadata.storeMetadata();
+
+            fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
         }
     }
 
@@ -61,6 +65,14 @@ public final class FileDatabase implements AutoCloseable {
         return fileDatabaseDriver;
     }
 
+    /**
+     * Returns the {@link FileBookmarks} instance.
+     *
+     * @return the {@link FileBookmarks} instance
+     */
+    public FileBookmarks getFileBookmarks() {
+        return fileBookmarks;
+    }
 
     @Override
     public void close() throws SQLException {
