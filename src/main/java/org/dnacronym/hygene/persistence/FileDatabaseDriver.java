@@ -27,6 +27,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
     public static final String DB_FILE_EXTENSION = ".hygene";
     public static final String FILE_IO_EXTENSION_PATH = "src/main/resources/sqlite-fileio/fileio";
     public static final String FILE_IO_EXTENSION_WIN_X86_PATH = "src/main/resources/sqlite-fileio/x86/fileio";
+    public static final String WIN_X86_OS_ARCHITECTURE_NAME = "x86";
 
     private final Connection connection;
     private boolean fileIOEnabled = false;
@@ -57,7 +58,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
         }
 
         String extensionPath = FILE_IO_EXTENSION_PATH;
-        if (SystemUtils.IS_OS_WINDOWS && SystemUtils.OS_ARCH.equals("x86")) {
+        if (SystemUtils.IS_OS_WINDOWS && SystemUtils.OS_ARCH.equals(WIN_X86_OS_ARCHITECTURE_NAME)) {
             extensionPath = FILE_IO_EXTENSION_WIN_X86_PATH;
         }
 
