@@ -1,9 +1,10 @@
 package org.dnacronym.hygene.parser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeBuilder;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.SequenceDirection;
 
@@ -25,6 +26,7 @@ import java.util.stream.IntStream;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class NewGfaParser {
+    private static final Logger LOGGER = LogManager.getLogger(NewGfaParser.class);
     private static final int PROGRESS_UPDATE_INTERVAL = 10;
     private static final int PROGRESS_TOTAL = 100;
     private static final String SOURCE_NAME = "<source>";
@@ -33,6 +35,7 @@ public final class NewGfaParser {
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeArrays;
+    private int lineCount;
 
 
     /**
@@ -47,7 +50,7 @@ public final class NewGfaParser {
     /**
      * Parses a GFA file to a {@link Graph}.
      *
-     * @param gfaFile an instance of {@link GfaFile}
+     * @param gfaFile         an instance of {@link GfaFile}
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return a {@link Graph}
      * @throws ParseException if the given {@link String} is not GFA-compliant
@@ -56,29 +59,28 @@ public final class NewGfaParser {
     public Graph parse(final GfaFile gfaFile, final ProgressUpdater progressUpdater) throws ParseException {
         BufferedReader gfa = gfaFile.readFile();
 
-        final int totalLines = (int) gfa.lines().count();
-
-        // Get new buffered reader
-        gfa = gfaFile.readFile();
-
-        allocateNodes(gfa);
-
-        nodeArrays = new int[nodeIds.size()][];
-        Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
-
-        // Get new buffered reader
-        gfa = gfaFile.readFile();
-
         try {
+            LOGGER.info("Start allocating nodes");
+            allocateNodes(gfa);
+            LOGGER.info("Finished allocating nodes");
+
+            nodeArrays = new int[nodeIds.size()][];
+            Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
+
+            // Get new buffered reader
+            gfa = gfaFile.readFile();
+
             int offset = 0;
             String line;
+            LOGGER.info("Start parsing lines");
             while ((line = gfa.readLine()) != null) {
                 if (offset % PROGRESS_UPDATE_INTERVAL == 0) {
-                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / totalLines);
+                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / lineCount);
                 }
                 parseLine(line, offset + 1);
                 offset++;
             }
+            LOGGER.info("Finished parsing lines");
         } catch (final IOException e) {
             throw new ParseException("An error while reading the GFA file.", e);
         }
@@ -96,11 +98,18 @@ public final class NewGfaParser {
      * This step is necessary because we need to know the internal node IDs
      * upfront to be able to add edges to the correct node vectors.
      *
-     * @param gfa lines of a GFA-compliant {@link String}
+     * @param gfa a buffered reader of a GFA file
+     * @throws IOException if the given GFA file is not valid
      */
-    private void allocateNodes(final BufferedReader gfa) {
+    private void allocateNodes(final BufferedReader gfa) throws IOException {
         addNodeId(SOURCE_NAME);
-        gfa.lines().filter(line -> line.startsWith("S\t")).forEach(line -> addNodeId(parseNodeName(line)));
+        String line;
+        while ((line = gfa.readLine()) != null) {
+            if (line.startsWith("S\t")) {
+                addNodeId(parseNodeName(line));
+            }
+            lineCount++;
+        }
         addNodeId(SINK_NAME);
     }
 
@@ -161,11 +170,9 @@ public final class NewGfaParser {
 
             final int nodeId = getNodeId(name);
 
-            nodeArrays[nodeId] = NodeBuilder.fromArray(nodeId, nodeArrays[nodeId])
-                    .withLineNumber(offset)
-                    .withSequenceLength(sequence.length())
-                    .withColor(NodeColor.sequenceToColor(sequence))
-                    .toArray();
+            nodeArrays[nodeId][Node.NODE_LINE_NUMBER_INDEX] = offset;
+            nodeArrays[nodeId][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
+            nodeArrays[nodeId][Node.NODE_COLOR_INDEX] = NodeColor.sequenceToColor(sequence).ordinal();
 
         } catch (final NoSuchElementException e) {
             throw new ParseException("Not enough parameters for segment on line " + offset, e);
@@ -216,8 +223,10 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addIncomingEdge(final int fromId, final int toId, final int offset) {
-        nodeArrays[toId] = NodeBuilder.fromArray(toId, nodeArrays[toId])
-                .withIncomingEdge(fromId, offset).toArray();
+        nodeArrays[toId] = Arrays.copyOf(nodeArrays[toId], nodeArrays[toId].length + Node.EDGE_DATA_SIZE);
+
+        nodeArrays[toId][nodeArrays[toId].length - 2] = fromId;
+        nodeArrays[toId][nodeArrays[toId].length - 1] = offset;
     }
 
     /**
@@ -228,8 +237,33 @@ public final class NewGfaParser {
      * @param offset line number of edge
      */
     private void addOutgoingEdge(final int fromId, final int toId, final int offset) {
-        nodeArrays[fromId] = NodeBuilder.fromArray(fromId, nodeArrays[fromId])
-                .withOutgoingEdge(toId, offset).toArray();
+        final int lastOutgoingEdgePosition = Node.NODE_EDGE_DATA_OFFSET
+                + nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE;
+
+        nodeArrays[fromId] = insertAtPosition(nodeArrays[fromId], lastOutgoingEdgePosition, toId, offset);
+        nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX]++;
+    }
+
+    /**
+     * Inserts one or more elements at a certain position in a given array.
+     *
+     * @param array    array in which new elements need to be added
+     * @param position insertion position
+     * @param inserts  the values that need to be inserted
+     * @return array with the elements inserted
+     */
+    private int[] insertAtPosition(final int[] array, final int position, final int... inserts) {
+        final int[] result = new int[array.length + inserts.length];
+
+        System.arraycopy(array, 0, result, 0, position);
+
+        for (int i = 0; i < inserts.length; i++) {
+            result[position + i] = inserts[i];
+        }
+
+        System.arraycopy(array, position, result, position + inserts.length, array.length - position);
+
+        return result;
     }
 
     /**

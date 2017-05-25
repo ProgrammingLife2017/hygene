@@ -61,10 +61,19 @@ public final class GfaFile {
             if (graphLoader.hasGraph()) {
                 graph = new Graph(graphLoader.restoreGraph(), this);
             } else {
+                LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
+                LOGGER.info("Finished parsing");
+
                 nodeIds = gfaParser.getNodeIds();
+
+                LOGGER.info("Start fafosp x");
                 graph.fafosp().horizontal();
+
+                LOGGER.info("Start fafosp y");
                 graph.fafosp().vertical();
+
+                LOGGER.info("GfaFile parse finished");
 
                 graphLoader.dumpGraph(graph.getNodeArrays());
             }
