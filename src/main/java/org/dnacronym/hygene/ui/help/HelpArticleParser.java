@@ -69,7 +69,6 @@ public final class HelpArticleParser {
         }
     }
 
-
     /**
      * Will parse the articles {@link Element} node in the help articles XML document.
      *

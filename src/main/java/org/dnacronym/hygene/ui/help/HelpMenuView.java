@@ -25,7 +25,7 @@ public class HelpMenuView {
 
 
     /**
-     * Constructor for {@link HelpMenuView}.
+     * Initializes a new instance of {@link HelpMenuView}.
      *
      * @throws IOException               if there was an error locating or reading the FXML
      * @throws UIInitialisationException if there was an error initializing the provided FXML resource
@@ -44,8 +44,6 @@ public class HelpMenuView {
 
         final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);
-
-        Platform.runLater(stage::show);
     }
 
 

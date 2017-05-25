@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.help;
 
 /**
- * This class contains all data required for a displaying a help-article in hte the GUI.
+ * This class contains all data required for a displaying a help-article in the the GUI.
  */
 public final class HelpArticle {
     /**
@@ -14,10 +14,10 @@ public final class HelpArticle {
     private String content;
 
     /**
-     * Constructs a new HelpArticle.
+     * Initializes a new instance of {@link HelpArticle}.
      *
      * @param title   the title of the article
-     * @param content the content nof the article
+     * @param content the content of the article
      */
     HelpArticle(final String title, final String content) {
         this.title = title;

@@ -41,18 +41,18 @@ public final class HelpMenuController implements Initializable {
      */
     void generateSidebarMenu() {
         List<Button> leftMenuBTN = HelpMenuView.getHelpMenuArticles().stream()
-                .map(this::generateLeftMenuBTN).collect(Collectors.toList());
+                .map(this::generateSidebarButton).collect(Collectors.toList());
 
         sidebar.getChildren().addAll(leftMenuBTN);
     }
 
     /**
-     * Generate left menu btn button.
+     * Generate a new sidebar button.
      *
      * @param article the article
      * @return the button
      */
-    Button generateLeftMenuBTN(final HelpArticle article) {
+    Button generateSidebarButton(final HelpArticle article) {
         Button btn = new Button();
         try {
             final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
