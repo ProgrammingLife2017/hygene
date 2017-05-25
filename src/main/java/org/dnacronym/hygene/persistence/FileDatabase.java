@@ -63,7 +63,7 @@ public final class FileDatabase implements AutoCloseable {
      *
      * @return the {@link FileDatabaseDriver}
      */
-    public FileDatabaseDriver getFileDatabaseDriver() {
+    FileDatabaseDriver getFileDatabaseDriver() {
         return fileDatabaseDriver;
     }
 
