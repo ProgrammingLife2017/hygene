@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.persistence;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
@@ -12,6 +13,10 @@ import java.sql.SQLException;
 /**
  * Persistent storage for graph dumps.
  */
+@SuppressFBWarnings(
+        value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE",
+        justification = "Neither relevant nor practical for a local, isolated file database"
+)
 public final class GraphLoader {
     private static final Logger LOGGER = LogManager.getLogger(GraphLoader.class);
 

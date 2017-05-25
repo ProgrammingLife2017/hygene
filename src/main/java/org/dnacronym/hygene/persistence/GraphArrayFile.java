@@ -5,9 +5,14 @@ import org.dnacronym.hygene.parser.ProgressUpdater;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 
@@ -20,6 +25,8 @@ public class GraphArrayFile {
 
     private static final String NODE_VALUE_SEPARATOR = " ";
     private static final String NODE_ARRAY_SEPARATOR = "\n";
+
+    private static final int WRITE_BUFFER_SIZE = 4 * (int) Math.pow(1024, 2);
 
     private File file;
 
@@ -45,27 +52,28 @@ public class GraphArrayFile {
     public int[][] read(final int graphSize, final ProgressUpdater progressUpdater) throws IOException {
         final int[][] graph = new int[graphSize][];
 
-        final BufferedReader cache = new BufferedReader(new FileReader(file));
+        try (final BufferedReader cache =
+                     new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String node;
+            StringTokenizer nodeTokenizer;
+            int nodeIndex = 0;
+            while ((node = cache.readLine()) != null) {
+                if (nodeIndex % PROGRESS_UPDATE_INTERVAL == 0) {
+                    progressUpdater.updateProgress(PROGRESS_TOTAL * nodeIndex / graphSize);
+                }
 
-        String node;
-        StringTokenizer nodeTokenizer;
-        int nodeIndex = 0;
-        while ((node = cache.readLine()) != null) {
-            if (nodeIndex % PROGRESS_UPDATE_INTERVAL == 0) {
-                progressUpdater.updateProgress(PROGRESS_TOTAL * nodeIndex / graphSize);
+                nodeTokenizer = new StringTokenizer(node, NODE_VALUE_SEPARATOR);
+
+                graph[nodeIndex] = new int[nodeTokenizer.countTokens()];
+
+                int valueIndex = 0;
+                while (nodeTokenizer.hasMoreTokens()) {
+                    graph[nodeIndex][valueIndex] = Integer.parseInt(nodeTokenizer.nextToken());
+                    valueIndex++;
+                }
+
+                nodeIndex++;
             }
-
-            nodeTokenizer = new StringTokenizer(node, NODE_VALUE_SEPARATOR);
-
-            graph[nodeIndex] = new int[nodeTokenizer.countTokens()];
-
-            int valueIndex = 0;
-            while (nodeTokenizer.hasMoreTokens()) {
-                graph[nodeIndex][valueIndex] = Integer.parseInt(nodeTokenizer.nextToken());
-                valueIndex++;
-            }
-
-            nodeIndex++;
         }
 
         return graph;
@@ -77,9 +85,8 @@ public class GraphArrayFile {
      * @param graph the internal graph array data structure
      */
     public void write(int[][] graph) throws IOException {
-        try (FileWriter writer = new FileWriter(file)) {
-            BufferedWriter bufferedWriter = new BufferedWriter(writer, 4 * (int) Math.pow(1024, 2));
-
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {
                 final StringBuilder a = new StringBuilder();
 
@@ -92,8 +99,6 @@ public class GraphArrayFile {
             }
 
             bufferedWriter.flush();
-
-            writer.close();
         }
     }
 
