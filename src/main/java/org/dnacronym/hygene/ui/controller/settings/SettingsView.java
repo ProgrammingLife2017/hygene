@@ -60,6 +60,15 @@ public final class SettingsView {
 
 
     /**
+     * Gets the stage.
+     *
+     * @return the stage
+     */
+    public Stage getStage() {
+        return stage;
+    }
+
+    /**
      * Set the stage.
      *
      * @param stage stage for use by the view
