@@ -58,7 +58,7 @@ public final class SimpleBookmarkStore {
      * @param bookmarks {@link java.util.Collection} of {@link Bookmark}s
      */
     void addBookmarks(final Bookmark... bookmarks) {
-        for (Bookmark bookmark : bookmarks) {
+        for (final Bookmark bookmark : bookmarks) {
             addBookmark(bookmark);
         }
     }
