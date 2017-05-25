@@ -24,8 +24,11 @@ public final class GraphDimensionsCalculator {
     private Graph graph;
     private GraphQuery graphQuery;
 
-    private final IntegerProperty minXProperty;
-    private final IntegerProperty maxXProperty;
+    private final IntegerProperty minXNodeIdProperty;
+    private final IntegerProperty maxXNodeIdProperty;
+
+    private int minX;
+    private int maxX;
     private int minY;
     private int maxY;
 
@@ -42,8 +45,8 @@ public final class GraphDimensionsCalculator {
      * Create a new instance of {@link GraphDimensionsCalculator}.
      */
     public GraphDimensionsCalculator() {
-        minXProperty = new SimpleIntegerProperty();
-        maxXProperty = new SimpleIntegerProperty();
+        minXNodeIdProperty = new SimpleIntegerProperty();
+        maxXNodeIdProperty = new SimpleIntegerProperty();
     }
 
 
@@ -80,16 +83,27 @@ public final class GraphDimensionsCalculator {
         query.query(centerNodeId, hops);
         query.visit(nodeId -> {
             neighbours.add(nodeId);
-            tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId)
-                    + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
-            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId)
-                    + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH + graph.getLength(nodeId));
+            final int nodeLeftX = graph.getUnscaledXPosition(nodeId);
+            if (tempMinX[0] > nodeLeftX) {
+                tempMinX[0] = nodeLeftX;
+                minXNodeIdProperty.set(nodeId);
+            }
+
+            final int nodeRightX = graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId);
+            if (tempMaxX[0] < nodeRightX) {
+                tempMaxX[0] = nodeRightX;
+                maxXNodeIdProperty.set(nodeId);
+            }
+
+            tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId));
+            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId));
+
             tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
 
-        minXProperty.set(tempMinX[0]);
-        maxXProperty.set(tempMaxX[0]);
+        this.minX = tempMinX[0];
+        this.maxX = tempMaxX[0];
         this.minY = tempMinY[0];
         this.maxY = tempMaxY[0];
 
@@ -105,7 +119,7 @@ public final class GraphDimensionsCalculator {
      */
     public double computeXPosition(final int nodeId) {
         final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId);
-        return (double) (xPosition - minXProperty.get()) / (maxXProperty.get() - minXProperty.get()) * canvasWidth;
+        return (double) (xPosition - minX) / (maxX - minX) * canvasWidth;
     }
 
     /**
@@ -147,7 +161,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     public double computeWidth(final int nodeId) {
-        return (double) graph.getLength(nodeId) / (maxXProperty.get() - minXProperty.get()) * canvasWidth;
+        return (double) graph.getLength(nodeId) / (maxX - minX) * canvasWidth;
     }
 
     /**
@@ -187,20 +201,20 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the maximum x {@link IntegerProperty} in unscaled x coordinates.
+     * Gets the node id with the minimum x in unscaled x coordinates.
      *
-     * @return the maximum x {@link IntegerProperty}
+     * @return the minimum node id {@link IntegerProperty} in the x direction
      */
-    public IntegerProperty getMinXProperty() {
-        return minXProperty;
+    public IntegerProperty getMinXNodeIdProperty() {
+        return minXNodeIdProperty;
     }
 
     /**
-     * Gets the maximum x {@link IntegerProperty} in unscaled x coordinates.
+     * Gets the node id with the maximum x in unscaled x coordinates.
      *
-     * @return the maximum x {@link IntegerProperty}
+     * @return the maximum node id {@link IntegerProperty} in the x direction
      */
-    public IntegerProperty getMaxXProperty() {
-        return maxXProperty;
+    public IntegerProperty getMaxXNodeIdProperty() {
+        return maxXNodeIdProperty;
     }
 }

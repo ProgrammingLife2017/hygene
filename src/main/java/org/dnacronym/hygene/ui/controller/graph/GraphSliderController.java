@@ -23,6 +23,13 @@ public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
     private static final int GRAPH_SLIDER_SEGMENTS = 10;
 
+    private static final int MINIMUM_GRAH_THUMB_WIDTH = 20;
+    private static final String GRAPH_SLIDER_STYLE =
+            "-fx-pref-height: 30;\n" +
+                    "-fx-pref-width: %d;\n" +
+                    "-fx-arc-height: 0;\n" +
+                    "-fx-arc-width: 0;\n";
+
     private GraphVisualizer graphVisualizer;
     private GraphStore graphStore;
 
@@ -94,5 +101,9 @@ public final class GraphSliderController implements Initializable {
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
+    }
+
+    void updateGraphSlider(final int minX, final int maxX) {
+
     }
 }
