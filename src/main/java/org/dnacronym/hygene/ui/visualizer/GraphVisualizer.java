@@ -125,15 +125,25 @@ public final class GraphVisualizer {
         final double rectWidth = calculator.computeWidth(nodeId);
         final double rectHeight = calculator.getNodeHeight();
 
-        final Node selectedNode = getSelectedNodeProperty().get();
-        if (selectedNode != null && selectedNode.getId() == nodeId) {
-            graphicsContext.setFill(NodeColor.BRIGHT_GREEN.getFXColor());
-        } else {
-            graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
-        }
+        graphicsContext.setFill(getNodeColor(nodeId, graph));
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
 
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
+    }
+
+    /**
+     * Retrieve the {@link Color} of a specific node.
+     *
+     * @param nodeId the node id
+     * @param graph  the {@link Graph}
+     * @return the {@link Color}
+     */
+    private Color getNodeColor(final int nodeId, final Graph graph) {
+        final Node selectedNode = getSelectedNodeProperty().get();
+        if (selectedNode != null && selectedNode.getId() == nodeId) {
+            return NodeColor.BRIGHT_GREEN.getFXColor();
+        }
+        return graph.getColor(nodeId).getFXColor();
     }
 
     /**
