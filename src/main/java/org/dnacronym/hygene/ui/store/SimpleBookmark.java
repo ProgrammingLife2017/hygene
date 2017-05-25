@@ -22,6 +22,7 @@ public final class SimpleBookmark {
 
     private final Runnable onClick;
 
+
     /**
      * Constructs a new {@link SimpleBookmark} instance.
      *
@@ -36,6 +37,7 @@ public final class SimpleBookmark {
 
         onClick = () -> graphVisualizer.getCenterNodeIdProperty().set(nodeIdProperty.get());
     }
+
 
     /**
      * Returns the node id {@link IntegerProperty}.

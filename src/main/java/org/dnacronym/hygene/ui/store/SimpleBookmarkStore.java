@@ -44,10 +44,11 @@ public final class SimpleBookmarkStore {
         });
     }
 
+
     /**
-     * Add a single {@link SimpleBookmark}.
+     * Adds a single {@link SimpleBookmark}.
      *
-     * @param bookmark        {@link Bookmark} to add
+     * @param bookmark {@link Bookmark} to add
      */
     void addBookmark(final Bookmark bookmark) {
         try {
@@ -58,7 +59,7 @@ public final class SimpleBookmarkStore {
     }
 
     /**
-     * Get an {@link ObservableList} of {@link SimpleBookmark}s.
+     * Gets an {@link ObservableList} of {@link SimpleBookmark}s.
      *
      * @return {@link ObservableList} of {@link SimpleBookmark}s
      */

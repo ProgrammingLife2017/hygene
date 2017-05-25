@@ -81,7 +81,7 @@ public final class BookmarksController implements Initializable {
     }
 
     /**
-     * Set the {@link SimpleBookmarkStore} for use by the controller.
+     * Sets the {@link SimpleBookmarkStore} for use by the controller.
      *
      * @param simpleBookmarkStore {@link SimpleBookmarkStore} for use by the controller
      */
@@ -90,7 +90,7 @@ public final class BookmarksController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphStore} for use by the controller.
+     * Sets the {@link GraphStore} for use by the controller.
      *
      * @param graphStore {@link GraphStore} for use by the controller
      */
