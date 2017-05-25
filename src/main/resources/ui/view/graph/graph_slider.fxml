@@ -9,7 +9,7 @@
             fx:controller="org.dnacronym.hygene.ui.controller.graph.GraphSliderController">
     <children>
         <ScrollBar fx:id="graphScrollBar" layoutX="178.0" layoutY="28.0" AnchorPane.bottomAnchor="10.0"
-                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
             <tooltip>
                 <Tooltip text="Slide through the graph."/>
             </tooltip>

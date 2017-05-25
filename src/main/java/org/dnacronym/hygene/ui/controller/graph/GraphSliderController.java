@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
  */
 public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
-    private static final int GRAPH_SLIDER_SEGMENTS = 10;
-    private static final int MINIMUM_GRAPH_THUMB_WIDTH = 20;
 
     private GraphVisualizer graphVisualizer;
     private GraphDimensionsCalculator graphDimensionsCalculator;
@@ -51,15 +49,14 @@ public final class GraphSliderController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        graphVisualizer.getCenterNodeIdProperty().addListener(
+                (observable, oldNodeId, newNodeId) -> graphScrollBar.setValue(newNodeId.doubleValue()));
+
         graphScrollBar.maxProperty().bind(Bindings.max(
                 0,
                 Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1)));
 
         graphScrollBar.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
-
-        graphVisualizer.getCenterNodeIdProperty().addListener(
-                (observable, oldNodeId, newNodeId) -> graphScrollBar.setValue(newNodeId.doubleValue()));
-
         graphScrollBar.visibleAmountProperty().bind(Bindings.subtract(
                 graphDimensionsCalculator.getMaxXNodeIdProperty(),
                 graphDimensionsCalculator.getMinXNodeIdProperty()));
