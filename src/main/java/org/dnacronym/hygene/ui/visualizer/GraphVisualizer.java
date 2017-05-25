@@ -45,6 +45,8 @@ public final class GraphVisualizer {
 
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
 
+    private final GraphDimensionsCalculator graphDimensionsCalculator;
+
     private final ObjectProperty<Node> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
 
@@ -73,9 +75,12 @@ public final class GraphVisualizer {
      * class will also prompt a redraw if the {@link org.dnacronym.hygene.parser.GfaFile} in {@link GraphStore} is not
      * null.
      *
-     * @param graphStore {@link GraphStore} which is observed by this class
+     * @param graphStore                {@link GraphStore} which is observed by this class
+     * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      */
-    public GraphVisualizer(final GraphStore graphStore) {
+    public GraphVisualizer(final GraphStore graphStore, final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
+
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
 
@@ -190,9 +195,7 @@ public final class GraphVisualizer {
 
         final int centerNodeId = centerNodeIdProperty.get();
 
-        final GraphDimensionsCalculator graphDimensionsCalculator = new GraphDimensionsCalculator(
-                graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get()
-        );
+        graphDimensionsCalculator.calculate(graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get());
         final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
 
         for (final Integer nodeId : neighbours) {

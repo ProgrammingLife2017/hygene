@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.util;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,31 +14,41 @@ import java.util.List;
 
 /**
  * Performs calculations for determining node/graph positions and dimensions.
+ * <p>
+ * Every time {@link #calculate(Graph, Canvas, int, int, double)} is called, all internal values are updated.
  */
 public final class GraphDimensionsCalculator {
     private static final Logger LOGGER = LogManager.getLogger(GraphDimensionsCalculator.class);
     private static final int EDGE_WIDTH = 1000;
 
-    private final Graph graph;
-    private final GraphQuery query;
-    private final double canvasHeight;
-    private final double canvasWidth;
-    private final int minX;
-    private final int maxX;
-    private final int minY;
-    private final int maxY;
-    private final double nodeHeight;
+    private Graph graph;
+    private GraphQuery graphQuery;
+
+    private final IntegerProperty minXProperty;
+    private final IntegerProperty maxXProperty;
+    private int minY;
+    private int maxY;
+
+    private double canvasWidth;
+    private double nodeHeight;
 
     private double laneHeight = -1;
     private int laneCount = -1;
 
-    private final List<Integer> neighbours;
+    private List<Integer> neighbours;
 
 
     /**
-     * Constructs and initializes an instance of {@link GraphDimensionsCalculator}.
-     * <p>
-     * The calculator also internally stores the id of all the neighbours of a set center node id.
+     * Create a new instance of {@link GraphDimensionsCalculator}.
+     */
+    public GraphDimensionsCalculator() {
+        minXProperty = new SimpleIntegerProperty();
+        maxXProperty = new SimpleIntegerProperty();
+    }
+
+
+    /**
+     * This calculations recalculates all internal values based on the new values.
      *
      * @param graph        a reference to the current {@link Graph}, used to get node properties
      * @param canvas       a reference to the current {@link Canvas}, used for determining width and height
@@ -46,10 +58,11 @@ public final class GraphDimensionsCalculator {
      * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, int,
      * java.util.function.BiConsumer)
      */
-    public GraphDimensionsCalculator(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
-                                     final double nodeHeight) {
+    public void calculate(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
+                          final double nodeHeight) {
         this.graph = graph;
-        this.canvasHeight = canvas.getHeight();
+        graphQuery = new GraphQuery(graph);
+
         this.canvasWidth = canvas.getWidth();
         this.nodeHeight = nodeHeight;
 
@@ -75,20 +88,13 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
 
-        this.minX = tempMinX[0];
-        this.maxX = tempMaxX[0];
+        minXProperty.set(tempMinX[0]);
+        maxXProperty.set(tempMaxX[0]);
         this.minY = tempMinY[0];
         this.maxY = tempMaxY[0];
-    }
 
-
-    /**
-     * Computes the diameter of the graph.
-     *
-     * @return the diameter of the graph
-     */
-    public int computeDiameter() {
-        return maxX - minX;
+        laneHeight = canvas.getHeight() / getLaneCount();
+        laneCount = Math.abs(maxY - minY) + 1;
     }
 
     /**
@@ -98,14 +104,8 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     public double computeXPosition(final int nodeId) {
-        if (computeDiameter() == 0) {
-            LOGGER.warn("Diameter of graph is 0");
-            return 0;
-        }
-
-        final int xPosition = graph.getUnscaledXPosition(nodeId)
-                + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH - graph.getLength(nodeId);
-        return (double) (xPosition - minX) / computeDiameter() * canvasWidth;
+        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId);
+        return (double) (xPosition - minXProperty.get()) / (maxXProperty.get() - minXProperty.get()) * canvasWidth;
     }
 
     /**
@@ -147,7 +147,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     public double computeWidth(final int nodeId) {
-        return (double) graph.getLength(nodeId) / computeDiameter() * canvasWidth;
+        return (double) graph.getLength(nodeId) / (maxXProperty.get() - minXProperty.get()) * canvasWidth;
     }
 
     /**
@@ -165,10 +165,6 @@ public final class GraphDimensionsCalculator {
      * @return the height of a lane
      */
     public double getLaneHeight() {
-        if (Double.compare(laneHeight, -1) == 0) {
-            laneHeight = canvasHeight / getLaneCount();
-        }
-
         return laneHeight;
     }
 
@@ -178,10 +174,6 @@ public final class GraphDimensionsCalculator {
      * @return the lane count
      */
     public int getLaneCount() {
-        if (Double.compare(laneCount, -1) == 0) {
-            laneCount = Math.abs(maxY - minY) + 1;
-        }
-
         return laneCount;
     }
 
@@ -192,5 +184,23 @@ public final class GraphDimensionsCalculator {
      */
     public List<Integer> getNeighbours() {
         return neighbours;
+    }
+
+    /**
+     * Gets the maximum x {@link IntegerProperty} in unscaled x coordinates.
+     *
+     * @return the maximum x {@link IntegerProperty}
+     */
+    public IntegerProperty getMinXProperty() {
+        return minXProperty;
+    }
+
+    /**
+     * Gets the maximum x {@link IntegerProperty} in unscaled x coordinates.
+     *
+     * @return the maximum x {@link IntegerProperty}
+     */
+    public IntegerProperty getMaxXProperty() {
+        return maxXProperty;
     }
 }
