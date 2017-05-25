@@ -6,7 +6,8 @@ package org.dnacronym.hygene.persistence;
  */
 public enum ColumnType {
     INTEGER("INTEGER"),
-    TEXT("TEXT");
+    TEXT("TEXT"),
+    BLOB("BLOB");
 
     private String typeString;
 
@@ -21,12 +22,8 @@ public enum ColumnType {
     }
 
 
-    /**
-     * Returns the a {@link String} representing this type.
-     *
-     * @return the type string
-     */
-    public final String getTypeString() {
+    @Override
+    public String toString() {
         return typeString;
     }
 }

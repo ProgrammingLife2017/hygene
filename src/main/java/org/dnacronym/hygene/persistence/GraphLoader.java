@@ -34,9 +34,9 @@ public final class GraphLoader {
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
 
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable(TABLE_NAME);
-        fileDatabaseTable.addColumn(KEY_COLUMN_NAME, "TEXT");
-        fileDatabaseTable.addColumn(NODE_COUNT_COLUMN_NAME, "TEXT");
-        fileDatabaseTable.addColumn(DUMP_COLUMN_NAME, "BLOB");
+        fileDatabaseTable.addColumn(KEY_COLUMN_NAME, ColumnType.TEXT);
+        fileDatabaseTable.addColumn(NODE_COUNT_COLUMN_NAME, ColumnType.TEXT);
+        fileDatabaseTable.addColumn(DUMP_COLUMN_NAME, ColumnType.BLOB);
 
         try {
             fileDatabaseDriver.setUpTable(fileDatabaseTable);

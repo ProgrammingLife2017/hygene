@@ -46,7 +46,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
     synchronized void setUpTable(final FileDatabaseTable table) throws SQLException {
         try (final Statement statement = connection.createStatement()) {
             final String columnList = String.join(", ", table.getColumns().stream()
-                    .map((Pair<String, String> column) -> column.getKey() + " " + column.getValue())
+                    .map((Pair<String, ColumnType> column) -> column.getKey() + " " + column.getValue())
                     .collect(Collectors.toList()));
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + table.getName() + "(" + columnList + ")");

@@ -40,8 +40,8 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
         final FileDatabaseTable fileDatabaseTable;
 
         fileDatabaseTable = new FileDatabaseTable(testTableName);
-        fileDatabaseTable.addColumn("col1", "TEXT");
-        fileDatabaseTable.addColumn("col2", "TEXT");
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
+        fileDatabaseTable.addColumn("col2", ColumnType.TEXT);
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow(testTableName, Arrays.asList("1", "2"));
@@ -51,7 +51,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
     @Test
     void testDeleteRow() throws SQLException {
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
-        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow("test", Collections.singletonList("val1"));
@@ -63,7 +63,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
     @Test
     void testHasRowFalse() throws SQLException {
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
-        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow("test", Collections.singletonList("val1"));
@@ -74,7 +74,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
     @Test
     void testHasRowTrue() throws SQLException {
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable("test");
-        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow("test", Collections.singletonList("val1"));

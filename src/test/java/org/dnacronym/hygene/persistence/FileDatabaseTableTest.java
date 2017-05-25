@@ -34,7 +34,7 @@ final class FileDatabaseTableTest {
 
     @Test
     void testAddColumn() {
-        final Pair<String, String> column = new Pair<>("test_key", "test_value");
+        final Pair<String, ColumnType> column = new Pair<>("test_key", ColumnType.INTEGER);
         fileDatabaseTable.addColumn(column.getKey(), column.getValue());
 
         assertThat(fileDatabaseTable.getColumns().size()).isEqualTo(1);
