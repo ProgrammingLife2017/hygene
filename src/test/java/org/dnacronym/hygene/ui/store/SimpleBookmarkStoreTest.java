@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.store;
 
+import javafx.beans.property.SimpleObjectProperty;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
@@ -37,8 +38,11 @@ final class SimpleBookmarkStoreTest {
         when(node.retrieveMetadata()).thenReturn(nodeMetadata);
         when(graph.getNode(0)).thenReturn(node);
 
+        final GraphStore graphStore = mock(GraphStore.class);
+        when(graphStore.getGfaFileProperty()).thenReturn(new SimpleObjectProperty<>());
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore);
+
         bookmark = mock(Bookmark.class);
-        simpleBookmarkStore = new SimpleBookmarkStore();
         simpleBookmarkStore.addBookmark(bookmark, graph);
     }
 

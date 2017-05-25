@@ -83,7 +83,7 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer();
         settings = new Settings();
-        simpleBookmarkStore = new SimpleBookmarkStore();
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore);
     }
 
     @Override
