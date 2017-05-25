@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  * The controller for the help menu.
  */
 public final class HelpMenuController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(HelpMenuController.class);
     private static final String LEFT_MENU_BTN = "/ui/view/help/help_sidebar_btn.fxml";
 
     @FXML
@@ -36,11 +39,8 @@ public final class HelpMenuController implements Initializable {
      * Generate sidebar menu.
      */
     void generateSidebarMenu() {
-        List<Button> leftMenuBTN = HelpMenuWrapper.getHelpMenuArticles().stream().map(art -> {
-            Button btn = generateLeftMenuBTN(art);
-            return btn;
-        }).collect(Collectors.toList());
-
+        List<Button> leftMenuBTN = HelpMenuWrapper.getHelpMenuArticles().stream()
+                .map(this::generateLeftMenuBTN).collect(Collectors.toList());
 
         sidebar.getChildren().addAll(leftMenuBTN);
     }
@@ -57,13 +57,11 @@ public final class HelpMenuController implements Initializable {
             final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
             btn = FXMLLoader.load(resource);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
 
         btn.setText(article.getTitle());
-        btn.setOnMouseClicked(event -> {
-            contentArea.setText(article.getContent());
-        });
+        btn.setOnMouseClicked(event -> contentArea.setText(article.getContent()));
 
         return btn;
     }

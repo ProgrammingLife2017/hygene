@@ -59,12 +59,12 @@ public final class HelpArticleParser {
     public List<HelpArticle> parse(final String filename) {
         Document document = loadXML(filename);
 
-        System.out.println("Root element :" + document.getDocumentElement().getNodeName());
-
-        Element articlesElement = (Element) document.getDocumentElement().getElementsByTagName("articles").item(0);
-        List<HelpArticle> articles = parseArticles(articlesElement);
-
-        return articles;
+        if (document != null) {
+            Element articlesElement = (Element) document.getDocumentElement().getElementsByTagName("articles").item(0);
+            return parseArticles(articlesElement);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
 
@@ -104,7 +104,6 @@ public final class HelpArticleParser {
         String title = article.getElementsByTagName("title").item(0).getTextContent();
         String content = article.getElementsByTagName("content").item(0).getTextContent();
 
-        HelpArticle helpArticle = new HelpArticle(title, content);
-        return helpArticle;
+        return new HelpArticle(title, content);
     }
 }

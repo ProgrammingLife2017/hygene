@@ -149,6 +149,7 @@ public final class MenuController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
+        actionEvent.consume();
     }
 
     /**
