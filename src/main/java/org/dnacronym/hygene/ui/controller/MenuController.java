@@ -145,7 +145,7 @@ public final class MenuController implements Initializable {
                 LOGGER.info("Launched GUI help menu");
             }
 
-            consoleWrapper.bringToFront();
+            helpMenuWrapper.bringToFront();
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
