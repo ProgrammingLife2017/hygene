@@ -3,6 +3,7 @@ package org.dnacronym.hygene.persistence;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.sqlite.SQLiteConfig;
 
 import java.sql.Connection;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public final class FileDatabaseDriver implements AutoCloseable {
     public static final String DB_FILE_EXTENSION = ".hygene";
     public static final String FILE_IO_EXTENSION_PATH = "src/main/resources/sqlite-fileio/fileio";
+    public static final String FILE_IO_EXTENSION_WIN_X86_PATH = "src/main/resources/sqlite-fileio/x86/fileio";
 
     private final Connection connection;
     private boolean fileIOEnabled = false;
@@ -50,10 +52,17 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException if the file IO extension cannot be loaded
      */
     synchronized void enableFileIO() throws SQLException {
-        if (!fileIOEnabled) {
-            raw("SELECT load_extension('" + FILE_IO_EXTENSION_PATH + "')");
-            fileIOEnabled = true;
+        if (fileIOEnabled) {
+            return;
         }
+
+        String extensionPath = FILE_IO_EXTENSION_PATH;
+        if (SystemUtils.IS_OS_WINDOWS && SystemUtils.OS_ARCH.equals("x86")) {
+            extensionPath = FILE_IO_EXTENSION_WIN_X86_PATH;
+        }
+
+        raw("SELECT load_extension('" + extensionPath + "')");
+        fileIOEnabled = true;
     }
 
     /**
