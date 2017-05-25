@@ -52,6 +52,7 @@ public final class GraphVisualizer {
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty hopsProperty;
+    private final IntegerProperty onScreenNodeCountProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
@@ -88,6 +89,7 @@ public final class GraphVisualizer {
 
         centerNodeIdProperty = new SimpleIntegerProperty(0);
         hopsProperty = new SimpleIntegerProperty(0);
+        onScreenNodeCountProperty = new SimpleIntegerProperty();
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
             setGraph(newValue.getGraph());
@@ -197,6 +199,7 @@ public final class GraphVisualizer {
 
         graphDimensionsCalculator.calculate(graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get());
         final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
+        onScreenNodeCountProperty.set(neighbours.size());
 
         for (final Integer nodeId : neighbours) {
             drawNode(graphDimensionsCalculator, graph, nodeId);
@@ -367,5 +370,14 @@ public final class GraphVisualizer {
      */
     public IntegerProperty getNodeCountProperty() {
         return nodeCountProperty;
+    }
+
+    /**
+     * The property which describes the amount of nodes onscreen.
+     *
+     * @return property which describes the amount of nodes on screen
+     */
+    public IntegerProperty getOnScreenNodeCountProperty() {
+        return onScreenNodeCountProperty;
     }
 }

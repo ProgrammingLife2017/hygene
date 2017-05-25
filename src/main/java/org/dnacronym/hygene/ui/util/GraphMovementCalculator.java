@@ -13,8 +13,9 @@ public final class GraphMovementCalculator {
     private static final double DEFAULT_ZOOMING_SENSITIVITY = 0.05;
 
     private final GraphVisualizer graphVisualizer;
+
     private final DoubleProperty panningSensitivityProperty;
-    private final DoubleProperty zoomingSensitivtyProperty;
+    private final DoubleProperty zoomingSensitivityProperty;
 
     /**
      * {@code x} position where the panning started.
@@ -24,15 +25,24 @@ public final class GraphMovementCalculator {
     private boolean draggingRight;
     private boolean dragging;
 
+    /**
+     *
+     */
+    private boolean stopScrollingOut;
+
 
     /**
      * Create instance of {@link GraphMovementCalculator}.
+     * <p>
+     * The given {@link GraphDimensionsCalculator} is used to calculate the amount of onscreen nodes, and determines how
+     * far the user can zoom out.
      *
      * @param graphVisualizer {@link GraphVisualizer} to drag
      */
     public GraphMovementCalculator(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
         this.panningSensitivityProperty = new SimpleDoubleProperty(DEFAULT_PANNING_SENSITIVITY);
+        this.zoomingSensitivityProperty = new SimpleDoubleProperty(DEFAULT_ZOOMING_SENSITIVITY);
     }
 
 
@@ -87,14 +97,25 @@ public final class GraphMovementCalculator {
 
     /**
      * When the user scrolls.
+     * <p>
+     * Scrolling up corresponds to zooming in, and scrolling down corresponds to zooming out. The user can zoom in no
+     * more than 1 hops. Scrolling out is ignored when the diameter of the onscreen graph is equal to the diameter
+     * of the actual graph.
      *
      * @param deltaY delta in the y direction
      */
     public void onScroll(final double deltaY) {
-        final int oldHops = graphVisualizer.getHopsProperty().get();
-        final int newHops = (int) Math.round(oldHops + deltaY * getZoomingSensitivtyProperty().get());
+        if (stopScrollingOut && deltaY > 0) {
+            return;
+        }
 
-        graphVisualizer.getHopsProperty().set(newHops);
+        final int oldHops = graphVisualizer.getHopsProperty().get();
+        final int newHops = (int) Math.round(oldHops + deltaY * getZoomingSensitivityProperty().get());
+
+        graphVisualizer.getHopsProperty().set(Math.max(newHops, 1));
+
+        stopScrollingOut = graphVisualizer.getOnScreenNodeCountProperty().get()
+                > graphVisualizer.getNodeCountProperty().get();
     }
 
     /**
@@ -115,7 +136,7 @@ public final class GraphMovementCalculator {
      *
      * @return property which determines the zoom sensitivity
      */
-    public DoubleProperty getZoomingSensitivtyProperty() {
-        return zoomingSensitivtyProperty;
+    public DoubleProperty getZoomingSensitivityProperty() {
+        return zoomingSensitivityProperty;
     }
 }
