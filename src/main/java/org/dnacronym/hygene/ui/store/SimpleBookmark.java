@@ -29,22 +29,18 @@ public final class SimpleBookmark {
     /**
      * Constructs a new {@link SimpleBookmark} instance.
      *
-     * @param bookmark        bookmark associated with this {@link SimpleBookmark}
-     * @param graphVisualizer {@link GraphVisualizer} that bookmark is associated with
+     * @param bookmark bookmark associated with this {@link SimpleBookmark}
+     * @param onClick  {@link Runnable} that can be retrieved by calling {@link #getOnClick()}
      * @throws ParseException if unable to get the sequence of the node in the bookmark
      */
-    public SimpleBookmark(final Bookmark bookmark, final GraphVisualizer graphVisualizer) throws ParseException {
+    public SimpleBookmark(final Bookmark bookmark, final Runnable onClick) throws ParseException {
         this.bookmark = bookmark;
+        this.onClick = onClick;
 
         nodeIdProperty = new SimpleIntegerProperty(bookmark.getNodeId());
         baseOffsetProperty = new SimpleIntegerProperty(bookmark.getBaseOffset());
         descriptionProperty = new SimpleStringProperty(bookmark.getDescription());
         radiusProperty = new SimpleIntegerProperty(bookmark.getRadius());
-
-        onClick = () -> {
-            graphVisualizer.getCenterNodeIdProperty().set(nodeIdProperty.get());
-            graphVisualizer.setSelectedNode(nodeIdProperty.get());
-        };
     }
 
 

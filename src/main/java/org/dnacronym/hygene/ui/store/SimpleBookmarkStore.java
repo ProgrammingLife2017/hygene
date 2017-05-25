@@ -48,7 +48,7 @@ public final class SimpleBookmarkStore {
     /**
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
      */
-    void writeBookmakrsToFile() {
+    void writeBookmarksToFile() {
         // TODO store all bookmarks.
     }
 
@@ -57,7 +57,7 @@ public final class SimpleBookmarkStore {
      *
      * @param bookmarks {@link java.util.Collection} of {@link Bookmark}s
      */
-    void addAllBookmarks(final Bookmark... bookmarks) {
+    void addBookmarks(final Bookmark... bookmarks) {
         for (Bookmark bookmark : bookmarks) {
             addBookmark(bookmark);
         }
@@ -70,7 +70,10 @@ public final class SimpleBookmarkStore {
      */
     void addBookmark(final Bookmark bookmark) {
         try {
-            bookmarks.add(new SimpleBookmark(bookmark, graphVisualizer));
+            bookmarks.add(new SimpleBookmark(bookmark, () -> {
+                graphVisualizer.getCenterNodeIdProperty().set(bookmark.getNodeId());
+                graphVisualizer.setSelectedNode(bookmark.getNodeId());
+            }));
         } catch (final ParseException e) {
             LOGGER.error("Unable to create bookmark %s.", bookmark, e);
         }

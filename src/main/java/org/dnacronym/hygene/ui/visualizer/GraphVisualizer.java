@@ -267,8 +267,7 @@ public final class GraphVisualizer {
      * @param nodeId node id of the new selected {@link Node}
      */
     public void setSelectedNode(final int nodeId) {
-        final Node selectedNode = graph.getNode(nodeId);
-        selectedNodeProperty.set(selectedNode);
+        selectedNodeProperty.set(graph.getNode(nodeId));
     }
 
     /**

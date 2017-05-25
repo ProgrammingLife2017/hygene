@@ -21,26 +21,22 @@ final class SimpleBookmarkTest {
     private Bookmark bookmark;
     private GraphVisualizer graphVisualizer;
     private IntegerProperty centerNodeIdProperty;
+    private Runnable onClick;
 
     private SimpleBookmark simpleBookmark;
 
 
     @BeforeEach
     void beforeEach() throws ParseException {
-        bookmark = mock(Bookmark.class);
-
-        // mock bookmark properties that determine what is displayed in the ui
-        when(bookmark.getNodeId()).thenReturn(10);
-        when(bookmark.getDescription()).thenReturn("1234");
-        when(bookmark.getBaseOffset()).thenReturn(1);
-        when(bookmark.getRadius()).thenReturn(500);
+        bookmark = new Bookmark(10, 1, 500, "1234");
 
         // ensure tests get a certain node with certain metadata
         graphVisualizer = mock(GraphVisualizer.class);
         centerNodeIdProperty = mock(IntegerProperty.class);
         when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
 
-        simpleBookmark = new SimpleBookmark(bookmark, graphVisualizer);
+        onClick = mock(Runnable.class);
+        simpleBookmark = new SimpleBookmark(bookmark, onClick);
     }
 
 
@@ -73,6 +69,6 @@ final class SimpleBookmarkTest {
     void testClickOn() {
         simpleBookmark.getOnClick().run();
 
-        verify(centerNodeIdProperty, times(1)).set(10);
+        verify(onClick, times(1)).run();
     }
 }
