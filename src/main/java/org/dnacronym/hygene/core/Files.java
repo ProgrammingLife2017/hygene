@@ -108,6 +108,16 @@ public final class Files {
 
 
     /**
+     * Returns a {@link File} instance for the given data file name.
+     *
+     * @return the application data {@link File} object
+     */
+    public File getTemporaryFile(final String prefix) throws IOException {
+        return File.createTempFile(prefix, ".tmp");
+    }
+
+
+    /**
      * Reads the given file and saves its contents to a {@link String}s.
      *
      * @param file the file to be read from

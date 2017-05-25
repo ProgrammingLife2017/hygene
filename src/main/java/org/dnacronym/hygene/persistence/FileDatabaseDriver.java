@@ -3,6 +3,7 @@ package org.dnacronym.hygene.persistence;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
+import org.sqlite.SQLiteConfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,6 +26,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
     public static final String DB_FILE_EXTENSION = ".hygene";
 
     private final Connection connection;
+    private boolean fileIOEnabled = false;
 
 
     /**
@@ -34,9 +36,24 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException in the case of erroneous SQL behaviour
      */
     FileDatabaseDriver(final String fileName) throws SQLException {
-        connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION);
+        SQLiteConfig config = new SQLiteConfig();
+        config.enableLoadExtension(true);
+
+        connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION, config.toProperties());
     }
 
+
+    /**
+     * Enables the file IO extension for SQLite.
+     *
+     * @throws SQLException
+     */
+    public synchronized void enableFileIO() throws SQLException {
+        if (!fileIOEnabled) {
+            rawUpdate("SELECT load_extension('src/main/resources/sqlite-fileio/fileio')");
+            fileIOEnabled = true;
+        }
+    }
 
     /**
      * Creates the given tables in the database.
@@ -176,6 +193,16 @@ public final class FileDatabaseDriver implements AutoCloseable {
         }
     }
 
+    /**
+     * Performs a raw SQL update query on the database.
+     *
+     * @param query a raw SQL query
+     */
+    public synchronized void rawUpdate(final String query) throws SQLException {
+        try (final Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        }
+    }
 
     @Override
     public synchronized void close() throws SQLException {

@@ -2,10 +2,11 @@ package org.dnacronym.hygene.persistence;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.core.Files;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 
 /**
@@ -19,8 +20,6 @@ public final class GraphLoader {
     private static final String KEY_COLUMN_VALUE = "0";
     private static final String NODE_COUNT_COLUMN_NAME = "node_count";
     private static final String DUMP_COLUMN_NAME = "dump";
-    private static final String NODE_VALUE_SEPARATOR = " ";
-    private static final String NODE_ARRAY_SEPARATOR = "\n";
 
     private final FileDatabaseDriver fileDatabaseDriver;
 
@@ -83,22 +82,20 @@ public final class GraphLoader {
             deleteGraph();
         }
 
-        final StringBuilder graphDump = new StringBuilder();
-        for (final int[] node : graph) {
-            for (final int value : node) {
-                graphDump.append(value).append(NODE_VALUE_SEPARATOR);
-            }
-
-            graphDump.deleteCharAt(graphDump.length() - 1);
-            graphDump.append(NODE_ARRAY_SEPARATOR);
-        }
-
         try {
-            fileDatabaseDriver.insertRow(TABLE_NAME,
-                    Arrays.asList(KEY_COLUMN_VALUE, Integer.toString(graph.length), graphDump.toString()));
-        } catch (final SQLException e) {
+            LOGGER.info("Write internal data structure to temporary file.");
+            final GraphArrayFile cache = new GraphArrayFile(Files.getInstance().getTemporaryFile("hygene-cache"));
+            cache.write(graph);
+
+            LOGGER.info("Load temporary file into the database.");
+            fileDatabaseDriver.enableFileIO();
+            fileDatabaseDriver.rawUpdate("INSERT INTO " + TABLE_NAME + " VALUES(" + KEY_COLUMN_VALUE + "," +
+                    graph.length + ",readfile('" + cache.getAbsolutePath() + "'))");
+        } catch (SQLException | IOException e) {
             throw new UnexpectedDatabaseException("Failed to dump graph into database.", e);
         }
+
+        LOGGER.info("Finished dumping graph to storage.");
     }
 
     /**
@@ -106,46 +103,28 @@ public final class GraphLoader {
      *
      * @return a graph
      */
-    public int[][] restoreGraph() {
+    public int[][] restoreGraph(final ProgressUpdater progressUpdater) throws IOException {
         LOGGER.info("Restoring graph from storage.");
 
         if (!hasGraph()) {
-            throw new IllegalStateException("Fuck you mate.");
+            throw new IllegalStateException("There is no graph present in the database to be restored.");
         }
 
-        final int nodeCount;
-        final String graphDump;
+        final GraphArrayFile cache = new GraphArrayFile(Files.getInstance().getTemporaryFile("hygene-cache"));
 
         try {
-            nodeCount = Integer.parseInt(fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME,
+            final int nodeCount = Integer.parseInt(fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME,
                     KEY_COLUMN_VALUE, NODE_COUNT_COLUMN_NAME));
-            graphDump = fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, KEY_COLUMN_VALUE,
-                    DUMP_COLUMN_NAME);
+
+            LOGGER.info("Creating temporary file with internal data structure representation.");
+            fileDatabaseDriver.enableFileIO();
+            fileDatabaseDriver.rawUpdate(
+                    "SELECT writefile('" + cache.getAbsolutePath() + "', dump) FROM " + TABLE_NAME + " LIMIT 1");
+
+            LOGGER.info("Load temporary file into memory and parse to internal data structure.");
+            return cache.read(nodeCount, progressUpdater);
         } catch (final SQLException e) {
             throw new UnexpectedDatabaseException("Failed to retrieve graph dump.", e);
         }
-
-        final int[][] graph = new int[nodeCount][];
-        final StringTokenizer dumpTokenizer = new StringTokenizer(graphDump, NODE_ARRAY_SEPARATOR);
-
-        String node;
-        StringTokenizer nodeTokenizer;
-        int nodeIndex = 0;
-        while (dumpTokenizer.hasMoreTokens()) {
-            node = dumpTokenizer.nextToken();
-            nodeTokenizer = new StringTokenizer(node, NODE_VALUE_SEPARATOR);
-
-            graph[nodeIndex] = new int[nodeTokenizer.countTokens()];
-
-            int valueIndex = 0;
-            while (nodeTokenizer.hasMoreTokens()) {
-                graph[nodeIndex][valueIndex] = Integer.parseInt(nodeTokenizer.nextToken());
-                valueIndex++;
-            }
-
-            nodeIndex++;
-        }
-
-        return graph;
     }
 }
