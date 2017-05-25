@@ -160,7 +160,7 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onScroll(final ScrollEvent scrollEvent) {
-        graphMovementCalculator.onScroll(scrollEvent.getDeltaY());
+        graphMovementCalculator.onScroll(-scrollEvent.getDeltaY());
 
         scrollEvent.consume();
     }

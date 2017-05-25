@@ -98,7 +98,7 @@ public final class GraphMovementCalculator {
     /**
      * When the user scrolls.
      * <p>
-     * Scrolling up corresponds to zooming in, and scrolling down corresponds to zooming out. The user can zoom in no
+     * A positive delta corresponds to zooming in, and a negative delta to to zooming out. The user can zoom in no
      * more than 1 hops. Scrolling out is ignored when the diameter of the onscreen graph is equal to the diameter
      * of the actual graph.
      *

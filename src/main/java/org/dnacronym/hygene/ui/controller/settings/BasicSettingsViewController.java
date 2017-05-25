@@ -74,4 +74,17 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
             getGraphMovementCalculator().getPanningSensitivityProperty().setValue(newValue);
         });
     }
+
+    /**
+     * When the suer finishes sliding the zooming sensitivity {@link Slider}.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with this event
+     */
+    @FXML
+    void zoomingSensitivitySliderDone(final MouseEvent mouseEvent) {
+        getSettings().addRunnable(() -> {
+            final double newValue = ((Slider) mouseEvent.getSource()).getValue();
+            getGraphMovementCalculator().getZoomingSensitivityProperty().setValue(newValue);
+        });
+    }
 }
