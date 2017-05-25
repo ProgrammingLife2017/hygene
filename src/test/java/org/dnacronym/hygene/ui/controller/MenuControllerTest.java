@@ -135,7 +135,7 @@ public final class MenuControllerTest extends UITest {
     void testOpenSettingsWindowInit() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
 
-        CompletableFuture<Object> future = new CompletableFuture<>();
+        CompletableFuture<SettingsView> future = new CompletableFuture<>();
 
         interact(() -> {
             menuController.setSettings(new Settings(graphStore));
