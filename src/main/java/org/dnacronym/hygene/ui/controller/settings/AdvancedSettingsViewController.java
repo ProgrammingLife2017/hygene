@@ -5,6 +5,7 @@ import javafx.scene.control.CheckBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,31 +27,15 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
 
     /**
      * When user clicks on show lane borders {@link CheckBox}.
+     *
+     * @param mouseEvent the {@link javafx.scene.input.MouseEvent}
      */
     @FXML
-    void showLaneBordersClicked() {
+    void showLaneBordersClicked(final MouseEvent mouseEvent) {
         getSettings().addRunnable(() -> {
-            final boolean newValue = displayLaneBorders.isSelected();
+            final boolean newValue = ((CheckBox) mouseEvent.getSource()).isSelected();
             getGraphVisualizer().getDisplayBordersProperty().setValue(newValue);
             LOGGER.info("Displaying lane borders has now been " + (newValue ? "enabled." : "disabled."));
         });
-    }
-
-    /**
-     * Gets display lane borders.
-     *
-     * @return the display lane borders
-     */
-    CheckBox getDisplayLaneBorders() {
-        return displayLaneBorders;
-    }
-
-    /**
-     * Sets display lane borders.
-     *
-     * @param displayLaneBorders the display lane borders
-     */
-    void setDisplayLaneBorders(final CheckBox displayLaneBorders) {
-        this.displayLaneBorders = displayLaneBorders;
     }
 }
