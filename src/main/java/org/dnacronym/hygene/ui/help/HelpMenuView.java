@@ -12,10 +12,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+
 /**
  * Custom stage used for creating the console window in the GUI.
  */
-public class HelpMenuWrapper {
+public class HelpMenuView {
     private static final String TITLE = "Help";
     private static final String HELP_MENU_VIEW = "/ui/view/help/help_view.fxml";
     private static final List<HelpArticle> HELP_MENU_ARTICLES = (new HelpArticleParser()).parse();
@@ -24,12 +25,12 @@ public class HelpMenuWrapper {
 
 
     /**
-     * Constructor for {@link HelpMenuWrapper}.
+     * Constructor for {@link HelpMenuView}.
      *
      * @throws IOException               if there was an error locating or reading the FXML
      * @throws UIInitialisationException if there was an error initializing the provided FXML resource
      */
-    public HelpMenuWrapper() throws IOException, UIInitialisationException {
+    public HelpMenuView() throws IOException, UIInitialisationException {
         stage = new Stage();
 
         stage.setTitle(TITLE);
@@ -47,8 +48,9 @@ public class HelpMenuWrapper {
         Platform.runLater(stage::show);
     }
 
+
     /**
-     * Gets the {@link Stage} in {@link HelpMenuWrapper}.
+     * Gets the {@link Stage} in {@link HelpMenuView}.
      *
      * @return the {@link Stage}
      */

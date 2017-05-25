@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
 /**
  * The controller for the help menu.
  */
@@ -39,7 +40,7 @@ public final class HelpMenuController implements Initializable {
      * Generate sidebar menu.
      */
     void generateSidebarMenu() {
-        List<Button> leftMenuBTN = HelpMenuWrapper.getHelpMenuArticles().stream()
+        List<Button> leftMenuBTN = HelpMenuView.getHelpMenuArticles().stream()
                 .map(this::generateLeftMenuBTN).collect(Collectors.toList());
 
         sidebar.getChildren().addAll(leftMenuBTN);

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * This class parses {@link HelpArticle}s.
  */
@@ -22,8 +23,9 @@ public final class HelpArticleParser {
     static final String DEFAULT_HELP_MENU_FILE = "src/main/resources/ui/help/articles.xml";
     private static final Logger LOGGER = LogManager.getLogger(HelpArticleParser.class);
 
+
     /**
-     * Load and XML document.
+     * Load a XML document.
      *
      * @param filename the file name
      * @return the {@link Document}

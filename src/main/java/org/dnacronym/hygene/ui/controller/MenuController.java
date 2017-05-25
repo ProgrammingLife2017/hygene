@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.controller.settings.SettingsView;
-import org.dnacronym.hygene.ui.help.HelpMenuWrapper;
+import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -46,7 +46,7 @@ public final class MenuController implements Initializable {
     private Menu recentFilesMenu;
 
     private ConsoleWrapper consoleWrapper;
-    private HelpMenuWrapper helpMenuWrapper;
+    private HelpMenuView helpMenuWrapper;
 
     private SettingsView settingsView;
 
@@ -141,7 +141,7 @@ public final class MenuController implements Initializable {
     public void openHelpAction(final ActionEvent actionEvent) throws IOException {
         try {
             if (helpMenuWrapper == null) {
-                helpMenuWrapper = new HelpMenuWrapper();
+                helpMenuWrapper = new HelpMenuView();
                 LOGGER.info("Launched GUI help menu");
             }
 
