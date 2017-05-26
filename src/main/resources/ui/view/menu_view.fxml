@@ -6,7 +6,8 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <MenuBar xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="org.dnacronym.hygene.ui.controller.MenuController">
+         fx:controller="org.dnacronym.hygene.ui.controller.MenuController"
+         fx:id="menuBar">
     <menus>
         <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>

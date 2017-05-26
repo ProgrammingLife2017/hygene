@@ -5,9 +5,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
@@ -39,6 +41,9 @@ public final class MenuController implements Initializable {
     private File parentDirectory;
 
     @FXML
+    private MenuBar menuBar;
+
+    @FXML
     private Menu recentFilesMenu;
 
     private ConsoleWrapper consoleWrapper;
@@ -48,6 +53,10 @@ public final class MenuController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        if (SystemUtils.IS_OS_MAC) {
+            menuBar.useSystemMenuBarProperty().set(true);
+        }
+
         try {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setSettings(Hygene.getInstance().getSettings());
