@@ -6,6 +6,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,16 +36,21 @@ public final class GraphController implements Initializable {
     private Pane graphPane;
 
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    /**
+     * Create a new instance of {@link GraphController}.
+     */
+    public GraphController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
-            return;
         }
+    }
 
+
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
         graphCanvas.heightProperty().bind(graphPane.heightProperty());
         graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
@@ -132,5 +138,41 @@ public final class GraphController implements Initializable {
         ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
 
         mouseEvent.consume();
+    }
+
+    /**
+     * When the user starts scrolling on the graph.
+     *
+     * @param scrollEvent {@link ScrollEvent} associated with the event
+     */
+    @FXML
+    void onScrollStarted(final ScrollEvent scrollEvent) {
+        ((Node) scrollEvent.getSource()).getScene().setCursor(Cursor.CROSSHAIR);
+
+        scrollEvent.consume();
+    }
+
+    /**
+     * When the user scroll on the graph.
+     *
+     * @param scrollEvent {@link ScrollEvent} associated with the event
+     */
+    @FXML
+    void onScroll(final ScrollEvent scrollEvent) {
+        graphMovementCalculator.onScroll(-scrollEvent.getDeltaY());
+
+        scrollEvent.consume();
+    }
+
+    /**
+     * When the user finished scrolling.
+     *
+     * @param scrollEvent {@link ScrollEvent} associated with the event
+     */
+    @FXML
+    void onScrollFinished(final ScrollEvent scrollEvent) {
+        ((Node) scrollEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
+
+        scrollEvent.consume();
     }
 }

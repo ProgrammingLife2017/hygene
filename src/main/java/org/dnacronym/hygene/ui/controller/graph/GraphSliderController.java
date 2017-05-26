@@ -3,13 +3,14 @@ package org.dnacronym.hygene.ui.controller.graph;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Slider;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -21,38 +22,44 @@ import java.util.ResourceBundle;
  */
 public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
-    private static final int GRAPH_SLIDER_SEGMENTS = 10;
 
     private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphStore graphStore;
 
     @FXML
     private Pane graphSliderPane;
     @FXML
-    private Slider graphSlider;
+    private ScrollBar graphScrollBar;
+
+
+    /**
+     * Create new instance of a {@link GraphSliderController}.
+     */
+    public GraphSliderController() {
+        try {
+            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
+            setGraphDimensionCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
+            setGraphStore(Hygene.getInstance().getGraphStore());
+        } catch (final UIInitialisationException e) {
+            LOGGER.error("Unable to initialize GraphSliderController.", e);
+        }
+    }
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        try {
-            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-            setGraphStore(Hygene.getInstance().getGraphStore());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize GraphSliderController.", e);
-            return;
-        }
+        graphVisualizer.getCenterNodeIdProperty().addListener(
+                (observable, oldNodeId, newNodeId) -> graphScrollBar.setValue(newNodeId.doubleValue()));
 
-        graphSlider.maxProperty().bind(Bindings.max(
+        graphScrollBar.maxProperty().bind(Bindings.max(
                 0,
                 Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1)));
-        graphSlider.majorTickUnitProperty().bind(Bindings.divide(
-                Bindings.max(GRAPH_SLIDER_SEGMENTS, graphVisualizer.getNodeCountProperty()),
-                GRAPH_SLIDER_SEGMENTS));
 
-        graphSlider.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
-
-        graphVisualizer.getCenterNodeIdProperty().addListener(
-                (observable, oldNodeId, newNodeId) -> graphSlider.setValue(newNodeId.doubleValue()));
+        graphScrollBar.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
+        graphScrollBar.visibleAmountProperty().bind(Bindings.subtract(
+                graphDimensionsCalculator.getMaxXNodeIdProperty(),
+                graphDimensionsCalculator.getMinXNodeIdProperty()));
 
         graphSliderPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         graphSliderPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
@@ -70,7 +77,18 @@ public final class GraphSliderController implements Initializable {
     }
 
     /**
-     * Sets the {@link GraphStore} in the controller.
+     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
+     * <p>
+     * This allows the slider to change the width of the thumb when zooming.
+     *
+     * @param graphDimensionCalculator {@link GraphDimensionsCalculator} for use by the controller
+     */
+    void setGraphDimensionCalculator(final GraphDimensionsCalculator graphDimensionCalculator) {
+        this.graphDimensionsCalculator = graphDimensionCalculator;
+    }
+
+    /**
+     * Set the {@link GraphStore} in the controller.
      *
      * @param graphStore {@link GraphStore} to store in the {@link GraphController}
      */

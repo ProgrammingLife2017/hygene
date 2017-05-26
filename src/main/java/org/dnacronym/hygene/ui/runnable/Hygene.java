@@ -14,6 +14,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
@@ -42,6 +43,7 @@ public final class Hygene extends Application {
     private Settings settings;
     private GraphMovementCalculator graphMovementCalculator;
     private SimpleBookmarkStore simpleBookmarkStore;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
 
     private Stage primaryStage;
 
@@ -83,8 +85,10 @@ public final class Hygene extends Application {
     @Override
     public void init() {
         graphStore = new GraphStore();
-        graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
+
+        graphDimensionsCalculator = new GraphDimensionsCalculator();
+        graphVisualizer = new GraphVisualizer(graphStore, graphDimensionsCalculator);
         simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
         graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
     }
@@ -187,23 +191,30 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link SimpleBookmarkStore} of {@link Hygene}.
-     *
-     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
-     * @see SimpleBookmarkStore
-     * @see #init()
-     */
-    public SimpleBookmarkStore getSimpleBookmarkStore() {
-        return simpleBookmarkStore;
-    }
-
-    /**
      * Gets the {@link GraphMovementCalculator} of the {@link Hygene}.
      *
      * @return {@link GraphMovementCalculator} of the {@link Hygene}
      */
     public GraphMovementCalculator getGraphMovementCalculator() {
         return graphMovementCalculator;
+    }
+
+    /**
+     * Gets the {@link GraphDimensionsCalculator} of the {@link Hygene}.
+     *
+     * @return {@link GraphDimensionsCalculator} of the {@link Hygene}
+     */
+    public GraphDimensionsCalculator getGraphDimensionsCalculator() {
+        return graphDimensionsCalculator;
+    }
+
+    /**
+     * Gets the {@link SimpleBookmarkStore} of the {@link Hygene}.
+     *
+     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
+     */
+    public SimpleBookmarkStore getSimpleBookmarkStore() {
+        return simpleBookmarkStore;
     }
 
     /**
