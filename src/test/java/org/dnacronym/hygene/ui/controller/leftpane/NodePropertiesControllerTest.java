@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests for {@link NodePropertiesController}s.
+ * Unit tests for {@link NodePropertiesController}.
  */
 public final class NodePropertiesControllerTest extends UITest {
     private NodePropertiesController nodePropertiesController;

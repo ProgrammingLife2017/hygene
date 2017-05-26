@@ -67,7 +67,7 @@ final class GraphDimensionsCalculatorTest {
     }
 
     private Graph createGraph() {
-        return new Graph(new int[][]{
+        return new Graph(new int[][] {
                 NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
