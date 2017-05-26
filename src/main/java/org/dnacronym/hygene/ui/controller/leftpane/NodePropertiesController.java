@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,12 +87,12 @@ public final class NodePropertiesController implements Initializable {
     }
 
     /**
-     * When the user clicks on the focus {@link Button}.
-     *x
+     * When the user clicks on the focus {@link javafx.scene.control.Button}.
+     *
      * @param actionEvent the {@link ActionEvent}
      */
     @FXML
-    void onFocus(final ActionEvent actionEvent) {
+    void onFocusAction(final ActionEvent actionEvent) {
         final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
         graphVisualizer.getCenterNodeIdProperty().set(selectedNode.getId());
 

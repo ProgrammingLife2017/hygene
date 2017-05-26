@@ -72,7 +72,7 @@
                                 <TextField fx:id="nodeId" editable="false" GridPane.columnIndex="1"
                                            GridPane.rowIndex="1"/>
                                 <Button fx:id="focus" mnemonicParsing="false" text="Focus" GridPane.columnIndex="1"
-                                onAction="#onFocus"/>
+                                onAction="#onFocusAction"/>
                             </children>
                         </GridPane>
                     </children>
