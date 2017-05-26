@@ -128,9 +128,12 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Will quit Hygene.
+     * Quits the application.
+     * <p>
+     * JavaFX is requested to run the {@link Platform#exit()} method. The launcher thread will then shutdown.
+     * If there are no other non-daemon threads that are running.
      *
-     * @param actionEvent {@link ActionEvent} associated with the event
+     * @param actionEvent the {@link ActionEvent}
      */
     @FXML
     void exitAction(final ActionEvent actionEvent) {
