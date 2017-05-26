@@ -57,7 +57,7 @@ public final class SimpleBookmarkStore {
                 simpleBookmarks.clear();
                 addBookmarks(fileBookmarks.getAll());
             } catch (final SQLException | IOException e) {
-                LOGGER.error(e);
+                LOGGER.error("Unable to load bookmarks from file.", e);
             }
         });
     }
