@@ -46,7 +46,7 @@ public final class MenuController implements Initializable {
     private Menu recentFilesMenu;
 
     private ConsoleWrapper consoleWrapper;
-    private HelpMenuView helpMenuWrapper;
+    private HelpMenuView helpMenuView;
 
     private SettingsView settingsView;
 
@@ -140,12 +140,12 @@ public final class MenuController implements Initializable {
      */
     public void openHelpAction(final ActionEvent actionEvent) throws IOException {
         try {
-            if (helpMenuWrapper == null) {
-                helpMenuWrapper = new HelpMenuView();
+            if (helpMenuView == null) {
+                helpMenuView = new HelpMenuView();
                 LOGGER.info("Launched GUI help menu");
             }
 
-            helpMenuWrapper.bringToFront();
+            helpMenuView.bringToFront();
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
@@ -258,6 +258,15 @@ public final class MenuController implements Initializable {
      */
     public SettingsView getSettingsView() {
         return settingsView;
+    }
+
+    /**
+     * Gets the {@link HelpMenuView}.
+     *
+     * @return the {@link HelpMenuView}
+     */
+    public HelpMenuView getHelpMenuView() {
+        return helpMenuView;
     }
 
     /**

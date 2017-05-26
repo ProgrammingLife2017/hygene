@@ -40,10 +40,10 @@ public final class HelpMenuController implements Initializable {
      * Generate sidebar menu.
      */
     void generateSidebarMenu() {
-        List<Button> leftMenuBTN = HelpMenuView.getHelpMenuArticles().stream()
+        List<Button> leftMenuButton = HelpMenuView.getHelpMenuArticles().stream()
                 .map(this::generateSidebarButton).collect(Collectors.toList());
 
-        sidebar.getChildren().addAll(leftMenuBTN);
+        sidebar.getChildren().addAll(leftMenuButton);
     }
 
     /**
@@ -53,17 +53,17 @@ public final class HelpMenuController implements Initializable {
      * @return the button
      */
     Button generateSidebarButton(final HelpArticle article) {
-        Button btn = new Button();
+        Button button = new Button();
         try {
             final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
-            btn = FXMLLoader.load(resource);
+            button = FXMLLoader.load(resource);
         } catch (IOException e) {
             LOGGER.error(e);
         }
 
-        btn.setText(article.getTitle());
-        btn.setOnMouseClicked(event -> contentArea.setText(article.getContent()));
+        button.setText(article.getTitle());
+        button.setOnMouseClicked(event -> contentArea.setText(article.getContent()));
 
-        return btn;
+        return button;
     }
 }

@@ -1,94 +1,17 @@
 <help docVersion="1.0">
     <articles>
-        <article id="1">
+        <article>
             <title>About</title>
-            <content>Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de
-                standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met
-                letters nam en ze door elkaar husselde om een font-catalogus te maken. Het heeft niet alleen vijf eeuwen
-                overleefd maar is ook, vrijwel onveranderd, overgenomen in elektronische letterzetting. Het is in de
-                jaren '60 populair geworden met de introductie van Letraset vellen met Lorem Ipsum passages en meer
-                recentelijk door desktop publishing software zoals Aldus PageMaker die versies van Lorem Ipsum bevatten.
+            <content>Hygene is DNA sequence visualizer. It will enable scientists to analyse large DNA sequence
+                alignment graphs, as well as easily identify mutations. Additionally, the tool will allow users to
+                annotate their graphs and share these annotations with fellow users.
             </content>
         </article>
         <article>
-            <title>KeyBind</title>
-            <content>Lorum Ipsum Hygene 1</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene 2</content>
-        </article>
-        <article id="1">
-            <title>About</title>
-            <content>Lorum Ipsum Hygene 3</content>
-        </article>
-        <article>
-            <title>KeyBind</title>
-            <content>Lorum Ipsum Hygene 4</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene 5</content>
-        </article>
-        <article id="1">
-            <title>About</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>KeyBind</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene 5</content>
-        </article>
-        <article id="1">
-            <title>About</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>KeyBind</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene 5</content>
-        </article>
-        <article id="1">
-            <title>About</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>KeyBind</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene 5</content>
-        </article>
-        <article id="1">
-            <title>About</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>KeyBind</title>
-            <content>Lorum Ipsum Hygene</content>
-        </article>
-        <article>
-            <title>Loading a file</title>
-            <content>Lorum Ipsum Hygene</content>
+            <title>Loading a .GFA file</title>
+            <content>From the main file menu select: File -> Open -> Select your file. Note that large file might takes
+                a little longer to longer.
+            </content>
         </article>
     </articles>
 </help>

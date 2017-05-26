@@ -10,6 +10,7 @@ import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.controller.settings.SettingsView;
+import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
@@ -158,6 +160,23 @@ public final class MenuControllerTest extends UITest {
             future.complete(menuController.getSettingsView());
         });
 
+        assertThat(future.get().getStage().isShowing()).isTrue();
+    }
+
+    @Test
+    void testOpenHelpMenuViewWindowInitialization() throws ExecutionException, InterruptedException {
+        CompletableFuture<HelpMenuView> future = new CompletableFuture<>();
+
+        interact(() -> {
+            try {
+                menuController.openHelpAction(new ActionEvent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            future.complete(menuController.getHelpMenuView());
+        });
+
+        assertThat(future.get()).isNotNull();
         assertThat(future.get().getStage().isShowing()).isTrue();
     }
 
