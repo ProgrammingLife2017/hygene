@@ -37,4 +37,11 @@ For the database implementation we had to deal with some tests that were interfe
 
 For our GFA file parser we have added some integration tests, especially for parsing metadata. This improves our confidence in our parsing pipeline.
 
-Therefore, our coverage of thise week decreased a little to 81% (CodeCov 77%).
+Therefore, our coverage of this week decreased a little to 81% (CodeCov 77%).
+
+## Sprint 4
+In this sprint we worked on improving our UI tests. We refactored the the UI classes to make them more testable.
+
+We also made sure that every new part/feature we added was well tested and did not run into any special problems.
+
+Therefore, our coverage of this week improved to 82% (CodeCov 78%).
