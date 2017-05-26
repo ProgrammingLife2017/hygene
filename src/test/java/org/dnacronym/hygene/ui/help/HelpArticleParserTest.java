@@ -39,10 +39,16 @@ class HelpArticleParserTest {
     }
 
     @Test
-    void testParseArticleConntent() {
+    void testParseArticleContent() {
         assertThat(articles.get(0).getContent())
                 .isEqualTo("Mockito is a mocking framework and used extensively by Hygene.");
         assertThat(articles.get(1).getContent())
                 .isEqualTo("JUnit5 is a unit that framework and use extensively by Hygene.");
+    }
+
+    @Test
+    void testParseNullCase() {
+        articles = helpArticleLoader.parse("null.xml");
+        assertThat(articles.size()).isEqualTo(0);
     }
 }
