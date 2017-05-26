@@ -9,7 +9,7 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 /**
  * Tests to test that an {@link Hygene} throw exceptions when not initialized by the JavaFX framework.
  */
-public final class HygeneExceptionTest {
+final class HygeneExceptionTest {
     @Test
     void testGetInstance() {
         Hygene.setInstance(null);

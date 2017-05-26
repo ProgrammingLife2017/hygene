@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link RecentDirectory} class.
  */
-class RecentDirectoryTest {
+final class RecentDirectoryTest {
     @BeforeEach
     void setUp() throws IOException {
         deleteDataFile();

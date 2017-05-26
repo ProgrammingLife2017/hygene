@@ -9,24 +9,24 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 /**
  * Unit tests for {@link Hygene}.
  */
-public class HygeneTest extends UITest {
+final class HygeneTest extends UITest {
     @Test
-    public final void testGetApplication() throws UIInitialisationException {
+    void testGetApplication() throws UIInitialisationException {
         assertThat(Hygene.getInstance()).isEqualTo(getApplication());
     }
 
     @Test
-    public final void testGetPrimaryStage() throws UIInitialisationException {
+    void testGetPrimaryStage() throws UIInitialisationException {
         assertThat(Hygene.getInstance().getPrimaryStage()).isEqualTo(getPrimaryStage());
     }
 
     @Test
-    public final void testGetGraphStore() throws UIInitialisationException {
+    void testGetGraphStore() throws UIInitialisationException {
         assertThat(Hygene.getInstance().getGraphStore()).isNotNull();
     }
 
     @Test
-    final void testGetSimpleBookmarkStore() throws UIInitialisationException {
+    void testGetSimpleBookmarkStore() throws UIInitialisationException {
         assertThat(Hygene.getInstance().getSimpleBookmarkStore()).isNotNull();
     }
 }

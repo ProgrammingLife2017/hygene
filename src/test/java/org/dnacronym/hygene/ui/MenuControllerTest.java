@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link MenuController}.
  */
-public final class MenuControllerTest extends UITest {
+final class MenuControllerTest extends UITest {
     private MenuController menuController;
 
 
@@ -46,7 +46,7 @@ public final class MenuControllerTest extends UITest {
 
 
     @Test
-    public void testFileOpenerAccept() throws Exception {
+    void testFileOpenerAccept() throws Exception {
         CompletableFuture<Object> future = new CompletableFuture<>();
 
         interact(() -> {
@@ -75,7 +75,7 @@ public final class MenuControllerTest extends UITest {
     }
 
     @Test
-    public void testFileOpenerCancel() throws Exception {
+    void testFileOpenerCancel() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
         final FileChooser fileChooser = mock(FileChooser.class);
 

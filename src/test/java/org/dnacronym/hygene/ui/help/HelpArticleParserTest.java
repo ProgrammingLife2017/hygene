@@ -13,7 +13,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 /**
  * Unit test for {@link HelpArticleParser}.
  */
-class HelpArticleParserTest {
+final class HelpArticleParserTest {
     private static final String HELP_ARTICLES_TESTING_FILE = "/help/test_help_articles.xml";
 
     private HelpArticleParser helpArticleLoader;
