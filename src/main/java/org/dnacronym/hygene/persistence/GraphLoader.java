@@ -96,7 +96,7 @@ public final class GraphLoader {
             fileDatabaseDriver.enableFileIO();
             fileDatabaseDriver.raw("INSERT INTO " + TABLE_NAME + " VALUES(" + KEY_COLUMN_VALUE + ","
                     + graph.length + ",readfile('" + cache.getAbsolutePath() + "'))");
-        } catch (SQLException | IOException e) {
+        } catch (final SQLException | IOException e) {
             throw new UnexpectedDatabaseException("Failed to dump graph into database.", e);
         }
 
