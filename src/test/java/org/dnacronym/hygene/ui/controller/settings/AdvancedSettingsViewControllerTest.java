@@ -10,8 +10,6 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.awt.event.MouseEvent;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -28,7 +26,7 @@ final class AdvancedSettingsViewControllerTest extends UITest {
     private GraphVisualizer graphVisualizer;
     private Settings settings;
     private CheckBox checkBox;
-    private ActionEvent mouseEventMock;
+    private ActionEvent mouseEvent;
 
 
     @Override
@@ -47,14 +45,14 @@ final class AdvancedSettingsViewControllerTest extends UITest {
         checkBox = new CheckBox();
         checkBox.setSelected(true);
 
-        mouseEventMock = mock(ActionEvent.class);
+        mouseEvent = mock(ActionEvent.class);
     }
 
 
     @Test
     void testShowBorders() {
-        when(mouseEventMock.getSource()).thenReturn(checkBox);
-        interact(() -> advancedSettingsViewController.showLaneBordersClicked(mouseEventMock));
+        when(mouseEvent.getSource()).thenReturn(checkBox);
+        interact(() -> advancedSettingsViewController.showLaneBordersClicked(mouseEvent));
         verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 
@@ -63,8 +61,8 @@ final class AdvancedSettingsViewControllerTest extends UITest {
         assertThat(checkBox.isSelected()).isTrue();
         assertThat(graphVisualizer.getDisplayBordersProperty().getValue()).isFalse();
 
-        when(mouseEventMock.getSource()).thenReturn(checkBox);
-        interact(() -> advancedSettingsViewController.showLaneBordersClicked(mouseEventMock));
+        when(mouseEvent.getSource()).thenReturn(checkBox);
+        interact(() -> advancedSettingsViewController.showLaneBordersClicked(mouseEvent));
 
         ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());

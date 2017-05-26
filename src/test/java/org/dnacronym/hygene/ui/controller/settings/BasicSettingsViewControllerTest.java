@@ -31,8 +31,8 @@ final class BasicSettingsViewControllerTest extends UITest {
     private Settings settings;
     private MouseEvent mouseEvent;
     private ActionEvent actionEvent;
-    private ColorPicker colorPickerMock;
-    private Slider sliderMock;
+    private ColorPicker colorPicker;
+    private Slider slider;
     private ArgumentCaptor<Runnable> captor;
 
 
@@ -53,11 +53,11 @@ final class BasicSettingsViewControllerTest extends UITest {
         basicSettingsViewController.setGraphVisualizer(graphVisualizer);
         basicSettingsViewController.setSettings(settings);
 
-        colorPickerMock = mock(ColorPicker.class);
-        when(colorPickerMock.getValue()).thenReturn(Color.YELLOW);
+        colorPicker = mock(ColorPicker.class);
+        when(colorPicker.getValue()).thenReturn(Color.YELLOW);
 
-        sliderMock = mock(Slider.class);
-        when(sliderMock.getValue()).thenReturn(42.42);
+        slider = mock(Slider.class);
+        when(slider.getValue()).thenReturn(42.42);
 
         mouseEvent = mock(MouseEvent.class);
         actionEvent = mock(ActionEvent.class);
@@ -68,14 +68,14 @@ final class BasicSettingsViewControllerTest extends UITest {
 
     @Test
     void testNodeHeightSliderDone() {
-        when(mouseEvent.getSource()).thenReturn(sliderMock);
+        when(mouseEvent.getSource()).thenReturn(slider);
         interact(() -> basicSettingsViewController.nodeHeightSliderDone(mouseEvent));
         verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
 
     @Test
     void testEdgeColorDone() {
-        when(actionEvent.getSource()).thenReturn(colorPickerMock);
+        when(actionEvent.getSource()).thenReturn(colorPicker);
         interact(() -> basicSettingsViewController.edgeColorDone(actionEvent));
         verify(settings, times(1)).addRunnable(any(Runnable.class));
     }
@@ -84,7 +84,7 @@ final class BasicSettingsViewControllerTest extends UITest {
     void testNodeHeightUpdate() {
         assertThat(graphVisualizer.getNodeHeightProperty().getValue()).isEqualTo(20.0);
 
-        when(mouseEvent.getSource()).thenReturn(sliderMock);
+        when(mouseEvent.getSource()).thenReturn(slider);
         interact(() -> basicSettingsViewController.nodeHeightSliderDone(mouseEvent));
 
         verify(settings).addRunnable(captor.capture());
@@ -98,7 +98,7 @@ final class BasicSettingsViewControllerTest extends UITest {
     void testEdgeColorUpdate() {
         assertThat(graphVisualizer.getEdgeColorProperty().getValue()).isEqualTo(Color.RED);
 
-        when(actionEvent.getSource()).thenReturn(colorPickerMock);
+        when(actionEvent.getSource()).thenReturn(colorPicker);
         interact(() -> basicSettingsViewController.edgeColorDone(actionEvent));
 
         verify(settings).addRunnable(captor.capture());
