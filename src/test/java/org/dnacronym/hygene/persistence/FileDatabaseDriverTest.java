@@ -105,7 +105,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
             try {
                 assertThat(resultSet.getString("col1")).isEqualTo("val1");
             } catch (final SQLException e) {
-                fail();
+                fail(e.getMessage());
             }
         });
 
