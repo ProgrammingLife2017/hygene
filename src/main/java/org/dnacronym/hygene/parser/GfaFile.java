@@ -59,7 +59,7 @@ public final class GfaFile {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
             if (graphLoader.hasGraph()) {
-                graph = new Graph(graphLoader.restoreGraph(), this);
+                graph = new Graph(graphLoader.restoreGraph(progressUpdater), this);
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
@@ -75,7 +75,9 @@ public final class GfaFile {
 
                 LOGGER.info("GfaFile parse finished");
 
+                LOGGER.info("Start dumping the graph to the database");
                 graphLoader.dumpGraph(graph.getNodeArrays());
+                LOGGER.info("Finished dumping the graph to the database");
             }
         } catch (final IOException | SQLException e) {
             LOGGER.error("Could not open file database to restore graph.", e);
