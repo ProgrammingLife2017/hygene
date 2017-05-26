@@ -43,6 +43,13 @@
                     </accelerator>
                 </MenuItem>
             </items>
+            <items>
+                <MenuItem fx:id="openHelp" mnemonicParsing="false" onAction="#openHelpAction" text="Help">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="H" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                    </accelerator>
+                </MenuItem>
+            </items>
         </Menu>
     </menus>
 </MenuBar>

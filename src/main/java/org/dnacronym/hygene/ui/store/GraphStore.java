@@ -30,7 +30,7 @@ public final class GraphStore {
      * @param file            {@link File} to load. This should be a {@value GFA_EXTENSION} file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
-     * @see GfaFile#parse()
+     * @see GfaFile#parse(ProgressUpdater)
      */
     public void load(@NonNull final File file, final ProgressUpdater progressUpdater) throws IOException {
         try {

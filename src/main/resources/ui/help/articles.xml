@@ -1,0 +1,13 @@
+<help docVersion="1.0">
+    <articles>
+        <article>
+            <title>About</title>
+            <content>Hygene is DNA sequence visualizer. It will enable scientists to analyse large DNA sequence alignment graphs, as well as easily identify mutations. Additionally, the tool will allow users to annotate their graphs and share these annotations with fellow users.
+            </content>
+        </article>
+        <article>
+            <title>Loading a .GFA file</title>
+            <content>From the main file menu select: File -> Open -> Select your file. Note that large file might takes a little longer to longer.</content>
+        </article>
+    </articles>
+</help>
