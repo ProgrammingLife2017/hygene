@@ -209,6 +209,15 @@ public final class Hygene extends Application {
     }
 
     /**
+     * Gets the {@link SimpleBookmarkStore} of the {@link Hygene}.
+     *
+     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
+     */
+    public SimpleBookmarkStore getSimpleBookmarkStore() {
+        return simpleBookmarkStore;
+    }
+
+    /**
      * Get an instance of the Hygene.
      * <p>
      * If there is not an instance, then it will throw a {@link UIInitialisationException} as opposed to creating a

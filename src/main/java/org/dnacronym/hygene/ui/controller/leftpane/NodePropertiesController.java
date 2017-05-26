@@ -1,9 +1,11 @@
 package org.dnacronym.hygene.ui.controller.leftpane;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,5 +85,18 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * When the user clicks on the focus {@link Button}.
+     *x
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void onFocus(final ActionEvent actionEvent) {
+        final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
+        graphVisualizer.getCenterNodeIdProperty().set(selectedNode.getId());
+
+        actionEvent.consume();
     }
 }
