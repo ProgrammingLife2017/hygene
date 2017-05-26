@@ -57,7 +57,6 @@ public final class GraphDimensionsCalculator {
     public void calculate(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
                           final double nodeHeight) {
         this.graph = graph;
-        final GraphQuery graphQuery = new GraphQuery(graph);
 
         this.canvasWidth = canvas.getWidth();
         this.nodeHeight = nodeHeight;
@@ -71,7 +70,7 @@ public final class GraphDimensionsCalculator {
         neighbours = new LinkedList<>();
         neighbours.add(centerNodeId);
 
-        query = new GraphQuery(graph);
+        final GraphQuery query = new GraphQuery(graph);
         query.query(centerNodeId, hops);
         query.visit(nodeId -> {
             neighbours.add(nodeId);
