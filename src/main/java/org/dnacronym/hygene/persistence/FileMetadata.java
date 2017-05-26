@@ -121,7 +121,7 @@ final class FileMetadata {
             fileVersion = Integer.parseInt(fileVersionString);
         } catch (final NumberFormatException e) {
             throw new IncompatibleDatabaseVersionException("Database version format incompatible, found: "
-                    + fileVersionString + ", expected a number.");
+                    + fileVersionString + ", expected an integer.");
         }
         return FileDatabase.DB_VERSION == fileVersion;
     }

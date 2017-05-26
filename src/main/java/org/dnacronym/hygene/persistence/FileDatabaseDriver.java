@@ -151,7 +151,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @param itemCallback the action to perform on each row of the table
      * @throws SQLException in the case of an error during SQL operations
      */
-    synchronized void getAllOfTable(final String tableName, final Consumer<ResultSet> itemCallback)
+    synchronized void forEachRow(final String tableName, final Consumer<ResultSet> itemCallback)
             throws SQLException {
         final String sql = "SELECT * FROM " + tableName;
 

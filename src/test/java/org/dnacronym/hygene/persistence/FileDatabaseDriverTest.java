@@ -100,7 +100,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
         fileDatabaseDriver.insertRow(testTableName, Collections.singletonList("val1"));
 
         final int[] count = {0};
-        fileDatabaseDriver.getAllOfTable(testTableName, resultSet -> {
+        fileDatabaseDriver.forEachRow(testTableName, resultSet -> {
             count[0]++;
             try {
                 assertThat(resultSet.getString("col1")).isEqualTo("val1");

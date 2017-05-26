@@ -61,13 +61,13 @@ public final class FileBookmarks {
     public List<Bookmark> getAll() throws SQLException {
         final List<Bookmark> bookmarks = new ArrayList<>();
 
-        fileDatabaseDriver.getAllOfTable(TABLE_NAME, resultSet -> {
+        fileDatabaseDriver.forEachRow(TABLE_NAME, row -> {
             try {
                 final Bookmark bookmark = new Bookmark(
-                        resultSet.getInt(NODE_ID_COLUMN_NAME),
-                        resultSet.getInt(BASE_OFFSET_COLUMN_NAME),
-                        resultSet.getInt(RADIUS_COLUMN_NAME),
-                        Optional.ofNullable(resultSet.getString(DESCRIPTION_COLUMN_NAME)).orElse("")
+                        row.getInt(NODE_ID_COLUMN_NAME),
+                        row.getInt(BASE_OFFSET_COLUMN_NAME),
+                        row.getInt(RADIUS_COLUMN_NAME),
+                        Optional.ofNullable(row.getString(DESCRIPTION_COLUMN_NAME)).orElse("")
                 );
                 bookmarks.add(bookmark);
             } catch (final SQLException e) {
