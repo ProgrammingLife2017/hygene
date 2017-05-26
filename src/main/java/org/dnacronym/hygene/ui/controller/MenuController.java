@@ -17,6 +17,7 @@ import org.dnacronym.hygene.ui.controller.settings.SettingsView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
+import org.dnacronym.hygene.ui.store.RecentDirectory;
 import org.dnacronym.hygene.ui.store.RecentFiles;
 import org.dnacronym.hygene.ui.store.Settings;
 
@@ -24,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -37,8 +37,6 @@ public final class MenuController implements Initializable {
     private FileChooser fileChooser;
     private GraphStore graphStore;
     private Settings settings;
-
-    private File parentDirectory;
 
     @FXML
     private MenuBar menuBar;
@@ -65,10 +63,7 @@ public final class MenuController implements Initializable {
             initFileChooser();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
-            return;
         }
-
-        parentDirectory = new File(System.getProperty("user.home"));
     }
 
     /**
@@ -87,22 +82,21 @@ public final class MenuController implements Initializable {
      * @param event {@link ActionEvent} associated with the event
      * @throws IOException               if unable to open or parse the file
      * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
-     * @see GraphStore#load(File)
      */
     @FXML
     void openFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
         final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
-        if (parentDirectory != null) {
-            fileChooser.setInitialDirectory(parentDirectory);
-        }
+        fileChooser.setInitialDirectory(RecentDirectory.get());
 
         final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
         if (gfaFile == null) {
             return;
         }
 
-        parentDirectory = Optional.ofNullable(gfaFile.getParentFile()).orElse(parentDirectory);
+        if (gfaFile.getParentFile() != null) {
+            RecentDirectory.store(gfaFile.getParentFile());
+        }
 
         loadFile(gfaFile);
     }
