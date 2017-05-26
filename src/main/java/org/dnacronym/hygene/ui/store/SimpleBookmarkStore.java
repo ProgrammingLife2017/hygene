@@ -66,7 +66,7 @@ public final class SimpleBookmarkStore {
     /**
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
      */
-    void writeBookmarksToFile() {
+    public void writeBookmarksToFile() {
         if (fileBookmarks != null) {
             List<Bookmark> bookmarks = new ArrayList<>(simpleBookmarks.size());
 

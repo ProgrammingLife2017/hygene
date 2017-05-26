@@ -101,7 +101,10 @@ public final class Hygene extends Application {
         final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
 
-        primaryStage.setOnCloseRequest(e -> Platform.exit());
+        primaryStage.setOnCloseRequest(e -> {
+            simpleBookmarkStore.writeBookmarksToFile();
+            Platform.exit();
+        });
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
