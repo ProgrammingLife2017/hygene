@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Class responsible for storing and retrieving the recently opened directory (in the {@link javafx.stage.FileChooser}).
  */
-public class RecentDirectory {
+public final class RecentDirectory {
     static final String DATA_FILE_NAME = "recently-opened-directory.txt";
 
 
