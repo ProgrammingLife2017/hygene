@@ -17,7 +17,6 @@ import java.util.List;
  */
 public final class GraphDimensionsCalculator {
     private Graph graph;
-    private GraphQuery graphQuery;
 
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
@@ -25,7 +24,6 @@ public final class GraphDimensionsCalculator {
     private int minX;
     private int maxX;
     private int minY;
-    private int maxY;
 
     private double canvasWidth;
     private double nodeHeight;
@@ -59,7 +57,7 @@ public final class GraphDimensionsCalculator {
     public void calculate(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
                           final double nodeHeight) {
         this.graph = graph;
-        graphQuery = new GraphQuery(graph);
+        final GraphQuery graphQuery = new GraphQuery(graph);
 
         this.canvasWidth = canvas.getWidth();
         this.nodeHeight = nodeHeight;
@@ -99,7 +97,7 @@ public final class GraphDimensionsCalculator {
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
         this.minY = tempMinY[0];
-        this.maxY = tempMaxY[0];
+        final int maxY = tempMaxY[0];
 
         laneHeight = canvas.getHeight() / getLaneCount();
         laneCount = Math.abs(maxY - minY) + 1;
