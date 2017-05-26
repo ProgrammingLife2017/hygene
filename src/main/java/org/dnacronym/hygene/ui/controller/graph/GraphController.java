@@ -1,14 +1,18 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.controller.graph;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
@@ -22,6 +26,7 @@ public final class GraphController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
 
     private GraphVisualizer graphVisualizer;
+    private GraphMovementCalculator graphMovementCalculator;
 
     @FXML
     private Canvas graphCanvas;
@@ -34,6 +39,7 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
             return;
@@ -46,7 +52,16 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphVisualizer} in the controller.
+     * Sets the {@link GraphMovementCalculator} for use by the controller.
+     *
+     * @param graphMovementCalculator {@link GraphMovementCalculator} for use by the controller
+     */
+    void setGraphMovementCalculator(final GraphMovementCalculator graphMovementCalculator) {
+        this.graphMovementCalculator = graphMovementCalculator;
+    }
+
+    /**
+     * Sets the {@link GraphVisualizer} in the controller.
      *
      * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}
      */
@@ -79,5 +94,43 @@ public final class GraphController implements Initializable {
                         + " to node id: " + edge.getTo() + " could not be loaded");
             }
         });
+    }
+
+    /**
+     * When starting to drag on the graph pane.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with the event
+     */
+    @FXML
+    void onGraphPaneMousePressed(final MouseEvent mouseEvent) {
+        graphMovementCalculator.onMousePressed(mouseEvent.getSceneX());
+        ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.OPEN_HAND);
+
+        mouseEvent.consume();
+    }
+
+    /**
+     * When dragging to drag on the graph pane.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with the event
+     */
+    @FXML
+    void onGraphPaneMouseDragged(final MouseEvent mouseEvent) {
+        graphMovementCalculator.onMouseDragged(mouseEvent.getSceneX());
+        ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.CLOSED_HAND);
+
+        mouseEvent.consume();
+    }
+
+    /**
+     * When finished dragging on the graph pane.
+     *
+     * @param mouseEvent {@link MouseEvent} associated with the event
+     */
+    @FXML
+    void onGraphPaneMouseReleased(final MouseEvent mouseEvent) {
+        ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
+
+        mouseEvent.consume();
     }
 }

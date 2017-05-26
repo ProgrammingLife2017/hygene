@@ -9,8 +9,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.controller.leftpane.NodePropertiesController">
     <children>
         <ScrollPane layoutX="111.0" layoutY="41.0" maxHeight="1.7976931348623157E308" prefHeight="200.0"
@@ -28,6 +28,7 @@
                             <rowConstraints>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                 <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -35,37 +36,40 @@
                             </rowConstraints>
                             <children>
                                 <Label text="Clicked Node"/>
-                                <Label text="Sequence" GridPane.rowIndex="1"/>
+                                <Label text="Sequence" GridPane.rowIndex="2"/>
                                 <Canvas fx:id="neighbourCanvas" height="100.0" width="100.0" GridPane.columnIndex="1"
-                                        GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
-                                <Label text="Neighbours" GridPane.rowIndex="2"/>
-                                <Label text="Position" GridPane.rowIndex="5"/>
+                                        GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
+                                <Label text="Neighbours" GridPane.rowIndex="3"/>
+                                <Label text="Position" GridPane.rowIndex="6"/>
                                 <TextField fx:id="sequence" editable="false" GridPane.columnIndex="1"
-                                           GridPane.rowIndex="1">
+                                           GridPane.rowIndex="2">
                                     <tooltip>
                                         <Tooltip text="Base sequence of this node."/>
                                     </tooltip>
                                 </TextField>
                                 <TextField fx:id="position" editable="false" GridPane.columnIndex="1"
-                                           GridPane.rowIndex="5">
+                                           GridPane.rowIndex="6">
                                     <tooltip>
                                         <Tooltip text="Position of the node in the graph"/>
                                     </tooltip>
                                 </TextField>
-                                <Label text="Left neighbours" GridPane.rowIndex="3"/>
+                                <Label text="Left neighbours" GridPane.rowIndex="4"/>
                                 <TextField fx:id="leftNeighbours" editable="false" GridPane.columnIndex="1"
-                                           GridPane.rowIndex="3">
+                                           GridPane.rowIndex="4">
                                     <tooltip>
                                         <Tooltip text="Amount of neighbours on the left side of the node."/>
                                     </tooltip>
                                 </TextField>
-                                <Label text="Right neighbours" GridPane.rowIndex="4"/>
+                                <Label text="Right neighbours" GridPane.rowIndex="5"/>
                                 <TextField fx:id="rightNeighbours" editable="false" GridPane.columnIndex="1"
-                                           GridPane.rowIndex="4">
+                                           GridPane.rowIndex="5">
                                     <tooltip>
                                         <Tooltip text="Amount of neighbours on the right side of the node."/>
                                     </tooltip>
                                 </TextField>
+                                <Label text="Node id" GridPane.rowIndex="1"/>
+                                <TextField fx:id="nodeId" editable="false" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>
                     </children>

@@ -8,10 +8,13 @@
                  prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
-                <Tab text="Basic display">
+                <Tab text="Query">
+                    <fx:include source="query_settings_view.fxml"/>
+                </Tab>
+                <Tab text="Basic">
                     <fx:include source="basic_settings_view.fxml"/>
                 </Tab>
-                <Tab text="Advanced display">
+                <Tab text="Advanced">
                     <fx:include source="advanced_settings_view.fxml"/>
                 </Tab>
                 <Tab text="Logging">

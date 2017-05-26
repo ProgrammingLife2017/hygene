@@ -17,7 +17,7 @@
         <fx:include source="graph/graph.fxml"/>
     </center>
     <left>
-        <fx:include source="left_panel/left_panel.fxml"/>
+        <fx:include source="left_pane/left_panel.fxml"/>
     </left>
     <right>
         <fx:include source="bookmarks_view.fxml"/>

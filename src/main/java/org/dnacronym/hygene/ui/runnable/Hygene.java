@@ -14,6 +14,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.io.File;
@@ -39,6 +40,7 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
+    private GraphMovementCalculator graphMovementCalculator;
     private SimpleBookmarkStore simpleBookmarkStore;
 
     private Stage primaryStage;
@@ -84,6 +86,7 @@ public final class Hygene extends Application {
         graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
         simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
+        graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
     }
 
     @Override
@@ -192,6 +195,15 @@ public final class Hygene extends Application {
      */
     public SimpleBookmarkStore getSimpleBookmarkStore() {
         return simpleBookmarkStore;
+    }
+
+    /**
+     * Gets the {@link GraphMovementCalculator} of the {@link Hygene}.
+     *
+     * @return {@link GraphMovementCalculator} of the {@link Hygene}
+     */
+    public GraphMovementCalculator getGraphMovementCalculator() {
+        return graphMovementCalculator;
     }
 
     /**

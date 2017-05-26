@@ -23,12 +23,15 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     private Slider nodeHeight;
     @FXML
     private ColorPicker edgeColor;
+    @FXML
+    private Slider panningSensitivity;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
         edgeColor.setValue(getGraphVisualizer().getEdgeColorProperty().get());
+        panningSensitivity.setValue(getGraphMovementCalculator().getPanningSensitivityProperty().get());
     }
 
     /**
@@ -56,6 +59,19 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
             final Color newValue = ((ColorPicker) actionEvent.getSource()).getValue();
             getGraphVisualizer().getEdgeColorProperty().setValue(newValue);
             LOGGER.info("Edge color has now been set to " + newValue + ".");
+        });
+    }
+
+    /**
+     * When the user finishes sliding the panning sensitivity {@link Slider}.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void panningSensitivitySliderDone(final ActionEvent actionEvent) {
+        getSettings().addRunnable(() -> {
+            final double newValue = ((Slider) actionEvent.getSource()).getValue();
+            getGraphMovementCalculator().getPanningSensitivityProperty().setValue(newValue);
         });
     }
 }
