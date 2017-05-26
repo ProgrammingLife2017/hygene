@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -133,6 +134,19 @@ public final class MenuController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
+    }
+
+    /**
+     * Quits the application.
+     * <p>
+     * JavaFX is requested to run the {@link Platform#exit()} method. The launcher thread will then shutdown.
+     * If there are no other non-daemon threads that are running.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void exitAction(final ActionEvent actionEvent) {
+        Platform.runLater(Platform::exit);
     }
 
     /**
