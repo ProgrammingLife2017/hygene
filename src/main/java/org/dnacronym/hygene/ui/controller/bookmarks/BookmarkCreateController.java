@@ -21,10 +21,10 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for creating {@link org.dnacronym.hygene.models.Bookmark}s.
+ * Controller for creating bookmarks.
  */
-public final class CreateBookmarkController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(CreateBookmarkController.class);
+public final class BookmarkCreateController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
     private GraphVisualizer graphVisualizer;
     private SimpleBookmarkStore simpleBookmarkStore;
 
@@ -39,9 +39,9 @@ public final class CreateBookmarkController implements Initializable {
 
 
     /**
-     * Create instance of {@link CreateBookmarkController}.
+     * Create instance of {@link BookmarkCreateController}.
      */
-    public CreateBookmarkController() {
+    public BookmarkCreateController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());

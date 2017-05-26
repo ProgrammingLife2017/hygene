@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.controller.bookmarks.CreateBookmarkController">
+            fx:controller="org.dnacronym.hygene.ui.controller.bookmarks.BookmarkCreateController">
     <children>
         <GridPane hgap="10.0" layoutX="181.0" layoutY="122.0" vgap="10.0" AnchorPane.bottomAnchor="10.0"
                   AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">

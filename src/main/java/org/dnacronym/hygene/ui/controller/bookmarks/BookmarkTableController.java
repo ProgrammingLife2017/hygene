@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for showing of {@link SimpleBookmark}s.
  */
-public final class BookmarksTableController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(BookmarksTableController.class);
+public final class BookmarkTableController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(BookmarkTableController.class);
 
     private SimpleBookmarkStore simpleBookmarkStore;
     private GraphStore graphStore;
@@ -48,14 +48,14 @@ public final class BookmarksTableController implements Initializable {
 
 
     /**
-     * Create new instance of a {@link BookmarksTableController}.
+     * Create new instance of a {@link BookmarkTableController}.
      */
-    public BookmarksTableController() {
+    public BookmarkTableController() {
         try {
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize BookmarksTableController.", e);
+            LOGGER.error("Unable to initialize BookmarkTableController.", e);
         }
     }
 
