@@ -1,0 +1,12 @@
+<help docVersion="1.0">
+    <articles>
+        <article id="1">
+            <title>Mockito</title>
+            <content>Mockito is a mocking framework and used extensively by Hygene.</content>
+        </article>
+        <article id="2">
+            <title>JUnit5</title>
+            <content>JUnit5 is a unit that framework and use extensively by Hygene.</content>
+        </article>
+    </articles>
+</help>

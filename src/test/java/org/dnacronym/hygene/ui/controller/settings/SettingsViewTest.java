@@ -10,6 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
 final class SettingsViewTest extends UITest {
     private SettingsView settingsView;
     private Settings settings;
