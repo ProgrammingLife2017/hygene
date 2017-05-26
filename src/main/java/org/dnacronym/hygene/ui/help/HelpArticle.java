@@ -5,11 +5,11 @@ package org.dnacronym.hygene.ui.help;
  */
 public final class HelpArticle {
     /**
-     * The Title.
+     * The title.
      */
     private String title;
     /**
-     * The Content.
+     * The content.
      */
     private String content;
 

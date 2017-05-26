@@ -57,7 +57,7 @@ public final class HelpMenuController implements Initializable {
         try {
             final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
             button = FXMLLoader.load(resource);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error(e);
         }
 
