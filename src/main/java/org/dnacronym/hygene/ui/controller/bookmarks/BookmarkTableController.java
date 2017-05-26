@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.controller;
+package org.dnacronym.hygene.ui.controller.bookmarks;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for showing of {@link SimpleBookmark}s.
  */
-public final class BookmarksController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(BookmarksController.class);
+public final class BookmarkTableController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(BookmarkTableController.class);
 
     private SimpleBookmarkStore simpleBookmarkStore;
     private GraphStore graphStore;
@@ -48,14 +48,14 @@ public final class BookmarksController implements Initializable {
 
 
     /**
-     * Create new instance of a {@link BookmarksController}.
+     * Create new instance of a {@link BookmarkTableController}.
      */
-    public BookmarksController() {
+    public BookmarkTableController() {
         try {
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize BookmarksController.", e);
+            LOGGER.error("Unable to initialize BookmarkTableController.", e);
         }
     }
 
@@ -77,7 +77,7 @@ public final class BookmarksController implements Initializable {
             return simpleBookmarkTableRow;
         });
 
-        bookmarksTable.setItems(simpleBookmarkStore.getBookmarks());
+        bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
 
         bookmarksPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         bookmarksPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));

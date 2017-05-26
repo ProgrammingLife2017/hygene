@@ -21,6 +21,7 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Map;
 
 
@@ -83,7 +84,7 @@ public final class Hygene extends Application {
     }
 
     @Override
-    public void init() {
+    public void init() throws IOException, SQLException {
         graphStore = new GraphStore();
         settings = new Settings(graphStore);
 
@@ -104,7 +105,10 @@ public final class Hygene extends Application {
         final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
 
-        primaryStage.setOnCloseRequest(e -> Platform.exit());
+        primaryStage.setOnCloseRequest(e -> {
+            simpleBookmarkStore.writeBookmarksToFile();
+            Platform.exit();
+        });
 
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);

@@ -20,6 +20,6 @@
         <fx:include source="left_pane/left_panel.fxml"/>
     </left>
     <right>
-        <fx:include source="bookmarks_view.fxml"/>
+        <fx:include source="bookmarks/bookmarks_table_view.fxml"/>
     </right>
 </BorderPane>
