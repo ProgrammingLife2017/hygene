@@ -27,7 +27,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Label text="Create bookmark"/>
+                <Label text="Create bookmark" GridPane.columnSpan="2147483647"/>
                 <Label text="Base Offset" GridPane.rowIndex="1"/>
                 <Label text="Radius" GridPane.rowIndex="2"/>
                 <Label text="Description" GridPane.rowIndex="3"/>
@@ -35,9 +35,8 @@
                 <TextField fx:id="radius" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <TextArea fx:id="description" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
                           GridPane.rowIndex="3"/>
-                <Button fx:id="save" mnemonicParsing="false" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="4"
-                        GridPane.valignment="TOP"
-                        onAction="#onSaveAction"/>
+                <Button fx:id="save" mnemonicParsing="false" onAction="#onSaveAction" text="Save"
+                        GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP"/>
             </children>
         </GridPane>
     </children>

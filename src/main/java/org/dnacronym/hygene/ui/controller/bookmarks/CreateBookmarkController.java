@@ -90,15 +90,20 @@ public final class CreateBookmarkController implements Initializable {
             return;
         }
 
-        final int nodeId = graphVisualizer.getSelectedNodeProperty().get().getId();
-        final int baseOffsetValue = Integer.parseInt(baseOffset.getText().replaceAll("[^\\d]", ""));
-        final int radiusValue = Integer.parseInt(radius.getText().replaceAll("[^\\d]", ""));
+        final String baseString = baseOffset.getText().replaceAll("[^\\d]", "");
+        final String radiusString = radius.getText().replaceAll("[^\\d]", "");
 
-        simpleBookmarkStore.addBookmark(new Bookmark(nodeId, baseOffsetValue, radiusValue, description.getText()));
+        if (!baseString.isEmpty() && !radiusString.isEmpty()) {
+            final int nodeId = graphVisualizer.getSelectedNodeProperty().get().getId();
+            final int baseOffsetValue = Integer.parseInt(baseString);
+            final int radiusValue = Integer.parseInt(radiusString);
 
-        baseOffset.clear();
-        radius.clear();
-        description.clear();
-        actionEvent.consume();
+            simpleBookmarkStore.addBookmark(new Bookmark(nodeId, baseOffsetValue, radiusValue, description.getText()));
+
+            baseOffset.clear();
+            radius.clear();
+            description.clear();
+            actionEvent.consume();
+        }
     }
 }
