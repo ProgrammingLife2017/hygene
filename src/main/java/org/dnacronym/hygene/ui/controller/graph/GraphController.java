@@ -52,7 +52,6 @@ public final class GraphController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         graphCanvas.heightProperty().bind(graphPane.heightProperty());
-        graphCanvas.heightProperty().bind(graphPane.heightProperty());
         graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
         graphVisualizer.setCanvas(graphCanvas);
@@ -142,7 +141,7 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * When the suer starts scrolling on the graph.
+     * When the user starts scrolling on the graph.
      *
      * @param scrollEvent {@link ScrollEvent} associated with the event
      */
