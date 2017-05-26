@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
@@ -9,19 +10,23 @@
     <top>
         <fx:include source="menu_view.fxml"/>
     </top>
-    <center>
-        <fx:include source="graph/graph_view.fxml"/>
-    </center>
-    <bottom>
-        <fx:include source="graph/graph_slider_view.fxml"/>
-    </bottom>
-    <right>
-        <fx:include source="bookmark/bookmarks_table_view.fxml"/>
-    </right>
+
     <left>
-        <VBox maxHeight="Infinity" prefWidth="400.0" BorderPane.alignment="CENTER">
+        <VBox maxHeight="Infinity" prefHeight="Infinity">
             <fx:include source="node/node_properties_view.fxml"/>
             <fx:include source="bookmark/bookmark_create_view.fxml"/>
         </VBox>
     </left>
+
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0"
+                   BorderPane.alignment="CENTER">
+            <fx:include source="graph/graph_view.fxml"/>
+            <fx:include source="graph/graph_slider_view.fxml"/>
+        </SplitPane>
+    </center>
+
+    <right>
+        <fx:include source="bookmark/bookmarks_table_view.fxml"/>
+    </right>
 </BorderPane>

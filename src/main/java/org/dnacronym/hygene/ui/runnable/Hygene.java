@@ -87,12 +87,12 @@ public final class Hygene extends Application {
     @Override
     public void init() throws IOException, SQLException {
         graphStore = new GraphStore();
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
 
+        graphDimensionsCalculator = new GraphDimensionsCalculator();
         graphVisualizer = new GraphVisualizer(graphStore, graphDimensionsCalculator);
         graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
-        graphDimensionsCalculator = new GraphDimensionsCalculator();
 
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
         settings = new Settings(graphStore);
     }
 
