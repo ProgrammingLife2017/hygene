@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.Files;
 
 import java.io.IOException;
@@ -16,18 +15,18 @@ import java.net.URL;
 
 
 /**
- * Preloader of {@link Hygene}.
+ * Preloader of application.
  * <p>
  * The view is located at {@value PRELOADER_VIEW}.
  */
 public final class HygenePreloader extends Preloader {
+    private static final String PRELOADER_VIEW = "/ui/dna_preloader_view.fxml";
 
-    private static final String PRELOADER_VIEW = "/ui/view/dna_preloader_view.fxml";
+    private Stage stage;
 
     @FXML
-    private @Nullable ProgressBar progress;
+    private ProgressBar progress;
 
-    private @Nullable Stage stage;
 
     @Override
     public void start(final Stage primaryStage) throws IOException, UIInitialisationException {

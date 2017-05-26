@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fx:id="bookmarksPane" fitToHeight="true" hbarPolicy="NEVER"
+            maxHeight="Infinity"
+            pannable="true" xmlns="http://javafx.com/javafx/8.0.102"
+            fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkTableController">
+    <content>
+        <AnchorPane maxHeight="Infinity" minHeight="-Infinity" minWidth="-Infinity">
+            <children>
+                <Label text="Bookmarks" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                    <tooltip>
+                        <Tooltip text="All bookmarks associated with the currently loaded GFA graph."/>
+                    </tooltip>
+                </Label>
+                <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
+                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                           AnchorPane.topAnchor="30.0">
+                    <columns>
+                        <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
+                        <TableColumn fx:id="baseOffset" editable="false" prefWidth="100.0" text="Base Offset"/>
+                        <TableColumn fx:id="radius" editable="false" prefWidth="75" text="Radius"/>
+                        <TableColumn fx:id="description" editable="false" prefWidth="150.0" text="Description"/>
+                    </columns>
+                    <tooltip>
+                        <Tooltip text="Overview of all bases of the current genome sequence."/>
+                    </tooltip>
+                </TableView>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

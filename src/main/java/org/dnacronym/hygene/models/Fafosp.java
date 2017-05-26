@@ -96,7 +96,7 @@ public final class Fafosp {
     /**
      * Calculates the "left height" and "right height" properties for all nodes, including the sentinels.
      *
-     * @param meta an array to store the left and right heights in
+     * @param meta an array to recent the left and right heights in
      */
     private void verticalInit(final int[] meta) {
         iterator.visitAll(SequenceDirection.RIGHT, node -> verticalInit(node, SequenceDirection.LEFT, meta));
@@ -108,7 +108,7 @@ public final class Fafosp {
      *
      * @param node      the node's identifier
      * @param direction which height to calculate
-     * @param meta      the array to store the height in
+     * @param meta      the array to recent the height in
      */
     @SuppressWarnings("squid:AssignmentInSubExpressionCheck") // False positive
     private void verticalInit(final int node, final SequenceDirection direction, final int[] meta) {

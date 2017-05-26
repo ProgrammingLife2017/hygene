@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class HelpMenuView {
     private static final String TITLE = "Help";
-    private static final String HELP_MENU_VIEW = "/ui/view/help/help_view.fxml";
+    private static final String HELP_MENU_VIEW = "/ui/help/help_view.fxml";
     private static final List<HelpArticle> HELP_MENU_ARTICLES = (new HelpArticleParser()).parse();
 
     private Stage stage;
@@ -46,6 +46,14 @@ public class HelpMenuView {
         stage.setScene(rootScene);
     }
 
+    /**
+     * Gets help menu articles.
+     *
+     * @return the help menu articles
+     */
+    public static List<HelpArticle> getHelpMenuArticles() {
+        return HELP_MENU_ARTICLES;
+    }
 
     /**
      * Gets the {@link Stage} in {@link HelpMenuView}.
@@ -65,14 +73,5 @@ public class HelpMenuView {
         } else {
             Platform.runLater(stage::show);
         }
-    }
-
-    /**
-     * Gets help menu articles.
-     *
-     * @return the help menu articles
-     */
-    public static List<HelpArticle> getHelpMenuArticles() {
-        return HELP_MENU_ARTICLES;
     }
 }

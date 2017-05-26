@@ -40,16 +40,6 @@ public final class ConsoleMessage {
         node.setFill(getColor(event.getLevel()));
     }
 
-
-    /**
-     * Gets the {@link Text} node.
-     *
-     * @return the {@link Text} node
-     */
-    public Text getNode() {
-        return node;
-    }
-
     /**
      * Returns a JavaFX color corresponding to a certain log level.
      *
@@ -74,5 +64,14 @@ public final class ConsoleMessage {
             default:
                 return Color.LIGHTGRAY;
         }
+    }
+
+    /**
+     * Gets the {@link Text} node.
+     *
+     * @return the {@link Text} node
+     */
+    public Text getNode() {
+        return node;
     }
 }

@@ -118,7 +118,7 @@ tasks.withType(JavaCompile).all { JavaCompile compile ->
 
 }
 
-/* Plugin settings */
+/* Plugin setting */
 mainClassName = mainClass
 
 checkstyle {

@@ -11,12 +11,12 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
-import org.dnacronym.hygene.ui.store.GraphStore;
-import org.dnacronym.hygene.ui.store.Settings;
-import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
-import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
-import org.dnacronym.hygene.ui.util.GraphMovementCalculator;
-import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
+import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
+import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
+import org.dnacronym.hygene.ui.graph.GraphStore;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.setting.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,17 +34,18 @@ public final class Hygene extends Application {
     private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
     private static Hygene hygene;
 
-    private static final String APPLICATION_VIEW = "/ui/view/main_view.fxml";
-    private static final String APPLICATION_ICON = "/ui/icons/hygene_logo_small.png";
-
     static final String TITLE = "Hygene";
+    private static final String APPLICATION_VIEW = "/ui/main_view.fxml";
+    private static final String APPLICATION_ICON = "/icons/hygene_logo_small.png";
 
     private GraphStore graphStore;
-    private GraphVisualizer graphVisualizer;
-    private Settings settings;
-    private GraphMovementCalculator graphMovementCalculator;
     private SimpleBookmarkStore simpleBookmarkStore;
+
+    private GraphVisualizer graphVisualizer;
+    private GraphMovementCalculator graphMovementCalculator;
     private GraphDimensionsCalculator graphDimensionsCalculator;
+
+    private Settings settings;
 
     private Stage primaryStage;
 
@@ -86,12 +87,13 @@ public final class Hygene extends Application {
     @Override
     public void init() throws IOException, SQLException {
         graphStore = new GraphStore();
-        settings = new Settings(graphStore);
-
-        graphDimensionsCalculator = new GraphDimensionsCalculator();
-        graphVisualizer = new GraphVisualizer(graphStore, graphDimensionsCalculator);
         simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
+
+        graphVisualizer = new GraphVisualizer(graphStore, graphDimensionsCalculator);
         graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
+        graphDimensionsCalculator = new GraphDimensionsCalculator();
+
+        settings = new Settings(graphStore);
     }
 
     @Override
@@ -150,89 +152,71 @@ public final class Hygene extends Application {
      * The title is formatted as {@value TITLE} - [filePath].
      *
      * @param filePath filepath to set the in the title of the application
-     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
-     *                                   #start(Stage)}
      */
-    public void formatTitle(final String filePath) throws UIInitialisationException {
+    public void formatTitle(final String filePath) {
         primaryStage.setTitle(TITLE + " - [" + filePath + "]");
     }
 
     /**
-     * Gets the {@link GraphStore} of the {@link Hygene}.
+     * Gets the {@link GraphStore} of the application.
      *
-     * @return {@link GraphStore} of the {@link Hygene}
-     * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
-     *                                   in {@link #init()}
-     * @see GraphStore
-     * @see #init()
+     * @return {@link GraphStore} of the application
      */
-    public GraphStore getGraphStore() throws UIInitialisationException {
+    public GraphStore getGraphStore() {
         return graphStore;
     }
 
     /**
-     * Gets the {@link GraphVisualizer} of the {@link Hygene}.
+     * Gets the {@link GraphVisualizer} of the application.
      *
-     * @return {@link GraphVisualizer} of the {@link Hygene}
-     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
-     *                                   in {@link #init()}
-     * @see GraphVisualizer
-     * @see #init()
+     * @return {@link GraphVisualizer} of the application
      */
-    public GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
+    public GraphVisualizer getGraphVisualizer() {
         return graphVisualizer;
     }
 
     /**
-     * Gets the {@link Settings} of the {@link Hygene}.
+     * Gets the {@link Settings} of the application.
      *
-     * @return {@link Settings} of the {@link Hygene}
-     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Settings} was not set
-     *                                   in {@link #init()}
+     * @return {@link Settings} of the application
      */
-    public Settings getSettings() throws UIInitialisationException {
+    public Settings getSettings() {
         return settings;
     }
 
     /**
-     * Gets the {@link GraphMovementCalculator} of the {@link Hygene}.
+     * Gets the {@link GraphMovementCalculator} of the application.
      *
-     * @return {@link GraphMovementCalculator} of the {@link Hygene}
+     * @return {@link GraphMovementCalculator} of the {application
      */
     public GraphMovementCalculator getGraphMovementCalculator() {
         return graphMovementCalculator;
     }
 
     /**
-     * Gets the {@link GraphDimensionsCalculator} of the {@link Hygene}.
+     * Gets the {@link GraphDimensionsCalculator} of the application.
      *
-     * @return {@link GraphDimensionsCalculator} of the {@link Hygene}
+     * @return {@link GraphDimensionsCalculator} of the application
      */
     public GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;
     }
 
     /**
-     * Gets the {@link SimpleBookmarkStore} of the {@link Hygene}.
+     * Gets the {@link SimpleBookmarkStore} of the application.
      *
-     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
+     * @return {@link SimpleBookmarkStore} of the application
      */
     public SimpleBookmarkStore getSimpleBookmarkStore() {
         return simpleBookmarkStore;
     }
 
     /**
-     * Get an instance of the Hygene.
-     * <p>
-     * If there is not an instance, then it will throw a {@link UIInitialisationException} as opposed to creating a
-     * new one.
+     * Gets the primary {@link Stage} of the application.
      *
-     * @return instance of the {@link Hygene}
-     * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
-     *                                   #start(Stage)}
-     * @see #start(Stage)
+     * @return primary {@link Stage} of the application
      */
-    public Stage getPrimaryStage() throws UIInitialisationException {
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 }
