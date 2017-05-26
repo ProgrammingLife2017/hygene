@@ -53,11 +53,12 @@ public final class HelpMenuController implements Initializable {
      * @return the button
      */
     Button generateSidebarButton(final HelpArticle article) {
-        Button button = new Button();
+        Button button;
         try {
             final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
             button = FXMLLoader.load(resource);
         } catch (final IOException e) {
+            button = new Button();
             LOGGER.error(e);
         }
 
