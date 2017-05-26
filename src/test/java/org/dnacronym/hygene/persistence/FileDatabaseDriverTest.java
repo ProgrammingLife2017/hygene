@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -23,6 +24,12 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
     void setUp() throws IOException, SQLException {
         super.setUp();
         fileDatabaseDriver = new FileDatabaseDriver(GFA_FILE_NAME);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException, SQLException {
+        fileDatabaseDriver.close();
+        super.tearDown();
     }
 
 
@@ -82,10 +89,41 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
         assertThat(fileDatabaseDriver.hasRow("test", "col1", "val1")).isTrue();
     }
 
+    @Test
+    void testGetAllOfTable() throws SQLException {
+        final String testTableName = "test";
 
-    @AfterEach
-    void tearDown() throws IOException, SQLException {
-        fileDatabaseDriver.close();
-        super.tearDown();
+        final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable(testTableName);
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
+        fileDatabaseDriver.setUpTable(fileDatabaseTable);
+
+        fileDatabaseDriver.insertRow(testTableName, Collections.singletonList("val1"));
+
+        final int[] count = {0};
+        fileDatabaseDriver.forEachRow(testTableName, resultSet -> {
+            count[0]++;
+            try {
+                assertThat(resultSet.getString("col1")).isEqualTo("val1");
+            } catch (final SQLException e) {
+                fail(e.getMessage());
+            }
+        });
+
+        assertThat(count[0]).isEqualTo(1);
+    }
+
+    @Test
+    void testDeleteAllFromTable() throws SQLException {
+        final String testTableName = "test";
+
+        final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable(testTableName);
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
+        fileDatabaseDriver.setUpTable(fileDatabaseTable);
+
+        fileDatabaseDriver.insertRow(testTableName, Collections.singletonList("val1"));
+        assertThat(fileDatabaseDriver.hasRow("test", "col1", "val1")).isTrue();
+
+        fileDatabaseDriver.deleteAllFromTable(testTableName);
+        assertThat(fileDatabaseDriver.hasRow("test", "col1", "val1")).isFalse();
     }
 }

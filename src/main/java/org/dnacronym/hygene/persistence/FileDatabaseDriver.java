@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -140,6 +141,38 @@ public final class FileDatabaseDriver implements AutoCloseable {
 
                 return value;
             }
+        }
+    }
+
+    /**
+     * Performs the given action on each row of the given table.
+     *
+     * @param tableName    the name of the table to query
+     * @param itemCallback the action to perform on each row of the table
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    synchronized void forEachRow(final String tableName, final Consumer<ResultSet> itemCallback)
+            throws SQLException {
+        final String sql = "SELECT * FROM " + tableName;
+
+        try (final Statement statement = connection.createStatement()) {
+            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+                while (resultSet.next()) {
+                    itemCallback.accept(resultSet);
+                }
+            }
+        }
+    }
+
+    /**
+     * Deletes all rows from a table.
+     *
+     * @param tableName the name of the table
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    synchronized void deleteAllFromTable(final String tableName) throws SQLException {
+        try (final Statement statement = connection.createStatement()) {
+            statement.executeUpdate("DELETE FROM " + tableName);
         }
     }
 

@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.persistence;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +16,6 @@ final class FileMetadata {
     static final String TABLE_NAME = "global";
     static final String VERSION_KEY_NAME = "version";
     static final String DIGEST_KEY_NAME = "digest";
-    static final String DB_VERSION = "0.0.1";
 
     private static final String KEY_COLUMN_NAME = "global_key";
     private static final String VALUE_COLUMN_NAME = "global_value";
@@ -31,7 +29,7 @@ final class FileMetadata {
      *
      * @param fileDatabase the database to contain that metadata
      */
-    FileMetadata(final @NonNull FileDatabase fileDatabase) {
+    FileMetadata(final FileDatabase fileDatabase) {
         this.fileDatabase = fileDatabase;
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
     }
@@ -57,7 +55,8 @@ final class FileMetadata {
      * @throws SQLException in the case of an error during SQL operations
      */
     void storeMetadata() throws IOException, SQLException {
-        fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, DB_VERSION));
+        fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, String.valueOf(FileDatabase
+                .DB_VERSION)));
         fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
     }
 
@@ -109,17 +108,22 @@ final class FileMetadata {
     /**
      * Checks whether the version of the database specification stored in the file database is compatible with the
      * current version.
-     * <p>
-     * Assumes the Semantic Versioning standard and compares only the 'major' components of the two versions.
      *
      * @return {@code true} iff. the versions are compatible
-     * @throws SQLException in the case of an error during SQL operations
+     * @throws SQLException                         in the case of an error during SQL operations
+     * @throws IncompatibleDatabaseVersionException in the case of an incompatible DB format
      */
-    private boolean checkVersionCompatibility() throws SQLException {
-        final int currentMajorVersion = Integer.parseInt(DB_VERSION.split("\\.")[0]);
-        final int fileMajorVersion = Integer.parseInt(getMetadataValue(VERSION_KEY_NAME).split("\\.")[0]);
+    private boolean checkVersionCompatibility() throws SQLException, IncompatibleDatabaseVersionException {
+        final String fileVersionString = getMetadataValue(VERSION_KEY_NAME);
 
-        return currentMajorVersion == fileMajorVersion;
+        final int fileVersion;
+        try {
+            fileVersion = Integer.parseInt(fileVersionString);
+        } catch (final NumberFormatException e) {
+            throw new IncompatibleDatabaseVersionException("Database version format incompatible, found: "
+                    + fileVersionString + ", expected an integer.");
+        }
+        return FileDatabase.DB_VERSION == fileVersion;
     }
 
     /**
