@@ -8,5 +8,6 @@
            fx:controller="org.dnacronym.hygene.ui.controller.leftpane.LeftPaneController">
     <items>
         <fx:include source="node_properties_view.fxml"/>
+        <fx:include source="../bookmarks/create_bookmark_view.fxml"/>
     </items>
 </SplitPane>

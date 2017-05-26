@@ -7,6 +7,8 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -43,7 +45,7 @@ final class SimpleBookmarkStoreTest {
     void testGetBookmarks() {
         simpleBookmarkStore.addBookmark(bookmark);
 
-        final SimpleBookmark simpleBookmark = simpleBookmarkStore.getBookmarks().get(0);
+        final SimpleBookmark simpleBookmark = simpleBookmarkStore.getSimpleBookmarks().get(0);
 
         assertThat(simpleBookmark.getBookmark()).isEqualTo(bookmark);
     }
@@ -51,17 +53,18 @@ final class SimpleBookmarkStoreTest {
     @Test
     void testSetBookmarks() throws ParseException {
         final Bookmark bookmark2 = new Bookmark(1, 20, 20, "asdf");
-        simpleBookmarkStore.addBookmarks(bookmark, bookmark2);
+        simpleBookmarkStore.addBookmarks(Arrays.asList(bookmark, bookmark2));
 
-        assertThat(simpleBookmarkStore.getBookmarks()).hasSize(2);
-        assertThat(simpleBookmarkStore.getBookmarks().get(0)).isNotEqualTo(simpleBookmarkStore.getBookmarks().get(1));
+        assertThat(simpleBookmarkStore.getSimpleBookmarks()).hasSize(2);
+        assertThat(simpleBookmarkStore.getSimpleBookmarks().get(0))
+                .isNotEqualTo(simpleBookmarkStore.getSimpleBookmarks().get(1));
     }
 
     @Test
     void testSetOnClick() {
         simpleBookmarkStore.addBookmark(bookmark);
 
-        final SimpleBookmark simpleBookmark = simpleBookmarkStore.getBookmarks().get(0);
+        final SimpleBookmark simpleBookmark = simpleBookmarkStore.getSimpleBookmarks().get(0);
         simpleBookmark.getOnClick().run();
 
         verify(graphVisualizer, times(1)).setSelectedNode(0);

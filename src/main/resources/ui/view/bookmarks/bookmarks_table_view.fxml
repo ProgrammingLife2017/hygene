@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <ScrollPane fx:id="bookmarksPane" fitToHeight="true" hbarPolicy="NEVER" maxHeight="Infinity" pannable="true"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.controller.BookmarksController">
+            fx:controller="org.dnacronym.hygene.ui.controller.bookmarks.BookmarksTableController">
     <content>
         <AnchorPane maxHeight="Infinity" minHeight="-Infinity" minWidth="-Infinity">
             <children>

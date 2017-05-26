@@ -6,7 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.persistence.FileBookmarks;
+import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,7 +24,10 @@ public final class SimpleBookmarkStore {
 
     private final GraphVisualizer graphVisualizer;
 
-    private final ObservableList<SimpleBookmark> bookmarks;
+    private final List<SimpleBookmark> simpleBookmarks;
+    private final ObservableList<SimpleBookmark> observableSimpleBookmarks;
+
+    private FileBookmarks fileBookmarks;
 
 
     /**
@@ -37,10 +47,18 @@ public final class SimpleBookmarkStore {
      */
     public SimpleBookmarkStore(final GraphStore graphStore, final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
-        bookmarks = FXCollections.observableArrayList();
+        simpleBookmarks = new ArrayList<>();
+        observableSimpleBookmarks = FXCollections.observableList(simpleBookmarks);
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-            // TODO get all bookmarks.
+            try {
+                fileBookmarks = new FileBookmarks(new FileDatabase(newValue.getFileName()));
+
+                simpleBookmarks.clear();
+                addBookmarks(fileBookmarks.getAll());
+            } catch (final SQLException | IOException e) {
+                LOGGER.error(e);
+            }
         });
     }
 
@@ -48,8 +66,14 @@ public final class SimpleBookmarkStore {
     /**
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
      */
-    void writeBookmarksToFile() {
-        // TODO store all bookmarks.
+    void writeBookmarksToFile() throws SQLException {
+        if (fileBookmarks != null) {
+            List<Bookmark> bookmarks = new ArrayList<>(simpleBookmarks.size());
+
+            simpleBookmarks.forEach(simpleBookmark -> bookmarks.add(simpleBookmark.getBookmark()));
+
+            fileBookmarks.storeAll(bookmarks);
+        }
     }
 
     /**
@@ -57,7 +81,7 @@ public final class SimpleBookmarkStore {
      *
      * @param bookmarks {@link java.util.Collection} of {@link Bookmark}s
      */
-    void addBookmarks(final Bookmark... bookmarks) {
+    void addBookmarks(final List<Bookmark> bookmarks) {
         for (final Bookmark bookmark : bookmarks) {
             addBookmark(bookmark);
         }
@@ -70,7 +94,7 @@ public final class SimpleBookmarkStore {
      */
     void addBookmark(final Bookmark bookmark) {
         try {
-            bookmarks.add(new SimpleBookmark(bookmark, () -> {
+            simpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 graphVisualizer.getCenterNodeIdProperty().set(bookmark.getNodeId());
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
             }));
@@ -84,7 +108,7 @@ public final class SimpleBookmarkStore {
      *
      * @return {@link ObservableList} of {@link SimpleBookmark}s
      */
-    public ObservableList<SimpleBookmark> getBookmarks() {
-        return bookmarks;
+    public ObservableList<SimpleBookmark> getSimpleBookmarks() {
+        return observableSimpleBookmarks;
     }
 }

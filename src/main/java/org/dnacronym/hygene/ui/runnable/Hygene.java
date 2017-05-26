@@ -20,6 +20,7 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Map;
 
 
@@ -81,7 +82,7 @@ public final class Hygene extends Application {
     }
 
     @Override
-    public void init() {
+    public void init() throws IOException, SQLException {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
