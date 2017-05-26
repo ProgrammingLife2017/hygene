@@ -1,14 +1,10 @@
 package org.dnacronym.hygene.ui.console;
 
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -16,6 +12,7 @@ import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.net.URL;
 import java.util.Optional;
@@ -31,10 +28,7 @@ public final class ConsoleController implements Initializable {
     private GraphVisualizer graphVisualizer;
 
     @FXML
-    private TextFlow consoleTextFlow;
-
-    @FXML
-    private ScrollPane consoleScrollPane;
+    private StyleClassedTextArea consoleContent;
 
     @FXML
     private TextField consoleInput;
@@ -66,13 +60,13 @@ public final class ConsoleController implements Initializable {
      * Allows the text the console window to automatically scroll down when new input is introduced.
      */
     private void enableAutoScrolling() {
-        consoleTextFlow.getChildren().addListener(
-                (ListChangeListener<Node>) (change -> {
-                    consoleTextFlow.layout();
-                    consoleScrollPane.layout();
-                    consoleScrollPane.setVvalue(1.0f);
-                }));
-        consoleScrollPane.setContent(consoleTextFlow);
+//        consoleTextFlow.getChildren().addListener(
+//                (ListChangeListener<Node>) (change -> {
+//                    consoleTextFlow.layout();
+//                    consoleScrollPane.layout();
+//                    consoleScrollPane.setVvalue(1.0f);
+//                }));
+//        consoleScrollPane.setContent(consoleTextFlow);
     }
 
     /**
@@ -99,9 +93,11 @@ public final class ConsoleController implements Initializable {
      * @param message the message
      */
     void appendLogItem(final ConsoleMessage message) {
-        if (consoleTextFlow != null) {
-            consoleTextFlow.getChildren().add(message.getNode());
-        }
+        consoleContent.appendText("dwadwd");
+        consoleContent.setC
+//        if (consoleTextFlow != null) {
+//            consoleTextFlow.appendText(message.toString());
+//        }
     }
 
     /**

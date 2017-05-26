@@ -51,6 +51,9 @@ dependencies {
     // Guava
     compile("com.google.guava:guava:${guavaVersion}")
 
+    // RichTextFx
+    compile("org.fxmisc.richtext:richtextfx:${richTextFxVersion}")
+
     // Apache Commons
     compile("commons-codec:commons-codec:${commonsCodecVersion}")
     compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
