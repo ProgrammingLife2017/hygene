@@ -2,9 +2,10 @@ package org.dnacronym.hygene.persistence;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -133,10 +134,9 @@ final class FileMetadata {
      * @throws IOException in the case of an error during IO operations
      */
     private String computeFileDigest() throws IOException {
-        final FileInputStream fileInputStream = new FileInputStream(new File(fileDatabase.getFileName()));
-        final String digest = DigestUtils.sha512Hex(fileInputStream);
-        fileInputStream.close();
+        final BasicFileAttributes attr =
+                Files.readAttributes(Paths.get(fileDatabase.getFileName()), BasicFileAttributes.class);
 
-        return digest;
+        return DigestUtils.sha512Hex(fileDatabase.getFileName() + attr.lastModifiedTime() + attr.size());
     }
 }
