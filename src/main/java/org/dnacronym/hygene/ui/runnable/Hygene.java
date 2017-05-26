@@ -13,12 +13,14 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.store.Settings;
+import org.dnacronym.hygene.ui.store.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
+
 
 /**
  * Main class of the application. Launches a {@link HygenePreloader}, and afterwards a {@link Hygene}.
@@ -37,6 +39,7 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     private GraphVisualizer graphVisualizer;
     private Settings settings;
+    private SimpleBookmarkStore simpleBookmarkStore;
 
     private Stage primaryStage;
 
@@ -80,6 +83,7 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         graphVisualizer = new GraphVisualizer(graphStore);
         settings = new Settings(graphStore);
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
     }
 
     @Override
@@ -136,7 +140,7 @@ public final class Hygene extends Application {
      *
      * @param filePath filepath to set the in the title of the application
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
-     *                                   #start(Stage)}.
+     *                                   #start(Stage)}
      */
     public void formatTitle(final String filePath) throws UIInitialisationException {
         primaryStage.setTitle(TITLE + " - [" + filePath + "]");
@@ -147,7 +151,7 @@ public final class Hygene extends Application {
      *
      * @return {@link GraphStore} of the {@link Hygene}
      * @throws UIInitialisationException if the the UI was not initialized, meaning the {@link GraphStore} was not set
-     *                                   in {@link #init()}.
+     *                                   in {@link #init()}
      * @see GraphStore
      * @see #init()
      */
@@ -160,7 +164,8 @@ public final class Hygene extends Application {
      *
      * @return {@link GraphVisualizer} of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link GraphVisualizer} was not set
-     *                                   in {@link #init()}.
+     *                                   in {@link #init()}
+     * @see GraphVisualizer
      * @see #init()
      */
     public GraphVisualizer getGraphVisualizer() throws UIInitialisationException {
@@ -179,6 +184,17 @@ public final class Hygene extends Application {
     }
 
     /**
+     * Gets the {@link SimpleBookmarkStore} of {@link Hygene}.
+     *
+     * @return {@link SimpleBookmarkStore} of the {@link Hygene}
+     * @see SimpleBookmarkStore
+     * @see #init()
+     */
+    public SimpleBookmarkStore getSimpleBookmarkStore() {
+        return simpleBookmarkStore;
+    }
+
+    /**
      * Get an instance of the Hygene.
      * <p>
      * If there is not an instance, then it will throw a {@link UIInitialisationException} as opposed to creating a
@@ -186,7 +202,7 @@ public final class Hygene extends Application {
      *
      * @return instance of the {@link Hygene}
      * @throws UIInitialisationException if the UI was not initialized, meaning the {@link Stage} was not set in {@link
-     *                                   #start(Stage)}.
+     *                                   #start(Stage)}
      * @see #start(Stage)
      */
     public Stage getPrimaryStage() throws UIInitialisationException {

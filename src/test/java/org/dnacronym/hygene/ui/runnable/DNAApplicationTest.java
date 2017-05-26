@@ -24,4 +24,9 @@ public class DNAApplicationTest extends UITest {
     public final void testGetGraphStore() throws UIInitialisationException {
         assertThat(Hygene.getInstance().getGraphStore()).isNotNull();
     }
+
+    @Test
+    final void testGetSimpleBookmarkStore() throws UIInitialisationException {
+        assertThat(Hygene.getInstance().getSimpleBookmarkStore()).isNotNull();
+    }
 }

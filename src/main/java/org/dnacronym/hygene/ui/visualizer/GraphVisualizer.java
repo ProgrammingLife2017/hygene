@@ -280,6 +280,15 @@ public final class GraphVisualizer {
     }
 
     /**
+     * Update the selected {@link Node} to the node with the given id.
+     *
+     * @param nodeId node id of the new selected {@link Node}
+     */
+    public void setSelectedNode(final int nodeId) {
+        selectedNodeProperty.set(graph.getNode(nodeId));
+    }
+
+    /**
      * The property of the selected node.
      * <p>
      * This node is updated every time the user clicks on a node in the canvas.
