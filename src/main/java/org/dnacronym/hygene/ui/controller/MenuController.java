@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.controller.settings.SettingsView;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
