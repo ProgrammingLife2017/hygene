@@ -36,7 +36,6 @@ class RecentDirectoryTest {
 
     @Test
     void testGetWithMissingDataFile() throws IOException {
-
         assertThat(RecentDirectory.get().getAbsolutePath()).isEqualTo(System.getProperty("user.home"));
     }
 
