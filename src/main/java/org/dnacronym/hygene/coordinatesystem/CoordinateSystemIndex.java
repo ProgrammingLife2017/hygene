@@ -103,14 +103,15 @@ public final class CoordinateSystemIndex {
 
                 for (final String genome : nodeGenomes) {
                     final Integer previousBaseCount = genomeBaseDiffCounts.get(genome);
+                    final Integer genomeTotalCount = genomeBaseCounts.get(genome);
 
-                    if (previousBaseCount == null) {
+                    if (previousBaseCount == null || genomeTotalCount == null) {
                         throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
                     }
 
                     final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
                     if (previousBaseCount + nodeBaseCount >= BASE_CACHE_INTERVAL) {
-                        final int baseIndexPosition = previousBaseCount + nodeBaseCount + genomeBaseCounts.get(genome);
+                        final int baseIndexPosition = previousBaseCount + nodeBaseCount + genomeTotalCount;
                         // TODO save position (genomeNames.indexOf(genome) for the genome ID)
                         genomeBaseDiffCounts.put(genome, 0);
                         genomeBaseCounts.put(genome, baseIndexPosition);
