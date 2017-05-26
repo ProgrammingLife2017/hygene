@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import org.apache.logging.log4j.LogManager;
@@ -25,12 +26,14 @@ public final class AdvancedSettingsViewController extends AbstractSettingsContro
     }
 
     /**
-     * When user clicks on show lane borders {@link CheckBox}.
+     * When user interacts with the show lane borders {@link CheckBox}.
+     *
+     * @param actionEvent the {@link ActionEvent}
      */
     @FXML
-    void showLaneBordersClicked() {
+    void showLaneBordersClicked(final ActionEvent actionEvent) {
         getSettings().addRunnable(() -> {
-            final boolean newValue = displayLaneBorders.isSelected();
+            final boolean newValue = ((CheckBox) actionEvent.getSource()).isSelected();
             getGraphVisualizer().getDisplayBordersProperty().setValue(newValue);
             LOGGER.info("Displaying lane borders has now been " + (newValue ? "enabled." : "disabled."));
         });

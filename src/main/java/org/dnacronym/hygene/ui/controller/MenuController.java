@@ -9,7 +9,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.controller.settings.SettingsView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -42,6 +41,8 @@ public final class MenuController implements Initializable {
     private Menu recentFilesMenu;
 
     private ConsoleWrapper consoleWrapper;
+
+    private SettingsView settingsView;
 
 
     @Override
@@ -101,7 +102,7 @@ public final class MenuController implements Initializable {
      */
     @FXML
     void settingsAction() {
-        final SettingsView settingsView = new SettingsView(settings);
+        settingsView = new SettingsView(settings);
         settingsView.show();
     }
 
@@ -189,7 +190,7 @@ public final class MenuController implements Initializable {
      *
      * @return the {@link FileChooser}
      */
-    @Nullable FileChooser getFileChooser() {
+    FileChooser getFileChooser() {
         return fileChooser;
     }
 
@@ -207,8 +208,17 @@ public final class MenuController implements Initializable {
      *
      * @return the {@link ConsoleWrapper}
      */
-    public @Nullable ConsoleWrapper getConsoleWrapper() {
+    public ConsoleWrapper getConsoleWrapper() {
         return consoleWrapper;
+    }
+
+    /**
+     * Gets settings view.
+     *
+     * @return the {@link SettingsView}
+     */
+    public SettingsView getSettingsView() {
+        return settingsView;
     }
 
     /**

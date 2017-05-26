@@ -9,10 +9,12 @@ import javafx.stage.Window;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
+import org.dnacronym.hygene.ui.controller.settings.SettingsView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.store.RecentFiles;
+import org.dnacronym.hygene.ui.store.Settings;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -127,6 +129,36 @@ public final class MenuControllerTest extends UITest {
         });
 
         assertThat(future.get()).isNotNull();
+    }
+
+    @Test
+    void testOpenSettingsWindowInit() throws Exception {
+        final GraphStore graphStore = mock(GraphStore.class);
+
+        CompletableFuture<SettingsView> future = new CompletableFuture<>();
+
+        interact(() -> {
+            menuController.setSettings(new Settings(graphStore));
+            menuController.settingsAction();
+            future.complete(menuController.getSettingsView());
+        });
+
+        assertThat(future.get()).isNotNull();
+    }
+
+    @Test
+    void testOpenSettingsWindowState() throws Exception {
+        final GraphStore graphStore = mock(GraphStore.class);
+
+        CompletableFuture<SettingsView> future = new CompletableFuture<>();
+
+        interact(() -> {
+            menuController.setSettings(new Settings(graphStore));
+            menuController.settingsAction();
+            future.complete(menuController.getSettingsView());
+        });
+
+        assertThat(future.get().getStage().isShowing()).isTrue();
     }
 
     @Test
