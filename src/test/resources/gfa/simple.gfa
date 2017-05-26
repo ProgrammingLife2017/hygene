@@ -1,4 +1,5 @@
 H	VN:Z:1.0
-S	11	ACCTT
-S	12	TCAAGG
+H	ORI:Z:g1.fasta;g2.fasta;
+S	11	ACCTT	*	ORI:Z:g1.fasta
+S	12	TCAAGG	*	ORI:Z:g2.fasta
 L	11	+	12	-	4M
