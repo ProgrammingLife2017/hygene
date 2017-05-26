@@ -103,7 +103,8 @@ public final class CreateBookmarkController implements Initializable {
             baseOffset.clear();
             radius.clear();
             description.clear();
-            actionEvent.consume();
         }
+
+        actionEvent.consume();
     }
 }
