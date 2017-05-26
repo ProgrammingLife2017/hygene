@@ -72,6 +72,7 @@ public final class MetadataParser {
                 st.nextToken();
                 final String name = st.nextToken();
                 final String sequence = st.nextToken();
+            st.nextToken(); // Ignore asterisk
             final List<String> genomes = parseGenomes(st);
 
                 result.put(entry.getKey(), new NodeMetadata(name, sequence, genomes));
@@ -189,8 +190,6 @@ public final class MetadataParser {
     }
 
     private List<String> parseGenomes(final StringTokenizer stringTokenizer) throws ParseException {
-        stringTokenizer.nextToken(); // Ignore asterisk
-
         final String genomeMetadata = stringTokenizer.nextToken();
         if (!genomeMetadata.startsWith(GENOME_LIST_HEADER_PREFIX)) {
             throw new ParseException("Expected genome header at this position.");

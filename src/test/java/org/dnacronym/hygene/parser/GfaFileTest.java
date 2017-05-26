@@ -29,8 +29,9 @@ import static org.mockito.Mockito.verify;
 final class GfaFileTest {
     private static final String GFA_TEST_FILE = "src/test/resources/gfa/simple.gfa";
     private static final String SIMPLE_GFA_CONTENTS = String.format("H\tVN:Z:1.0%n"
-            + "S\t11\tACCTT%n"
-            + "S\t12\tTCAAGG%n"
+            + "H\tORI:Z:g1.fasta;g2.fasta;%n"
+            + "S\t11\tACCTT\t*\tORI:Z:g1.fasta%n"
+            + "S\t12\tTCAAGG\t*\tORI:Z:g2.fasta%n"
             + "L\t11\t+\t12\t-\t4M%n");
 
     private String currentFileName;
@@ -106,9 +107,9 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
+        final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(3);
 
-        verify(metadataParser).parseNodeMetadata(gfaFile, 2);
+        verify(metadataParser).parseNodeMetadata(gfaFile, 3);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
     }
 
@@ -119,9 +120,9 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        final EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
+        final EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(5);
 
-        verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
+        verify(metadataParser).parseEdgeMetadata(gfaFile, 5);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
     }
 

@@ -11,6 +11,7 @@ import org.dnacronym.hygene.persistence.FileGenomeIndex;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,10 +54,23 @@ public final class CoordinateSystemIndex {
      *
      * @throws ParseException in case of errors during parsing of the GFA file
      */
-    void populateIndex() throws ParseException {
+    public void populateIndex() throws ParseException {
         loadGenomeList();
-        saveIndexPoints();
+        buildIndex();
     }
+
+    /**
+     * Looks for the node that comes closest to the wanted genome-base point in the coordinate system.
+     *
+     * @param genome the name of the genome to query for
+     * @param base   the base to query for
+     * @return the ID of the closest node to the desired point
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public int getClosestNodeId(final String genome, final int base) throws SQLException {
+        return fileGenomeIndex.getClosestNodeToBase(getGenomeId(genome), base);
+    }
+
 
     /**
      * Retrieves the list of genomes in the GFA file from the header.
@@ -112,7 +126,7 @@ public final class CoordinateSystemIndex {
     /**
      * Iterates through the graph and saves index points at selected base locations.
      */
-    private void saveIndexPoints() {
+    private void buildIndex() {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
         graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
             try {
@@ -129,16 +143,26 @@ public final class CoordinateSystemIndex {
                     final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
                     if (previousBaseCount + nodeBaseCount >= BASE_CACHE_INTERVAL) {
                         final int baseIndexPosition = previousBaseCount + nodeBaseCount + genomeTotalCount;
-                        // TODO save position (genomeNames.indexOf(genome) for the genome ID)
+                        fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
                         genomeBaseDiffCounts.put(genome, 0);
                         genomeBaseCounts.put(genome, baseIndexPosition);
                     } else {
                         genomeBaseCounts.put(genome, previousBaseCount + nodeBaseCount);
                     }
                 }
-            } catch (final ParseException e) {
-                LOGGER.warn("Failed to read metadata of node " + nodeId + ".");
+            } catch (final ParseException | SQLException e) {
+                LOGGER.warn("Failed to read metadata of node " + nodeId + ".", e);
             }
         });
+    }
+
+    /**
+     * Gets the genome ID belonging to the given genome name.
+     *
+     * @param genomeName the name of the genome
+     * @return the corresponding internal genome ID
+     */
+    private int getGenomeId(final String genomeName) {
+        return genomeNames.indexOf(genomeName);
     }
 }
