@@ -1,12 +1,11 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,8 +15,6 @@ import java.util.ResourceBundle;
  * Controller for the configuration window.
  */
 public final class QuerySettingsController extends AbstractSettingsController {
-    private static final Logger LOGGER = LogManager.getLogger(QuerySettingsController.class);
-
     @FXML
     private Label currentNodeId;
     @FXML
@@ -48,14 +45,15 @@ public final class QuerySettingsController extends AbstractSettingsController {
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
+     *
+     * @param actionEvent the {@link ActionEvent}
      */
     @FXML
-    void setNodeId() {
+    void setNodeId(final ActionEvent actionEvent) {
         getSettings().addRunnable(() -> {
-            final int newValue = Integer.parseInt(nodeId.getText().replaceAll("[^\\d]", ""));
+            final TextField source = (TextField) actionEvent.getSource();
+            final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
             getGraphVisualizer().getCenterNodeIdProperty().set(newValue);
-
-            LOGGER.info("Center node id set to: " + getGraphVisualizer().getCenterNodeIdProperty().get());
         });
     }
 
@@ -65,14 +63,15 @@ public final class QuerySettingsController extends AbstractSettingsController {
      * <p>
      * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
      * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
+     *
+     * @param actionEvent the {@link ActionEvent}
      */
     @FXML
-    void setRange() {
+    void setRange(final ActionEvent actionEvent) {
         getSettings().addRunnable(() -> {
-            final int newValue = Integer.parseInt(range.getText().replaceAll("[^\\d]", ""));
+            final TextField source = (TextField) actionEvent.getSource();
+            final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
             getGraphVisualizer().getHopsProperty().set(newValue);
-
-            LOGGER.info("Range set to: " + getGraphVisualizer().getHopsProperty().get());
         });
     }
 }
