@@ -87,14 +87,14 @@ public final class GraphArrayFile {
         try (final BufferedWriter bufferedWriter = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {
-                final StringBuilder a = new StringBuilder();
+                final StringBuilder stringBuilder = new StringBuilder();
 
                 for (final int value : node) {
-                    a.append(value).append(NODE_VALUE_SEPARATOR);
+                    stringBuilder.append(value).append(NODE_VALUE_SEPARATOR);
                 }
-                a.append(NODE_ARRAY_SEPARATOR);
+                stringBuilder.append(NODE_ARRAY_SEPARATOR);
 
-                bufferedWriter.write(a.toString());
+                bufferedWriter.write(stringBuilder.toString());
             }
 
             bufferedWriter.flush();
