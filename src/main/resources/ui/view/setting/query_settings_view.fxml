@@ -26,13 +26,13 @@
             <Label text="Node Id"/>
             <Label text="Range" GridPane.rowIndex="2"/>
             <TextField fx:id="nodeId" promptText="New node Id" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
-                       GridPane.rowIndex="1" onKeyTyped="#setNodeId">
+                       GridPane.rowIndex="1" onKeyPressed="#setNodeId">
                 <tooltip>
                     <Tooltip text="Set the current node id. This node id is displayed in the center of the screen."/>
                 </tooltip>
             </TextField>
             <TextField fx:id="range" promptText="new Range" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
-                       GridPane.rowIndex="3" onKeyTyped="#setRange">
+                       GridPane.rowIndex="3" onKeyPressed="#setRange">
                 <tooltip>
                     <Tooltip
                             text="Set the range around the current node. This determines how many hops should be displayed in each direction."/>
