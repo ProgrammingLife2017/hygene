@@ -66,13 +66,17 @@ public final class SimpleBookmarkStore {
     /**
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
      */
-    void writeBookmarksToFile() throws SQLException {
+    void writeBookmarksToFile() {
         if (fileBookmarks != null) {
             List<Bookmark> bookmarks = new ArrayList<>(simpleBookmarks.size());
 
             simpleBookmarks.forEach(simpleBookmark -> bookmarks.add(simpleBookmark.getBookmark()));
 
-            fileBookmarks.storeAll(bookmarks);
+            try {
+                fileBookmarks.storeAll(bookmarks);
+            } catch (final SQLException e) {
+                LOGGER.error("Unable to store bookmarks to file.", e);
+            }
         }
     }
 
@@ -92,9 +96,9 @@ public final class SimpleBookmarkStore {
      *
      * @param bookmark {@link Bookmark} to add
      */
-    void addBookmark(final Bookmark bookmark) {
+    public void addBookmark(final Bookmark bookmark) {
         try {
-            simpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
+            observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 graphVisualizer.getCenterNodeIdProperty().set(bookmark.getNodeId());
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
             }));
