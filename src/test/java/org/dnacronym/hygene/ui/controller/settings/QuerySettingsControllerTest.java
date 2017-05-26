@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
 import javafx.beans.property.IntegerProperty;
-import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import org.dnacronym.hygene.ui.UITest;
 import org.dnacronym.hygene.ui.store.Settings;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
@@ -45,10 +45,10 @@ final class QuerySettingsControllerTest extends UITest {
     @Test
     void testSetNodeId() {
         final TextField source = new TextField("1001");
-        final ActionEvent actionEvent = mock(ActionEvent.class);
-        when(actionEvent.getSource()).thenReturn(source);
+        final KeyEvent keyEvent = mock(KeyEvent.class);
+        when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setNodeId(actionEvent));
+        interact(() -> querySettingsController.setNodeId(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
@@ -61,10 +61,10 @@ final class QuerySettingsControllerTest extends UITest {
     @Test
     void testSetNodeIdSantizeText() {
         final TextField source = new TextField("0p0q1");
-        final ActionEvent actionEvent = mock(ActionEvent.class);
-        when(actionEvent.getSource()).thenReturn(source);
+        final KeyEvent keyEvent = mock(KeyEvent.class);
+        when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setNodeId(actionEvent));
+        interact(() -> querySettingsController.setNodeId(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
@@ -77,10 +77,10 @@ final class QuerySettingsControllerTest extends UITest {
     @Test
     void testSetRange() {
         final TextField source = new TextField("99");
-        final ActionEvent actionEvent = mock(ActionEvent.class);
-        when(actionEvent.getSource()).thenReturn(source);
+        final KeyEvent keyEvent = mock(KeyEvent.class);
+        when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setRange(actionEvent));
+        interact(() -> querySettingsController.setRange(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
@@ -93,10 +93,10 @@ final class QuerySettingsControllerTest extends UITest {
     @Test
     void testSetRangeSanitizeText() {
         final TextField source = new TextField("9ppp19");
-        final ActionEvent actionEvent = mock(ActionEvent.class);
-        when(actionEvent.getSource()).thenReturn(source);
+        final KeyEvent keyEvent = mock(KeyEvent.class);
+        when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setRange(actionEvent));
+        interact(() -> querySettingsController.setRange(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());

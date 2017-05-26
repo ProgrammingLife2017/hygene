@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
@@ -8,11 +7,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane fx:controller="org.dnacronym.hygene.ui.controller.settings.QuerySettingsController" maxHeight="-Infinity"
-            maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-    <GridPane hgap="5.0" vgap="20.0" AnchorPane.leftAnchor="10.0"
-              AnchorPane.topAnchor="20.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.controller.settings.QuerySettingsController">
+    <GridPane hgap="5.0" vgap="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -27,30 +25,23 @@
         <children>
             <Label text="Node Id"/>
             <Label text="Range" GridPane.rowIndex="2"/>
-            <TextField fx:id="nodeId" promptText="Node Id" GridPane.columnIndex="1"
-                       GridPane.rowIndex="1">
+            <TextField fx:id="nodeId" promptText="New node Id" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                       GridPane.rowIndex="1" onKeyPressed="#setNodeId">
                 <tooltip>
-                    <Tooltip
-                            text="Set the current node id. This node id is displayed in the center of the screen."/>
+                    <Tooltip text="Set the current node id. This node id is displayed in the center of the screen."/>
                 </tooltip>
             </TextField>
-            <TextField fx:id="range" promptText="range" GridPane.columnIndex="1"
-                       GridPane.rowIndex="3">
+            <TextField fx:id="range" promptText="new Range" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                       GridPane.rowIndex="3" onKeyPressed="#setRange">
                 <tooltip>
                     <Tooltip
                             text="Set the range around the current node. This determines how many hops should be displayed in each direction."/>
                 </tooltip>
             </TextField>
-            <Button fx:id="setNodeId" mnemonicParsing="false" onAction="#setNodeId"
-                    text="Set" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-            <Button fx:id="setRange" mnemonicParsing="false" onAction="#setRange"
-                    text="Set" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
             <Label text="Current" GridPane.columnIndex="1"/>
             <Label text="Current" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Label fx:id="currentNodeId" text="currentNodeId"
-                   GridPane.columnIndex="2"/>
-            <Label fx:id="currentRange" text="currentRange" GridPane.columnIndex="2"
-                   GridPane.rowIndex="2"/>
+            <Label fx:id="currentNodeId" text="currentNodeId" GridPane.columnIndex="2"/>
+            <Label fx:id="currentRange" text="currentRange" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
         </children>
     </GridPane>
 </AnchorPane>
