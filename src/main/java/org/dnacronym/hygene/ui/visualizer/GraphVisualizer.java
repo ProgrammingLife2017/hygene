@@ -16,6 +16,7 @@ import javafx.scene.paint.Paint;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.ui.store.GraphStore;
 import org.dnacronym.hygene.ui.util.GraphDimensionsCalculator;
@@ -78,6 +79,8 @@ public final class GraphVisualizer {
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
 
+        getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
+
         centerNodeIdProperty = new SimpleIntegerProperty(0);
         hopsProperty = new SimpleIntegerProperty(0);
 
@@ -122,10 +125,25 @@ public final class GraphVisualizer {
         final double rectWidth = calculator.computeWidth(nodeId);
         final double rectHeight = calculator.getNodeHeight();
 
-        graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
+        graphicsContext.setFill(getNodeColor(nodeId, graph));
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
 
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
+    }
+
+    /**
+     * Retrieve the {@link Color} of a specific node.
+     *
+     * @param nodeId the node id
+     * @param graph  the {@link Graph}
+     * @return the {@link Color}
+     */
+    private Color getNodeColor(final int nodeId, final Graph graph) {
+        final Node selectedNode = getSelectedNodeProperty().get();
+        if (selectedNode != null && selectedNode.getId() == nodeId) {
+            return NodeColor.BRIGHT_GREEN.getFXColor();
+        }
+        return graph.getColor(nodeId).getFXColor();
     }
 
     /**

@@ -19,6 +19,7 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -74,7 +75,8 @@ public final class ConsoleController implements Initializable {
      */
     private void logSelectedSequence() {
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
-                appendLogItem(new ConsoleMessage("Sequence: " + newNode.getSequenceLength() + "\n")));
+                Optional.ofNullable(newNode).ifPresent(node ->
+                        appendLogItem(new ConsoleMessage("Sequence: " + node.getSequenceLength() + "\n"))));
     }
 
     /**
