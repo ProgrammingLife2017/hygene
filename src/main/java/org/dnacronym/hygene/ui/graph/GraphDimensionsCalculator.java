@@ -16,9 +16,11 @@ import java.util.List;
  * Every time {@link #calculate(Graph, Canvas, int, int, double)} is called, all internal values are updated.
  */
 public final class GraphDimensionsCalculator {
+    private Graph graph;
+
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
-    private Graph graph;
+
     private int minX;
     private int maxX;
     private int minY;

@@ -87,7 +87,7 @@ public final class GraphSliderController implements Initializable {
     /**
      * Set the {@link GraphStore} in the controller.
      *
-     * @param graphStore {@link GraphStore} to recent in the {@link GraphController}
+     * @param graphStore {@link GraphStore} to store in the {@link GraphController}
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;

@@ -26,15 +26,6 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
     @FXML
     private ChoiceBox<String> choiceBox;
 
-    /**
-     * Gets a list of log levels.
-     *
-     * @return String[] the LogLevels
-     */
-    static List<String> getLogLevels() {
-        return LOG_LEVELS;
-    }
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         choiceBox.getItems().addAll(LOG_LEVELS);
@@ -68,5 +59,14 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
      */
     void setChoiceBox(final ChoiceBox<String> choiceBox) {
         this.choiceBox = choiceBox;
+    }
+
+    /**
+     * Gets a list of log levels.
+     *
+     * @return String[] the LogLevels
+     */
+    static List<String> getLogLevels() {
+        return LOG_LEVELS;
     }
 }

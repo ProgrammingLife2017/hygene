@@ -41,6 +41,15 @@ public final class ConsoleMessage {
     }
 
     /**
+     * Gets the {@link Text} node.
+     *
+     * @return the {@link Text} node
+     */
+    public Text getNode() {
+        return node;
+    }
+
+    /**
      * Returns a JavaFX color corresponding to a certain log level.
      *
      * @param level the loglevel represent by {@link Level}
@@ -64,14 +73,5 @@ public final class ConsoleMessage {
             default:
                 return Color.LIGHTGRAY;
         }
-    }
-
-    /**
-     * Gets the {@link Text} node.
-     *
-     * @return the {@link Text} node
-     */
-    public Text getNode() {
-        return node;
     }
 }

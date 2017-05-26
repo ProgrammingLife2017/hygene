@@ -76,7 +76,7 @@ public final class SimpleBookmarkStore {
             try {
                 fileBookmarks.storeAll(bookmarks);
             } catch (final SQLException e) {
-                LOGGER.error("Unable to recent bookmarks to file.", e);
+                LOGGER.error("Unable to store bookmarks to file.", e);
             }
         }
     }

@@ -80,7 +80,7 @@ public final class ConsoleController implements Initializable {
     /**
      * Set the {@link GraphVisualizer} in the controller.
      *
-     * @param graphVisualizer {@link GraphVisualizer} to recent in the {@link ConsoleController}
+     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link ConsoleController}
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;

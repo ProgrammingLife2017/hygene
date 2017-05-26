@@ -67,7 +67,7 @@ public final class GraphController implements Initializable {
     /**
      * Sets the {@link GraphVisualizer} in the controller.
      *
-     * @param graphVisualizer {@link GraphVisualizer} to recent in the {@link GraphController}
+     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;

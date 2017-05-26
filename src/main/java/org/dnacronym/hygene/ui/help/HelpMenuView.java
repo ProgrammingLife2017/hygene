@@ -47,15 +47,6 @@ public class HelpMenuView {
     }
 
     /**
-     * Gets help menu articles.
-     *
-     * @return the help menu articles
-     */
-    public static List<HelpArticle> getHelpMenuArticles() {
-        return HELP_MENU_ARTICLES;
-    }
-
-    /**
      * Gets the {@link Stage} in {@link HelpMenuView}.
      *
      * @return the {@link Stage}
@@ -73,5 +64,14 @@ public class HelpMenuView {
         } else {
             Platform.runLater(stage::show);
         }
+    }
+
+    /**
+     * Gets help menu articles.
+     *
+     * @return the help menu articles
+     */
+    public static List<HelpArticle> getHelpMenuArticles() {
+        return HELP_MENU_ARTICLES;
     }
 }
