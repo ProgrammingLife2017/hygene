@@ -1,4 +1,4 @@
 /**
- * Controllers which deal with drawing and interaction with the graph itself.
+ * Controllers which deal with graph drawing and interaction.
  */
 package org.dnacronym.hygene.ui.controller.graph;

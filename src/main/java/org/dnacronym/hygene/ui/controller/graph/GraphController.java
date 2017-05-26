@@ -3,10 +3,10 @@ package org.dnacronym.hygene.ui.controller.graph;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
@@ -28,8 +28,6 @@ public final class GraphController implements Initializable {
     private GraphVisualizer graphVisualizer;
     private GraphMovementCalculator graphMovementCalculator;
 
-    private Stage primaryStage;
-
     @FXML
     private Canvas graphCanvas;
 
@@ -41,7 +39,6 @@ public final class GraphController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setPrimaryStage(Hygene.getInstance().getPrimaryStage());
             setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
@@ -61,15 +58,6 @@ public final class GraphController implements Initializable {
      */
     void setGraphMovementCalculator(final GraphMovementCalculator graphMovementCalculator) {
         this.graphMovementCalculator = graphMovementCalculator;
-    }
-
-    /**
-     * Sets the {@link String} for use by the controller.
-     *
-     * @param primaryStage {@link Stage} for use by the controller
-     */
-    void setPrimaryStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
     }
 
     /**
@@ -116,7 +104,7 @@ public final class GraphController implements Initializable {
     @FXML
     void onGraphPaneMousePressed(final MouseEvent mouseEvent) {
         graphMovementCalculator.onMousePressed(mouseEvent.getSceneX());
-        primaryStage.getScene().setCursor(Cursor.OPEN_HAND);
+        ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.OPEN_HAND);
 
         mouseEvent.consume();
     }
@@ -129,19 +117,19 @@ public final class GraphController implements Initializable {
     @FXML
     void onGraphPaneMouseDragged(final MouseEvent mouseEvent) {
         graphMovementCalculator.onMouseDragged(mouseEvent.getSceneX());
-        primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
+        ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.CLOSED_HAND);
 
         mouseEvent.consume();
     }
 
     /**
-     * When finished drag on the graph pane.
+     * When finished dragging on the graph pane.
      *
      * @param mouseEvent {@link MouseEvent} associated with the event
      */
     @FXML
     void onGraphPaneMouseReleased(final MouseEvent mouseEvent) {
-        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+        ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
 
         mouseEvent.consume();
     }

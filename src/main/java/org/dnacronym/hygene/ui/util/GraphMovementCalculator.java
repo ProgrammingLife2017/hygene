@@ -75,11 +75,12 @@ public final class GraphMovementCalculator {
         final int newCenterNodeId = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 
-        if (newCenterNodeId >= 0 && newCenterNodeId < graphVisualizer.getNodeCountProperty().get()) {
-            graphVisualizer.getCenterNodeIdProperty().set(newCenterNodeId);
-        } else {
-            dragging = false;
-        }
+        graphVisualizer.getCenterNodeIdProperty().set(Math.min(
+                Math.max(newCenterNodeId, 0),
+                graphVisualizer.getNodeCountProperty().get() - 1));
+
+        dragging = newCenterNodeId < 0 || newCenterNodeId > graphVisualizer.getNodeCountProperty().get();
+
     }
 
     /**

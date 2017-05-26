@@ -5,7 +5,6 @@ import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,21 +26,39 @@ final class GraphMovementCalculatorTest {
         centerNodeIdProperty = mock(IntegerProperty.class);
         nodeCountProperty = mock(IntegerProperty.class);
 
-        when(centerNodeIdProperty.get()).thenReturn(10);
-        when(nodeCountProperty.get()).thenReturn(20);
+        when(centerNodeIdProperty.get()).thenReturn(15);
+        when(nodeCountProperty.get()).thenReturn(2000);
 
         when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
         when(graphVisualizer.getNodeCountProperty()).thenReturn(nodeCountProperty);
 
         graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
+        graphMovementCalculator.getPanningSensitivityProperty().set(1);
     }
 
 
     @Test
     void testDragging() {
-        graphMovementCalculator.onMousePressed(10);
+        graphMovementCalculator.onMousePressed(0);
+        graphMovementCalculator.onMouseDragged(-100);
+
+        verify(centerNodeIdProperty).set(15 + 100);
+    }
+
+    @Test
+    void testLowerBound() {
+        graphMovementCalculator.onMousePressed(0);
         graphMovementCalculator.onMouseDragged(100);
 
-        verify(centerNodeIdProperty).set(any(Integer.class));
+        verify(centerNodeIdProperty).set(0);
+    }
+
+    @Test
+    void testUpperBound() {
+        when(nodeCountProperty.get()).thenReturn(20);
+        graphMovementCalculator.onMousePressed(0);
+        graphMovementCalculator.onMouseDragged(-100);
+
+        verify(centerNodeIdProperty).set(19);
     }
 }
