@@ -15,6 +15,7 @@ import java.util.List;
  */
 public final class GraphDimensionsCalculator {
     private static final Logger LOGGER = LogManager.getLogger(GraphDimensionsCalculator.class);
+    private static final int EDGE_WIDTH = 1000;
 
     private final Graph graph;
     private final GraphQuery query;
@@ -52,7 +53,8 @@ public final class GraphDimensionsCalculator {
         this.canvasWidth = canvas.getWidth();
         this.nodeHeight = nodeHeight;
 
-        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
+        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
+                + graph.getUnscaledXEdgeCount(centerNodeId) * EDGE_WIDTH;
         final int[] tempMinX = {unscaledCenterX};
         final int[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
@@ -65,8 +67,10 @@ public final class GraphDimensionsCalculator {
         query.query(centerNodeId, hops);
         query.visit(nodeId -> {
             neighbours.add(nodeId);
-            tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId));
-            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId));
+            tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId)
+                    + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
+            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId)
+                    + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH + graph.getLength(nodeId));
             tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
@@ -99,7 +103,8 @@ public final class GraphDimensionsCalculator {
             return 0;
         }
 
-        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId);
+        final int xPosition = graph.getUnscaledXPosition(nodeId)
+                + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH - graph.getLength(nodeId);
         return (double) (xPosition - minX) / computeDiameter() * canvasWidth;
     }
 
