@@ -1,10 +1,10 @@
 package org.dnacronym.hygene.ui.controller.settings;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyEvent;
 import javafx.util.converter.NumberStringConverter;
 
 import java.net.URL;
@@ -40,38 +40,34 @@ public final class QuerySettingsController extends AbstractSettingsController {
     }
 
     /**
-     * Sets the node id property in the {@link org.dnacronym.hygene.ui.visualizer.GraphVisualizer} integer value of the
-     * current {@link TextField}.
-     * <p>
-     * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
-     * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
+     * When user finished editing the node id {@link TextField}.
      *
-     * @param actionEvent the {@link ActionEvent}
+     * @param keyEvent the {@link KeyEvent}
      */
     @FXML
-    void setNodeId(final ActionEvent actionEvent) {
+    void setNodeId(final KeyEvent keyEvent) {
         getSettings().addRunnable(() -> {
-            final TextField source = (TextField) actionEvent.getSource();
+            final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
             getGraphVisualizer().getCenterNodeIdProperty().set(newValue);
         });
+
+        keyEvent.consume();
     }
 
     /**
-     * Sets the range property in the {@link org.dnacronym.hygene.ui.visualizer.GraphVisualizer} integer value of the
-     * current {@link TextField}.
-     * <p>
-     * The {@link TextField} should have a {@link TextFormatter} with a {@link NumberStringConverter} so only numbers
-     * can be entered in the {@link TextField}. Finally clears the {@link TextField}.
+     * When user finished editing the range {@link TextField}.
      *
-     * @param actionEvent the {@link ActionEvent}
+     * @param keyEvent the {@link KeyEvent}
      */
     @FXML
-    void setRange(final ActionEvent actionEvent) {
+    void setRange(final KeyEvent keyEvent) {
         getSettings().addRunnable(() -> {
-            final TextField source = (TextField) actionEvent.getSource();
+            final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
             getGraphVisualizer().getHopsProperty().set(newValue);
         });
+
+        keyEvent.consume();
     }
 }
