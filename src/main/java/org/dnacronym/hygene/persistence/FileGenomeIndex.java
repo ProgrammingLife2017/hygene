@@ -77,7 +77,7 @@ public final class FileGenomeIndex {
                 + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ")"
                 + " LIMIT 1";
 
-        return (Integer) fileDatabaseDriver.executeCustomSingleRowQuery(sql, resultSet -> {
+        return (Integer) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
             try {
                 return resultSet.getInt(NODE_ID_COLUMN_NAME);
             } catch (final SQLException e) {

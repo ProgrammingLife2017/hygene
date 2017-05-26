@@ -73,7 +73,7 @@ public final class MetadataParser {
                 final String name = st.nextToken();
                 final String sequence = st.nextToken();
             st.nextToken(); // Ignore asterisk
-            final List<String> genomes = parseGenomes(st);
+            final List<String> genomes = parseGenomes(st.nextToken());
 
                 result.put(entry.getKey(), new NodeMetadata(name, sequence, genomes));
             } catch (final NoSuchElementException e) {
@@ -189,13 +189,21 @@ public final class MetadataParser {
         return gfaFile.readFile();
     }
 
-    private List<String> parseGenomes(final StringTokenizer stringTokenizer) throws ParseException {
-        final String genomeMetadata = stringTokenizer.nextToken();
-        if (!genomeMetadata.startsWith(GENOME_LIST_HEADER_PREFIX)) {
+    /**
+     * Returns all genomes of the current file.
+     * <p>
+     * It does this by reading the appropriate header of that GFA file.
+     *
+     * @param header the header tag (including the prefix) to parse
+     * @return the list of genomes in that file
+     * @throws ParseException if the GFA file or given line is invalid
+     */
+    private List<String> parseGenomes(final String header) throws ParseException {
+        if (!header.startsWith(GENOME_LIST_HEADER_PREFIX)) {
             throw new ParseException("Expected genome header at this position.");
         }
 
-        final String genomeListString = genomeMetadata.substring(GENOME_LIST_HEADER_PREFIX.length());
+        final String genomeListString = header.substring(GENOME_LIST_HEADER_PREFIX.length());
         final StringTokenizer bodyTokenizer = new StringTokenizer(genomeListString, ";");
         final List<String> genomes = new ArrayList<>();
 

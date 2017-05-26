@@ -40,7 +40,7 @@ public final class CoordinateSystemIndex {
      * @param gfaFile         the graph file to index
      * @param fileGenomeIndex the {@link FileGenomeIndex} instance to be used for storing and retrieving data
      */
-    public CoordinateSystemIndex(final GfaFile gfaFile, FileGenomeIndex fileGenomeIndex) {
+    public CoordinateSystemIndex(final GfaFile gfaFile, final FileGenomeIndex fileGenomeIndex) {
         this.gfaFile = gfaFile;
         this.fileGenomeIndex = fileGenomeIndex;
         this.genomeBaseCounts = new HashMap<>();
@@ -82,7 +82,10 @@ public final class CoordinateSystemIndex {
 
         try {
             String line;
-            while ((line = bufferedReader.readLine()) != null && line.startsWith("H")) {
+            while ((line = bufferedReader.readLine()) != null) {
+                if (!line.startsWith("H")) {
+                    break;
+                }
                 parseHeaderLine(line);
             }
         } catch (final IOException e) {

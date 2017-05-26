@@ -67,7 +67,7 @@ public final class NodeMetadata {
      *
      * @return the genomes
      */
-    public final List<String> getGenomes() {
+    public List<String> getGenomes() {
         return genomes;
     }
 }
