@@ -148,7 +148,7 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onScrollStarted(final ScrollEvent scrollEvent) {
-        primaryStage.getScene().setCursor(Cursor.CROSSHAIR);
+        ((Node) scrollEvent.getSource()).getScene().setCursor(Cursor.CROSSHAIR);
 
         scrollEvent.consume();
     }
@@ -172,7 +172,7 @@ public final class GraphController implements Initializable {
      */
     @FXML
     void onScrollFinished(final ScrollEvent scrollEvent) {
-        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+        ((Node) scrollEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
 
         scrollEvent.consume();
     }

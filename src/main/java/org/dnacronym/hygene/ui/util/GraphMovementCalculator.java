@@ -26,7 +26,8 @@ public final class GraphMovementCalculator {
     private boolean dragging;
 
     /**
-     *
+     * When true, scrolling out is prohibited. This prevents the about of hops growing too large, making scrolling in
+     * again unresponsive.
      */
     private boolean stopScrollingOut;
 
