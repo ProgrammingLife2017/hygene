@@ -52,6 +52,13 @@ final class GraphTest {
     }
 
     @Test
+    void testGetUnscaledXEdgeCount() {
+        final Graph graph = createGraphWithNodes(NodeBuilder.start().withUnscaledXEdgeCount(28).create().toArray());
+
+        assertThat(graph.getUnscaledXEdgeCount(0)).isEqualTo(28);
+    }
+
+    @Test
     void testGetUnscaledXPosition() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withUnscaledXPosition(33).create().toArray());
 

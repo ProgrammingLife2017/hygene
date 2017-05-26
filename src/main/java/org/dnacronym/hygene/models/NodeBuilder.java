@@ -14,6 +14,7 @@ public final class NodeBuilder {
     private int lineNumber;
     private int sequenceLength;
     private NodeColor color = NodeColor.BLACK;
+    private int unscaledXEdgeCount;
     private int unscaledXPosition = -1;
     private int unscaledYPosition = -1;
     private Set<Edge> incomingEdges = new TreeSet<>();
@@ -43,6 +44,7 @@ public final class NodeBuilder {
         builder.lineNumber = node.getLineNumber();
         builder.sequenceLength = node.getSequenceLength();
         builder.color = node.getColor();
+        builder.unscaledXEdgeCount = node.getUnscaledXEdgeCount();
         builder.unscaledXPosition = node.getUnscaledXPosition();
         builder.unscaledYPosition = node.getUnscaledYPosition();
         builder.incomingEdges = node.getIncomingEdges();
@@ -100,13 +102,13 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the unscaled y position of the {@link Node} under construction.
+     * Sets the unscaled x edge count of the {@link Node} under construction.
      *
-     * @param unscaledYPosition the unscaled y position of the node
+     * @param unscaledXEdgeCount the unscaled x edge count of the node
      * @return current instance of the builder to provide a fluent interface
      */
-    public NodeBuilder withUnscaledYPosition(final int unscaledYPosition) {
-        this.unscaledYPosition = unscaledYPosition;
+    public NodeBuilder withUnscaledXEdgeCount(final int unscaledXEdgeCount) {
+        this.unscaledXEdgeCount = unscaledXEdgeCount;
 
         return this;
     }
@@ -114,11 +116,23 @@ public final class NodeBuilder {
     /**
      * Sets the unscaled x position of the {@link Node} under construction.
      *
-     * @param unscaledXPosition the unscaled y position of the node
+     * @param unscaledXPosition the unscaled x position of the node
      * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withUnscaledXPosition(final int unscaledXPosition) {
         this.unscaledXPosition = unscaledXPosition;
+
+        return this;
+    }
+
+    /**
+     * Sets the unscaled y position of the {@link Node} under construction.
+     *
+     * @param unscaledYPosition the unscaled y position of the node
+     * @return current instance of the builder to provide a fluent interface
+     */
+    public NodeBuilder withUnscaledYPosition(final int unscaledYPosition) {
+        this.unscaledYPosition = unscaledYPosition;
 
         return this;
     }
@@ -159,6 +173,7 @@ public final class NodeBuilder {
                 lineNumber,
                 sequenceLength,
                 color.ordinal(),
+                unscaledXEdgeCount,
                 unscaledXPosition,
                 unscaledYPosition,
                 outgoingEdges.size()
