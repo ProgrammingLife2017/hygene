@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 final class SimpleBookmarkStoreTest {
     private SimpleBookmarkStore simpleBookmarkStore;
     private IntegerProperty centerNodeIdProperty;
+    private IntegerProperty hopsProperty;
 
     private Bookmark bookmark;
     private GraphVisualizer graphVisualizer;
@@ -35,7 +36,9 @@ final class SimpleBookmarkStoreTest {
 
         graphVisualizer = mock(GraphVisualizer.class);
         centerNodeIdProperty = mock(IntegerProperty.class);
+        hopsProperty = mock(IntegerProperty.class);
         when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        when(graphVisualizer.getHopsProperty()).thenReturn(hopsProperty);
 
         simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
     }
@@ -69,5 +72,6 @@ final class SimpleBookmarkStoreTest {
 
         verify(graphVisualizer, times(1)).setSelectedNode(0);
         verify(centerNodeIdProperty, times(1)).set(0);
+        verify(hopsProperty, times(1)).set(32);
     }
 }

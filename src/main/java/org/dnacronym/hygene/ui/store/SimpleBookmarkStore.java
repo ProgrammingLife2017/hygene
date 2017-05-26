@@ -100,6 +100,8 @@ public final class SimpleBookmarkStore {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 graphVisualizer.getCenterNodeIdProperty().set(bookmark.getNodeId());
+                graphVisualizer.getHopsProperty().set(bookmark.getRadius());
+
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
             }));
         } catch (final ParseException e) {
