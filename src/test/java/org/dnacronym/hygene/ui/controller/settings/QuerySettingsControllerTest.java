@@ -16,9 +16,9 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests of {@link QuerySettingsController}s.
+ * Unit tests of {@link QuerySettingsController}.
  */
-public final class QuerySettingsControllerTest extends UITest {
+final class QuerySettingsControllerTest extends UITest {
     private QuerySettingsController querySettingsController;
     private GraphVisualizer graphVisualizer;
     private IntegerProperty centerNodeIdProperty;

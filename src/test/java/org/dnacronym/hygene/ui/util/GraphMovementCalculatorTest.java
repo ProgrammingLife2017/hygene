@@ -12,10 +12,9 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests for {@link GraphMovementCalculator}s.
+ * Unit tests for {@link GraphMovementCalculator}.
  */
-// TODO rewrite GraphMovementCalculator and test this final version
-public final class GraphMovementCalculatorTest {
+final class GraphMovementCalculatorTest {
     private GraphMovementCalculator graphMovementCalculator;
     private GraphVisualizer graphVisualizer;
     private IntegerProperty centerNodeIdProperty;
