@@ -82,7 +82,7 @@ public final class FileGenomeIndex {
                 return resultSet.getInt(NODE_ID_COLUMN_NAME);
             } catch (final SQLException e) {
                 LOGGER.error("Unable to retrieve closest node to base " + base + " in genome no. " + genomeId + ".", e);
-                return null;
+                return -1;
             }
         });
     }
