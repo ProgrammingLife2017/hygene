@@ -44,10 +44,10 @@ public final class FileBookmarks {
      */
     FileDatabaseTable getTable() {
         final FileDatabaseTable globalTable = new FileDatabaseTable(TABLE_NAME);
-        globalTable.addColumn(NODE_ID_COLUMN_NAME, "INTEGER");
-        globalTable.addColumn(BASE_OFFSET_COLUMN_NAME, "INTEGER");
-        globalTable.addColumn(RADIUS_COLUMN_NAME, "INTEGER");
-        globalTable.addColumn(DESCRIPTION_COLUMN_NAME, "TEXT");
+        globalTable.addColumn(NODE_ID_COLUMN_NAME, ColumnType.INTEGER);
+        globalTable.addColumn(BASE_OFFSET_COLUMN_NAME, ColumnType.INTEGER);
+        globalTable.addColumn(RADIUS_COLUMN_NAME, ColumnType.INTEGER);
+        globalTable.addColumn(DESCRIPTION_COLUMN_NAME, ColumnType.TEXT);
 
         return globalTable;
     }

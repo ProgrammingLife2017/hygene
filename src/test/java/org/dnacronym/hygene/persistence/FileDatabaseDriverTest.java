@@ -94,7 +94,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
         final String testTableName = "test";
 
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable(testTableName);
-        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow(testTableName, Collections.singletonList("val1"));
@@ -117,7 +117,7 @@ final class FileDatabaseDriverTest extends FileDatabaseBaseTest {
         final String testTableName = "test";
 
         final FileDatabaseTable fileDatabaseTable = new FileDatabaseTable(testTableName);
-        fileDatabaseTable.addColumn("col1", "TEXT");
+        fileDatabaseTable.addColumn("col1", ColumnType.TEXT);
         fileDatabaseDriver.setUpTable(fileDatabaseTable);
 
         fileDatabaseDriver.insertRow(testTableName, Collections.singletonList("val1"));
