@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.visualizer.GraphVisualizer;
 
 
 /**
@@ -92,11 +91,11 @@ public final class SimpleBookmark {
     /**
      * Return the {@link Runnable} which should be fired when the user double clicks on a bookmark
      * <p>
-     * This {@link Runnable} updates the center node id and the current node in the given {@link GraphVisualizer} to the
-     * one stored internally.
+     * This {@link Runnable} updates the center node id and the current node in the given
+     * {@link org.dnacronym.hygene.ui.visualizer.GraphVisualizer} to the one stored internally.
      *
      * @return {@link Runnable} to be fired when user clicks on bookmark
-     * @see GraphVisualizer#getCenterNodeIdProperty()
+     * @see org.dnacronym.hygene.ui.visualizer.GraphVisualizer#getCenterNodeIdProperty()
      */
     public Runnable getOnClick() {
         return onClick;
