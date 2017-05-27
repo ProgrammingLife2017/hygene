@@ -126,4 +126,26 @@ public final class NodePropertiesController implements Initializable {
 
         actionEvent.consume();
     }
+
+    /**
+     * When the user clicks on the view sequence button.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void viewSequenceAction(final ActionEvent actionEvent) {
+        try {
+            if (graphVisualizer.getSelectedNodeProperty().get() != null) {
+                final String sequence = graphVisualizer.getSelectedNodeProperty().get()
+                        .retrieveMetadata().getSequence();
+                final SequenceView sequenceView = new SequenceView();
+
+                sequenceView.show(sequence);
+            }
+        } catch (ParseException | IOException e) {
+            LOGGER.error("Unable to open sequence window.", e);
+        }
+
+        actionEvent.consume();
+    }
 }
