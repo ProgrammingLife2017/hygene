@@ -56,7 +56,6 @@ public final class NodePropertiesController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize NodePropertiesController.", e);
         }
-
     }
 
 

@@ -39,15 +39,20 @@ public final class ConsoleController implements Initializable {
     private TextField consoleInput;
 
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    /**
+     * Create instance of {@link ConsoleController}.
+     */
+    public ConsoleController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialise ConsoleController.", e);
-            return;
         }
+    }
 
+
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
         JFXAppender.getLatestLogEvent().addListener((observable, oldValue, newValue) -> appendLogItem(newValue));
 
         enableAutoScrolling();
