@@ -13,8 +13,8 @@ import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.setting.Settings;
-import org.dnacronym.hygene.ui.setting.SettingsView;
+import org.dnacronym.hygene.ui.settings.Settings;
+import org.dnacronym.hygene.ui.settings.SettingsView;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

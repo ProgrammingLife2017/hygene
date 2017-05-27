@@ -10,7 +10,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102"
-            fx:controller="org.dnacronym.hygene.ui.setting.QuerySettingsController">
+            fx:controller="org.dnacronym.hygene.ui.settings.QuerySettingsController">
     <GridPane hgap="5.0" vgap="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>

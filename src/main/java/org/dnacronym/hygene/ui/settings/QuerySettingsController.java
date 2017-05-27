@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.setting;
+package org.dnacronym.hygene.ui.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

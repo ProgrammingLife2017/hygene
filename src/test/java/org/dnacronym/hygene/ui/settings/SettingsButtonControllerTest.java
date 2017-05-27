@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.setting;
+package org.dnacronym.hygene.ui.settings;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;

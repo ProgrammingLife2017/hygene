@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <ButtonBar xmlns:fx="http://javafx.com/fxml" fx:id="buttonBar" xmlns="http://javafx.com/javafx"
-           fx:controller="org.dnacronym.hygene.ui.setting.SettingsButtonController"
+           fx:controller="org.dnacronym.hygene.ui.settings.SettingsButtonController"
            prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="5.0">
     <buttons>
         <Button fx:id="ok" mnemonicParsing="false" onAction="#okAction" text="OK">

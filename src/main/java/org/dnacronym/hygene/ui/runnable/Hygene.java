@@ -16,7 +16,7 @@ import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.setting.Settings;
+import org.dnacronym.hygene.ui.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;

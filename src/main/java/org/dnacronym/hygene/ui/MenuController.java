@@ -20,8 +20,8 @@ import org.dnacronym.hygene.ui.recent.RecentDirectory;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.setting.Settings;
-import org.dnacronym.hygene.ui.setting.SettingsView;
+import org.dnacronym.hygene.ui.settings.Settings;
+import org.dnacronym.hygene.ui.settings.SettingsView;
 
 import java.io.File;
 import java.io.IOException;
