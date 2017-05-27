@@ -12,46 +12,74 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.parser.ProgressUpdater;
+import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.function.Consumer;
 
+
+/**
+ * Wrapper class that creates a stage for displaying of a progressbar to the user whilst the file loads.
+ */
 public final class ProgressBarView {
     private static final Logger LOGGER = LogManager.getLogger(ProgressBarView.class);
 
     private static final String PROGRESS_BAR_VIEW = "/ui/progressbar/progress_bar_view.fxml";
     private static final int PROGRESS_TOTAL = 100;
 
-    private final FXMLLoader fxmlLoader;
-    private final Stage dialogStage;
+    private FXMLLoader fxmlLoader;
+    private Stage stage;
+    private ProgressBarController progressBarController;
 
 
     /**
      * Create instance of {@link ProgressBarView}.
-     *
-     * @throws UIInitialisationException if unable to load {@value PROGRESS_BAR_VIEW}
      */
-    public ProgressBarView() throws UIInitialisationException {
+    public ProgressBarView() {
         try {
-            dialogStage = new Stage();
-            dialogStage.initStyle(StageStyle.UTILITY);
-            dialogStage.setResizable(false);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            final Stage stage = new Stage();
+            stage.setResizable(false);
 
             final URL resource = Files.getInstance().getResourceUrl(PROGRESS_BAR_VIEW);
             fxmlLoader = new FXMLLoader(resource);
-        } catch (final IOException e) {
-            throw new UIInitialisationException("Progress bar view could not be loaded.", e);
+
+            final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
+            stage.initOwner(primaryStage);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            setStage(stage);
+        } catch (final IOException | UIInitialisationException e) {
+            LOGGER.error("Progress bar view could not be loaded.", e);
         }
+    }
+
+
+    /**
+     * Sets the {@link Stage}.
+     *
+     * @param stage {@link Stage} for use by the view
+     */
+    void setStage(final Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
+     * Sets the {@link ProgressBarController}.
+     *
+     * @param progressBarController {@link ProgressBarController} for use by the view
+     */
+    void setController(final ProgressBarController progressBarController) {
+        this.progressBarController = progressBarController;
     }
 
     /**
      * Show {@link Stage}.
      */
     public void show() {
-        dialogStage.show();
+        stage.show();
     }
 
     /**
@@ -65,7 +93,7 @@ public final class ProgressBarView {
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
                 task.accept(progress -> {
                     if (progress == PROGRESS_TOTAL) {
-                        Platform.runLater(dialogStage::close);
+                        Platform.runLater(stage::close);
                     }
                     this.updateProgress(progress, PROGRESS_TOTAL);
                 });
@@ -75,9 +103,9 @@ public final class ProgressBarView {
 
         try {
             final Parent root = fxmlLoader.load();
-            dialogStage.setScene(new Scene(root));
+            stage.setScene(new Scene(root));
 
-            final ProgressBarController progressBarController = fxmlLoader.getController();
+            setController(fxmlLoader.getController());
             progressBarController.activateProgressBar(progressTask);
 
             new Thread(progressTask).start();
