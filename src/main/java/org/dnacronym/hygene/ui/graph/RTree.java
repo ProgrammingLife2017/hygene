@@ -69,6 +69,7 @@ public final class RTree {
      * @param nodeAction the action that needs to be executed when a node is found
      * @param edgeAction the action that needs to be executed when an edge is found
      */
+    @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     public void find(final double x, final double y,
                      final Consumer<Integer> nodeAction, final BiConsumer<Integer, Integer> edgeAction) {
         try {
@@ -82,7 +83,8 @@ public final class RTree {
                 edgeAction.accept(result.value()[0], result.value()[1]);
             }
         } catch (final NoSuchElementException e) {
-            LOGGER.info("No node or edge found at position (" + x + ", " + y + ").", e);
+            // There is no need to log the exception itself.
+            LOGGER.info("No node or edge found at position (" + x + ", " + y + ").");
         }
     }
 }

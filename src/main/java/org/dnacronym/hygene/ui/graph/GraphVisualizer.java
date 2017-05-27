@@ -269,6 +269,10 @@ public final class GraphVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.setOnMouseClicked(event -> {
+            if (rTree == null) {
+                return;
+            }
+
             selectedNodeProperty.setValue(null);
             selectedEdgeProperty.setValue(null);
 
