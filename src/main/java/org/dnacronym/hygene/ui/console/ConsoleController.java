@@ -12,6 +12,8 @@ import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.dnacronym.hygene.ui.dialogue.Dialogue;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -47,6 +49,9 @@ public final class ConsoleController implements Initializable {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialise ConsoleController.", e);
+
+            final Dialogue dialogue = new ErrorDialogue(e);
+            dialogue.show();
         }
     }
 

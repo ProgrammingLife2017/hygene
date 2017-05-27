@@ -8,13 +8,13 @@ import javafx.scene.control.Alert;
  * <p>
  * Displayed when the user did something they shouldn't do or potentially dangerous.
  */
-public class WarningDialogue extends Dialogue {
+public final class WarningDialogue extends Dialogue {
     /**
      * Construct a new {@link WarningDialogue}.
      *
      * @param message message to display in the {@link WarningDialogue}
      */
-    public WarningDialogue(String message) {
+    public WarningDialogue(final String message) {
         super("Warning", message, Alert.AlertType.WARNING);
     }
 }
