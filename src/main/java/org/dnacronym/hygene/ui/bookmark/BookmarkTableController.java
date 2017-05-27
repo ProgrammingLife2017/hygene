@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
+import org.dnacronym.hygene.ui.runnable.Dialogue;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -61,6 +62,9 @@ public final class BookmarkTableController implements Initializable {
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize BookmarkTableController.", e);
+
+            final Dialogue dialogue = new Dialogue(Dialogue.DialogueType.ERROR, e);
+            dialogue.show();
         }
     }
 
