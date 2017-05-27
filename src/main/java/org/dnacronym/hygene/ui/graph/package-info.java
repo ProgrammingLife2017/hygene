@@ -12,12 +12,11 @@
  * graph, and makes sure the slider corresponds with the current {@link org.dnacronym.hygene.models.Graph}.
  * <li> {@link org.dnacronym.hygene.ui.graph.GraphStore} stores a reference to the current
  * {@link org.dnacronym.hygene.parser.GfaFile} in memory.
- * </li>
  * <li> {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} wraps a {@link javafx.scene.canvas.Canvas} and draws the
  * current {@link org.dnacronym.hygene.models.Graph} using the coordinates calculated by
  * {@link org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator}.
- * <li> {@link org.dnacronym.hygene.ui.graph.RTree} allows easy finding of nodes, making it easy to find nodes when the user
- * clicks onscreen.
+ * <li> {@link org.dnacronym.hygene.ui.graph.RTree} allows easy finding of nodes, making it easy to find nodes when the
+ * user clicks onscreen.
  * </ul>
  */
 package org.dnacronym.hygene.ui.graph;
