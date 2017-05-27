@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.runnable;
 
+import org.dnacronym.hygene.ui.dialogue.Dialogue;
 import org.dnacronym.hygene.ui.UITest;
 import org.junit.jupiter.api.Test;
 

@@ -11,7 +11,8 @@ import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.runnable.Dialogue;
+import org.dnacronym.hygene.ui.dialogue.Dialogue;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -45,7 +46,7 @@ public final class GraphController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize GraphController.", e);
 
-            final Dialogue dialogue = new Dialogue(Dialogue.DialogueType.ERROR, e);
+            final Dialogue dialogue = new ErrorDialogue(e);
             dialogue.show();
         }
     }

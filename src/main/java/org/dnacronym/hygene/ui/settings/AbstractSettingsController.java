@@ -3,9 +3,10 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.fxml.Initializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Dialogue;
+import org.dnacronym.hygene.ui.dialogue.Dialogue;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -32,7 +33,7 @@ public abstract class AbstractSettingsController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
 
-            final Dialogue dialogue = new Dialogue(Dialogue.DialogueType.ERROR, e);
+            final Dialogue dialogue = new ErrorDialogue(e);
             dialogue.show();
         }
     }
