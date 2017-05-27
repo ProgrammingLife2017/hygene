@@ -10,7 +10,7 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 
 /**
- * Abstract Settings Controller.
+ * Abstract settings Controller.
  */
 public abstract class AbstractSettingsController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(AbstractSettingsController.class);

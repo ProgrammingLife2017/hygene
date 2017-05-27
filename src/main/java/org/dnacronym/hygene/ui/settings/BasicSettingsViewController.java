@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the basic setting view.
+ * Settings controller for the basic settings.
  */
 public final class BasicSettingsViewController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
@@ -76,7 +76,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     }
 
     /**
-     * When the suer finishes sliding the zooming sensitivity {@link Slider}.
+     * When the user finishes sliding the zooming sensitivity {@link Slider}.
      *
      * @param mouseEvent {@link MouseEvent} associated with this event
      */

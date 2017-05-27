@@ -187,7 +187,7 @@ public final class Hygene extends Application {
     /**
      * Gets the {@link GraphMovementCalculator} of the application.
      *
-     * @return {@link GraphMovementCalculator} of the {application
+     * @return {@link GraphMovementCalculator} of the application
      */
     public GraphMovementCalculator getGraphMovementCalculator() {
         return graphMovementCalculator;

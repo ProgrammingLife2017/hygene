@@ -24,7 +24,7 @@ public final class SettingsButtonController extends AbstractSettingsController {
     }
 
     /**
-     * When the user clicks the "OK" button execute all actions and close the window.
+     * When the user clicks "OK" execute all actions and close the window.
      *
      * @param actionEvent {@link ActionEvent} associated with this action
      */
@@ -54,7 +54,7 @@ public final class SettingsButtonController extends AbstractSettingsController {
     }
 
     /**
-     * Execute and clear all commands.
+     * When the user clicks "Apply" execute all commands.
      *
      * @param actionEvent {@link ActionEvent} associated with this action
      */

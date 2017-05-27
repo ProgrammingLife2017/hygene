@@ -15,7 +15,7 @@ import java.net.URL;
 
 
 /**
- * Controller of the display window.
+ * Wrapper class that creates a stage for displaying of settings to the user.
  */
 public final class SettingsView {
     private static final Logger LOGGER = LogManager.getLogger(SettingsView.class);

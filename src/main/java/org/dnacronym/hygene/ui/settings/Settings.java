@@ -6,7 +6,9 @@ import org.dnacronym.hygene.ui.graph.GraphStore;
 
 
 /**
- * Settings class. This stores a bunch of commands.
+ * Settings class.
+ * <p>
+ * Stores a bunch of {@link Runnable}s that can either be executed or discarded.
  */
 public final class Settings {
     private final ObservableList<Runnable> commands;
@@ -30,7 +32,7 @@ public final class Settings {
      *
      * @param runnable action to execute
      */
-    public void addRunnable(final Runnable runnable) {
+    void addRunnable(final Runnable runnable) {
         commands.add(runnable);
     }
 
@@ -40,7 +42,7 @@ public final class Settings {
      * If the {@link GraphStore} has no {@link org.dnacronym.hygene.parser.GfaFile}, this method does not execute any
      * {@link Runnable}.
      */
-    public void executeAll() {
+    void executeAll() {
         if (graphStore.getGfaFileProperty().isNotNull().get()) {
             for (final Runnable runnable : commands) {
                 runnable.run();
@@ -53,7 +55,7 @@ public final class Settings {
     /**
      * Clear all actions in the queue without executing them.
      */
-    public void clearAll() {
+    void clearAll() {
         commands.clear();
     }
 
@@ -62,7 +64,7 @@ public final class Settings {
      *
      * @return current {@link ObservableList} of commands
      */
-    public ObservableList<Runnable> getCommands() {
+    ObservableList<Runnable> getCommands() {
         return commands;
     }
 }

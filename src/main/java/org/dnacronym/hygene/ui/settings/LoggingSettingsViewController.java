@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Controller for the basic setting view.
+ * Settings controller for the logger.
  */
 public final class LoggingSettingsViewController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);

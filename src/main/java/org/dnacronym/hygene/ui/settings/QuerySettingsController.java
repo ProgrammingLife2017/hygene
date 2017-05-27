@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the configuration window.
+ * Settings controller for the current query.
  */
 public final class QuerySettingsController extends AbstractSettingsController {
     @FXML

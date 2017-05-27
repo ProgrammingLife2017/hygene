@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the border.
+ * Settings controller for more advanced features.
  */
 public final class AdvancedSettingsViewController extends AbstractSettingsController {
     private static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
