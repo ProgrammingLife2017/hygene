@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml/1"
-      xmlns="http://javafx.com/javafx/8">
+      xmlns="http://javafx.com/javafx/8"
+      fx:controller="org.dnacronym.hygene.ui.progressbar.ProgressBarController">
     <Text strokeType="OUTSIDE"
           strokeWidth="0.0"
           text="Loading file..."/>
