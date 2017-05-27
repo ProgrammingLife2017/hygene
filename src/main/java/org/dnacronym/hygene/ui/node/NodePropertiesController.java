@@ -17,6 +17,7 @@ import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -85,6 +86,7 @@ public final class NodePropertiesController implements Initializable {
             rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
 
             position.setText(String.valueOf(newNode.getId()));
+
         });
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
