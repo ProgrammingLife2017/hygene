@@ -105,7 +105,7 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Opens a blocking setting window.
+     * Opens a blocking settings window.
      */
     @FXML
     void settingsAction() {
