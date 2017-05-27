@@ -39,18 +39,18 @@ public final class ProgressBarView {
      */
     public ProgressBarView() {
         try {
-            final Stage stage = new Stage();
-            stage.setResizable(false);
+            final Stage newStage = new Stage();
+            newStage.setResizable(false);
 
             final URL resource = Files.getInstance().getResourceUrl(PROGRESS_BAR_VIEW);
             fxmlLoader = new FXMLLoader(resource);
 
             final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
-            stage.initOwner(primaryStage);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.initModality(Modality.APPLICATION_MODAL);
+            newStage.initOwner(primaryStage);
+            newStage.initStyle(StageStyle.UTILITY);
+            newStage.initModality(Modality.APPLICATION_MODAL);
 
-            setStage(stage);
+            setStage(newStage);
         } catch (final IOException | UIInitialisationException e) {
             LOGGER.error("Progress bar view could not be loaded.", e);
         }
