@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the three buttons of the setting window.
+ * Controller for the three buttons of the settings window.
  */
 public final class SettingsButtonController extends AbstractSettingsController {
     @FXML

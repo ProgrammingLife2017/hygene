@@ -8,7 +8,7 @@
  * onscreen pixel coordinates.
  * <li> {@link org.dnacronym.hygene.ui.graph.GraphMovementCalculator} translates pixel coordinates of user interactions
  * to unscaled coordinates of nodes.
- * <li> {@link org.dnacronym.hygene.ui.graph.GraphSliderController} deals with user input in via the slider below the
+ * <li> {@link org.dnacronym.hygene.ui.graph.GraphSliderController} deals with user input through the slider below the
  * graph, and makes sure the slider corresponds with the current {@link org.dnacronym.hygene.models.Graph}.
  * <li> {@link org.dnacronym.hygene.ui.graph.GraphStore} stores a reference to the current
  * {@link org.dnacronym.hygene.parser.GfaFile} in memory.

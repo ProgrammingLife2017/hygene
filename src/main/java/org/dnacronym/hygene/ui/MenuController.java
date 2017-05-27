@@ -253,7 +253,7 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Gets setting view.
+     * Gets settings view.
      *
      * @return the {@link SettingsView}
      */

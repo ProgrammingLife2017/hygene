@@ -33,8 +33,9 @@ public final class LoggingSettingsViewController extends AbstractSettingsControl
     }
 
     /**
-     * When the user changes the log level and new {@link Runnable} command is added to
-     * {@link Settings}. Command run when the user applies the change in setting.
+     * When the user changes the log level and new {@link Runnable} command is added to {@link Settings}.
+     * <p>
+     * Command run when the user applies the change in setting.
      *
      * @param event action event
      */

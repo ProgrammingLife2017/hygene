@@ -43,7 +43,7 @@ public final class RTree {
      * @param height the absolute height of the node
      */
     public void addNode(final int nodeId, final double x, final double y, final double width, final double height) {
-        tree = tree.add(new Integer[]{nodeId}, rectangle(x, y, x + width, y + height));
+        tree = tree.add(new Integer[] {nodeId}, rectangle(x, y, x + width, y + height));
     }
 
     /**
@@ -58,7 +58,7 @@ public final class RTree {
      */
     public void addEdge(final int fromNodeId, final int toNodeId, final double fromX, final double fromY,
                         final double toX, final double toY) {
-        tree = tree.add(new Integer[]{fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
+        tree = tree.add(new Integer[] {fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
     }
 
     /**

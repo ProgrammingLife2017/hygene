@@ -1,5 +1,5 @@
 /**
- * Configure application and show current settings to the user.
+ * Configure the application and show current settings to the user.
  * <p>
  * <ul>
  * <li> {@link org.dnacronym.hygene.ui.settings.AdvancedSettingsViewController} deals with user input for changing

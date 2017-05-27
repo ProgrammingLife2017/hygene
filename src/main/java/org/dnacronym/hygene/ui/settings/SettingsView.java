@@ -48,7 +48,7 @@ public final class SettingsView {
             newStage.initOwner(primaryStage);
             newStage.setScene(new Scene(parent));
 
-            // TODO show prompt box asking the user if they want to close if they have unsaved setting.
+            // TODO show prompt box asking the user if they want to close if they have unsaved settings.
             newStage.setOnCloseRequest(request -> settings.clearAll());
 
             setStage(newStage);
@@ -77,7 +77,7 @@ public final class SettingsView {
     }
 
     /**
-     * Show the setting window.
+     * Show the settings window.
      */
     public void show() {
         stage.show();

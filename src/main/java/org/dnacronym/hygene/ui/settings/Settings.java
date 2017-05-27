@@ -8,7 +8,7 @@ import org.dnacronym.hygene.ui.graph.GraphStore;
 /**
  * Settings class.
  * <p>
- * Stores a bunch of {@link Runnable}s that can either be executed or discarded.
+ * Stores a collection of {@link Runnable}s that can either be executed or discarded.
  */
 public final class Settings {
     private final ObservableList<Runnable> commands;

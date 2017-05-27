@@ -17,6 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for {@link RecentFiles}.
  */
 final class RecentFilesTest {
+    @BeforeEach
+    void setUp() throws IOException {
+        RecentFiles.reset();
+    }
+
     @AfterAll
     static void tearDown() throws IOException {
         final File file = Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME);
@@ -24,10 +29,6 @@ final class RecentFilesTest {
         java.nio.file.Files.deleteIfExists(file.toPath());
     }
 
-    @BeforeEach
-    void setUp() throws IOException {
-        RecentFiles.reset();
-    }
 
     @Test
     void testAddAndGetSimple() throws IOException {
