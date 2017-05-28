@@ -26,6 +26,8 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308"/>
@@ -71,14 +73,14 @@
                         <Tooltip text="Shift right by 100."/>
                     </tooltip>
                 </Button>
-                <Label text="Base offset" GridPane.columnIndex="6"/>
-                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                <Label text="Base offset" GridPane.columnIndex="8"/>
+                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="8" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Current base offset. Can be modified to be at most length of base minus 1."/>
                     </tooltip>
                 </TextField>
                 <Button fx:id="setOffsetButton" mnemonicParsing="false" onAction="#setOffsetAction" text="Set"
-                        GridPane.columnIndex="7" GridPane.rowIndex="1">
+                        GridPane.columnIndex="9" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Set the base offset to the current value in the field."/>
                     </tooltip>
@@ -86,13 +88,18 @@
                 <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2"/>
                 <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
                 <TextArea fx:id="sequenceTextArea" editable="false" maxWidth="Infinity" prefHeight="200.0"
-                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="8" GridPane.rowSpan="2"/>
+                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="10" GridPane.rowSpan="2"/>
                 <Button fx:id="getTextAreaOffsetAction" mnemonicParsing="false" onAction="#getTextAreaOffsetAction"
-                        text="Set" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                        text="Set" GridPane.columnIndex="11" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Set offset to base selected in text area."/>
                     </tooltip>
                 </Button>
+                <Button fx:id="goToStart" mnemonicParsing="false" prefWidth="50.0" text="Start"
+                        GridPane.columnIndex="6" onAction="#goToStartAction"/>
+                <Button fx:id="goToEnd" mnemonicParsing="false" prefWidth="50.0" text="End" GridPane.columnIndex="6"
+                        GridPane.rowIndex="1" onAction="#goToEndAction"/>
+                <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="7" GridPane.rowSpan="2"/>
             </children>
         </GridPane>
     </children>

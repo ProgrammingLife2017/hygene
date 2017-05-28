@@ -194,4 +194,30 @@ public final class SequenceController implements Initializable {
 
         actionEvent.consume();
     }
+
+    /**
+     * When the user wants to go to the start of the sequence.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void goToStartAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.setOffset(0);
+
+        actionEvent.consume();
+    }
+
+    /**
+     * When the user wants to go to the end of the sequence.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void goToEndAction(final ActionEvent actionEvent) {
+        if (sequenceVisualizer.getSequenceProperty().get() != null) {
+            sequenceVisualizer.setOffset(sequenceVisualizer.getSequenceProperty().get().length() - 1);
+        }
+
+        actionEvent.consume();
+    }
 }
