@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
-import org.dnacronym.hygene.ui.progressbar.ProgressBarController;
+import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -287,7 +287,10 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
-        ProgressBarController.performTask(progressUpdater -> {
+        final ProgressBarView progressBarView = new ProgressBarView();
+
+        progressBarView.show();
+        progressBarView.monitorTask(progressUpdater -> {
             if (graphStore == null) {
                 LOGGER.error("Failed to load: " + file.getName() + ".");
                 return;
