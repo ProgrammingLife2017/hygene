@@ -175,10 +175,8 @@ public final class GraphIterator {
                 visited[head] = true;
                 action.accept(currentDepth, head);
 
-                if (currentDepth == maxDepth) {
+                if (currentDepth >= maxDepth) {
                     continue;
-                } else if (currentDepth > maxDepth) {
-                    return;
                 }
 
                 visitDirectNeighbours(head, SequenceDirection.LEFT, neighbour -> {
