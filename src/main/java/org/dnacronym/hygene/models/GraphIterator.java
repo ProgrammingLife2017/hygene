@@ -159,6 +159,7 @@ public final class GraphIterator {
      * @param maxDepth the maximum number of hops a neighbour can be removed from the node
      * @param action   the function to apply to each neighbour's depth and identifier
      */
+    @SuppressWarnings("squid:S3776") // No reasonable refactor possible
     public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth,
                                                    final BiConsumer<Integer, Integer> action) {
         final boolean[] visited = new boolean[nodeArrays.length];
@@ -169,35 +170,33 @@ public final class GraphIterator {
         final int[] depthIncreaseTimes = {1, 0};
         while (!queue.isEmpty()) {
             final int head = queue.remove();
-            if (visited[head]) {
-                continue;
-            }
 
-            visited[head] = true;
-            action.accept(currentDepth, head);
+            if (!visited[head]) {
+                visited[head] = true;
+                action.accept(currentDepth, head);
 
-            if (currentDepth == maxDepth) {
-                continue;
-            } else if (currentDepth > maxDepth) {
-                return;
-            }
-
-            visitDirectNeighbours(head, SequenceDirection.LEFT, neighbour -> {
-                if (!visited[neighbour]) {
-                    depthIncreaseTimes[1]++;
-                    queue.add(neighbour);
+                if (currentDepth == maxDepth) {
+                    continue;
+                } else if (currentDepth > maxDepth) {
+                    return;
                 }
-            });
-            visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
-                if (!visited[neighbour]) {
-                    depthIncreaseTimes[1]++;
-                    queue.add(neighbour);
-                }
-            });
 
+                visitDirectNeighbours(head, SequenceDirection.LEFT, neighbour -> {
+                    if (!visited[neighbour]) {
+                        depthIncreaseTimes[1]++;
+                        queue.add(neighbour);
+                    }
+                });
+                visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
+                    if (!visited[neighbour]) {
+                        depthIncreaseTimes[1]++;
+                        queue.add(neighbour);
+                    }
+                });
+            }
 
             depthIncreaseTimes[0]--;
-            if (depthIncreaseTimes[0] == 0) {
+            if (depthIncreaseTimes[0] <= 0) {
                 currentDepth++;
 
                 depthIncreaseTimes[0] = depthIncreaseTimes[1];
