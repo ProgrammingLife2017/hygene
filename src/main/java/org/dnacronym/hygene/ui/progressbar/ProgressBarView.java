@@ -87,7 +87,7 @@ public final class ProgressBarView {
      *
      * @param task a lambda that accepts an instance of {@link ProgressUpdater}
      */
-    public void performTask(final Consumer<ProgressUpdater> task) {
+    public void monitorTask(final Consumer<ProgressUpdater> task) {
         final Task<Void> progressTask = new Task<Void>() {
             @Override
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
@@ -101,6 +101,15 @@ public final class ProgressBarView {
             }
         };
 
+        initialize(progressTask);
+    }
+
+    /**
+     * Initialize the given {@link Task}, and set the {@link Scene} of the {@link Stage}.
+     *
+     * @param progressTask {@link Task} to initialize
+     */
+    private void initialize(final Task<Void> progressTask) {
         try {
             final Parent root = fxmlLoader.load();
             stage.setScene(new Scene(root));

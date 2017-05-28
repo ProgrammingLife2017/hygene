@@ -290,7 +290,7 @@ public final class MenuController implements Initializable {
         final ProgressBarView progressBarView = new ProgressBarView();
 
         progressBarView.show();
-        progressBarView.performTask(progressUpdater -> {
+        progressBarView.monitorTask(progressUpdater -> {
             if (graphStore == null) {
                 LOGGER.error("Failed to load: " + file.getName() + ".");
                 return;

@@ -41,7 +41,7 @@ final class ProgressBarViewTest extends UITest {
     @SuppressWarnings("unchecked")
     void testPerformTaskSetScene() {
         final Consumer<ProgressUpdater> consumer = mock(Consumer.class);
-        interact(() -> progressBarView.performTask(consumer));
+        interact(() -> progressBarView.monitorTask(consumer));
 
         verify(stage).setScene(any(Scene.class));
     }
@@ -51,7 +51,7 @@ final class ProgressBarViewTest extends UITest {
     void testConsumerCall() {
         final Consumer<ProgressUpdater> consumer  = mock(Consumer.class);
 
-        interact(() -> progressBarView.performTask(consumer));
+        interact(() -> progressBarView.monitorTask(consumer));
 
         verify(consumer).accept(any());
     }
