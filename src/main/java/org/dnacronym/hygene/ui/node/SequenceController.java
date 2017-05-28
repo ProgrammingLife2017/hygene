@@ -8,7 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
+import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
@@ -25,6 +27,7 @@ import java.util.ResourceBundle;
  */
 public final class SequenceController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(SequenceController.class);
+    private static final int CANVAS_PADDING = 10;
 
     private SequenceVisualizer sequenceVisualizer;
     private GraphVisualizer graphVisualizer;
@@ -37,6 +40,8 @@ public final class SequenceController implements Initializable {
     private Canvas sequenceCanvas;
     @FXML
     private Slider incrementAmount;
+    @FXML
+    private TextField setOffset;
 
 
     /**
@@ -56,15 +61,18 @@ public final class SequenceController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         sequenceVisualizer.setCanvas(sequenceCanvas);
 
+        setOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+        sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
+                setOffset.setText(String.valueOf(newValue)));
+
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 lengthField.clear();
-                sequenceVisualizer.getSequenceProperty().set(null);
-                sequenceVisualizer.getVisibleProperty().set(false);
                 return;
             }
 
             lengthField.setText(String.valueOf(newValue.getSequenceLength()));
+            setOffset.setPromptText("0 - " + newValue.getSequenceLength());
 
             try {
                 sequenceVisualizer.getSequenceProperty().set(newValue.retrieveMetadata().getSequence());
@@ -79,7 +87,7 @@ public final class SequenceController implements Initializable {
         sequenceViewPane.visibleProperty().bind(visible);
         sequenceViewPane.managedProperty().bind(visible);
 
-        sequenceCanvas.widthProperty().bind(sequenceViewPane.widthProperty());
+        sequenceCanvas.widthProperty().bind(Bindings.subtract(sequenceViewPane.widthProperty(), CANVAS_PADDING * 2));
     }
 
     /**
@@ -141,6 +149,17 @@ public final class SequenceController implements Initializable {
     @FXML
     void decrementLargeAction(final ActionEvent actionEvent) {
         sequenceVisualizer.decrementOffset((int) incrementAmount.getValue());
+        actionEvent.consume();
+    }
+
+    /**
+     * When the user sets a new offset.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void setOffsetAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.setOffset(Integer.parseInt(setOffset.getText()));
         actionEvent.consume();
     }
 }

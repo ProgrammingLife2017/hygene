@@ -6,8 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +48,7 @@ public final class NodePropertiesController implements Initializable {
     @FXML
     private TextField position;
     @FXML
-    private Button viewSequence;
+    private ToggleButton viewSequence;
 
 
     /**
@@ -94,10 +94,11 @@ public final class NodePropertiesController implements Initializable {
 
         });
 
-        viewSequence.visibleProperty().bind(graphVisualizer.getSelectedNodeProperty().isNotNull());
-        viewSequence.managedProperty().bind(graphVisualizer.getSelectedNodeProperty().isNotNull());
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        sequenceVisualizer.getVisibleProperty().bind(Bindings.and(
+                graphVisualizer.getSelectedNodeProperty().isNotNull(),
+                viewSequence.selectedProperty()));
     }
 
     /**
@@ -140,17 +141,6 @@ public final class NodePropertiesController implements Initializable {
             graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
         }
 
-        actionEvent.consume();
-    }
-
-    /**
-     * When the user clicks on the view sequence button.
-     *
-     * @param actionEvent the {@link ActionEvent}
-     */
-    @FXML
-    void viewSequenceAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.getVisibleProperty().set(true);
         actionEvent.consume();
     }
 }

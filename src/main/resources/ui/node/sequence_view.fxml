@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane fx:id="sequenceViewPane" maxWidth="Infinity" prefHeight="200.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane fx:id="sequenceViewPane" maxWidth="Infinity" prefHeight="200.0" prefWidth="850.0"
+            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.node.SequenceController">
     <children>
         <Canvas fx:id="sequenceCanvas" height="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
@@ -25,6 +25,8 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="ALWAYS" prefWidth="0.0"/>
             </columnConstraints>
@@ -56,6 +58,10 @@
                 <Button fx:id="largeIncrement" maxHeight="Infinity" mnemonicParsing="false"
                         onAction="#incrementLargeAction" prefWidth="50.0" text="&gt;&gt;" GridPane.columnIndex="6"
                         GridPane.rowSpan="2147483647"/>
+                <Label text="Set offset" GridPane.columnIndex="7"/>
+                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="7" GridPane.rowIndex="1"/>
+                <Button fx:id="setOffsetButton" mnemonicParsing="false" onAction="#setOffsetAction" text="Set"
+                        GridPane.columnIndex="8" GridPane.rowIndex="1"/>
             </children>
         </GridPane>
     </children>

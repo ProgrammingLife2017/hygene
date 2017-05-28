@@ -10,6 +10,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 
 /**
@@ -22,7 +23,6 @@ public final class SequenceVisualizer {
     private static final double VERTICAL_GAP = 5;
     private static final double ARC_SIZE = 10;
 
-    private static final double TEXT_WIDTH_PORTION_OFFSET = 0.25;
     private static final double TEXT_HEIGHT_PORTION_OFFSET = 0.75;
 
     private Canvas canvas;
@@ -41,8 +41,10 @@ public final class SequenceVisualizer {
         offsetProperty = new SimpleIntegerProperty();
 
         sequenceProperty.addListener((observable, oldValue, newValue) -> {
-            offsetProperty.set(Math.min(newValue.length() - 1, offsetProperty.get()));
-            draw();
+            if (newValue != null) {
+                offsetProperty.set(Math.min(newValue.length() - 1, offsetProperty.get()));
+                draw();
+            }
         });
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -62,9 +64,9 @@ public final class SequenceVisualizer {
      */
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
-        canvas.widthProperty().addListener((observable, oldValue, newValue) -> draw());
-
         this.graphicsContext = canvas.getGraphicsContext2D();
+
+        canvas.widthProperty().addListener((observable, oldValue, newValue) -> draw());
     }
 
     /**
@@ -72,7 +74,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} if visible
      */
-    public BooleanProperty getVisibleProperty() {
+    BooleanProperty getVisibleProperty() {
         return visibleProperty;
     }
 
@@ -81,7 +83,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link StringProperty} which decides the sequence
      */
-    public StringProperty getSequenceProperty() {
+    StringProperty getSequenceProperty() {
         return sequenceProperty;
     }
 
@@ -90,7 +92,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link ReadOnlyIntegerProperty} which decides the sequence
      */
-    public ReadOnlyIntegerProperty getOffsetProperty() {
+    ReadOnlyIntegerProperty getOffsetProperty() {
         return offsetProperty;
     }
 
@@ -108,10 +110,15 @@ public final class SequenceVisualizer {
         graphicsContext.setStroke(squareFill);
         graphicsContext.strokeRoundRect(x, y, SQUARE_WIDTH, SQUARE_HEIGHT, ARC_SIZE, ARC_SIZE);
 
+        final Text messageText = new Text(message);
+        messageText.setFont(graphicsContext.getFont());
+        final double textWidth = messageText.getBoundsInLocal().getWidth();
+
         graphicsContext.setStroke(textFill);
         graphicsContext.fillText(
                 message,
-                x + SQUARE_WIDTH * TEXT_WIDTH_PORTION_OFFSET, y + SQUARE_HEIGHT * TEXT_HEIGHT_PORTION_OFFSET);
+                x + SQUARE_WIDTH / 2 - textWidth / 2,
+                y + SQUARE_HEIGHT * TEXT_HEIGHT_PORTION_OFFSET);
     }
 
     /**
@@ -129,12 +136,24 @@ public final class SequenceVisualizer {
     /**
      * Increment the current offset.
      * <p>
-     * Upper bound set at sequenceProperty length - 1. Draws the sequence again.
+     * Upper bound set at sequence length - 1. Draws the sequence again.
      *
      * @param amount amount to increment the offset by
      */
     void incrementOffset(final int amount) {
         offsetProperty.set(Math.min(offsetProperty.get() + amount, sequenceProperty.get().length() - 1));
+        draw();
+    }
+
+    /**
+     * Change offset to new value.
+     * <p>
+     * Upper bound set at sequence length - 1. Lower bound is set at 0. Draws sequence again.
+     *
+     * @param offset new offset amount
+     */
+    void setOffset(final int offset) {
+        offsetProperty.set(Math.max(0, Math.min(offset, sequenceProperty.get().length() - 1)));
         draw();
     }
 
@@ -158,6 +177,10 @@ public final class SequenceVisualizer {
 
         for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++) {
             final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
+
+            if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
+                break;
+            }
 
             String base = String.valueOf(sequenceProperty.get().charAt(i));
 

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="nodePropertiesPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.node.NodePropertiesController">
     <children>
         <ScrollPane layoutX="111.0" layoutY="41.0" maxHeight="Infinity" AnchorPane.bottomAnchor="0.0"
@@ -90,12 +91,7 @@
                                                 <Tooltip text="Base sequence of this node."/>
                                             </tooltip>
                                         </TextField>
-                                        <Button fx:id="viewSequence" mnemonicParsing="false"
-                                                onAction="#viewSequenceAction" prefWidth="100.0" text="View">
-                                            <tooltip>
-                                                <Tooltip text="View entire sequence in a separate window."/>
-                                            </tooltip>
-                                        </Button>
+                                        <ToggleButton fx:id="viewSequence" mnemonicParsing="false" text="View"/>
                                     </children>
                                 </HBox>
                             </children>
