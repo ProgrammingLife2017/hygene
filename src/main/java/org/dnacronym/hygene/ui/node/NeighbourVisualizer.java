@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.node;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -14,12 +13,9 @@ import org.dnacronym.hygene.models.Node;
  * A neighbour visualizer is a simple visualisation tool which draws a circle in the middle of the canvas,
  * and lines on the left and right side representing the neighbours.
  */
-public final class NeighbourVisualizer {
+final class NeighbourVisualizer {
     private static final double NODE_WIDTH_PORTION_OF_CANVAS = 0.25;
     private static final double ARC_PORTION_OF_CANVAS = 0.1;
-
-    private final ObjectProperty<Node> nodeProperty;
-    private final ObjectProperty<Color> edgeColorProperty;
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -31,16 +27,10 @@ public final class NeighbourVisualizer {
      * @param edgeColorProperty property which determines the color of edges to neighbours
      * @param nodeProperty      property which determines what node should actually be visualised
      */
-    public NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty,
+    NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty,
                                final ObjectProperty<Node> nodeProperty) {
-        this.edgeColorProperty = new SimpleObjectProperty<>();
-        this.nodeProperty = new SimpleObjectProperty<>();
-
-        this.edgeColorProperty.bind(edgeColorProperty);
-        this.nodeProperty.bind(nodeProperty);
-
-        this.nodeProperty.addListener((observable, oldNode, newNode) -> draw());
-        this.edgeColorProperty.addListener((observable, oldNode, newNode) -> draw());
+        nodeProperty.addListener((observable, oldNode, newNode) -> draw(newNode, edgeColorProperty.get()));
+        edgeColorProperty.addListener((observable, oldColor, newColor) -> draw(nodeProperty.get(), newColor));
     }
 
 
@@ -49,7 +39,7 @@ public final class NeighbourVisualizer {
      *
      * @param canvas canvas on which the node shall be drawn
      */
-    public void setCanvas(final Canvas canvas) {
+    void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
     }
@@ -63,9 +53,11 @@ public final class NeighbourVisualizer {
 
     /**
      * Draw the node and outgoing edges.
+     *
+     * @param node      {@link Node} to draw
+     * @param edgeColor {@link Color} of edges
      */
-    private void draw() {
-        final Node node = nodeProperty.get();
+    private void draw(final Node node, final Color edgeColor) {
         clear();
 
         if (node != null) {
@@ -78,7 +70,7 @@ public final class NeighbourVisualizer {
             final double width = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getWidth();
             final double height = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getHeight();
 
-            graphicsContext.setFill(edgeColorProperty.get());
+            graphicsContext.setFill(edgeColor);
 
             for (int left = 0; left < leftNeighbours; left++) {
                 graphicsContext.strokeLine(
