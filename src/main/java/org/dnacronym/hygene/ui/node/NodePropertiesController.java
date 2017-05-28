@@ -17,7 +17,6 @@ import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -28,6 +27,7 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
+    private SequenceVisualizer sequenceVisualizer;
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
 
@@ -52,6 +52,7 @@ public final class NodePropertiesController implements Initializable {
      */
     public NodePropertiesController() {
         try {
+            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
@@ -91,6 +92,15 @@ public final class NodePropertiesController implements Initializable {
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+    }
+
+    /**
+     * Sets the {@link SequenceVisualizer} for use by the controller.
+     *
+     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller
+     */
+    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
+        this.sequenceVisualizer = sequenceVisualizer;
     }
 
     /**
@@ -134,18 +144,7 @@ public final class NodePropertiesController implements Initializable {
      */
     @FXML
     void viewSequenceAction(final ActionEvent actionEvent) {
-        try {
-            if (graphVisualizer.getSelectedNodeProperty().get() != null) {
-                final String sequence = graphVisualizer.getSelectedNodeProperty().get()
-                        .retrieveMetadata().getSequence();
-                final SequenceView sequenceView = new SequenceView();
-
-                sequenceView.show(sequence);
-            }
-        } catch (ParseException | IOException e) {
-            LOGGER.error("Unable to open sequence window.", e);
-        }
-
+        sequenceVisualizer.getVisibleProperty().set(true);
         actionEvent.consume();
     }
 }

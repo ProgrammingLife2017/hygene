@@ -32,4 +32,8 @@
         </VBox>
     </center>
 
+
+    <bottom>
+        <fx:include source="node/sequence_view.fxml"/>
+    </bottom>
 </BorderPane>

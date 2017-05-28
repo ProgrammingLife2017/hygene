@@ -1,59 +1,138 @@
 package org.dnacronym.hygene.ui.node;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 /**
- *
+ * Controller for the sequence view.
  */
 public class SequenceController implements Initializable {
-    private static final int TEXT_FIELD_WIDTH = 20;
-    private static final int TEXT_FIELD_HEIGHT = 40;
+    private static final Logger LOGGER = LogManager.getLogger(SequenceController.class);
 
+    private SequenceVisualizer sequenceVisualizer;
+    private GraphVisualizer graphVisualizer;
+
+    @FXML
+    private Pane sequenceViewPane;
     @FXML
     private TextField lengthField;
     @FXML
-    private GridPane sequenceGrid;
+    private Canvas sequenceCanvas;
+    @FXML
+    private Slider incrementAmount;
+
+
+    /**
+     * Create instance of {@link SequenceController}.
+     */
+    public SequenceController() {
+        try {
+            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
+        } catch (final UIInitialisationException e) {
+            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
+        }
+    }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Nothing to initialize
+        sequenceVisualizer.setCanvas(sequenceCanvas);
+
+        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                lengthField.clear();
+                sequenceVisualizer.getSequenceProperty().set(null);
+                return;
+            }
+
+            lengthField.setText(String.valueOf(newValue.getSequenceLength()));
+
+            try {
+                sequenceVisualizer.getSequenceProperty().set(newValue.retrieveMetadata().getSequence());
+            } catch (ParseException e) {
+                LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", newValue, e);
+            }
+        });
+
+        sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty());
+        sequenceViewPane.managedProperty().bind(sequenceVisualizer.getVisibleProperty());
     }
 
     /**
-     * @param sequence
-     * @param maxWindowWidth
+     * Sets the {@link GraphVisualizer} for use by the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
      */
-    void setSequence(final String sequence, final double maxWindowWidth) {
-        lengthField.setText(String.valueOf(sequence.length()));
+    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
+    }
 
-        int column = 0;
-        for (int i = 0; i < sequence.length(); i++) {
-            final Label baseField = new Label();
-            final Label positionField = new Label();
-            baseField.setText(String.valueOf(sequence.charAt(i)));
-            positionField.setText(String.valueOf(i));
+    /**
+     * Sets the {@link SequenceVisualizer} for use by the controller.
+     *
+     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller
+     */
+    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
+        this.sequenceVisualizer = sequenceVisualizer;
+    }
 
-            baseField.setPrefWidth(TEXT_FIELD_WIDTH);
-            baseField.setPrefHeight(TEXT_FIELD_HEIGHT);
-            positionField.setPrefWidth(TEXT_FIELD_WIDTH);
-            positionField.setPrefHeight(TEXT_FIELD_HEIGHT);
+    /**
+     * When the user wants to move by only a single amount.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void incrementSmallAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.incrementOffset(1);
+        actionEvent.consume();
+    }
 
-            sequenceGrid.addColumn(column, baseField);
-            sequenceGrid.addColumn(column, positionField);
+    /**
+     * When the user wants to increment by a large amount.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void incrementLargeAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.incrementOffset((int) incrementAmount.getValue());
+        actionEvent.consume();
+    }
 
-            column++;
-            if (column * TEXT_FIELD_WIDTH > maxWindowWidth) {
-                column = 0;
-            }
-        }
+    /**
+     * When the user wants to decrement by a small amount.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void decrementSmallAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.decrementOffset(1);
+        actionEvent.consume();
+    }
+
+    /**
+     * When the user wants to decrement by a large amount.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void decrementLargeAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.decrementOffset((int) incrementAmount.getValue());
+        actionEvent.consume();
     }
 }
