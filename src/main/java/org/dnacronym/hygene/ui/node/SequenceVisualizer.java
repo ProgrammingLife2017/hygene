@@ -41,10 +41,12 @@ public final class SequenceVisualizer {
         offsetProperty = new SimpleIntegerProperty();
 
         sequenceProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                offsetProperty.set(Math.min(newValue.length() - 1, offsetProperty.get()));
-                draw();
+            final int newOffset = newValue != null ? Math.min(offsetProperty.get(), newValue.length()) : 0;
+            if (newOffset == offsetProperty.get()) {
+                draw(); // ensure draw is called if offset property remains unchanged
             }
+
+            setOffset(newOffset);
         });
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -148,13 +150,18 @@ public final class SequenceVisualizer {
     /**
      * Change offset to new value.
      * <p>
-     * Upper bound set at sequence length - 1. Lower bound is set at 0. Draws sequence again.
+     * Upper bound set at sequence length - 1. Lower bound is set at 0. If sequence is null, offset set to 0. Afterwards
+     * draws again.
      *
      * @param offset new offset amount
      */
     void setOffset(final int offset) {
+        if (sequenceProperty.get() == null) {
+            offsetProperty.set(0);
+            return;
+        }
+
         offsetProperty.set(Math.max(0, Math.min(offset, sequenceProperty.get().length() - 1)));
-        draw();
     }
 
     /**
