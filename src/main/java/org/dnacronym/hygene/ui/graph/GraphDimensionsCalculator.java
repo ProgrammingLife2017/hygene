@@ -16,11 +16,15 @@ import java.util.List;
  * Every time {@link #calculate(Graph, Canvas, int, int, double)} is called, all internal values are updated.
  */
 public final class GraphDimensionsCalculator {
-    private Graph graph;
+    /**
+     * The default horizontal displacement between two adjacent nodes.
+     */
+    private static final int DEFAULT_EDGE_WIDTH = 1000;
 
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
 
+    private Graph graph;
     private int minX;
     private int maxX;
     private int minY;
@@ -61,7 +65,8 @@ public final class GraphDimensionsCalculator {
         this.canvasWidth = canvas.getWidth();
         this.nodeHeight = nodeHeight;
 
-        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId);
+        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
+                + graph.getUnscaledXEdgeCount(centerNodeId) * DEFAULT_EDGE_WIDTH;
         final int[] tempMinX = {unscaledCenterX};
         final int[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
@@ -74,20 +79,23 @@ public final class GraphDimensionsCalculator {
         query.query(centerNodeId, hops);
         query.visit(nodeId -> {
             neighbours.add(nodeId);
-            final int nodeLeftX = graph.getUnscaledXPosition(nodeId);
+
+            final int nodeLeftX = graph.getUnscaledXPosition(nodeId)
+                    + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
             if (tempMinX[0] > nodeLeftX) {
                 tempMinX[0] = nodeLeftX;
                 minXNodeIdProperty.set(nodeId);
             }
 
-            final int nodeRightX = graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId);
+            final int nodeRightX = graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId)
+                    + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
             if (tempMaxX[0] < nodeRightX) {
                 tempMaxX[0] = nodeRightX;
                 maxXNodeIdProperty.set(nodeId);
             }
 
-            tempMinX[0] = Math.min(tempMinX[0], graph.getUnscaledXPosition(nodeId));
-            tempMaxX[0] = Math.max(tempMaxX[0], graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId));
+            tempMinX[0] = Math.min(tempMinX[0], nodeLeftX);
+            tempMaxX[0] = Math.max(tempMaxX[0], nodeRightX);
 
             tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
@@ -109,7 +117,8 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     public double computeXPosition(final int nodeId) {
-        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId);
+        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId)
+                + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
         return (double) (xPosition - minX) / (maxX - minX) * canvasWidth;
     }
 
