@@ -1,4 +1,4 @@
 /**
- * All classes that involved in making the help menu work.
- **/
+ * Everything to do with the help menu.
+ */
 package org.dnacronym.hygene.ui.help;

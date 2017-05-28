@@ -40,7 +40,6 @@ public final class ConsoleMessage {
         node.setFill(getColor(event.getLevel()));
     }
 
-
     /**
      * Gets the {@link Text} node.
      *

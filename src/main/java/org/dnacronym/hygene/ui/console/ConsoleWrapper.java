@@ -17,7 +17,7 @@ import java.net.URL;
  */
 public final class ConsoleWrapper {
     private static final String TITLE = "Console";
-    private static final String CONSOLE_VIEW = "/ui/view/console_view.fxml";
+    private static final String CONSOLE_VIEW = "/ui/console/console_view.fxml";
 
     private final Stage stage;
 

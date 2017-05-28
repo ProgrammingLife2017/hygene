@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.102">
+    <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+             prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+            <Tab text="Query">
+                <fx:include source="query_settings_view.fxml"/>
+                <tooltip>
+                    <Tooltip text="Settings for the current query"/>
+                </tooltip>
+            </Tab>
+            <Tab text="Basic">
+                <fx:include source="basic_settings_view.fxml"/>
+                <tooltip>
+                    <Tooltip text="Basic view and interaction settings."/>
+                </tooltip>
+            </Tab>
+            <Tab text="Advanced">
+                <fx:include source="advanced_settings_view.fxml"/>
+                <tooltip>
+                    <Tooltip text="Advanced view settings"/>
+                </tooltip>
+            </Tab>
+            <Tab text="Logging">
+                <fx:include source="logging_settings_view.fxml"/>
+                <tooltip>
+                    <Tooltip text="Logging settings."/>
+                </tooltip>
+            </Tab>
+        </tabs>
+    </TabPane>
+    <fx:include source="settings_button_view.fxml"/>
+</AnchorPane>

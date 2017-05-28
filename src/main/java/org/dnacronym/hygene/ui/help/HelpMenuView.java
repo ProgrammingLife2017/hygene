@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class HelpMenuView {
     private static final String TITLE = "Help";
-    private static final String HELP_MENU_VIEW = "/ui/view/help/help_view.fxml";
+    private static final String HELP_MENU_VIEW = "/ui/help/help_view.fxml";
     private static final List<HelpArticle> HELP_MENU_ARTICLES = (new HelpArticleParser()).parse();
 
     private Stage stage;
@@ -45,7 +45,6 @@ public class HelpMenuView {
         final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);
     }
-
 
     /**
      * Gets the {@link Stage} in {@link HelpMenuView}.

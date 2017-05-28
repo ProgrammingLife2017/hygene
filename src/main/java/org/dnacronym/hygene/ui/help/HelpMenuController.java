@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public final class HelpMenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(HelpMenuController.class);
-    private static final String LEFT_MENU_BTN = "/ui/view/help/help_sidebar_btn.fxml";
+    private static final String LEFT_MENU_BTN = "/ui/help/help_sidebar_btn.fxml";
 
     @FXML
     private VBox sidebar;
