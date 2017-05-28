@@ -72,7 +72,7 @@ public final class SequenceController implements Initializable {
             }
 
             lengthField.setText(String.valueOf(newValue.getSequenceLength()));
-            setOffset.setPromptText("0 - " + newValue.getSequenceLength());
+            setOffset.setPromptText("0 - " + (newValue.getSequenceLength() - 1));
 
             try {
                 sequenceVisualizer.getSequenceProperty().set(newValue.retrieveMetadata().getSequence());

@@ -41,12 +41,10 @@ public final class SequenceVisualizer {
         offsetProperty = new SimpleIntegerProperty();
 
         sequenceProperty.addListener((observable, oldValue, newValue) -> {
-            final int newOffset = newValue != null ? Math.min(offsetProperty.get(), newValue.length()) : 0;
-            if (newOffset == offsetProperty.get()) {
-                draw(); // ensure draw is called if offset property remains unchanged
+            if (offsetProperty.get() == 0) {
+                draw(); // force redraw if offset remains unchanged.
             }
-
-            setOffset(newOffset);
+            offsetProperty.set(0);
         });
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -76,7 +74,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} if visible
      */
-    BooleanProperty getVisibleProperty() {
+    public BooleanProperty getVisibleProperty() {
         return visibleProperty;
     }
 
@@ -85,7 +83,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link StringProperty} which decides the sequence
      */
-    StringProperty getSequenceProperty() {
+    public StringProperty getSequenceProperty() {
         return sequenceProperty;
     }
 
@@ -94,7 +92,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link ReadOnlyIntegerProperty} which decides the sequence
      */
-    ReadOnlyIntegerProperty getOffsetProperty() {
+    public ReadOnlyIntegerProperty getOffsetProperty() {
         return offsetProperty;
     }
 
@@ -155,7 +153,7 @@ public final class SequenceVisualizer {
      *
      * @param offset new offset amount
      */
-    void setOffset(final int offset) {
+    public void setOffset(final int offset) {
         if (sequenceProperty.get() == null) {
             offsetProperty.set(0);
             return;

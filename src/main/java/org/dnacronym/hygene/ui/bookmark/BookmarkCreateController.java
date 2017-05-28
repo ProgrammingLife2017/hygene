@@ -8,13 +8,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -29,6 +32,7 @@ public final class BookmarkCreateController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
 
     private GraphVisualizer graphVisualizer;
+    private SequenceVisualizer sequenceVisualizer;
     private GraphStore graphStore;
     private SimpleBookmarkStore simpleBookmarkStore;
 
@@ -50,6 +54,7 @@ public final class BookmarkCreateController implements Initializable {
     public BookmarkCreateController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
@@ -63,7 +68,14 @@ public final class BookmarkCreateController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         final ObjectProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
+        baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
+        baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
+        baseOffset.textProperty().addListener((observable, oldValue, newValue) ->
+                sequenceVisualizer.setOffset(Integer.parseInt(newValue)));
+        sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
+                baseOffset.setText(String.valueOf(newValue)));
+
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
@@ -79,6 +91,15 @@ public final class BookmarkCreateController implements Initializable {
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
+    }
+
+    /**
+     * Sets the {@link SequenceVisualizer} for use by the controller.
+     *
+     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller.
+     */
+    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
+        this.sequenceVisualizer = sequenceVisualizer;
     }
 
     /**
