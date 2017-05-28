@@ -1,8 +1,11 @@
 package org.dnacronym.hygene.ui.bookmark;
 
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -28,6 +31,8 @@ public final class BookmarkTableController implements Initializable {
 
     @FXML
     private ScrollPane bookmarksPane;
+    @FXML
+    private Label bookmarksTableTitle;
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
      * center node id in {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} is updated to the one in the
@@ -43,6 +48,8 @@ public final class BookmarkTableController implements Initializable {
     private TableColumn<SimpleBookmark, Number> radius;
     @FXML
     private TableColumn<SimpleBookmark, String> description;
+    @FXML
+    private Button hideButton;
 
 
     /**
@@ -76,6 +83,14 @@ public final class BookmarkTableController implements Initializable {
         });
 
         bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
+        bookmarksTable.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
+        bookmarksTable.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
+        bookmarksTableTitle.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
+        bookmarksTableTitle.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
+
+        hideButton.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
+                .then(">")
+                .otherwise("<"));
 
         bookmarksPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         bookmarksPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
@@ -97,5 +112,17 @@ public final class BookmarkTableController implements Initializable {
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
+    }
+
+    /**
+     * Toggles the visibility of the the bookmarks table.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void toggleVisibilityAction(final ActionEvent actionEvent) {
+        final boolean newValue = simpleBookmarkStore.getTableVisibleProperty().not().get();
+        simpleBookmarkStore.getTableVisibleProperty().set(newValue);
+        actionEvent.consume();
     }
 }
