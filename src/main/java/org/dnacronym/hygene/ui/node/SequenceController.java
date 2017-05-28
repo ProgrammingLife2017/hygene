@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the sequence view.
  */
-public class SequenceController implements Initializable {
+public final class SequenceController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(SequenceController.class);
 
     private SequenceVisualizer sequenceVisualizer;
@@ -53,7 +53,7 @@ public class SequenceController implements Initializable {
 
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         sequenceVisualizer.setCanvas(sequenceCanvas);
 
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> {

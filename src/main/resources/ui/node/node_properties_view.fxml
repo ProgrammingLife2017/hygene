@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="nodePropertiesPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+            minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.node.NodePropertiesController">
     <children>
         <ScrollPane layoutX="111.0" layoutY="41.0" maxHeight="Infinity" AnchorPane.bottomAnchor="0.0"
@@ -91,7 +91,7 @@
                                             </tooltip>
                                         </TextField>
                                         <Button fx:id="viewSequence" mnemonicParsing="false"
-                                                onAction="#viewSequenceAction" text="View">
+                                                onAction="#viewSequenceAction" prefWidth="100.0" text="View">
                                             <tooltip>
                                                 <Tooltip text="View entire sequence in a separate window."/>
                                             </tooltip>

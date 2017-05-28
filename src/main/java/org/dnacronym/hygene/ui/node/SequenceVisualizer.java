@@ -16,11 +16,14 @@ import javafx.scene.paint.Color;
  * Visualizer which shows a nice representation of the selected node.
  */
 public final class SequenceVisualizer {
-    private static final double BASE_WIDTH = 30;
-    private static final double BASE_HEIGHT = 40;
+    private static final double SQUARE_WIDTH = 30;
+    private static final double SQUARE_HEIGHT = 40;
     private static final double HORIZONTAL_GAP = 10;
     private static final double VERTICAL_GAP = 5;
     private static final double ARC_WIDTH = 10;
+
+    private static final double TEXT_WIDTH_PORTION_OFFSET = 0.25;
+    private static final double TEXT_HEIGHT_PORTION_OFFSET = 0.75;
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -45,7 +48,7 @@ public final class SequenceVisualizer {
 
         visibleProperty = new SimpleBooleanProperty();
         visibleProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue){
+            if (newValue) {
                 draw();
             }
         });
@@ -61,7 +64,6 @@ public final class SequenceVisualizer {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
     }
-
 
     /**
      * Returns the {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} is visible.
@@ -93,21 +95,21 @@ public final class SequenceVisualizer {
     /**
      * Draw square on canvas with given message.
      *
-     * @param message text to display in middle of square
-     * @param x       upper left x of square
-     * @param y       upper left y of square
-     * @param width   width of square
-     * @param height  height of square
-     * @param arcSize arc size of square
+     * @param message    text to display in middle of square
+     * @param x          upper left x of square
+     * @param y          upper left y of square
+     * @param squareFill {@link Color} fill of background of square
+     * @param textFill   {@link Color} fill of text in square
      */
     private void drawSquare(final String message, final double x, final double y,
-                            final double width, final double height, final double arcSize,
                             final Color squareFill, final Color textFill) {
         graphicsContext.setFill(squareFill);
-        graphicsContext.fillRoundRect(x, y, width, height, arcSize, arcSize);
+        graphicsContext.fillRoundRect(x, y, SQUARE_WIDTH, SQUARE_HEIGHT, ARC_WIDTH, ARC_WIDTH);
 
         graphicsContext.setFill(textFill);
-        graphicsContext.fillText(message, x + width * 0.25, y + height * 0.75);
+        graphicsContext.fillText(
+                message,
+                x + SQUARE_WIDTH * TEXT_WIDTH_PORTION_OFFSET, y + SQUARE_HEIGHT * TEXT_HEIGHT_PORTION_OFFSET);
     }
 
     /**
@@ -153,31 +155,16 @@ public final class SequenceVisualizer {
         }
 
         for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++) {
-            final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (BASE_WIDTH + HORIZONTAL_GAP);
+            final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
 
-            if (topRightX + BASE_WIDTH > canvas.getWidth()) {
+            if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
                 break;
             }
 
             String base = String.valueOf(sequenceProperty.get().charAt(i));
 
-            drawSquare(base,
-                    topRightX,
-                    VERTICAL_GAP,
-                    BASE_WIDTH,
-                    BASE_HEIGHT,
-                    ARC_WIDTH,
-                    Color.BLUE,
-                    Color.BLACK);
-
-            drawSquare(String.valueOf(i),
-                    topRightX,
-                    VERTICAL_GAP * 2 + BASE_HEIGHT,
-                    BASE_WIDTH,
-                    BASE_HEIGHT,
-                    ARC_WIDTH,
-                    Color.DARKBLUE,
-                    Color.BLACK);
+            drawSquare(base, topRightX, VERTICAL_GAP, Color.BLUE, Color.BLACK);
+            drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT, Color.DARKBLUE, Color.BLACK);
         }
     }
 }
