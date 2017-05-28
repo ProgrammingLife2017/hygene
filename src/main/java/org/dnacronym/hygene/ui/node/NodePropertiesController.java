@@ -1,10 +1,12 @@
 package org.dnacronym.hygene.ui.node;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +47,8 @@ public final class NodePropertiesController implements Initializable {
     private TextField rightNeighbours;
     @FXML
     private TextField position;
+    @FXML
+    private Button viewSequence;
 
 
     /**
@@ -90,6 +94,8 @@ public final class NodePropertiesController implements Initializable {
 
         });
 
+        viewSequence.visibleProperty().bind(graphVisualizer.getSelectedNodeProperty().isNotNull());
+        viewSequence.managedProperty().bind(graphVisualizer.getSelectedNodeProperty().isNotNull());
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
     }

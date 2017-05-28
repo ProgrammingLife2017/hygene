@@ -20,7 +20,7 @@ public final class SequenceVisualizer {
     private static final double SQUARE_HEIGHT = 40;
     private static final double HORIZONTAL_GAP = 10;
     private static final double VERTICAL_GAP = 5;
-    private static final double ARC_WIDTH = 10;
+    private static final double ARC_SIZE = 10;
 
     private static final double TEXT_WIDTH_PORTION_OFFSET = 0.25;
     private static final double TEXT_HEIGHT_PORTION_OFFSET = 0.75;
@@ -62,6 +62,8 @@ public final class SequenceVisualizer {
      */
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
+        canvas.widthProperty().addListener((observable, oldValue, newValue) -> draw());
+
         this.graphicsContext = canvas.getGraphicsContext2D();
     }
 
@@ -103,10 +105,10 @@ public final class SequenceVisualizer {
      */
     private void drawSquare(final String message, final double x, final double y,
                             final Color squareFill, final Color textFill) {
-        graphicsContext.setFill(squareFill);
-        graphicsContext.fillRoundRect(x, y, SQUARE_WIDTH, SQUARE_HEIGHT, ARC_WIDTH, ARC_WIDTH);
+        graphicsContext.setStroke(squareFill);
+        graphicsContext.strokeRoundRect(x, y, SQUARE_WIDTH, SQUARE_HEIGHT, ARC_SIZE, ARC_SIZE);
 
-        graphicsContext.setFill(textFill);
+        graphicsContext.setStroke(textFill);
         graphicsContext.fillText(
                 message,
                 x + SQUARE_WIDTH * TEXT_WIDTH_PORTION_OFFSET, y + SQUARE_HEIGHT * TEXT_HEIGHT_PORTION_OFFSET);
@@ -148,7 +150,7 @@ public final class SequenceVisualizer {
      * <p>
      * If sequence is null then area is only cleared.
      */
-    void draw() {
+    private void draw() {
         clear();
         if (sequenceProperty.get() == null) {
             return;
@@ -156,10 +158,6 @@ public final class SequenceVisualizer {
 
         for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++) {
             final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
-
-            if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
-                break;
-            }
 
             String base = String.valueOf(sequenceProperty.get().charAt(i));
 
