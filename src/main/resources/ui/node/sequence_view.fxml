@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -93,6 +94,8 @@
                 </Button>
                 <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2"/>
                 <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
+                <TextArea fx:id="sequenceTextArea" editable="false" maxWidth="1.7976931348623157E308" prefHeight="200.0"
+                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="9" GridPane.rowSpan="2"/>
             </children>
         </GridPane>
     </children>

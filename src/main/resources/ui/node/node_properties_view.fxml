@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="nodePropertiesPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity"
             minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
@@ -83,17 +82,8 @@
                                                 wrapText="true"/>
                                     </tooltip>
                                 </Button>
-                                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1"
-                                      GridPane.rowIndex="2">
-                                    <children>
-                                        <TextField fx:id="sequence" editable="false">
-                                            <tooltip>
-                                                <Tooltip text="Base sequence of this node."/>
-                                            </tooltip>
-                                        </TextField>
-                                        <ToggleButton fx:id="viewSequence" mnemonicParsing="false" text="View"/>
-                                    </children>
-                                </HBox>
+                                <ToggleButton fx:id="viewSequence" mnemonicParsing="false" text="View"
+                                              GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                             </children>
                         </GridPane>
                     </children>

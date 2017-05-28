@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
@@ -42,6 +43,8 @@ public final class SequenceController implements Initializable {
     private Slider incrementAmount;
     @FXML
     private TextField setOffset;
+    @FXML
+    private TextArea sequenceTextArea;
 
 
     /**
@@ -62,12 +65,17 @@ public final class SequenceController implements Initializable {
         sequenceVisualizer.setCanvas(sequenceCanvas);
 
         setOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
-        sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
-                setOffset.setText(String.valueOf(newValue)));
+        sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) -> {
+            setOffset.setText(String.valueOf(newValue));
+
+            sequenceTextArea.positionCaret(newValue.intValue());
+            sequenceTextArea.selectPositionCaret(newValue.intValue() + 1);
+        });
 
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 lengthField.clear();
+                sequenceTextArea.clear();
                 return;
             }
 
@@ -75,7 +83,9 @@ public final class SequenceController implements Initializable {
             setOffset.setPromptText("0 - " + (newValue.getSequenceLength() - 1));
 
             try {
-                sequenceVisualizer.getSequenceProperty().set(newValue.retrieveMetadata().getSequence());
+                final String sequence = newValue.retrieveMetadata().getSequence();
+                sequenceVisualizer.getSequenceProperty().set(sequence);
+                sequenceTextArea.setText(sequence);
             } catch (ParseException e) {
                 LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", newValue, e);
             }
@@ -84,10 +94,16 @@ public final class SequenceController implements Initializable {
         final BooleanBinding visible = Bindings.and(
                 Bindings.isNotNull(graphVisualizer.getSelectedNodeProperty()),
                 sequenceVisualizer.getVisibleProperty());
-        sequenceViewPane.visibleProperty().bind(visible);
-        sequenceViewPane.managedProperty().bind(visible);
+        sequenceViewPane.visibleProperty().
 
-        sequenceCanvas.widthProperty().bind(Bindings.subtract(sequenceViewPane.widthProperty(), CANVAS_PADDING * 2));
+                bind(visible);
+        sequenceViewPane.managedProperty().
+
+                bind(visible);
+
+        sequenceCanvas.widthProperty().
+
+                bind(Bindings.subtract(sequenceViewPane.widthProperty(), CANVAS_PADDING * 2));
     }
 
     /**

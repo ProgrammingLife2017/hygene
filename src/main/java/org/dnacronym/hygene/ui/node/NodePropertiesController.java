@@ -15,6 +15,7 @@ import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -37,8 +38,6 @@ public final class NodePropertiesController implements Initializable {
     private AnchorPane nodePropertiesPane;
     @FXML
     private TextField nodeId;
-    @FXML
-    private TextField sequence;
     @FXML
     private Canvas neighbourCanvas;
     @FXML
@@ -76,22 +75,19 @@ public final class NodePropertiesController implements Initializable {
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
             if (newNode == null) {
+                nodeId.clear();
+                leftNeighbours.clear();
+                rightNeighbours.clear();
+                position.clear();
                 return;
             }
 
             nodeId.setText(String.valueOf(newNode.getId()));
 
-            try {
-                sequence.setText(newNode.retrieveMetadata().getSequence());
-            } catch (final ParseException e) {
-                LOGGER.error("Error when parsing a node.", e);
-            }
-
             leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
             rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
 
             position.setText(String.valueOf(newNode.getId()));
-
         });
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
