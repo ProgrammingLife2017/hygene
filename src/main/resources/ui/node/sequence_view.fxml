@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
@@ -23,14 +22,14 @@
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="SOMETIMES"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="ALWAYS" prefWidth="0.0"/>
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308"/>
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -44,58 +43,56 @@
                         <Tooltip text="Amount of bases in the currently selected node."/>
                     </tooltip>
                 </TextField>
-                <Slider fx:id="incrementAmount" majorTickUnit="10.0" max="50.0" min="10.0" showTickLabels="true"
-                        showTickMarks="true" snapToTicks="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                    <tooltip>
-                        <Tooltip
-                                text="Amount to increment by when clicking on the fast backwards and forwards buttons."/>
-                    </tooltip>
-                </Slider>
-                <Label text="Increment amount" GridPane.columnIndex="2"/>
                 <Button fx:id="largeDecrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#decrementLargeAction" prefWidth="50.0" text="&lt;&lt;" GridPane.columnIndex="5"
+                        onAction="#decrementLargeAction" prefWidth="50.0" text="&lt;&lt;" GridPane.columnIndex="2"
                         GridPane.rowSpan="2">
                     <tooltip>
-                        <Tooltip text="Shift left by set increment amount."/>
+                        <Tooltip text="Shift left by 100."/>
                     </tooltip>
                 </Button>
                 <Button fx:id="smallDecrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#decrementSmallAction" prefWidth="35.0" text="&lt;" GridPane.columnIndex="6"
+                        onAction="#decrementSmallAction" prefWidth="35.0" text="&lt;" GridPane.columnIndex="3"
                         GridPane.rowSpan="2">
                     <tooltip>
                         <Tooltip text="Shift left by one."/>
                     </tooltip>
                 </Button>
                 <Button fx:id="smallIncrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#incrementSmallAction" prefWidth="35.0" text="&gt;" GridPane.columnIndex="7"
+                        onAction="#incrementSmallAction" prefWidth="35.0" text="&gt;" GridPane.columnIndex="4"
                         GridPane.rowSpan="2">
                     <tooltip>
                         <Tooltip text="Shift right by one."/>
                     </tooltip>
                 </Button>
                 <Button fx:id="largeIncrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#incrementLargeAction" prefWidth="50.0" text="&gt;&gt;" GridPane.columnIndex="8"
+                        onAction="#incrementLargeAction" prefWidth="50.0" text="&gt;&gt;" GridPane.columnIndex="5"
                         GridPane.rowSpan="2">
                     <tooltip>
-                        <Tooltip text="Shift right by set increment amount."/>
+                        <Tooltip text="Shift right by 100."/>
                     </tooltip>
                 </Button>
-                <Label text="Base offset" GridPane.columnIndex="3"/>
-                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <Label text="Base offset" GridPane.columnIndex="6"/>
+                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Current base offset. Can be modified to be at most length of base minus 1."/>
                     </tooltip>
                 </TextField>
                 <Button fx:id="setOffsetButton" mnemonicParsing="false" onAction="#setOffsetAction" text="Set"
-                        GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        GridPane.columnIndex="7" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Set the base offset to the current value in the field."/>
                     </tooltip>
                 </Button>
                 <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2"/>
                 <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2"/>
-                <TextArea fx:id="sequenceTextArea" editable="false" maxWidth="1.7976931348623157E308" prefHeight="200.0"
-                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="9" GridPane.rowSpan="2"/>
+                <TextArea fx:id="sequenceTextArea" editable="false" maxWidth="Infinity" prefHeight="200.0"
+                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="8" GridPane.rowSpan="2"/>
+                <Button fx:id="getTextAreaOffsetAction" mnemonicParsing="false" onAction="#getTextAreaOffsetAction"
+                        text="Set" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                    <tooltip>
+                        <Tooltip text="Set offset to base selected in text area."/>
+                    </tooltip>
+                </Button>
             </children>
         </GridPane>
     </children>

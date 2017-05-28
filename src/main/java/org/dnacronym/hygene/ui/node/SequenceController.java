@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -29,6 +28,7 @@ import java.util.ResourceBundle;
 public final class SequenceController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(SequenceController.class);
     private static final int CANVAS_PADDING = 10;
+    private static final int LARGE_INCREMENT_AMOUNT = 100;
 
     private SequenceVisualizer sequenceVisualizer;
     private GraphVisualizer graphVisualizer;
@@ -39,8 +39,6 @@ public final class SequenceController implements Initializable {
     private TextField lengthField;
     @FXML
     private Canvas sequenceCanvas;
-    @FXML
-    private Slider incrementAmount;
     @FXML
     private TextField setOffset;
     @FXML
@@ -142,7 +140,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void incrementLargeAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.incrementOffset((int) incrementAmount.getValue());
+        sequenceVisualizer.incrementOffset(LARGE_INCREMENT_AMOUNT);
         actionEvent.consume();
     }
 
@@ -164,7 +162,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void decrementLargeAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.decrementOffset((int) incrementAmount.getValue());
+        sequenceVisualizer.decrementOffset(LARGE_INCREMENT_AMOUNT);
         actionEvent.consume();
     }
 
@@ -175,7 +173,25 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void setOffsetAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.setOffset(Integer.parseInt(setOffset.getText()));
+        if (!setOffset.getText().isEmpty()) {
+            sequenceVisualizer.setOffset(Integer.parseInt(setOffset.getText()));
+        }
+
+        actionEvent.consume();
+    }
+
+    /**
+     * When the user wants to set the offset to the selected base in the textarea.
+     * <p>
+     * The offset is based on the caret position.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     * @see TextArea#caretPosition
+     */
+    @FXML
+    void getTextAreaOffsetAction(final ActionEvent actionEvent) {
+        sequenceVisualizer.setOffset(sequenceTextArea.getCaretPosition());
+
         actionEvent.consume();
     }
 }
