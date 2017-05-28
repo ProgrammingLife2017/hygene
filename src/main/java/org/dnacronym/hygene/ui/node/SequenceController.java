@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.node;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -58,6 +60,7 @@ public class SequenceController implements Initializable {
             if (newValue == null) {
                 lengthField.clear();
                 sequenceVisualizer.getSequenceProperty().set(null);
+                sequenceVisualizer.getVisibleProperty().set(false);
                 return;
             }
 
@@ -70,8 +73,13 @@ public class SequenceController implements Initializable {
             }
         });
 
-        sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty());
-        sequenceViewPane.managedProperty().bind(sequenceVisualizer.getVisibleProperty());
+        final BooleanBinding visible = Bindings.and(
+                Bindings.isNotNull(graphVisualizer.getSelectedNodeProperty()),
+                sequenceVisualizer.getVisibleProperty());
+        sequenceViewPane.visibleProperty().bind(visible);
+        sequenceViewPane.managedProperty().bind(visible);
+
+        sequenceCanvas.widthProperty().bind(sequenceViewPane.widthProperty());
     }
 
     /**

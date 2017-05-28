@@ -25,16 +25,15 @@ public final class SequenceVisualizer {
     private Canvas canvas;
     private GraphicsContext graphicsContext;
 
-    private final BooleanProperty visibleProperty;
     private final StringProperty sequenceProperty;
     private final IntegerProperty offsetProperty;
+    private final BooleanProperty visibleProperty;
 
 
     /**
      * Create instance of {@link SequenceVisualizer}.
      */
     public SequenceVisualizer() {
-        visibleProperty = new SimpleBooleanProperty();
         sequenceProperty = new SimpleStringProperty();
         offsetProperty = new SimpleIntegerProperty();
 
@@ -43,6 +42,13 @@ public final class SequenceVisualizer {
             draw();
         });
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        visibleProperty = new SimpleBooleanProperty();
+        visibleProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue){
+                draw();
+            }
+        });
     }
 
 
