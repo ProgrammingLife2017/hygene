@@ -25,6 +25,8 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     private ColorPicker edgeColor;
     @FXML
     private Slider panningSensitivity;
+    @FXML
+    private Slider zoomingSensitivity;
 
 
     @Override
@@ -32,6 +34,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
         edgeColor.setValue(getGraphVisualizer().getEdgeColorProperty().get());
         panningSensitivity.setValue(getGraphMovementCalculator().getPanningSensitivityProperty().get());
+        zoomingSensitivity.setValue(getGraphMovementCalculator().getZoomingSensitivityProperty().get());
     }
 
     /**
