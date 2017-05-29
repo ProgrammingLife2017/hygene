@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+
 import java.util.function.Consumer;
 
 
@@ -106,6 +109,8 @@ public final class GraphQuery {
         cache.clear();
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, node) -> cache.setDistance(node, depth));
         findSentinelNeighbours();
+
+        postEvent();
     }
 
     /**
@@ -123,6 +128,8 @@ public final class GraphQuery {
 
         this.centre = centre;
         fixCentre();
+
+        postEvent();
     }
 
     /**
@@ -142,6 +149,8 @@ public final class GraphQuery {
         }
 
         incrementCacheRadius();
+
+        postEvent();
     }
 
     /**
@@ -158,6 +167,8 @@ public final class GraphQuery {
         if (cacheRadius - radius > MAX_RADIUS_DIFFERENCE) {
             query(centre, radius);
         }
+
+        postEvent();
     }
 
     /**
@@ -335,5 +346,12 @@ public final class GraphQuery {
         } else {
             query(centre, newRadius);
         }
+    }
+
+    /**
+     * Posts event indicating a change in the center point query to the event bus.
+     */
+    private void postEvent() {
+        HygeneEventBus.getInstance().post(new CenterPointQueryChangeEvent(this));
     }
 }
