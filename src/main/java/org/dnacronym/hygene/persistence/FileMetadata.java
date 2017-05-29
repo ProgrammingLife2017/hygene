@@ -114,6 +114,7 @@ final class FileMetadata {
      * @throws SQLException                         in the case of an error during SQL operations
      * @throws IncompatibleDatabaseVersionException in the case of an incompatible DB format
      */
+    @SuppressWarnings("PMD.PreserveStackTrace") // Stack trace is not necessary
     private boolean checkVersionCompatibility() throws SQLException, IncompatibleDatabaseVersionException {
         final String fileVersionString = getMetadataValue(VERSION_KEY_NAME);
 

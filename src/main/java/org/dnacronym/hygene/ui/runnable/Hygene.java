@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public final class Hygene extends Application {
     private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
-    private static Hygene hygene;
+    private static Hygene hygeneApplication;
 
     static final String TITLE = "Hygene";
     private static final String APPLICATION_VIEW = "/ui/main_view.fxml";
@@ -56,10 +56,10 @@ public final class Hygene extends Application {
      * @throws UIInitialisationException if the UI has not be initialized
      */
     public static synchronized Hygene getInstance() throws UIInitialisationException {
-        if (hygene == null) {
+        if (hygeneApplication == null) {
             throw new UIInitialisationException("Instance of Application not set.");
         }
-        return hygene;
+        return hygeneApplication;
     }
 
     /**
@@ -68,7 +68,7 @@ public final class Hygene extends Application {
      * @param application {@link Hygene} instance
      */
     protected static synchronized void setInstance(final Hygene application) {
-        hygene = application;
+        hygeneApplication = application;
     }
 
     /**

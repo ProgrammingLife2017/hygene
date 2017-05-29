@@ -97,6 +97,7 @@ public final class RecentFiles {
      * @param fileList the original list
      * @return the truncated list
      */
+    @SuppressWarnings("PMD.LooseCoupling") // LinkedHashSet must be used because its contents must be ordered
     private static LinkedHashSet<File> truncate(final LinkedHashSet<File> fileList) {
         final LinkedHashSet<File> truncatedSet = new LinkedHashSet<>();
         final Iterator<File> fileIterator = fileList.iterator();

@@ -59,13 +59,8 @@ public final class JFXAppender extends AbstractAppender {
                 layout == null ? PatternLayout.createDefaultLayout() : layout, true);
     }
 
-    @SuppressWarnings("squid:S1166")
     @Override
     public void append(final LogEvent event) {
-        try {
-            latestLogEvent.setValue(new ConsoleMessage(this, event));
-        } catch (final RuntimeException e) {
-            // We cant actually log the exception of here since that would cause the same problem.
-        }
+        latestLogEvent.setValue(new ConsoleMessage(this, event));
     }
 }

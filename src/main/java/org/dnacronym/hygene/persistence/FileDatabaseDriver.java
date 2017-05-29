@@ -30,7 +30,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
     public static final String WIN_X86_OS_ARCHITECTURE_NAME = "x86";
 
     private final Connection connection;
-    private boolean fileIOEnabled = false;
+    private boolean fileIOEnabled;
 
 
     /**
