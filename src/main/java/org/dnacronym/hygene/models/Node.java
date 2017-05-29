@@ -169,6 +169,7 @@ public final class Node {
      *
      * @return set containing the outgoing edges of the {@link Node}
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public Set<Edge> getOutgoingEdges() {
         if (outgoingEdges == null) {
             synchronized (Node.class) {
@@ -176,12 +177,11 @@ public final class Node {
                     final Set<Edge> newOutgoingEdges = new TreeSet<>();
                     final int offset = NODE_EDGE_DATA_OFFSET;
 
-                    Edge edge;
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         final int to = data[offset + i * EDGE_DATA_SIZE];
                         final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
 
-                        edge = new Edge(id, to, lineNumber, graph);
+                        final Edge edge = new Edge(id, to, lineNumber, graph);
                         newOutgoingEdges.add(edge);
                     }
                     this.outgoingEdges = newOutgoingEdges;
@@ -198,6 +198,7 @@ public final class Node {
      *
      * @return set containing the incoming edges of the {@link Node}
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public Set<Edge> getIncomingEdges() {
         if (incomingEdges == null) {
             synchronized (Node.class) {
@@ -205,12 +206,11 @@ public final class Node {
                     final Set<Edge> newIncomingEdges = new TreeSet<>();
                     final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
 
-                    Edge edge;
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         final int from = data[offset + i * EDGE_DATA_SIZE];
                         final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
 
-                        edge = new Edge(from, id, lineNumber, graph);
+                        final Edge edge = new Edge(from, id, lineNumber, graph);
                         newIncomingEdges.add(edge);
                     }
 
