@@ -51,8 +51,8 @@ public final class GraphController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        graphCanvas.heightProperty().bind(graphPane.heightProperty());
-        graphCanvas.widthProperty().bind(graphPane.widthProperty());
+//        graphCanvas.heightProperty().bind(graphPane.heightProperty());
+//        graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
         graphVisualizer.setCanvas(graphCanvas);
     }

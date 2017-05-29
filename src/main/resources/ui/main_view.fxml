@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
@@ -19,11 +18,11 @@
     </left>
 
     <center>
-        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0"
-                   BorderPane.alignment="CENTER">
+        <VBox prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
             <fx:include source="graph/graph_view.fxml"/>
+            <fx:include source="graph/graph_navigation_view.fxml"/>
             <fx:include source="graph/graph_slider_view.fxml"/>
-        </SplitPane>
+        </VBox>
     </center>
 
     <right>

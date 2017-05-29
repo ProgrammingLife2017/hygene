@@ -4,7 +4,6 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
@@ -25,8 +24,6 @@ public final class GraphSliderController implements Initializable {
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphStore graphStore;
 
-    @FXML
-    private Pane graphSliderPane;
     @FXML
     private ScrollBar graphScrollBar;
 
@@ -60,8 +57,8 @@ public final class GraphSliderController implements Initializable {
                 graphDimensionsCalculator.getMaxXNodeIdProperty(),
                 graphDimensionsCalculator.getMinXNodeIdProperty()));
 
-        graphSliderPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        graphSliderPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        graphScrollBar.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        graphScrollBar.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
 
     /**
