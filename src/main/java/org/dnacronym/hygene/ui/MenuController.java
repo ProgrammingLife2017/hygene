@@ -306,6 +306,8 @@ public final class MenuController implements Initializable {
             }
         });
 
+        Hygene.getInstance().formatTitle(file.getPath());
+
         // Update menu only in initialized state (not in test-cases)
         if (recentFilesMenu != null) {
             populateRecentFilesMenu();
