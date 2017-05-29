@@ -70,6 +70,7 @@ public final class Node {
             value = "EI_EXPOSE_REP",
             justification = "For performance reasons, we don't want to create a copy here"
     )
+    @SuppressWarnings("PMD.MethodReturnsInternalArray") // Performance
     public int[] toArray() {
         return data;
     }
