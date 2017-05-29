@@ -10,6 +10,7 @@ import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileBookmarks;
 import org.dnacronym.hygene.persistence.FileDatabase;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -26,6 +27,7 @@ public final class SimpleBookmarkStore {
     private static final Logger LOGGER = LogManager.getLogger(SimpleBookmarkStore.class);
 
     private final GraphVisualizer graphVisualizer;
+    private final GraphDimensionsCalculator graphDimensionsCalculator;
 
     private final List<SimpleBookmark> simpleBookmarks;
     private final ObservableList<SimpleBookmark> observableSimpleBookmarks;
@@ -41,15 +43,17 @@ public final class SimpleBookmarkStore {
      * clear all current {@link SimpleBookmark}s and load the {@link Bookmark}s associated with the new
      * {@link org.dnacronym.hygene.parser.GfaFile}.
      * <p>
-     * It uses the {@link GraphVisualizer} as a reference for each internal {@link SimpleBookmark}. The
-     * {@link GraphVisualizer} should also observe the {@link GraphStore} directly to ensure this class and the
-     * {@link GraphVisualizer} refer to the same {@link org.dnacronym.hygene.models.Graph} at all times.
+     * It uses the {@link GraphDimensionsCalculator} as a reference for each internal {@link SimpleBookmark}.
      *
-     * @param graphStore      {@link GraphStore} to be observed by this class
-     * @param graphVisualizer {@link GraphVisualizer} to be used by this class
+     * @param graphStore                {@link GraphStore} to be observed by this class
+     * @param graphVisualizer           the {@link GraphVisualizer} to be used by this class
+     * @param graphDimensionsCalculator {@link GraphVisualizer} to be used by this class
      * @see SimpleBookmark
      */
-    public SimpleBookmarkStore(final GraphStore graphStore, final GraphVisualizer graphVisualizer) {
+    public SimpleBookmarkStore(final GraphStore graphStore,
+                               final GraphVisualizer graphVisualizer,
+                               final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.graphVisualizer = graphVisualizer;
         simpleBookmarks = new ArrayList<>();
         observableSimpleBookmarks = FXCollections.observableList(simpleBookmarks);
@@ -116,9 +120,7 @@ public final class SimpleBookmarkStore {
     public void addBookmark(final Bookmark bookmark) {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
-                graphVisualizer.getCenterNodeIdProperty().set(bookmark.getNodeId());
-                graphVisualizer.getHopsProperty().set(bookmark.getRadius());
-
+                graphDimensionsCalculator.query(bookmark.getNodeId(), bookmark.getRadius());
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
             }));
         } catch (final ParseException e) {

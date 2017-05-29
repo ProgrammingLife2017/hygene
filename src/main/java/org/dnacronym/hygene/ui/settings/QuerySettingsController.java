@@ -30,12 +30,12 @@ public final class QuerySettingsController extends AbstractSettingsController {
         nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
         range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
-        currentNodeId.textProperty().bind(getGraphVisualizer().getCenterNodeIdProperty().asString());
-        currentRange.textProperty().bind(getGraphVisualizer().getHopsProperty().asString());
+        currentNodeId.textProperty().bind(getGraphDimensionsCalculator().getCenterNodeIdProperty().asString());
+        currentRange.textProperty().bind(getGraphDimensionsCalculator().getRangeProperty().asString());
 
-        getGraphVisualizer().getCenterNodeIdProperty().addListener(
+        getGraphDimensionsCalculator().getCenterNodeIdProperty().addListener(
                 (observable, oldValue, newValue) -> nodeId.setText(String.valueOf(newValue)));
-        getGraphVisualizer().getHopsProperty().addListener(
+        getGraphDimensionsCalculator().getRangeProperty().addListener(
                 (observable, oldValue, newValue) -> range.setText(String.valueOf(newValue)));
     }
 
@@ -49,7 +49,7 @@ public final class QuerySettingsController extends AbstractSettingsController {
         getSettings().addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            getGraphVisualizer().getCenterNodeIdProperty().set(newValue);
+            getGraphDimensionsCalculator().updateCenterNodeId(newValue);
         });
 
         keyEvent.consume();
@@ -65,7 +65,7 @@ public final class QuerySettingsController extends AbstractSettingsController {
         getSettings().addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            getGraphVisualizer().getHopsProperty().set(newValue);
+            getGraphDimensionsCalculator().updateRange(newValue);
         });
 
         keyEvent.consume();

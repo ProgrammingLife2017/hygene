@@ -11,7 +11,7 @@ public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
     private static final double DEFAULT_ZOOMING_SENSITIVITY = 0.05;
 
-    private final GraphVisualizer graphVisualizer;
+    private final GraphDimensionsCalculator graphDimensionsCalculator;
 
     private final DoubleProperty panningSensitivityProperty;
     private final DoubleProperty zoomingSensitivityProperty;
@@ -24,12 +24,6 @@ public final class GraphMovementCalculator {
     private boolean draggingRight;
     private boolean dragging;
 
-    /**
-     * When true, scrolling out is prohibited. This prevents the about of hops growing too large, making scrolling in
-     * again unresponsive.
-     */
-    private boolean stopScrollingOut;
-
 
     /**
      * Create instance of {@link GraphMovementCalculator}.
@@ -37,10 +31,10 @@ public final class GraphMovementCalculator {
      * The given {@link GraphDimensionsCalculator} is used to calculate the amount of onscreen nodes, and determines how
      * far the user can zoom out.
      *
-     * @param graphVisualizer {@link GraphVisualizer} to drag
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} used to query
      */
-    public GraphMovementCalculator(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
+    public GraphMovementCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.panningSensitivityProperty = new SimpleDoubleProperty(DEFAULT_PANNING_SENSITIVITY);
         this.zoomingSensitivityProperty = new SimpleDoubleProperty(DEFAULT_ZOOMING_SENSITIVITY);
     }
@@ -81,41 +75,56 @@ public final class GraphMovementCalculator {
         dragging = true;
         lastX = x;
 
-        final double currentCenterNodeId = graphVisualizer.getCenterNodeIdProperty().get();
+        final double currentCenterNodeId = graphDimensionsCalculator.getCenterNodeIdProperty().get();
 
         final double translation = centerX - x;
         final int newCenterNodeId = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 
-        graphVisualizer.getCenterNodeIdProperty().set(Math.min(
+        graphDimensionsCalculator.updateCenterNodeId(Math.min(
                 Math.max(newCenterNodeId, 0),
-                graphVisualizer.getNodeCountProperty().get() - 1));
+                graphDimensionsCalculator.getNodeCountProperty().get() - 1));
 
-        dragging = newCenterNodeId < 0 || newCenterNodeId > graphVisualizer.getNodeCountProperty().get();
-
+        dragging = newCenterNodeId < 0 || newCenterNodeId > graphDimensionsCalculator.getNodeCountProperty().get();
     }
 
     /**
      * When the user scrolls.
      * <p>
      * A positive delta corresponds to zooming in, and a negative delta to to zooming out. The user can zoom in no
-     * more than 1 hops. Scrolling out is ignored when the diameter of the onscreen graph is equal to the diameter
-     * of the actual graph.
+     * more than 1 range.
      *
      * @param deltaY delta in the y direction
      */
     public void onScroll(final double deltaY) {
-        if (stopScrollingOut && deltaY > 0) {
-            return;
+        final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
+        if (deltaRange > 0) {
+            zoomIn(deltaRange);
+        } else {
+            zoomOut(deltaRange);
         }
+    }
 
-        final int oldHops = graphVisualizer.getHopsProperty().get();
-        final int newHops = (int) Math.round(oldHops + deltaY * getZoomingSensitivityProperty().get());
+    /**
+     * Zoom in by range by decrementing radius by range amount.
+     *
+     * @param range the range to zoom in by
+     */
+    private void zoomIn(final int range) {
+        for (int i = 0; i < range; i++) {
+            graphDimensionsCalculator.decrementRadius();
+        }
+    }
 
-        graphVisualizer.getHopsProperty().set(Math.max(newHops, 1));
-
-        stopScrollingOut = graphVisualizer.getOnScreenNodeCountProperty().get()
-                > graphVisualizer.getNodeCountProperty().get();
+    /**
+     * Zoom out by range by incrementing radius by range amount.
+     *
+     * @param range the range zo zoom out by
+     */
+    private void zoomOut(final int range) {
+        for (int i = 0; i < range; i++) {
+            graphDimensionsCalculator.incrementRadius();
+        }
     }
 
     /**

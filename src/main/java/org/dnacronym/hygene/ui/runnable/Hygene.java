@@ -90,9 +90,9 @@ public final class Hygene extends Application {
 
         graphDimensionsCalculator = new GraphDimensionsCalculator();
         graphVisualizer = new GraphVisualizer(graphStore, graphDimensionsCalculator);
-        graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
+        graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, graphDimensionsCalculator);
         settings = new Settings(graphStore);
     }
 

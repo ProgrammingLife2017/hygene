@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -28,6 +29,7 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
     private GraphStore graphStore;
 
@@ -119,7 +121,7 @@ public final class NodePropertiesController implements Initializable {
     @FXML
     void onFocusAction(final ActionEvent actionEvent) {
         final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
-        graphVisualizer.getCenterNodeIdProperty().set(selectedNode.getId());
+        graphDimensionsCalculator.updateCenterNodeId(selectedNode.getId());
 
         actionEvent.consume();
     }

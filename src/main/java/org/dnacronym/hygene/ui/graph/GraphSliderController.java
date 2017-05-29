@@ -45,14 +45,15 @@ public final class GraphSliderController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        graphVisualizer.getCenterNodeIdProperty().addListener(
+        graphDimensionsCalculator.getCenterNodeIdProperty().addListener(
                 (observable, oldNodeId, newNodeId) -> graphScrollBar.setValue(newNodeId.doubleValue()));
 
         graphScrollBar.maxProperty().bind(Bindings.max(
                 0,
-                Bindings.subtract(graphVisualizer.getNodeCountProperty(), 1)));
+                Bindings.subtract(graphDimensionsCalculator.getNodeCountProperty(), 1)));
 
-        graphScrollBar.valueProperty().bindBidirectional(graphVisualizer.getCenterNodeIdProperty());
+        graphScrollBar.valueProperty().addListener((observable, oldValue, newValue) ->
+                graphDimensionsCalculator.updateCenterNodeId(newValue.intValue()));
         graphScrollBar.visibleAmountProperty().bind(Bindings.subtract(
                 graphDimensionsCalculator.getMaxXNodeIdProperty(),
                 graphDimensionsCalculator.getMinXNodeIdProperty()));

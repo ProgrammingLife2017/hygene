@@ -6,6 +6,8 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
 import org.dnacronym.hygene.models.Node;
@@ -43,7 +45,7 @@ public final class GraphDimensionsCalculator {
     private double canvasWidth = 0;
     private double canvasHeight = 0;
 
-    private List<Integer> neighbours;
+    private final ObservableList<Integer> observableNeighbours;
     private GraphQuery graphQuery;
 
 
@@ -62,11 +64,30 @@ public final class GraphDimensionsCalculator {
         laneHeightProperty = new SimpleDoubleProperty();
         laneCountProperty = new SimpleIntegerProperty(1);
 
-        neighbours = new LinkedList<>();
+        observableNeighbours = FXCollections.observableArrayList();
     }
 
 
+    /**
+     * Calculate the following values.
+     * <p>
+     * <ul>
+     * <li> Neighbours list
+     * <li> Minimum unscaled x
+     * <li> Maximum unscaled y
+     * <li> Minimum unscaled y
+     * <li> Lane count property
+     * <li> Lane height property
+     * <li> On screen node count property
+     * </ul>
+     * <p>
+     * If the graph has not been set, this method does nothing.
+     */
     private void calculate() {
+        if (graph == null) {
+            return;
+        }
+
         final int centerNodeId = centerNodeIdProperty.get();
 
         final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
@@ -76,7 +97,7 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
-        neighbours.clear();
+        List<Integer> neighbours = new LinkedList<>();
         neighbours.add(centerNodeId);
 
         graphQuery.visit(nodeId -> {
@@ -100,6 +121,8 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
 
+        observableNeighbours.setAll(neighbours);
+
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
         this.minY = tempMinY[0];
@@ -107,9 +130,14 @@ public final class GraphDimensionsCalculator {
 
         laneCountProperty.set(Math.abs(maxY - minY) + 1);
         laneHeightProperty.set(canvasHeight / laneCountProperty.get());
-        onScreenNodeCountProperty.set(neighbours.size());
+        onScreenNodeCountProperty.set(observableNeighbours.size());
     }
 
+    /**
+     * Set the {@link Graph} used for calculations.
+     *
+     * @param graph the {@link Graph} for use by calculations
+     */
     void setGraph(final Graph graph) {
         this.graph = graph;
         graphQuery = new GraphQuery(graph);
@@ -117,28 +145,93 @@ public final class GraphDimensionsCalculator {
         nodeCountProperty.set(graph.getNodeArrays().length);
     }
 
+    /**
+     * Set the size of the canvas on which the {@link Graph} will be drawn.
+     * <p>
+     * This will perform a another calculation.
+     *
+     * @param canvasWidth  the width of the {@link javafx.scene.canvas.Canvas}
+     * @param canvasHeight the height of the {@link javafx.scene.canvas.Canvas}
+     */
     void setCanvasSize(final double canvasWidth, final double canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+
+        calculate();
     }
 
+    /**
+     * Set the height of onscreen nodes in pixels.
+     * <p>
+     * This will perform a another calculation.
+     *
+     * @param nodeHeight the height of nodes
+     */
     void setNodeHeight(final double nodeHeight) {
         this.nodeHeight = nodeHeight;
+
+        calculate();
     }
 
-    void setCenterNodeIdRange(final int centerNodeId, final int range) {
+    /**
+     * Query the set node with the set range.
+     * <p>
+     * This will perform a another calculation.
+     *
+     * @param centerNodeId the center of the query
+     * @param range        the range of the query
+     * @see GraphQuery
+     */
+    public void query(final int centerNodeId, final int range) {
         centerNodeIdProperty.set(centerNodeId);
         rangeProperty.set(range);
 
         graphQuery.query(centerNodeId, range);
+        calculate();
     }
 
-    void incrementRadius() {
+    /**
+     * Update the center node id of the query.
+     * <p>
+     * This will perform a another calculation.
+     *
+     * @param centerNodeId the center of the query
+     */
+    public void updateCenterNodeId(final int centerNodeId) {
+        query(centerNodeId, rangeProperty.get());
+        calculate();
+    }
+
+    /**
+     * Update the range of the query.
+     * <p>
+     * This will perform a another calculation.
+     *
+     * @param range the range of the query
+     */
+    public void updateRange(final int range) {
+        query(centerNodeIdProperty.get(), range);
+        calculate();
+    }
+
+    /**
+     * This will perform a second calculation.
+     * <p>
+     * This will perform a another calculation.
+     */
+    public void incrementRadius() {
         graphQuery.incrementRadius();
+        calculate();
     }
 
-    void decrementRadius() {
+    /**
+     * Increment the radius of the query.
+     * <p>
+     * This will perform a another calculation.
+     */
+    public void decrementRadius() {
         graphQuery.decrementRadius();
+        calculate();
     }
 
     /**
@@ -195,12 +288,12 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Get the neighbours of the set center node, no more than set hops away.
+     * Get the {@link ObservableList} of the neighbours of the set center id with the set range.
      *
-     * @return neighbours of set center node
+     * @return the {@link ObservableList} of the neighbours of the set neighbours set range away
      */
-    public List<Integer> getNeighbours() {
-        return neighbours;
+    public ObservableList<Integer> getNeighbours() {
+        return observableNeighbours;
     }
 
     /**

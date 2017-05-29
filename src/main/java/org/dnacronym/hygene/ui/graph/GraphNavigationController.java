@@ -21,7 +21,7 @@ public final class GraphNavigationController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphNavigationController.class);
     private static final int JUMP_AMOUNT = 100;
 
-    private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphStore graphStore;
 
     @FXML
@@ -33,7 +33,7 @@ public final class GraphNavigationController implements Initializable {
      */
     public GraphNavigationController() {
         try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setGraphMovementCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to instantiate " + getClass().getSimpleName() + ".", e);
@@ -48,12 +48,12 @@ public final class GraphNavigationController implements Initializable {
     }
 
     /**
-     * Sets the {@link GraphVisualizer} for use by the controller.
+     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
      *
-     * @param graphVisualizer the {@link GraphVisualizer} for use by the controller
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
      */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
+    void setGraphMovementCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
     }
 
     /**
@@ -72,7 +72,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftLargeAction(final ActionEvent actionEvent) {
-        graphVisualizer.getCenterNodeIdProperty().set(graphVisualizer.getCenterNodeIdProperty().get() - JUMP_AMOUNT);
+        graphDimensionsCalculator.updateCenterNodeId(
+                graphDimensionsCalculator.getCenterNodeIdProperty().get() - JUMP_AMOUNT);
         actionEvent.consume();
     }
 
@@ -83,7 +84,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftAction(final ActionEvent actionEvent) {
-        graphVisualizer.getCenterNodeIdProperty().set(graphVisualizer.getCenterNodeIdProperty().get() - 1);
+        graphDimensionsCalculator.updateCenterNodeId(graphDimensionsCalculator.getCenterNodeIdProperty().get() - 1);
         actionEvent.consume();
     }
 
@@ -94,7 +95,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightAction(final ActionEvent actionEvent) {
-        graphVisualizer.getCenterNodeIdProperty().set(graphVisualizer.getCenterNodeIdProperty().get() + 1);
+        graphDimensionsCalculator.updateCenterNodeId(graphDimensionsCalculator.getCenterNodeIdProperty().get() + 1);
         actionEvent.consume();
     }
 
@@ -105,7 +106,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightLargeAction(final ActionEvent actionEvent) {
-        graphVisualizer.getCenterNodeIdProperty().set(graphVisualizer.getCenterNodeIdProperty().get() + JUMP_AMOUNT);
+        graphDimensionsCalculator.updateCenterNodeId(
+                graphDimensionsCalculator.getCenterNodeIdProperty().get() + JUMP_AMOUNT);
         actionEvent.consume();
     }
 
@@ -116,7 +118,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomInAction(final ActionEvent actionEvent) {
-        graphVisualizer.getHopsProperty().set(graphVisualizer.getHopsProperty().get() - 1);
+        graphDimensionsCalculator.updateRange(graphDimensionsCalculator.getRangeProperty().get() + 1);
         actionEvent.consume();
     }
 
@@ -127,7 +129,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomOutAction(final ActionEvent actionEvent) {
-        graphVisualizer.getHopsProperty().set(graphVisualizer.getHopsProperty().get() + 1);
+        graphDimensionsCalculator.updateRange(graphDimensionsCalculator.getRangeProperty().get() - 1);
         actionEvent.consume();
     }
 }

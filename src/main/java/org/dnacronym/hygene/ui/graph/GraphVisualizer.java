@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -21,8 +22,6 @@ import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.parser.ParseException;
-
-import java.util.List;
 
 
 /**
@@ -106,6 +105,8 @@ public final class GraphVisualizer {
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener(changeListener);
+
+        graphDimensionsCalculator.getNeighbours().addListener((ListChangeListener<Integer>) change -> draw());
     }
 
 
@@ -213,8 +214,7 @@ public final class GraphVisualizer {
         clear();
         rTree = new RTree();
 
-        final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
-        for (final Integer nodeId : neighbours) {
+        for (final Integer nodeId : graphDimensionsCalculator.getNeighbours()) {
             drawNode(nodeId);
             graph.iterator().visitDirectNeighbours(
                     nodeId, SequenceDirection.RIGHT,
