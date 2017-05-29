@@ -190,7 +190,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void getTextAreaOffsetAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.setOffset(sequenceTextArea.getCaretPosition());
+        sequenceVisualizer.setOffset(sequenceTextArea.getCaretPosition() - sequenceTextArea.getSelectedText().length());
 
         actionEvent.consume();
     }
