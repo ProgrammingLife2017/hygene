@@ -3,7 +3,7 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ChoiceBox;
 import org.apache.logging.log4j.LogManager;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.AbstractUITest;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link LoggingSettingsViewController}s.
  */
-final class LoggingSettingsViewControllerTest extends UITest {
+final class LoggingSettingsViewControllerTest extends AbstractUITest {
     private LoggingSettingsViewController loggingSettingsViewController;
     private GraphVisualizer graphVisualizer;
     private Settings settingsMock;

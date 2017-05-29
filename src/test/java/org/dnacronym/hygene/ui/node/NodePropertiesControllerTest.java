@@ -5,7 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.AbstractUITest;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link NodePropertiesController}.
  */
-final class NodePropertiesControllerTest extends UITest {
+final class NodePropertiesControllerTest extends AbstractUITest {
     private NodePropertiesController nodePropertiesController;
     private GraphVisualizer graphVisualizer;
 

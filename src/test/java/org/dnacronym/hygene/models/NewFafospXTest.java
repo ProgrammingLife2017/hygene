@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for FAFOSP-X in {@link Fafosp}.
  */
-final class NewFafospXTest extends GraphBasedTest {
+final class NewFafospXTest extends AbstractGraphTest {
     @Test
     void testNoNeighboursLength() {
         createGraph(3);

@@ -2,7 +2,7 @@ package org.dnacronym.hygene.ui.settings;
 
 
 import javafx.stage.Stage;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.AbstractUITest;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link SettingsView}.
  */
-final class SettingsViewTest extends UITest {
+final class SettingsViewTest extends AbstractUITest {
     private SettingsView settingsView;
     private Settings settings;
     private Stage stage;

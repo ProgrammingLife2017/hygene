@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 /**
  * Test suite for the {@link FileDatabase} class.
  */
-final class FileDatabaseTest extends FileDatabaseBaseTest {
+final class FileDatabaseTest extends AbstractFileDatabaseTest {
     private FileDatabase fileDatabase;
 
 
