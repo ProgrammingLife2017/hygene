@@ -364,7 +364,7 @@ final class GraphIteratorTest extends GraphBasedTest {
 
         final List<Integer> neighbours = new ArrayList<>();
         getGraph().iterator().visitAllWithinRange(SequenceDirection.LEFT, 2,
-                (width, node) -> neighbours.add(node));
+                (depth, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(6, 5, 4, 3, 1);
     }
@@ -376,8 +376,49 @@ final class GraphIteratorTest extends GraphBasedTest {
 
         final List<Integer> neighbours = new ArrayList<>();
         getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 2,
-                (width, node) -> neighbours.add(node));
+                (depth, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 3, 4);
+    }
+
+    /**
+     * Tests that the depth component of the BiConsumer is correct for the given graph.
+     */
+    @Test
+    void testVisitAllWithinRangeDepthRandom() {
+        createGraph(9);
+        addEdges(new int[][] {
+                {0, 1}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 5}, {3, 5},
+                {4, 5}, {4, 6}, {4, 7}, {5, 6}, {5, 8}, {6, 7}, {6, 8}});
+
+        final int[] depths = new int[9];
+        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 99,
+                (depth, node) -> depths[node] = depth);
+
+        assertThat(depths).containsExactly(0, 1, 2, 2, 2, 3, 3, 3, 4);
+    }
+
+    @Test
+    void testVisitAllWithinRangeDepthZigzag() {
+        createGraph(7);
+        addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {3, 6}, {4, 6}, {5, 6}});
+
+        final int[] depths = new int[7];
+        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 99,
+                (depth, node) -> depths[node] = depth);
+
+        assertThat(depths).containsExactly(0, 2, 1, 2, 2, 4, 3);
+    }
+
+    @Test
+    void testVisitAllWithinRangeDepthInsertion() {
+        createGraph(5);
+        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}});
+
+        final int[] depths = new int[5];
+        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 99,
+                (depth, node) -> depths[node] = depth);
+
+        assertThat(depths).containsExactly(0, 1, 1, 2, 3);
     }
 }

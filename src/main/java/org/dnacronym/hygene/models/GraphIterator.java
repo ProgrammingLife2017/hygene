@@ -167,37 +167,31 @@ public final class GraphIterator {
 
         int currentDepth = 0;
         final int[] depthIncreaseTimes = {1, 0};
+
+        final Consumer<Integer> visitDirectNeighbourAction = neighbour -> {
+            if (!visited[neighbour]) {
+                depthIncreaseTimes[1]++;
+                queue.add(neighbour);
+            }
+        };
+
         while (!queue.isEmpty()) {
             final int head = queue.remove();
-            if (visited[head]) {
-                continue;
-            }
 
-            visited[head] = true;
-            action.accept(currentDepth, head);
+            if (!visited[head]) {
+                visited[head] = true;
+                action.accept(currentDepth, head);
 
-            if (currentDepth == maxDepth) {
-                continue;
-            } else if (currentDepth > maxDepth) {
-                return;
-            }
-
-            visitDirectNeighbours(head, SequenceDirection.LEFT, neighbour -> {
-                if (!visited[neighbour]) {
-                    depthIncreaseTimes[1]++;
-                    queue.add(neighbour);
+                if (currentDepth >= maxDepth) {
+                    continue;
                 }
-            });
-            visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
-                if (!visited[neighbour]) {
-                    depthIncreaseTimes[1]++;
-                    queue.add(neighbour);
-                }
-            });
 
+                visitDirectNeighbours(head, SequenceDirection.LEFT, visitDirectNeighbourAction);
+                visitDirectNeighbours(head, SequenceDirection.RIGHT, visitDirectNeighbourAction);
+            }
 
             depthIncreaseTimes[0]--;
-            if (depthIncreaseTimes[0] == 0) {
+            if (depthIncreaseTimes[0] <= 0) {
                 currentDepth++;
 
                 depthIncreaseTimes[0] = depthIncreaseTimes[1];
