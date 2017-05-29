@@ -68,16 +68,18 @@ public final class SimpleBookmarkStore {
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
      */
     public void writeBookmarksToFile() {
-        if (fileBookmarks != null) {
-            List<Bookmark> bookmarks = new ArrayList<>(simpleBookmarks.size());
+        if (fileBookmarks == null) {
+            return;
+        }
 
-            simpleBookmarks.forEach(simpleBookmark -> bookmarks.add(simpleBookmark.getBookmark()));
+        final List<Bookmark> bookmarks = new ArrayList<>(simpleBookmarks.size());
 
-            try {
-                fileBookmarks.storeAll(bookmarks);
-            } catch (final SQLException e) {
-                LOGGER.error("Unable to store bookmarks to file.", e);
-            }
+        simpleBookmarks.forEach(simpleBookmark -> bookmarks.add(simpleBookmark.getBookmark()));
+
+        try {
+            fileBookmarks.storeAll(bookmarks);
+        } catch (final SQLException e) {
+            LOGGER.error("Unable to store bookmarks to file.", e);
         }
     }
 

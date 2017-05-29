@@ -64,7 +64,7 @@ public final class JFXAppender extends AbstractAppender {
     public void append(final LogEvent event) {
         try {
             latestLogEvent.setValue(new ConsoleMessage(this, event));
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             // We cant actually log the exception of here since that would cause the same problem.
         }
     }
