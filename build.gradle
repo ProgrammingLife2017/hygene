@@ -127,7 +127,7 @@ checkstyle {
 pmd {
     ignoreFailures = false
     ruleSetFiles = files("config/pmd/pmd-rules.xml")
-    sourceSets = [sourceSets.main, sourceSets.test]
+    sourceSets = [sourceSets.main]
 }
 
 jacocoTestReport {
