@@ -43,3 +43,6 @@ cache:
 after_success:
     - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
     - bash <(curl -s https://codecov.io/bash) -t 18d9443f-bf82-4d44-9cc6-04e0a0a999c8
+    
+notifications:
+  email: false
