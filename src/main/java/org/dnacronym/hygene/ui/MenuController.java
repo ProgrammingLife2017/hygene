@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
@@ -72,6 +73,7 @@ public final class MenuController implements Initializable {
             initFileChooser();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
+            new ErrorDialogue(e).show();
         }
 
         toggleBookmarkTable.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())

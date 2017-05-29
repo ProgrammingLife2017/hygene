@@ -56,9 +56,7 @@ public final class BookmarkCreateController implements Initializable {
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-
-            final Dialogue dialogue = new ErrorDialogue(e);
-            dialogue.show();
+            new ErrorDialogue(e).show();
         }
     }
 
