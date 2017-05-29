@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * Unit tests of {@link SettingsView}.
+ * Unit tests for {@link SettingsView}.
  */
 final class SettingsViewTest extends UITest {
     private SettingsView settingsView;
