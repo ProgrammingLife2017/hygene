@@ -5,11 +5,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -30,9 +30,9 @@ public final class BookmarkTableController implements Initializable {
     private GraphStore graphStore;
 
     @FXML
-    private ScrollPane bookmarksPane;
+    private AnchorPane tableAnchor;
     @FXML
-    private Label bookmarksTableTitle;
+    private ScrollPane bookmarksPane;
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
      * center node id in {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} is updated to the one in the
@@ -83,11 +83,9 @@ public final class BookmarkTableController implements Initializable {
         });
 
         bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
-        bookmarksTable.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        bookmarksTable.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        bookmarksTableTitle.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        bookmarksTableTitle.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
 
+        tableAnchor.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
+        tableAnchor.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
         hideButton.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
                 .then(">")
                 .otherwise("<"));
