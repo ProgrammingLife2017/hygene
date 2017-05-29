@@ -159,7 +159,6 @@ public final class GraphIterator {
      * @param maxDepth the maximum number of hops a neighbour can be removed from the node
      * @param action   the function to apply to each neighbour's depth and identifier
      */
-    @SuppressWarnings("squid:S3776") // No reasonable refactor possible
     public void visitIndirectNeighboursWithinRange(final int id, final int maxDepth,
                                                    final BiConsumer<Integer, Integer> action) {
         final boolean[] visited = new boolean[nodeArrays.length];
@@ -168,6 +167,14 @@ public final class GraphIterator {
 
         int currentDepth = 0;
         final int[] depthIncreaseTimes = {1, 0};
+
+        final Consumer<Integer> visitDirectNeighbourAction = neighbour -> {
+            if (!visited[neighbour]) {
+                depthIncreaseTimes[1]++;
+                queue.add(neighbour);
+            }
+        };
+
         while (!queue.isEmpty()) {
             final int head = queue.remove();
 
@@ -179,18 +186,8 @@ public final class GraphIterator {
                     continue;
                 }
 
-                visitDirectNeighbours(head, SequenceDirection.LEFT, neighbour -> {
-                    if (!visited[neighbour]) {
-                        depthIncreaseTimes[1]++;
-                        queue.add(neighbour);
-                    }
-                });
-                visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
-                    if (!visited[neighbour]) {
-                        depthIncreaseTimes[1]++;
-                        queue.add(neighbour);
-                    }
-                });
+                visitDirectNeighbours(head, SequenceDirection.LEFT, visitDirectNeighbourAction);
+                visitDirectNeighbours(head, SequenceDirection.RIGHT, visitDirectNeighbourAction);
             }
 
             depthIncreaseTimes[0]--;
