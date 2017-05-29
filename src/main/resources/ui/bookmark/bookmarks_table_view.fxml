@@ -8,20 +8,20 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <ScrollPane fx:id="bookmarksPane" fitToHeight="true" hbarPolicy="NEVER" maxHeight="Infinity" pannable="true"
-            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkTableController">
     <content>
         <AnchorPane maxHeight="Infinity" minHeight="-Infinity" minWidth="-Infinity">
             <children>
-                <Label fx:id="bookmarksTableTitle" text="Bookmarks" AnchorPane.leftAnchor="30.0"
+                <Label fx:id="bookmarksTableTitle" text="Bookmarks" AnchorPane.leftAnchor="40.0"
                        AnchorPane.topAnchor="10.0">
                     <tooltip>
                         <Tooltip text="All bookmarks associated with the currently loaded GFA graph."/>
                     </tooltip>
                 </Label>
                 <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
-                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="10.0"
-                           AnchorPane.topAnchor="30.0">
+                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="10.0"
+                           AnchorPane.topAnchor="40.0">
                     <columns>
                         <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
                         <TableColumn fx:id="baseOffset" editable="false" prefWidth="100.0" text="Base Offset"/>
@@ -33,8 +33,9 @@
                     </tooltip>
                 </TableView>
                 <Button fx:id="hideButton" layoutX="-26.0" layoutY="71.0" mnemonicParsing="false"
-                        onAction="#toggleVisibilityAction" prefWidth="15.0" text="&gt;" wrapText="true"
-                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                        onAction="#toggleVisibilityAction" prefWidth="10.0" text="&gt;"
+                        wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                        AnchorPane.topAnchor="0.0"/>
             </children>
         </AnchorPane>
     </content>
