@@ -175,7 +175,7 @@ public final class MenuController implements Initializable {
                 new FileChooser.ExtensionFilter(
                         "GFA (*." + GraphStore.GFA_EXTENSION + ")",
                         "*." + GraphStore.GFA_EXTENSION);
-        final FileChooser.ExtensionFilter noFilter = new FileChooser.ExtensionFilter("All files", "*");
+        final FileChooser.ExtensionFilter noFilter = new FileChooser.ExtensionFilter("All files", "*.*");
 
         final FileChooser chooser = new FileChooser();
         chooser.setTitle(chooserTitle);
