@@ -70,7 +70,7 @@ public final class SimpleBookmarkStore {
 
 
     /**
-     * {@link BooleanProperty} which decides the visibility of the table.
+     * The {@link BooleanProperty} which decides the visibility of the table.
      *
      * @return {@link BooleanProperty} which decides the visibility of the table
      */

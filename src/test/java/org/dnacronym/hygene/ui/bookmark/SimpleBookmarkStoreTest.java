@@ -45,7 +45,7 @@ final class SimpleBookmarkStoreTest {
     }
 
 
-    /**
+    /*
      * Visibility.
      */
 
@@ -54,7 +54,8 @@ final class SimpleBookmarkStoreTest {
         assertThat(simpleBookmarkStore.getTableVisibleProperty().get()).isTrue();
     }
 
-    /**
+
+    /*
      * Get set bookmarks.
      */
 

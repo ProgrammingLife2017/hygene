@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests of {@link BookmarkCreateController}.
+ * Unit tests for {@link BookmarkCreateController}.
  */
 final class BookmarksTableControllerTest extends UITest {
     private BookmarkTableController bookmarkTableController;
