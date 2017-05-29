@@ -1,0 +1,78 @@
+package org.dnacronym.hygene.models;
+
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.MetadataParser;
+import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+final class NodeMetadataCacheTest {
+    private MetadataParser metadataParser;
+    private Graph graph;
+    private GraphQuery graphQuery;
+    private NodeMetadataCache nodeMetaDatacache;
+
+
+    @BeforeEach
+    void setUp() throws ParseException {
+        metadataParser = spyMetadataParser();
+        graph = createGraph();
+        graphQuery = new GraphQuery(graph);
+        nodeMetaDatacache = new NodeMetadataCache(graph);
+
+        HygeneEventBus.getInstance().register(nodeMetaDatacache);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        MetadataParserFactory.setInstance(null);
+        HygeneEventBus.getInstance().unregister(nodeMetaDatacache);
+    }
+
+
+    @Test
+    void testThatNodeMetadataIsCached() throws ParseException, InterruptedException {
+        graphQuery.query(2, 0);
+
+        nodeMetaDatacache.getThread().join();
+
+        assertThat(nodeMetaDatacache.has(1)).isFalse();
+        assertThat(nodeMetaDatacache.has(2)).isTrue();
+        assertThat(nodeMetaDatacache.getOrRetrieve(2).retrieveMetadata().getSequence()).isEqualTo("TCAAGG");
+
+        // Currently the metadata is retrieved twice, because it is not yet cached within a node object
+        verify(metadataParser, times(2)).parseNodeMetadata(graph.getGfaFile(), 3);
+    }
+
+    @Test
+    void testThatNodesOfLargeRadiusCenterPointQueriesAreNotCached() throws ParseException, InterruptedException {
+        graphQuery.query(1, 200);
+
+        assertThat(nodeMetaDatacache.getThread()).isNull();
+        assertThat(nodeMetaDatacache.has(1)).isFalse();
+    }
+
+    private Graph createGraph() throws ParseException {
+        GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
+        gfaFile.parse(progress -> {
+        });
+
+        return gfaFile.getGraph();
+    }
+
+    private MetadataParser spyMetadataParser() {
+        final MetadataParser metadataParser = spy(MetadataParser.class);
+
+        MetadataParserFactory.setInstance(metadataParser);
+
+        return metadataParser;
+    }
+}
