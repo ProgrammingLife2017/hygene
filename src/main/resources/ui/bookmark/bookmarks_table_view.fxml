@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Tooltip?>
@@ -13,14 +14,14 @@
     <content>
         <AnchorPane maxHeight="Infinity" minHeight="-Infinity" minWidth="-Infinity">
             <children>
-                <Label fx:id="bookmarksTableTitle" text="Bookmarks" AnchorPane.leftAnchor="30.0"
+                <Label fx:id="bookmarksTableTitle" text="Bookmarks" AnchorPane.leftAnchor="40.0"
                        AnchorPane.topAnchor="10.0">
                     <tooltip>
                         <Tooltip text="All bookmarks associated with the currently loaded GFA graph."/>
                     </tooltip>
                 </Label>
                 <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
-                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="10.0"
+                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="10.0"
                            AnchorPane.topAnchor="40.0">
                     <columns>
                         <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
@@ -32,9 +33,11 @@
                         <Tooltip text="Overview of all bases of the current genome sequence."/>
                     </tooltip>
                 </TableView>
-                <Button fx:id="hideButton" layoutX="-26.0" layoutY="71.0" mnemonicParsing="false"
+                <Button fx:id="hideButton" layoutX="-26.0" layoutY="71.0" maxWidth="-Infinity" mnemonicParsing="false"
                         onAction="#toggleVisibilityAction" prefWidth="10.0" text="&gt;" wrapText="true"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                <Separator layoutX="-3.0" layoutY="-69.0" orientation="VERTICAL" prefHeight="200.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="0.0"/>
             </children>
         </AnchorPane>
     </content>

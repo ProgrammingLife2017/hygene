@@ -89,7 +89,7 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Sets the {@link SimpleBookmarkStore} for use by the controller
+     * Sets the {@link SimpleBookmarkStore} for use by the controller.
      *
      * @param simpleBookmarkStore {@link SimpleBookmarkStore} for use by the controller
      */
