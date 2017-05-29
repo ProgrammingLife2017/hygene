@@ -55,7 +55,7 @@ public final class GfaFile {
      * @throws ParseException if the file content is not GFA-compliant
      */
     public Graph parse(final ProgressUpdater progressUpdater) throws ParseException {
-        try (final FileDatabase fileDatabase = new FileDatabase(fileName)) {
+        try (FileDatabase fileDatabase = new FileDatabase(fileName)) {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
             if (graphLoader.hasGraph()) {

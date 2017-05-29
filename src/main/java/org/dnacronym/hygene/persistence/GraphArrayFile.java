@@ -53,7 +53,7 @@ public final class GraphArrayFile {
     public int[][] read(final int graphSize, final ProgressUpdater progressUpdater) throws IOException {
         final int[][] graph = new int[graphSize][];
 
-        try (final BufferedReader cache = new BufferedReader(new InputStreamReader(
+        try (BufferedReader cache = new BufferedReader(new InputStreamReader(
                 new GZIPInputStream(new FileInputStream(file)), StandardCharsets.UTF_8))) {
             String node;
             int nodeIndex = 0;
@@ -86,7 +86,7 @@ public final class GraphArrayFile {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void write(final int[][] graph) throws IOException {
-        try (final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
                 new GZIPOutputStream(new FileOutputStream(file)), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {
                 final StringBuilder stringBuilder = new StringBuilder();

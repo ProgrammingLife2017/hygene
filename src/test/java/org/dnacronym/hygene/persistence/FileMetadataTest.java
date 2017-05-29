@@ -53,7 +53,7 @@ final class FileMetadataTest extends FileDatabaseBaseTest {
     @Test
     void testVerifyMetadata() throws IOException, SQLException {
         final String testFileName = "src/test/resources/persistence-test.gfa";
-        try (final PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
                 "UTF-8"))) {
             out.println("Content before modification");
         }
@@ -61,7 +61,7 @@ final class FileMetadataTest extends FileDatabaseBaseTest {
         final FileDatabase testDatabase = new FileDatabase(testFileName);
         testDatabase.close();
 
-        try (final PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
                 "UTF-8"))) {
             out.println("Content after modification");
         }
