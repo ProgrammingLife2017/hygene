@@ -21,7 +21,10 @@
         <exclude name="BeanMembersShouldSerialize" />
     </rule>
     <rule ref="rulesets/java/junit.xml" />
-    <rule ref="rulesets/java/logging-java.xml" />
+    <rule ref="rulesets/java/logging-java.xml">
+        <!-- Causes large increases in complexity for little gain in performance. -->
+        <exclude name="GuardLogStatementJavaUtil" />
+    </rule>
     <rule ref="rulesets/java/naming.xml">
         <!-- Skipping because id (identifier), rs (ResultSet), ps (PreparedStatement) are OK, for example. -->
         <exclude name="ShortVariable" />
