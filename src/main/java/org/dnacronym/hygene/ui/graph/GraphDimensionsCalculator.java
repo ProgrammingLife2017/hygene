@@ -94,9 +94,6 @@ public final class GraphDimensionsCalculator {
                 maxXNodeIdProperty.set(nodeId);
             }
 
-            tempMinX[0] = Math.min(tempMinX[0], nodeLeftX);
-            tempMaxX[0] = Math.max(tempMaxX[0], nodeRightX);
-
             tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
