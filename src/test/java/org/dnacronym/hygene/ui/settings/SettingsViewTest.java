@@ -10,6 +10,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
+/**
+ * Unit tests for {@link SettingsView}.
+ */
 final class SettingsViewTest extends UITest {
     private SettingsView settingsView;
     private Settings settings;
@@ -19,10 +22,12 @@ final class SettingsViewTest extends UITest {
     @Override
     public void beforeEach() {
         settings = mock(Settings.class);
-        settingsView = new SettingsView(settings);
-
         stage = mock(Stage.class);
-        settingsView.setStage(stage);
+
+        interact(() -> {
+            settingsView = new SettingsView(settings);
+            settingsView.setStage(stage);
+        });
     }
 
 
