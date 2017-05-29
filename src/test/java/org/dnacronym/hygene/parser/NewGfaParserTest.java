@@ -93,7 +93,7 @@ final class NewGfaParserTest {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M\nL 2 + 1 + 0M";
         final Graph graph = parse(gfa);
 
-        Node firstNode = graph.getNode(1);
+        final Node firstNode = graph.getNode(1);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 3, null));
@@ -107,8 +107,8 @@ final class NewGfaParserTest {
         final String gfa = "S 1 A\nL 1 + 2 + 0M\nS 2 B";
         final Graph graph = parse(gfa);
 
-        Node firstNode = graph.getNode(1);
-        Node secondNode = graph.getNode(2);
+        final Node firstNode = graph.getNode(1);
+        final Node secondNode = graph.getNode(2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 2, null));
@@ -122,8 +122,8 @@ final class NewGfaParserTest {
         final String gfa = "L 100 + 200 + 0M\nS 100 A\nS 200 B";
         final Graph graph = parse(gfa);
 
-        Node firstNode = graph.getNode(1);
-        Node secondNode = graph.getNode(2);
+        final Node firstNode = graph.getNode(1);
+        final Node secondNode = graph.getNode(2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 1, null));

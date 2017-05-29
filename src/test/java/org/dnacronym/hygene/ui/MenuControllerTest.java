@@ -47,7 +47,7 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testFileOpenerAccept() throws Exception {
-        CompletableFuture<Object> future = new CompletableFuture<>();
+        final CompletableFuture<Object> future = new CompletableFuture<>();
 
         interact(() -> {
             try {
@@ -116,9 +116,9 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testOpenConsoleActionInit() throws Exception {
-        ActionEvent action = mock(ActionEvent.class);
+        final ActionEvent action = mock(ActionEvent.class);
 
-        CompletableFuture<Object> future = new CompletableFuture<>();
+        final CompletableFuture<Object> future = new CompletableFuture<>();
 
         interact(() -> {
             try {
@@ -136,7 +136,7 @@ final class MenuControllerTest extends UITestBase {
     void testOpenSettingsWindowInit() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
 
-        CompletableFuture<SettingsView> future = new CompletableFuture<>();
+        final CompletableFuture<SettingsView> future = new CompletableFuture<>();
 
         interact(() -> {
             menuController.setSettings(new Settings(graphStore));
@@ -151,7 +151,7 @@ final class MenuControllerTest extends UITestBase {
     void testOpenSettingsWindowState() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
 
-        CompletableFuture<SettingsView> future = new CompletableFuture<>();
+        final CompletableFuture<SettingsView> future = new CompletableFuture<>();
 
         interact(() -> {
             menuController.setSettings(new Settings(graphStore));
@@ -164,7 +164,7 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testOpenHelpMenuViewWindowInitialization() throws ExecutionException, InterruptedException {
-        CompletableFuture<HelpMenuView> future = new CompletableFuture<>();
+        final CompletableFuture<HelpMenuView> future = new CompletableFuture<>();
 
         interact(() -> {
             try {
@@ -181,9 +181,9 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testOpenConsoleActionWindowState() throws Exception {
-        ActionEvent action = mock(ActionEvent.class);
+        final ActionEvent action = mock(ActionEvent.class);
 
-        CompletableFuture<ConsoleWrapper> future = new CompletableFuture<>();
+        final CompletableFuture<ConsoleWrapper> future = new CompletableFuture<>();
 
         interact(() -> {
             try {
@@ -199,10 +199,10 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testConsoleWindowPersistence() throws Exception {
-        ActionEvent action = mock(ActionEvent.class);
+        final ActionEvent action = mock(ActionEvent.class);
 
-        CompletableFuture<ConsoleWrapper> future1 = new CompletableFuture<>();
-        CompletableFuture<ConsoleWrapper> future2 = new CompletableFuture<>();
+        final CompletableFuture<ConsoleWrapper> future1 = new CompletableFuture<>();
+        final CompletableFuture<ConsoleWrapper> future2 = new CompletableFuture<>();
 
         interact(() -> {
             try {

@@ -40,11 +40,11 @@ final class BasicSettingsViewControllerTest extends UITestBase {
         basicSettingsViewController = new BasicSettingsViewController();
 
         graphVisualizer = mock(GraphVisualizer.class);
-        SimpleDoubleProperty height = new SimpleDoubleProperty();
+        final SimpleDoubleProperty height = new SimpleDoubleProperty();
         height.setValue(20);
         when(graphVisualizer.getNodeHeightProperty()).thenReturn(height);
 
-        ObjectProperty<Color> color = new SimpleObjectProperty<>();
+        final ObjectProperty<Color> color = new SimpleObjectProperty<>();
         color.set(Color.RED);
         when(graphVisualizer.getEdgeColorProperty()).thenReturn(color);
 
@@ -87,7 +87,7 @@ final class BasicSettingsViewControllerTest extends UITestBase {
         interact(() -> basicSettingsViewController.nodeHeightSliderDone(mouseEvent));
 
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         assertThat(graphVisualizer.getNodeHeightProperty().getValue()).isEqualTo(42.42);
@@ -101,7 +101,7 @@ final class BasicSettingsViewControllerTest extends UITestBase {
         interact(() -> basicSettingsViewController.edgeColorDone(actionEvent));
 
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         assertThat(graphVisualizer.getEdgeColorProperty().getValue()).isEqualTo(Color.YELLOW);

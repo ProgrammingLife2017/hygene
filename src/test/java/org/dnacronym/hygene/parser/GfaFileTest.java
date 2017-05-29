@@ -88,7 +88,7 @@ final class GfaFileTest {
 
     @Test
     void testParseFile() throws IOException, ParseException {
-        NewGfaParser gfaParser = spy(NewGfaParser.class);
+        final NewGfaParser gfaParser = spy(NewGfaParser.class);
         NewGfaParserFactory.setInstance(gfaParser);
 
         currentFileName = GFA_TEST_FILE;
@@ -102,12 +102,12 @@ final class GfaFileTest {
 
     @Test
     void testParseNodeMetaData() throws IOException, ParseException {
-        MetadataParser metadataParser = spy(MetadataParser.class);
+        final MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
         currentFileName = GFA_TEST_FILE;
-        GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+        final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(2);
 
         verify(metadataParser).parseNodeMetadata(gfaFile, 2);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
@@ -115,12 +115,12 @@ final class GfaFileTest {
 
     @Test
     void testParseEdgeMetadata() throws IOException, ParseException {
-        MetadataParser metadataParser = spy(MetadataParser.class);
+        final MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
+        final EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(4);
 
         verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");

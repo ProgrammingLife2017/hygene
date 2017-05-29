@@ -15,12 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class MetadataParsingIntegrationTest {
     @Test
     void testGetNodeMetadata() throws ParseException {
-        GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
+        final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse(progress -> {
         });
-        Node node = gfaFile.getGraph().getNode(1);
 
-        NodeMetadata nodeMetadata = node.retrieveMetadata();
+        final Node node = gfaFile.getGraph().getNode(1);
+        final NodeMetadata nodeMetadata = node.retrieveMetadata();
 
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
         assertThat(nodeMetadata.getName()).isEqualTo("11");
@@ -28,12 +28,12 @@ final class MetadataParsingIntegrationTest {
 
     @Test
     void testGetEdgeMetadata() throws ParseException {
-        GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
+        final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse(progress -> {
         });
-        Edge edge = gfaFile.getGraph().getNode(1).getOutgoingEdges().iterator().next();
 
-        EdgeMetadata edgeMetadata = edge.retrieveMetadata();
+        final Edge edge = gfaFile.getGraph().getNode(1).getOutgoingEdges().iterator().next();
+        final EdgeMetadata edgeMetadata = edge.retrieveMetadata();
 
         assertThat(edgeMetadata.getFromOrient()).isEqualTo("+");
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");

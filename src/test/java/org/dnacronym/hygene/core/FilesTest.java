@@ -28,8 +28,8 @@ final class FilesTest {
 
     @Test
     void testInstanceRemainsTheSame() throws FileNotFoundException {
-        Files files1 = Files.getInstance();
-        Files files2 = Files.getInstance();
+        final Files files1 = Files.getInstance();
+        final Files files2 = Files.getInstance();
 
         assertThat(files1 == files2).isTrue();
     }

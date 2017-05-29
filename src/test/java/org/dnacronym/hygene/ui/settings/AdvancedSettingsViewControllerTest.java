@@ -33,7 +33,7 @@ final class AdvancedSettingsViewControllerTest extends UITestBase {
         advancedSettingsViewController = new AdvancedSettingsViewController();
 
         graphVisualizer = mock(GraphVisualizer.class);
-        SimpleBooleanProperty displayLaneBorder = new SimpleBooleanProperty();
+        final SimpleBooleanProperty displayLaneBorder = new SimpleBooleanProperty();
         displayLaneBorder.setValue(false);
         when(graphVisualizer.getDisplayBordersProperty()).thenReturn(displayLaneBorder);
 
@@ -63,9 +63,9 @@ final class AdvancedSettingsViewControllerTest extends UITestBase {
         when(mouseEvent.getSource()).thenReturn(checkBox);
         interact(() -> advancedSettingsViewController.showLaneBordersClicked(mouseEvent));
 
-        ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+        final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         assertThat(graphVisualizer.getDisplayBordersProperty().getValue()).isTrue();

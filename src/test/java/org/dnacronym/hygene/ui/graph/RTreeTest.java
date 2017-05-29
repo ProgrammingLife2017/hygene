@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.fail;
 final class RTreeTest {
     @Test
     void testFindNode() {
-        RTree tree = new RTree();
+        final RTree tree = new RTree();
         tree.addNode(45, 10, 10, 20, 20);
 
         tree.find(15, 15,
@@ -23,7 +23,7 @@ final class RTreeTest {
 
     @Test
     void testFindNearNode() {
-        RTree tree = new RTree();
+        final RTree tree = new RTree();
         tree.addNode(45, 10, 10, 20, 20);
 
         tree.find(9, 9,
@@ -34,7 +34,7 @@ final class RTreeTest {
 
     @Test
     void testFindEdge() {
-        RTree tree = new RTree();
+        final RTree tree = new RTree();
         tree.addEdge(30, 31, 25, 25, 50, 50);
 
         tree.find(40, 40,
@@ -48,7 +48,7 @@ final class RTreeTest {
 
     @Test
     void testFindNearEdge() {
-        RTree tree = new RTree();
+        final RTree tree = new RTree();
         tree.addEdge(30, 31, 25, 25, 50, 50);
 
         tree.find(41, 40,
@@ -62,7 +62,7 @@ final class RTreeTest {
 
     @Test
     void testOnlyFindWithinMaxRadius() {
-        RTree tree = new RTree();
+        final RTree tree = new RTree();
         tree.addNode(0, 0, 0, 5, 5);
 
         tree.find(1000, 1000,

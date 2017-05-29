@@ -37,7 +37,7 @@ final class GraphStoreTest extends UITestBase {
     void testOpenGfaFile() throws IOException, ExecutionException, InterruptedException {
         final File file = new File("src/test/resources/gfa/simple.gfa");
 
-        CompletableFuture<Object> future = new CompletableFuture<>();
+        final CompletableFuture<Object> future = new CompletableFuture<>();
 
         Platform.runLater(() -> {
             try {
