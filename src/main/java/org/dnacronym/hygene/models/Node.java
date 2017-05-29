@@ -168,7 +168,7 @@ public final class Node {
      *
      * @return set containing the outgoing edges of the {@link Node}
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public Set<Edge> getOutgoingEdges() {
         if (outgoingEdges == null) {
             synchronized (Node.class) {
@@ -197,6 +197,7 @@ public final class Node {
      *
      * @return set containing the incoming edges of the {@link Node}
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public Set<Edge> getIncomingEdges() {
         if (incomingEdges == null) {
             synchronized (Node.class) {

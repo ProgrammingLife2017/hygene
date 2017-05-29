@@ -49,7 +49,7 @@ public final class GraphArrayFile {
      * @return internal graph array data structure from cache file
      * @throws IOException if the cache file cannot be read
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public int[][] read(final int graphSize, final ProgressUpdater progressUpdater) throws IOException {
         final int[][] graph = new int[graphSize][];
 

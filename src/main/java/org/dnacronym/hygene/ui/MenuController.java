@@ -289,6 +289,7 @@ public final class MenuController implements Initializable {
      * @throws IOException               if an IO error occurrs during loading or saving
      * @throws UIInitialisationException if initialisation of the UI fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     private void loadFile(final File file) throws IOException, UIInitialisationException {
         final ProgressBarView progressBarView = new ProgressBarView();
         progressBarView.show();
