@@ -56,7 +56,7 @@ final class MenuControllerTest extends UITest {
                 final File file = mock(File.class);
 
                 // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
-                final Window owner = Hygene.getInstance().getPrimaryStage().getOwner();
+                final Window owner = Hygene.getInstance().getPrimaryStage().getScene().getWindow();
                 when(fileChooser.showOpenDialog(owner)).thenReturn(file);
                 menuController.setFileChooser(fileChooser);
                 menuController.setGraphStore(graphStore);

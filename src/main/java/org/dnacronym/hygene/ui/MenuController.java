@@ -92,7 +92,7 @@ public final class MenuController implements Initializable {
 
         fileChooser.setInitialDirectory(RecentDirectory.get());
 
-        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
+        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getScene().getWindow());
         if (gfaFile == null) {
             return;
         }
