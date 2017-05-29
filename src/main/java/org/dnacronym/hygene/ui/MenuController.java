@@ -92,7 +92,7 @@ public final class MenuController implements Initializable {
 
         fileChooser.setInitialDirectory(RecentDirectory.get());
 
-        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getOwner());
+        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getScene().getWindow());
         if (gfaFile == null) {
             return;
         }
@@ -175,10 +175,12 @@ public final class MenuController implements Initializable {
                 new FileChooser.ExtensionFilter(
                         "GFA (*." + GraphStore.GFA_EXTENSION + ")",
                         "*." + GraphStore.GFA_EXTENSION);
+        final FileChooser.ExtensionFilter noFilter = new FileChooser.ExtensionFilter("All files", "*.*");
 
         final FileChooser chooser = new FileChooser();
         chooser.setTitle(chooserTitle);
         chooser.getExtensionFilters().add(gfaFilter);
+        chooser.getExtensionFilters().add(noFilter);
 
         setFileChooser(chooser);
     }
@@ -302,7 +304,9 @@ public final class MenuController implements Initializable {
                 LOGGER.error("Failed to load: " + file.getName() + ".", e);
             }
         });
-
+      
+        Hygene.getInstance().formatTitle(file.getPath());
+  
         RecentFiles.add(file);
 
         // Update menu only in initialized state (not in test-cases)
