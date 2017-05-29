@@ -15,7 +15,7 @@ import java.net.URL;
 /**
  * Custom stage used for creating the console window in the GUI.
  */
-public final class ConsoleWrapper {
+public final class ConsoleView {
     private static final String TITLE = "Console";
     private static final String CONSOLE_VIEW = "/ui/console/console_view.fxml";
 
@@ -23,12 +23,12 @@ public final class ConsoleWrapper {
 
 
     /**
-     * Constructor for {@link ConsoleWrapper}.
+     * Constructor for {@link ConsoleView}.
      *
      * @throws IOException               if there was an error locating or reading the FXML
      * @throws UIInitialisationException if there was an error initializing the provided FXML resource
      */
-    public ConsoleWrapper() throws IOException, UIInitialisationException {
+    public ConsoleView() throws IOException, UIInitialisationException {
         stage = new Stage();
 
         stage.setTitle(TITLE);
@@ -43,7 +43,7 @@ public final class ConsoleWrapper {
 
 
     /**
-     * Gets the {@link Stage} in {@link ConsoleWrapper}.
+     * Gets the {@link Stage} in {@link ConsoleView}.
      *
      * @return the {@link Stage}
      */
