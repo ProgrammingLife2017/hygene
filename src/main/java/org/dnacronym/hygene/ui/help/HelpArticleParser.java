@@ -63,14 +63,13 @@ public final class HelpArticleParser {
      */
     public List<HelpArticle> parse(final String filename) {
         final Document document = loadXML(filename);
-
         if (document == null) {
             return new ArrayList<>();
-        } else {
-            final Element articlesElement = (Element) document.getDocumentElement()
-                    .getElementsByTagName("articles").item(0);
-            return parseArticles(articlesElement);
         }
+
+        final Element articlesElement = (Element) document.getDocumentElement()
+                .getElementsByTagName("articles").item(0);
+        return parseArticles(articlesElement);
     }
 
     /**
