@@ -53,15 +53,15 @@ public final class GraphDimensionsCalculator {
      * Create a new instance of {@link GraphDimensionsCalculator}.
      */
     public GraphDimensionsCalculator() {
-        minXNodeIdProperty = new SimpleIntegerProperty();
-        maxXNodeIdProperty = new SimpleIntegerProperty();
+        minXNodeIdProperty = new SimpleIntegerProperty(1);
+        maxXNodeIdProperty = new SimpleIntegerProperty(1);
 
-        centerNodeIdProperty = new SimpleIntegerProperty();
-        rangeProperty = new SimpleIntegerProperty();
+        centerNodeIdProperty = new SimpleIntegerProperty(1);
+        rangeProperty = new SimpleIntegerProperty(1);
         onScreenNodeCountProperty = new SimpleIntegerProperty();
-        nodeCountProperty = new SimpleIntegerProperty();
+        nodeCountProperty = new SimpleIntegerProperty(1);
 
-        laneHeightProperty = new SimpleDoubleProperty();
+        laneHeightProperty = new SimpleDoubleProperty(1);
         laneCountProperty = new SimpleIntegerProperty(1);
 
         observableNeighbours = FXCollections.observableArrayList();
@@ -84,7 +84,7 @@ public final class GraphDimensionsCalculator {
      * If the graph has not been set, this method does nothing.
      */
     private void calculate() {
-        if (graph == null) {
+        if (graph == null || rangeProperty.get() == 0) {
             return;
         }
 
@@ -97,7 +97,7 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
-        List<Integer> neighbours = new LinkedList<>();
+        final List<Integer> neighbours = new LinkedList<>();
         neighbours.add(centerNodeId);
 
         graphQuery.visit(nodeId -> {
@@ -135,6 +135,8 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Set the {@link Graph} used for calculations.
+     * <p>
+     * This will perform a another calculation.
      *
      * @param graph the {@link Graph} for use by calculations
      */
@@ -143,6 +145,7 @@ public final class GraphDimensionsCalculator {
         graphQuery = new GraphQuery(graph);
 
         nodeCountProperty.set(graph.getNodeArrays().length);
+        calculate();
     }
 
     /**
@@ -183,10 +186,10 @@ public final class GraphDimensionsCalculator {
      * @see GraphQuery
      */
     public void query(final int centerNodeId, final int range) {
-        centerNodeIdProperty.set(centerNodeId);
+        centerNodeIdProperty.set(Math.max(0, Math.min(centerNodeId, nodeCountProperty.get()) - 1));
         rangeProperty.set(range);
 
-        graphQuery.query(centerNodeId, range);
+        graphQuery.query(centerNodeIdProperty.get(), rangeProperty.get());
         calculate();
     }
 
@@ -355,7 +358,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return property which decides the current center {@link Node} id
      */
-    public ReadOnlyIntegerProperty getCenterNodeIdProperty() {
+    public IntegerProperty getCenterNodeIdProperty() {
         return centerNodeIdProperty;
     }
 

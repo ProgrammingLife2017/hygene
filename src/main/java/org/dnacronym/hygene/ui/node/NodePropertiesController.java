@@ -56,6 +56,7 @@ public final class NodePropertiesController implements Initializable {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphStore(Hygene.getInstance().getGraphStore());
+            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize NodePropertiesController.", e);
             new ErrorDialogue(e).show();
@@ -111,6 +112,15 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
+    }
+
+    /**
+     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
+     *
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
+     */
+    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
     }
 
     /**

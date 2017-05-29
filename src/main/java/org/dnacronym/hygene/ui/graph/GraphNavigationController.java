@@ -118,7 +118,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomInAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.updateRange(graphDimensionsCalculator.getRangeProperty().get() + 1);
+        graphDimensionsCalculator.decrementRadius();
         actionEvent.consume();
     }
 
@@ -129,7 +129,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomOutAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.updateRange(graphDimensionsCalculator.getRangeProperty().get() - 1);
+        graphDimensionsCalculator.incrementRadius();
         actionEvent.consume();
     }
 }

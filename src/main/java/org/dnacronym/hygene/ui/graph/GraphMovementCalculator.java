@@ -98,7 +98,7 @@ public final class GraphMovementCalculator {
      */
     public void onScroll(final double deltaY) {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
-        if (deltaRange > 0) {
+        if (deltaRange < 0) {
             zoomIn(deltaRange);
         } else {
             zoomOut(deltaRange);

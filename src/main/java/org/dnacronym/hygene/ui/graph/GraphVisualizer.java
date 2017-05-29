@@ -83,10 +83,7 @@ public final class GraphVisualizer {
 
         getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
 
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-            setGraph(newValue.getGraph());
-            draw();
-        });
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
 
         final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
             if (graphStore.getGfaFileProperty().get() != null) {
@@ -300,6 +297,10 @@ public final class GraphVisualizer {
         });
 
         graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), canvas.getHeight());
+        canvas.widthProperty().addListener((observable, oldValue, newValue) ->
+                graphDimensionsCalculator.setCanvasSize(newValue.doubleValue(), canvas.getHeight()));
+        canvas.heightProperty().addListener((observable, oldValue, newValue) ->
+                graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), newValue.doubleValue()));
     }
 
     /**
