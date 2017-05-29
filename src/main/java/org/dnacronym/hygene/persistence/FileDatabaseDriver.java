@@ -73,7 +73,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException in the case of an error during SQL operations
      */
     synchronized void setUpTable(final FileDatabaseTable table) throws SQLException {
-        try (final Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             final String columnList = String.join(", ", table.getColumns().stream()
                     .map((Pair<String, ColumnType> column) -> column.getKey() + " " + column.getValue())
                     .collect(Collectors.toList()));
@@ -92,7 +92,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException in the case of an error during SQL operations
      */
     synchronized void insertRow(final String tableName, final List<String> values) throws SQLException {
-        try (final Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             final String concatenatedValues = String.join(", ", values.stream().map(
                     value -> {
                         if (StringUtils.isNumeric(value)) {
@@ -117,7 +117,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
             throws SQLException {
         final String sql = "DELETE FROM " + tableName + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
 
-        try (final Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         }
     }
@@ -136,8 +136,8 @@ public final class FileDatabaseDriver implements AutoCloseable {
         final String sql = "SELECT EXISTS (SELECT 1 FROM " + tableName + " WHERE " + keyColumnName + "='"
                 + keyColumnValue + "')";
 
-        try (final Statement statement = connection.createStatement()) {
-            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
                 return resultSet.getInt(1) == 1;
             }
         }
@@ -157,8 +157,8 @@ public final class FileDatabaseDriver implements AutoCloseable {
                                        final String valueColumnName) throws SQLException {
         final String sql = "SELECT * FROM " + tableName + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
 
-        try (final Statement statement = connection.createStatement()) {
-            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
                 if (!resultSet.next()) {
                     throw new SQLException("Expected at least one row in ResultSet.");
                 }
@@ -183,8 +183,8 @@ public final class FileDatabaseDriver implements AutoCloseable {
             throws SQLException {
         final String sql = "SELECT * FROM " + tableName;
 
-        try (final Statement statement = connection.createStatement()) {
-            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
                 while (resultSet.next()) {
                     itemCallback.accept(resultSet);
                 }
@@ -199,7 +199,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException in the case of an error during SQL operations
      */
     synchronized void deleteAllFromTable(final String tableName) throws SQLException {
-        try (final Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM " + tableName);
         }
     }
@@ -211,7 +211,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @throws SQLException if execution of the raw query went wrong
      */
     synchronized void raw(final String query) throws SQLException {
-        try (final Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         }
     }

@@ -304,9 +304,9 @@ public final class MenuController implements Initializable {
                 LOGGER.error("Failed to load: " + file.getName() + ".", e);
             }
         });
-      
+
         Hygene.getInstance().formatTitle(file.getPath());
-  
+
         RecentFiles.add(file);
 
         // Update menu only in initialized state (not in test-cases)
