@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link MenuController}.
  */
-final class MenuControllerTest extends AbstractUITest {
+final class MenuControllerTest extends UITestBase {
     private MenuController menuController;
 
 

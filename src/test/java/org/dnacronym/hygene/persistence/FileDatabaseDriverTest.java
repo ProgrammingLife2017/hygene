@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 /**
  * Test suite for the {@link FileDatabaseDriver} class.
  */
-final class FileDatabaseDriverTest extends AbstractFileDatabaseTest {
+final class FileDatabaseDriverTest extends FileDatabaseTestBase {
     private FileDatabaseDriver fileDatabaseDriver;
 
 

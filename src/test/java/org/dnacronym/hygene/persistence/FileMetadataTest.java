@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 /**
  * Test suite for the {@link FileMetadata} class.
  */
-final class FileMetadataTest extends AbstractFileDatabaseTest {
+final class FileMetadataTest extends FileDatabaseTestBase {
     private FileMetadata fileMetadata;
     private FileDatabase fileDatabase;
 

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
  * Abstract test class for UI testing. Initializes and closes and application instance before and after each unit test
  * in test classes that inherit from this class.
  */
-public abstract class AbstractUITest extends FxRobot {
+public abstract class UITestBase extends FxRobot {
     private Hygene application;
     private Stage primaryStage;
 

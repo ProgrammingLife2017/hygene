@@ -6,7 +6,7 @@
 
 <suppressions>
     <!-- Already defined in production packages -->
-    <suppress files=".*Test\.java" checks="JavadocPackage"/>
+    <suppress files=".*(Test|TestBase)\.java" checks="JavadocPackage"/>
     <!-- Acceptable in tests -->
-    <suppress files=".*Test\.java" checks="MagicNumber|JavadocType|JavadocMethod"/>
+    <suppress files=".*(Test|TestBase)\.java" checks="MagicNumber|JavadocType|JavadocMethod"/>
 </suppressions>

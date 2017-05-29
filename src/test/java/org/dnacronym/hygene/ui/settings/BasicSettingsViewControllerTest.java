@@ -8,7 +8,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.ui.AbstractUITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link BasicSettingsViewController}s.
  */
-final class BasicSettingsViewControllerTest extends AbstractUITest {
+final class BasicSettingsViewControllerTest extends UITestBase {
     private BasicSettingsViewController basicSettingsViewController;
     private GraphVisualizer graphVisualizer;
     private Settings settings;

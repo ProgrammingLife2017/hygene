@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link FileBookmarks} class.
  */
-final class FileBookmarksTest extends AbstractFileDatabaseTest {
+final class FileBookmarksTest extends FileDatabaseTestBase {
     private FileBookmarks fileBookmarks;
     private FileDatabase fileDatabase;
 

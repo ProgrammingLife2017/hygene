@@ -3,7 +3,7 @@ package org.dnacronym.hygene.ui.progressbar;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dnacronym.hygene.parser.ProgressUpdater;
-import org.dnacronym.hygene.ui.AbstractUITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link ProgressBarView}.
  */
-final class ProgressBarViewTest extends AbstractUITest {
+final class ProgressBarViewTest extends UITestBase {
     private ProgressBarView progressBarView;
     private Stage stage;
 

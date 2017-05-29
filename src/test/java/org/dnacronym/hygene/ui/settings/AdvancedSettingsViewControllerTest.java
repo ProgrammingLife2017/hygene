@@ -4,7 +4,7 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
-import org.dnacronym.hygene.ui.AbstractUITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link AdvancedSettingsViewController}s.
  */
-final class AdvancedSettingsViewControllerTest extends AbstractUITest {
+final class AdvancedSettingsViewControllerTest extends UITestBase {
     private AdvancedSettingsViewController advancedSettingsViewController;
     private GraphVisualizer graphVisualizer;
     private Settings settings;

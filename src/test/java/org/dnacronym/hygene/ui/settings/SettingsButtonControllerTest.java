@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dnacronym.hygene.ui.AbstractUITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link SettingsButtonController}s.
  */
-final class SettingsButtonControllerTest extends AbstractUITest {
+final class SettingsButtonControllerTest extends UITestBase {
     private SettingsButtonController settingsButtonController;
     private Settings settings;
 

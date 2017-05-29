@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 /**
  * Unit tests for {@link GraphQuery}s.
  */
-class GraphQueryTest extends AbstractGraphTest {
+class GraphQueryTest extends GraphTestBase {
     /*
      * query
      */

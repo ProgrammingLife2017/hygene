@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * Base test suite for database tests.
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod") // Must be abstract because it contains no tests
-abstract class AbstractFileDatabaseTest {
+abstract class FileDatabaseTestBase {
     static final String GFA_FILE_NAME = "src/test/resources/gfa/simple.gfa";
     static final File GFA_FILE_DB = new File(GFA_FILE_NAME + FileDatabaseDriver.DB_FILE_EXTENSION);
 
