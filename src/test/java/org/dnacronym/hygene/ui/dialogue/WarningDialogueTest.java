@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * Unit tests of {@link WarningDialogue}.
+ * Unit tests for {@link WarningDialogue}.
  */
 final class WarningDialogueTest extends UITest {
     private Dialogue errorDialogue;

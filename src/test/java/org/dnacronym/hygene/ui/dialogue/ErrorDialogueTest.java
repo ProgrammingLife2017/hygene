@@ -11,9 +11,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * Unit tests for the {@link Dialogue} class.
- * <p>
- * Due to the nature of ui {@link Dialogue}, this class consists mostly of black box tests.
+ * Unit tests for {@link Dialogue}.
  */
 final class ErrorDialogueTest extends UITest {
     private Dialogue errorDialogue;

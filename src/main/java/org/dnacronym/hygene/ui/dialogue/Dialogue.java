@@ -12,11 +12,11 @@ public abstract class Dialogue {
 
 
     /**
-     * Construct a new {@link Dialogue}.
+     * Create an instance of {@link Dialogue}.
      *
      * @param title      title of the {@link Alert}
      * @param headerText header text of the {@link Alert}
-     * @param alertType  {@link javafx.scene.control.Alert.AlertType} of the alert
+     * @param alertType  {@link Alert.AlertType} of the alert
      */
     Dialogue(final String title, final String headerText, final Alert.AlertType alertType) {
         setAlert(new Alert(alertType), title, headerText);
@@ -24,10 +24,10 @@ public abstract class Dialogue {
 
 
     /**
-     * Set {@link Alert} for use by {@link Dialogue}.
+     * Sets {@link Alert} for use by {@link Dialogue}.
      *
      * @param alert      {@link Alert} for use by {@link Dialogue}
-     * @param title      title of the {@link Alert}
+     * @param title      the title of the {@link Alert}
      * @param headerText header text of the {@link Alert}
      */
     final void setAlert(final Alert alert, final String title, final String headerText) {
@@ -38,7 +38,7 @@ public abstract class Dialogue {
     }
 
     /**
-     * Get the {@link Alert} the {@link Dialogue} uses.
+     * Returns the {@link Alert} the {@link Dialogue} uses.
      *
      * @return {@link Alert} the {@link Dialogue} uses
      */
@@ -47,7 +47,7 @@ public abstract class Dialogue {
     }
 
     /**
-     * Show a dialogue onscreen.
+     * Shows a dialogue onscreen.
      * <p>
      * A dialogue prevents any further interaction with the UI until it is closed. Uses the
      * {@link Alert} from JavaFX.
@@ -62,7 +62,7 @@ public abstract class Dialogue {
     }
 
     /**
-     * Show a dialogue onscreen that prevents further interaction with the UI until closed.
+     * Shows a dialogue onscreen that prevents further interaction with the UI until closed.
      *
      * @param alert alert to display
      */

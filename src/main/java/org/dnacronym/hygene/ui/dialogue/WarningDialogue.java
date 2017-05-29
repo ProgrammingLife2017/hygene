@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 /**
  * Warning dialogue.
  * <p>
- * Displayed when the user did something they shouldn't do or potentially dangerous.
+ * Displayed when the user did something they shouldn't do.
  */
 public final class WarningDialogue extends Dialogue {
     /**
