@@ -5,9 +5,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<MenuBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.102"
-         fx:controller="org.dnacronym.hygene.ui.MenuController"
-         fx:id="menuBar">
+<MenuBar fx:id="menuBar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="org.dnacronym.hygene.ui.MenuController">
     <menus>
         <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>
@@ -44,6 +43,13 @@
                 </MenuItem>
             </items>
             <items>
+                <MenuItem fx:id="toggleBookmarkTable" mnemonicParsing="false" text="Bookmarks"
+                          onAction="#toggleBookmarksTableAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                    </accelerator>
+                </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem fx:id="openHelp" mnemonicParsing="false" onAction="#openHelpAction" text="Help">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="H" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>

@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
@@ -39,12 +41,15 @@ public final class MenuController implements Initializable {
     private FileChooser fileChooser;
     private GraphStore graphStore;
     private Settings settings;
+    private SimpleBookmarkStore simpleBookmarkStore;
 
     @FXML
     private MenuBar menuBar;
 
     @FXML
     private Menu recentFilesMenu;
+    @FXML
+    private MenuItem toggleBookmarkTable;
 
     private ConsoleWrapper consoleWrapper;
     private HelpMenuView helpMenuView;
@@ -61,12 +66,17 @@ public final class MenuController implements Initializable {
         try {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setSettings(Hygene.getInstance().getSettings());
+            setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
 
             populateRecentFilesMenu();
             initFileChooser();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
         }
+
+        toggleBookmarkTable.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
+                .then("Hide bookmarks")
+                .otherwise("Show bookmarks"));
     }
 
     /**
@@ -76,6 +86,15 @@ public final class MenuController implements Initializable {
      */
     void setSettings(final Settings settings) {
         this.settings = settings;
+    }
+
+    /**
+     * Sets the {@link SimpleBookmarkStore} for use by the controller
+     *
+     * @param simpleBookmarkStore {@link SimpleBookmarkStore} for use by the controller
+     */
+    void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
+        this.simpleBookmarkStore = simpleBookmarkStore;
     }
 
     /**
@@ -150,6 +169,17 @@ public final class MenuController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
+        actionEvent.consume();
+    }
+
+    /**
+     * When the user wants to toggle the visibility of the BookmarksTable.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void toggleBookmarksTableAction(final ActionEvent actionEvent) {
+        simpleBookmarkStore.getTableVisibleProperty().set(!simpleBookmarkStore.getTableVisibleProperty().get());
         actionEvent.consume();
     }
 
