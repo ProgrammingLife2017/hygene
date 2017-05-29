@@ -31,6 +31,7 @@ public final class Graph {
             value = "EI_EXPOSE_REP2",
             justification = "For performance reasons, we don't want to create a copy here"
     )
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly") // Performance
     public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
         this.nodeArrays = nodeArrays;
         this.gfaFile = gfaFile;
@@ -53,6 +54,7 @@ public final class Graph {
      * @param id the {@link Node}'s id
      * @return the array representing a {@link Node}'s metadata
      */
+    @SuppressWarnings("PMD.MethodReturnsInternalArray") // Performance
     public int[] getNodeArray(final int id) {
         return nodeArrays[id];
     }
@@ -66,6 +68,7 @@ public final class Graph {
             value = "EI_EXPOSE_REP",
             justification = "For performance reasons, we don't want to create a copy here"
     )
+    @SuppressWarnings("PMD.MethodReturnsInternalArray") // Performance
     public int[][] getNodeArrays() {
         return nodeArrays;
     }

@@ -43,6 +43,7 @@ public final class Node {
      * @param graph the graph containing the node, in case there is no graph (yet) for this node to be on, null is
      *              accepted
      */
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly") // Performance
     Node(final int id, final int[] data, final @Nullable Graph graph) {
         this.id = id;
         this.data = data;
