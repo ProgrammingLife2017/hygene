@@ -65,7 +65,7 @@ final class MenuControllerTest extends UITest {
                 verify(file).getParentFile();
 
                 future.complete(null);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 future.complete(null);
                 fail(e.getMessage());
             }
@@ -169,7 +169,7 @@ final class MenuControllerTest extends UITest {
         interact(() -> {
             try {
                 menuController.openHelpAction(new ActionEvent());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
             future.complete(menuController.getHelpMenuView());

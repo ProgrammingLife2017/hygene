@@ -40,7 +40,7 @@ public final class HelpMenuController implements Initializable {
      * Generate sidebar menu.
      */
     void generateSidebarMenu() {
-        List<Button> leftMenuButton = HelpMenuView.getHelpMenuArticles().stream()
+        final List<Button> leftMenuButton = HelpMenuView.getHelpMenuArticles().stream()
                 .map(this::generateSidebarButton).collect(Collectors.toList());
 
         sidebar.getChildren().addAll(leftMenuButton);

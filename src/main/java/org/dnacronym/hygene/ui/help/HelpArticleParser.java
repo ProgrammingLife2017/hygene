@@ -32,21 +32,24 @@ public final class HelpArticleParser {
      */
     Document loadXML(final String filename) {
         Document document = null;
+
         try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
             document = dBuilder.parse(filename);
             document.normalizeDocument();
         } catch (final ParserConfigurationException | SAXException | IOException e) {
             LOGGER.error(e);
         }
+
         return document;
     }
 
     /**
      * Will call {@link HelpArticleParser#parse(String)} with default location for help articles.
      *
-     * @return A {@link List} of {@link HelpArticle}
+     * @return a {@link List} of {@link HelpArticle}
      */
     public List<HelpArticle> parse() {
         return parse(DEFAULT_HELP_MENU_FILE);
@@ -56,37 +59,36 @@ public final class HelpArticleParser {
      * Will load the provided XML file and parse its contents into {@link HelpArticle}s.
      *
      * @param filename the filename
-     * @return A {@link List} of {@link HelpArticle}
+     * @return a {@link List} of {@link HelpArticle}
      */
     public List<HelpArticle> parse(final String filename) {
-        Document document = loadXML(filename);
-
-        if (document != null) {
-            Element articlesElement = (Element) document.getDocumentElement().getElementsByTagName("articles").item(0);
-            return parseArticles(articlesElement);
-        } else {
+        final Document document = loadXML(filename);
+        if (document == null) {
             return new ArrayList<>();
         }
+
+        final Element articlesElement = (Element) document.getDocumentElement()
+                .getElementsByTagName("articles").item(0);
+        return parseArticles(articlesElement);
     }
 
     /**
      * Will parse the articles {@link Element} node in the help articles XML document.
      *
      * @param articlesElement the {@link Element} node
-     * @return A {@link List} of {@link HelpArticle}
+     * @return a {@link List} of {@link HelpArticle}
      */
     List<HelpArticle> parseArticles(final Element articlesElement) {
-        List<HelpArticle> articles = new ArrayList<>();
-
-        NodeList article = articlesElement.getElementsByTagName("article");
+        final List<HelpArticle> articles = new ArrayList<>();
+        final NodeList article = articlesElement.getElementsByTagName("article");
 
         for (int i = 0; i < article.getLength(); i++) {
-            Node articleNode = article.item(i);
+            final Node articleNode = article.item(i);
 
             if (articleNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element articleElement = (Element) articleNode;
+                final Element articleElement = (Element) articleNode;
 
-                HelpArticle helpArticle = parseArticleElement(articleElement);
+                final HelpArticle helpArticle = parseArticleElement(articleElement);
 
                 articles.add(helpArticle);
             }
@@ -102,8 +104,8 @@ public final class HelpArticleParser {
      * @return the {@link HelpArticle}
      */
     HelpArticle parseArticleElement(final Element article) {
-        String title = article.getElementsByTagName("title").item(0).getTextContent();
-        String content = article.getElementsByTagName("content").item(0).getTextContent();
+        final String title = article.getElementsByTagName("title").item(0).getTextContent();
+        final String content = article.getElementsByTagName("content").item(0).getTextContent();
 
         return new HelpArticle(title, content);
     }

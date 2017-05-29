@@ -28,7 +28,7 @@ public final class GraphArrayFile {
 
     private static final int WRITE_BUFFER_SIZE = 4 * (int) Math.pow(1024, 2);
 
-    private File file;
+    private final File file;
 
 
     /**
