@@ -60,7 +60,16 @@ public final class JFXAppender extends AbstractAppender {
     }
 
     @Override
+    @SuppressWarnings( {
+            "PMD.AvoidCatchingGenericException", // Exception class is unknown
+            "PMD.EmptyCatchBlock", // Exception can neither be logged nor be rethrown
+            "squid:S1166" // Exception cannot be logged or rethrown
+    })
     public void append(final LogEvent event) {
-        latestLogEvent.setValue(new ConsoleMessage(this, event));
+        try {
+            latestLogEvent.setValue(new ConsoleMessage(this, event));
+        } catch (final RuntimeException e) {
+            // We can't actually log the exception here since that would cause the same problem
+        }
     }
 }
