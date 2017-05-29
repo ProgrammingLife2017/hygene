@@ -18,7 +18,7 @@ public final class Graph {
     private final int[][] nodeArrays;
     private final GfaFile gfaFile;
 
-    private @MonotonicNonNull GraphIterator iterator;
+    private @MonotonicNonNull GraphIterator graphIterator;
 
 
     /**
@@ -195,12 +195,12 @@ public final class Graph {
      *
      * @return the {@link GraphIterator} for this {@link Graph} for iterating over its node
      */
-    @EnsuresNonNull("iterator")
+    @EnsuresNonNull("graphIterator")
     public GraphIterator iterator() {
-        if (iterator == null) {
-            iterator = new GraphIterator(this);
+        if (graphIterator == null) {
+            graphIterator = new GraphIterator(this);
         }
-        return iterator;
+        return graphIterator;
     }
 
     /**
