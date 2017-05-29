@@ -2,7 +2,7 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests of {@link GraphStore}s.
  */
-final class GraphStoreTest extends UITest {
+final class GraphStoreTest extends UITestBase {
     private GraphStore graphStore;
 
 

@@ -14,14 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>
  * This class is intended to be extended.
  */
-abstract class GraphBasedTest {
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod") // Must be abstract because it contains no tests
+abstract class GraphTestBase {
     private Graph graph;
     private int[][] nodeArrays;
     private GraphQuery graphQuery;
 
 
     /**
-     * Resets this {@link GraphBasedTest}'s fields.
+     * Resets this {@link GraphTestBase}'s fields.
      */
     @AfterEach
     void afterEach() {
@@ -32,7 +33,7 @@ abstract class GraphBasedTest {
 
 
     /**
-     * Creates a new {@link Graph} with the given size, and sets it in this {@link GraphBasedTest}.
+     * Creates a new {@link Graph} with the given size, and sets it in this {@link GraphTestBase}.
      *
      * @param size the size of the {@link Graph} to create
      */
@@ -46,7 +47,7 @@ abstract class GraphBasedTest {
     }
 
     /**
-     * Creates a new {@link GraphQuery} for the current {@link Graph}, and sets it in this {@link GraphBasedTest}.
+     * Creates a new {@link GraphQuery} for the current {@link Graph}, and sets it in this {@link GraphTestBase}.
      */
     final void createGraphQuery() {
         graphQuery = new GraphQuery(graph);

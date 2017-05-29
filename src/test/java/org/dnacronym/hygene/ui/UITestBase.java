@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
  * Abstract test class for UI testing. Initializes and closes and application instance before and after each unit test
  * in test classes that inherit from this class.
  */
-public abstract class UITest extends FxRobot {
+public abstract class UITestBase extends FxRobot {
     private Hygene application;
     private Stage primaryStage;
 
@@ -56,14 +56,18 @@ public abstract class UITest extends FxRobot {
      * This method is called after the {@link #basicBeforeEach()} method.
      * If this method is not overridden it doesn't do anything.
      */
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract") // Implementation is optional
     public void beforeEach() {
+        // Does nothing by default
     }
 
     /**
      * This method is called after the {@link #basicAfterEach()} method.
      * If this method is not overridden it doesn't do anything.
      */
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract") // Implementation is optional
     public void afterEach() {
+        // Does nothing by default
     }
 
     /**

@@ -3,7 +3,7 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests of {@link QuerySettingsController}.
  */
-final class QuerySettingsControllerTest extends UITest {
+final class QuerySettingsControllerTest extends UITestBase {
     private QuerySettingsController querySettingsController;
     private GraphVisualizer graphVisualizer;
     private IntegerProperty centerNodeIdProperty;

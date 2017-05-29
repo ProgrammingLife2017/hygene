@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Each method has a diagram representing the graph being tested. These graphs are not to scale; they only show the
  * edges that exist between the nodes.
  */
-final class NewFafospYTest extends GraphBasedTest {
+final class NewFafospYTest extends GraphTestBase {
     private final Function<Integer, Integer> getUnscaledYPosition = id -> getGraph().getUnscaledYPosition(id);
 
 
