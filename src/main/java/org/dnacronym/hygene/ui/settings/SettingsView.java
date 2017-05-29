@@ -11,6 +11,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import java.io.IOException;
 import java.net.URL;
 
 
@@ -32,8 +33,6 @@ public final class SettingsView {
      */
     public SettingsView(final Settings settings) {
         try {
-            final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
-
             final Stage newStage = new Stage();
             newStage.setResizable(false);
             newStage.setTitle(TITLE);
@@ -44,6 +43,7 @@ public final class SettingsView {
                 throw new UIInitialisationException("Root of Settings could not be found.");
             }
 
+            final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
             newStage.initModality(Modality.WINDOW_MODAL);
             newStage.initOwner(primaryStage);
             newStage.setScene(new Scene(parent));
@@ -52,7 +52,7 @@ public final class SettingsView {
             newStage.setOnCloseRequest(request -> settings.clearAll());
 
             setStage(newStage);
-        } catch (final Exception e) {
+        } catch (final IOException | UIInitialisationException e) {
             LOGGER.error("Unable to initialize SettingsView.", e);
         }
     }

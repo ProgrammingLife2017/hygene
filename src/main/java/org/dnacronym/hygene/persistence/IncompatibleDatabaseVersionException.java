@@ -8,11 +8,21 @@ import java.io.IOException;
  */
 public final class IncompatibleDatabaseVersionException extends IOException {
     /**
-     * Constructs the exception instance.
+     * Constructs a new {@link IncompatibleDatabaseVersionException}.
      *
      * @param message the exception message
      */
     public IncompatibleDatabaseVersionException(final String message) {
         super(message);
+    }
+
+    /**
+     * Constructs a new {@link IncompatibleDatabaseVersionException}.
+     *
+     * @param message the exception message
+     * @param cause   the exception's cause
+     */
+    public IncompatibleDatabaseVersionException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

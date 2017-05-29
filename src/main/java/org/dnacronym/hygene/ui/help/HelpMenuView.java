@@ -19,7 +19,7 @@ import java.util.List;
 public class HelpMenuView {
     private static final String TITLE = "Help";
     private static final String HELP_MENU_VIEW = "/ui/help/help_view.fxml";
-    private static final List<HelpArticle> HELP_MENU_ARTICLES = (new HelpArticleParser()).parse();
+    private static final List<HelpArticle> HELP_MENU_ARTICLES = new HelpArticleParser().parse();
 
     private final Stage stage;
 
