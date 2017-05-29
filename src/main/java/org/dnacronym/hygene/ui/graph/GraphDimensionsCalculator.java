@@ -223,6 +223,7 @@ public final class GraphDimensionsCalculator {
      * This will perform a another calculation.
      */
     public void incrementRadius() {
+        rangeProperty.add(1);
         graphQuery.incrementRadius();
         calculate();
     }
@@ -233,6 +234,7 @@ public final class GraphDimensionsCalculator {
      * This will perform a another calculation.
      */
     public void decrementRadius() {
+        rangeProperty.subtract(1);
         graphQuery.decrementRadius();
         calculate();
     }
