@@ -16,6 +16,8 @@
     <rule ref="rulesets/java/design.xml">
         <!-- Too many false positives. -->
         <exclude name="UseVarargs" />
+        <!-- Causes large increases in complexity for little gain in performance. -->
+        <exclude name="AvoidSynchronizedAtMethodLevel" />
     </rule>
     <rule ref="rulesets/java/empty.xml" />
     <rule ref="rulesets/java/finalizers.xml" />
