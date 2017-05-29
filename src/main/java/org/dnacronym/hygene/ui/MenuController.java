@@ -198,23 +198,24 @@ public final class MenuController implements Initializable {
             throw new UIInitialisationException("Error while reading recent files from data file.", e);
         }
 
-        if (!recentFiles.isEmpty() && recentFilesMenu.getItems() != null) {
-            // Remove default information item (telling the user that there are no recent files)
-            recentFilesMenu.getItems().clear();
+        if (recentFiles.isEmpty() || recentFilesMenu.getItems() == null) {
+            return;
+        }
 
-            MenuItem menuItem;
-            for (final File file : recentFiles) {
-                menuItem = new MenuItem(file.getPath());
-                recentFilesMenu.getItems().add(menuItem);
+        // Remove default information item (telling the user that there are no recent files)
+        recentFilesMenu.getItems().clear();
 
-                menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-                    try {
-                        loadFile(file);
-                    } catch (final IOException | UIInitialisationException e) {
-                        LOGGER.error("Failed to load the selected recent file.", e);
-                    }
-                });
-            }
+        for (final File file : recentFiles) {
+            final MenuItem menuItem = new MenuItem(file.getPath());
+            recentFilesMenu.getItems().add(menuItem);
+
+            menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+                try {
+                    loadFile(file);
+                } catch (final IOException | UIInitialisationException e) {
+                    LOGGER.error("Failed to load the selected recent file.", e);
+                }
+            });
         }
     }
 
@@ -304,9 +305,9 @@ public final class MenuController implements Initializable {
                 LOGGER.error("Failed to load: " + file.getName() + ".", e);
             }
         });
-      
+
         Hygene.getInstance().formatTitle(file.getPath());
-  
+
         RecentFiles.add(file);
 
         // Update menu only in initialized state (not in test-cases)

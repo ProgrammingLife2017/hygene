@@ -49,21 +49,20 @@ public final class GraphArrayFile {
      * @return internal graph array data structure from cache file
      * @throws IOException if the cache file cannot be read
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public int[][] read(final int graphSize, final ProgressUpdater progressUpdater) throws IOException {
         final int[][] graph = new int[graphSize][];
 
         try (final BufferedReader cache = new BufferedReader(new InputStreamReader(
                 new GZIPInputStream(new FileInputStream(file)), StandardCharsets.UTF_8))) {
             String node;
-            StringTokenizer nodeTokenizer;
             int nodeIndex = 0;
             while ((node = cache.readLine()) != null) {
                 if (nodeIndex % PROGRESS_UPDATE_INTERVAL == 0) {
                     progressUpdater.updateProgress(PROGRESS_TOTAL * nodeIndex / graphSize);
                 }
 
-                nodeTokenizer = new StringTokenizer(node, NODE_VALUE_SEPARATOR);
-
+                final StringTokenizer nodeTokenizer = new StringTokenizer(node, NODE_VALUE_SEPARATOR);
                 graph[nodeIndex] = new int[nodeTokenizer.countTokens()];
 
                 int valueIndex = 0;
@@ -85,6 +84,7 @@ public final class GraphArrayFile {
      * @param graph the internal graph array data structure
      * @throws IOException if we cannot write to the cache file
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void write(final int[][] graph) throws IOException {
         try (final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
                 new GZIPOutputStream(new FileOutputStream(file)), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
