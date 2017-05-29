@@ -1,10 +1,14 @@
 package org.dnacronym.hygene.ui.graph;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.canvas.Canvas;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
+import org.dnacronym.hygene.models.Node;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,8 +16,6 @@ import java.util.List;
 
 /**
  * Performs calculations for determining node/graph positions and dimensions.
- * <p>
- * Every time {@link #calculate(Graph, Canvas, int, int, double)} is called, all internal values are updated.
  */
 public final class GraphDimensionsCalculator {
     /**
@@ -24,18 +26,25 @@ public final class GraphDimensionsCalculator {
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
 
+    private final IntegerProperty centerNodeIdProperty;
+    private final IntegerProperty rangeProperty;
+    private final IntegerProperty onScreenNodeCountProperty;
+    private final IntegerProperty nodeCountProperty;
+
+    private double nodeHeight;
+    private final DoubleProperty laneHeightProperty;
+    private final IntegerProperty laneCountProperty;
+
     private Graph graph;
     private int minX;
     private int maxX;
     private int minY;
 
-    private double canvasWidth;
-    private double nodeHeight;
-
-    private double laneHeight = -1;
-    private int laneCount = -1;
+    private double canvasWidth = 0;
+    private double canvasHeight = 0;
 
     private List<Integer> neighbours;
+    private GraphQuery graphQuery;
 
 
     /**
@@ -44,26 +53,21 @@ public final class GraphDimensionsCalculator {
     public GraphDimensionsCalculator() {
         minXNodeIdProperty = new SimpleIntegerProperty();
         maxXNodeIdProperty = new SimpleIntegerProperty();
+
+        centerNodeIdProperty = new SimpleIntegerProperty();
+        rangeProperty = new SimpleIntegerProperty();
+        onScreenNodeCountProperty = new SimpleIntegerProperty();
+        nodeCountProperty = new SimpleIntegerProperty();
+
+        laneHeightProperty = new SimpleDoubleProperty();
+        laneCountProperty = new SimpleIntegerProperty(1);
+
+        neighbours = new LinkedList<>();
     }
 
 
-    /**
-     * This calculations recalculates all internal values based on the new values.
-     *
-     * @param graph        a reference to the current {@link Graph}, used to get node properties
-     * @param canvas       a reference to the current {@link Canvas}, used for determining width and height
-     * @param centerNodeId node id of the center node
-     * @param hops         Amount of hops allowed from center node
-     * @param nodeHeight   the height of a single node
-     * @see org.dnacronym.hygene.models.GraphIterator#visitIndirectNeighboursWithinRange(int, int,
-     * java.util.function.BiConsumer)
-     */
-    public void calculate(final Graph graph, final Canvas canvas, final int centerNodeId, final int hops,
-                          final double nodeHeight) {
-        this.graph = graph;
-
-        this.canvasWidth = canvas.getWidth();
-        this.nodeHeight = nodeHeight;
+    private void calculate() {
+        final int centerNodeId = centerNodeIdProperty.get();
 
         final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
                 + graph.getUnscaledXEdgeCount(centerNodeId) * DEFAULT_EDGE_WIDTH;
@@ -72,12 +76,10 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
-        neighbours = new LinkedList<>();
+        neighbours.clear();
         neighbours.add(centerNodeId);
 
-        final GraphQuery query = new GraphQuery(graph);
-        query.query(centerNodeId, hops);
-        query.visit(nodeId -> {
+        graphQuery.visit(nodeId -> {
             neighbours.add(nodeId);
 
             final int nodeLeftX = graph.getUnscaledXPosition(nodeId)
@@ -103,8 +105,40 @@ public final class GraphDimensionsCalculator {
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
-        laneHeight = canvas.getHeight() / getLaneCount();
-        laneCount = Math.abs(maxY - minY) + 1;
+        laneCountProperty.set(Math.abs(maxY - minY) + 1);
+        laneHeightProperty.set(canvasHeight / laneCountProperty.get());
+        onScreenNodeCountProperty.set(neighbours.size());
+    }
+
+    void setGraph(final Graph graph) {
+        this.graph = graph;
+        graphQuery = new GraphQuery(graph);
+
+        nodeCountProperty.set(graph.getNodeArrays().length);
+    }
+
+    void setCanvasSize(final double canvasWidth, final double canvasHeight) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+    }
+
+    void setNodeHeight(final double nodeHeight) {
+        this.nodeHeight = nodeHeight;
+    }
+
+    void setCenterNodeIdRange(final int centerNodeId, final int range) {
+        centerNodeIdProperty.set(centerNodeId);
+        rangeProperty.set(range);
+
+        graphQuery.query(centerNodeId, range);
+    }
+
+    void incrementRadius() {
+        graphQuery.incrementRadius();
+    }
+
+    void decrementRadius() {
+        graphQuery.decrementRadius();
     }
 
     /**
@@ -137,7 +171,7 @@ public final class GraphDimensionsCalculator {
      */
     public double computeYPosition(final int nodeId) {
         final int yPosition = graph.getUnscaledYPosition(nodeId);
-        return (yPosition - minY) * getLaneHeight() + getLaneHeight() / 2 - nodeHeight / 2;
+        return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2 - nodeHeight / 2;
     }
 
     /**
@@ -147,7 +181,7 @@ public final class GraphDimensionsCalculator {
      * @return the absolute middle y position of a node within the current canvas
      */
     public double computeMiddleYPosition(final int nodeId) {
-        return computeYPosition(nodeId) + getNodeHeight() / 2;
+        return computeYPosition(nodeId) + nodeHeight / 2;
     }
 
     /**
@@ -158,33 +192,6 @@ public final class GraphDimensionsCalculator {
      */
     public double computeWidth(final int nodeId) {
         return (double) graph.getLength(nodeId) / (maxX - minX) * canvasWidth;
-    }
-
-    /**
-     * Gets the height of a node.
-     *
-     * @return the height of a node
-     */
-    public double getNodeHeight() {
-        return nodeHeight;
-    }
-
-    /**
-     * Gets the lane height.
-     *
-     * @return the height of a lane
-     */
-    public double getLaneHeight() {
-        return laneHeight;
-    }
-
-    /**
-     * Gets the lane count.
-     *
-     * @return the lane count
-     */
-    public int getLaneCount() {
-        return laneCount;
     }
 
     /**
@@ -201,7 +208,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return the minimum node id {@link IntegerProperty} in the x direction
      */
-    public IntegerProperty getMinXNodeIdProperty() {
+    public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
     }
 
@@ -210,7 +217,63 @@ public final class GraphDimensionsCalculator {
      *
      * @return the maximum node id {@link IntegerProperty} in the x direction
      */
-    public IntegerProperty getMaxXNodeIdProperty() {
+    public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
         return maxXNodeIdProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyIntegerProperty} which describes the amount of lanes.
+     *
+     * @return the {@link ReadOnlyIntegerProperty} which describes the amount of lanes
+     */
+    public ReadOnlyIntegerProperty getLanecountProperty() {
+        return laneCountProperty;
+    }
+
+    /**
+     * Returns the {@link DoubleProperty} which describes the height of lanes.
+     *
+     * @return the {@link DoubleProperty} which describes the height of lanes
+     */
+    public ReadOnlyDoubleProperty getLaneHeightProperty() {
+        return laneHeightProperty;
+    }
+
+    /**
+     * The property which describes the amount of node in the set graph.
+     *
+     * @return property which describes the amount of nodes in the set graph
+     */
+    public ReadOnlyIntegerProperty getNodeCountProperty() {
+        return nodeCountProperty;
+    }
+
+    /**
+     * The property which describes the amount of nodes onscreen.
+     *
+     * @return property which describes the amount of nodes on screen
+     */
+    public ReadOnlyIntegerProperty getOnScreenNodeCountProperty() {
+        return onScreenNodeCountProperty;
+    }
+
+    /**
+     * Property which determines the current center {@link Node} id.
+     *
+     * @return property which decides the current center {@link Node} id
+     */
+    public ReadOnlyIntegerProperty getCenterNodeIdProperty() {
+        return centerNodeIdProperty;
+    }
+
+    /**
+     * The property which determines the range to draw around the center node.
+     * <p>
+     * This range is given in the amount of hops
+     *
+     * @return property which determines the amount of hops to draw in each direction around the center node
+     */
+    public ReadOnlyIntegerProperty getRangeProperty() {
+        return rangeProperty;
     }
 }
