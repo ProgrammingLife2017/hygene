@@ -25,7 +25,10 @@
     <rule ref="rulesets/java/javabeans.xml">
         <exclude name="BeanMembersShouldSerialize" />
     </rule>
-    <rule ref="rulesets/java/junit.xml" />
+    <rule ref="rulesets/java/junit.xml">
+        <!-- Too many false positives. -->
+        <exclude name="JUnitTestContainsTooManyAsserts" />
+    </rule>
     <rule ref="rulesets/java/logging-java.xml">
         <!-- Causes large increases in complexity for little gain in performance. -->
         <exclude name="GuardLogStatementJavaUtil" />
