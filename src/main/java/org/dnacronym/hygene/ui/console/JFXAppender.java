@@ -60,7 +60,7 @@ public final class JFXAppender extends AbstractAppender {
     }
 
     @Override
-    @SuppressWarnings( {
+    @SuppressWarnings({
             "PMD.AvoidCatchingGenericException", // Exception class is unknown
             "PMD.EmptyCatchBlock", // Exception can neither be logged nor be rethrown
             "squid:S1166" // Exception cannot be logged or rethrown
