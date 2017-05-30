@@ -1,5 +1,9 @@
 package org.dnacronym.hygene.models;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.function.Consumer;
 
 
@@ -34,6 +38,14 @@ public final class GraphQuery {
      * Maps each node in the cache to the distance from the centre point of the query.
      */
     private final NodeDistanceMap cache;
+    /**
+     * Lists all nodes in the cache of which all left neighbours are not in the cache.
+     */
+    private final List<Integer> sourceNeighbours;
+    /**
+     * Lists all nodes in the cache of which all right neighbours are not in the cache.
+     */
+    private final List<Integer> sinkNeighbours;
 
     /**
      * The node id of the centre node in the current query.
@@ -58,6 +70,9 @@ public final class GraphQuery {
         this.graph = graph;
         this.iterator = new GraphIterator(graph);
         this.cache = new NodeDistanceMap();
+
+        this.sourceNeighbours = new ArrayList<>();
+        this.sinkNeighbours = new ArrayList<>();
     }
 
 
@@ -83,8 +98,8 @@ public final class GraphQuery {
         this.cacheRadius = radius;
 
         cache.clear();
-        iterator.visitIndirectNeighboursWithinRange(centre, radius,
-                (depth, node) -> cache.setDistance(node, depth));
+        iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, node) -> cache.setDistance(node, depth));
+        findSentinelNeighbours();
     }
 
     /**
@@ -149,6 +164,34 @@ public final class GraphQuery {
     }
 
     /**
+     * Visits all nodes in the cache in breadth-first order and applies the given {@link Consumer} to them.
+     *
+     * @param direction the direction to visit in
+     * @param action    a {@link Consumer} for node ids
+     */
+    public void visitBFS(final SequenceDirection direction, final Consumer<Integer> action) {
+        final Queue<Integer> queue = new LinkedList<>();
+        queue.addAll(direction.ternary(sinkNeighbours, sourceNeighbours));
+
+        final boolean[] visited = new boolean[graph.getNodeArrays().length];
+        while (!queue.isEmpty()) {
+            final int head = queue.remove();
+            if (visited[head]) {
+                continue;
+            }
+
+            action.accept(head);
+            visited[head] = true;
+
+            iterator.visitDirectNeighbours(head, direction, index -> {
+                if (!visited[index] && cache.containsNode(index)) {
+                    queue.add(index);
+                }
+            });
+        }
+    }
+
+    /**
      * Returns the query's current centre node id.
      *
      * @return the query's current centre node id
@@ -191,5 +234,37 @@ public final class GraphQuery {
         cacheRadius++;
         cache.getNodes(cacheRadius - 1).forEach(node ->
                 iterator.visitDirectNeighbours(node, neighbour -> cache.setDistance(neighbour, cacheRadius)));
+        findSentinelNeighbours();
+    }
+
+    /**
+     * Finds the neighbours of the (virtual) source and sink nodes, and puts them in the respective {@link List}s.
+     */
+    @SuppressWarnings("squid:S00108") // False positive, empty lambdas cannot be removed
+    private void findSentinelNeighbours() {
+        sourceNeighbours.clear();
+        sinkNeighbours.clear();
+
+        visit(node -> {
+            final boolean[] hasNeighbours = {false, false};
+
+            iterator.visitDirectNeighboursWhile(node, SequenceDirection.LEFT,
+                    neighbour -> !cache.containsNode(neighbour),
+                    neighbour -> hasNeighbours[0] = true,
+                    ignored -> {}
+            );
+            iterator.visitDirectNeighboursWhile(node, SequenceDirection.RIGHT,
+                    neighbour -> !cache.containsNode(neighbour),
+                    neighbour -> hasNeighbours[1] = true,
+                    ignored -> {}
+            );
+
+            if (!hasNeighbours[0]) {
+                sourceNeighbours.add(node);
+            }
+            if (!hasNeighbours[1]) {
+                sinkNeighbours.add(node);
+            }
+        });
     }
 }
