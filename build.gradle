@@ -125,7 +125,7 @@ checkstyle {
 }
 
 pmd {
-    ignoreFailures = false
+    ignoreFailures = true
     ruleSetFiles = files("config/pmd/pmd-rules.xml")
     sourceSets = [sourceSets.main]
 }
