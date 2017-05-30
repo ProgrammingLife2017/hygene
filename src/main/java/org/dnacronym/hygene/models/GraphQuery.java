@@ -22,9 +22,14 @@ public final class GraphQuery {
      */
     private static final int MAX_RADIUS_DIFFERENCE = 10;
     /**
-     * The maximum cached radius before the cached is "too large".
+     * The maximum cached radius before the cache is "too large".
      */
     private static final int MAX_RADIUS_FACTOR = 2;
+    /**
+     * The largest number by which the radius can be increased using the {@link #setRadius(int)} method before it is
+     * deemed necessary to rebuild the cache.
+     */
+    private static final int MAX_SET_RADIUS_INCREASE = 5;
 
     /**
      * The queried {@link Graph}.
@@ -155,6 +160,21 @@ public final class GraphQuery {
     }
 
     /**
+     * Sets the radius.
+     * <p>
+     * If the new radius value is below zero, the radius will be set to 0.
+     *
+     * @param radius the new radius
+     */
+    public void setRadius(final int radius) {
+        if (radius > this.radius) {
+            incrementRadius(radius - this.radius);
+        } else if (radius < this.radius) {
+            decrementRadius(this.radius - Math.max(0, radius));
+        }
+    }
+
+    /**
      * Visits all nodes in the cache and applies the given {@link Consumer} to them.
      *
      * @param action a {@link Consumer} for node ids
@@ -266,5 +286,53 @@ public final class GraphQuery {
                 sinkNeighbours.add(node);
             }
         });
+    }
+
+    /**
+     * Increments the radius by the specified amount.
+     *
+     * @param increment the amount by which to increment the radius
+     */
+    private void incrementRadius(final int increment) {
+        final int newRadius = radius + increment;
+        assert newRadius >= radius;
+
+        final Integer centreDistance = cache.getDistance(centre);
+        if (centreDistance == null) {
+            // This branch should be unreachable, but is required by the Checker Framework
+            query(centre, newRadius);
+            return;
+        }
+
+        final int effectiveCacheRadius = cacheRadius - centreDistance;
+        if (newRadius <= effectiveCacheRadius) {
+            this.radius = newRadius;
+        } else if (newRadius - effectiveCacheRadius > MAX_SET_RADIUS_INCREASE) {
+            query(centre, newRadius);
+        } else {
+            final int cacheRadiusTarget = newRadius + effectiveCacheRadius;
+            while (cacheRadius < cacheRadiusTarget) {
+                incrementCacheRadius();
+            }
+
+            this.radius = newRadius;
+        }
+    }
+
+    /**
+     * Decrements the radius by the specified amount.
+     *
+     * @param decrement the amount by which to decrement the radius
+     */
+    private void decrementRadius(final int decrement) {
+        final int newRadius = radius - decrement;
+        assert newRadius <= radius;
+        assert newRadius >= 0;
+
+        if (cacheRadius - newRadius <= MAX_RADIUS_DIFFERENCE) {
+            this.radius = newRadius;
+        } else {
+            query(centre, newRadius);
+        }
     }
 }
