@@ -12,9 +12,9 @@ import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
+import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -38,6 +38,8 @@ public final class NodePropertiesController implements Initializable {
     private AnchorPane nodePropertiesPane;
     @FXML
     private TextField nodeId;
+    @FXML
+    private TextField sequencePreview;
     @FXML
     private Canvas neighbourCanvas;
     @FXML
@@ -76,6 +78,7 @@ public final class NodePropertiesController implements Initializable {
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
             if (newNode == null) {
                 nodeId.clear();
+                sequencePreview.clear();
                 leftNeighbours.clear();
                 rightNeighbours.clear();
                 position.clear();
@@ -83,6 +86,12 @@ public final class NodePropertiesController implements Initializable {
             }
 
             nodeId.setText(String.valueOf(newNode.getId()));
+
+            try {
+                sequencePreview.setText(String.valueOf(newNode.retrieveMetadata().getSequence()));
+            } catch (final ParseException e) {
+                LOGGER.error("Unable to parse sequence of node %s.", newNode, e);
+            }
 
             leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
             rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
