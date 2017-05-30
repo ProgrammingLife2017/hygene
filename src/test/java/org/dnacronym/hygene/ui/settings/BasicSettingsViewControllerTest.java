@@ -48,16 +48,13 @@ final class BasicSettingsViewControllerTest extends UITestBase {
 
         graphMovementCalculator = mock(GraphMovementCalculator.class);
 
-        final SimpleDoubleProperty panning = new SimpleDoubleProperty();
-        panning.setValue(21);
+        final SimpleDoubleProperty panning = new SimpleDoubleProperty(21);
         when(graphMovementCalculator.getPanningSensitivityProperty()).thenReturn(panning);
 
-        final SimpleDoubleProperty zooming = new SimpleDoubleProperty();
-        zooming.setValue(0.042);
+        final SimpleDoubleProperty zooming = new SimpleDoubleProperty(0.042);
         when(graphMovementCalculator.getZoomingSensitivityProperty()).thenReturn(zooming);
 
-        final ObjectProperty<Color> color = new SimpleObjectProperty<>();
-        color.set(Color.RED);
+        final ObjectProperty<Color> color = new SimpleObjectProperty<>(Color.RED);
         when(graphVisualizer.getEdgeColorProperty()).thenReturn(color);
 
         settings = mock(Settings.class);
