@@ -120,7 +120,9 @@ public final class SimpleBookmarkStore {
     public void addBookmark(final Bookmark bookmark) {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
-                graphDimensionsCalculator.query(bookmark.getNodeId(), bookmark.getRadius());
+                graphDimensionsCalculator.getCenterNodeIdProperty().set(bookmark.getNodeId());
+                graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());
+
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
             }));
         } catch (final ParseException e) {

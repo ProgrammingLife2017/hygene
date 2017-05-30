@@ -74,10 +74,11 @@ public final class GraphDimensionsCalculator {
 
         centerNodeIdProperty = new SimpleIntegerProperty(1);
         radiusProperty = new SimpleIntegerProperty(1);
-        centerNodeIdProperty.addListener((observable, oldValue, newValue) ->
-                query(newValue.intValue(), radiusProperty.get()));
-        radiusProperty.addListener((observable, oldValue, newValue) ->
-                query(centerNodeIdProperty.get(), newValue.intValue()));
+        centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
+            centerNodeIdProperty.set(Math.max(0, Math.min(newValue.intValue(), getNodeCountProperty().get() - 1)));
+            query();
+        });
+        radiusProperty.addListener((observable, oldValue, newValue) -> query());
 
         nodeCountProperty = new SimpleIntegerProperty(1);
 
@@ -149,8 +150,8 @@ public final class GraphDimensionsCalculator {
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
-        laneCountProperty.set(Math.abs(maxY - minY) + 1);
         laneHeightProperty.set(canvasHeight / laneCountProperty.get());
+        laneCountProperty.set(Math.abs(maxY - minY) + 1);
     }
 
     /**
@@ -188,33 +189,12 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Perform a new query with the set center node id and set range.
-     * <p>
-     * If the center node id and range are equal to the stored values, this method does nothing. Otherwise, sets the
-     * current center node id to the set value. If it is outside the bounds {@code [0, graph node count]}, it is set to
-     * the closest bound. The current range is also updated to the set value. A new query of the graph is performed
-     * using the internal {@link GraphQuery}.
      *
-     * @param centerNodeId the center of the query
-     * @param range        the range of the query
      * @see GraphQuery#query(int, int)
      */
-    public void query(final int centerNodeId, final int range) {
-        final int newCenterNodeId = Math.max(1, Math.min(centerNodeId, nodeCountProperty.get() - 1));
-
-        boolean changed = false;
-        if (centerNodeIdProperty.get() != newCenterNodeId) {
-            centerNodeIdProperty.set(newCenterNodeId);
-            changed = true;
-        }
-        if (radiusProperty.get() != range) {
-            radiusProperty.set(range);
-            changed = true;
-        }
-
-        if (changed) {
-            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-            calculate();
-        }
+    public void query() {
+        graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+        calculate();
     }
 
     /**
@@ -341,7 +321,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Property which determines the current center {@link Node} id.
      * <p>
-     * Every time this value is updated, {@link #query(int, int)} is called. This method ensures that the center node id
+     * Every time this value is updated, {@link #query} is called. This method ensures that the center node id
      * remains in bounds.
      *
      * @return property which decides the current center {@link Node} id
@@ -353,7 +333,7 @@ public final class GraphDimensionsCalculator {
     /**
      * The property which determines the range to draw around the center node.
      * <p>
-     * Every time this value is updated, {@link #query(int, int)} is called. This method ensures that the range remains
+     * Every time this value is updated, {@link #query} is called. This method ensures that the range remains
      * in bounds.
      *
      * @return property which determines the amount of hops to draw in each direction around the center node

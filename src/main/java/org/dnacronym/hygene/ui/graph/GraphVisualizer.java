@@ -71,7 +71,7 @@ public final class GraphVisualizer {
      * The passed {@link GraphStore} is observed by this class. If the {@link GraphStore}
      * {@link org.dnacronym.hygene.parser.GfaFile} is updated, it will prompt a redraw. Changing the properties of this
      * class will also prompt a redraw if the {@link org.dnacronym.hygene.parser.GfaFile} in {@link GraphStore} is not
-     * null.
+     * {@code null}.
      *
      * @param graphStore                {@link GraphStore} which is observed by this class
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
