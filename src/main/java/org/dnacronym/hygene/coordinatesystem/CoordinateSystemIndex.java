@@ -28,18 +28,30 @@ public final class CoordinateSystemIndex {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
     private final GfaFile gfaFile;
-
-    private int baseCacheInterval = DEFAULT_BASE_CACHE_INTERVAL;
     private final FileGenomeIndex fileGenomeIndex;
+
+    /**
+     * The minimal base distance between two adjacent index points of the same genome.
+     */
+    private int baseCacheInterval = DEFAULT_BASE_CACHE_INTERVAL;
+    /**
+     * The current total base count per genome.
+     */
     private final Map<String, Integer> genomeBaseCounts;
+    /**
+     * The base count difference per genome, counted from the last index point of that genome.
+     */
     private final Map<String, Integer> genomeBaseDiffCounts;
+    /**
+     * A list of all genome names (used to map names to numeric indices and back).
+     */
     private final List<String> genomeNames;
 
 
     /**
      * Constructs a new {@link CoordinateSystemIndex} instance.
      *
-     * @param gfaFile         the graph file to index
+     * @param gfaFile         the GFA file to index
      * @param fileDatabase the {@link FileDatabase} instance to be used for storing and retrieving data
      */
     public CoordinateSystemIndex(final GfaFile gfaFile, final FileDatabase fileDatabase) {
