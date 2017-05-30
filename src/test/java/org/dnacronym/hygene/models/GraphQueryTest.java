@@ -549,7 +549,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(3, 2);
         getGraphQuery().setRadius(2);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(1, 2, 3, 4, 5);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(1, 2, 3, 4, 5);
     }
 
     @Test
@@ -561,7 +561,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(4, 1);
         getGraphQuery().setRadius(3);
 
-        assertThat(collectGraphQueryNodes()).contains(1, 2, 3, 4, 5, 6, 7);
+        assertThat(collectVisit()).contains(1, 2, 3, 4, 5, 6, 7);
     }
 
     @Test
@@ -573,7 +573,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(3, 4);
         getGraphQuery().setRadius(1);
 
-        assertThat(collectGraphQueryNodes()).contains(3);
+        assertThat(collectVisit()).contains(3);
     }
 
     /**
@@ -591,7 +591,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().moveTo(3);
         getGraphQuery().setRadius(3);
 
-        assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4, 5, 6);
+        assertThat(collectVisit()).contains(0, 1, 2, 3, 4, 5, 6);
     }
 
     /**
@@ -606,7 +606,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(0, 0);
         getGraphQuery().setRadius(6);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(0, 1, 2, 3, 4, 5, 6);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(0, 1, 2, 3, 4, 5, 6);
     }
 
     /**
@@ -621,6 +621,6 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(0, 11);
         getGraphQuery().setRadius(0);
 
-        assertThat(collectGraphQueryNodes()).containsExactly(0);
+        assertThat(collectVisit()).containsExactly(0);
     }
 }
