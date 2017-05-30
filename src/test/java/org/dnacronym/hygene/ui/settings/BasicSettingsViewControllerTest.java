@@ -9,6 +9,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.ui.UITestBase;
+import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 final class BasicSettingsViewControllerTest extends UITestBase {
     private BasicSettingsViewController basicSettingsViewController;
     private GraphVisualizer graphVisualizer;
+    private GraphMovementCalculator graphMovementCalculator;
     private Settings settings;
     private MouseEvent mouseEvent;
     private ActionEvent actionEvent;
@@ -44,12 +46,20 @@ final class BasicSettingsViewControllerTest extends UITestBase {
         height.setValue(20);
         when(graphVisualizer.getNodeHeightProperty()).thenReturn(height);
 
-        final ObjectProperty<Color> color = new SimpleObjectProperty<>();
-        color.set(Color.RED);
+        graphMovementCalculator = mock(GraphMovementCalculator.class);
+
+        final SimpleDoubleProperty panning = new SimpleDoubleProperty(21);
+        when(graphMovementCalculator.getPanningSensitivityProperty()).thenReturn(panning);
+
+        final SimpleDoubleProperty zooming = new SimpleDoubleProperty(0.042);
+        when(graphMovementCalculator.getZoomingSensitivityProperty()).thenReturn(zooming);
+
+        final ObjectProperty<Color> color = new SimpleObjectProperty<>(Color.RED);
         when(graphVisualizer.getEdgeColorProperty()).thenReturn(color);
 
         settings = mock(Settings.class);
         basicSettingsViewController.setGraphVisualizer(graphVisualizer);
+        basicSettingsViewController.setGraphMovementCalculator(graphMovementCalculator);
         basicSettingsViewController.setSettings(settings);
 
         colorPicker = mock(ColorPicker.class);
@@ -105,5 +115,47 @@ final class BasicSettingsViewControllerTest extends UITestBase {
         command.run();
 
         assertThat(graphVisualizer.getEdgeColorProperty().getValue()).isEqualTo(Color.YELLOW);
+    }
+
+    @Test
+    void testPanningSensitivitySliderDone() {
+        when(mouseEvent.getSource()).thenReturn(slider);
+        interact(() -> basicSettingsViewController.zoomingSensitivitySliderDone(mouseEvent));
+        verify(settings, times(1)).addRunnable(any(Runnable.class));
+    }
+
+    @Test
+    void testZoomingSensitivitySliderDone() {
+        when(mouseEvent.getSource()).thenReturn(slider);
+        interact(() -> basicSettingsViewController.panningSensitivitySliderDone(mouseEvent));
+        verify(settings, times(1)).addRunnable(any(Runnable.class));
+    }
+
+    @Test
+    void testPanningSensitivitySliderUpdate() {
+        assertThat(graphMovementCalculator.getPanningSensitivityProperty().getValue()).isEqualTo(21.0);
+
+        when(mouseEvent.getSource()).thenReturn(slider);
+        interact(() -> basicSettingsViewController.panningSensitivitySliderDone(mouseEvent));
+
+        verify(settings).addRunnable(captor.capture());
+        Runnable command = captor.getValue();
+        command.run();
+
+        assertThat(graphMovementCalculator.getPanningSensitivityProperty().getValue()).isEqualTo(42.42);
+    }
+
+    @Test
+    void testZoomingSensitivitySliderUpdate() {
+        assertThat(graphMovementCalculator.getZoomingSensitivityProperty().getValue()).isEqualTo(0.042);
+
+        when(mouseEvent.getSource()).thenReturn(slider);
+        basicSettingsViewController.zoomingSensitivitySliderDone(mouseEvent);
+
+        verify(settings).addRunnable(captor.capture());
+        Runnable command = captor.getValue();
+        command.run();
+
+        assertThat(graphMovementCalculator.getZoomingSensitivityProperty().getValue()).isEqualTo(42.42);
     }
 }

@@ -25,6 +25,8 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     private ColorPicker edgeColor;
     @FXML
     private Slider panningSensitivity;
+    @FXML
+    private Slider zoomingSensitivity;
 
 
     @Override
@@ -32,6 +34,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
         edgeColor.setValue(getGraphVisualizer().getEdgeColorProperty().get());
         panningSensitivity.setValue(getGraphMovementCalculator().getPanningSensitivityProperty().get());
+        zoomingSensitivity.setValue(getGraphMovementCalculator().getZoomingSensitivityProperty().get());
     }
 
     /**
@@ -65,13 +68,14 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     /**
      * When the user finishes sliding the panning sensitivity {@link Slider}.
      *
-     * @param actionEvent the {@link ActionEvent}
+     * @param mouseEvent the {@link MouseEvent}
      */
     @FXML
-    void panningSensitivitySliderDone(final ActionEvent actionEvent) {
+    void panningSensitivitySliderDone(final MouseEvent mouseEvent) {
         getSettings().addRunnable(() -> {
-            final double newValue = ((Slider) actionEvent.getSource()).getValue();
+            final double newValue = ((Slider) mouseEvent.getSource()).getValue();
             getGraphMovementCalculator().getPanningSensitivityProperty().setValue(newValue);
+            LOGGER.info("Panning sensitivity has been set to " + newValue + ".");
         });
     }
 
@@ -85,6 +89,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         getSettings().addRunnable(() -> {
             final double newValue = ((Slider) mouseEvent.getSource()).getValue();
             getGraphMovementCalculator().getZoomingSensitivityProperty().setValue(newValue);
+            LOGGER.info("Zooming sensitivity has been set to " + newValue + ".");
         });
     }
 }
