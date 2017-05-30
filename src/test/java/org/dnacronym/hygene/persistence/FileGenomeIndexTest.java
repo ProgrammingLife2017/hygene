@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link FileGenomeIndex} class.
  */
-final class FileGenomeIndexTest extends FileDatabaseBaseTest {
+final class FileGenomeIndexTest extends FileDatabaseTestBase {
     private FileGenomeIndex fileGenomeIndex;
     private FileDatabase fileDatabase;
 
