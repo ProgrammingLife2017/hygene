@@ -109,7 +109,14 @@ public final class GraphQuery {
      */
     public void incrementRadius() {
         radius++;
-        if (radius <= cacheRadius) {
+
+        final Integer centreDistance = cache.getDistance(centre);
+        if (centreDistance == null) {
+            // This branch should be unreachable, but is required by the Checker Framework
+            query(centre, radius);
+            return;
+        }
+        if (radius <= cacheRadius - centreDistance) {
             return;
         }
 
@@ -170,7 +177,7 @@ public final class GraphQuery {
             return;
         }
 
-        int offset = centreDistance + (radius - cacheRadius);
+        int offset = radius - (cacheRadius - centreDistance);
         while (offset > 0) {
             incrementCacheRadius();
             offset--;
