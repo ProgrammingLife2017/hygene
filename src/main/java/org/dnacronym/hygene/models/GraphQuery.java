@@ -16,6 +16,7 @@ import java.util.function.Consumer;
  * will always be in the cache, the cache may contain more nodes. The excessive nodes are flushed from the cache by
  * rebuilding the cache after a number of calls.
  */
+@SuppressWarnings("PMD.TooManyMethods") // This is a cohesive class that does not need refactoring
 public final class GraphQuery {
     /**
      * The maximal acceptable difference between the preferred radius and the cached radius.
