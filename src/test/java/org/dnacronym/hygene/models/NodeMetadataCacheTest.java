@@ -14,6 +14,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
+/**
+ * Unit tests for {@link NodeMetadataCache}.
+ */
 final class NodeMetadataCacheTest {
     private MetadataParser metadataParser;
     private Graph graph;
