@@ -390,6 +390,17 @@ class GraphQueryTest extends GraphTestBase {
     }
 
     @Test
+    void testSetRadiusValueEquals() {
+        createGraph(82);
+        createGraphQuery();
+
+        getGraphQuery().query(14, 8);
+        getGraphQuery().setRadius(8);
+
+        assertThat(getGraphQuery().getRadius()).isEqualTo(8);
+    }
+
+    @Test
     void testSetRadiusValueIncrease() {
         createGraph(95);
         createGraphQuery();
@@ -412,7 +423,19 @@ class GraphQueryTest extends GraphTestBase {
     }
 
     @Test
-    void testSetRadiusIncrease() {
+    void testSetRadiusEqual() {
+        createGraph(7);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
+
+        getGraphQuery().query(3, 2);
+        getGraphQuery().setRadius(2);
+
+        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    void testSetRadiusIncreaseSimple() {
         createGraph(9);
         createGraphQuery();
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}});
@@ -424,7 +447,7 @@ class GraphQueryTest extends GraphTestBase {
     }
 
     @Test
-    void testSetRadiusDecrease() {
+    void testSetRadiusDecreaseSimple() {
         createGraph(9);
         createGraphQuery();
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}});
@@ -433,5 +456,53 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().setRadius(1);
 
         assertThat(collectGraphQueryNodes()).contains(3);
+    }
+
+    /**
+     * Tests that the correct nodes are present when the range is increased but the necessary nodes for this new
+     * range are already in the cache.
+     */
+    @Test
+    void testSetRadiusIncreaseInCache() {
+        createGraph(9);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}});
+
+        getGraphQuery().query(3, 2);
+        getGraphQuery().moveTo(4);
+        getGraphQuery().moveTo(3);
+        getGraphQuery().setRadius(3);
+
+        assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4, 5, 6);
+    }
+
+    /**
+     * Tests that the correct nodes are present when the range is increased by more than the maximum.
+     */
+    @Test
+    void testSetRadiusIncreaseExceedMaxSetRadiusIncrease() {
+        createGraph(8);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}});
+
+        getGraphQuery().query(0, 0);
+        getGraphQuery().setRadius(6);
+
+        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(0, 1, 2, 3, 4, 5, 6);
+    }
+
+    /**
+     * Tests that the cache is rebuilt after decreasing the range with a sufficiently large step.
+     */
+    @Test
+    void testSetRadiusDecreaseExceedMaxRadiusDifference() {
+        createGraph(7);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
+
+        getGraphQuery().query(0, 11);
+        getGraphQuery().setRadius(0);
+
+        assertThat(collectGraphQueryNodes()).containsExactly(0);
     }
 }
