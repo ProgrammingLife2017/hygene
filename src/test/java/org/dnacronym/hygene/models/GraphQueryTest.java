@@ -372,4 +372,66 @@ class GraphQueryTest extends GraphTestBase {
 
         assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4);
     }
+
+
+    /*
+     * setRadius
+     */
+
+    @Test
+    void testSetRadiusValueBelowZero() {
+        createGraph(48);
+        createGraphQuery();
+
+        getGraphQuery().query(17, 9);
+        getGraphQuery().setRadius(-8);
+
+        assertThat(getGraphQuery().getRadius()).isEqualTo(0);
+    }
+
+    @Test
+    void testSetRadiusValueIncrease() {
+        createGraph(95);
+        createGraphQuery();
+
+        getGraphQuery().query(63, 7);
+        getGraphQuery().setRadius(18);
+
+        assertThat(getGraphQuery().getRadius()).isEqualTo(18);
+    }
+
+    @Test
+    void testSetRadiusValueDecrease() {
+        createGraph(76);
+        createGraphQuery();
+
+        getGraphQuery().query(50, 12);
+        getGraphQuery().setRadius(4);
+
+        assertThat(getGraphQuery().getRadius()).isEqualTo(4);
+    }
+
+    @Test
+    void testSetRadiusIncrease() {
+        createGraph(9);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}});
+
+        getGraphQuery().query(4, 1);
+        getGraphQuery().setRadius(3);
+
+        assertThat(collectGraphQueryNodes()).contains(1, 2, 3, 4, 5, 6, 7);
+    }
+
+    @Test
+    void testSetRadiusDecrease() {
+        createGraph(9);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}});
+
+        getGraphQuery().query(3, 4);
+        getGraphQuery().setRadius(1);
+
+        assertThat(collectGraphQueryNodes()).contains(3);
+    }
 }
