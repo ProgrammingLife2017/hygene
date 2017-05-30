@@ -28,7 +28,7 @@ final class NeighbourVisualizer {
      * @param nodeProperty      property which determines what node should actually be visualised
      */
     NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty,
-                               final ObjectProperty<Node> nodeProperty) {
+                        final ObjectProperty<Node> nodeProperty) {
         nodeProperty.addListener((observable, oldNode, newNode) -> draw(newNode, edgeColorProperty.get()));
         edgeColorProperty.addListener((observable, oldColor, newColor) -> draw(nodeProperty.get(), newColor));
     }
