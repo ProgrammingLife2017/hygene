@@ -100,7 +100,9 @@ public final class GraphMovementCalculator {
      */
     public void onScroll(final double deltaY) {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
-        graphDimensionsCalculator.getRadiusProperty().add(deltaRange);
+        graphDimensionsCalculator.getRadiusProperty().set(
+                graphDimensionsCalculator.getRadiusProperty().get() + deltaRange
+        );
     }
 
     /**

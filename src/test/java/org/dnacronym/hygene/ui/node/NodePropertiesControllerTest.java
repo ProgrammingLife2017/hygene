@@ -2,16 +2,17 @@ package org.dnacronym.hygene.ui.node;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.ui.UITestBase;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -21,29 +22,32 @@ import static org.mockito.Mockito.when;
 final class NodePropertiesControllerTest extends UITestBase {
     private NodePropertiesController nodePropertiesController;
     private GraphVisualizer graphVisualizer;
+    private Node node;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
 
 
     @Override
     public void beforeEach() {
+        graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
         graphVisualizer = mock(GraphVisualizer.class);
+        node = mock(Node.class);
+        when(node.getId()).thenReturn(20);
+        final ObjectProperty<Node> selectedNodeProperty = new SimpleObjectProperty<>(node);
+        when(graphVisualizer.getSelectedNodeProperty()).thenReturn(selectedNodeProperty);
 
         nodePropertiesController = new NodePropertiesController();
+        nodePropertiesController.setGraphDimensionsCalculator(graphDimensionsCalculator);
         nodePropertiesController.setGraphVisualiser(graphVisualizer);
     }
 
 
     @Test
     void testFocusAction() {
-        final Node node = mock(Node.class);
-        final ObjectProperty<Node> selectedNodeProperty = new SimpleObjectProperty<>(node);
-        final IntegerProperty centerNodeIdProperty = mock(IntegerProperty.class);
-
-        when(node.getId()).thenReturn(10);
-        when(graphVisualizer.getSelectedNodeProperty()).thenReturn(selectedNodeProperty);
-        when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        final IntegerProperty centerNodeIdProperty = new SimpleIntegerProperty(-1);
+        when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
 
         interact(() -> nodePropertiesController.onFocusAction(mock(ActionEvent.class)));
 
-        verify(centerNodeIdProperty, times(1)).set(10);
+        assertThat(centerNodeIdProperty.get()).isEqualTo(20);
     }
 }

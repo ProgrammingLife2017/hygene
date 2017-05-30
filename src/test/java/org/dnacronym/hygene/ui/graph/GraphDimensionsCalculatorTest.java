@@ -21,49 +21,58 @@ final class GraphDimensionsCalculatorTest {
     @BeforeEach
     void beforeEach() {
         graphDimensionsCalculator = new GraphDimensionsCalculator();
+
+        graphDimensionsCalculator.setGraph(createGraph());
+        graphDimensionsCalculator.setCanvasSize(mockCanvas().getWidth(), mockCanvas().getHeight());
     }
 
 
     @Test
     void testComputeXPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
         assertThat(graphDimensionsCalculator.computeXPosition(0)).isEqualTo(-400);
     }
 
     @Test
     void testComputeRightXPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
         assertThat(graphDimensionsCalculator.computeRightXPosition(0)).isEqualTo(0);
     }
 
     @Test
     void testComputeYPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
-        assertThat(graphDimensionsCalculator.computeYPosition(0)).isEqualTo(-300.0 / 2);
+        assertThat(graphDimensionsCalculator.computeYPosition(0)).isEqualTo(300.0 / 2);
     }
 
     @Test
     void testComputeMiddleYPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
-        assertThat(graphDimensionsCalculator.computeMiddleYPosition(0)).isEqualTo(-300.0 / 2);
+        assertThat(graphDimensionsCalculator.computeMiddleYPosition(0)).isEqualTo(300.0 / 2);
     }
 
     @Test
     void testComputeWidth() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 20, 0);
         assertThat(graphDimensionsCalculator.computeWidth(0)).isEqualTo(400);
     }
 
     @Test
-    void testGetNodeHeight() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 0, 105);
-        assertThat(graphDimensionsCalculator.getNodeHeight()).isEqualTo(105);
+    void testComputeAndGetLaneHeight() {
+        assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300);
     }
 
     @Test
-    void testComputeAndGetLaneHeight() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 0, 0);
-        assertThat(graphDimensionsCalculator.getLaneHeight()).isEqualTo(-300);
+    void testUpperBoundNodeId() {
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(1000);
+        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
+    }
+
+    @Test
+    void testLowerBoundNodeId() {
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(-1000);
+        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
+    }
+
+    @Test
+    void testUpperBoundRadius() {
+        graphDimensionsCalculator.getRadiusProperty().set(1000);
+        assertThat(graphDimensionsCalculator.getRadiusProperty().get()).isEqualTo(1);
     }
 
     private Graph createGraph() {

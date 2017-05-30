@@ -80,7 +80,7 @@ public abstract class AbstractSettingsController implements Initializable {
      *
      * @return the {@link GraphMovementCalculator} for use by the controller
      */
-    public final GraphMovementCalculator getGraphMovementCalculator() {
+    final GraphMovementCalculator getGraphMovementCalculator() {
         return graphMovementCalculator;
     }
 
@@ -107,7 +107,7 @@ public abstract class AbstractSettingsController implements Initializable {
      *
      * @return the {@link GraphDimensionsCalculator} for use by the controller.
      */
-    public GraphDimensionsCalculator getGraphDimensionsCalculator() {
+    final GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;
     }
 }

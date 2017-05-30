@@ -4,13 +4,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
-import org.dnacronym.hygene.models.Node;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -180,7 +181,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Set the size of the canvas on which the {@link Graph} {@link Node}s will be drawn.
+     * Set the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.models.Node}s will be drawn.
      * <p>
      * This will perform another calculation.
      *
@@ -259,18 +260,22 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the node id {@link ReadOnlyIntegerProperty} with the minimum x in unscaled x coordinates.
+     * Returns the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
+     * smallest (leftmost) x position.
      *
-     * @return the minimum node id {@link ReadOnlyIntegerProperty} in the x direction
+     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the smallest x position in
+     * neighbours
      */
     public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
     }
 
     /**
-     * Gets the node id with the maximum x in unscaled x coordinates.
+     * Returns the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
+     * largest (rightmost) x position.
      *
-     * @return the maximum node id {@link IntegerProperty} in the x direction
+     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the largest x position in
+     * neighbours
      */
     public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
         return maxXNodeIdProperty;
@@ -286,34 +291,35 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link DoubleProperty} which describes the height of lanes.
+     * Returns the {@link ReadOnlyDoubleProperty} which describes the height of lanes.
      *
-     * @return the {@link DoubleProperty} which describes the height of lanes
+     * @return the {@link ReadOnlyDoubleProperty} which describes the height of lanes
      */
     public ReadOnlyDoubleProperty getLaneHeightProperty() {
         return laneHeightProperty;
     }
 
     /**
-     * The property which describes the amount of node in the set graph.
+     * Return the {@link ReadOnlyIntegerProperty} which describes the amount of nodes in the set graph.
      *
-     * @return property which describes the amount of nodes in the set graph
+     * @return the {@link ReadOnlyIntegerProperty} which describes the amount of nodes in the set graph
      */
     public ReadOnlyIntegerProperty getNodeCountProperty() {
         return nodeCountProperty;
     }
 
     /**
-     * Get the {@link ObservableList} of the neighbours of the set center id with the set range.
+     * Get the {@link ReadOnlyListProperty} of the neighbours of the set center id with the set range.
      * <p>
-     * Every time this list is updated, all nodes in the previous list should be discarded and all nodes in the new list
+     * Every time this list changes, all nodes in the previous list should be discarded and all nodes in the new list
      * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
-     * center node id or range is changed to a new value.
+     * center node id or range is changed to a new value, a new canvas height and width are set or if the graph is
+     * updated.
      *
      * @return the {@link ObservableList} of the neighbours of the set neighbours set range away
      */
-    public ObservableList<Integer> getNeighbours() {
-        return observableNeighbours;
+    public ReadOnlyListProperty<Integer> getNeighbours() {
+        return new ReadOnlyListWrapper<>(observableNeighbours);
     }
 
     /**
@@ -326,12 +332,12 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Property which determines the current center {@link Node} id.
+     * Property which determines the current center {@link org.dnacronym.hygene.models.Node} id.
      * <p>
      * Every time this value is updated, {@link #query} is called. When updated, it does a range check to make sure the
      * value remains in the range {@code [0, node count]}.
      *
-     * @return property which decides the current center {@link Node} id
+     * @return property which decides the current center {@link org.dnacronym.hygene.models.Node} id
      */
     public IntegerProperty getCenterNodeIdProperty() {
         return centerNodeIdProperty;
