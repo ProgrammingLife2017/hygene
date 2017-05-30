@@ -240,6 +240,7 @@ public final class GraphQuery {
     /**
      * Finds the neighbours of the (virtual) source and sink nodes, and puts them in the respective {@link List}s.
      */
+    @SuppressWarnings("squid:S00108") // False positive
     private void findSentinelNeighbours() {
         sourceNeighbours.clear();
         sinkNeighbours.clear();
@@ -250,14 +251,12 @@ public final class GraphQuery {
             iterator.visitDirectNeighboursWhile(node, SequenceDirection.LEFT,
                     neighbour -> !cache.containsNode(neighbour),
                     neighbour -> hasNeighbours[0] = true,
-                    ignored -> {
-                    }
+                    ignored -> {}
             );
             iterator.visitDirectNeighboursWhile(node, SequenceDirection.RIGHT,
                     neighbour -> !cache.containsNode(neighbour),
                     neighbour -> hasNeighbours[1] = true,
-                    ignored -> {
-                    }
+                    ignored -> {}
             );
 
             if (!hasNeighbours[0]) {
