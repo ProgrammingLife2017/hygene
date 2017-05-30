@@ -6,7 +6,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -87,21 +86,15 @@ public final class GraphVisualizer {
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
 
-        final ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
-            if (graphStore.getGfaFileProperty().get() != null) {
-                draw();
-            }
-        };
-
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         graphDimensionsCalculator.getNodeHeightProperty().bind(nodeHeightProperty);
 
-        edgeColorProperty.addListener(changeListener);
-        nodeHeightProperty.addListener(changeListener);
+        edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
+        nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
-        displayLaneBordersProperty.addListener(changeListener);
+        displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
         graphDimensionsCalculator.getNeighbours().addListener((ListChangeListener<Integer>) change -> draw());
     }
@@ -268,7 +261,7 @@ public final class GraphVisualizer {
         nodeMetadataCache = new NodeMetadataCache(graph);
         HygeneEventBus.getInstance().register(nodeMetadataCache);
 
-        clear();
+        draw();
     }
 
     /**

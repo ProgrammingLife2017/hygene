@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -33,7 +34,7 @@ public final class GraphDimensionsCalculator {
      * The default horizontal displacement between two adjacent nodes.
      */
     private static final int DEFAULT_EDGE_WIDTH = 1000;
-    private static final int DEFAULT_RANGE = 10;
+    private static final int DEFAULT_RADIUS = 10;
 
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
@@ -104,7 +105,7 @@ public final class GraphDimensionsCalculator {
      * If the graph has not been set, this method does nothing.
      */
     private void calculate() {
-        if (graph == null || radiusProperty.get() == 0) {
+        if (graph == null) {
             return;
         }
 
@@ -165,13 +166,15 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
-        radiusProperty.set(DEFAULT_RANGE);
+        radiusProperty.set(DEFAULT_RADIUS);
+
+        calculate(); // force a recalculation
     }
 
     /**
-     * Set the size of the canvas on which the {@link Graph} will be drawn.
+     * Set the size of the canvas on which the {@link Graph} {@link Node}s will be drawn.
      * <p>
-     * This will perform a another calculation.
+     * This will perform another calculation.
      *
      * @param canvasWidth  the width of the {@link javafx.scene.canvas.Canvas}
      * @param canvasHeight the height of the {@link javafx.scene.canvas.Canvas}
@@ -196,16 +199,22 @@ public final class GraphDimensionsCalculator {
      * @see GraphQuery#query(int, int)
      */
     public void query(final int centerNodeId, final int range) {
-        final int newCenterNodeId = Math.max(0, Math.min(centerNodeId, nodeCountProperty.get()) - 1);
+        final int newCenterNodeId = Math.max(1, Math.min(centerNodeId, nodeCountProperty.get() - 1));
 
-        if (centerNodeIdProperty.get() != newCenterNodeId && radiusProperty.get() == range) {
-            return;
+        boolean changed = false;
+        if (centerNodeIdProperty.get() != newCenterNodeId) {
+            centerNodeIdProperty.set(newCenterNodeId);
+            changed = true;
+        }
+        if (radiusProperty.get() != range) {
+            radiusProperty.set(range);
+            changed = true;
         }
 
-        centerNodeIdProperty.set(newCenterNodeId);
-        radiusProperty.set(range);
-
-        calculate();
+        if (changed) {
+            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+            calculate();
+        }
     }
 
     /**
@@ -214,7 +223,7 @@ public final class GraphDimensionsCalculator {
      * @param nodeId the id of the node
      * @return the absolute x position of a node within the current canvas
      */
-    public double computeXPosition(final int nodeId) {
+    double computeXPosition(final int nodeId) {
         final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId)
                 + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
         return (double) (xPosition - minX) / (maxX - minX) * canvasWidth;
@@ -226,7 +235,7 @@ public final class GraphDimensionsCalculator {
      * @param nodeId the id of the node
      * @return the absolute right x position of a node within the current canvas
      */
-    public double computeRightXPosition(final int nodeId) {
+    double computeRightXPosition(final int nodeId) {
         return computeXPosition(nodeId) + computeWidth(nodeId);
     }
 
@@ -236,7 +245,7 @@ public final class GraphDimensionsCalculator {
      * @param nodeId the id of the node
      * @return the absolute y position of a node within the current canvas
      */
-    public double computeYPosition(final int nodeId) {
+    double computeYPosition(final int nodeId) {
         final int yPosition = graph.getUnscaledYPosition(nodeId);
         return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2
                 - nodeHeightProperty.get() / 2;
@@ -248,7 +257,7 @@ public final class GraphDimensionsCalculator {
      * @param nodeId the id of the node
      * @return the absolute middle y position of a node within the current canvas
      */
-    public double computeMiddleYPosition(final int nodeId) {
+    double computeMiddleYPosition(final int nodeId) {
         return computeYPosition(nodeId) + nodeHeightProperty.get() / 2;
     }
 
@@ -258,20 +267,8 @@ public final class GraphDimensionsCalculator {
      * @param nodeId the id of the node
      * @return the width of a node
      */
-    public double computeWidth(final int nodeId) {
+    double computeWidth(final int nodeId) {
         return (double) graph.getLength(nodeId) / (maxX - minX) * canvasWidth;
-    }
-
-    /**
-     * Get the {@link ObservableList} of the neighbours of the set center id with the set range.
-     * <p>
-     * Every time this list is updated, all nodes in the previous list should be discarded and all nodes in the new list
-     * should be drawn.
-     *
-     * @return the {@link ObservableList} of the neighbours of the set neighbours set range away
-     */
-    public ObservableList<Integer> getNeighbours() {
-        return observableNeighbours;
     }
 
     /**
@@ -306,17 +303,8 @@ public final class GraphDimensionsCalculator {
      *
      * @return the {@link DoubleProperty} which describes the height of lanes
      */
-    public DoubleProperty getLaneHeightProperty() {
+    public ReadOnlyDoubleProperty getLaneHeightProperty() {
         return laneHeightProperty;
-    }
-
-    /**
-     * Returns the {@link DoubleProperty} which describes the height of nodes.
-     *
-     * @return the {@link DoubleProperty} which describes the height of nodes
-     */
-    public DoubleProperty getNodeHeightProperty() {
-        return nodeHeightProperty;
     }
 
     /**
@@ -326,6 +314,28 @@ public final class GraphDimensionsCalculator {
      */
     public ReadOnlyIntegerProperty getNodeCountProperty() {
         return nodeCountProperty;
+    }
+
+    /**
+     * Get the {@link ObservableList} of the neighbours of the set center id with the set range.
+     * <p>
+     * Every time this list is updated, all nodes in the previous list should be discarded and all nodes in the new list
+     * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
+     * center node id or range is changed to a new value.
+     *
+     * @return the {@link ObservableList} of the neighbours of the set neighbours set range away
+     */
+    public ObservableList<Integer> getNeighbours() {
+        return observableNeighbours;
+    }
+
+    /**
+     * Returns the {@link DoubleProperty} which describes the height of nodes.
+     *
+     * @return the {@link DoubleProperty} which describes the height of nodes
+     */
+    public DoubleProperty getNodeHeightProperty() {
+        return nodeHeightProperty;
     }
 
     /**
