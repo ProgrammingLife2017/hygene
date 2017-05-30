@@ -341,4 +341,35 @@ class GraphQueryTest extends GraphTestBase {
 
         assertThat(collectGraphQueryNodes()).doesNotContain(2);
     }
+
+
+    /*
+     * moveTo and change radius
+     */
+
+    @Test
+    void testMoveToAndIncrementRadius() {
+        createGraph(6);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
+
+        getGraphQuery().query(1, 1);
+        getGraphQuery().moveTo(2);
+        getGraphQuery().incrementRadius();
+
+        assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4);
+    }
+
+    @Test
+    void testIncrementRadiusAndMoveTo() {
+        createGraph(6);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
+
+        getGraphQuery().query(1, 1);
+        getGraphQuery().incrementRadius();
+        getGraphQuery().moveTo(2);
+
+        assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4);
+    }
 }
