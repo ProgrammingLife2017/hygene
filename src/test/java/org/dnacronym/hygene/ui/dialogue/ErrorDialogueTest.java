@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.dialogue;
 
 import javafx.scene.control.Alert;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link Dialogue}.
  */
-final class ErrorDialogueTest extends UITest {
+final class ErrorDialogueTest extends UITestBase {
     private Dialogue errorDialogue;
     private Exception exception;
 

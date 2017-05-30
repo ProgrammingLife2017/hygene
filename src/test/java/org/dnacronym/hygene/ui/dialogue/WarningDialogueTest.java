@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.dialogue;
 
 import javafx.scene.control.Alert;
-import org.dnacronym.hygene.ui.UITest;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link WarningDialogue}.
  */
-final class WarningDialogueTest extends UITest {
+final class WarningDialogueTest extends UITestBase {
     private Dialogue errorDialogue;
 
 

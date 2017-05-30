@@ -12,11 +12,11 @@ public abstract class Dialogue {
 
 
     /**
-     * Create an instance of {@link Dialogue}.
+     * Creates an instance of {@link Dialogue}.
      *
-     * @param title      title of the {@link Alert}
-     * @param headerText header text of the {@link Alert}
-     * @param alertType  {@link Alert.AlertType} of the alert
+     * @param title      the title of the {@link Alert}
+     * @param headerText the header text of the {@link Alert}
+     * @param alertType  the {@link Alert.AlertType} of the alert
      */
     Dialogue(final String title, final String headerText, final Alert.AlertType alertType) {
         setAlert(new Alert(alertType), title, headerText);
@@ -26,9 +26,9 @@ public abstract class Dialogue {
     /**
      * Sets {@link Alert} for use by {@link Dialogue}.
      *
-     * @param alert      {@link Alert} for use by {@link Dialogue}
+     * @param alert      the {@link Alert} for use by {@link Dialogue}
      * @param title      the title of the {@link Alert}
-     * @param headerText header text of the {@link Alert}
+     * @param headerText the header text of the {@link Alert}
      */
     final void setAlert(final Alert alert, final String title, final String headerText) {
         alert.setTitle(title);
@@ -40,7 +40,7 @@ public abstract class Dialogue {
     /**
      * Returns the {@link Alert} the {@link Dialogue} uses.
      *
-     * @return {@link Alert} the {@link Dialogue} uses
+     * @return the {@link Alert} the {@link Dialogue} uses
      */
     final Alert getAlert() {
         return alert;
@@ -64,7 +64,7 @@ public abstract class Dialogue {
     /**
      * Shows a dialogue onscreen that prevents further interaction with the UI until closed.
      *
-     * @param alert alert to display
+     * @param alert the {@link Alert} to display
      */
     final void show(final Alert alert) {
         alert.showAndWait();
