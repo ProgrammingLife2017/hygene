@@ -34,6 +34,8 @@ public final class Node {
     private volatile @MonotonicNonNull Set<Edge> incomingEdges;
     private volatile @MonotonicNonNull Set<Edge> outgoingEdges;
 
+    private @MonotonicNonNull NodeMetadata metadata;
+
 
     /**
      * Constructor for {@link Node}.
@@ -238,6 +240,9 @@ public final class Node {
      * @throws ParseException if the edge metadata cannot be parsed
      */
     public NodeMetadata retrieveMetadata() throws ParseException {
-        return NodeMetadata.retrieveFor(this);
+        if (metadata == null) {
+            metadata = NodeMetadata.retrieveFor(this);
+        }
+        return metadata;
     }
 }

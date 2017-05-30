@@ -48,8 +48,18 @@ final class NodeMetadataCacheTest {
         assertThat(nodeMetaDatacache.has(2)).isTrue();
         assertThat(nodeMetaDatacache.getOrRetrieve(2).retrieveMetadata().getSequence()).isEqualTo("TCAAGG");
 
-        // Currently the metadata is retrieved twice, because it is not yet cached within a node object
-        verify(metadataParser, times(2)).parseNodeMetadata(graph.getGfaFile(), 3);
+        verify(metadataParser, times(1)).parseNodeMetadata(graph.getGfaFile(), 3);
+    }
+
+    @Test
+    void testThatOldNodeMetadataCacheIsRemoved() throws ParseException, InterruptedException {
+        graphQuery.query(2, 0);
+        graphQuery.query(1, 0);
+
+        nodeMetaDatacache.getThread().join();
+
+        assertThat(nodeMetaDatacache.has(1)).isTrue();
+        assertThat(nodeMetaDatacache.has(2)).isFalse();
     }
 
     @Test
