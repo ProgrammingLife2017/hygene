@@ -133,7 +133,7 @@ abstract class GraphTestBase {
      * is the new sequence length for that node.
      */
     final void setSequenceLengths(final int[][] sequenceLengths) {
-        for (int[] sequenceLength : sequenceLengths) {
+        for (final int[] sequenceLength : sequenceLengths) {
             assert (sequenceLength.length == 2);
 
             final int id = sequenceLength[0];

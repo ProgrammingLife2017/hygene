@@ -36,7 +36,7 @@ final class LoggingSettingsViewControllerTest extends UITestBase {
 
     @Test
     void testChangeLogLevelEvent() {
-        ActionEvent event = new ActionEvent();
+        final ActionEvent event = new ActionEvent();
         interact(() -> loggingSettingsViewController.onLogLevelChanged(event));
         verify(settingsMock, times(1)).addRunnable(any(Runnable.class));
     }
@@ -56,10 +56,10 @@ final class LoggingSettingsViewControllerTest extends UITestBase {
      */
     @Test
     void testChangeLogLevelRunnable() {
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        final ChoiceBox<String> choiceBox = new ChoiceBox<>();
 
         String currentLevel = LogManager.getRootLogger().getLevel().toString();
-        String newLevel;
+        final String newLevel;
         if (currentLevel.equals("ERROR")) {
             choiceBox.setValue("DEBUG");
             newLevel = "DEBUG";
@@ -72,12 +72,12 @@ final class LoggingSettingsViewControllerTest extends UITestBase {
 
         loggingSettingsViewController.setChoiceBox(choiceBox);
 
-        ActionEvent event = new ActionEvent();
+        final ActionEvent event = new ActionEvent();
         interact(() -> loggingSettingsViewController.onLogLevelChanged(event));
 
-        ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+        final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settingsMock).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         currentLevel = LogManager.getRootLogger().getLevel().toString();
@@ -87,7 +87,7 @@ final class LoggingSettingsViewControllerTest extends UITestBase {
 
     @Test
     void testInitializationLogLevels() {
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        final ChoiceBox<String> choiceBox = new ChoiceBox<>();
 
         loggingSettingsViewController.setChoiceBox(choiceBox);
         loggingSettingsViewController.initialize(null, null);
@@ -97,8 +97,8 @@ final class LoggingSettingsViewControllerTest extends UITestBase {
 
     @Test
     void testInitializationCurrentLogLevel() {
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        String currentLevel = LogManager.getRootLogger().getLevel().toString();
+        final ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        final String currentLevel = LogManager.getRootLogger().getLevel().toString();
 
         loggingSettingsViewController.setChoiceBox(choiceBox);
         loggingSettingsViewController.initialize(null, null);

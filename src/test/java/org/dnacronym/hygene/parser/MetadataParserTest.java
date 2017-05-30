@@ -28,7 +28,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseNodeMetadata() throws ParseException {
-        NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata.getSequence()).isEqualTo("TCAAGG");
@@ -36,7 +36,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseEdgeMetadata() throws ParseException {
-        EdgeMetadata edgeMetadata = parser.parseEdgeMetadata(createGfaFile("%nL 12 + 24 - 4M"), 2);
+        final EdgeMetadata edgeMetadata = parser.parseEdgeMetadata(createGfaFile("%nL 12 + 24 - 4M"), 2);
 
         assertThat(edgeMetadata.getFromOrient()).isEqualTo("+");
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
@@ -45,7 +45,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseMetadataInvalidLineNumber() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile(""), 0));
+        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile(""), 0));
 
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Line 0 is not a valid line number");
@@ -53,7 +53,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseMetadataInvalidLineNumber2() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile(""), 5));
+        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile(""), 5));
 
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Line 5 is not found");
@@ -61,7 +61,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseNodeMetadataWithInvalidLineBecauseTheSequenceIsMissing() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12"), 1));
+        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Not enough parameters for segment on line 1");
@@ -69,7 +69,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("L 12 + 24"), 1));
+        final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("L 12 + 24"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Not enough parameters for link on line 1");
@@ -77,7 +77,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseNodeMetadataWithAnEdgeLine() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("L 12 + 24 - 4M"), 1));
+        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("L 12 + 24 - 4M"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Expected line 1 to start with S");
@@ -85,7 +85,7 @@ final class MetadataParserTest {
 
     @Test
     void testParseEdgeMetadataWithANodeLine() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("S 12 ACTG"), 1));
+        final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("S 12 ACTG"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Expected line 1 to start with L");

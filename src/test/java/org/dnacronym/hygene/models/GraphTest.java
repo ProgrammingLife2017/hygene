@@ -90,7 +90,7 @@ final class GraphTest {
 
     @Test
     void testGetNode() {
-        Node node = NodeBuilder.start().create();
+        final Node node = NodeBuilder.start().create();
         final Graph graph = createGraphWithNodes(node.toArray());
 
         assertThat(graph.getNode(0).toArray()).isEqualTo(node.toArray());

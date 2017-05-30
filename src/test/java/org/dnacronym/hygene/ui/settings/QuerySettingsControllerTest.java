@@ -51,7 +51,7 @@ final class QuerySettingsControllerTest extends UITestBase {
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         verify(centerNodeIdProperty, times(1)).set(1001);
@@ -67,7 +67,7 @@ final class QuerySettingsControllerTest extends UITestBase {
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         verify(centerNodeIdProperty, times(1)).set(1);
@@ -83,7 +83,7 @@ final class QuerySettingsControllerTest extends UITestBase {
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         verify(hopsProperty, times(1)).set(99);
@@ -99,7 +99,7 @@ final class QuerySettingsControllerTest extends UITestBase {
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
-        Runnable command = captor.getValue();
+        final Runnable command = captor.getValue();
         command.run();
 
         verify(hopsProperty, times(1)).set(919);
