@@ -40,7 +40,6 @@ public final class GraphDimensionsCalculator {
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
-    private final IntegerProperty onScreenNodeCountProperty;
     private final IntegerProperty nodeCountProperty;
 
     private final DoubleProperty nodeHeightProperty;
@@ -79,7 +78,6 @@ public final class GraphDimensionsCalculator {
         radiusProperty.addListener((observable, oldValue, newValue) ->
                 query(centerNodeIdProperty.get(), newValue.intValue()));
 
-        onScreenNodeCountProperty = new SimpleIntegerProperty();
         nodeCountProperty = new SimpleIntegerProperty(1);
 
         nodeHeightProperty = new SimpleDoubleProperty();
@@ -152,7 +150,6 @@ public final class GraphDimensionsCalculator {
 
         laneCountProperty.set(Math.abs(maxY - minY) + 1);
         laneHeightProperty.set(canvasHeight / laneCountProperty.get());
-        onScreenNodeCountProperty.set(observableNeighbours.size());
     }
 
     /**
@@ -329,15 +326,6 @@ public final class GraphDimensionsCalculator {
      */
     public ReadOnlyIntegerProperty getNodeCountProperty() {
         return nodeCountProperty;
-    }
-
-    /**
-     * The property which describes the amount of nodes onscreen.
-     *
-     * @return property which describes the amount of nodes on screen
-     */
-    public ReadOnlyIntegerProperty getOnScreenNodeCountProperty() {
-        return onScreenNodeCountProperty;
     }
 
     /**
