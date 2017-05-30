@@ -87,7 +87,7 @@ public final class GraphMovementCalculator {
                 + Math.round(panningSensitivityProperty.get() * translation));
 
         graphDimensionsCalculator.getCenterNodeIdProperty().set(newCenterNodeId);
-        dragging = newCenterNodeId < 0 || newCenterNodeId > graphDimensionsCalculator.getNodeCountProperty().get();
+        dragging = newCenterNodeId > 0 && newCenterNodeId < graphDimensionsCalculator.getNodeCountProperty().get();
     }
 
     /**
