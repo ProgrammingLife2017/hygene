@@ -51,7 +51,7 @@ public final class CoordinateSystemIndex {
     /**
      * Constructs a new {@link CoordinateSystemIndex} instance.
      *
-     * @param gfaFile         the GFA file to index
+     * @param gfaFile      the GFA file to index
      * @param fileDatabase the {@link FileDatabase} instance to be used for storing and retrieving data
      */
     public CoordinateSystemIndex(final GfaFile gfaFile, final FileDatabase fileDatabase) {
@@ -97,10 +97,10 @@ public final class CoordinateSystemIndex {
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                if (!line.startsWith("H")) {
-                    break;
+                if (line.startsWith("H\t" + MetadataParser.GENOME_LIST_HEADER_PREFIX)) {
+                    parseHeaderLine(line);
+                    return;
                 }
-                parseHeaderLine(line);
             }
         } catch (final IOException e) {
             throw new ParseException("An error while reading the GFA file.", e);
@@ -111,7 +111,7 @@ public final class CoordinateSystemIndex {
      * Parses one header line and checks for genome metadata.
      *
      * @param line the line to parse
-     * @throws ParseException in case of errors during parsing of the GFA file
+     * @throws ParseException in case of errors during parsing of the header line
      */
     private void parseHeaderLine(final String line) throws ParseException {
         final StringTokenizer stringTokenizer = new StringTokenizer(line, "\t");
