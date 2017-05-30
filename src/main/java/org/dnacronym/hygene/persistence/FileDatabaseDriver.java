@@ -215,8 +215,8 @@ public final class FileDatabaseDriver implements AutoCloseable {
      */
     synchronized Object executeCustomQuery(final String sql, final Function<ResultSet, Object> dataCallback)
             throws SQLException {
-        try (final Statement statement = connection.createStatement()) {
-            try (final ResultSet resultSet = statement.executeQuery(sql)) {
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
                 return dataCallback.apply(resultSet);
             }
         }
