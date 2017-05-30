@@ -5,10 +5,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.IntStream;
 
+
 /**
  * The node builder provides an easy way to construct a new node
  * based on parameters that are converted into a node array.
  */
+@SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class NodeBuilder {
     private int nodeId;
     private int lineNumber;
@@ -19,6 +21,7 @@ public final class NodeBuilder {
     private int unscaledYPosition = -1;
     private Set<Edge> incomingEdges = new TreeSet<>();
     private Set<Edge> outgoingEdges = new TreeSet<>();
+
 
     /**
      * Creates a new instance of the builder.

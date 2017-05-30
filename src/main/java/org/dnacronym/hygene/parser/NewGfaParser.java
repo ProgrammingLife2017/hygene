@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
+@SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class NewGfaParser {
     private static final Logger LOGGER = LogManager.getLogger(NewGfaParser.class);
     private static final int PROGRESS_UPDATE_INTERVAL = 10;
