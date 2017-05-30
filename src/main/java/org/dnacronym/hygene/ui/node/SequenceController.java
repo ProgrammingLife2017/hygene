@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 public final class SequenceController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(SequenceController.class);
     private static final int CANVAS_PADDING = 10;
-    private static final int LARGE_INCREMENT_AMOUNT = 100;
 
     private SequenceVisualizer sequenceVisualizer;
     private GraphVisualizer graphVisualizer;
@@ -140,7 +139,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void incrementLargeAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.incrementOffset(LARGE_INCREMENT_AMOUNT);
+        sequenceVisualizer.incrementOffset(sequenceVisualizer.onScreenBasesCountProperty().get());
         actionEvent.consume();
     }
 
@@ -162,7 +161,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void decrementLargeAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.decrementOffset(LARGE_INCREMENT_AMOUNT);
+        sequenceVisualizer.decrementOffset(sequenceVisualizer.onScreenBasesCountProperty().get());
         actionEvent.consume();
     }
 

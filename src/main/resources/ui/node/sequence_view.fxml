@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="sequenceViewPane" maxWidth="Infinity" prefHeight="210.0" prefWidth="850.0"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.node.SequenceController">
     <children>
         <Canvas fx:id="sequenceCanvas" height="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
@@ -49,28 +49,28 @@
                         onAction="#decrementLargeAction" prefWidth="50.0" text="&lt;&lt;" GridPane.columnIndex="2"
                         GridPane.rowSpan="2">
                     <tooltip>
-                        <Tooltip text="Shift left by 100."/>
+                        <Tooltip text="Go left by all bases onscreen."/>
                     </tooltip>
                 </Button>
                 <Button fx:id="smallDecrement" maxHeight="Infinity" mnemonicParsing="false"
                         onAction="#decrementSmallAction" prefWidth="35.0" text="&lt;" GridPane.columnIndex="3"
                         GridPane.rowSpan="2">
                     <tooltip>
-                        <Tooltip text="Shift left by one."/>
+                        <Tooltip text="Go left by a single base."/>
                     </tooltip>
                 </Button>
                 <Button fx:id="smallIncrement" maxHeight="Infinity" mnemonicParsing="false"
                         onAction="#incrementSmallAction" prefWidth="35.0" text="&gt;" GridPane.columnIndex="4"
                         GridPane.rowSpan="2">
                     <tooltip>
-                        <Tooltip text="Shift right by one."/>
+                        <Tooltip text="Go right by a single base."/>
                     </tooltip>
                 </Button>
                 <Button fx:id="largeIncrement" maxHeight="Infinity" mnemonicParsing="false"
                         onAction="#incrementLargeAction" prefWidth="50.0" text="&gt;&gt;" GridPane.columnIndex="5"
                         GridPane.rowSpan="2">
                     <tooltip>
-                        <Tooltip text="Shift right by 100."/>
+                        <Tooltip text="Go right by all bases onscreen."/>
                     </tooltip>
                 </Button>
                 <Label text="Base offset" GridPane.columnIndex="8"/>

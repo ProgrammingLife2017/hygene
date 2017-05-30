@@ -31,6 +31,7 @@ public final class SequenceVisualizer {
     private final StringProperty sequenceProperty;
     private final IntegerProperty offsetProperty;
     private final BooleanProperty visibleProperty;
+    private final IntegerProperty onScreenBasesProperty;
 
 
     /**
@@ -39,6 +40,7 @@ public final class SequenceVisualizer {
     public SequenceVisualizer() {
         sequenceProperty = new SimpleStringProperty();
         offsetProperty = new SimpleIntegerProperty();
+        onScreenBasesProperty = new SimpleIntegerProperty();
 
         sequenceProperty.addListener((observable, oldValue, newValue) -> {
             if (offsetProperty.get() == 0) {
@@ -94,6 +96,15 @@ public final class SequenceVisualizer {
      */
     public ReadOnlyIntegerProperty getOffsetProperty() {
         return offsetProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas.
+     *
+     * @return {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas
+     */
+    public ReadOnlyIntegerProperty onScreenBasesCountProperty() {
+        return onScreenBasesProperty;
     }
 
     /**
@@ -180,10 +191,12 @@ public final class SequenceVisualizer {
             return;
         }
 
-        for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++) {
+        int onscreen = 0;
+        for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++, onscreen++) {
             final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
 
             if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
+                onScreenBasesProperty.set(onscreen);
                 break;
             }
 
