@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 /**
  * Class responsible for indexing the genome coordinate system of a file.
  */
-public final class CoordinateSystemIndex {
+public final class GenomeIndex {
     private static final int DEFAULT_BASE_CACHE_INTERVAL = 1000;
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
@@ -49,12 +49,12 @@ public final class CoordinateSystemIndex {
 
 
     /**
-     * Constructs a new {@link CoordinateSystemIndex} instance.
+     * Constructs a new {@link GenomeIndex} instance.
      *
      * @param gfaFile      the GFA file to index
      * @param fileDatabase the {@link FileDatabase} instance to be used for storing and retrieving data
      */
-    public CoordinateSystemIndex(final GfaFile gfaFile, final FileDatabase fileDatabase) {
+    public GenomeIndex(final GfaFile gfaFile, final FileDatabase fileDatabase) {
         this.gfaFile = gfaFile;
         this.fileGenomeIndex = fileDatabase.getFileGenomeIndex();
         this.genomeBaseCounts = new HashMap<>();

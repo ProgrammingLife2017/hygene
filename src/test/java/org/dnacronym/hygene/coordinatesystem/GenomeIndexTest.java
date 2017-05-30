@@ -19,12 +19,12 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Test suite for the {@link CoordinateSystemIndex} class.
+ * Test suite for the {@link GenomeIndex} class.
  */
-class CoordinateSystemIndexTest {
+class GenomeIndexTest {
     private static final String TEST_GFA_FILE_NAME = "src/test/resources/gfa/index.gfa";
 
-    private CoordinateSystemIndex coordinateSystemIndex;
+    private GenomeIndex genomeIndex;
     private FileDatabase fileDatabase;
 
 
@@ -35,8 +35,8 @@ class CoordinateSystemIndexTest {
 
         final GfaFile gfaFile = new GfaFile(TEST_GFA_FILE_NAME);
         gfaFile.parse(mock(ProgressUpdater.class));
-        coordinateSystemIndex = new CoordinateSystemIndex(gfaFile, fileDatabase);
-        coordinateSystemIndex.setBaseCacheInterval(1);
+        genomeIndex = new GenomeIndex(gfaFile, fileDatabase);
+        genomeIndex.setBaseCacheInterval(1);
     }
 
     @AfterEach
@@ -48,8 +48,8 @@ class CoordinateSystemIndexTest {
 
     @Test
     void getClosestNodeId() throws ParseException, SQLException {
-        coordinateSystemIndex.populateIndex();
-        assertThat(coordinateSystemIndex.getClosestNodeId("g2.fasta", 6)).isEqualTo(3);
+        genomeIndex.populateIndex();
+        assertThat(genomeIndex.getClosestNodeId("g2.fasta", 6)).isEqualTo(3);
     }
 
 
