@@ -74,7 +74,7 @@ public final class FileGenomeIndex {
     public int getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
         final String sql = "SELECT * FROM " + TABLE_NAME
                 + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId
-                + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ")"
+                + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ") ASC"
                 + " LIMIT 1";
 
         return (Integer) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {

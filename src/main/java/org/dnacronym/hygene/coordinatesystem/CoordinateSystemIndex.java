@@ -7,6 +7,7 @@ import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParser;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileGenomeIndex;
 
 import java.io.BufferedReader;
@@ -23,11 +24,12 @@ import java.util.StringTokenizer;
  * Class responsible for indexing the genome coordinate system of a file.
  */
 public final class CoordinateSystemIndex {
-    static final int BASE_CACHE_INTERVAL = 1000;
-
+    private static final int DEFAULT_BASE_CACHE_INTERVAL = 1000;
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
     private final GfaFile gfaFile;
+
+    private int baseCacheInterval = DEFAULT_BASE_CACHE_INTERVAL;
     private final FileGenomeIndex fileGenomeIndex;
     private final Map<String, Integer> genomeBaseCounts;
     private final Map<String, Integer> genomeBaseDiffCounts;
@@ -38,11 +40,11 @@ public final class CoordinateSystemIndex {
      * Constructs a new {@link CoordinateSystemIndex} instance.
      *
      * @param gfaFile         the graph file to index
-     * @param fileGenomeIndex the {@link FileGenomeIndex} instance to be used for storing and retrieving data
+     * @param fileDatabase the {@link FileDatabase} instance to be used for storing and retrieving data
      */
-    public CoordinateSystemIndex(final GfaFile gfaFile, final FileGenomeIndex fileGenomeIndex) {
+    public CoordinateSystemIndex(final GfaFile gfaFile, final FileDatabase fileDatabase) {
         this.gfaFile = gfaFile;
-        this.fileGenomeIndex = fileGenomeIndex;
+        this.fileGenomeIndex = fileDatabase.getFileGenomeIndex();
         this.genomeBaseCounts = new HashMap<>();
         this.genomeBaseDiffCounts = new HashMap<>();
         this.genomeNames = new ArrayList<>();
@@ -116,7 +118,7 @@ public final class CoordinateSystemIndex {
 
             if (!nextGenome.equals("")) {
                 genomeBaseCounts.put(nextGenome, 0);
-                genomeBaseDiffCounts.put(nextGenome, -BASE_CACHE_INTERVAL);
+                genomeBaseDiffCounts.put(nextGenome, -baseCacheInterval);
                 genomeNames.add(nextGenome);
             }
         }
@@ -144,7 +146,7 @@ public final class CoordinateSystemIndex {
                     }
 
                     final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                    if (previousBaseCount + nodeBaseCount >= BASE_CACHE_INTERVAL) {
+                    if (previousBaseCount + nodeBaseCount >= baseCacheInterval) {
                         final int baseIndexPosition = previousBaseCount + nodeBaseCount + genomeTotalCount;
                         fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
                         genomeBaseDiffCounts.put(genome, 0);
@@ -167,5 +169,23 @@ public final class CoordinateSystemIndex {
      */
     private int getGenomeId(final String genomeName) {
         return genomeNames.indexOf(genomeName);
+    }
+
+    /**
+     * Returns the baseCacheInterval.
+     *
+     * @return the baseCacheInterval
+     */
+    public int getBaseCacheInterval() {
+        return baseCacheInterval;
+    }
+
+    /**
+     * The interval of bases to be cached.
+     *
+     * @param baseCacheInterval the base cache interval
+     */
+    public void setBaseCacheInterval(final int baseCacheInterval) {
+        this.baseCacheInterval = baseCacheInterval;
     }
 }
