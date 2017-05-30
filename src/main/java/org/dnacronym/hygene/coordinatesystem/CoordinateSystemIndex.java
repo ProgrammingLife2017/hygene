@@ -134,6 +134,10 @@ public final class CoordinateSystemIndex {
     private void buildIndex() {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
         graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
+            if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
+                return;
+            }
+
             try {
                 final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
 
