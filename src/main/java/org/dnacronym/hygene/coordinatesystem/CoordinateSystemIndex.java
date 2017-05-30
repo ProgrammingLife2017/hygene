@@ -116,7 +116,7 @@ public final class CoordinateSystemIndex {
         while (bodyTokenizer.hasMoreTokens()) {
             final String nextGenome = bodyTokenizer.nextToken();
 
-            if (!nextGenome.equals("")) {
+            if (!nextGenome.isEmpty()) {
                 genomeBaseCounts.put(nextGenome, 0);
                 genomeBaseDiffCounts.put(nextGenome, -baseCacheInterval);
                 genomeNames.add(nextGenome);
