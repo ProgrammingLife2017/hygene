@@ -2,8 +2,6 @@ package org.dnacronym.hygene.models;
 
 import org.junit.jupiter.api.AfterEach;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -139,17 +137,6 @@ abstract class GraphTestBase {
             final int id = sequenceLength[0];
             nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequenceLength[1];
         }
-    }
-
-    /**
-     * Returns all nodes that can be visited by the current {@link GraphQuery}.
-     *
-     * @return all nodes that can be visited by the current {@link GraphQuery}
-     */
-    final List<Integer> collectGraphQueryNodes() {
-        final List<Integer> nodes = new ArrayList<>();
-        graphQuery.visit(nodes::add);
-        return nodes;
     }
 
     /**

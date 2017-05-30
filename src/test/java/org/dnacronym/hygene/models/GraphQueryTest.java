@@ -2,7 +2,9 @@ package org.dnacronym.hygene.models;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -75,7 +77,7 @@ class GraphQueryTest extends GraphTestBase {
 
         getGraphQuery().query(49, 0);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(49);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(49);
     }
 
     /**
@@ -89,7 +91,7 @@ class GraphQueryTest extends GraphTestBase {
 
         getGraphQuery().query(22, 1);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(13, 22, 25);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(13, 22, 25);
     }
 
     /**
@@ -107,7 +109,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(19, 1);
         getGraphQuery().query(17, 2);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(13, 17, 24, 28);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(13, 17, 24, 28);
     }
 
 
@@ -151,7 +153,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(3, 0);
         getGraphQuery().moveTo(1);
 
-        assertThat(collectGraphQueryNodes()).containsExactly(1);
+        assertThat(collectVisit()).containsExactly(1);
     }
 
     /**
@@ -166,7 +168,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(3, 1);
         getGraphQuery().moveTo(3);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(2, 3, 4);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(2, 3, 4);
     }
 
     /**
@@ -181,7 +183,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(0, 2);
         getGraphQuery().moveTo(4);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(2, 3, 4);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(2, 3, 4);
     }
 
     /**
@@ -196,7 +198,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(2, 1);
         getGraphQuery().moveTo(0);
 
-        assertThat(collectGraphQueryNodes()).containsExactly(0, 1, 2, 3, 4);
+        assertThat(collectVisit()).containsExactly(0, 1, 2, 3, 4);
     }
 
     /**
@@ -214,7 +216,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().moveTo(3);
         getGraphQuery().moveTo(4);
 
-        assertThat(collectGraphQueryNodes()).containsExactlyInAnyOrder(3, 4);
+        assertThat(collectVisit()).containsExactlyInAnyOrder(3, 4);
     }
 
     /**
@@ -231,7 +233,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(14, 2);
         getGraphQuery().moveTo(12);
 
-        final List<Integer> nodes = collectGraphQueryNodes();
+        final List<Integer> nodes = collectVisit();
         assertThat(nodes).contains(15); // From cache
         assertThat(nodes).contains(5, 6, 7, 8, 9, 10, 11, 12, 13, 14); // Current query
     }
@@ -283,7 +285,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(35, 1);
         getGraphQuery().incrementRadius();
 
-        assertThat(collectGraphQueryNodes()).contains(3, 20, 35, 59, 73);
+        assertThat(collectVisit()).contains(3, 20, 35, 59, 73);
     }
 
     @Test
@@ -295,7 +297,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().query(3, 2);
         getGraphQuery().decrementRadius();
 
-        assertThat(collectGraphQueryNodes()).contains(1, 2, 3, 6);
+        assertThat(collectVisit()).contains(1, 2, 3, 6);
     }
 
     @Test
@@ -308,7 +310,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().incrementRadius();
         getGraphQuery().decrementRadius();
 
-        assertThat(collectGraphQueryNodes()).contains(1, 2, 4, 5, 6);
+        assertThat(collectVisit()).contains(1, 2, 4, 5, 6);
     }
 
     @Test
@@ -321,7 +323,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().decrementRadius();
         getGraphQuery().incrementRadius();
 
-        assertThat(collectGraphQueryNodes()).contains(1, 2, 3, 4, 5, 6, 7);
+        assertThat(collectVisit()).contains(1, 2, 3, 4, 5, 6, 7);
     }
 
     /**
@@ -339,7 +341,7 @@ class GraphQueryTest extends GraphTestBase {
             getGraphQuery().decrementRadius();
         }
 
-        assertThat(collectGraphQueryNodes()).doesNotContain(2);
+        assertThat(collectVisit()).doesNotContain(2);
     }
 
 
@@ -357,7 +359,7 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().moveTo(2);
         getGraphQuery().incrementRadius();
 
-        assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4);
+        assertThat(collectVisit()).contains(0, 1, 2, 3, 4);
     }
 
     @Test
@@ -370,6 +372,122 @@ class GraphQueryTest extends GraphTestBase {
         getGraphQuery().incrementRadius();
         getGraphQuery().moveTo(2);
 
-        assertThat(collectGraphQueryNodes()).contains(0, 1, 2, 3, 4);
+        assertThat(collectVisit()).contains(0, 1, 2, 3, 4);
+    }
+
+
+    /*
+     * visitBFS
+     */
+
+    /**
+     * Tests that only a single node is visited during BFS if the cache contains only that node, even if the graph
+     * contains multiple nodes.
+     */
+    @Test
+    void testVisitBFSSingleNode() {
+        createGraph(4);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}});
+
+        getGraphQuery().query(2, 0);
+
+        assertThat(collectVisitBFS(SequenceDirection.LEFT)).containsExactly(2);
+        assertThat(collectVisitBFS(SequenceDirection.RIGHT)).containsExactly(2);
+    }
+
+    /**
+     * Tests that the first few nodes visited are the direct neighbours of the source node of the subgraph formed by
+     * the query.
+     */
+    @Test
+    void testVisitBFSSourceNodes() {
+        createGraph(9);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 4}, {2, 5}, {4, 6}, {4, 7}, {6, 8}, {7, 8}});
+
+        getGraphQuery().query(4, 1);
+
+        assertThat(collectVisitBFS(SequenceDirection.RIGHT).subList(0, 2)).containsExactlyInAnyOrder(1, 2);
+    }
+
+    /**
+     * Tests that the first few nodes visited are the direct neighbours of the sink node of the subgraph formed by
+     * the query.
+     */
+    @Test
+    void testVisitBFSSinkNodes() {
+        createGraph(9);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 4}, {2, 5}, {4, 6}, {4, 7}, {6, 8}, {7, 8}});
+
+        getGraphQuery().query(4, 1);
+
+        assertThat(collectVisitBFS(SequenceDirection.LEFT).subList(0, 2)).containsExactlyInAnyOrder(6, 7);
+    }
+
+    /**
+     * Tests that visiting in breadth-first order will visit the same nodes as in non-breadth-first order in a random
+     * pre-generated graph.
+     */
+    @Test
+    void testVisitBFSLeftRandomGraph() {
+        createGraph(10);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {0, 2}, {0, 3}, {1, 4}, {1, 5}, {2, 6}, {3, 7}, {5, 6}, {6, 7}, {6, 8}, {7, 9}});
+
+        getGraphQuery().query(6, 2);
+
+        final List<Integer> visitNodes = collectVisit();
+        final List<Integer> visitBfsNodes = collectVisitBFS(SequenceDirection.LEFT);
+        assertThat(visitNodes).containsAll(visitBfsNodes);
+        assertThat(visitBfsNodes).containsAll(visitNodes);
+    }
+
+    /**
+     * Tests that visiting in breadth-first order will visit the same nodes as in non-breadth-first order in a random
+     * pre-generated graph.
+     */
+    @Test
+    void testVisitBFSRightRandomGraph() {
+        createGraph(10);
+        createGraphQuery();
+        addEdges(new int[][] {{0, 1}, {0, 2}, {0, 3}, {1, 4}, {1, 5}, {2, 6}, {3, 7}, {5, 6}, {6, 7}, {6, 8}, {7, 9}});
+
+        getGraphQuery().query(6, 2);
+
+        final List<Integer> visitNodes = collectVisit();
+        final List<Integer> visitBfsNodes = collectVisitBFS(SequenceDirection.RIGHT);
+        assertThat(visitNodes).containsAll(visitBfsNodes);
+        assertThat(visitBfsNodes).containsAll(visitNodes);
+    }
+
+
+    /*
+     * Helper methods
+     */
+
+    /**
+     * Returns all nodes that can be visited by the current {@link GraphQuery} using {@link GraphQuery#visit(Consumer)}.
+     *
+     * @return all nodes that can be visited by the current {@link GraphQuery} using {@link GraphQuery#visit(Consumer)}
+     */
+    private List<Integer> collectVisit() {
+        final List<Integer> nodes = new ArrayList<>();
+        getGraphQuery().visit(nodes::add);
+        return nodes;
+    }
+
+    /**
+     * Returns all nodes that can be visited by the current {@link GraphQuery} using
+     * {@link GraphQuery#visitBFS(SequenceDirection, Consumer)}.
+     *
+     * @return all nodes that can be visited by the current {@link GraphQuery} using {@link
+     * GraphQuery#visitBFS(SequenceDirection, Consumer)}
+     */
+    private List<Integer> collectVisitBFS(final SequenceDirection direction) {
+        final List<Integer> nodes = new ArrayList<>();
+        getGraphQuery().visitBFS(direction, nodes::add);
+        return nodes;
     }
 }
