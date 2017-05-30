@@ -154,21 +154,21 @@ public final class CoordinateSystemIndex {
                 final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
 
                 for (final String genome : nodeGenomes) {
-                    final Integer previousBaseCount = genomeBaseDiffCounts.get(genome);
-                    final Integer genomeTotalCount = genomeBaseCounts.get(genome);
+                    final Integer genomeBaseDiffCount = genomeBaseDiffCounts.get(genome);
+                    final Integer genomeBaseCount = genomeBaseCounts.get(genome);
 
-                    if (previousBaseCount == null || genomeTotalCount == null) {
+                    if (genomeBaseDiffCount == null || genomeBaseCount == null) {
                         throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
                     }
 
                     final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                    if (previousBaseCount + nodeBaseCount >= baseCacheInterval) {
-                        final int baseIndexPosition = previousBaseCount + nodeBaseCount + genomeTotalCount;
+                    if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
+                        final int baseIndexPosition = genomeBaseDiffCount + nodeBaseCount + genomeBaseCount;
                         fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
                         genomeBaseDiffCounts.put(genome, 0);
                         genomeBaseCounts.put(genome, baseIndexPosition);
                     } else {
-                        genomeBaseCounts.put(genome, previousBaseCount + nodeBaseCount);
+                        genomeBaseCounts.put(genome, genomeBaseDiffCount + nodeBaseCount);
                     }
                 }
             } catch (final ParseException | SQLException e) {
@@ -188,20 +188,20 @@ public final class CoordinateSystemIndex {
     }
 
     /**
-     * Returns the baseCacheInterval.
+     * Returns the base cache interval.
      *
-     * @return the baseCacheInterval
+     * @return the base cache interval
      */
-    public int getBaseCacheInterval() {
+    int getBaseCacheInterval() {
         return baseCacheInterval;
     }
 
     /**
-     * The interval of bases to be cached.
+     * Set the interval of bases to be cached.
      *
      * @param baseCacheInterval the base cache interval
      */
-    public void setBaseCacheInterval(final int baseCacheInterval) {
+    void setBaseCacheInterval(final int baseCacheInterval) {
         this.baseCacheInterval = baseCacheInterval;
     }
 }

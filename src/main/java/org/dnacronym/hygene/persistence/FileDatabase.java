@@ -80,9 +80,9 @@ public final class FileDatabase implements AutoCloseable {
     }
 
     /**
-     * Returns the fileGenomeIndex.
+     * Returns the file genome index.
      *
-     * @return the fileGenomeIndex
+     * @return the file genome index
      */
     public FileGenomeIndex getFileGenomeIndex() {
         return fileGenomeIndex;

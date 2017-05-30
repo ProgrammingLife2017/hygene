@@ -11,9 +11,9 @@ import java.util.Arrays;
  * Class responsible for storing and retrieving genome coordinate system index points.
  */
 public final class FileGenomeIndex {
-    static final String TABLE_NAME = "genome_index";
-
     private static final Logger LOGGER = LogManager.getLogger(GraphLoader.class);
+
+    static final String TABLE_NAME = "genome_index";
 
     private static final String GENOME_ID_COLUMN_NAME = "genome_id";
     private static final String BASE_COLUMN_NAME = "base";
@@ -68,7 +68,7 @@ public final class FileGenomeIndex {
      *
      * @param genomeId the ID of the genome
      * @param base     the base number
-     * @return the ID of the closest node
+     * @return the ID of the closest node, or -1 if it could not be found
      * @throws SQLException in the case of an error during SQL operations
      */
     public int getClosestNodeToBase(final int genomeId, final int base) throws SQLException {

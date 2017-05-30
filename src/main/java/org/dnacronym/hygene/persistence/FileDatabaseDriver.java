@@ -210,7 +210,7 @@ public final class FileDatabaseDriver implements AutoCloseable {
      *
      * @param sql          the SQL query to execute
      * @param dataCallback the callback to be called with the result
-     * @return the return-value of {@code dataCallback}
+     * @return the return value of {@code dataCallback}
      * @throws SQLException in the case of an error during SQL operations
      */
     synchronized Object executeCustomQuery(final String sql, final Function<ResultSet, Object> dataCallback)
