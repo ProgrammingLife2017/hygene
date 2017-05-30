@@ -75,10 +75,17 @@ public final class GraphDimensionsCalculator {
         centerNodeIdProperty = new SimpleIntegerProperty(1);
         radiusProperty = new SimpleIntegerProperty(1);
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
-            centerNodeIdProperty.set(Math.max(0, Math.min(newValue.intValue(), getNodeCountProperty().get() - 1)));
+            centerNodeIdProperty.set(Math.max(
+                    0,
+                    Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
             query();
         });
-        radiusProperty.addListener((observable, oldValue, newValue) -> query());
+        radiusProperty.addListener((observable, oldValue, newValue) -> {
+            radiusProperty.set(Math.max(
+                    1,
+                    Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
+            query();
+        });
 
         nodeCountProperty = new SimpleIntegerProperty(1);
 
@@ -252,9 +259,9 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the node id with the minimum x in unscaled x coordinates.
+     * Gets the node id {@link ReadOnlyIntegerProperty} with the minimum x in unscaled x coordinates.
      *
-     * @return the minimum node id {@link IntegerProperty} in the x direction
+     * @return the minimum node id {@link ReadOnlyIntegerProperty} in the x direction
      */
     public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
@@ -321,8 +328,8 @@ public final class GraphDimensionsCalculator {
     /**
      * Property which determines the current center {@link Node} id.
      * <p>
-     * Every time this value is updated, {@link #query} is called. This method ensures that the center node id
-     * remains in bounds.
+     * Every time this value is updated, {@link #query} is called. When updated, it does a range check to make sure the
+     * value remains in the range {@code [0, node count]}.
      *
      * @return property which decides the current center {@link Node} id
      */
@@ -333,8 +340,8 @@ public final class GraphDimensionsCalculator {
     /**
      * The property which determines the range to draw around the center node.
      * <p>
-     * Every time this value is updated, {@link #query} is called. This method ensures that the range remains
-     * in bounds.
+     * Every time this value is updated, {@link #query} is called. When updated, it does a check to make sure that the
+     * range remains in the range {@code [1, node count / 2]}.
      *
      * @return property which determines the amount of hops to draw in each direction around the center node
      */
