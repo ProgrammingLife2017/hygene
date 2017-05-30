@@ -140,6 +140,27 @@ public final class GraphQuery {
     }
 
     /**
+     * Sets the radius.
+     * <p>
+     * If the new radius value is below zero, the radius will be set to 0.
+     *
+     * @param radius the new radius
+     */
+    public void setRadius(final int radius) {
+        final int cappedRadius = Math.max(0, radius);
+
+        if (cappedRadius > this.radius) {
+            while (cappedRadius > this.radius) {
+                incrementRadius();
+            }
+        } else {
+            while (cappedRadius < this.radius) {
+                decrementRadius();
+            }
+        }
+    }
+
+    /**
      * Visits all nodes in the cache and applies the given {@link Consumer} to them.
      *
      * @param action a {@link Consumer} for node ids
