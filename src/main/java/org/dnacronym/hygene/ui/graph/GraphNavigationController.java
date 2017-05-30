@@ -65,7 +65,7 @@ public final class GraphNavigationController implements Initializable {
     }
 
     /**
-     * When the user wants to go left by {@value JUMP_AMOUNT} nodes.
+     * When the user wants to go left by onscreen bases.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -74,12 +74,11 @@ public final class GraphNavigationController implements Initializable {
         graphDimensionsCalculator.getCenterNodeIdProperty().set(
                 graphDimensionsCalculator.getCenterNodeIdProperty().get() - JUMP_AMOUNT
         );
-
         actionEvent.consume();
     }
 
     /**
-     * When the user wants to go left by a single node.
+     * When the user wants to go left by a single base.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -88,12 +87,11 @@ public final class GraphNavigationController implements Initializable {
         graphDimensionsCalculator.getCenterNodeIdProperty().set(
                 graphDimensionsCalculator.getCenterNodeIdProperty().get() - 1
         );
-
         actionEvent.consume();
     }
 
     /**
-     * When the user wants to go right by a single node.
+     * When the user wants to go right by a single base.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -102,12 +100,11 @@ public final class GraphNavigationController implements Initializable {
         graphDimensionsCalculator.getCenterNodeIdProperty().set(
                 graphDimensionsCalculator.getCenterNodeIdProperty().get() + 1
         );
-
         actionEvent.consume();
     }
 
     /**
-     * When the user wants to go right by {@value JUMP_AMOUNT} nodes.
+     * When the user wants to go right by amount of onscreen bases.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -116,7 +113,6 @@ public final class GraphNavigationController implements Initializable {
         graphDimensionsCalculator.getCenterNodeIdProperty().set(
                 graphDimensionsCalculator.getCenterNodeIdProperty().get() + JUMP_AMOUNT
         );
-
         actionEvent.consume();
     }
 
@@ -130,7 +126,6 @@ public final class GraphNavigationController implements Initializable {
         graphDimensionsCalculator.getRadiusProperty().set(
                 graphDimensionsCalculator.getRadiusProperty().get() - 1
         );
-
         actionEvent.consume();
     }
 
@@ -144,7 +139,6 @@ public final class GraphNavigationController implements Initializable {
         graphDimensionsCalculator.getRadiusProperty().set(
                 graphDimensionsCalculator.getRadiusProperty().get() + 1
         );
-
         actionEvent.consume();
     }
 }

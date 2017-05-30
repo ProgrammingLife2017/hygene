@@ -45,9 +45,9 @@ public final class SimpleBookmarkStore {
      * <p>
      * It uses the {@link GraphDimensionsCalculator} as a reference for each internal {@link SimpleBookmark}.
      *
-     * @param graphStore                {@link GraphStore} to be observed by this class
+     * @param graphStore                the {@link GraphStore} to be observed by this class
      * @param graphVisualizer           the {@link GraphVisualizer} to be used by this class
-     * @param graphDimensionsCalculator {@link GraphVisualizer} to be used by this class
+     * @param graphDimensionsCalculator the {@link GraphVisualizer} to be used by this class
      * @see SimpleBookmark
      */
     public SimpleBookmarkStore(final GraphStore graphStore,

@@ -163,7 +163,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Set the {@link Graph} used for calculations.
+     * Sets the {@link Graph} used for calculations.
      * <p>
      * Sets the center node id to halfway the graph, and the range to 10.
      *
@@ -181,7 +181,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Set the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.models.Node}s will be drawn.
+     * Sets the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.models.Node}s will be drawn.
      * <p>
      * This will perform another calculation.
      *
@@ -332,7 +332,8 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Property which determines the current center {@link org.dnacronym.hygene.models.Node} id.
+     * Returns the {@link IntegerProperty} which determines the current center
+     * {@link org.dnacronym.hygene.models.Node} id.
      * <p>
      * Every time this value is updated, {@link #query} is called. When updated, it does a range check to make sure the
      * value remains in the range {@code [0, node count]}.
@@ -344,7 +345,8 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * The property which determines the range to draw around the center node.
+     * Returns the {@link IntegerProperty} which determines the range to draw around the center
+     * {@link org.dnacronym.hygene.models.Node}.
      * <p>
      * Every time this value is updated, {@link #query} is called. When updated, it does a check to make sure that the
      * range remains in the range {@code [1, node count / 2]}.
