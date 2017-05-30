@@ -98,7 +98,7 @@ public final class Hygene extends Application {
 
         sequenceVisualizer = new SequenceVisualizer();
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, sequenceVisualizer);
     }
 
     @Override

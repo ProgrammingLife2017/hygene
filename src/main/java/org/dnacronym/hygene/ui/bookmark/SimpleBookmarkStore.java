@@ -13,6 +13,7 @@ import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ public final class SimpleBookmarkStore {
     private static final Logger LOGGER = LogManager.getLogger(SimpleBookmarkStore.class);
 
     private final GraphVisualizer graphVisualizer;
+    private final SequenceVisualizer sequenceVisualizer;
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
     private final List<SimpleBookmark> simpleBookmarks;
@@ -48,12 +50,16 @@ public final class SimpleBookmarkStore {
      * @param graphStore                the {@link GraphStore} to be observed by this class
      * @param graphVisualizer           the {@link GraphVisualizer} to be used by this class
      * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} to be used by this class
+     * @param sequenceVisualizer the {@link SequenceVisualizer} to be used by this class
      * @see SimpleBookmark
      */
     public SimpleBookmarkStore(final GraphStore graphStore, final GraphVisualizer graphVisualizer,
-                               final GraphDimensionsCalculator graphDimensionsCalculator) {
+                               final GraphDimensionsCalculator graphDimensionsCalculator,
+                               final SequenceVisualizer sequenceVisualizer) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.graphVisualizer = graphVisualizer;
+        this.sequenceVisualizer = sequenceVisualizer;
+
         simpleBookmarks = new ArrayList<>();
         observableSimpleBookmarks = FXCollections.observableList(simpleBookmarks);
 
@@ -120,7 +126,8 @@ public final class SimpleBookmarkStore {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 graphDimensionsCalculator.getCenterNodeIdProperty().set(bookmark.getNodeId());
-                graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());
+                graphDimensionsCalculator.getHopsProperty().set(bookmark.getRadius());
+                sequenceVisualizer.setOffset(bookmark.getBaseOffset());
 
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
             }));
