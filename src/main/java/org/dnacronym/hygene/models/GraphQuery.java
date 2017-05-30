@@ -240,7 +240,7 @@ public final class GraphQuery {
     /**
      * Finds the neighbours of the (virtual) source and sink nodes, and puts them in the respective {@link List}s.
      */
-    @SuppressWarnings("squid:S00108") // False positive
+    @SuppressWarnings("squid:S00108") // False positive, empty lambdas cannot be removed
     private void findSentinelNeighbours() {
         sourceNeighbours.clear();
         sinkNeighbours.clear();
