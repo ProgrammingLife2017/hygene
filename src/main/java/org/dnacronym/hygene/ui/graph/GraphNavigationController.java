@@ -72,7 +72,10 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftLargeAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().subtract(JUMP_AMOUNT);
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(
+                graphDimensionsCalculator.getCenterNodeIdProperty().get() - JUMP_AMOUNT
+        );
+
         actionEvent.consume();
     }
 
@@ -83,7 +86,10 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().subtract(1);
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(
+                graphDimensionsCalculator.getCenterNodeIdProperty().get() - 1
+        );
+
         actionEvent.consume();
     }
 
@@ -94,7 +100,10 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().add(1);
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(
+                graphDimensionsCalculator.getCenterNodeIdProperty().get() + 1
+        );
+
         actionEvent.consume();
     }
 
@@ -105,7 +114,10 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightLargeAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().add(JUMP_AMOUNT);
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(
+                graphDimensionsCalculator.getCenterNodeIdProperty().get() + JUMP_AMOUNT
+        );
+
         actionEvent.consume();
     }
 
@@ -116,7 +128,10 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomInAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getRadiusProperty().subtract(1);
+        graphDimensionsCalculator.getRadiusProperty().set(
+                graphDimensionsCalculator.getRadiusProperty().get() - 1
+        );
+
         actionEvent.consume();
     }
 
@@ -127,7 +142,10 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomOutAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getRadiusProperty().add(1);
+        graphDimensionsCalculator.getRadiusProperty().set(
+                graphDimensionsCalculator.getRadiusProperty().get() + 1
+        );
+
         actionEvent.consume();
     }
 }

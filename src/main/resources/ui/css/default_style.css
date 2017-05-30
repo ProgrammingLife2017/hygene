@@ -1,3 +1,8 @@
+.square_button {
+    -fx-min-height: 45;
+    -fx-min-width: 45;
+}
+
 #hideButton {
     -fx-border-color: transparent;
     -fx-border-width: 0;

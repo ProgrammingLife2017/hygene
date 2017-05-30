@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8.0.102"
+            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <fx:include source="menu_view.fxml"/>
@@ -12,19 +13,28 @@
 
     <left>
         <VBox maxHeight="Infinity" prefHeight="Infinity">
-            <fx:include source="node/node_properties_view.fxml"/>
-            <fx:include source="bookmark/bookmark_create_view.fxml"/>
+            <children>
+                <fx:include source="node/node_properties_view.fxml"/>
+                <fx:include source="bookmark/bookmark_create_view.fxml"/>
+            </children>
         </VBox>
     </left>
-
-    <center>
-        <SplitPane dividerPositions="0.5" orientation="VERTICAL">
-            <fx:include source="graph/graph_view.fxml"/>
-            <fx:include source="graph/graph_slider_view.fxml"/>
-        </SplitPane>
-    </center>
 
     <right>
         <fx:include source="bookmark/bookmarks_table_view.fxml"/>
     </right>
+
+    <center>
+        <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="0" minWidth="0">
+            <VBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+                  AnchorPane.topAnchor="0">
+                <StackPane VBox.vgrow="ALWAYS">
+                    <fx:include source="graph/graph_view.fxml"/>
+                    <fx:include source="graph/graph_navigation_view.fxml" StackPane.alignment="BOTTOM_LEFT"/>
+                </StackPane>
+                <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
+            </VBox>
+        </AnchorPane>
+    </center>
+
 </BorderPane>

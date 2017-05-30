@@ -1,41 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
-<HBox fx:id="graphButtonBar" alignment="BOTTOM_LEFT" maxHeight="-Infinity" prefHeight="50"
-      nodeOrientation="LEFT_TO_RIGHT" spacing="10.0" xmlns="http://javafx.com/javafx/8"
+<HBox fx:id="graphButtonBar" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity"
+      nodeOrientation="LEFT_TO_RIGHT" prefHeight="50" spacing="10.0" xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.graph.GraphNavigationController">
     <children>
-        <Button fx:id="goLeftLarge" mnemonicParsing="false" onAction="#goLeftLargeAction" text="&lt;&lt;">
+        <Button fx:id="goLeftLarge" mnemonicParsing="false" onAction="#goLeftLargeAction" styleClass="square_button"
+                text="&lt;&lt;">
             <tooltip>
                 <Tooltip text="Go left by 100 nodes."/>
             </tooltip>
         </Button>
-        <Button fx:id="goLeft" mnemonicParsing="false" onAction="#goLeftAction" text="&lt;">
+        <Button fx:id="goLeft" mnemonicParsing="false" onAction="#goLeftAction" styleClass="square_button" text="&lt;">
             <tooltip>
                 <Tooltip text="Go left by a single node."/>
             </tooltip>
         </Button>
-        <Button fx:id="goRight" mnemonicParsing="false" onAction="#goRightAction" text="&gt;">
+        <Button fx:id="goRight" mnemonicParsing="false" onAction="#goRightAction" styleClass="square_button"
+                text="&gt;">
             <tooltip>
                 <Tooltip text="Go right by a single node."/>
             </tooltip>
         </Button>
-        <Button fx:id="goRightLarge" mnemonicParsing="false" onAction="#goRightLargeAction" text="&gt;&gt;">
+        <Button fx:id="goRightLarge" mnemonicParsing="false" onAction="#goRightLargeAction" styleClass="square_button"
+                text="&gt;&gt;">
             <tooltip>
                 <Tooltip text="Go right by 100 nodes."/>
             </tooltip>
         </Button>
-        <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomInAction" text="+">
+        <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomInAction" styleClass="square_button" text="+">
             <tooltip>
                 <Tooltip text="Zoom in."/>
             </tooltip>
         </Button>
-        <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOutAction" text="-">
+        <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOutAction" styleClass="square_button" text="-">
             <tooltip>
                 <Tooltip text="Zoom out."/>
             </tooltip>
         </Button>
     </children>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <opaqueInsets>
+        <Insets/>
+    </opaqueInsets>
 </HBox>
