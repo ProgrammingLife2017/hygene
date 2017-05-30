@@ -25,15 +25,15 @@
         </rowConstraints>
         <children>
             <Label text="Node Id"/>
-            <Label text="Range" GridPane.rowIndex="2"/>
+            <Label text="Radius" GridPane.rowIndex="2"/>
             <TextField fx:id="nodeId" promptText="New node Id" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
                        GridPane.rowIndex="1" onKeyPressed="#setNodeId">
                 <tooltip>
                     <Tooltip text="Set the current node id. This node id is displayed in the center of the screen."/>
                 </tooltip>
             </TextField>
-            <TextField fx:id="range" promptText="new Range" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
-                       GridPane.rowIndex="3" onKeyPressed="#setRange">
+            <TextField fx:id="radius" promptText="new Range" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                       GridPane.rowIndex="3" onKeyPressed="#setRadius">
                 <tooltip>
                     <Tooltip
                             text="Set the range around the current node. This determines how many hops should be displayed in each direction."/>
@@ -41,8 +41,8 @@
             </TextField>
             <Label text="Current" GridPane.columnIndex="1"/>
             <Label text="Current" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Label fx:id="currentNodeId" text="currentNodeId" GridPane.columnIndex="2"/>
-            <Label fx:id="currentRange" text="currentRange" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <Label fx:id="currentNodeId" GridPane.columnIndex="2"/>
+            <Label fx:id="currentRadius" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
         </children>
     </GridPane>
 </AnchorPane>

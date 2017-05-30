@@ -72,8 +72,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftLargeAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.updateCenterNodeId(
-                graphDimensionsCalculator.getCenterNodeIdProperty().get() - JUMP_AMOUNT);
+        graphDimensionsCalculator.getCenterNodeIdProperty().subtract(JUMP_AMOUNT);
         actionEvent.consume();
     }
 
@@ -84,7 +83,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.updateCenterNodeId(graphDimensionsCalculator.getCenterNodeIdProperty().get() - 1);
+        graphDimensionsCalculator.getCenterNodeIdProperty().subtract(1);
         actionEvent.consume();
     }
 
@@ -95,7 +94,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.updateCenterNodeId(graphDimensionsCalculator.getCenterNodeIdProperty().get() + 1);
+        graphDimensionsCalculator.getCenterNodeIdProperty().add(1);
         actionEvent.consume();
     }
 
@@ -106,8 +105,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightLargeAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.updateCenterNodeId(
-                graphDimensionsCalculator.getCenterNodeIdProperty().get() + JUMP_AMOUNT);
+        graphDimensionsCalculator.getCenterNodeIdProperty().add(JUMP_AMOUNT);
         actionEvent.consume();
     }
 
@@ -118,7 +116,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomInAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.decrementRadius();
+        graphDimensionsCalculator.getRadiusProperty().subtract(1);
         actionEvent.consume();
     }
 
@@ -129,7 +127,7 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomOutAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.incrementRadius();
+        graphDimensionsCalculator.getRadiusProperty().add(1);
         actionEvent.consume();
     }
 }

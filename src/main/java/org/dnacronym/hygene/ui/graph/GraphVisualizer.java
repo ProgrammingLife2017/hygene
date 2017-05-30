@@ -27,11 +27,13 @@ import org.dnacronym.hygene.parser.ParseException;
 /**
  * A simple canvas that allows drawing of primitive shapes.
  * <p>
- * When passing a {@link Graph}, it will draw it using JavaFX primitives. If the {@link Canvas} has not been set
- * all methods related to drawing will thrown an {@link IllegalStateException}.
+ * When passing a {@link Graph}, it will draw on it using JavaFX primitives, using its {@link GraphicsContext}.
+ * <p>
+ * {@link GraphDimensionsCalculator} is used to calculate actual node positions in view.
  *
  * @see Canvas
  * @see GraphicsContext
+ * @see GraphDimensionsCalculator
  */
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
@@ -93,9 +95,7 @@ public final class GraphVisualizer {
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
-        graphDimensionsCalculator.setNodeHeight(DEFAULT_NODE_HEIGHT);
-        nodeHeightProperty.addListener((observable, oldValue, newValue) ->
-                graphDimensionsCalculator.setNodeHeight(newValue.doubleValue()));
+        graphDimensionsCalculator.getNodeHeightProperty().bind(nodeHeightProperty);
 
         edgeColorProperty.addListener(changeListener);
         nodeHeightProperty.addListener(changeListener);
@@ -110,7 +110,7 @@ public final class GraphVisualizer {
     /**
      * Draw a node on the canvas.
      * <p>
-     * The minimum and maximum x positions are assumed to be unscaled.
+     * The node is afterwards added to the {@link RTree}.
      *
      * @param nodeId id of node to draw
      */
@@ -143,6 +143,8 @@ public final class GraphVisualizer {
 
     /**
      * Draws an edge on the canvas.
+     * <p>
+     * The edge is afterwards added to the {@link RTree}.
      *
      * @param fromNodeId edge origin node ID
      * @param toNodeId   edge destination node ID
@@ -190,9 +192,10 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Clear the canvas.
+     * Clear the canvas, and resets the {@link RTree}.
      */
     private void clear() {
+        rTree = new RTree();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -209,8 +212,6 @@ public final class GraphVisualizer {
         }
 
         clear();
-        rTree = new RTree();
-
         for (final Integer nodeId : graphDimensionsCalculator.getNeighbours()) {
             drawNode(nodeId);
             graph.iterator().visitDirectNeighbours(
@@ -220,7 +221,7 @@ public final class GraphVisualizer {
 
         if (displayLaneBordersProperty.get()) {
             drawLaneBorders(
-                    graphDimensionsCalculator.getLanecountProperty().get(),
+                    graphDimensionsCalculator.getLaneCountProperty().get(),
                     graphDimensionsCalculator.getLaneHeightProperty().get());
         }
     }

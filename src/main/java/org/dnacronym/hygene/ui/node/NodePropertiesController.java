@@ -131,7 +131,9 @@ public final class NodePropertiesController implements Initializable {
     @FXML
     void onFocusAction(final ActionEvent actionEvent) {
         final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
-        graphDimensionsCalculator.updateCenterNodeId(selectedNode.getId());
+        if (selectedNode != null) {
+            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
+        }
 
         actionEvent.consume();
     }

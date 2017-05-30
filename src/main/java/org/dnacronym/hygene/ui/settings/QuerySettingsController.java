@@ -18,25 +18,25 @@ public final class QuerySettingsController extends AbstractSettingsController {
     @FXML
     private Label currentNodeId;
     @FXML
-    private Label currentRange;
+    private Label currentRadius;
     @FXML
     private TextField nodeId;
     @FXML
-    private TextField range;
+    private TextField radius;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-        range.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        radius.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
         currentNodeId.textProperty().bind(getGraphDimensionsCalculator().getCenterNodeIdProperty().asString());
-        currentRange.textProperty().bind(getGraphDimensionsCalculator().getRangeProperty().asString());
+        currentRadius.textProperty().bind(getGraphDimensionsCalculator().getRadiusProperty().asString());
 
         getGraphDimensionsCalculator().getCenterNodeIdProperty().addListener(
                 (observable, oldValue, newValue) -> nodeId.setText(String.valueOf(newValue)));
-        getGraphDimensionsCalculator().getRangeProperty().addListener(
-                (observable, oldValue, newValue) -> range.setText(String.valueOf(newValue)));
+        getGraphDimensionsCalculator().getRadiusProperty().addListener(
+                (observable, oldValue, newValue) -> radius.setText(String.valueOf(newValue)));
     }
 
     /**
@@ -49,23 +49,23 @@ public final class QuerySettingsController extends AbstractSettingsController {
         getSettings().addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            getGraphDimensionsCalculator().updateCenterNodeId(newValue);
+            getGraphDimensionsCalculator().getCenterNodeIdProperty().set(newValue);
         });
 
         keyEvent.consume();
     }
 
     /**
-     * When user finished editing the range {@link TextField}.
+     * When user finished editing the radius {@link TextField}.
      *
      * @param keyEvent the {@link KeyEvent}
      */
     @FXML
-    void setRange(final KeyEvent keyEvent) {
+    void setRadius(final KeyEvent keyEvent) {
         getSettings().addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            getGraphDimensionsCalculator().updateRange(newValue);
+            getGraphDimensionsCalculator().getRadiusProperty().set(newValue);
         });
 
         keyEvent.consume();

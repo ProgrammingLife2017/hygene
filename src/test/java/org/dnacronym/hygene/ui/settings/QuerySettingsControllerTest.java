@@ -79,7 +79,7 @@ final class QuerySettingsControllerTest extends UITestBase {
         final KeyEvent keyEvent = mock(KeyEvent.class);
         when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setRange(keyEvent));
+        interact(() -> querySettingsController.setRadius(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
@@ -95,7 +95,7 @@ final class QuerySettingsControllerTest extends UITestBase {
         final KeyEvent keyEvent = mock(KeyEvent.class);
         when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setRange(keyEvent));
+        interact(() -> querySettingsController.setRadius(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());

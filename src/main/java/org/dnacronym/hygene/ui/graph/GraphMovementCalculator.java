@@ -6,6 +6,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 /**
  * Deals with translating user input into something the {@link GraphVisualizer} can use and understand.
+ * <p>
+ * The translated coordinates are passed to the {@link GraphDimensionsCalculator}, which updates the positions of
+ * onscreen nodes drawn by the {@link GraphVisualizer}.
+ *
+ * @see GraphDimensionsCalculator
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
@@ -81,10 +86,7 @@ public final class GraphMovementCalculator {
         final int newCenterNodeId = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 
-        graphDimensionsCalculator.updateCenterNodeId(Math.min(
-                Math.max(newCenterNodeId, 0),
-                graphDimensionsCalculator.getNodeCountProperty().get() - 1));
-
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(newCenterNodeId);
         dragging = newCenterNodeId < 0 || newCenterNodeId > graphDimensionsCalculator.getNodeCountProperty().get();
     }
 
@@ -98,33 +100,7 @@ public final class GraphMovementCalculator {
      */
     public void onScroll(final double deltaY) {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
-        if (deltaRange < 0) {
-            zoomIn(deltaRange);
-        } else {
-            zoomOut(deltaRange);
-        }
-    }
-
-    /**
-     * Zoom in by range by decrementing radius by range amount.
-     *
-     * @param range the range to zoom in by
-     */
-    private void zoomIn(final int range) {
-        for (int i = 0; i < range; i++) {
-            graphDimensionsCalculator.decrementRadius();
-        }
-    }
-
-    /**
-     * Zoom out by range by incrementing radius by range amount.
-     *
-     * @param range the range zo zoom out by
-     */
-    private void zoomOut(final int range) {
-        for (int i = 0; i < range; i++) {
-            graphDimensionsCalculator.incrementRadius();
-        }
+        graphDimensionsCalculator.getRadiusProperty().add(deltaRange);
     }
 
     /**
@@ -139,7 +115,7 @@ public final class GraphMovementCalculator {
     }
 
     /**
-     * Property which determines the sensitivty of zooming.
+     * Property which determines the sensitivity of zooming.
      * <p>
      * A higher value results in zooming changing the hops by a larger amount.
      *
