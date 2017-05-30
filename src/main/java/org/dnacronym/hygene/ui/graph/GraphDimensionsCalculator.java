@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Dimension2D;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
 
@@ -52,18 +53,17 @@ public final class GraphDimensionsCalculator {
      * The {@link Graph} used to get the unscaled coordinates of nodes.
      */
     private Graph graph;
+    private GraphQuery graphQuery;
+
     private int minX;
     private int maxX;
     private int minY;
-
-    private double canvasWidth = 0;
-    private double canvasHeight = 0;
+    private Dimension2D canvasDimension;
 
     /**
      * List of nodes that should be drawn onscreen.
      */
     private final ObservableList<Integer> observableNeighbours;
-    private GraphQuery graphQuery;
 
 
     /**
@@ -75,17 +75,20 @@ public final class GraphDimensionsCalculator {
 
         centerNodeIdProperty = new SimpleIntegerProperty(1);
         radiusProperty = new SimpleIntegerProperty(1);
+
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
             centerNodeIdProperty.set(Math.max(
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
-            query();
+            graphQuery.moveTo(centerNodeIdProperty.get());
+            calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
-            query();
+            graphQuery.setRadius(radiusProperty.get());
+            calculate();
         });
 
         nodeCountProperty = new SimpleIntegerProperty(1);
@@ -111,17 +114,17 @@ public final class GraphDimensionsCalculator {
      * <li> On screen node count property
      * </ul>
      * <p>
-     * If the graph has not been set, this method does nothing.
+     * If the graph or canvas has not been set, this method does nothing.
      */
     private void calculate() {
-        if (graph == null) {
+        if (graph == null || canvasDimension == null) {
             return;
         }
 
         final int centerNodeId = centerNodeIdProperty.get();
-
         final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
                 + graph.getUnscaledXEdgeCount(centerNodeId) * DEFAULT_EDGE_WIDTH;
+
         final int[] tempMinX = {unscaledCenterX};
         final int[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
@@ -129,7 +132,6 @@ public final class GraphDimensionsCalculator {
 
         final List<Integer> neighbours = new LinkedList<>();
         neighbours.add(centerNodeId);
-
         graphQuery.visit(nodeId -> {
             neighbours.add(nodeId);
 
@@ -158,7 +160,7 @@ public final class GraphDimensionsCalculator {
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
-        laneHeightProperty.set(canvasHeight / laneCountProperty.get());
+        laneHeightProperty.set(canvasDimension.getHeight() / laneCountProperty.get());
         laneCountProperty.set(Math.abs(maxY - minY) + 1);
     }
 
@@ -189,19 +191,7 @@ public final class GraphDimensionsCalculator {
      * @param canvasHeight the height of the {@link javafx.scene.canvas.Canvas}
      */
     void setCanvasSize(final double canvasWidth, final double canvasHeight) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-
-        calculate();
-    }
-
-    /**
-     * Perform a new query with the set center node id and set range.
-     *
-     * @see GraphQuery#query(int, int)
-     */
-    public void query() {
-        graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+        canvasDimension = new Dimension2D(canvasWidth, canvasHeight);
         calculate();
     }
 
@@ -214,7 +204,7 @@ public final class GraphDimensionsCalculator {
     double computeXPosition(final int nodeId) {
         final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId)
                 + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
-        return (double) (xPosition - minX) / (maxX - minX) * canvasWidth;
+        return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
@@ -256,7 +246,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     double computeWidth(final int nodeId) {
-        return (double) graph.getLength(nodeId) / (maxX - minX) * canvasWidth;
+        return (double) graph.getLength(nodeId) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
@@ -335,7 +325,7 @@ public final class GraphDimensionsCalculator {
      * Returns the {@link IntegerProperty} which determines the current center
      * {@link org.dnacronym.hygene.models.Node} id.
      * <p>
-     * Every time this value is updated, {@link #query} is called. When updated, it does a range check to make sure the
+     * Every time this value is changed, a calculation is done. When updated, it does a range check to make sure the
      * value remains in the range {@code [0, node count]}.
      *
      * @return property which decides the current center {@link org.dnacronym.hygene.models.Node} id
@@ -348,7 +338,7 @@ public final class GraphDimensionsCalculator {
      * Returns the {@link IntegerProperty} which determines the range to draw around the center
      * {@link org.dnacronym.hygene.models.Node}.
      * <p>
-     * Every time this value is updated, {@link #query} is called. When updated, it does a check to make sure that the
+     * Every time this value is changed, a calculation is done. When updated, it does a check to make sure that the
      * range remains in the range {@code [1, node count / 2]}.
      *
      * @return property which determines the amount of hops to draw in each direction around the center node

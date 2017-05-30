@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
 
-    private GraphVisualizer graphVisualizer;
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphStore graphStore;
 
@@ -33,7 +32,6 @@ public final class GraphSliderController implements Initializable {
      */
     public GraphSliderController() {
         try {
-            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphDimensionCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
@@ -56,17 +54,6 @@ public final class GraphSliderController implements Initializable {
 
         graphScrollBar.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         graphScrollBar.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-    }
-
-    /**
-     * Sets the {@link GraphVisualizer}.
-     * <p>
-     * This allows the sliders to change the properties of the {@link GraphVisualizer}.
-     *
-     * @param graphVisualiser graph pane to set in the controller
-     */
-    void setGraphVisualiser(final GraphVisualizer graphVisualiser) {
-        this.graphVisualizer = graphVisualiser;
     }
 
     /**
