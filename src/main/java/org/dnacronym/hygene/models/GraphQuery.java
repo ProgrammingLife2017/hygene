@@ -232,17 +232,15 @@ public final class GraphQuery {
         final int effectiveCacheRadius = cacheRadius - centreDistance;
         if (newRadius <= effectiveCacheRadius) {
             this.radius = newRadius;
+        } else if (newRadius - effectiveCacheRadius > MAX_SET_RADIUS_INCREASE) {
+            query(centre, newRadius);
         } else {
-            if (newRadius - effectiveCacheRadius > MAX_SET_RADIUS_INCREASE) {
-                query(centre, newRadius);
-            } else {
-                final int cacheRadiusTarget = newRadius + effectiveCacheRadius;
-                while (cacheRadius < cacheRadiusTarget) {
-                    incrementCacheRadius();
-                }
-
-                this.radius = newRadius;
+            final int cacheRadiusTarget = newRadius + effectiveCacheRadius;
+            while (cacheRadius < cacheRadiusTarget) {
+                incrementCacheRadius();
             }
+
+            this.radius = newRadius;
         }
     }
 
