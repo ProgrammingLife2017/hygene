@@ -2,50 +2,66 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
-<HBox fx:id="graphButtonBar" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity"
-      nodeOrientation="LEFT_TO_RIGHT" prefHeight="50" spacing="10.0" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.graph.GraphNavigationController">
+<?import javafx.scene.layout.StackPane?>
+<StackPane fx:id="graphNavigationButtons" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.dnacronym.hygene.ui.graph.GraphNavigationController">
     <children>
-        <Button fx:id="goLeftLarge" mnemonicParsing="false" onAction="#goLeftLargeAction" styleClass="square_button"
-                text="&lt;&lt;">
-            <tooltip>
-                <Tooltip text="Go left by 100 nodes."/>
-            </tooltip>
-        </Button>
-        <Button fx:id="goLeft" mnemonicParsing="false" onAction="#goLeftAction" styleClass="square_button" text="&lt;">
-            <tooltip>
-                <Tooltip text="Go left by a single node."/>
-            </tooltip>
-        </Button>
-        <Button fx:id="goRight" mnemonicParsing="false" onAction="#goRightAction" styleClass="square_button"
-                text="&gt;">
-            <tooltip>
-                <Tooltip text="Go right by a single node."/>
-            </tooltip>
-        </Button>
-        <Button fx:id="goRightLarge" mnemonicParsing="false" onAction="#goRightLargeAction" styleClass="square_button"
-                text="&gt;&gt;">
-            <tooltip>
-                <Tooltip text="Go right by 100 nodes."/>
-            </tooltip>
-        </Button>
-        <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomInAction" styleClass="square_button" text="+">
-            <tooltip>
-                <Tooltip text="Zoom in."/>
-            </tooltip>
-        </Button>
-        <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOutAction" styleClass="square_button" text="-">
-            <tooltip>
-                <Tooltip text="Zoom out."/>
-            </tooltip>
-        </Button>
+        <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="50" spacing="10.0" StackPane.alignment="CENTER">
+            <children>
+                <Separator orientation="VERTICAL"/>
+                <Button fx:id="goLeftLarge" mnemonicParsing="false" onAction="#goLeftLargeAction"
+                        styleClass="square_button" text="&lt;&lt;">
+                    <tooltip>
+                        <Tooltip text="Go left by 1s00 nodes."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="goLeft" mnemonicParsing="false" onAction="#goLeftAction" styleClass="square_button"
+                        text="&lt;">
+                    <tooltip>
+                        <Tooltip text="Go left by a single node."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="goRight" mnemonicParsing="false" onAction="#goRightAction" styleClass="square_button"
+                        text="&gt;">
+                    <tooltip>
+                        <Tooltip text="Go right by a single node."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="goRightLarge" mnemonicParsing="false" onAction="#goRightLargeAction"
+                        styleClass="square_button" text="&gt;&gt;">
+                    <tooltip>
+                        <Tooltip text="Go right by 100 nodes."/>
+                    </tooltip>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
+        <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="50.0" spacing="10.0"
+              StackPane.alignment="CENTER_RIGHT">
+            <children>
+                <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomInAction" styleClass="square_button"
+                        text="+">
+                    <tooltip>
+                        <Tooltip text="Zoom in."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOutAction" styleClass="square_button"
+                        text="-">
+                    <tooltip>
+                        <Tooltip text="Zoom out."/>
+                    </tooltip>
+                </Button>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
     </children>
-    <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-    </padding>
-    <opaqueInsets>
-        <Insets/>
-    </opaqueInsets>
-</HBox>
+</StackPane>

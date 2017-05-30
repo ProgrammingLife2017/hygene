@@ -4,7 +4,7 @@ package org.dnacronym.hygene.ui.graph;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -25,7 +25,7 @@ public final class GraphNavigationController implements Initializable {
     private GraphStore graphStore;
 
     @FXML
-    private HBox graphButtonBar;
+    private StackPane graphNavigationButtons;
 
 
     /**
@@ -43,8 +43,8 @@ public final class GraphNavigationController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        graphButtonBar.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
-        graphButtonBar.managedProperty().bind(graphStore.getGfaFileProperty().isNotNull());
+        graphNavigationButtons.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
+        graphNavigationButtons.managedProperty().bind(graphStore.getGfaFileProperty().isNotNull());
     }
 
     /**

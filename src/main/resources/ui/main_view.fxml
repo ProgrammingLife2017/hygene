@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8"
@@ -25,16 +24,12 @@
     </right>
 
     <center>
-        <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="0" minWidth="0">
-            <VBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-                  AnchorPane.topAnchor="0">
-                <StackPane VBox.vgrow="ALWAYS">
-                    <fx:include source="graph/graph_view.fxml"/>
-                    <fx:include source="graph/graph_navigation_view.fxml" StackPane.alignment="BOTTOM_LEFT"/>
-                </StackPane>
-                <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
-            </VBox>
-        </AnchorPane>
+        <VBox BorderPane.alignment="BOTTOM_LEFT">
+            <fx:include source="graph/graph_view.fxml" VBox.vgrow="SOMETIMES"/>
+            <Separator maxWidth="Infinity"/>
+            <fx:include source="graph/graph_navigation_view.fxml" VBox.vgrow="NEVER"/>
+            <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
+        </VBox>
     </center>
 
 </BorderPane>
