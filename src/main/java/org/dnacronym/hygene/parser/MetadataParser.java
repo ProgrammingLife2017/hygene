@@ -190,21 +190,21 @@ public final class MetadataParser {
     }
 
     /**
-     * Returns all genomes of the current file.
+     * Returns all genomes of the node on the given {@code lineNumber}.
      * <p>
-     * It does this by reading the appropriate header of that GFA file.
+     * It does this by reading the appropriate genome header field of that line.
      *
-     * @param header     the header field (including the prefix) to parse
-     * @param lineNumber the current line number
+     * @param headerField the header field (including the prefix) to parse
+     * @param lineNumber  the current line number
      * @return the list of genomes in that file
      * @throws ParseException if the GFA file or given line is invalid
      */
-    private List<String> parseGenomes(final String header, final int lineNumber) throws ParseException {
-        if (!header.startsWith(GENOME_LIST_HEADER_PREFIX)) {
+    private List<String> parseGenomes(final String headerField, final int lineNumber) throws ParseException {
+        if (!headerField.startsWith(GENOME_LIST_HEADER_PREFIX)) {
             throw new ParseException("Expected genome header on line " + lineNumber + ".");
         }
 
-        final String genomeListString = header.substring(GENOME_LIST_HEADER_PREFIX.length());
+        final String genomeListString = headerField.substring(GENOME_LIST_HEADER_PREFIX.length());
         final StringTokenizer bodyTokenizer = new StringTokenizer(genomeListString, ";");
         final List<String> genomes = new ArrayList<>();
 
