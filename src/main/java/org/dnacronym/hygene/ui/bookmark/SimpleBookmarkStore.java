@@ -127,9 +127,9 @@ public final class SimpleBookmarkStore {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 graphDimensionsCalculator.getCenterNodeIdProperty().set(bookmark.getNodeId());
                 graphDimensionsCalculator.getHopsProperty().set(bookmark.getRadius());
-                sequenceVisualizer.setOffset(bookmark.getBaseOffset());
 
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
+                sequenceVisualizer.setOffset(bookmark.getBaseOffset());
             }));
         } catch (final ParseException e) {
             LOGGER.error("Unable to create bookmark %s.", bookmark, e);

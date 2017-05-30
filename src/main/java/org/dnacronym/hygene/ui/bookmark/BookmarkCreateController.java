@@ -69,13 +69,15 @@ public final class BookmarkCreateController implements Initializable {
         final ObjectProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
-        baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
-        baseOffset.textProperty().addListener((observable, oldValue, newValue) ->
-                sequenceVisualizer.setOffset(Integer.parseInt(newValue)));
+        baseOffset.textProperty().addListener((observable, oldValue, newValue) -> {
+            sequenceVisualizer.setOffset(Integer.parseInt(newValue));
+            baseOffset.setText(sequenceVisualizer.getOffsetProperty().asString().get());
+        });
         sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
                 baseOffset.setText(String.valueOf(newValue)));
 
+        baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
