@@ -7,7 +7,7 @@ import org.dnacronym.hygene.models.GraphQuery;
  * Represents a change in the center point query.
  */
 public final class CenterPointQueryChangeEvent {
-    private GraphQuery graphQuery;
+    private final GraphQuery graphQuery;
 
 
     /**
@@ -23,7 +23,7 @@ public final class CenterPointQueryChangeEvent {
     /**
      * Returns the updated query.
      *
-     * @return the updated query.
+     * @return the updated query
      */
     public GraphQuery getGraphQuery() {
         return graphQuery;

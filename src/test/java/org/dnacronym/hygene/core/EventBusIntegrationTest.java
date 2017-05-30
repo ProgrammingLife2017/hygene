@@ -9,11 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
  * Integrations tests for the event bus workflow.
  */
 public final class EventBusIntegrationTest {
     private static final int[][] DUMMY_GRAPH = new int[][] {Node.createEmptyNodeArray()};
+
 
     @Test
     void testThatEventsCanBePostedAndListenedTo() {
@@ -26,6 +28,7 @@ public final class EventBusIntegrationTest {
 
         assertThat(graphQuery).isEqualTo(listener.getGraphQuery());
     }
+
 
     private static class CenterPointQueryChangeEventListener {
         private GraphQuery graphQuery;
