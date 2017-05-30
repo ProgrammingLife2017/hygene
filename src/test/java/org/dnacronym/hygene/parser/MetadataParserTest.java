@@ -30,7 +30,8 @@ final class MetadataParserTest {
 
     @Test
     void testParseNodeMetadata() throws ParseException {
-        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"),
+                3);
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata.getSequence()).isEqualTo("TCAAGG");

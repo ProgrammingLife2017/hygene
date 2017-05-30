@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
  * Test suite for the {@link CoordinateSystemIndex} class.
  */
 class CoordinateSystemIndexTest {
-    private final static String TEST_GFA_FILE_NAME = "src/test/resources/gfa/index.gfa";
+    private static final String TEST_GFA_FILE_NAME = "src/test/resources/gfa/index.gfa";
 
     private CoordinateSystemIndex coordinateSystemIndex;
     private FileDatabase fileDatabase;
