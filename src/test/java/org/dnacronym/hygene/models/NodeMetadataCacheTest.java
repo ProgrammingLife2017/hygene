@@ -67,11 +67,34 @@ final class NodeMetadataCacheTest {
     }
 
     @Test
+    void testThatNewQueriesDoNotRemoveOldCache() throws ParseException, InterruptedException {
+        graphQuery.query(1, 0);
+
+        nodeMetaDatacache.getThread().join();
+
+        final Node node = nodeMetaDatacache.getOrRetrieve(1);
+
+        graphQuery.query(1, 0);
+
+        nodeMetaDatacache.getThread().join();
+
+        assertThat(node == nodeMetaDatacache.getOrRetrieve(1)).isTrue();
+    }
+
+    @Test
     void testThatNodesOfLargeRadiusCenterPointQueriesAreNotCached() throws ParseException, InterruptedException {
         graphQuery.query(1, 200);
 
         assertThat(nodeMetaDatacache.getThread()).isNull();
         assertThat(nodeMetaDatacache.has(1)).isFalse();
+    }
+
+    @Test
+    void testThatUncachedNodeCanBeRetrieved() throws ParseException, InterruptedException {
+        graphQuery.query(1, 0);
+
+        assertThat(nodeMetaDatacache.has(2)).isFalse();
+        assertThat(nodeMetaDatacache.getOrRetrieve(2).retrieveMetadata().getSequence()).isEqualTo("TCAAGG");
     }
 
     private Graph createGraph() throws ParseException {

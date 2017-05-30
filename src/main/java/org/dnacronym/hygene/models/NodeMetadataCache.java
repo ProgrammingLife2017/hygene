@@ -23,8 +23,8 @@ public final class NodeMetadataCache {
      */
     private static final int CACHE_RADIUS_THRESHOLD = 150;
 
-    private ConcurrentHashMap<Integer, Node> cache;
-    private Graph graph;
+    private final ConcurrentHashMap<Integer, Node> cache;
+    private final Graph graph;
 
     private @MonotonicNonNull Thread thread;
 
@@ -44,7 +44,7 @@ public final class NodeMetadataCache {
      * Returns true if the cache has metadata of the given node id stored.
      *
      * @param nodeId ID of the node
-     * @return boolean indicating presence of metadata of given node in the cache
+     * @return true if the cache has metadata of the given node id stored
      */
     public boolean has(final int nodeId) {
         return cache.containsKey(nodeId);
@@ -112,7 +112,7 @@ public final class NodeMetadataCache {
      * @param nodeIds set of node ids that should be in the cache after executing this method
      */
     private void addNewItemsToCache(final Set<Integer> nodeIds) {
-        for (Integer nodeId : nodeIds) {
+        for (final Integer nodeId : nodeIds) {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
@@ -123,7 +123,7 @@ public final class NodeMetadataCache {
 
             try {
                 retrieve(nodeId);
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 LOGGER.warn("Node metadata of node " + nodeId + " could not be retrieved.", e);
             }
         }
