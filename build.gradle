@@ -124,6 +124,12 @@ checkstyle {
     ignoreFailures = true
 }
 
+pmd {
+    ignoreFailures = false
+    ruleSetFiles = files("config/pmd/pmd-rules.xml")
+    sourceSets = [sourceSets.main]
+}
+
 jacocoTestReport {
     reports {
         csv.enabled = false

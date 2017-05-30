@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<ruleset name="PMD Rules">
+    <description>
+        The DNA is Not an Acronym PMD ruleset.
+    </description>
+
+    <rule ref="rulesets/java/basic.xml" />
+    <rule ref="rulesets/java/braces.xml" />
+    <rule ref="rulesets/java/clone.xml" />
+    <rule ref="rulesets/java/codesize.xml" />
+    <rule ref="rulesets/java/coupling.xml">
+        <exclude name="LawOfDemeter" />
+        <exclude name="LoosePackageCoupling" />
+    </rule>
+    <rule ref="rulesets/java/design.xml">
+        <!-- Too many false positives. -->
+        <exclude name="UseVarargs" />
+        <!-- Causes large increases in complexity for little gain in performance. -->
+        <exclude name="AvoidSynchronizedAtMethodLevel" />
+    </rule>
+    <rule ref="rulesets/java/empty.xml" />
+    <rule ref="rulesets/java/finalizers.xml" />
+    <rule ref="rulesets/java/imports.xml" />
+    <rule ref="rulesets/java/javabeans.xml">
+        <exclude name="BeanMembersShouldSerialize" />
+    </rule>
+    <rule ref="rulesets/java/junit.xml">
+        <!-- Too many false positives. -->
+        <exclude name="JUnitTestContainsTooManyAsserts" />
+    </rule>
+    <rule ref="rulesets/java/logging-java.xml">
+        <!-- Causes large increases in complexity for little gain in performance. -->
+        <exclude name="GuardLogStatementJavaUtil" />
+    </rule>
+    <rule ref="rulesets/java/naming.xml">
+        <!-- Skipping because id (identifier), rs (ResultSet), ps (PreparedStatement) are OK, for example. -->
+        <exclude name="ShortVariable" />
+        <!-- Avoid duplication because we override the minimum property. -->
+        <exclude name="LongVariable" />
+        <!-- Avoid duplication because we override the minimum property. -->
+        <exclude name="ShortClassName" />
+    </rule>
+    <rule ref="rulesets/java/naming.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="36" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/naming.xml/ShortClassName">
+        <properties>
+            <property name="minimum" value="4" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/optimizations.xml" />
+    <rule ref="rulesets/java/strictexception.xml" />
+    <rule ref="rulesets/java/strings.xml">
+        <!-- Too many false positives. -->
+        <exclude name="AvoidDuplicateLiterals" />
+    </rule>
+    <rule ref="rulesets/java/sunsecure.xml" />
+    <rule ref="rulesets/java/typeresolution.xml" />
+    <rule ref="rulesets/java/unnecessary.xml" />
+    <rule ref="rulesets/java/unusedcode.xml" />
+
+
+</ruleset>
