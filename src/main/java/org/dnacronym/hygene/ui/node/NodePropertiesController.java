@@ -8,7 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
@@ -35,7 +35,7 @@ public final class NodePropertiesController implements Initializable {
     private GraphVisualizer graphVisualizer;
 
     @FXML
-    private AnchorPane nodePropertiesPane;
+    private Pane nodePropertiesPane;
     @FXML
     private TextField nodeId;
     @FXML
