@@ -41,6 +41,15 @@ public final class CenterPointQueryChangeEvent {
     }
 
     /**
+     * Returns the new center point of the center point query.
+     *
+     * @return the new center point of the center point query
+     */
+    public int getCenterPoint() {
+        return graphQuery.getCentre();
+    }
+
+    /**
      * Returns the new radius of the center point query.
      *
      * @return the new radius of the center point query
