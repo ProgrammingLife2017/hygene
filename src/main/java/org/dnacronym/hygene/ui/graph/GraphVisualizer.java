@@ -96,7 +96,7 @@ public final class GraphVisualizer {
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        graphDimensionsCalculator.getNeighbours().addListener((ListChangeListener<Integer>) change -> draw());
+        graphDimensionsCalculator.getObservableQueryNodes().addListener((ListChangeListener<Integer>) change -> draw());
     }
 
 
@@ -205,7 +205,7 @@ public final class GraphVisualizer {
         }
 
         clear();
-        for (final Integer nodeId : graphDimensionsCalculator.getNeighbours()) {
+        for (final Integer nodeId : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(nodeId);
             graph.iterator().visitDirectNeighbours(
                     nodeId, SequenceDirection.RIGHT,

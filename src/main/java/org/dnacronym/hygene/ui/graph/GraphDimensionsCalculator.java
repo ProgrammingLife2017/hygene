@@ -60,10 +60,8 @@ public final class GraphDimensionsCalculator {
     private int minY;
     private Dimension2D canvasDimension;
 
-    /**
-     * List of nodes that should be drawn onscreen.
-     */
-    private final ObservableList<Integer> observableNeighbours;
+    private final ObservableList<Integer> observableQueryNodes;
+    private final ReadOnlyListWrapper<Integer> readOnlyObservableNodes;
 
 
     /**
@@ -97,7 +95,8 @@ public final class GraphDimensionsCalculator {
         laneHeightProperty = new SimpleDoubleProperty(1);
         laneCountProperty = new SimpleIntegerProperty(1);
 
-        observableNeighbours = FXCollections.observableArrayList();
+        observableQueryNodes = FXCollections.observableArrayList();
+        readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
     }
 
 
@@ -151,7 +150,7 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
 
-        observableNeighbours.setAll(neighbours);
+        observableQueryNodes.setAll(neighbours);
 
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
@@ -248,22 +247,20 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
-     * smallest (leftmost) x position.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the node id in the current query with the smallest
+     * (leftmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the smallest x position in
-     * neighbours
+     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the smallest x position
      */
     public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
-     * largest (rightmost) x position.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the node id in the current query with the largest
+     * (rightmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the largest x position in
-     * neighbours
+     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the largest x position
      */
     public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
         return maxXNodeIdProperty;
@@ -297,17 +294,16 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the {@link ReadOnlyListProperty} of the neighbours of the set center id with the set range.
+     * Gets the {@link ReadOnlyListProperty} of the queried nodes.
      * <p>
      * Every time this list changes, all nodes in the previous list should be discarded and all nodes in the new list
      * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
-     * center node id or range is changed to a new value, a new canvas height and width are set, or if the graph is
-     * updated.
+     * center node id or radius is changed to a new value, new canvas dimensions are set, or if the graph is updated.
      *
-     * @return the {@link ObservableList} of the id's of the cached nodes
+     * @return the {@link ReadOnlyListProperty} of the id's of the cached nodes
      */
-    public ReadOnlyListProperty<Integer> getNeighbours() {
-        return new ReadOnlyListWrapper<>(observableNeighbours);
+    public ReadOnlyListProperty<Integer> getObservableQueryNodes() {
+        return readOnlyObservableNodes;
     }
 
     /**
