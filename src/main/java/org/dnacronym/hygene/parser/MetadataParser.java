@@ -35,11 +35,12 @@ public final class MetadataParser {
     }
 
     /**
-     * Parses the metadata of a segment (node) to a {@link NodeMetadata} object.
+     * Parses the metadata of multiple nodes with limited file IO by reading the file only once.
      *
      * @param gfa         a reference to the current {@link GfaFile}
-     * @param lineNumbers the line numbers where the nodes should be located, sorted from lowest to highest
-     * @return a map in the {@code line number => node metadata} format
+     * @param lineNumbers the line numbers where the nodes should be located, sorted from lowest to highest,
+     *                    results will be given the same key as provided in this map
+     * @return a map in the {@code provided key => node metadata} format
      * @throws ParseException if the GFA file or given line is invalid
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // The whole purpose of the loop is to instantiate objects
@@ -69,7 +70,6 @@ public final class MetadataParser {
                 throw new ParseException("Not enough parameters for segment on line " + lineNumber, e);
             }
         }
-
 
         try {
             reader.close();

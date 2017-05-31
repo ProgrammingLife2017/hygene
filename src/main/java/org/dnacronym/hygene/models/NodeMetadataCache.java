@@ -6,9 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
-import org.dnacronym.hygene.parser.MetadataParser;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 
 import java.io.UncheckedIOException;
 import java.util.Comparator;
@@ -137,10 +135,7 @@ public final class NodeMetadataCache {
     @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     private void retrieveMetadataForCachedNodesWithoutMetadata() {
         try {
-            final MetadataParser metadataParser = MetadataParserFactory.createInstance();
-
-            final Map<Integer, NodeMetadata> metadata = metadataParser.parseNodeMetadata(
-                    graph.getGfaFile(),
+            final Map<Integer, NodeMetadata> metadata = graph.getGfaFile().parseNodeMetadata(
                     cache.values().stream()
                             .filter(node -> !node.hasMetadata())
                             .sorted(Comparator.comparingInt(Node::getLineNumber))

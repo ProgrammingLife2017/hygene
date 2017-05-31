@@ -88,12 +88,24 @@ public final class GfaFile {
     /**
      * Parses a node's metadata to a {@link NodeMetadata} object.
      *
-     * @param lineNumber line number of the node within the GFA file
-     * @return a {@link NodeMetadata} object
+     * @param lineNumber  the line numbers where the nodes should be located, sorted from lowest to highest,
+     *                    results will be given the same key as provided in this map
+     * @return a map in the {@code provided key => node metadata} format
      * @throws ParseException if the node metadata cannot be parsed
      */
     public NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
         return metadataParser.parseNodeMetadata(this, lineNumber);
+    }
+
+    /**
+     * Parses a node's metadata to a {@link NodeMetadata} object.
+     *
+     * @param lineNumbers line number of the node within the GFA file
+     * @return a {@link NodeMetadata} object
+     * @throws ParseException if the node metadata cannot be parsed
+     */
+    public Map<Integer, NodeMetadata> parseNodeMetadata(final Map<Integer, Integer> lineNumbers) throws ParseException {
+        return metadataParser.parseNodeMetadata(this, lineNumbers);
     }
 
     /**
