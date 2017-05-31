@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Queue;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 
+import java.util.Set;
 import java.util.function.Consumer;
 
 
@@ -221,6 +223,15 @@ public final class GraphQuery {
                 }
             });
         }
+    }
+
+    /**
+     * Returns an immutable set of the node IDs that should be present in the graph visualization.
+     *
+     * @return an immutable set of the node IDs that should be present in the graph visualization
+     */
+    public Set<Integer> getNodeIds() {
+        return ImmutableSet.copyOf(cache.keySet());
     }
 
     /**
