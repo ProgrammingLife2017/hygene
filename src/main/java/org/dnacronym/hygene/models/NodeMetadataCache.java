@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 public final class NodeMetadataCache {
     private static final Logger LOGGER = LogManager.getLogger(NodeMetadataCache.class);
 
-    private int previousCenterPoint = -1;
-    private int previousRadius = -1;
-
     /**
      * Defines the maximum radius for which nodes will be cached.
      */
@@ -35,6 +32,9 @@ public final class NodeMetadataCache {
     private final Graph graph;
 
     private @MonotonicNonNull Thread thread;
+
+    private int previousCenterPoint = -1;
+    private int previousRadius = -1;
 
 
     /**
