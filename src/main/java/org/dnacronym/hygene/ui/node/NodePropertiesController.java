@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,7 +30,6 @@ public final class NodePropertiesController implements Initializable {
 
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
-    private GraphStore graphStore;
 
     @FXML
     private AnchorPane nodePropertiesPane;
@@ -55,7 +53,6 @@ public final class NodePropertiesController implements Initializable {
     public NodePropertiesController() {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-            setGraphStore(Hygene.getInstance().getGraphStore());
             setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize NodePropertiesController.", e);
@@ -91,8 +88,8 @@ public final class NodePropertiesController implements Initializable {
             position.setText(String.valueOf(newNode.getId()));
         });
 
-        nodePropertiesPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        nodePropertiesPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
     }
 
     /**
@@ -103,15 +100,6 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
-     * Set the {@link GraphStore} in the controller.
-     *
-     * @param graphStore {@link GraphStore} to recent in the {@link org.dnacronym.hygene.ui.graph.GraphController}
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
     }
 
     /**

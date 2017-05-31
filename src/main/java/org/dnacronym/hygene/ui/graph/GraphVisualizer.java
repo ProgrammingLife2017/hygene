@@ -26,9 +26,9 @@ import org.dnacronym.hygene.parser.ParseException;
 /**
  * A simple canvas that allows drawing of primitive shapes.
  * <p>
- * When passing a {@link Graph}, it will draw on it using JavaFX primitives, using its {@link GraphicsContext}.
- * <p>
- * {@link GraphDimensionsCalculator} is used to calculate actual node positions in view.
+ * It observes the {@link Graph} in {@link GraphDimensionsCalculator}. When the list of nodes qeuried nodes changes
+ * in {@link GraphDimensionsCalculator}, then it will clear the {@link Canvas} and draw the new {@link Node}s on the
+ * {@link Canvas} using a {@link GraphicsContext}.
  *
  * @see Canvas
  * @see GraphicsContext
@@ -47,6 +47,7 @@ public final class GraphVisualizer {
     private static final double EDGE_OPACITY_BETA = 4.25;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
+    private Graph graph;
 
     private final ObjectProperty<Node> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
@@ -73,18 +74,15 @@ public final class GraphVisualizer {
      * class will also prompt a redraw if the {@link org.dnacronym.hygene.parser.GfaFile} in {@link GraphStore} is not
      * {@code null}.
      *
-     * @param graphStore                {@link GraphStore} which is observed by this class
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      */
-    public GraphVisualizer(final GraphStore graphStore, final GraphDimensionsCalculator graphDimensionsCalculator) {
+    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
 
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
 
         getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
-
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -96,6 +94,8 @@ public final class GraphVisualizer {
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
+        graphDimensionsCalculator.getGraphProperty().addListener((observable, oldValue, newValue) ->
+                setGraph(newValue));
         graphDimensionsCalculator.getObservableQueryNodes().addListener((ListChangeListener<Integer>) change -> draw());
     }
 
@@ -248,11 +248,13 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Sets the {@link Graph} reference.
+     * Set the {@link Graph} for use in the {@link GraphVisualizer}.
+     * <p>
+     * The {@link Graph} is used to get node colors.
      *
-     * @param graph graph to set in the {@link GraphVisualizer}
+     * @param graph the {@link Graph} for use in the {@link GraphVisualizer}
      */
-    private void setGraph(final Graph graph) {
+    void setGraph(final Graph graph) {
         this.graph = graph;
 
         if (nodeMetadataCache != null) {

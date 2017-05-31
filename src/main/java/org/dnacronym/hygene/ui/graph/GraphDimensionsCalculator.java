@@ -2,12 +2,15 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
@@ -31,6 +34,7 @@ import java.util.List;
  * @see GraphDimensionsCalculator
  * @see GraphQuery
  */
+@SuppressWarnings("PMD.TooManyFields") // This class is tightly coupled, and does not need to be divided further.
 public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
@@ -52,7 +56,7 @@ public final class GraphDimensionsCalculator {
     /**
      * The {@link Graph} used to get the unscaled coordinates of nodes.
      */
-    private Graph graph;
+    private final ObjectProperty<Graph> graphProperty;
     private GraphQuery graphQuery;
 
     private int minX;
@@ -66,8 +70,10 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Create a new instance of {@link GraphDimensionsCalculator}.
+     *
+     * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
-    public GraphDimensionsCalculator() {
+    public GraphDimensionsCalculator(final GraphStore graphStore) {
         minXNodeIdProperty = new SimpleIntegerProperty(1);
         maxXNodeIdProperty = new SimpleIntegerProperty(1);
 
@@ -91,12 +97,15 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty = new SimpleIntegerProperty(1);
 
-        nodeHeightProperty = new SimpleDoubleProperty();
+        nodeHeightProperty = new SimpleDoubleProperty(1);
         laneHeightProperty = new SimpleDoubleProperty(1);
         laneCountProperty = new SimpleIntegerProperty(1);
 
         observableQueryNodes = FXCollections.observableArrayList();
         readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
+
+        graphProperty = new SimpleObjectProperty<>();
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
     }
 
 
@@ -114,6 +123,7 @@ public final class GraphDimensionsCalculator {
      * <p>If the graph or canvas has not been set, this method does nothing.
      */
     private void calculate() {
+        final Graph graph = graphProperty.get();
         if (graph == null || canvasDimension == null) {
             return;
         }
@@ -169,7 +179,7 @@ public final class GraphDimensionsCalculator {
      * @param graph the {@link Graph} for use by calculations
      */
     void setGraph(final Graph graph) {
-        this.graph = graph;
+        graphProperty.set(graph);
         graphQuery = new GraphQuery(graph);
 
         nodeCountProperty.set(graph.getNodeArrays().length);
@@ -177,6 +187,17 @@ public final class GraphDimensionsCalculator {
         radiusProperty.set(DEFAULT_RADIUS);
 
         calculate(); // Force a recalculation
+    }
+
+    /**
+     * Gets the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of the
+     * {@link GraphDimensionsCalculator}.
+     *
+     * @return the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of
+     * {@link GraphDimensionsCalculator}
+     */
+    public ReadOnlyObjectProperty<Graph> getGraphProperty() {
+        return graphProperty;
     }
 
     /**
@@ -199,6 +220,7 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     double computeXPosition(final int nodeId) {
+        final Graph graph = graphProperty.get();
         final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId)
                 + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
@@ -221,7 +243,7 @@ public final class GraphDimensionsCalculator {
      * @return the absolute y position of a node within the current canvas
      */
     double computeYPosition(final int nodeId) {
-        final int yPosition = graph.getUnscaledYPosition(nodeId);
+        final int yPosition = graphProperty.get().getUnscaledYPosition(nodeId);
         return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2
                 - nodeHeightProperty.get() / 2;
     }
@@ -243,7 +265,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     double computeWidth(final int nodeId) {
-        return (double) graph.getLength(nodeId) / (maxX - minX) * canvasDimension.getWidth();
+        return (double) graphProperty.get().getLength(nodeId) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
@@ -320,7 +342,7 @@ public final class GraphDimensionsCalculator {
      * {@link org.dnacronym.hygene.models.Node} id.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a range check to make sure the
-     * value remains in the range {@code [0, node count]}.
+     * value remains in the range {@code [0, node count - 1]}.
      *
      * @return property which decides the current center {@link org.dnacronym.hygene.models.Node} id
      */

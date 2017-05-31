@@ -3,8 +3,8 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="graphPane" minWidth="0" minHeight="0"
-            onMouseDragged="#onGraphPaneMouseDragged" onMousePressed="#onGraphPaneMousePressed"
-            onMouseReleased="#onGraphPaneMouseReleased" onScroll="#onScroll" onScrollFinished="#onScrollFinished"
+            onMouseDragged="#onGraphPaneMouseDragged" onMouseDragEntered="#onGraphPaneMouseDragEntered"
+            onMouseReleased="#onGraphPaeMouseReleased" onScroll="#onScroll" onScrollFinished="#onScrollFinished"
             onScrollStarted="#onScrollStarted" xmlns="http://javafx.com/javafx/8.0.102"
             fx:controller="org.dnacronym.hygene.ui.graph.GraphController">
     <Canvas fx:id="graphCanvas" height="400.0" width="400.0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0.0"/>

@@ -21,7 +21,6 @@ public final class GraphSliderController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphSliderController.class);
 
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    private GraphStore graphStore;
 
     @FXML
     private ScrollBar graphScrollBar;
@@ -33,7 +32,6 @@ public final class GraphSliderController implements Initializable {
     public GraphSliderController() {
         try {
             setGraphDimensionCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
-            setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize GraphSliderController.", e);
             new ErrorDialogue(e).show();
@@ -52,8 +50,8 @@ public final class GraphSliderController implements Initializable {
                 graphDimensionsCalculator.getMaxXNodeIdProperty(),
                 graphDimensionsCalculator.getMinXNodeIdProperty()));
 
-        graphScrollBar.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        graphScrollBar.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        graphScrollBar.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        graphScrollBar.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
     }
 
     /**
@@ -65,14 +63,5 @@ public final class GraphSliderController implements Initializable {
      */
     void setGraphDimensionCalculator(final GraphDimensionsCalculator graphDimensionCalculator) {
         this.graphDimensionsCalculator = graphDimensionCalculator;
-    }
-
-    /**
-     * Set the {@link GraphStore} in the controller.
-     *
-     * @param graphStore {@link GraphStore} to store in the {@link GraphController}
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
     }
 }

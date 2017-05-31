@@ -22,7 +22,6 @@ public final class GraphNavigationController implements Initializable {
     private static final int ZOOM_AMOUNT = 10;
 
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    private GraphStore graphStore;
 
     @FXML
     private StackPane graphNavigationButtons;
@@ -34,7 +33,6 @@ public final class GraphNavigationController implements Initializable {
     public GraphNavigationController() {
         try {
             setGraphMovementCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
-            setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to instantiate " + getClass().getSimpleName() + ".", e);
         }
@@ -43,8 +41,8 @@ public final class GraphNavigationController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        graphNavigationButtons.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
-        graphNavigationButtons.managedProperty().bind(graphStore.getGfaFileProperty().isNotNull());
+        graphNavigationButtons.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        graphNavigationButtons.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
     }
 
     /**
@@ -54,15 +52,6 @@ public final class GraphNavigationController implements Initializable {
      */
     void setGraphMovementCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
-    }
-
-    /**
-     * Sets the {@link GraphStore} for use by the controller.
-     *
-     * @param graphStore the {@link GraphStore} for use by the controller
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
     }
 
     /**

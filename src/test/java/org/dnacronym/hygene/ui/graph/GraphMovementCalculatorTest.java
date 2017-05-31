@@ -38,7 +38,7 @@ final class GraphMovementCalculatorTest {
 
     @Test
     void testDraggingRight() {
-        graphMovementCalculator.onMousePressed(0);
+        graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(-100);
 
         assertThat(centerNodeIdProperty.get()).isEqualTo(100);
@@ -46,7 +46,7 @@ final class GraphMovementCalculatorTest {
 
     @Test
     void testDraggingLeft() {
-        graphMovementCalculator.onMousePressed(0);
+        graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(100);
 
         assertThat(centerNodeIdProperty.get()).isEqualTo(-100);

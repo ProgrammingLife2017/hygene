@@ -52,7 +52,7 @@ public final class GraphMovementCalculator {
      *
      * @param x x as offset when dragging
      */
-    public void onMousePressed(final double x) {
+    public void onMouseDragEntered(final double x) {
         centerX = x;
         dragging = false;
     }
@@ -61,7 +61,7 @@ public final class GraphMovementCalculator {
      * The new x every time the mouse is dragged.
      * <p>
      * If the drag direction changes, and the user is currently dragging, it resets the drag by calling
-     * {@link #onMousePressed(double)} again.
+     * {@link #onMouseDragEntered(double)} again.
      * <p>
      * If not, the method checks if the user is dragging right or left, and makes sure that the dragging variable is set
      * to {@code true}. It also stores the current {@code x} position for the next time this method is called, which can
@@ -73,7 +73,7 @@ public final class GraphMovementCalculator {
     public void onMouseDragged(final double x) {
         final boolean startedDraggingOppositeDirection = lastX < x && draggingRight || lastX > x && !draggingRight;
         if (dragging && startedDraggingOppositeDirection) {
-            onMousePressed(x);
+            onMouseDragEntered(x);
         }
 
         draggingRight = lastX > x;
