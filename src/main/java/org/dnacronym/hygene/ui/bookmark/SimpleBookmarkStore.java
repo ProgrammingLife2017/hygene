@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.bookmark;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +29,7 @@ public final class SimpleBookmarkStore {
 
     private final List<SimpleBookmark> simpleBookmarks;
     private final ObservableList<SimpleBookmark> observableSimpleBookmarks;
+    private final BooleanProperty tableVisibleProperty;
 
     private FileBookmarks fileBookmarks;
 
@@ -61,8 +64,19 @@ public final class SimpleBookmarkStore {
                 LOGGER.error("Unable to load bookmarks from file.", e);
             }
         });
+
+        tableVisibleProperty = new SimpleBooleanProperty(true);
     }
 
+
+    /**
+     * The {@link BooleanProperty} which decides the visibility of the table.
+     *
+     * @return {@link BooleanProperty} which decides the visibility of the table
+     */
+    public BooleanProperty getTableVisibleProperty() {
+        return tableVisibleProperty;
+    }
 
     /**
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.

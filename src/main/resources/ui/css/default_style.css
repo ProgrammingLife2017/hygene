@@ -1,0 +1,6 @@
+#hideButton {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
