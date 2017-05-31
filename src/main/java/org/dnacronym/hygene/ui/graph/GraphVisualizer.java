@@ -13,11 +13,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.models.SequenceDirection;
+import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.List;
 
@@ -32,6 +37,8 @@ import java.util.List;
  * @see GraphicsContext
  */
 public final class GraphVisualizer {
+    private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
+
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final double DEFAULT_DASH_LENGTH = 10;
@@ -58,6 +65,7 @@ public final class GraphVisualizer {
 
     private final IntegerProperty nodeCountProperty;
     private Graph graph;
+    private NodeMetadataCache nodeMetadataCache;
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -252,6 +260,13 @@ public final class GraphVisualizer {
      */
     private void setGraph(final Graph graph) {
         this.graph = graph;
+
+        if (nodeMetadataCache != null) {
+            HygeneEventBus.getInstance().unregister(nodeMetadataCache);
+        }
+        nodeMetadataCache = new NodeMetadataCache(graph);
+        HygeneEventBus.getInstance().register(nodeMetadataCache);
+
         clear();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
@@ -277,7 +292,7 @@ public final class GraphVisualizer {
             selectedEdgeProperty.setValue(null);
 
             rTree.find(event.getX(), event.getY(),
-                    nodeId -> selectedNodeProperty.setValue(graph.getNode(nodeId)),
+                    this::setSelectedNode,
                     (fromNodeId, toNodeId) -> graph.getNode(fromNodeId).getOutgoingEdges().stream()
                             .filter(edge -> edge.getTo() == toNodeId)
                             .findFirst()
@@ -292,7 +307,11 @@ public final class GraphVisualizer {
      * @param nodeId node id of the new selected {@link Node}
      */
     public void setSelectedNode(final int nodeId) {
-        selectedNodeProperty.set(graph.getNode(nodeId));
+        try {
+            selectedNodeProperty.set(nodeMetadataCache.getOrRetrieve(nodeId));
+        } catch (final ParseException e) {
+            LOGGER.info("Metadata of selected node " + nodeId + " could not be parsed.");
+        }
     }
 
     /**
