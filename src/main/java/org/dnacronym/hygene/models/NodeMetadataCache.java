@@ -8,6 +8,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.parser.ParseException;
 
+import java.io.UncheckedIOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -111,6 +112,7 @@ public final class NodeMetadataCache {
      *
      * @param nodeIds set of node ids that should be in the cache after executing this method
      */
+    @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     private void addNewItemsToCache(final Set<Integer> nodeIds) {
         for (final Integer nodeId : nodeIds) {
             if (Thread.currentThread().isInterrupted()) {
@@ -125,6 +127,8 @@ public final class NodeMetadataCache {
                 retrieve(nodeId);
             } catch (final ParseException e) {
                 LOGGER.warn("Node metadata of node " + nodeId + " could not be retrieved.", e);
+            } catch (UncheckedIOException e) {
+                LOGGER.warn("Retrieving metadata of node " + nodeId + " was interrupted.");
             }
         }
     }
