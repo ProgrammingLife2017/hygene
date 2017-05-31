@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Map;
 
 
 /**
@@ -31,7 +30,6 @@ public final class GfaFile {
     private final NewGfaParser gfaParser;
     private final MetadataParser metadataParser;
     private @MonotonicNonNull Graph graph;
-    private @MonotonicNonNull Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
 
 
     /**
@@ -64,8 +62,6 @@ public final class GfaFile {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
                 LOGGER.info("Finished parsing");
-
-                nodeIds = gfaParser.getNodeIds();
 
                 LOGGER.info("Start fafosp x");
                 graph.fafosp().horizontal();
@@ -131,19 +127,6 @@ public final class GfaFile {
             throw new IllegalStateException("Cannot get the graph before parsing the file");
         }
         return graph;
-    }
-
-    /**
-     * Returns the mapping of node names to IDs in the GFA file.
-     *
-     * @return the mapping of node names to IDs
-     * @throws IllegalStateException if the file is not yet parsed to a graph
-     */
-    public Map<String, Integer> getNodeIds() {
-        if (nodeIds == null) {
-            throw new IllegalStateException("Cannot get the node ID mapping before parsing the file");
-        }
-        return nodeIds;
     }
 
     /**

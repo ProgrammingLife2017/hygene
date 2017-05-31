@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.AbstractMap;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
@@ -124,17 +123,6 @@ final class GfaFileTest {
 
         verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
-    }
-
-    @Test
-    void testGetNodeIds() throws ParseException {
-        currentFileName = GFA_TEST_FILE;
-        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-
-        gfaFile.parse(progress -> {
-        });
-
-        assertThat(gfaFile.getNodeIds()).contains(new AbstractMap.SimpleEntry<>("11", 1));
     }
 
     private String bufferedReaderToString(final BufferedReader reader) {
