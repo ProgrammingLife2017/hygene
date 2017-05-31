@@ -105,7 +105,7 @@ public abstract class AbstractSettingsController implements Initializable {
     /**
      * Gets the {@link GraphDimensionsCalculator} for use by the controller.
      *
-     * @return the {@link GraphDimensionsCalculator} for use by the controller.
+     * @return the {@link GraphDimensionsCalculator} for use by the controller
      */
     final GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;

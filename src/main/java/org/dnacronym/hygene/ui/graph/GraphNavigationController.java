@@ -29,7 +29,7 @@ public final class GraphNavigationController implements Initializable {
 
 
     /**
-     * Create instance of {@link GraphNavigationController}.
+     * Creates an instance of {@link GraphNavigationController}.
      */
     public GraphNavigationController() {
         try {

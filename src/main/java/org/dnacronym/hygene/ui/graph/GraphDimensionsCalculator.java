@@ -19,10 +19,10 @@ import java.util.List;
 
 
 /**
- * Performs calculations for determining node/graph positions and dimensions.
+ * Performs calculations for determining node positions and dimensions onscreen.
  * <p>
  * These positions are used by the {@link GraphVisualizer} to draw nodes onscreen. The positions are determined by the
- * set canvas width and height, set center node id and set radius.
+ * set canvas dimensions, center node id and radius.
  * <p>
  * Every time the center node id is updated, or the range, a new query is performed to update the neighbours list. This
  * list represents the nodes that should be drawn onscreen. Node coordinates are determined as to make sure the nodes
@@ -102,19 +102,17 @@ public final class GraphDimensionsCalculator {
 
 
     /**
-     * Calculate the following values.
-     * <p>
-     * <ul>
-     * <li> Neighbours list
-     * <li> Minimum unscaled x
-     * <li> Maximum unscaled y
-     * <li> Minimum unscaled y
-     * <li> Lane count property
-     * <li> Lane height property
-     * <li> On screen node count property
+     * Calculates the following values.
+     * <p><ul>
+     * <li>Neighbours list
+     * <li>Minimum unscaled x
+     * <li>Maximum unscaled y
+     * <li>Minimum unscaled y
+     * <li>Lane count property
+     * <li>Lane height property
+     * <li>On screen node count property
      * </ul>
-     * <p>
-     * If the graph or canvas has not been set, this method does nothing.
+     * <p>If the graph or canvas has not been set, this method does nothing.
      */
     private void calculate() {
         if (graph == null || canvasDimension == null) {
@@ -179,7 +177,7 @@ public final class GraphDimensionsCalculator {
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
         radiusProperty.set(DEFAULT_RADIUS);
 
-        calculate(); // force a recalculation
+        calculate(); // Force a recalculation
     }
 
     /**
@@ -250,7 +248,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
      * smallest (leftmost) x position.
      *
      * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the smallest x position in
@@ -261,7 +259,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the node in the current neighbours list with the
      * largest (rightmost) x position.
      *
      * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the largest x position in
@@ -272,7 +270,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link ReadOnlyIntegerProperty} which describes the amount of lanes.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the amount of lanes.
      *
      * @return the {@link ReadOnlyIntegerProperty} which describes the amount of lanes
      */
@@ -281,7 +279,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link ReadOnlyDoubleProperty} which describes the height of lanes.
+     * Gets the {@link ReadOnlyDoubleProperty} which describes the height of lanes.
      *
      * @return the {@link ReadOnlyDoubleProperty} which describes the height of lanes
      */
@@ -290,7 +288,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Return the {@link ReadOnlyIntegerProperty} which describes the amount of nodes in the set graph.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the amount of nodes in the set graph.
      *
      * @return the {@link ReadOnlyIntegerProperty} which describes the amount of nodes in the set graph
      */
@@ -299,21 +297,21 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Get the {@link ReadOnlyListProperty} of the neighbours of the set center id with the set range.
+     * Gets the {@link ReadOnlyListProperty} of the neighbours of the set center id with the set range.
      * <p>
      * Every time this list changes, all nodes in the previous list should be discarded and all nodes in the new list
      * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
-     * center node id or range is changed to a new value, a new canvas height and width are set or if the graph is
+     * center node id or range is changed to a new value, a new canvas height and width are set, or if the graph is
      * updated.
      *
-     * @return the {@link ObservableList} of the neighbours of the set neighbours set range away
+     * @return the {@link ObservableList} of the id's of the cached nodes
      */
     public ReadOnlyListProperty<Integer> getNeighbours() {
         return new ReadOnlyListWrapper<>(observableNeighbours);
     }
 
     /**
-     * Returns the {@link DoubleProperty} which describes the height of nodes.
+     * Gets the {@link DoubleProperty} which describes the height of nodes.
      *
      * @return the {@link DoubleProperty} which describes the height of nodes
      */
@@ -322,7 +320,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link IntegerProperty} which determines the current center
+     * Gets the {@link IntegerProperty} which determines the current center
      * {@link org.dnacronym.hygene.models.Node} id.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a range check to make sure the
@@ -335,7 +333,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Returns the {@link IntegerProperty} which determines the range to draw around the center
+     * Gets the {@link IntegerProperty} which determines the range to draw around the center
      * {@link org.dnacronym.hygene.models.Node}.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a check to make sure that the

@@ -93,8 +93,7 @@ public final class GraphMovementCalculator {
     /**
      * When the user scrolls.
      * <p>
-     * A positive delta corresponds to zooming in, and a negative delta to to zooming out. The user can zoom in no
-     * more than 1 range.
+     * A positive delta corresponds to zooming in, and a negative delta to to zooming out.
      *
      * @param deltaY delta in the y direction
      */

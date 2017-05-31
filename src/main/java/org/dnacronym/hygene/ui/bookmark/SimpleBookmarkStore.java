@@ -47,11 +47,10 @@ public final class SimpleBookmarkStore {
      *
      * @param graphStore                the {@link GraphStore} to be observed by this class
      * @param graphVisualizer           the {@link GraphVisualizer} to be used by this class
-     * @param graphDimensionsCalculator the {@link GraphVisualizer} to be used by this class
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} to be used by this class
      * @see SimpleBookmark
      */
-    public SimpleBookmarkStore(final GraphStore graphStore,
-                               final GraphVisualizer graphVisualizer,
+    public SimpleBookmarkStore(final GraphStore graphStore, final GraphVisualizer graphVisualizer,
                                final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.graphVisualizer = graphVisualizer;
