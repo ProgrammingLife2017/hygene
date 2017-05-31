@@ -127,7 +127,7 @@ public final class NodeMetadataCache {
                 retrieve(nodeId);
             } catch (final ParseException e) {
                 LOGGER.warn("Node metadata of node " + nodeId + " could not be retrieved.", e);
-            } catch (UncheckedIOException e) {
+            } catch (final UncheckedIOException e) {
                 LOGGER.warn("Retrieving metadata of node " + nodeId + " was interrupted.");
             }
         }
