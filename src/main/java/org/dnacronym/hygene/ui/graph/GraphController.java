@@ -134,7 +134,7 @@ public final class GraphController implements Initializable {
      * @param mouseEvent {@link MouseEvent} associated with the event
      */
     @FXML
-    void onGraphPaeMouseReleased(final MouseEvent mouseEvent) {
+    void onGraphPaneMouseReleased(final MouseEvent mouseEvent) {
         ((Node) mouseEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
 
         mouseEvent.consume();

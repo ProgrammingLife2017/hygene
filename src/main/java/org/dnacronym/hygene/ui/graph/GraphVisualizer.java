@@ -47,7 +47,6 @@ public final class GraphVisualizer {
     private static final double EDGE_OPACITY_BETA = 4.25;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
-    private Graph graph;
 
     private final ObjectProperty<Node> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
