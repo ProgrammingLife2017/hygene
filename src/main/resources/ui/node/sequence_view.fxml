@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="sequenceViewPane" maxWidth="Infinity" prefHeight="210.0" prefWidth="850.0"
-            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.node.SequenceController">
     <children>
         <Canvas fx:id="sequenceCanvas" height="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
@@ -80,7 +80,7 @@
                     </tooltip>
                 </TextField>
                 <Button fx:id="setOffsetButton" mnemonicParsing="false" onAction="#setOffsetAction" prefWidth="70.0"
-                        text="&lt; Set" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                        text="Set &gt;" GridPane.columnIndex="9" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Set the base offset to the current value in the field."/>
                     </tooltip>
@@ -90,7 +90,7 @@
                 <TextArea fx:id="sequenceTextArea" editable="false" maxWidth="Infinity" prefHeight="200.0"
                           prefWidth="200.0" wrapText="true" GridPane.columnIndex="10" GridPane.rowSpan="2"/>
                 <Button fx:id="getTextAreaOffsetAction" mnemonicParsing="false" onAction="#getTextAreaOffsetAction"
-                        prefWidth="70.0" text="Set &gt;" GridPane.columnIndex="9">
+                        prefWidth="70.0" text="&lt; Set" GridPane.columnIndex="9">
                     <tooltip>
                         <Tooltip text="Set offset to base selected in text area."/>
                     </tooltip>
