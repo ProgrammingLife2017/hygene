@@ -75,29 +75,7 @@ public final class NodePropertiesController implements Initializable {
                 = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
         neighbourVisualizer.setCanvas(neighbourCanvas);
 
-        selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
-            if (newNode == null) {
-                nodeId.clear();
-                sequencePreview.clear();
-                leftNeighbours.clear();
-                rightNeighbours.clear();
-                position.clear();
-                return;
-            }
-
-            nodeId.setText(String.valueOf(newNode.getId()));
-
-            try {
-                sequencePreview.setText(String.valueOf(newNode.retrieveMetadata().getSequence()));
-            } catch (final ParseException e) {
-                LOGGER.error("Unable to parse sequence of node %s.", newNode, e);
-            }
-
-            leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
-            rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
-
-            position.setText(String.valueOf(newNode.getId()));
-        });
+        selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
@@ -132,6 +110,45 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
+    }
+
+    /**
+     * Updates the fields that describe the properties of the {@link Node}.
+     * <p>
+     * If this {@link Node} is {@code null}, the fields are simply cleared.
+     *
+     * @param node the {@link Node} whose properties should be displayed
+     */
+    private void updateFields(final Node node) {
+        if (node == null) {
+            clearNodeFields();
+            return;
+        }
+
+        nodeId.setText(String.valueOf(node.getId()));
+
+        try {
+            sequencePreview.setText(String.valueOf(node.retrieveMetadata().getSequence()));
+        } catch (final ParseException e) {
+            LOGGER.error("Unable to parse sequence of node %s.", node, e);
+        }
+
+        leftNeighbours.setText(String.valueOf(node.getNumberOfIncomingEdges()));
+        rightNeighbours.setText(String.valueOf(node.getNumberOfOutgoingEdges()));
+
+        position.setText(String.valueOf(node.getId()));
+    }
+
+
+    /**
+     * Clear all text fields used to describe node properties.
+     */
+    private void clearNodeFields() {
+        nodeId.clear();
+        sequencePreview.clear();
+        leftNeighbours.clear();
+        rightNeighbours.clear();
+        position.clear();
     }
 
     /**

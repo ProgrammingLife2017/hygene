@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -69,38 +69,13 @@ public final class SequenceController implements Initializable {
             sequenceTextArea.selectPositionCaret(newValue.intValue() + 1);
         });
 
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                lengthField.clear();
-                sequenceTextArea.clear();
-                return;
-            }
+        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
 
-            lengthField.setText(String.valueOf(newValue.getSequenceLength()));
-            setOffset.setPromptText("0 - " + (newValue.getSequenceLength() - 1));
-
-            try {
-                final String sequence = newValue.retrieveMetadata().getSequence();
-                sequenceVisualizer.getSequenceProperty().set(sequence);
-                sequenceTextArea.setText(sequence);
-            } catch (ParseException e) {
-                LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", newValue, e);
-            }
-        });
-
-        final BooleanBinding visible = Bindings.and(
-                Bindings.isNotNull(graphVisualizer.getSelectedNodeProperty()),
-                sequenceVisualizer.getVisibleProperty());
-        sequenceViewPane.visibleProperty().
-
-                bind(visible);
-        sequenceViewPane.managedProperty().
-
-                bind(visible);
-
-        sequenceCanvas.widthProperty().
-
-                bind(Bindings.subtract(sequenceViewPane.widthProperty(), CANVAS_PADDING * 2));
+        final BooleanBinding visible = graphVisualizer.getSelectedNodeProperty().isNotNull()
+                .and(sequenceVisualizer.getVisibleProperty());
+        sequenceViewPane.visibleProperty().bind(visible);
+        sequenceViewPane.managedProperty().bind(visible);
+        sequenceCanvas.widthProperty().bind(sequenceViewPane.widthProperty().subtract(CANVAS_PADDING * 2));
     }
 
     /**
@@ -119,6 +94,32 @@ public final class SequenceController implements Initializable {
      */
     void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
         this.sequenceVisualizer = sequenceVisualizer;
+    }
+
+    /**
+     * Updates the fields that describe the sequence of the {@link Node}.
+     * <p>
+     * If this {@link Node} is {@code null}, the fields are simply cleared.
+     *
+     * @param node the {@link Node} whose sequence properties should be displayed
+     */
+    private void updateFields(final Node node) {
+        if (node == null) {
+            lengthField.clear();
+            sequenceTextArea.clear();
+            return;
+        }
+
+        lengthField.setText(String.valueOf(node.getSequenceLength()));
+        setOffset.setPromptText("0 - " + (node.getSequenceLength() - 1));
+
+        try {
+            final String sequence = node.retrieveMetadata().getSequence();
+            sequenceVisualizer.getSequenceProperty().set(sequence);
+            sequenceTextArea.setText(sequence);
+        } catch (ParseException e) {
+            LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", node, e);
+        }
     }
 
     /**
