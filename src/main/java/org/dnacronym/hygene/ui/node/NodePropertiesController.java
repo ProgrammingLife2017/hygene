@@ -119,7 +119,7 @@ public final class NodePropertiesController implements Initializable {
      *
      * @param node the {@link Node} whose properties should be displayed
      */
-    private void updateFields(final Node node) {
+    void updateFields(final Node node) {
         if (node == null) {
             clearNodeFields();
             return;

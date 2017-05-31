@@ -70,10 +70,7 @@ public final class BookmarkCreateController implements Initializable {
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
-        baseOffset.textProperty().addListener((observable, oldValue, newValue) -> {
-            sequenceVisualizer.setOffset(Integer.parseInt(newValue));
-            baseOffset.setText(sequenceVisualizer.getOffsetProperty().asString().get());
-        });
+        baseOffset.textProperty().addListener((observable, oldValue, newValue) -> updateBaseOffset(newValue));
         sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
                 baseOffset.setText(String.valueOf(newValue)));
 
@@ -120,6 +117,25 @@ public final class BookmarkCreateController implements Initializable {
      */
     void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
         this.simpleBookmarkStore = simpleBookmarkStore;
+    }
+
+    /**
+     * Update the current base offset in the sequence visualizer and the base offset {@link TextField}.
+     * <p>
+     * If the base offset string is {@code null} or empty, the offset in the {@link SequenceVisualizer} is set to 0 and
+     * the text of the base offset {@link TextField} is set to "0".
+     *
+     * @param offset the new offset string
+     */
+    void updateBaseOffset(final String offset) {
+        if (offset == null || offset.isEmpty()) {
+            sequenceVisualizer.setOffset(0);
+            baseOffset.setText("0");
+            return;
+        }
+
+        sequenceVisualizer.setOffset(Integer.parseInt(offset));
+        baseOffset.setText(sequenceVisualizer.getOffsetProperty().asString().get());
     }
 
     /**

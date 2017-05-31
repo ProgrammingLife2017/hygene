@@ -103,7 +103,7 @@ public final class SequenceVisualizer {
      *
      * @return {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas
      */
-    public ReadOnlyIntegerProperty onScreenBasesCountProperty() {
+    public ReadOnlyIntegerProperty getOnScreenBasesCountProperty() {
         return onScreenBasesProperty;
     }
 
@@ -200,7 +200,7 @@ public final class SequenceVisualizer {
                 break;
             }
 
-            String base = String.valueOf(sequenceProperty.get().charAt(i));
+            final String base = String.valueOf(sequenceProperty.get().charAt(i));
 
             drawSquare(base, topRightX, VERTICAL_GAP, Color.BLUE, Color.BLACK);
             drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT, Color.DARKBLUE, Color.BLACK);

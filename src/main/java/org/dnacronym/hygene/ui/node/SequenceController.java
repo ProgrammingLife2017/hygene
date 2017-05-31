@@ -103,10 +103,11 @@ public final class SequenceController implements Initializable {
      *
      * @param node the {@link Node} whose sequence properties should be displayed
      */
-    private void updateFields(final Node node) {
+    void updateFields(final Node node) {
         if (node == null) {
             lengthField.clear();
             sequenceTextArea.clear();
+            sequenceVisualizer.getSequenceProperty().set("");
             return;
         }
 
@@ -140,7 +141,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void incrementLargeAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.incrementOffset(sequenceVisualizer.onScreenBasesCountProperty().get());
+        sequenceVisualizer.incrementOffset(sequenceVisualizer.getOnScreenBasesCountProperty().get());
         actionEvent.consume();
     }
 
@@ -162,7 +163,7 @@ public final class SequenceController implements Initializable {
      */
     @FXML
     void decrementLargeAction(final ActionEvent actionEvent) {
-        sequenceVisualizer.decrementOffset(sequenceVisualizer.onScreenBasesCountProperty().get());
+        sequenceVisualizer.decrementOffset(sequenceVisualizer.getOnScreenBasesCountProperty().get());
         actionEvent.consume();
     }
 
