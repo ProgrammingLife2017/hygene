@@ -9,11 +9,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
@@ -56,6 +60,18 @@ final class NodeMetadataCacheTest {
 
         // Verify that we are not getting metadata via traditional metadata retriever
         verify(metadataParser, never()).parseNodeMetadata(eq(graph.getGfaFile()), anyInt());
+    }
+
+    @Test
+    void testThatNodeMetadataIsCachedOnlyOnce() throws ParseException, InterruptedException {
+        graphQuery.query(2, 0);
+        graphQuery.query(2, 0);
+
+        nodeMetaDatacache.getThread().join();
+
+        assertThat(nodeMetaDatacache.has(2)).isTrue();
+
+        verify(metadataParser, times(1)).parseNodeMetadata(eq(graph.getGfaFile()), any(Map.class));
     }
 
     @Test

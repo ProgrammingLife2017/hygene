@@ -130,21 +130,23 @@ public final class NodeMetadataCache {
     }
 
     /**
-     * Retrieve metadata for cached nodes that have no metadata set yet.
+     * Retrieves metadata for cached nodes that have no metadata set yet.
      */
     @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     private void retrieveMetadataForCachedNodesWithoutMetadata() {
         try {
+            final Map<Integer, Integer> sortedNodesWithoutMetadata = cache.values().stream()
+                    .filter(node -> !node.hasMetadata())
+                    .sorted(Comparator.comparingInt(Node::getLineNumber))
+                    .collect(Collectors.toMap(
+                            Node::getId,
+                            Node::getLineNumber,
+                            (oldValue, newValue) -> oldValue,
+                            LinkedHashMap::new
+                    ));
+
             final Map<Integer, NodeMetadata> metadata = graph.getGfaFile().parseNodeMetadata(
-                    cache.values().stream()
-                            .filter(node -> !node.hasMetadata())
-                            .sorted(Comparator.comparingInt(Node::getLineNumber))
-                            .collect(Collectors.toMap(
-                                    Node::getId,
-                                    Node::getLineNumber,
-                                    (oldValue, newValue) -> oldValue,
-                                    LinkedHashMap::new
-                            ))
+                    sortedNodesWithoutMetadata
             );
 
             metadata.entrySet().stream().forEach(entry -> {
@@ -156,7 +158,7 @@ public final class NodeMetadataCache {
         } catch (final ParseException e) {
             LOGGER.warn("Node metadata could not be retrieved.", e);
         } catch (final UncheckedIOException e) {
-            LOGGER.warn("Retrieving metadata of nodes was interrupted.");
+            LOGGER.info("Retrieving metadata of nodes was interrupted.");
         }
     }
 
