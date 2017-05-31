@@ -21,6 +21,7 @@ import java.util.StringTokenizer;
 public final class MetadataParser {
     private int readerPosition;
 
+
     /**
      * Parses the metadata of a segment (node) to a {@link NodeMetadata} object.
      *
@@ -30,8 +31,11 @@ public final class MetadataParser {
      * @throws ParseException if the GFA file or given line is invalid
      */
     public NodeMetadata parseNodeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
-        return Optional.ofNullable(parseNodeMetadata(gfa, ImmutableMap.of(0, lineNumber)).get(0))
-                .orElseThrow(() -> new ParseException("The node at line " + lineNumber + " could not be found"));
+        final NodeMetadata metadata = parseNodeMetadata(gfa, ImmutableMap.of(0, lineNumber)).get(0);
+
+        return Optional.ofNullable(metadata).orElseThrow(
+                () -> new ParseException("The node at line " + lineNumber + " could not be found")
+        );
     }
 
     /**
@@ -73,7 +77,7 @@ public final class MetadataParser {
 
         try {
             reader.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ParseException("Reader could not be closed.", e);
         }
 
@@ -168,7 +172,7 @@ public final class MetadataParser {
     }
 
     /**
-     * Creates new reader for a GFA file and resets the reader position.
+     * Creates a new reader for a GFA file and resets the reader position.
      *
      * @param gfaFile a reference to the current {@link GfaFile}
      * @return {@link BufferedReader} for a {@link GfaFile}
