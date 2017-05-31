@@ -48,5 +48,4 @@ public final class CenterPointQueryChangeEvent {
     public int getRadius() {
         return graphQuery.getRadius();
     }
-
 }

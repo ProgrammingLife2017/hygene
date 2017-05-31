@@ -19,7 +19,7 @@ public final class NodeMetadataCache {
     private static final Logger LOGGER = LogManager.getLogger(NodeMetadataCache.class);
 
     /**
-     * Defines the maximum radius for which we will cache nodes.
+     * Defines the maximum radius for which nodes will be cached.
      */
     private static final int CACHE_RADIUS_THRESHOLD = 150;
 
@@ -53,7 +53,7 @@ public final class NodeMetadataCache {
     /**
      * Returns {@link Node} with loaded metadata of the given node id.
      * <p>
-     * If the node is not in the cache (yet) we will retrieve it on demand.
+     * If the node is not in the cache (yet) it will be retrieved on demand.
      *
      * @param nodeId ID of the node
      * @return {@link Node} with loaded metadata of the given node id
