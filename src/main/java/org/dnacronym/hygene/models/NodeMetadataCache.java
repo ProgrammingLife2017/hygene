@@ -5,7 +5,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.parser.ParseException;
 
 import java.io.UncheckedIOException;
@@ -156,6 +158,8 @@ public final class NodeMetadataCache {
                     node.setMetadata(entry.getValue());
                 }
             });
+
+            HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent());
         } catch (final ParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
         } catch (final UncheckedIOException e) {
