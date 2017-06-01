@@ -11,6 +11,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
@@ -39,6 +41,18 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
+    /**
+     * Font used inside the nodes, this should always be a monospace font.
+     */
+    private static final String DEFAULT_NODE_FONT = "Consolas";
+    /**
+     * Scalar for the size of the node text font as fraction of the node's height.
+     */
+    private static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
+    /**
+     * Range used when new graph is set, unless graph contains too few nodes.
+     */
+    private static final double DEFAULT_RANGE = 10;
 
     private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
@@ -104,18 +118,71 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
+     * @param calculator reference to the {@link GraphDimensionsCalculator} for the current drawing
+     * @param graph      graph which contains all the nodes and their information
+     * @param nodeId     id of node to draw
+     * @param charWidth  the width of character
+     * @param charHeight the height of a character
      * @param nodeId id of node to draw
      */
-    private void drawNode(final int nodeId) {
-        final double xPosition = graphDimensionsCalculator.computeXPosition(nodeId);
-        final double yPosition = graphDimensionsCalculator.computeYPosition(nodeId);
-        final double width = graphDimensionsCalculator.computeWidth(nodeId);
-        final double height = nodeHeightProperty.get();
+    private void drawNode(final int nodeId, final double charWidth, final double charHeigh) {
+        final double rectX = graphDimensionsCalculator.computeXPosition(nodeId);
+        final double rectY = graphDimensionsCalculator.computeYPosition(nodeId);
+        final double rectWidth = graphDimensionsCalculator.computeWidth(nodeId);
+        final double rectHeight = nodeHeightProperty.get();
 
         graphicsContext.setFill(getNodeColor(nodeId, graph));
-        graphicsContext.fillRect(xPosition, yPosition, width, height);
+        graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
 
-        rTree.addNode(nodeId, xPosition, yPosition, width, height);
+        graphicsContext.setFill(Color.BLACK);
+
+        int charCount = (int) (rectWidth / charWidth);
+
+        final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
+        final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeight() + 0.25 * charHeight;
+
+        String sequence = "ejsfloiuashefioluahgfuiashelfiuashfikalshefuiahseilfukashlefuisaehf".toUpperCase();
+
+        graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+        rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
+    }
+
+    /**
+     * Generates a new {@link Font} that will be scaled such that it fits inside a node.
+     *
+     * @param nodeHeight the node height
+     * @return the generated {@link Font}
+     */
+    private Font generateNodeFont(final double nodeHeight) {
+        double font1PHeight = getCharHeight(new Font(DEFAULT_NODE_FONT, 1));
+
+        double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
+
+        return new Font(DEFAULT_NODE_FONT, fontSize);
+    }
+
+    /**
+     * Computes the width of a single character for a specific font.
+     *
+     * @param font the {@link Font}
+     * @return the width in pixels
+     */
+    private double getCharWidth(final Font font) {
+        final Text t = new Text("X");
+        t.setFont(font);
+        return t.getLayoutBounds().getWidth();
+    }
+
+    /**
+     * Computes the height of a single character for a specific font.
+     *
+     * @param font the {@link Font}
+     * @return the width in pixels
+     */
+    private double getCharHeight(final Font font) {
+        final Text t = new Text("X");
+        t.setFont(font);
+        return t.getLayoutBounds().getHeight();
     }
 
     /**
@@ -207,6 +274,20 @@ public final class GraphVisualizer {
         clear();
         for (final Integer nodeId : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(nodeId);
+        rTree = new RTree();
+
+        final int centerNodeId = centerNodeIdProperty.get();
+
+        graphDimensionsCalculator.calculate(graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get());
+        final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
+        onScreenNodeCountProperty.set(neighbours.size());
+
+        Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
+        graphicsContext.setFont(nodeFont);
+
+        for (final Integer nodeId : neighbours) {
+            drawNode(graphDimensionsCalculator, graph, nodeId, getCharWidth(nodeFont), getCharHeight(nodeFont));
+
             graph.iterator().visitDirectNeighbours(
                     nodeId, SequenceDirection.RIGHT,
                     neighbourId -> drawEdge(nodeId, neighbourId));
