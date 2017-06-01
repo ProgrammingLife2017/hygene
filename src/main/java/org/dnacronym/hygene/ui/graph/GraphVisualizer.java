@@ -297,8 +297,10 @@ public final class GraphVisualizer {
         final Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
         graphicsContext.setFont(nodeFont);
 
+        final double charWidth = getCharWidth(nodeFont);
+        final double charHeight = getCharHeight(nodeFont);
         for (final Integer nodeId : neighbours) {
-            drawNode(graphDimensionsCalculator, graph, nodeId, getCharWidth(nodeFont), getCharHeight(nodeFont));
+            drawNode(graphDimensionsCalculator, graph, nodeId, charWidth, charHeight);
 
             graph.iterator().visitDirectNeighbours(
                     nodeId, SequenceDirection.RIGHT,
