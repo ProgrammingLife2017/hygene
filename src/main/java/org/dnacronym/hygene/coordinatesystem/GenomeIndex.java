@@ -145,36 +145,43 @@ public final class GenomeIndex {
      */
     private void buildIndex() {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
-        graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
-            if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
-                return;
-            }
+        graphIterator.visitAll(SequenceDirection.RIGHT, this::evaluateNode);
+    }
 
-            try {
-                final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
+    /**
+     * Evaluates a single node and updates the index accordingly.
+     *
+     * @param nodeId the ID of the node
+     */
+    private void evaluateNode(final int nodeId) {
+        if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
+            return;
+        }
 
-                for (final String genome : nodeGenomes) {
-                    final Integer genomeBaseDiffCount = genomeBaseDiffCounts.get(genome);
-                    final Integer genomeBaseCount = genomeBaseCounts.get(genome);
+        try {
+            final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
 
-                    if (genomeBaseDiffCount == null || genomeBaseCount == null) {
-                        throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
-                    }
+            for (final String genome : nodeGenomes) {
+                final Integer genomeBaseDiffCount = genomeBaseDiffCounts.get(genome);
+                final Integer genomeBaseCount = genomeBaseCounts.get(genome);
 
-                    final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                    if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
-                        final int baseIndexPosition = genomeBaseDiffCount + nodeBaseCount + genomeBaseCount;
-                        fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
-                        genomeBaseDiffCounts.put(genome, 0);
-                        genomeBaseCounts.put(genome, baseIndexPosition);
-                    } else {
-                        genomeBaseCounts.put(genome, genomeBaseDiffCount + nodeBaseCount);
-                    }
+                if (genomeBaseDiffCount == null || genomeBaseCount == null) {
+                    throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
                 }
-            } catch (final ParseException | SQLException e) {
-                LOGGER.warn("Failed to read metadata of node " + nodeId + ".", e);
+
+                final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
+                if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
+                    final int baseIndexPosition = genomeBaseDiffCount + nodeBaseCount + genomeBaseCount;
+                    fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
+                    genomeBaseDiffCounts.put(genome, 0);
+                    genomeBaseCounts.put(genome, baseIndexPosition);
+                } else {
+                    genomeBaseCounts.put(genome, genomeBaseDiffCount + nodeBaseCount);
+                }
             }
-        });
+        } catch (final ParseException | SQLException e) {
+            LOGGER.warn("Failed to read metadata of node " + nodeId + ".", e);
+        }
     }
 
     /**
@@ -197,7 +204,7 @@ public final class GenomeIndex {
     }
 
     /**
-     * Set the interval of bases to be cached.
+     * Sets the interval of bases to be cached.
      *
      * @param baseCacheInterval the base cache interval
      */
