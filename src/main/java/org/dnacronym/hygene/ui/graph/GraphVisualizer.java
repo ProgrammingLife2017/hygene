@@ -52,6 +52,7 @@ public final class GraphVisualizer {
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
+    private static final int MAX_GRAPH_RADIUS_NODE_TEXT = 50;
     private static final double DEFAULT_RANGE = 10;
 
     private static final double DEFAULT_EDGE_WIDTH = 1;
@@ -134,7 +135,7 @@ public final class GraphVisualizer {
         graphicsContext.setFill(getNodeColor(nodeId, graph));
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
 
-        if (nodeMetadataCache.has(nodeId)) {
+        if (nodeMetadataCache.has(nodeId) && hopsProperty.get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
             graphicsContext.setFill(Color.BLACK);
 
             int charCount = (int) (rectWidth / charWidth);
