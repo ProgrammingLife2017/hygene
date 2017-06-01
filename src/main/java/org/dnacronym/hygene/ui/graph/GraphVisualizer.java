@@ -151,8 +151,9 @@ public final class GraphVisualizer {
             try {
                 final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
                 graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
-            } catch (ParseException e) {
-                LOGGER.error(e);
+            } catch (final ParseException e) {
+                LOGGER.error("An parse exception occurred while attempting"
+                        + " to retrieve node's " + nodeId + " metadata from drawing", e);
             }
         }
 
