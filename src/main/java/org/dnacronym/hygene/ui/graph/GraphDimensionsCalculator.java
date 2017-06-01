@@ -84,14 +84,14 @@ public final class GraphDimensionsCalculator {
             centerNodeIdProperty.set(Math.max(
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
-            graphQuery.moveTo(centerNodeIdProperty.get());
+            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
             calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
-            graphQuery.setRadius(radiusProperty.get());
+            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
             calculate();
         });
 
