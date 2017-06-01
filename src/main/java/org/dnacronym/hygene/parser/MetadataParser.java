@@ -71,7 +71,7 @@ public final class MetadataParser {
 
                 result.put(entry.getKey(), new NodeMetadata(name, sequence));
             } catch (final NoSuchElementException e) {
-                throw new ParseException("Not enough parameters for segment on line " + lineNumber, e);
+                throw new ParseException("Not enough parameters for segment on line " + lineNumber + ".", e);
             }
         }
 
