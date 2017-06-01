@@ -182,7 +182,7 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Computes the opacity based on the amount of hop which an approximation of the current zoom level.
+     * Computes the opacity based on the amount of hops, which is an approximation of the current zoom level.
      * <p>
      * The formula used to compute the edge opacity is as follows:
      * <p>
