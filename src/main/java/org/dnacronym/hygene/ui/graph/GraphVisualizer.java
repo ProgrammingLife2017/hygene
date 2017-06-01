@@ -171,7 +171,8 @@ public final class GraphVisualizer {
      */
     private double computeEdgeOpacity() {
         return 1.0 - 1.0 / (1.0 + Math.exp(-(EDGE_OPACITY_ALPHA
-                * Math.log(Math.max(1, hopsProperty.get() - EDGE_OPACITY_OFFSET)) - EDGE_OPACITY_BETA)));
+                * Math.log(Math.max(1, graphDimensionsCalculator.getRadiusProperty().get() - EDGE_OPACITY_OFFSET))
+                - EDGE_OPACITY_BETA)));
     }
 
     /**
