@@ -181,16 +181,18 @@ public final class GraphVisualizer {
         rTree.addEdge(fromNodeId, toNodeId, fromX, fromY, toX, toY);
     }
 
+
     /**
      * Computes the opacity based on the graph radius, which is an approximation of the current zoom level.
      * <p>
      * The formula used to compute the edge opacity is as follows:
      * <p>
      * opacity(radius) = 1 - 1 / ( 1 + e^( -(alpha * ln( max(1, hops - offset) - beta) ) )
-     * <p>
-     * - {@code offset} is roughly the amount of hops after which the opacity scaling will start.
-     * - {@code alpha} affects the slope of the curve.
-     * - {@code beta} increasing beta will essentially cause the curve to lift up a bit smoothing it out.
+     * <p><ul>
+     * <li>{@code offset} is roughly the amount of hops after which the opacity scaling will start.
+     * <li>{@code alpha} affects the slope of the curve.
+     * <li>{@code beta} increasing beta will essentially cause the curve to lift up a bit smoothing it out.
+     * </ul>
      *
      * @return the edge opacity
      */
