@@ -12,9 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Bookmark;
-import org.dnacronym.hygene.ui.dialogue.Dialogue;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -103,9 +101,6 @@ public final class BookmarkCreateController implements Initializable {
 
     /**
      * When the user saves the bookmark.
-     * <p>
-     * Shows a {@link WarningDialogue} if the user attempts to create a bookmark whilst the base and radius have not
-     * been set.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -118,10 +113,7 @@ public final class BookmarkCreateController implements Initializable {
         final String baseString = baseOffset.getText().replaceAll("[^\\d]", "");
         final String radiusString = radius.getText().replaceAll("[^\\d]", "");
 
-        if (baseString.isEmpty() || radiusString.isEmpty()) {
-            final Dialogue dialogue = new WarningDialogue("Please fill in a base and radius first before saving.");
-            dialogue.show();
-        } else {
+        if (!baseString.isEmpty() && !radiusString.isEmpty()) {
             final int nodeId = graphVisualizer.getSelectedNodeProperty().get().getId();
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
