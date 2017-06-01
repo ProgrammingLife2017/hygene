@@ -188,9 +188,9 @@ public final class GraphVisualizer {
      * <p>
      * opacity(hops) = 1 - 1 / ( 1 + e^( -(alpha * ln( max(1, hops - offset) - beta) ) )
      * <p>
-     * - {@code offset} is roughly the amount of hop after which the opacity scaling will start.
+     * - {@code offset} is roughly the amount of hops after which the opacity scaling will start.
      * - {@code alpha} affects the slope of the curve.
-     * - {@code beta} increase b will essentially cause the curve to lift up a bit smoothing it out.
+     * - {@code beta} increasing beta will essentially cause the curve to lift up a bit smoothing it out.
      *
      * @return the edge opacity
      */
@@ -200,7 +200,7 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Retrieve the {@link Color} of an edge.
+     * Retrieves the {@link Color} of an edge.
      *
      * @return the {@link Color}
      */
