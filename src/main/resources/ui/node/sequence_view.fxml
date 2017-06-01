@@ -28,10 +28,10 @@
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="NEVER" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
                 <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity"/>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity"/>
+                <ColumnConstraints/>
+                <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -39,48 +39,20 @@
                 <RowConstraints vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Label text="Length"/>
+                <Label prefWidth="100.0" text="Length"/>
                 <TextField fx:id="lengthField" editable="false" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Amount of bases in the currently selected node."/>
                     </tooltip>
                 </TextField>
-                <Button fx:id="largeDecrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#decrementLargeAction" prefWidth="50.0" text="&lt;&lt;" GridPane.columnIndex="4"
-                        GridPane.rowSpan="2">
-                    <tooltip>
-                        <Tooltip text="Go left by all bases onscreen."/>
-                    </tooltip>
-                </Button>
-                <Button fx:id="smallDecrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#decrementSmallAction" prefWidth="50.0" text="&lt;" GridPane.columnIndex="3"
-                        GridPane.rowSpan="2">
-                    <tooltip>
-                        <Tooltip text="Go left by a single base."/>
-                    </tooltip>
-                </Button>
-                <Button fx:id="smallIncrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#incrementSmallAction" prefWidth="35.0" text="&gt;" GridPane.columnIndex="5"
-                        GridPane.rowSpan="2">
-                    <tooltip>
-                        <Tooltip text="Go right by a single base."/>
-                    </tooltip>
-                </Button>
-                <Button fx:id="largeIncrement" maxHeight="Infinity" mnemonicParsing="false"
-                        onAction="#incrementLargeAction" prefWidth="50.0" text="&gt;&gt;" GridPane.columnIndex="5"
-                        GridPane.rowSpan="2">
-                    <tooltip>
-                        <Tooltip text="Go right by all bases onscreen."/>
-                    </tooltip>
-                </Button>
-                <Label text="Base offset" GridPane.columnIndex="8"/>
-                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="8" GridPane.rowIndex="1">
+                <Label prefWidth="100.0" text="Base offset" GridPane.columnIndex="9"/>
+                <TextField fx:id="setOffset" prefWidth="50.0" GridPane.columnIndex="9" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Current base offset. Can be modified to be at most length of base minus 1."/>
                     </tooltip>
                 </TextField>
                 <Button fx:id="setOffsetButton" mnemonicParsing="false" onAction="#setOffsetAction" prefWidth="70.0"
-                        text="Set &gt;" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                        text="Set &gt;" GridPane.columnIndex="10" GridPane.rowIndex="1">
                     <tooltip>
                         <Tooltip text="Set the base offset to the current value in the field."/>
                     </tooltip>
@@ -89,9 +61,9 @@
                 <Separator maxHeight="Infinity" orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1"
                            GridPane.rowSpan="2"/>
                 <TextArea fx:id="sequenceTextArea" editable="false" maxWidth="Infinity" prefHeight="200.0"
-                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="10" GridPane.rowSpan="2"/>
+                          prefWidth="200.0" wrapText="true" GridPane.columnIndex="11" GridPane.rowSpan="2"/>
                 <Button fx:id="getTextAreaOffsetAction" mnemonicParsing="false" onAction="#getTextAreaOffsetAction"
-                        prefWidth="70.0" text="&lt; Set" GridPane.columnIndex="9">
+                        prefWidth="70.0" text="&lt; Set" GridPane.columnIndex="10">
                     <tooltip>
                         <Tooltip text="Set offset to base selected in text area."/>
                     </tooltip>
@@ -99,8 +71,36 @@
                 <Button fx:id="goToStart" maxHeight="Infinity" mnemonicParsing="false" onAction="#goToStartAction"
                         prefWidth="50.0" text="|&lt;" GridPane.columnIndex="2" GridPane.rowSpan="2"/>
                 <Button fx:id="goToEnd" maxHeight="Infinity" mnemonicParsing="false" onAction="#goToEndAction"
-                        prefWidth="50.0" text="&gt;|" GridPane.columnIndex="6" GridPane.rowSpan="2"/>
-                <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="7" GridPane.rowSpan="2"/>
+                        prefWidth="50.0" text="&gt;|" GridPane.columnIndex="7" GridPane.rowSpan="2"/>
+                <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="8" GridPane.rowSpan="2"/>
+                <Button fx:id="largeDecrement" maxHeight="Infinity" mnemonicParsing="false"
+                        onAction="#decrementLargeAction" prefWidth="50.0" text="&lt;&lt;" GridPane.columnIndex="3"
+                        GridPane.rowSpan="2">
+                    <tooltip>
+                        <Tooltip text="Go left by all bases onscreen."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="smallDecrement" maxHeight="Infinity" mnemonicParsing="false"
+                        onAction="#decrementSmallAction" prefWidth="50.0" text="&lt;" GridPane.columnIndex="4"
+                        GridPane.rowSpan="2">
+                    <tooltip>
+                        <Tooltip text="Go left by a single base."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="smallIncrement" maxHeight="Infinity" mnemonicParsing="false"
+                        onAction="#incrementSmallAction" prefWidth="50.0" text="&gt;" GridPane.columnIndex="5"
+                        GridPane.rowSpan="2">
+                    <tooltip>
+                        <Tooltip text="Go right by a single base."/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="largeIncrement" maxHeight="Infinity" mnemonicParsing="false"
+                        onAction="#incrementLargeAction" prefWidth="50.0" text="&gt;&gt;" GridPane.columnIndex="6"
+                        GridPane.rowSpan="2">
+                    <tooltip>
+                        <Tooltip text="Go right by all bases onscreen."/>
+                    </tooltip>
+                </Button>
             </children>
         </GridPane>
     </children>
