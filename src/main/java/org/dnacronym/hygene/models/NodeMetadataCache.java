@@ -9,8 +9,12 @@ import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.parser.ParseException;
 
 import java.io.UncheckedIOException;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -28,6 +32,9 @@ public final class NodeMetadataCache {
     private final Graph graph;
 
     private @MonotonicNonNull Thread thread;
+
+    private int previousCenterPoint = -1;
+    private int previousRadius = -1;
 
 
     /**
@@ -80,9 +87,13 @@ public final class NodeMetadataCache {
      */
     @Subscribe
     public void centerPointQueryChanged(final CenterPointQueryChangeEvent event) {
-        if (event.getRadius() > CACHE_RADIUS_THRESHOLD) {
+        if (event.getRadius() > CACHE_RADIUS_THRESHOLD
+                || event.getCenterPoint() == previousCenterPoint && event.getRadius() == previousRadius) {
             return;
         }
+
+        previousCenterPoint = event.getCenterPoint();
+        previousRadius = event.getRadius();
 
         cache.keySet().retainAll(event.getNodeIds());
 
@@ -112,24 +123,42 @@ public final class NodeMetadataCache {
      *
      * @param nodeIds set of node ids that should be in the cache after executing this method
      */
-    @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     private void addNewItemsToCache(final Set<Integer> nodeIds) {
-        for (final Integer nodeId : nodeIds) {
-            if (Thread.currentThread().isInterrupted()) {
-                return;
-            }
+        nodeIds.stream().forEach(nodeId -> cache.put(nodeId, graph.getNode(nodeId)));
 
-            if (has(nodeId)) {
-                continue;
-            }
+        retrieveMetadataForCachedNodesWithoutMetadata();
+    }
 
-            try {
-                retrieve(nodeId);
-            } catch (final ParseException e) {
-                LOGGER.warn("Node metadata of node " + nodeId + " could not be retrieved.", e);
-            } catch (final UncheckedIOException e) {
-                LOGGER.warn("Retrieving metadata of node " + nodeId + " was interrupted.");
-            }
+    /**
+     * Retrieves metadata for cached nodes that have no metadata set yet.
+     */
+    @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
+    private void retrieveMetadataForCachedNodesWithoutMetadata() {
+        try {
+            final Map<Integer, Integer> sortedNodesWithoutMetadata = cache.values().stream()
+                    .filter(node -> !node.hasMetadata())
+                    .sorted(Comparator.comparingInt(Node::getLineNumber))
+                    .collect(Collectors.toMap(
+                            Node::getId,
+                            Node::getLineNumber,
+                            (oldValue, newValue) -> oldValue,
+                            LinkedHashMap::new
+                    ));
+
+            final Map<Integer, NodeMetadata> metadata = graph.getGfaFile().parseNodeMetadata(
+                    sortedNodesWithoutMetadata
+            );
+
+            metadata.entrySet().stream().forEach(entry -> {
+                final Node node = cache.get(entry.getKey());
+                if (node != null) {
+                    node.setMetadata(entry.getValue());
+                }
+            });
+        } catch (final ParseException e) {
+            LOGGER.error("Node metadata could not be retrieved.", e);
+        } catch (final UncheckedIOException e) {
+            LOGGER.info("Retrieving metadata of nodes was interrupted.");
         }
     }
 

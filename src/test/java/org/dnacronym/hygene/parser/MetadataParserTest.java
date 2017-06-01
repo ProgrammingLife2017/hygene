@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.parser;
 
+import com.google.common.collect.ImmutableMap;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -32,6 +34,41 @@ final class MetadataParserTest {
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata.getSequence()).isEqualTo("TCAAGG");
+    }
+
+    @Test
+    void testParseNodeMetadataOfMultipleNodes() throws ParseException {
+        final Map<Integer, NodeMetadata> nodesMetadata = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG%n%n%nS 12 TAG%nS 12 CAT%nS 12 SANITYCHECK"),
+                ImmutableMap.of(1, 3, 2, 6, 3, 7)
+        );
+
+        assertThat(nodesMetadata.get(1).getSequence()).isEqualTo("TCAAGG");
+        assertThat(nodesMetadata.get(2).getSequence()).isEqualTo("TAG");
+        assertThat(nodesMetadata.get(3).getSequence()).isEqualTo("CAT");
+    }
+
+    /**
+     * Test that the reader is reset correctly between multiple reads.
+     */
+    @Test
+    void testParseNodeMetadataReaderReset() throws ParseException {
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
+        final NodeMetadata nodeMetadata2 = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
+
+        assertThat(nodeMetadata.getName()).isEqualTo("12");
+        assertThat(nodeMetadata2.getName()).isEqualTo("12");
+    }
+
+    @Test
+    void testParseNodeMetaOfMultipleNodesInWrongOrder() {
+        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG%n%n%nS 12 TAG%nS 12 CAT%nS 12 SANITYCHECK"),
+                ImmutableMap.of(2, 7, 1, 3)
+        ));
+
+        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).hasMessageContaining("Line 3 cannot be lower than the previous line number.");
     }
 
     @Test

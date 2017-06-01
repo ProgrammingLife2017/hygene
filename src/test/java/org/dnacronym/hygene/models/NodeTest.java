@@ -3,6 +3,7 @@ package org.dnacronym.hygene.models;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -90,6 +91,21 @@ final class NodeTest {
         final Node node = NodeBuilder.start().withIncomingEdge(1, 30).withIncomingEdge(2, 40).create();
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(2);
+    }
+
+    @Test
+    void testHasMetadataFalse() {
+        final Node node = NodeBuilder.start().create();
+
+        assertThat(node.hasMetadata()).isFalse();
+    }
+
+    @Test
+    void testHasMetadataTrue() {
+        final Node node = NodeBuilder.start().create();
+        node.setMetadata(mock(NodeMetadata.class));
+
+        assertThat(node.hasMetadata()).isTrue();
     }
 
     /**
