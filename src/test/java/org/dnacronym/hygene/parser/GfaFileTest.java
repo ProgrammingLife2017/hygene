@@ -123,16 +123,6 @@ final class GfaFileTest {
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
     }
 
-    @Test
-    void testGetNodeIds() throws ParseException {
-        currentFileName = GFA_TEST_FILE;
-        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-
-        gfaFile.parse(ProgressUpdater.DUMMY);
-
-        assertThat(gfaFile.getNodeIds()).contains(new AbstractMap.SimpleEntry<>("11", 1));
-    }
-
     private String bufferedReaderToString(final BufferedReader reader) {
         final String newline = String.format("%n");
         return reader.lines().collect(Collectors.joining(newline)) + newline;
