@@ -156,7 +156,7 @@ public final class NodeMetadataCache {
                 }
             });
         } catch (final ParseException e) {
-            LOGGER.warn("Node metadata could not be retrieved.", e);
+            LOGGER.error("Node metadata could not be retrieved.", e);
         } catch (final UncheckedIOException e) {
             LOGGER.info("Retrieving metadata of nodes was interrupted.");
         }
