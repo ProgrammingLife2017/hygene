@@ -5,8 +5,6 @@ import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 
 /**
@@ -33,15 +31,5 @@ final class WarningDialogueTest extends UITestBase {
 
         assertThat(alert.getTitle()).isEqualTo("Warning");
         assertThat(alert.getHeaderText()).isEqualTo("message.");
-    }
-
-    @Test
-    void testShow() {
-        final Alert mockAlert = mock(Alert.class);
-
-        interact(() -> errorDialogue.setAlert(mockAlert, "", ""));
-        errorDialogue.show();
-
-        verify(mockAlert).showAndWait();
     }
 }

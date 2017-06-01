@@ -7,6 +7,8 @@ import javafx.scene.control.Alert;
 /**
  * A dialogue is displayed on-screen and prevents any further interaction with the application until it is closed.
  */
+@SuppressWarnings({"PMD.AbstractNaming", "PMD.AbstractClassWithoutAbstractMethod"})
+// AbstractDialogue is an ugly class name, and class doesn't need abstract methods.
 public abstract class Dialogue {
     private Alert alert;
 

@@ -36,6 +36,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
+// TODO split up class
+@SuppressWarnings("PMD.ExcessiveImports") // See todo. This will be addressed soon.
 public final class MenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
@@ -222,7 +224,8 @@ public final class MenuController implements Initializable {
      *
      * @throws UIInitialisationException if initialisation of the UI fails
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    // Unique instance per iteration
     void populateRecentFilesMenu() throws UIInitialisationException {
         final List<File> recentFiles;
         try {
