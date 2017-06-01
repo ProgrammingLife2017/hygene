@@ -99,14 +99,6 @@ final class MetadataParserTest {
     }
 
     @Test
-    void testParseNodeMetadataWithEmptySemicolonItem() throws ParseException {
-        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TC * ORI:Z:;;test.fasta;"),
-                3);
-
-        assertThat(nodeMetadata.getGenomes()).contains("test.fasta");
-    }
-
-    @Test
     void testParseNodeMetadataWithInvalidLineBecauseTheSequenceIsMissing() throws ParseException {
         final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12"), 1));
 

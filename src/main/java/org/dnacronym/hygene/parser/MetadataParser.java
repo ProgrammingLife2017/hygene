@@ -211,11 +211,6 @@ public final class MetadataParser {
         while (bodyTokenizer.hasMoreTokens()) {
             final String nextGenome = bodyTokenizer.nextToken();
 
-            if (nextGenome.isEmpty()) {
-                // In the case of a trailing semi-colon at the end of the genome list
-                continue;
-            }
-
             genomes.add(nextGenome);
         }
 
