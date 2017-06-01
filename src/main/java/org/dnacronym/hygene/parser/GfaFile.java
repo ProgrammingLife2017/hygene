@@ -71,6 +71,8 @@ public final class GfaFile {
 
                 LOGGER.info("GfaFile parse finished");
 
+                progressUpdater.updateProgress(PROGRESS_TOTAL - 1, "Caching data for faster load next time...");
+
                 LOGGER.info("Start dumping the graph to the database");
                 graphLoader.dumpGraph(graph.getNodeArrays());
                 LOGGER.info("Finished dumping the graph to the database");
@@ -80,7 +82,7 @@ public final class GfaFile {
             throw new ParseException("Could not open file database to restore graph.", e);
         }
 
-        progressUpdater.updateProgress(PROGRESS_TOTAL);
+        progressUpdater.updateProgress(PROGRESS_TOTAL, "Loading file completed");
 
         return graph;
     }

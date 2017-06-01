@@ -11,5 +11,5 @@ public interface ProgressUpdater {
      *
      * @param progress progress indication between 0 and 100
      */
-    void updateProgress(int progress);
+    void updateProgress(int progress, String message);
 }

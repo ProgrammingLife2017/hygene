@@ -91,11 +91,13 @@ public final class ProgressBarView {
         final Task<Void> progressTask = new Task<Void>() {
             @Override
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
-                task.accept(progress -> {
+                task.accept((progress, message) -> {
                     if (progress == PROGRESS_TOTAL) {
                         Platform.runLater(stage::close);
                     }
                     this.updateProgress(progress, PROGRESS_TOTAL);
+
+                    progressBarController.updateProgressText(message);
                 });
                 return null;
             }
