@@ -104,7 +104,8 @@ public final class NewGfaParser {
      * This step is necessary because we need to know the internal node IDs
      * upfront to be able to add edges to the correct node vectors.
      *
-     * @param gfa a buffered reader of a GFA file
+     * @param gfa             a buffered reader of a GFA file
+     * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException if the given GFA file is not valid
      */
     private void allocateNodes(final BufferedReader gfa, final ProgressUpdater progressUpdater) throws IOException {
