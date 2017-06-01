@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.console.ConsoleWrapper;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
@@ -35,6 +36,8 @@ import java.util.ResourceBundle;
 /**
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
+// TODO split up class
+@SuppressWarnings("PMD.ExcessiveImports") // See todo. This will be addressed soon.
 public final class MenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
@@ -72,6 +75,7 @@ public final class MenuController implements Initializable {
             initFileChooser();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
+            new ErrorDialogue(e).show();
         }
 
         toggleBookmarkTable.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
@@ -220,7 +224,8 @@ public final class MenuController implements Initializable {
      *
      * @throws UIInitialisationException if initialisation of the UI fails
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    // Unique instance per iteration
     void populateRecentFilesMenu() throws UIInitialisationException {
         final List<File> recentFiles;
         try {

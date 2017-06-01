@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.fxml.Initializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -30,6 +31,7 @@ public abstract class AbstractSettingsController implements Initializable {
             setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
+            new ErrorDialogue(e).show();
         }
     }
 
