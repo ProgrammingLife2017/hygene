@@ -182,11 +182,11 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Computes the opacity based on the amount of hops, which is an approximation of the current zoom level.
+     * Computes the opacity based on the graph radius, which is an approximation of the current zoom level.
      * <p>
      * The formula used to compute the edge opacity is as follows:
      * <p>
-     * opacity(hops) = 1 - 1 / ( 1 + e^( -(alpha * ln( max(1, hops - offset) - beta) ) )
+     * opacity(radius) = 1 - 1 / ( 1 + e^( -(alpha * ln( max(1, hops - offset) - beta) ) )
      * <p>
      * - {@code offset} is roughly the amount of hops after which the opacity scaling will start.
      * - {@code alpha} affects the slope of the curve.
