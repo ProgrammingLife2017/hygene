@@ -27,8 +27,7 @@ final class GraphLoaderTest extends FileDatabaseTestBase {
         fileDatabase = new FileDatabase(GFA_FILE_NAME);
         graphLoader = new GraphLoader(fileDatabase);
 
-        progressUpdater = progress -> {
-        };
+        progressUpdater = ProgressUpdater.DUMMY;
     }
 
     @AfterEach

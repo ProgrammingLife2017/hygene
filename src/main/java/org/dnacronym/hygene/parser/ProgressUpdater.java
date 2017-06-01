@@ -6,6 +6,9 @@ package org.dnacronym.hygene.parser;
  */
 @FunctionalInterface
 public interface ProgressUpdater {
+    ProgressUpdater DUMMY = (progress, message) -> {
+    };
+
     /**
      * Updates the interested party with a new progress percentage.
      *

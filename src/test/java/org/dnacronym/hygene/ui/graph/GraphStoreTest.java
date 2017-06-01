@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
@@ -41,8 +42,7 @@ final class GraphStoreTest extends UITestBase {
 
         Platform.runLater(() -> {
             try {
-                graphStore.load(file, progress -> {
-                });
+                graphStore.load(file, ProgressUpdater.DUMMY);
             } catch (final IOException e) {
                 e.printStackTrace();
             }

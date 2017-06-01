@@ -63,8 +63,7 @@ final class GfaFileTest {
     @Test
     void testCannotReadNonExistingFile() {
         currentFileName = "random-file-name";
-        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse(progress -> {
-        }));
+        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse(ProgressUpdater.DUMMY));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
@@ -92,8 +91,7 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        gfaFile.parse(progress -> {
-        });
+        gfaFile.parse(ProgressUpdater.DUMMY);
 
         verify(gfaParser).parse(eq(gfaFile), any(ProgressUpdater.class));
         assertThat(gfaFile.getGraph()).isNotNull();
@@ -123,6 +121,16 @@ final class GfaFileTest {
 
         verify(metadataParser).parseEdgeMetadata(gfaFile, 4);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
+    }
+
+    @Test
+    void testGetNodeIds() throws ParseException {
+        currentFileName = GFA_TEST_FILE;
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+
+        gfaFile.parse(ProgressUpdater.DUMMY);
+
+        assertThat(gfaFile.getNodeIds()).contains(new AbstractMap.SimpleEntry<>("11", 1));
     }
 
     private String bufferedReaderToString(final BufferedReader reader) {
