@@ -23,6 +23,7 @@ import static org.mockito.Mockito.mock;
  */
 class GenomeIndexTest {
     private static final String TEST_GFA_FILE_NAME = "src/test/resources/gfa/index.gfa";
+    private static final int TEST_BASE_CACHE_INTERVAL = 1;
 
     private GenomeIndex genomeIndex;
     private FileDatabase fileDatabase;
@@ -36,7 +37,7 @@ class GenomeIndexTest {
         final GfaFile gfaFile = new GfaFile(TEST_GFA_FILE_NAME);
         gfaFile.parse(mock(ProgressUpdater.class));
         genomeIndex = new GenomeIndex(gfaFile, fileDatabase);
-        genomeIndex.setBaseCacheInterval(1);
+        genomeIndex.setBaseCacheInterval(TEST_BASE_CACHE_INTERVAL);
     }
 
     @AfterEach
@@ -47,11 +48,15 @@ class GenomeIndexTest {
 
 
     @Test
-    void getClosestNodeId() throws ParseException, SQLException {
+    void testGetClosestNodeId() throws ParseException, SQLException {
         genomeIndex.populateIndex();
         assertThat(genomeIndex.getClosestNodeId("g2.fasta", 6)).isEqualTo(3);
     }
 
+    @Test
+    void testGetBaseCacheInterval() {
+        assertThat(genomeIndex.getBaseCacheInterval()).isEqualTo(TEST_BASE_CACHE_INTERVAL);
+    }
 
     private void deleteDatabase() throws IOException {
         Files.deleteIfExists(new File(TEST_GFA_FILE_NAME + FileDatabaseDriver.DB_FILE_EXTENSION).toPath());

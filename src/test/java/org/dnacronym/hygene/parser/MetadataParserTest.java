@@ -30,8 +30,8 @@ final class MetadataParserTest {
 
     @Test
     void testParseNodeMetadata() throws ParseException {
-        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"),
-                3);
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata.getSequence()).isEqualTo("TCAAGG");
@@ -99,6 +99,14 @@ final class MetadataParserTest {
     }
 
     @Test
+    void testParseNodeMetadataWithEmptySemicolonItem() throws ParseException {
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TC * ORI:Z:;;test.fasta;"),
+                3);
+
+        assertThat(nodeMetadata.getGenomes()).contains("test.fasta");
+    }
+
+    @Test
     void testParseNodeMetadataWithInvalidLineBecauseTheSequenceIsMissing() throws ParseException {
         final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12"), 1));
 
@@ -109,6 +117,13 @@ final class MetadataParserTest {
     @Test
     void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws ParseException {
         Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC *"), 1));
+
+        assertThat(e).isInstanceOf(ParseException.class);
+    }
+
+    @Test
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomePrefixIsIncorrect() throws ParseException {
+        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC * ORY:Z:test.fasta;"), 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
@@ -136,6 +151,7 @@ final class MetadataParserTest {
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Expected line 1 to start with L");
     }
+
 
     private GfaFile createGfaFile(final String gfa) throws ParseException {
         final byte[] gfaBytes = replaceSpacesWithTabs(gfa).getBytes(StandardCharsets.UTF_8);
