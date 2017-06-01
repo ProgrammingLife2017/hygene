@@ -125,7 +125,7 @@ public final class GraphVisualizer {
      * @param charHeight the height of a character
      * @param nodeId id of node to draw
      */
-    private void drawNode(final int nodeId, final double charWidth, final double charHeigh) {
+    private void drawNode(final int nodeId, final double charWidth, final double charHeight) {
         final double rectX = graphDimensionsCalculator.computeXPosition(nodeId);
         final double rectY = graphDimensionsCalculator.computeYPosition(nodeId);
         final double rectWidth = graphDimensionsCalculator.computeWidth(nodeId);
@@ -134,16 +134,22 @@ public final class GraphVisualizer {
         graphicsContext.setFill(getNodeColor(nodeId, graph));
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
 
-        graphicsContext.setFill(Color.BLACK);
+        if (nodeMetadataCache.has(nodeId)) {
+            graphicsContext.setFill(Color.BLACK);
 
-        int charCount = (int) (rectWidth / charWidth);
+            int charCount = (int) (rectWidth / charWidth);
 
         final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
         final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeight() + 0.25 * charHeight;
 
-        String sequence = "ejsfloiuashefioluahgfuiashelfiuashfikalshefuiahseilfukashlefuisaehf".toUpperCase();
+            try {
+                String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
+                graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+            } catch (ParseException e) {
+                LOGGER.error(e);
+            }
+        }
 
-        graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
     }
 
