@@ -14,7 +14,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
-import org.dnacronym.hygene.ui.console.ConsoleWrapper;
+import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
@@ -54,7 +54,7 @@ public final class MenuController implements Initializable {
     @FXML
     private MenuItem toggleBookmarkTable;
 
-    private ConsoleWrapper consoleWrapper;
+    private ConsoleView consoleView;
     private HelpMenuView helpMenuView;
 
     private SettingsView settingsView;
@@ -145,12 +145,12 @@ public final class MenuController implements Initializable {
     @FXML
     void openConsoleAction(final ActionEvent event) throws IOException {
         try {
-            if (consoleWrapper == null) {
-                consoleWrapper = new ConsoleWrapper();
+            if (consoleView == null) {
+                consoleView = new ConsoleView();
                 LOGGER.info("Launched GUI console window");
             }
 
-            consoleWrapper.bringToFront();
+            consoleView.bringToFront();
         } catch (final UIInitialisationException e) {
             LOGGER.error(e);
         }
@@ -283,12 +283,12 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Returns the {@link ConsoleWrapper} attached to this menu.
+     * Returns the {@link ConsoleView} attached to this menu.
      *
-     * @return the {@link ConsoleWrapper}
+     * @return the {@link ConsoleView}
      */
-    public ConsoleWrapper getConsoleWrapper() {
-        return consoleWrapper;
+    public ConsoleView getConsoleView() {
+        return consoleView;
     }
 
     /**

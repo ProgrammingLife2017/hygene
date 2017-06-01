@@ -40,14 +40,17 @@ public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
-    private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final double DEFAULT_DASH_LENGTH = 10;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
     private static final double DEFAULT_RANGE = 10;
 
+    private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
+    private static final int EDGE_OPACITY_OFFSET = 80;
+    private static final double EDGE_OPACITY_ALPHA = 1.08;
+    private static final double EDGE_OPACITY_BETA = 4.25;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
@@ -171,11 +174,40 @@ public final class GraphVisualizer {
         final double toX = calculator.computeXPosition(toNodeId);
         final double toY = calculator.computeMiddleYPosition(toNodeId);
 
-        graphicsContext.setStroke(edgeColorProperty.getValue());
+        graphicsContext.setStroke(getEdgeColor());
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
         graphicsContext.strokeLine(fromX, fromY, toX, toY);
 
         rTree.addEdge(fromNodeId, toNodeId, fromX, fromY, toX, toY);
+    }
+
+
+    /**
+     * Computes the opacity based on the graph radius, which is an approximation of the current zoom level.
+     * <p>
+     * The formula used to compute the edge opacity is as follows:
+     * <p>
+     * opacity(radius) = 1 - 1 / ( 1 + e^( -(alpha * ln( max(1, hops - offset) - beta) ) )
+     * <p><ul>
+     * <li>{@code offset} is roughly the amount of hops after which the opacity scaling will start.
+     * <li>{@code alpha} affects the slope of the curve.
+     * <li>{@code beta} increasing beta will essentially cause the curve to lift up a bit smoothing it out.
+     * </ul>
+     *
+     * @return the edge opacity
+     */
+    private double computeEdgeOpacity() {
+        return 1.0 - 1.0 / (1.0 + Math.exp(-(EDGE_OPACITY_ALPHA
+                * Math.log(Math.max(1, hopsProperty.get() - EDGE_OPACITY_OFFSET)) - EDGE_OPACITY_BETA)));
+    }
+
+    /**
+     * Retrieves the {@link Color} of an edge.
+     *
+     * @return the {@link Color}
+     */
+    private Color getEdgeColor() {
+        return edgeColorProperty.getValue().deriveColor(1, 1, 1, computeEdgeOpacity());
     }
 
     /**
