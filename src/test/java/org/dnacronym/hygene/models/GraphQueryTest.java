@@ -240,136 +240,30 @@ class GraphQueryTest extends GraphTestBase {
 
 
     /*
-     * incrementRadius / decrementRadius
-     */
-
-    @Test
-    void testDecrementRadiusBelowZero() {
-        createGraph(26);
-        createGraphQuery();
-
-        getGraphQuery().query(14, 0);
-        getGraphQuery().decrementRadius();
-
-        assertThat(getGraphQuery().getRadius()).isEqualTo(0);
-    }
-
-    @Test
-    void testIncrementRadiusValue() {
-        createGraph(51);
-        createGraphQuery();
-
-        getGraphQuery().query(12, 42);
-
-        getGraphQuery().decrementRadius();
-        assertThat(getGraphQuery().getRadius()).isEqualTo(41);
-    }
-
-    @Test
-    void testDecrementRadiusValue() {
-        createGraph(78);
-        createGraphQuery();
-
-        getGraphQuery().query(56, 69);
-
-        getGraphQuery().incrementRadius();
-        assertThat(getGraphQuery().getRadius()).isEqualTo(70);
-    }
-
-    @Test
-    void testIncrementRadius() {
-        createGraph(84);
-        createGraphQuery();
-        addEdges(new int[][] {{3, 20}, {20, 35}, {35, 59}, {59, 73}});
-
-        getGraphQuery().query(35, 1);
-        getGraphQuery().incrementRadius();
-
-        assertThat(collectVisit()).contains(3, 20, 35, 59, 73);
-    }
-
-    @Test
-    void testDecrementRadius() {
-        createGraph(8);
-        createGraphQuery();
-        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {1, 4}, {4, 5}, {5, 6}, {3, 6}, {2, 7}});
-
-        getGraphQuery().query(3, 2);
-        getGraphQuery().decrementRadius();
-
-        assertThat(collectVisit()).contains(1, 2, 3, 6);
-    }
-
-    @Test
-    void testIncrementThenDecrementRadius() {
-        createGraph(7);
-        createGraphQuery();
-        addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 5}, {3, 6}, {4, 5}, {4, 6}});
-
-        getGraphQuery().query(4, 1);
-        getGraphQuery().incrementRadius();
-        getGraphQuery().decrementRadius();
-
-        assertThat(collectVisit()).contains(1, 2, 4, 5, 6);
-    }
-
-    @Test
-    void testDecrementThenIncrementRadius() {
-        createGraph(8);
-        createGraphQuery();
-        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {2, 4}, {3, 4}, {4, 5}, {4, 6}, {5, 7}, {6, 7}});
-
-        getGraphQuery().query(4, 2);
-        getGraphQuery().decrementRadius();
-        getGraphQuery().incrementRadius();
-
-        assertThat(collectVisit()).contains(1, 2, 3, 4, 5, 6, 7);
-    }
-
-    /**
-     * Tests that cached radius is reset after decrementing the radius often.
-     */
-    @Test
-    void testDecrementRadiusOften() {
-        createGraph(14);
-        createGraphQuery();
-        addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}, {8, 9}, {9, 10}, {10, 11},
-                {11, 12}, {12, 13}});
-
-        getGraphQuery().query(0, 12);
-        for (int i = 0; i < 11; i++) {
-            getGraphQuery().decrementRadius();
-        }
-
-        assertThat(collectVisit()).doesNotContain(2);
-    }
-
-
-    /*
      * moveTo and change radius
      */
 
     @Test
-    void testMoveToAndIncrementRadius() {
+    void testMoveToAndSetRadius() {
         createGraph(6);
         createGraphQuery();
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
 
         getGraphQuery().query(1, 1);
         getGraphQuery().moveTo(2);
-        getGraphQuery().incrementRadius();
+        getGraphQuery().setRadius(2);
 
         assertThat(collectVisit()).contains(0, 1, 2, 3, 4);
     }
 
     @Test
-    void testIncrementRadiusAndMoveTo() {
+    void testSetRadiusAndMoveTo() {
         createGraph(6);
         createGraphQuery();
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
 
         getGraphQuery().query(1, 1);
-        getGraphQuery().incrementRadius();
+        getGraphQuery().setRadius(2);
         getGraphQuery().moveTo(2);
 
         assertThat(collectVisit()).contains(0, 1, 2, 3, 4);

@@ -1,13 +1,13 @@
 package org.dnacronym.hygene.models;
 
 import com.google.common.collect.ImmutableSet;
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
-
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -88,6 +88,24 @@ public final class GraphQuery {
 
 
     /**
+     * Returns the query's current centre node id.
+     *
+     * @return the query's current centre node id
+     */
+    public int getCentre() {
+        return centre;
+    }
+
+    /**
+     * Returns the query's current radius.
+     *
+     * @return the query's current radius
+     */
+    public int getRadius() {
+        return radius;
+    }
+
+    /**
      * Clears the cache and rebuilds the query.
      *
      * @param centre the centre of the query
@@ -130,45 +148,6 @@ public final class GraphQuery {
 
         this.centre = centre;
         fixCentre();
-
-        postEvent();
-    }
-
-    /**
-     * Increases the radius by one.
-     */
-    public void incrementRadius() {
-        radius++;
-
-        final Integer centreDistance = cache.getDistance(centre);
-        if (centreDistance == null) {
-            // This branch should be unreachable, but is required by the Checker Framework
-            query(centre, radius);
-            return;
-        }
-        if (radius <= cacheRadius - centreDistance) {
-            return;
-        }
-
-        incrementCacheRadius();
-
-        postEvent();
-    }
-
-    /**
-     * Decreases the radius by one.
-     * <p>
-     * An actual update is deferred because it would be a waste to throw away the outer layer.
-     */
-    public void decrementRadius() {
-        if (radius <= 0) {
-            return;
-        }
-
-        radius--;
-        if (cacheRadius - radius > MAX_RADIUS_DIFFERENCE) {
-            query(centre, radius);
-        }
 
         postEvent();
     }
@@ -232,24 +211,6 @@ public final class GraphQuery {
      */
     public Set<Integer> getNodeIds() {
         return ImmutableSet.copyOf(cache.keySet());
-    }
-
-    /**
-     * Returns the query's current centre node id.
-     *
-     * @return the query's current centre node id
-     */
-    public int getCentre() {
-        return centre;
-    }
-
-    /**
-     * Returns the query's current radius.
-     *
-     * @return the query's current radius
-     */
-    public int getRadius() {
-        return radius;
     }
 
 
