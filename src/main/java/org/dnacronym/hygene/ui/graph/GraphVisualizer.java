@@ -138,7 +138,7 @@ public final class GraphVisualizer {
         if (nodeMetadataCache.has(nodeId) && hopsProperty.get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
             graphicsContext.setFill(Color.BLACK);
 
-            int charCount = (int) (rectWidth / charWidth);
+            final int charCount = (int) (rectWidth / charWidth);
 
         final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
         final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeight() + 0.25 * charHeight;
