@@ -306,13 +306,4 @@ public final class NewGfaParser {
                 () -> new ParseException("Link has reference to non existing node " + nodeName)
         );
     }
-
-    /**
-     * Returns the mapping of node names to IDs.
-     *
-     * @return the mapping of node names to IDs
-     */
-    Map<String, Integer> getNodeIds() {
-        return nodeIds;
-    }
 }
