@@ -56,7 +56,7 @@ public final class NodeMetadataCache {
      */
     public boolean has(final int nodeId) {
         final Node node = cache.get(nodeId);
-        return (node != null) && node.hasMetadata();
+        return node != null && node.hasMetadata();
     }
 
     /**
