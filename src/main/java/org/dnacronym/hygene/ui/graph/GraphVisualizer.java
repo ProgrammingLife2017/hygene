@@ -144,7 +144,7 @@ public final class GraphVisualizer {
         final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeight() + 0.25 * charHeight;
 
             try {
-                String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
+                final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
                 graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
             } catch (ParseException e) {
                 LOGGER.error(e);
@@ -161,9 +161,9 @@ public final class GraphVisualizer {
      * @return the generated {@link Font}
      */
     private Font generateNodeFont(final double nodeHeight) {
-        double font1PHeight = getCharHeight(new Font(DEFAULT_NODE_FONT, 1));
+        final double font1PHeight = getCharHeight(new Font(DEFAULT_NODE_FONT, 1));
 
-        double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
+        final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
 
         return new Font(DEFAULT_NODE_FONT, fontSize);
     }
@@ -289,7 +289,7 @@ public final class GraphVisualizer {
         final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
         onScreenNodeCountProperty.set(neighbours.size());
 
-        Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
+        final Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
         graphicsContext.setFont(nodeFont);
 
         for (final Integer nodeId : neighbours) {
