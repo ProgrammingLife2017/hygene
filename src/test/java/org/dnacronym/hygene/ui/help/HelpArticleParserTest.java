@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.help;
 
-import org.dnacronym.hygene.core.Files;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ final class HelpArticleParserTest {
     @BeforeEach
     void setUp() throws FileNotFoundException {
         helpArticleLoader = new HelpArticleParser();
-        articles = helpArticleLoader.parse(Files.getInstance().getResourceUrl(HELP_ARTICLES_TESTING_FILE).toString());
+        articles = helpArticleLoader.parse(HELP_ARTICLES_TESTING_FILE);
     }
 
 

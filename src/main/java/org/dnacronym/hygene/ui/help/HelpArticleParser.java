@@ -20,7 +20,7 @@ import java.util.List;
  * This class parses {@link HelpArticle}s.
  */
 public final class HelpArticleParser {
-    static final String DEFAULT_HELP_MENU_FILE = "src/main/resources/ui/help/articles.xml";
+    static final String DEFAULT_HELP_MENU_FILE = "/help/articles.xml";
     private static final Logger LOGGER = LogManager.getLogger(HelpArticleParser.class);
 
 
@@ -36,9 +36,10 @@ public final class HelpArticleParser {
         try {
             final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-            document = dBuilder.parse(filename);
-            document.normalizeDocument();
+            if (HelpArticleParser.class.getResource(filename) != null) {
+                document = dBuilder.parse(HelpArticleParser.class.getResource(filename).getFile());
+                document.normalizeDocument();
+            }
         } catch (final ParserConfigurationException | SAXException | IOException e) {
             LOGGER.error(e);
         }
