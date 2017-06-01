@@ -7,7 +7,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -51,22 +50,10 @@ public final class ConsoleController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         JFXAppender.getLatestLogEvent().addListener((observable, oldValue, newValue) -> appendLogItem(newValue));
 
-        enableAutoScrolling();
-
         logSelectedSequence();
-    }
 
-    /**
-     * Allows the text the console window to automatically scroll down when new input is introduced.
-     */
-    private void enableAutoScrolling() {
-//        consoleTextFlow.getChildren().addListener(
-//                (ListChangeListener<Node>) (change -> {
-//                    consoleTextFlow.layout();
-//                    consoleScrollPane.layout();
-//                    consoleScrollPane.setVvalue(1.0f);
-//                }));
-//        consoleScrollPane.setContent(consoleTextFlow);
+        consoleContent.setEditable(false);
+        consoleContent.setFocusTraversable(false);
     }
 
     /**
@@ -93,11 +80,10 @@ public final class ConsoleController implements Initializable {
      * @param message the message
      */
     void appendLogItem(final ConsoleMessage message) {
-        consoleContent.appendText("dwadwd");
-        consoleContent.setC
-//        if (consoleTextFlow != null) {
-//            consoleTextFlow.appendText(message.toString());
-//        }
+        if (consoleContent != null) {
+            consoleContent.appendText(message + "\n");
+//            consoleContent.s
+        }
     }
 
     /**
@@ -105,7 +91,7 @@ public final class ConsoleController implements Initializable {
      *
      * @param keyEvent the {@link KeyEvent}
      */
-    public void handleInput(@NonNull final KeyEvent keyEvent) {
+    public void handleInput(final KeyEvent keyEvent) {
         if (keyEvent.getCode().equals(KeyCode.ENTER)) {
             final String input = consoleInput.getCharacters().toString();
 

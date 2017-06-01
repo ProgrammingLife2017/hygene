@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.TextFlow?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="400.0"
-      prefWidth="700.0" styleClass="console" stylesheets="@../css/console_style.css"
-      xmlns="http://javafx.com/javafx/8.0.112" fx:controller="org.dnacronym.hygene.ui.console.ConsoleController">
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.console.ConsoleController">
     <children>
-        <ScrollPane fx:id="consoleScrollPane" fitToWidth="true" maxHeight="1.7976931348623157E308" prefHeight="386.0"
-                    prefWidth="600.0" styleClass="consoleScrollPane">
-            <content>
-                <TextFlow fx:id="consoleTextFlow" styleClass="consoleTextFlow"/>
-            </content>
-        </ScrollPane>
-        <TextField fx:id="consoleInput" maxHeight="20.0" onKeyPressed="#handleInput" prefHeight="20.0"
-                   prefWidth="600.0" styleClass="consoleInput"/>
+        <VBox layoutX="1.0" prefHeight="470.0" prefWidth="777.0" styleClass="console"
+              stylesheets="@../css/console_style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <StyleClassedTextArea fx:id="consoleContent" maxHeight="1.7976931348623157E308"
+                                      maxWidth="1.7976931348623157E308"
+                                      prefHeight="199.0" prefWidth="776.0" wrapText="true" VBox.vgrow="ALWAYS"/>
+                <TextField fx:id="consoleInput" onKeyPressed="#handleInput" styleClass="consoleInput"/>
+            </children>
+        </VBox>
     </children>
-</VBox>
+</AnchorPane>
