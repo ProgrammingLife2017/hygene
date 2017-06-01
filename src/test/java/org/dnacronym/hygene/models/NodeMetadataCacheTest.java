@@ -71,7 +71,8 @@ final class NodeMetadataCacheTest {
 
         assertThat(nodeMetaDatacache.has(2)).isTrue();
 
-        verify(metadataParser, times(1)).parseNodeMetadata(eq(graph.getGfaFile()), any(Map.class));
+        verify(metadataParser, times(1)).parseNodeMetadata(
+                eq(graph.getGfaFile()), any(Map.class));
     }
 
     @Test

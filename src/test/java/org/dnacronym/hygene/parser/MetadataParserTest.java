@@ -41,7 +41,10 @@ final class MetadataParserTest {
     @Test
     void testParseNodeMetadataOfMultipleNodes() throws ParseException {
         final Map<Integer, NodeMetadata> nodesMetadata = parser.parseNodeMetadata(
-                createGfaFile("%n%nS 12 TCAAGG%n%n%nS 12 TAG%nS 12 CAT%nS 12 SANITYCHECK"),
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
+                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
+                        + "%nS 12 CAT * ORI:Z:test.fasta;"
+                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
                 ImmutableMap.of(1, 3, 2, 6, 3, 7)
         );
 
@@ -55,8 +58,10 @@ final class MetadataParserTest {
      */
     @Test
     void testParseNodeMetadataReaderReset() throws ParseException {
-        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
-        final NodeMetadata nodeMetadata2 = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
+        final NodeMetadata nodeMetadata2 = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata2.getName()).isEqualTo("12");
@@ -65,7 +70,10 @@ final class MetadataParserTest {
     @Test
     void testParseNodeMetaOfMultipleNodesInWrongOrder() {
         final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(
-                createGfaFile("%n%nS 12 TCAAGG%n%n%nS 12 TAG%nS 12 CAT%nS 12 SANITYCHECK"),
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
+                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
+                        + "%nS 12 CAT * ORI:Z:test.fasta;"
+                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
                 ImmutableMap.of(2, 7, 1, 3)
         ));
 
