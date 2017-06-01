@@ -160,8 +160,6 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
         });
 
-        observableQueryNodes.setAll(neighbours);
-
         this.minX = tempMinX[0];
         this.maxX = tempMaxX[0];
         this.minY = tempMinY[0];
@@ -169,6 +167,8 @@ public final class GraphDimensionsCalculator {
 
         laneHeightProperty.set(canvasDimension.getHeight() / laneCountProperty.get());
         laneCountProperty.set(Math.abs(maxY - minY) + 1);
+
+        observableQueryNodes.setAll(neighbours);
     }
 
     /**
