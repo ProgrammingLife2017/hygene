@@ -11,11 +11,12 @@ import java.sql.SQLException;
  */
 @SuppressWarnings("initialization") // due to setup actions that need to be executed in the constructor
 public final class FileDatabase implements AutoCloseable {
-    static final int DB_VERSION = 4;
+    static final int DB_VERSION = 5;
 
     private final String fileName;
     private final FileDatabaseDriver fileDatabaseDriver;
     private final FileBookmarks fileBookmarks;
+    private final FileGenomeIndex fileGenomeIndex;
 
 
     /**
@@ -37,6 +38,7 @@ public final class FileDatabase implements AutoCloseable {
 
         final FileMetadata fileMetadata = new FileMetadata(this);
         fileBookmarks = new FileBookmarks(this);
+        fileGenomeIndex = new FileGenomeIndex(this);
 
         if (databaseAlreadyExisted) {
             fileMetadata.verifyMetadata();
@@ -45,6 +47,7 @@ public final class FileDatabase implements AutoCloseable {
             fileMetadata.storeMetadata();
 
             fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
+            fileDatabaseDriver.setUpTable(fileGenomeIndex.getTable());
         }
     }
 
@@ -74,6 +77,15 @@ public final class FileDatabase implements AutoCloseable {
      */
     public FileBookmarks getFileBookmarks() {
         return fileBookmarks;
+    }
+
+    /**
+     * Returns the file genome index.
+     *
+     * @return the file genome index
+     */
+    public FileGenomeIndex getFileGenomeIndex() {
+        return fileGenomeIndex;
     }
 
     @Override

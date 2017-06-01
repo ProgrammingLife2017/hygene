@@ -5,6 +5,8 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,8 @@ import java.util.StringTokenizer;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 public final class MetadataParser {
+    public static final String GENOME_LIST_HEADER_PREFIX = "ORI:Z:";
+
     private int readerPosition;
 
 
@@ -68,8 +72,10 @@ public final class MetadataParser {
                 st.nextToken();
                 final String name = st.nextToken();
                 final String sequence = st.nextToken();
+            st.nextToken(); // Ignore asterisk
+            final List<String> genomes = parseGenomes(st.nextToken(), lineNumber);
 
-                result.put(entry.getKey(), new NodeMetadata(name, sequence));
+                result.put(entry.getKey(), new NodeMetadata(name, sequence, genomes));
             } catch (final NoSuchElementException e) {
                 throw new ParseException("Not enough parameters for segment on line " + lineNumber + ".", e);
             }
@@ -181,5 +187,33 @@ public final class MetadataParser {
     private BufferedReader createReader(final GfaFile gfaFile) throws ParseException {
         readerPosition = 0;
         return gfaFile.readFile();
+    }
+
+    /**
+     * Returns all genomes of the node on the given {@code lineNumber}.
+     * <p>
+     * It does this by reading the appropriate genome header field of that line.
+     *
+     * @param headerField the header field (including the prefix) to parse
+     * @param lineNumber  the current line number
+     * @return the list of genomes in that file
+     * @throws ParseException if the GFA file or given line is invalid
+     */
+    private List<String> parseGenomes(final String headerField, final int lineNumber) throws ParseException {
+        if (!headerField.startsWith(GENOME_LIST_HEADER_PREFIX)) {
+            throw new ParseException("Expected genome header on line " + lineNumber + ".");
+        }
+
+        final String genomeListString = headerField.substring(GENOME_LIST_HEADER_PREFIX.length());
+        final StringTokenizer bodyTokenizer = new StringTokenizer(genomeListString, ";");
+        final List<String> genomes = new ArrayList<>();
+
+        while (bodyTokenizer.hasMoreTokens()) {
+            final String nextGenome = bodyTokenizer.nextToken();
+
+            genomes.add(nextGenome);
+        }
+
+        return genomes;
     }
 }

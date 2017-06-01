@@ -30,16 +30,21 @@ final class MetadataParserTest {
 
     @Test
     void testParseNodeMetadata() throws ParseException {
-        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata.getSequence()).isEqualTo("TCAAGG");
+        assertThat(nodeMetadata.getGenomes()).contains("test.fasta");
     }
 
     @Test
     void testParseNodeMetadataOfMultipleNodes() throws ParseException {
         final Map<Integer, NodeMetadata> nodesMetadata = parser.parseNodeMetadata(
-                createGfaFile("%n%nS 12 TCAAGG%n%n%nS 12 TAG%nS 12 CAT%nS 12 SANITYCHECK"),
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
+                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
+                        + "%nS 12 CAT * ORI:Z:test.fasta;"
+                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
                 ImmutableMap.of(1, 3, 2, 6, 3, 7)
         );
 
@@ -53,8 +58,10 @@ final class MetadataParserTest {
      */
     @Test
     void testParseNodeMetadataReaderReset() throws ParseException {
-        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
-        final NodeMetadata nodeMetadata2 = parser.parseNodeMetadata(createGfaFile("%n%nS 12 TCAAGG"), 3);
+        final NodeMetadata nodeMetadata = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
+        final NodeMetadata nodeMetadata2 = parser.parseNodeMetadata(
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"), 3);
 
         assertThat(nodeMetadata.getName()).isEqualTo("12");
         assertThat(nodeMetadata2.getName()).isEqualTo("12");
@@ -63,7 +70,10 @@ final class MetadataParserTest {
     @Test
     void testParseNodeMetaOfMultipleNodesInWrongOrder() {
         final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(
-                createGfaFile("%n%nS 12 TCAAGG%n%n%nS 12 TAG%nS 12 CAT%nS 12 SANITYCHECK"),
+                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
+                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
+                        + "%nS 12 CAT * ORI:Z:test.fasta;"
+                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
                 ImmutableMap.of(2, 7, 1, 3)
         ));
 
@@ -105,6 +115,20 @@ final class MetadataParserTest {
     }
 
     @Test
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws ParseException {
+        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC *"), 1));
+
+        assertThat(e).isInstanceOf(ParseException.class);
+    }
+
+    @Test
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomePrefixIsIncorrect() throws ParseException {
+        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC * ORY:Z:test.fasta;"), 1));
+
+        assertThat(e).isInstanceOf(ParseException.class);
+    }
+
+    @Test
     void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws ParseException {
         final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("L 12 + 24"), 1));
 
@@ -127,6 +151,7 @@ final class MetadataParserTest {
         assertThat(e).isInstanceOf(ParseException.class);
         assertThat(e).hasMessageContaining("Expected line 1 to start with L");
     }
+
 
     private GfaFile createGfaFile(final String gfa) throws ParseException {
         final byte[] gfaBytes = replaceSpacesWithTabs(gfa).getBytes(StandardCharsets.UTF_8);

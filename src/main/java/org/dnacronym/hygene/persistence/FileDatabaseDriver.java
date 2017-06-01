@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -201,6 +202,23 @@ public final class FileDatabaseDriver implements AutoCloseable {
     synchronized void deleteAllFromTable(final String tableName) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM " + tableName);
+        }
+    }
+
+    /**
+     * Executes a custom SQL query.
+     *
+     * @param sql          the SQL query to execute
+     * @param dataCallback the callback to be called with the result
+     * @return the return value of {@code dataCallback}
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    synchronized Object executeCustomQuery(final String sql, final Function<ResultSet, Object> dataCallback)
+            throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
+                return dataCallback.apply(resultSet);
+            }
         }
     }
 
