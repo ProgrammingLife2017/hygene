@@ -52,7 +52,7 @@ public final class GraphVisualizer {
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
-    private static final int MAX_GRAPH_RADIUS_NODE_TEXT = 50;
+    private static final int MAX_GRAPH_RADIUS_NODE_TEXT = 100;
     private static final double DEFAULT_RANGE = 10;
 
     private static final double DEFAULT_EDGE_WIDTH = 1;

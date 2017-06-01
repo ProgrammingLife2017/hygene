@@ -55,7 +55,8 @@ public final class NodeMetadataCache {
      * @return true if the cache has metadata of the given node id stored
      */
     public boolean has(final int nodeId) {
-        return cache.containsKey(nodeId);
+        final Node node = cache.get(nodeId);
+        return (node != null) && node.hasMetadata();
     }
 
     /**
