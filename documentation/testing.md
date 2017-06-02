@@ -51,4 +51,4 @@ This week we took a huge hit from removing old code (in terms of coverage). Beca
 
 The UI remain hard to test and we're working on improving our UI tests with a JavaFX end-to-end testing framework, which should allow us to test actual interaction with the UI better. Setting it up is however rather painful.
 
-Our coverage of this week decreased a little to ??% (CodeCov ??%).
+Our coverage of this week decreased a little to 79% (CodeCov 76%).
