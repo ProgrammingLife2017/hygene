@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.console;
 
-import javafx.scene.paint.Color;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
@@ -35,6 +34,7 @@ public final class ConsoleMessage {
      */
     public ConsoleMessage(final Appender appender, final LogEvent event) {
         this(new String(appender.getLayout().toByteArray(event), StandardCharsets.UTF_8));
+        styleClass = getColor(event.getLevel());
     }
 
     /**
@@ -56,28 +56,28 @@ public final class ConsoleMessage {
     }
 
     /**
-     * Returns a JavaFX color corresponding to a certain log level.
+     * Returns a styleclass corresponding to a certain log level.
      *
      * @param level the loglevel represent by {@link Level}
-     * @return the {@link Color}
+     * @return the styleclass
      */
-    private static Color getColor(final Level level) {
+    private static String getColor(final Level level) {
         if (level == null || level.toString() == null) {
-            return Color.BLACK;
+            return "default";
         }
 
         switch (level.toString()) {
             case "FATAL":
             case "ERROR":
             case "WARN":
-                return Color.RED;
+                return "red";
             case "DEBUG":
-                return Color.BLUE;
+                return "blue";
             case "TRACE":
-                return Color.GREEN;
+                return "yellow";
             case "INFO;":
             default:
-                return Color.LIGHTGRAY;
+                return "green";
         }
     }
 }
