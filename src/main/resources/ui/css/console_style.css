@@ -27,3 +27,15 @@
 .green {
     -fx-fill: #00ff23;
 }
+
+.red {
+    -fx-fill: #c3000a;
+}
+
+.yellow {
+    -fx-fill: #fff600;
+}
+
+.blue {
+    -fx-fill: #002cc3;
+}
