@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  */
 public final class ConsoleMessage {
     private final String message;
-    private final String styleClass;
+    private String styleClass = "green";
 
 
     /**
@@ -22,7 +22,6 @@ public final class ConsoleMessage {
      */
     public ConsoleMessage(final String message) {
         this.message = message;
-        this.styleClass = "green";
     }
 
     /**
