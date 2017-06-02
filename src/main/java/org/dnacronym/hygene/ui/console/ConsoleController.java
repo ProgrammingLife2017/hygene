@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.console;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -7,6 +8,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.events.ConsoleMessageEvent;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -43,13 +46,12 @@ public final class ConsoleController implements Initializable {
             LOGGER.error("Failed to initialise ConsoleController.", e);
             new ErrorDialogue(e).show();
         }
+        HygeneEventBus.getInstance().register(this);
     }
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        JFXAppender.getLatestLogEvent().addListener((observable, oldValue, newValue) -> appendLogItem(newValue));
-
         logSelectedSequence();
 
         consoleContent.setEditable(false);
@@ -81,9 +83,19 @@ public final class ConsoleController implements Initializable {
      */
     void appendLogItem(final ConsoleMessage message) {
         if (consoleContent != null) {
-            consoleContent.appendText(message + "\n");
-//            consoleContent.s
+            consoleContent.appendText(message.getMessage());
+            consoleContent.setStyleClass(0, consoleContent.getCaretPosition(), "green");
         }
+    }
+
+    /**
+     * Handles a new console event.
+     *
+     * @param consoleMessageEvent the event
+     */
+    @Subscribe
+    public void onConsoleMessageEvent(final ConsoleMessageEvent consoleMessageEvent) {
+        appendLogItem(consoleMessageEvent.getConsoleMessage());
     }
 
     /**
