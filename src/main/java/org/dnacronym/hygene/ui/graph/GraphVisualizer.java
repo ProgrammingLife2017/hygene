@@ -56,7 +56,6 @@ public final class GraphVisualizer {
      * Range used when new graph is set, unless graph contains too few nodes.
      */
     private static final int MAX_GRAPH_RADIUS_NODE_TEXT = 100;
-    private static final double DEFAULT_RANGE = 10;
 
     private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
@@ -124,12 +123,9 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
-     * @param calculator reference to the {@link GraphDimensionsCalculator} for the current drawing
-     * @param graph      graph which contains all the nodes and their information
      * @param nodeId     id of node to draw
      * @param charWidth  the width of character
      * @param charHeight the height of a character
-     * @param nodeId id of node to draw
      */
     private void drawNode(final int nodeId, final double charWidth, final double charHeight) {
         final double rectX = graphDimensionsCalculator.computeXPosition(nodeId);
@@ -140,13 +136,15 @@ public final class GraphVisualizer {
         graphicsContext.setFill(getNodeColor(nodeId, graph));
         graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
 
-        if (nodeMetadataCache.has(nodeId) && hopsProperty.get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
+        if (nodeMetadataCache.has(nodeId)
+                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
             graphicsContext.setFill(Color.BLACK);
 
             final int charCount = (int) (rectWidth / charWidth);
 
-        final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
-        final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeight() + 0.25 * charHeight;
+            final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
+            final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeightProperty().getValue()
+                    + 0.25 * charHeight;
 
             try {
                 final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
@@ -284,24 +282,15 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
-        clear();
-        for (final Integer nodeId : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(nodeId);
-        rTree = new RTree();
-
-        final int centerNodeId = centerNodeIdProperty.get();
-
-        graphDimensionsCalculator.calculate(graph, canvas, centerNodeId, hopsProperty.get(), nodeHeightProperty.get());
-        final List<Integer> neighbours = graphDimensionsCalculator.getNeighbours();
-        onScreenNodeCountProperty.set(neighbours.size());
-
         final Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
         graphicsContext.setFont(nodeFont);
 
         final double charWidth = getCharWidth(nodeFont);
         final double charHeight = getCharHeight(nodeFont);
-        for (final Integer nodeId : neighbours) {
-            drawNode(graphDimensionsCalculator, graph, nodeId, charWidth, charHeight);
+
+        clear();
+        for (final Integer nodeId : graphDimensionsCalculator.getObservableQueryNodes()) {
+            drawNode(nodeId, charWidth, charHeight);
 
             graph.iterator().visitDirectNeighbours(
                     nodeId, SequenceDirection.RIGHT,
