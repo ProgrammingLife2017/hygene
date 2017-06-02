@@ -45,3 +45,10 @@ In this sprint we worked on improving our UI tests. We refactored the the UI cla
 We also made sure that every new part/feature we added was well tested and did not run into any special problems.
 
 Therefore, our coverage of this week improved to 82% (CodeCov 78%).
+
+## Sprint 5
+This week we took a huge hit from removing old code (in terms of coverage). Because we completely rewrote our datastructure / parsing pipeline we still had the old versions around. All this code was well tested (same holds for the new versions of course), but that did unfortunately mean that after removing it, there was (in total) less code covered. Although we did not want to focus too much on improving this, we did our best to improve this by testing the new features well. In our opininion it does not make sense to add tests with only the goal to improve coverage. That would result in many meaningless tests that just 'literally' test that the lines of code were entered correctly instead of that the behavior of the code under test is correct. 
+
+The UI remain hard to test and we're working on improving our UI tests with a JavaFX end-to-end testing framework, which should allow us to test actual interaction with the UI better. Setting it up is however rather painful.
+
+Our coverage of this week decreased a little to ??% (CodeCov ??%).
