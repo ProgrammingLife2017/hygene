@@ -45,7 +45,7 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
     private static final int ARC_SIZE = 10;
-    private static final int NODE_OUTLINE_WIDTH = 5;
+    private static final int NODE_OUTLINE_WIDTH = 3;
     /**
      * Font used inside the nodes, this should always be a monospace font.
      */
