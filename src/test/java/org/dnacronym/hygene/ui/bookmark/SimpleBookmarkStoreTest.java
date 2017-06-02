@@ -29,6 +29,7 @@ final class SimpleBookmarkStoreTest {
 
     private Bookmark bookmark;
     private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private SequenceVisualizer sequenceVisualizer;
 
 
@@ -40,29 +41,17 @@ final class SimpleBookmarkStoreTest {
 
         graphVisualizer = mock(GraphVisualizer.class);
         sequenceVisualizer = mock(SequenceVisualizer.class);
+        graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
 
         centerNodeIdProperty = new SimpleIntegerProperty(-1);
-        hopsProperty = new SimpleIntegerProperty(-1);
-        when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
-        when(graphVisualizer.getHopsProperty()).thenReturn(hopsProperty);
+        radiusProperty = new SimpleIntegerProperty(-1);
+        when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        when(graphDimensionsCalculator.getRadiusProperty()).thenReturn(radiusProperty);
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, sequenceVisualizer);
+        simpleBookmarkStore = new SimpleBookmarkStore(
+                graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
     }
 
-
-    /*
-     * Visibility.
-     */
-
-    @Test
-    void testOriginalVisibilityTrue() {
-        assertThat(simpleBookmarkStore.getTableVisibleProperty().get()).isTrue();
-    }
-
-
-    /*
-     * Get set bookmarks.
-     */
 
     @Test
     void testGetBookmarks() {
@@ -92,7 +81,7 @@ final class SimpleBookmarkStoreTest {
 
         verify(graphVisualizer).setSelectedNode(0);
         assertThat(centerNodeIdProperty.get()).isEqualTo(0);
-        assertThat(hopsProperty.get()).isEqualTo(32);
+        assertThat(radiusProperty.get()).isEqualTo(32);
         verify(sequenceVisualizer).setOffset(5);
     }
 }

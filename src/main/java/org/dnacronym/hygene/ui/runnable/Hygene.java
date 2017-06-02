@@ -92,13 +92,14 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         settings = new Settings(graphStore);
 
-        graphDimensionsCalculator = new GraphDimensionsCalculator();
-        graphVisualizer = new GraphVisualizer(graphStore, graphDimensionsCalculator);
-        graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
+        graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
+        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator);
+        graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
 
         sequenceVisualizer = new SequenceVisualizer();
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, sequenceVisualizer);
+        simpleBookmarkStore = new SimpleBookmarkStore(
+                graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
     }
 
     @Override

@@ -126,7 +126,7 @@ public final class SimpleBookmarkStore {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 graphDimensionsCalculator.getCenterNodeIdProperty().set(bookmark.getNodeId());
-                graphDimensionsCalculator.getHopsProperty().set(bookmark.getRadius());
+                graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());
 
                 graphVisualizer.setSelectedNode(bookmark.getNodeId());
                 sequenceVisualizer.setOffset(bookmark.getBaseOffset());
