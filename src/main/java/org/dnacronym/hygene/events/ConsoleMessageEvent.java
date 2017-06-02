@@ -17,4 +17,13 @@ public final class ConsoleMessageEvent {
     public ConsoleMessageEvent(final ConsoleMessage consoleMessage) {
         this.consoleMessage = consoleMessage;
     }
+
+    /**
+     * Gets console message.
+     *
+     * @return the console message
+     */
+    public ConsoleMessage getConsoleMessage() {
+        return consoleMessage;
+    }
 }
