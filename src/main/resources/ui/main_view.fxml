@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8"
+            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8.0.102"
             xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <fx:include source="menu_view.fxml"/>
     </top>
 
     <left>
-        <VBox maxHeight="Infinity" prefHeight="Infinity">
-            <children>
+        <ScrollPane hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
+            <VBox>
                 <fx:include source="node/node_properties_view.fxml"/>
                 <fx:include source="bookmark/bookmark_create_view.fxml"/>
-            </children>
-        </VBox>
+            </VBox>
+        </ScrollPane>
     </left>
 
     <right>
@@ -31,7 +32,6 @@
             <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
         </VBox>
     </center>
-
 
     <bottom>
         <fx:include source="node/sequence_view.fxml"/>
