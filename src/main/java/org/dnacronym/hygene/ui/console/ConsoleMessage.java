@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  */
 public final class ConsoleMessage {
     private final String message;
-    private String styleClass;
+    private final String styleClass;
 
 
     /**
