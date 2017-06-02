@@ -7,6 +7,7 @@ import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,39 +29,29 @@ final class SimpleBookmarkStoreTest {
 
     private Bookmark bookmark;
     private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
+    private SequenceVisualizer sequenceVisualizer;
 
 
     @BeforeEach
     void beforeEach() throws ParseException {
-        bookmark = new Bookmark(0, 1, 32, "1234");
+        bookmark = new Bookmark(0, 5, 32, "1234");
 
         final GraphStore graphStore = new GraphStore();
 
         graphVisualizer = mock(GraphVisualizer.class);
+        sequenceVisualizer = mock(SequenceVisualizer.class);
+        graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
 
-        centerNodeIdProperty = new SimpleIntegerProperty(100);
-        radiusProperty = new SimpleIntegerProperty(100);
-        final GraphDimensionsCalculator graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
+        centerNodeIdProperty = new SimpleIntegerProperty(-1);
+        radiusProperty = new SimpleIntegerProperty(-1);
         when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
         when(graphDimensionsCalculator.getRadiusProperty()).thenReturn(radiusProperty);
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, graphDimensionsCalculator);
+        simpleBookmarkStore = new SimpleBookmarkStore(
+                graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
     }
 
-
-    /*
-     * Visibility.
-     */
-
-    @Test
-    void testOriginalVisibilityTrue() {
-        assertThat(simpleBookmarkStore.getTableVisibleProperty().get()).isTrue();
-    }
-
-
-    /*
-     * Get set bookmarks.
-     */
 
     @Test
     void testGetBookmarks() {
@@ -91,5 +82,6 @@ final class SimpleBookmarkStoreTest {
         verify(graphVisualizer).setSelectedNode(0);
         assertThat(centerNodeIdProperty.get()).isEqualTo(0);
         assertThat(radiusProperty.get()).isEqualTo(32);
+        verify(sequenceVisualizer).setOffset(5);
     }
 }

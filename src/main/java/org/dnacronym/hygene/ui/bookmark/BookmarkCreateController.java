@@ -8,13 +8,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -29,6 +32,7 @@ public final class BookmarkCreateController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
 
     private GraphVisualizer graphVisualizer;
+    private SequenceVisualizer sequenceVisualizer;
     private GraphStore graphStore;
     private SimpleBookmarkStore simpleBookmarkStore;
 
@@ -50,6 +54,7 @@ public final class BookmarkCreateController implements Initializable {
     public BookmarkCreateController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
+            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
             setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
@@ -62,6 +67,12 @@ public final class BookmarkCreateController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         final ObjectProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+
+        baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+        baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
+        baseOffset.textProperty().addListener((observable, oldValue, newValue) -> updateBaseOffset(newValue));
+        sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
+                baseOffset.setText(String.valueOf(newValue)));
 
         baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
@@ -82,6 +93,15 @@ public final class BookmarkCreateController implements Initializable {
     }
 
     /**
+     * Sets the {@link SequenceVisualizer} for use by the controller.
+     *
+     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller.
+     */
+    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
+        this.sequenceVisualizer = sequenceVisualizer;
+    }
+
+    /**
      * Set the {@link GraphStore} in the controller.
      *
      * @param graphStore {@link GraphStore} to recent in the {@link org.dnacronym.hygene.ui.graph.GraphController}
@@ -97,6 +117,25 @@ public final class BookmarkCreateController implements Initializable {
      */
     void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
         this.simpleBookmarkStore = simpleBookmarkStore;
+    }
+
+    /**
+     * Update the current base offset in the sequence visualizer and the base offset {@link TextField}.
+     * <p>
+     * If the base offset string is {@code null} or empty, the offset in the {@link SequenceVisualizer} is set to 0 and
+     * the text of the base offset {@link TextField} is set to "0".
+     *
+     * @param offset the new offset string
+     */
+    void updateBaseOffset(final String offset) {
+        if (offset == null || offset.isEmpty()) {
+            sequenceVisualizer.setOffset(0);
+            baseOffset.setText("0");
+            return;
+        }
+
+        sequenceVisualizer.setOffset(Integer.parseInt(offset));
+        baseOffset.setText(sequenceVisualizer.getOffsetProperty().asString().get());
     }
 
     /**

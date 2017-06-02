@@ -1,12 +1,14 @@
 package org.dnacronym.hygene.ui.node;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
@@ -27,15 +29,16 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
+    private SequenceVisualizer sequenceVisualizer;
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
 
     @FXML
-    private AnchorPane nodePropertiesPane;
+    private Pane nodePropertiesPane;
     @FXML
     private TextField nodeId;
     @FXML
-    private TextField sequence;
+    private TextField sequencePreview;
     @FXML
     private Canvas neighbourCanvas;
     @FXML
@@ -44,6 +47,8 @@ public final class NodePropertiesController implements Initializable {
     private TextField rightNeighbours;
     @FXML
     private TextField position;
+    @FXML
+    private ToggleButton viewSequence;
 
 
     /**
@@ -51,6 +56,7 @@ public final class NodePropertiesController implements Initializable {
      */
     public NodePropertiesController() {
         try {
+            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
@@ -68,27 +74,22 @@ public final class NodePropertiesController implements Initializable {
                 = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
         neighbourVisualizer.setCanvas(neighbourCanvas);
 
-        selectedNodeProperty.addListener((observable, oldNode, newNode) -> {
-            if (newNode == null) {
-                return;
-            }
-
-            nodeId.setText(String.valueOf(newNode.getId()));
-
-            try {
-                sequence.setText(newNode.retrieveMetadata().getSequence());
-            } catch (final ParseException e) {
-                LOGGER.error("Error when parsing a node.", e);
-            }
-
-            leftNeighbours.setText(String.valueOf(newNode.getNumberOfIncomingEdges()));
-            rightNeighbours.setText(String.valueOf(newNode.getNumberOfOutgoingEdges()));
-
-            position.setText(String.valueOf(newNode.getId()));
-        });
+        selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        sequenceVisualizer.getVisibleProperty().bind(Bindings.and(
+                graphVisualizer.getSelectedNodeProperty().isNotNull(),
+                viewSequence.selectedProperty()));
+    }
+
+    /**
+     * Sets the {@link SequenceVisualizer} for use by the controller.
+     *
+     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller
+     */
+    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
+        this.sequenceVisualizer = sequenceVisualizer;
     }
 
     /**
@@ -108,6 +109,45 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
+    }
+
+    /**
+     * Updates the fields that describe the properties of the {@link Node}.
+     * <p>
+     * If this {@link Node} is {@code null}, the fields are simply cleared.
+     *
+     * @param node the {@link Node} whose properties should be displayed
+     */
+    void updateFields(final Node node) {
+        if (node == null) {
+            clearNodeFields();
+            return;
+        }
+
+        nodeId.setText(String.valueOf(node.getId()));
+
+        try {
+            sequencePreview.setText(String.valueOf(node.retrieveMetadata().getSequence()));
+        } catch (final ParseException e) {
+            LOGGER.error("Unable to parse sequence of node %s.", node, e);
+        }
+
+        leftNeighbours.setText(String.valueOf(node.getNumberOfIncomingEdges()));
+        rightNeighbours.setText(String.valueOf(node.getNumberOfOutgoingEdges()));
+
+        position.setText(String.valueOf(node.getId()));
+    }
+
+
+    /**
+     * Clear all text fields used to describe node properties.
+     */
+    private void clearNodeFields() {
+        nodeId.clear();
+        sequencePreview.clear();
+        leftNeighbours.clear();
+        rightNeighbours.clear();
+        position.clear();
     }
 
     /**

@@ -16,6 +16,7 @@ import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.dnacronym.hygene.ui.settings.Settings;
 
 import java.io.File;
@@ -44,6 +45,8 @@ public final class Hygene extends Application {
     private GraphVisualizer graphVisualizer;
     private GraphMovementCalculator graphMovementCalculator;
     private GraphDimensionsCalculator graphDimensionsCalculator;
+
+    private SequenceVisualizer sequenceVisualizer;
 
     private Settings settings;
 
@@ -93,7 +96,10 @@ public final class Hygene extends Application {
         graphVisualizer = new GraphVisualizer(graphDimensionsCalculator);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, graphDimensionsCalculator);
+        sequenceVisualizer = new SequenceVisualizer();
+
+        simpleBookmarkStore = new SimpleBookmarkStore(
+                graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
     }
 
     @Override
@@ -174,6 +180,15 @@ public final class Hygene extends Application {
      */
     public GraphVisualizer getGraphVisualizer() {
         return graphVisualizer;
+    }
+
+    /**
+     * Gets the {@link SequenceVisualizer} of the application.
+     *
+     * @return {@link SequenceVisualizer} of the application
+     */
+    public SequenceVisualizer getSequenceVisualizer() {
+        return sequenceVisualizer;
     }
 
     /**
