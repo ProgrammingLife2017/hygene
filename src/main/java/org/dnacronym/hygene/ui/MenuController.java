@@ -327,7 +327,6 @@ public final class MenuController implements Initializable {
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
         final ProgressBarView progressBarView = new ProgressBarView();
-        progressBarView.show();
 
         progressBarView.monitorTask(progressUpdater -> {
             if (graphStore == null) {
@@ -341,6 +340,8 @@ public final class MenuController implements Initializable {
                 LOGGER.error("Failed to load: " + file.getName() + ".", e);
             }
         });
+
+        progressBarView.show();
 
         Hygene.getInstance().formatTitle(file.getPath());
 

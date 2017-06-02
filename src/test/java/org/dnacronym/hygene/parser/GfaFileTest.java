@@ -64,8 +64,7 @@ final class GfaFileTest {
     @Test
     void testCannotReadNonExistingFile() {
         currentFileName = "random-file-name";
-        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse(progress -> {
-        }));
+        final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse(ProgressUpdater.DUMMY));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
@@ -93,8 +92,7 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        gfaFile.parse(progress -> {
-        });
+        gfaFile.parse(ProgressUpdater.DUMMY);
 
         verify(gfaParser).parse(eq(gfaFile), any(ProgressUpdater.class));
         assertThat(gfaFile.getGraph()).isNotNull();

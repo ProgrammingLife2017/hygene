@@ -16,8 +16,7 @@ final class MetadataParsingIntegrationTest {
     @Test
     void testGetNodeMetadata() throws ParseException {
         final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
-        gfaFile.parse(progress -> {
-        });
+        gfaFile.parse(ProgressUpdater.DUMMY);
 
         final Node node = gfaFile.getGraph().getNode(1);
         final NodeMetadata nodeMetadata = node.retrieveMetadata();
@@ -29,8 +28,7 @@ final class MetadataParsingIntegrationTest {
     @Test
     void testGetEdgeMetadata() throws ParseException {
         final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
-        gfaFile.parse(progress -> {
-        });
+        gfaFile.parse(ProgressUpdater.DUMMY);
 
         final Edge edge = gfaFile.getGraph().getNode(1).getOutgoingEdges().iterator().next();
         final EdgeMetadata edgeMetadata = edge.retrieveMetadata();

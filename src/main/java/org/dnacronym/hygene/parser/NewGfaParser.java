@@ -28,8 +28,10 @@ import java.util.stream.IntStream;
 @SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class NewGfaParser {
     private static final Logger LOGGER = LogManager.getLogger(NewGfaParser.class);
-    private static final int PROGRESS_UPDATE_INTERVAL = 10;
-    private static final int PROGRESS_TOTAL = 100;
+    private static final int PROGRESS_UPDATE_INTERVAL = 1000;
+    private static final int PROGRESS_ALLOCATE_HEURISTIC = 1750000;
+    private static final long PROGRESS_ALLOCATE_TOTAL = 20;
+    private static final long PROGRESS_PARSE_LINE_TOTAL = 80;
     private static final String SOURCE_NAME = "<source>";
     private static final String SINK_NAME = "<sink>";
 
@@ -62,7 +64,7 @@ public final class NewGfaParser {
 
         try {
             LOGGER.info("Start allocating nodes");
-            allocateNodes(gfa);
+            allocateNodes(gfa, progressUpdater);
             LOGGER.info("Finished allocating nodes");
 
             nodeArrays = new int[nodeIds.size()][];
@@ -76,7 +78,10 @@ public final class NewGfaParser {
             LOGGER.info("Start parsing lines");
             while ((line = gfa.readLine()) != null) {
                 if (offset % PROGRESS_UPDATE_INTERVAL == 0) {
-                    progressUpdater.updateProgress(PROGRESS_TOTAL * offset / lineCount);
+                    progressUpdater.updateProgress(
+                            (int) (PROGRESS_ALLOCATE_TOTAL + PROGRESS_PARSE_LINE_TOTAL * offset / lineCount),
+                            "Parsing nodes and edges..."
+                    );
                 }
                 parseLine(line, offset + 1);
                 offset++;
@@ -99,13 +104,21 @@ public final class NewGfaParser {
      * This step is necessary because we need to know the internal node IDs
      * upfront to be able to add edges to the correct node vectors.
      *
-     * @param gfa a buffered reader of a GFA file
+     * @param gfa             a buffered reader of a GFA file
+     * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException if the given GFA file is not valid
      */
-    private void allocateNodes(final BufferedReader gfa) throws IOException {
+    private void allocateNodes(final BufferedReader gfa, final ProgressUpdater progressUpdater) throws IOException {
         addNodeId(SOURCE_NAME);
         String line;
         while ((line = gfa.readLine()) != null) {
+            if (lineCount % PROGRESS_UPDATE_INTERVAL == 0) {
+                final int update = lineCount / PROGRESS_ALLOCATE_HEURISTIC;
+                if (update <= PROGRESS_ALLOCATE_TOTAL) {
+                    progressUpdater.updateProgress(update, "Allocating nodes...");
+                }
+            }
+
             if (line.startsWith("S\t")) {
                 addNodeId(parseNodeName(line));
             }

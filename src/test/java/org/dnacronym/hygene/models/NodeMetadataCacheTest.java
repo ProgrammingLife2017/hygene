@@ -4,6 +4,7 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParser;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,8 +120,7 @@ final class NodeMetadataCacheTest {
 
     private Graph createGraph() throws ParseException {
         GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
-        gfaFile.parse(progress -> {
-        });
+        gfaFile.parse(ProgressUpdater.DUMMY);
 
         return gfaFile.getGraph();
     }

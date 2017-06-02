@@ -59,7 +59,9 @@ public final class GraphArrayFile {
             int nodeIndex = 0;
             while ((node = cache.readLine()) != null) {
                 if (nodeIndex % PROGRESS_UPDATE_INTERVAL == 0) {
-                    progressUpdater.updateProgress(PROGRESS_TOTAL * nodeIndex / graphSize);
+                    progressUpdater.updateProgress(
+                            PROGRESS_TOTAL * nodeIndex / graphSize,
+                            "Restoring graph from cache...");
                 }
 
                 final StringTokenizer nodeTokenizer = new StringTokenizer(node, NODE_VALUE_SEPARATOR);

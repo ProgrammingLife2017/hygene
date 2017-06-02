@@ -50,6 +50,16 @@ public final class ProgressBarView {
             newStage.initStyle(StageStyle.UTILITY);
             newStage.initModality(Modality.APPLICATION_MODAL);
 
+            final double centerXPosition = primaryStage.getX() + primaryStage.getWidth() / 2;
+            final double centerYPosition = primaryStage.getY() + primaryStage.getHeight() / 2;
+
+            newStage.setOnShowing(event -> newStage.hide());
+            newStage.setOnShown(event -> {
+                newStage.setX(centerXPosition - newStage.getWidth() / 2);
+                newStage.setY(centerYPosition - newStage.getHeight() / 2);
+                newStage.show();
+            });
+
             setStage(newStage);
         } catch (final IOException | UIInitialisationException e) {
             LOGGER.error("Progress bar view could not be loaded.", e);
@@ -91,11 +101,13 @@ public final class ProgressBarView {
         final Task<Void> progressTask = new Task<Void>() {
             @Override
             public Void call() throws InterruptedException, IOException, UIInitialisationException {
-                task.accept(progress -> {
+                task.accept((progress, message) -> {
                     if (progress == PROGRESS_TOTAL) {
                         Platform.runLater(stage::close);
                     }
                     this.updateProgress(progress, PROGRESS_TOTAL);
+
+                    progressBarController.updateProgressText(message);
                 });
                 return null;
             }
