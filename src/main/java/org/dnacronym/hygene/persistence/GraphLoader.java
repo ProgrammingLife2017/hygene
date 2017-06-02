@@ -3,9 +3,9 @@ package org.dnacronym.hygene.persistence;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -80,7 +80,7 @@ public final class GraphLoader {
      *
      * @param graph the graph to dump
      */
-    public void dumpGraph(final int[][] graph) {
+    public void dumpGraph(final int[][] graph, final String fileName) {
         LOGGER.info("Dumping graph to storage.");
 
         if (hasGraph()) {
@@ -89,13 +89,13 @@ public final class GraphLoader {
 
         try {
             LOGGER.info("Write internal data structure to temporary file.");
-            final GraphArrayFile cache = new GraphArrayFile(Files.getInstance().getTemporaryFile("hygene-cache"));
+            final GraphArrayFile cache = new GraphArrayFile(new File(fileName + ".hygenecache"));
             cache.write(graph);
 
             LOGGER.info("Load temporary file into the database.");
             fileDatabaseDriver.enableFileIO();
             fileDatabaseDriver.raw("INSERT INTO " + TABLE_NAME + " VALUES(" + KEY_COLUMN_VALUE + ","
-                    + graph.length + ",readfile('" + cache.getAbsolutePath() + "'))");
+                    + graph.length + ",\"Coming soon\")");
         } catch (final SQLException | IOException e) {
             throw new UnexpectedDatabaseException("Failed to dump graph into database.", e);
         }
@@ -110,23 +110,18 @@ public final class GraphLoader {
      * @return a graph
      * @throws IOException if we cannot read from the cache file
      */
-    public int[][] restoreGraph(final ProgressUpdater progressUpdater) throws IOException {
+    public int[][] restoreGraph(final ProgressUpdater progressUpdater, final String fileName) throws IOException {
         LOGGER.info("Restoring graph from storage.");
 
         if (!hasGraph()) {
             throw new IllegalStateException("There is no graph present in the database to be restored.");
         }
 
-        final GraphArrayFile cache = new GraphArrayFile(Files.getInstance().getTemporaryFile("hygene-cache"));
+        final GraphArrayFile cache = new GraphArrayFile(new File(fileName + ".hygenecache"));
 
         try {
             final int nodeCount = Integer.parseInt(fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME,
                     KEY_COLUMN_VALUE, NODE_COUNT_COLUMN_NAME));
-
-            LOGGER.info("Creating temporary file with internal data structure representation.");
-            fileDatabaseDriver.enableFileIO();
-            fileDatabaseDriver.raw(
-                    "SELECT writefile('" + cache.getAbsolutePath() + "', dump) FROM " + TABLE_NAME + " LIMIT 1");
 
             LOGGER.info("Load temporary file into memory and parse to internal data structure.");
             return cache.read(nodeCount, progressUpdater);

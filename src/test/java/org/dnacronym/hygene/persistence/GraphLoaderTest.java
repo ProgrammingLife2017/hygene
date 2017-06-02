@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.persistence;
 
+import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ final class GraphLoaderTest extends FileDatabaseTestBase {
     private FileDatabase fileDatabase;
     private GraphLoader graphLoader;
     private ProgressUpdater progressUpdater;
+    private String temporaryPath;
 
 
     @BeforeEach
@@ -26,6 +28,8 @@ final class GraphLoaderTest extends FileDatabaseTestBase {
 
         fileDatabase = new FileDatabase(GFA_FILE_NAME);
         graphLoader = new GraphLoader(fileDatabase);
+
+        temporaryPath = Files.getInstance().getTemporaryFile("test").getAbsolutePath();
 
         progressUpdater = ProgressUpdater.DUMMY;
     }
@@ -44,15 +48,15 @@ final class GraphLoaderTest extends FileDatabaseTestBase {
     }
 
     @Test
-    void testHasGraphTrue() {
-        graphLoader.dumpGraph(new int[][] {});
+    void testHasGraphTrue() throws IOException {
+        graphLoader.dumpGraph(new int[][] {}, temporaryPath);
 
         assertThat(graphLoader.hasGraph()).isTrue();
     }
 
     @Test
-    void testDeleteGraph() {
-        graphLoader.dumpGraph(new int[][] {});
+    void testDeleteGraph() throws IOException {
+        graphLoader.dumpGraph(new int[][] {}, temporaryPath);
         graphLoader.deleteGraph();
 
         assertThat(graphLoader.hasGraph()).isFalse();
@@ -63,9 +67,9 @@ final class GraphLoaderTest extends FileDatabaseTestBase {
         final int[][] graph = new int[][] {{88, 5}, {8, 11, 41, 65, 45}, {18, 33}, {90, 61, 85, 83}, {6, 61, 4, 89, 98},
                 {77, 53, 24, 91}};
 
-        graphLoader.dumpGraph(graph);
+        graphLoader.dumpGraph(graph, temporaryPath);
 
-        assertThat(graphLoader.restoreGraph(progressUpdater)).isEqualTo(graph);
+        assertThat(graphLoader.restoreGraph(progressUpdater, temporaryPath)).isEqualTo(graph);
     }
 
     @Test
@@ -73,9 +77,9 @@ final class GraphLoaderTest extends FileDatabaseTestBase {
         final int[][] graphA = new int[][] {{47, 68, 74}, {83, 37}};
         final int[][] graphB = new int[][] {{56}, {83, 69}, {44, 75, 91, 11}};
 
-        graphLoader.dumpGraph(graphA);
-        graphLoader.dumpGraph(graphB);
+        graphLoader.dumpGraph(graphA, temporaryPath);
+        graphLoader.dumpGraph(graphB, temporaryPath);
 
-        assertThat(graphLoader.restoreGraph(progressUpdater)).isEqualTo(graphB);
+        assertThat(graphLoader.restoreGraph(progressUpdater, temporaryPath)).isEqualTo(graphB);
     }
 }
