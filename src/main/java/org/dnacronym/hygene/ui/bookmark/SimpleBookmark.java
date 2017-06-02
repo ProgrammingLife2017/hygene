@@ -95,7 +95,6 @@ public final class SimpleBookmark {
      * {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} to the one stored internally.
      *
      * @return {@link Runnable} to be fired when user clicks on bookmark
-     * @see org.dnacronym.hygene.ui.graph.GraphVisualizer#getCenterNodeIdProperty()
      */
     public Runnable getOnClick() {
         return onClick;

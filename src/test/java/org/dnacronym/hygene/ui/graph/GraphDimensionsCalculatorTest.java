@@ -1,8 +1,10 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.scene.canvas.Canvas;
+import org.assertj.core.data.Offset;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;
+import org.dnacronym.hygene.parser.GfaFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,62 +18,99 @@ import static org.mockito.Mockito.when;
  */
 final class GraphDimensionsCalculatorTest {
     private GraphDimensionsCalculator graphDimensionsCalculator;
+    private GraphStore graphStore;
 
 
     @BeforeEach
     void beforeEach() {
-        graphDimensionsCalculator = new GraphDimensionsCalculator();
+        graphStore = new GraphStore();
+        graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
+
+        graphDimensionsCalculator.setGraph(createGraph());
+        graphDimensionsCalculator.setCanvasSize(mockCanvas().getWidth(), mockCanvas().getHeight());
     }
 
 
     @Test
+    void testGraphChanged() {
+        assertThat(graphDimensionsCalculator.getNodeCountProperty().get()).isEqualTo(1);
+
+        final GfaFile gfaFileTwoNodes = mock(GfaFile.class);
+        when(gfaFileTwoNodes.getGraph()).thenReturn(createTwoNodeGraph());
+        graphStore.getGfaFileProperty().set(gfaFileTwoNodes);
+
+        assertThat(graphDimensionsCalculator.getNodeCountProperty().get()).isEqualTo(2);
+    }
+
+    @Test
     void testComputeXPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
         assertThat(graphDimensionsCalculator.computeXPosition(0)).isEqualTo(-400);
     }
 
     @Test
     void testComputeRightXPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
         assertThat(graphDimensionsCalculator.computeRightXPosition(0)).isEqualTo(0);
     }
 
     @Test
     void testComputeYPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
-        assertThat(graphDimensionsCalculator.computeYPosition(0)).isEqualTo(-300.0 / 2);
+        assertThat(graphDimensionsCalculator.computeYPosition(0)).isEqualTo(300.0 / 2, Offset.offset(1.0));
     }
 
     @Test
     void testComputeMiddleYPosition() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 10, 0);
-        assertThat(graphDimensionsCalculator.computeMiddleYPosition(0)).isEqualTo(-300.0 / 2);
+        assertThat(graphDimensionsCalculator.computeMiddleYPosition(0)).isEqualTo(300.0 / 2, Offset.offset(1.0));
     }
 
     @Test
     void testComputeWidth() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 20, 0);
         assertThat(graphDimensionsCalculator.computeWidth(0)).isEqualTo(400);
     }
 
     @Test
-    void testGetNodeHeight() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 0, 105);
-        assertThat(graphDimensionsCalculator.getNodeHeight()).isEqualTo(105);
+    void testComputeAndGetLaneHeight() {
+        assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300);
     }
 
     @Test
-    void testComputeAndGetLaneHeight() {
-        graphDimensionsCalculator.calculate(createGraph(), mockCanvas(), 0, 0, 0);
-        assertThat(graphDimensionsCalculator.getLaneHeight()).isEqualTo(-300);
+    void testUpperBoundNodeId() {
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(1000);
+        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
+    }
+
+    @Test
+    void testLowerBoundNodeId() {
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(-1000);
+        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
+    }
+
+    @Test
+    void testUpperBoundRadius() {
+        graphDimensionsCalculator.getRadiusProperty().set(1000);
+        assertThat(graphDimensionsCalculator.getRadiusProperty().get()).isEqualTo(1);
     }
 
     private Graph createGraph() {
-        return new Graph(new int[][] {
+        return new Graph(new int[][]{
                 NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
                         .withUnscaledYPosition(30)
+                        .toArray()
+        }, null);
+    }
+
+    private Graph createTwoNodeGraph() {
+        return new Graph(new int[][]{
+                NodeBuilder.start()
+                        .withSequenceLength(500)
+                        .withUnscaledXPosition(600)
+                        .withUnscaledYPosition(30)
+                        .toArray(),
+                NodeBuilder.start()
+                        .withSequenceLength(300)
+                        .withUnscaledXPosition(400)
+                        .withUnscaledYPosition(15)
                         .toArray()
         }, null);
     }

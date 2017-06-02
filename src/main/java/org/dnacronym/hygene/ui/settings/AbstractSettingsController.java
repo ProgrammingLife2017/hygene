@@ -4,6 +4,7 @@ import javafx.fxml.Initializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -19,6 +20,7 @@ public abstract class AbstractSettingsController implements Initializable {
     private Settings settings;
     private GraphVisualizer graphVisualizer;
     private GraphMovementCalculator graphMovementCalculator;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
 
 
     /**
@@ -29,6 +31,7 @@ public abstract class AbstractSettingsController implements Initializable {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSettings(Hygene.getInstance().getSettings());
             setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
+            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
             new ErrorDialogue(e).show();
@@ -77,7 +80,7 @@ public abstract class AbstractSettingsController implements Initializable {
      *
      * @return the {@link GraphMovementCalculator} for use by the controller
      */
-    public final GraphMovementCalculator getGraphMovementCalculator() {
+    final GraphMovementCalculator getGraphMovementCalculator() {
         return graphMovementCalculator;
     }
 
@@ -88,5 +91,23 @@ public abstract class AbstractSettingsController implements Initializable {
      */
     final void setGraphMovementCalculator(final GraphMovementCalculator graphMovementCalculator) {
         this.graphMovementCalculator = graphMovementCalculator;
+    }
+
+    /**
+     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
+     *
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
+     */
+    final void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
+    }
+
+    /**
+     * Gets the {@link GraphDimensionsCalculator} for use by the controller.
+     *
+     * @return the {@link GraphDimensionsCalculator} for use by the controller
+     */
+    final GraphDimensionsCalculator getGraphDimensionsCalculator() {
+        return graphDimensionsCalculator;
     }
 }

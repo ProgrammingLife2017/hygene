@@ -1,8 +1,10 @@
 package org.dnacronym.hygene.ui.bookmark;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +14,6 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 final class SimpleBookmarkStoreTest {
     private SimpleBookmarkStore simpleBookmarkStore;
     private IntegerProperty centerNodeIdProperty;
-    private IntegerProperty hopsProperty;
+    private IntegerProperty radiusProperty;
 
     private Bookmark bookmark;
     private GraphVisualizer graphVisualizer;
@@ -36,12 +37,14 @@ final class SimpleBookmarkStoreTest {
         final GraphStore graphStore = new GraphStore();
 
         graphVisualizer = mock(GraphVisualizer.class);
-        centerNodeIdProperty = mock(IntegerProperty.class);
-        hopsProperty = mock(IntegerProperty.class);
-        when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
-        when(graphVisualizer.getHopsProperty()).thenReturn(hopsProperty);
 
-        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer);
+        centerNodeIdProperty = new SimpleIntegerProperty(100);
+        radiusProperty = new SimpleIntegerProperty(100);
+        final GraphDimensionsCalculator graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
+        when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        when(graphDimensionsCalculator.getRadiusProperty()).thenReturn(radiusProperty);
+
+        simpleBookmarkStore = new SimpleBookmarkStore(graphStore, graphVisualizer, graphDimensionsCalculator);
     }
 
 
@@ -85,8 +88,8 @@ final class SimpleBookmarkStoreTest {
         final SimpleBookmark simpleBookmark = simpleBookmarkStore.getSimpleBookmarks().get(0);
         simpleBookmark.getOnClick().run();
 
-        verify(graphVisualizer, times(1)).setSelectedNode(0);
-        verify(centerNodeIdProperty, times(1)).set(0);
-        verify(hopsProperty, times(1)).set(32);
+        verify(graphVisualizer).setSelectedNode(0);
+        assertThat(centerNodeIdProperty.get()).isEqualTo(0);
+        assertThat(radiusProperty.get()).isEqualTo(32);
     }
 }

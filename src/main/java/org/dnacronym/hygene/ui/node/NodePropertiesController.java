@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.graph.GraphStore;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -28,8 +27,8 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
-    private GraphStore graphStore;
 
     @FXML
     private AnchorPane nodePropertiesPane;
@@ -53,7 +52,7 @@ public final class NodePropertiesController implements Initializable {
     public NodePropertiesController() {
         try {
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-            setGraphStore(Hygene.getInstance().getGraphStore());
+            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize NodePropertiesController.", e);
             new ErrorDialogue(e).show();
@@ -88,8 +87,8 @@ public final class NodePropertiesController implements Initializable {
             position.setText(String.valueOf(newNode.getId()));
         });
 
-        nodePropertiesPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        nodePropertiesPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
     }
 
     /**
@@ -103,12 +102,12 @@ public final class NodePropertiesController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphStore} in the controller.
+     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
      *
-     * @param graphStore {@link GraphStore} to recent in the {@link org.dnacronym.hygene.ui.graph.GraphController}
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
      */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
+    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
     }
 
     /**
@@ -119,7 +118,9 @@ public final class NodePropertiesController implements Initializable {
     @FXML
     void onFocusAction(final ActionEvent actionEvent) {
         final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
-        graphVisualizer.getCenterNodeIdProperty().set(selectedNode.getId());
+        if (selectedNode != null) {
+            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
+        }
 
         actionEvent.consume();
     }

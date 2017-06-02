@@ -6,12 +6,17 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 /**
  * Deals with translating user input into something the {@link GraphVisualizer} can use and understand.
+ * <p>
+ * The translated coordinates are passed to the {@link GraphDimensionsCalculator}, which updates the positions of
+ * onscreen nodes drawn by the {@link GraphVisualizer}.
+ *
+ * @see GraphDimensionsCalculator
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
     private static final double DEFAULT_ZOOMING_SENSITIVITY = 0.05;
 
-    private final GraphVisualizer graphVisualizer;
+    private final GraphDimensionsCalculator graphDimensionsCalculator;
 
     private final DoubleProperty panningSensitivityProperty;
     private final DoubleProperty zoomingSensitivityProperty;
@@ -24,12 +29,6 @@ public final class GraphMovementCalculator {
     private boolean draggingRight;
     private boolean dragging;
 
-    /**
-     * When true, scrolling out is prohibited. This prevents the about of hops growing too large, making scrolling in
-     * again unresponsive.
-     */
-    private boolean stopScrollingOut;
-
 
     /**
      * Create instance of {@link GraphMovementCalculator}.
@@ -37,10 +36,10 @@ public final class GraphMovementCalculator {
      * The given {@link GraphDimensionsCalculator} is used to calculate the amount of onscreen nodes, and determines how
      * far the user can zoom out.
      *
-     * @param graphVisualizer {@link GraphVisualizer} to drag
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} used to query
      */
-    public GraphMovementCalculator(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
+    public GraphMovementCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.panningSensitivityProperty = new SimpleDoubleProperty(DEFAULT_PANNING_SENSITIVITY);
         this.zoomingSensitivityProperty = new SimpleDoubleProperty(DEFAULT_ZOOMING_SENSITIVITY);
     }
@@ -53,7 +52,7 @@ public final class GraphMovementCalculator {
      *
      * @param x x as offset when dragging
      */
-    public void onMousePressed(final double x) {
+    public void onMouseDragEntered(final double x) {
         centerX = x;
         dragging = false;
     }
@@ -62,7 +61,7 @@ public final class GraphMovementCalculator {
      * The new x every time the mouse is dragged.
      * <p>
      * If the drag direction changes, and the user is currently dragging, it resets the drag by calling
-     * {@link #onMousePressed(double)} again.
+     * {@link #onMouseDragEntered(double)} again.
      * <p>
      * If not, the method checks if the user is dragging right or left, and makes sure that the dragging variable is set
      * to {@code true}. It also stores the current {@code x} position for the next time this method is called, which can
@@ -74,48 +73,35 @@ public final class GraphMovementCalculator {
     public void onMouseDragged(final double x) {
         final boolean startedDraggingOppositeDirection = lastX < x && draggingRight || lastX > x && !draggingRight;
         if (dragging && startedDraggingOppositeDirection) {
-            onMousePressed(x);
+            onMouseDragEntered(x);
         }
 
         draggingRight = lastX > x;
         dragging = true;
         lastX = x;
 
-        final double currentCenterNodeId = graphVisualizer.getCenterNodeIdProperty().get();
+        final double currentCenterNodeId = graphDimensionsCalculator.getCenterNodeIdProperty().get();
 
         final double translation = centerX - x;
         final int newCenterNodeId = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 
-        graphVisualizer.getCenterNodeIdProperty().set(Math.min(
-                Math.max(newCenterNodeId, 0),
-                graphVisualizer.getNodeCountProperty().get() - 1));
-
-        dragging = newCenterNodeId < 0 || newCenterNodeId > graphVisualizer.getNodeCountProperty().get();
-
+        graphDimensionsCalculator.getCenterNodeIdProperty().set(newCenterNodeId);
+        dragging = newCenterNodeId > 0 && newCenterNodeId < graphDimensionsCalculator.getNodeCountProperty().get();
     }
 
     /**
      * When the user scrolls.
      * <p>
-     * A positive delta corresponds to zooming in, and a negative delta to to zooming out. The user can zoom in no
-     * more than 1 hops. Scrolling out is ignored when the diameter of the onscreen graph is equal to the diameter
-     * of the actual graph.
+     * A positive delta corresponds to zooming in, and a negative delta to to zooming out.
      *
      * @param deltaY delta in the y direction
      */
     public void onScroll(final double deltaY) {
-        if (stopScrollingOut && deltaY > 0) {
-            return;
-        }
-
-        final int oldHops = graphVisualizer.getHopsProperty().get();
-        final int newHops = (int) Math.round(oldHops + deltaY * getZoomingSensitivityProperty().get());
-
-        graphVisualizer.getHopsProperty().set(Math.max(newHops, 1));
-
-        stopScrollingOut = graphVisualizer.getOnScreenNodeCountProperty().get()
-                > graphVisualizer.getNodeCountProperty().get();
+        final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
+        graphDimensionsCalculator.getRadiusProperty().set(
+                graphDimensionsCalculator.getRadiusProperty().get() + deltaRange
+        );
     }
 
     /**
@@ -130,7 +116,7 @@ public final class GraphMovementCalculator {
     }
 
     /**
-     * Property which determines the sensitivty of zooming.
+     * Property which determines the sensitivity of zooming.
      * <p>
      * A higher value results in zooming changing the hops by a larger amount.
      *

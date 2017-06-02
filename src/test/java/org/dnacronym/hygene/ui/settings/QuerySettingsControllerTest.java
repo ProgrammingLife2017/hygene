@@ -1,15 +1,16 @@
 package org.dnacronym.hygene.ui.settings;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import org.dnacronym.hygene.ui.UITestBase;
-import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,24 +20,24 @@ import static org.mockito.Mockito.when;
  */
 final class QuerySettingsControllerTest extends UITestBase {
     private QuerySettingsController querySettingsController;
-    private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private IntegerProperty centerNodeIdProperty;
-    private IntegerProperty hopsProperty;
+    private IntegerProperty radiusProperty;
     private Settings settings;
 
 
     @Override
     public void beforeEach() {
         settings = mock(Settings.class);
-        graphVisualizer = mock(GraphVisualizer.class);
-        centerNodeIdProperty = mock(IntegerProperty.class);
-        hopsProperty = mock(IntegerProperty.class);
+        graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
+        centerNodeIdProperty = new SimpleIntegerProperty(-1);
+        radiusProperty = new SimpleIntegerProperty(-1);
 
-        when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
-        when(graphVisualizer.getHopsProperty()).thenReturn(hopsProperty);
+        when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        when(graphDimensionsCalculator.getRadiusProperty()).thenReturn(radiusProperty);
 
         querySettingsController = new QuerySettingsController();
-        querySettingsController.setGraphVisualizer(graphVisualizer);
+        querySettingsController.setGraphDimensionsCalculator(graphDimensionsCalculator);
         querySettingsController.setSettings(settings);
     }
 
@@ -54,7 +55,7 @@ final class QuerySettingsControllerTest extends UITestBase {
         final Runnable command = captor.getValue();
         command.run();
 
-        verify(centerNodeIdProperty, times(1)).set(1001);
+        assertThat(centerNodeIdProperty.get()).isEqualTo(1001);
     }
 
     @Test
@@ -70,7 +71,7 @@ final class QuerySettingsControllerTest extends UITestBase {
         final Runnable command = captor.getValue();
         command.run();
 
-        verify(centerNodeIdProperty, times(1)).set(1);
+        assertThat(centerNodeIdProperty.get()).isEqualTo(1);
     }
 
     @Test
@@ -79,14 +80,14 @@ final class QuerySettingsControllerTest extends UITestBase {
         final KeyEvent keyEvent = mock(KeyEvent.class);
         when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setRange(keyEvent));
+        interact(() -> querySettingsController.setRadius(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
         final Runnable command = captor.getValue();
         command.run();
 
-        verify(hopsProperty, times(1)).set(99);
+        assertThat(radiusProperty.get()).isEqualTo(99);
     }
 
     @Test
@@ -95,13 +96,13 @@ final class QuerySettingsControllerTest extends UITestBase {
         final KeyEvent keyEvent = mock(KeyEvent.class);
         when(keyEvent.getSource()).thenReturn(source);
 
-        interact(() -> querySettingsController.setRange(keyEvent));
+        interact(() -> querySettingsController.setRadius(keyEvent));
 
         final ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
         verify(settings).addRunnable(captor.capture());
         final Runnable command = captor.getValue();
         command.run();
 
-        verify(hopsProperty, times(1)).set(919);
+        assertThat(radiusProperty.get()).isEqualTo(919);
     }
 }

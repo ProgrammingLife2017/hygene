@@ -1,11 +1,12 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -14,50 +15,47 @@ import static org.mockito.Mockito.when;
  */
 final class GraphMovementCalculatorTest {
     private GraphMovementCalculator graphMovementCalculator;
-    private GraphVisualizer graphVisualizer;
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private IntegerProperty centerNodeIdProperty;
-    private IntegerProperty nodeCountProperty;
+    private IntegerProperty radiusProperty;
 
 
     @BeforeEach
     void beforeEach() {
-        graphVisualizer = mock(GraphVisualizer.class);
-        centerNodeIdProperty = mock(IntegerProperty.class);
-        nodeCountProperty = mock(IntegerProperty.class);
+        centerNodeIdProperty = new SimpleIntegerProperty(0);
+        radiusProperty = new SimpleIntegerProperty(0);
 
-        when(centerNodeIdProperty.get()).thenReturn(15);
-        when(nodeCountProperty.get()).thenReturn(2000);
+        graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
+        when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        when(graphDimensionsCalculator.getRadiusProperty()).thenReturn(radiusProperty);
+        when(graphDimensionsCalculator.getNodeCountProperty()).thenReturn(new SimpleIntegerProperty(65));
 
-        when(graphVisualizer.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
-        when(graphVisualizer.getNodeCountProperty()).thenReturn(nodeCountProperty);
-
-        graphMovementCalculator = new GraphMovementCalculator(graphVisualizer);
+        graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
         graphMovementCalculator.getPanningSensitivityProperty().set(1);
+        graphMovementCalculator.getZoomingSensitivityProperty().set(1);
     }
 
 
     @Test
-    void testDragging() {
-        graphMovementCalculator.onMousePressed(0);
+    void testDraggingRight() {
+        graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(-100);
 
-        verify(centerNodeIdProperty).set(15 + 100);
+        assertThat(centerNodeIdProperty.get()).isEqualTo(100);
     }
 
     @Test
-    void testLowerBound() {
-        graphMovementCalculator.onMousePressed(0);
+    void testDraggingLeft() {
+        graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(100);
 
-        verify(centerNodeIdProperty).set(0);
+        assertThat(centerNodeIdProperty.get()).isEqualTo(-100);
     }
 
     @Test
-    void testUpperBound() {
-        when(nodeCountProperty.get()).thenReturn(20);
-        graphMovementCalculator.onMousePressed(0);
-        graphMovementCalculator.onMouseDragged(-100);
+    void testScroll() {
+        graphMovementCalculator.onScroll(10);
 
-        verify(centerNodeIdProperty).set(19);
+        assertThat(radiusProperty.get()).isEqualTo(10);
     }
 }
