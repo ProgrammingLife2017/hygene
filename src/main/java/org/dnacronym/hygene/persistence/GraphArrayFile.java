@@ -12,8 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 
 /**
@@ -54,7 +52,7 @@ public final class GraphArrayFile {
         final int[][] graph = new int[graphSize][];
 
         try (BufferedReader cache = new BufferedReader(new InputStreamReader(
-                new GZIPInputStream(new FileInputStream(file)), StandardCharsets.UTF_8))) {
+                new FileInputStream(file), StandardCharsets.UTF_8))) {
             String node;
             int nodeIndex = 0;
             while ((node = cache.readLine()) != null) {
@@ -89,7 +87,7 @@ public final class GraphArrayFile {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void write(final int[][] graph) throws IOException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
-                new GZIPOutputStream(new FileOutputStream(file)), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
+                new FileOutputStream(file), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {
                 final StringBuilder stringBuilder = new StringBuilder();
 

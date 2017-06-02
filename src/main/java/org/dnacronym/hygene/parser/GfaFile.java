@@ -58,7 +58,7 @@ public final class GfaFile {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
             if (graphLoader.hasGraph()) {
-                graph = new Graph(graphLoader.restoreGraph(progressUpdater), this);
+                graph = new Graph(graphLoader.restoreGraph(progressUpdater, fileName), this);
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
@@ -75,7 +75,7 @@ public final class GfaFile {
                 progressUpdater.updateProgress(PROGRESS_TOTAL - 1, "Caching data for faster load next time...");
 
                 LOGGER.info("Start dumping the graph to the database");
-                graphLoader.dumpGraph(graph.getNodeArrays());
+                graphLoader.dumpGraph(graph.getNodeArrays(), fileName);
                 LOGGER.info("Finished dumping the graph to the database");
             }
         } catch (final IOException | SQLException e) {
