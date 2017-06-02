@@ -1,11 +1,9 @@
 package org.dnacronym.hygene.ui.console;
 
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
-import org.checkerframework.checker.initialization.qual.Initialized;
 
 import java.nio.charset.StandardCharsets;
 
@@ -14,7 +12,8 @@ import java.nio.charset.StandardCharsets;
  * This class is a generic wrapper representing console messages.
  */
 public final class ConsoleMessage {
-    private final Text node;
+    private final String message;
+    private String styleClass;
 
 
     /**
@@ -23,8 +22,8 @@ public final class ConsoleMessage {
      * @param message the message
      */
     public ConsoleMessage(final String message) {
-        node = new Text(message);
-        node.setFill(Color.LIGHTGRAY);
+        this.message = message;
+        this.styleClass = "green";
     }
 
     /**
@@ -34,19 +33,26 @@ public final class ConsoleMessage {
      * @param appender the appender
      * @param event    the {@link LogEvent}
      */
-    public ConsoleMessage(@Initialized final Appender appender, final LogEvent event) {
+    public ConsoleMessage(final Appender appender, final LogEvent event) {
         this(new String(appender.getLayout().toByteArray(event), StandardCharsets.UTF_8));
-
-        node.setFill(getColor(event.getLevel()));
     }
 
     /**
-     * Gets the {@link Text} node.
+     * Gets the log message.
      *
-     * @return the {@link Text} node
+     * @return the log message
      */
-    public Text getNode() {
-        return node;
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Gets style class.
+     *
+     * @return the style class
+     */
+    public String getStyleClass() {
+        return styleClass;
     }
 
     /**
@@ -55,7 +61,7 @@ public final class ConsoleMessage {
      * @param level the loglevel represent by {@link Level}
      * @return the {@link Color}
      */
-    private static @Initialized Color getColor(final Level level) {
+    private static Color getColor(final Level level) {
         if (level == null || level.toString() == null) {
             return Color.BLACK;
         }
