@@ -44,6 +44,8 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
+    private static final int ARC_SIZE = 10;
+    private static final int NODE_OUTLINE_WIDTH = 5;
     /**
      * Font used inside the nodes, this should always be a monospace font.
      */
@@ -133,8 +135,15 @@ public final class GraphVisualizer {
         final double rectWidth = graphDimensionsCalculator.computeWidth(nodeId);
         final double rectHeight = nodeHeightProperty.get();
 
-        graphicsContext.setFill(getNodeColor(nodeId, graph));
-        graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
+        graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
+        graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
+
+        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+            graphicsContext.setStroke(NodeColor.BRIGHT_GREEN.getFXColor());
+            graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
+            graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2, rectY - NODE_OUTLINE_WIDTH / 2,
+                    rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
+        }
 
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
@@ -194,21 +203,6 @@ public final class GraphVisualizer {
         final Text t = new Text("X");
         t.setFont(font);
         return t.getLayoutBounds().getHeight();
-    }
-
-    /**
-     * Retrieve the {@link Color} of a specific node.
-     *
-     * @param nodeId the node id
-     * @param graph  the {@link Graph}
-     * @return the {@link Color}
-     */
-    private Color getNodeColor(final int nodeId, final Graph graph) {
-        final Node selectedNode = getSelectedNodeProperty().get();
-        if (selectedNode != null && selectedNode.getId() == nodeId) {
-            return NodeColor.BRIGHT_GREEN.getFXColor();
-        }
-        return graph.getColor(nodeId).getFXColor();
     }
 
     /**
