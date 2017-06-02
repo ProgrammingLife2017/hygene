@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.graph.GraphStore;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -31,9 +31,9 @@ import java.util.ResourceBundle;
 public final class BookmarkCreateController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
 
+    private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
     private SequenceVisualizer sequenceVisualizer;
-    private GraphStore graphStore;
     private SimpleBookmarkStore simpleBookmarkStore;
 
     @FXML
@@ -56,7 +56,7 @@ public final class BookmarkCreateController implements Initializable {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
-            setGraphStore(Hygene.getInstance().getGraphStore());
+            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
             new ErrorDialogue(e).show();
@@ -74,13 +74,17 @@ public final class BookmarkCreateController implements Initializable {
         sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
                 baseOffset.setText(String.valueOf(newValue)));
 
+        radius.setText(String.valueOf(graphDimensionsCalculator.getRadiusProperty().get()));
+        graphDimensionsCalculator.getRadiusProperty().addListener((observable, oldValue, newValue) ->
+                radius.setText(String.valueOf(newValue)));
+
         baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
 
-        bookmarkCreatePane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        bookmarkCreatePane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        bookmarkCreatePane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        bookmarkCreatePane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
     }
 
     /**
@@ -102,12 +106,12 @@ public final class BookmarkCreateController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphStore} in the controller.
+     * Set the {@link GraphDimensionsCalculator} in the controller.
      *
-     * @param graphStore {@link GraphStore} to recent in the {@link org.dnacronym.hygene.ui.graph.GraphController}
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
      */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
+    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
+        this.graphDimensionsCalculator = graphDimensionsCalculator;
     }
 
     /**
