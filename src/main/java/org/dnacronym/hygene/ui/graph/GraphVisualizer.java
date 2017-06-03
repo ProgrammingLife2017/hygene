@@ -141,7 +141,7 @@ public final class GraphVisualizer {
         if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
             graphicsContext.setStroke(NodeColor.BRIGHT_GREEN.getFXColor());
             graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
-            graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2, rectY - NODE_OUTLINE_WIDTH / 2,
+            graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2.0, rectY - NODE_OUTLINE_WIDTH / 2.0,
                     rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
         }
 
@@ -149,9 +149,9 @@ public final class GraphVisualizer {
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
             graphicsContext.setFill(Color.BLACK);
 
-            final int charCount = (int) (rectWidth / charWidth);
+            final int charCount = (int) Math.max((rectWidth - ARC_SIZE) / charWidth, 0);
 
-            final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
+            final double fontX = rectX + 0.5 * (rectWidth + (ARC_SIZE / 4.0) - charCount * charWidth);
             final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeightProperty().getValue()
                     + 0.25 * charHeight;
 
