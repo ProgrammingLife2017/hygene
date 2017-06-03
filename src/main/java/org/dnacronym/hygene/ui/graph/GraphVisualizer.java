@@ -3,9 +3,11 @@ package org.dnacronym.hygene.ui.graph;
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
@@ -61,6 +63,7 @@ public final class GraphVisualizer {
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
+    private final IntegerProperty hoverNodeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
 
@@ -97,6 +100,7 @@ public final class GraphVisualizer {
 
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
+        hoverNodeProperty = new SimpleIntegerProperty(-1);
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
@@ -374,6 +378,14 @@ public final class GraphVisualizer {
                             .ifPresent(selectedEdgeProperty::setValue)
             );
         });
+        canvas.setOnMouseMoved(event -> {
+            if (rTree == null) {
+                return;
+            }
+            hoverNodeProperty.set(-1);
+            rTree.find(event.getX(), event.getY(), hoverNodeProperty::set);
+        });
+        canvas.setOnMouseExited(event -> hoverNodeProperty.set(-1));
 
         graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), canvas.getHeight());
         canvas.widthProperty().addListener((observable, oldValue, newValue) ->
