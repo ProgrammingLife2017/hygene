@@ -36,14 +36,14 @@ public final class RTree {
     /**
      * Adds a node to the RTree.
      *
-     * @param nodeId the ID of the node
+     * @param id     the id of the node to add
      * @param x      the absolute x position of the node
      * @param y      the absolute y position of the node
      * @param width  the absolute width of the node
      * @param height the absolute height of the node
      */
-    public void addNode(final int nodeId, final double x, final double y, final double width, final double height) {
-        tree = tree.add(new Integer[] {nodeId}, rectangle(x, y, x + width, y + height));
+    public void addNode(final int id, final double x, final double y, final double width, final double height) {
+        tree = tree.add(new Integer[]{id}, rectangle(x, y, x + width, y + height));
     }
 
     /**
@@ -58,7 +58,20 @@ public final class RTree {
      */
     public void addEdge(final int fromNodeId, final int toNodeId, final double fromX, final double fromY,
                         final double toX, final double toY) {
-        tree = tree.add(new Integer[] {fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
+        tree = tree.add(new Integer[]{fromNodeId, toNodeId}, line(fromX, fromY, toX, toY));
+    }
+
+    /**
+     * Finds the closest node or within the specified maximum radius.
+     *
+     * @param x          the x position of the query point
+     * @param y          the y position of the query point
+     * @param nodeAction the action that needs to be executed when a node is found
+     */
+    public void find(final double x, final double y, final Consumer<Integer> nodeAction) {
+        find(x, y, nodeAction, (a, b) -> {
+            // We don't care about the edge.
+        });
     }
 
     /**
