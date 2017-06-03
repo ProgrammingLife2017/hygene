@@ -35,7 +35,7 @@ public final class SequenceVisualizer {
     private final IntegerProperty onScreenBasesProperty;
 
     private RTree rTree;
-    private int hoveredBaseId = -1;
+    private final IntegerProperty hoveredBaseIdProperty;
 
 
     /**
@@ -45,6 +45,7 @@ public final class SequenceVisualizer {
         sequenceProperty = new SimpleStringProperty();
         offsetProperty = new SimpleIntegerProperty();
         onScreenBasesProperty = new SimpleIntegerProperty();
+        hoveredBaseIdProperty = new SimpleIntegerProperty(-1);
 
         sequenceProperty.addListener((observable, oldValue, newValue) -> {
             if (offsetProperty.get() == 0) {
@@ -53,6 +54,7 @@ public final class SequenceVisualizer {
             offsetProperty.set(0);
         });
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
+        hoveredBaseIdProperty.addListener((observable, oldValue, newValue) -> draw());
 
         visibleProperty = new SimpleBooleanProperty();
         visibleProperty.addListener((observable, oldValue, newValue) -> {
@@ -85,13 +87,9 @@ public final class SequenceVisualizer {
             if (rTree == null) {
                 return;
             }
-            rTree.find(event.getX(), event.getY(), id -> hoveredBaseId = id);
-            draw();
+            rTree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set);
         });
-        canvas.setOnMouseExited(event -> {
-            hoveredBaseId = -1;
-            draw();
-        });
+        canvas.setOnMouseExited(event -> hoveredBaseIdProperty.set(-1));
     }
 
     /**
@@ -161,7 +159,7 @@ public final class SequenceVisualizer {
     }
 
     /**
-     * Clear the canvas.
+     * Clear the canvas and reset the {@link RTree).
      */
     private void clear() {
         rTree = new RTree();
@@ -192,9 +190,9 @@ public final class SequenceVisualizer {
             final String base = String.valueOf(sequenceProperty.get().charAt(i));
 
             drawSquare(base, topRightX, VERTICAL_GAP,
-                    i == hoveredBaseId ? Color.RED : Color.BLUE, Color.BLACK);
+                    i == hoveredBaseIdProperty.get() ? Color.RED : Color.BLUE, Color.BLACK);
             drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT,
-                    i == hoveredBaseId ? Color.DARKRED : Color.DARKBLUE, Color.BLACK);
+                    i == hoveredBaseIdProperty.get() ? Color.DARKRED : Color.DARKBLUE, Color.BLACK);
 
             rTree.addNode(i, topRightX, VERTICAL_GAP, SQUARE_WIDTH, SQUARE_HEIGHT * 2 + VERTICAL_GAP);
         }
