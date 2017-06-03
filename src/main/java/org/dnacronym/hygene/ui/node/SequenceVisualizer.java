@@ -159,7 +159,7 @@ public final class SequenceVisualizer {
     }
 
     /**
-     * Clear the canvas and reset the {@link RTree).
+     * Clears the canvas and reset the {@link RTree).
      */
     private void clear() {
         rTree = new RTree();
@@ -167,7 +167,7 @@ public final class SequenceVisualizer {
     }
 
     /**
-     * Visualize the current sequenceProperty with the current offset.
+     * Visualizes the current sequenceProperty with the current offset.
      * <p>
      * If sequence is null then area is only cleared. If a base offset is equal to the hovered on base, then its color
      * is red instead of blue.
@@ -219,7 +219,7 @@ public final class SequenceVisualizer {
     /**
      * Returns the {@link ReadOnlyIntegerProperty} which decides the offset.
      *
-     * @return the {@link ReadOnlyIntegerProperty} which decides the sequence
+     * @return the {@link ReadOnlyIntegerProperty} which decides the offset
      */
     public ReadOnlyIntegerProperty getOffsetProperty() {
         return offsetProperty;
