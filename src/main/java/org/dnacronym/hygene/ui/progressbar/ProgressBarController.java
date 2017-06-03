@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public final class ProgressBarController implements Initializable {
     @FXML
-    public Text progressText;
+    private Text progressText;
     @FXML
     private ProgressBar progressBar;
 
