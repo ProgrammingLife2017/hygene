@@ -68,7 +68,7 @@ public final class SequenceVisualizer {
      * Sets the {@link Canvas} for use by the visualizer.
      * <p>
      * When the user clicks on the canvas, if the x and y coordinates intersect with a base then the offset is updated
-     * to the given base. If the mouse is hovered of a base the hovered base id is updated.
+     * to the given base. If the mouse is hovered over a base the hovered base id is updated.
      *
      * @param canvas {@link Canvas} for use by the visualizer
      */
