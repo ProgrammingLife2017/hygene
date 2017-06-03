@@ -203,7 +203,7 @@ public final class SequenceVisualizer {
     /**
      * Returns the {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} is visible.
      *
-     * @return {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} if visible
+     * @return the {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} if visible
      */
     public BooleanProperty getVisibleProperty() {
         return visibleProperty;
@@ -212,7 +212,7 @@ public final class SequenceVisualizer {
     /**
      * Returns the {@link StringProperty} which decides the sequence.
      *
-     * @return {@link StringProperty} which decides the sequence
+     * @return the {@link StringProperty} which decides the sequence
      */
     public StringProperty getSequenceProperty() {
         return sequenceProperty;
@@ -221,7 +221,7 @@ public final class SequenceVisualizer {
     /**
      * Returns the {@link ReadOnlyIntegerProperty} which decides the offset.
      *
-     * @return {@link ReadOnlyIntegerProperty} which decides the sequence
+     * @return the {@link ReadOnlyIntegerProperty} which decides the sequence
      */
     public ReadOnlyIntegerProperty getOffsetProperty() {
         return offsetProperty;
@@ -230,7 +230,7 @@ public final class SequenceVisualizer {
     /**
      * Returns the {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas.
      *
-     * @return {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas
+     * @return the {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas
      */
     public ReadOnlyIntegerProperty getOnScreenBasesCountProperty() {
         return onScreenBasesProperty;
