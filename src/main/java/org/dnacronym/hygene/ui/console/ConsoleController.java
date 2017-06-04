@@ -146,7 +146,9 @@ public final class ConsoleController implements Initializable {
     }
 
     /**
-     * Takes a command and parses it.
+     * Parses a command.
+     *
+     * @param command the command
      */
     public void parseCommand(final String command) {
         switch (command) {

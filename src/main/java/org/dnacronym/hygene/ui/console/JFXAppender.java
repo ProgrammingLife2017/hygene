@@ -11,7 +11,6 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.dnacronym.hygene.core.HygeneEventBus;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 
 
 /**

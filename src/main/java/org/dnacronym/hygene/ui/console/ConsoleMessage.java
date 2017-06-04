@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.console;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
 
 
@@ -9,8 +8,10 @@ import org.apache.logging.log4j.core.LogEvent;
  * This class is a generic wrapper representing console messages.
  */
 public final class ConsoleMessage {
+    private static final String DEFAULT_STYLE_CLASS = "green";
+
     private final String message;
-    private String styleClass = "green";
+    private String styleClass = DEFAULT_STYLE_CLASS;
 
 
     /**
@@ -24,7 +25,7 @@ public final class ConsoleMessage {
 
     /**
      * Constructor for {@link ConsoleMessage} used when creating a {@link ConsoleMessage} from a Log4J2
-     * {@link LogEvent}. An {@link Appender} is passed such that the {@link LogEvent} can be properly parsed.
+     * {@link LogEvent}.
      *
      * @param event the {@link LogEvent}
      */
@@ -59,7 +60,7 @@ public final class ConsoleMessage {
      */
     static String getColor(final Level level) {
         if (level == null || level.toString() == null) {
-            return "green";
+            return DEFAULT_STYLE_CLASS;
         }
 
         switch (level.toString()) {
@@ -73,7 +74,7 @@ public final class ConsoleMessage {
                 return "yellow";
             case "INFO":
             default:
-                return "green";
+                return DEFAULT_STYLE_CLASS;
         }
     }
 }

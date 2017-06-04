@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Units tests for {@link ConsoleMessage}
+ * Units tests for {@link ConsoleMessage}.
  */
 class ConsoleMessageTest {
     private ConsoleMessage consoleMessage;
