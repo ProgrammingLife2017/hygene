@@ -139,10 +139,7 @@ public final class GraphVisualizer {
         graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
 
         if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
-            graphicsContext.setStroke(NodeColor.BRIGHT_GREEN.getFXColor());
-            graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
-            graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2.0, rectY - NODE_OUTLINE_WIDTH / 2.0,
-                    rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
+            highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
         }
 
         if (nodeMetadataCache.has(nodeId)
@@ -165,6 +162,23 @@ public final class GraphVisualizer {
         }
 
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
+    }
+
+    /**
+     * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.
+     *
+     * @param rectX          the upper left x position of the node
+     * @param rectY          the upper left y position of the node
+     * @param rectWidth      the width of the node
+     * @param rectHeight     the height of the node
+     * @param highlightColor the color of the highlight
+     */
+    private void highlightNode(final double rectX, final double rectY, final double rectWidth, final double rectHeight,
+                               final Color highlightColor) {
+        graphicsContext.setStroke(highlightColor);
+        graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
+        graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2.0, rectY - NODE_OUTLINE_WIDTH / 2.0,
+                rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
     }
 
     /**
