@@ -318,6 +318,7 @@ public final class GraphVisualizer {
         final double charWidth = getCharWidth(nodeFont);
         final double charHeight = getCharHeight(nodeFont);
 
+        // TODO refactor UI package to decentralize all classes, to avoid strong coupling and getters
         final List<Integer> bookmarkedNodeIds = new ArrayList<>();
         try {
             final List<SimpleBookmark> bookmarks = Hygene.getInstance().getSimpleBookmarkStore().getSimpleBookmarks();
