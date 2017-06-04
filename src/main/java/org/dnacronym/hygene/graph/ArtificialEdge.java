@@ -2,7 +2,7 @@ package org.dnacronym.hygene.graph;
 
 
 /**
- * Class representing an artificial edge, to be used graph layout.
+ * Class representing an artificial edge, to be used for graph layout.
  */
 public final class ArtificialEdge extends AbstractEdge {
     private final AbstractEdge originalEdge;
