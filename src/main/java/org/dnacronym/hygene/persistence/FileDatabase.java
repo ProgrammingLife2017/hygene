@@ -104,6 +104,15 @@ public final class FileDatabase implements AutoCloseable {
     }
 
     /**
+     * Returns the {@link FileMetadata} instance.
+     *
+     * @return the {@link FileMetadata} instance
+     */
+    public FileMetadata getFileMetadata() {
+        return fileMetadata;
+    }
+
+    /**
      * Returns the {@link FileBookmarks} instance.
      *
      * @return the {@link FileBookmarks} instance
