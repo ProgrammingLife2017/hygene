@@ -8,17 +8,22 @@ import java.util.Set;
  */
 public abstract class AbstractNode {
     private final int sequenceLength;
-    private final int xPosition;
-    private final int yPosition;
     private final Set<AbstractEdge> incomingEdges;
     private final Set<AbstractEdge> outgoingEdges;
+    private int xPosition;
+    private int yPosition;
 
 
-    public AbstractNode(final int sequenceLength, final int xPosition, final int yPosition,
-                        final Set<AbstractEdge> incomingEdges, final Set<AbstractEdge> outgoingEdges) {
+    /**
+     * Constructs a new {@link AbstractNode} instance.
+     *
+     * @param sequenceLength the length of the node
+     * @param incomingEdges  the incoming edges
+     * @param outgoingEdges  the outgoing edges
+     */
+    public AbstractNode(final int sequenceLength, final Set<AbstractEdge> incomingEdges,
+                        final Set<AbstractEdge> outgoingEdges) {
         this.sequenceLength = sequenceLength;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
         this.incomingEdges = incomingEdges;
         this.outgoingEdges = outgoingEdges;
     }
@@ -43,12 +48,30 @@ public abstract class AbstractNode {
     }
 
     /**
+     * Sets the X position.
+     *
+     * @param xPosition the X position
+     */
+    public void setXPosition(final int xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    /**
      * Returns the Y position.
      *
-     * @return the X position
+     * @return the Y position
      */
     public int getyPosition() {
         return yPosition;
+    }
+
+    /**
+     * Sets the Y position.
+     *
+     * @param yPosition the Y position
+     */
+    public void setYPosition(final int yPosition) {
+        this.yPosition = yPosition;
     }
 
     /**
