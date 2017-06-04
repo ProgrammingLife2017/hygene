@@ -4,7 +4,7 @@ import java.util.Set;
 
 
 /**
- * Class representing an artificial node, used only for graph layout.
+ * Class representing an artificial node, to be used graph layout.
  */
 public final class ArtificialNode extends AbstractNode {
     private final AbstractNode originalSource;
