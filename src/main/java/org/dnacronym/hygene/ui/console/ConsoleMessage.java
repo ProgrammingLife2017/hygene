@@ -4,8 +4,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
 
-import java.nio.charset.StandardCharsets;
-
 
 /**
  * This class is a generic wrapper representing console messages.
@@ -28,8 +26,7 @@ public final class ConsoleMessage {
      * Constructor for {@link ConsoleMessage} used when creating a {@link ConsoleMessage} from a Log4J2
      * {@link LogEvent}. An {@link Appender} is passed such that the {@link LogEvent} can be properly parsed.
      *
-     * @param appender the appender
-     * @param event    the {@link LogEvent}
+     * @param event the {@link LogEvent}
      */
     public ConsoleMessage(final LogEvent event) {
         this(event.getMessage().getFormattedMessage());
@@ -55,10 +52,10 @@ public final class ConsoleMessage {
     }
 
     /**
-     * Returns a styleclass corresponding to a certain log level.
+     * Returns a style class corresponding to a certain log level.
      *
-     * @param level the loglevel represent by {@link Level}
-     * @return the styleclass
+     * @param level the log level represent by {@link Level}
+     * @return the style class
      */
     private static String getColor(final Level level) {
         if (level == null || level.toString() == null) {
