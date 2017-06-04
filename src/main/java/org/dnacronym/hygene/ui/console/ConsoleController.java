@@ -28,6 +28,17 @@ import java.util.ResourceBundle;
 public final class ConsoleController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(ConsoleController.class);
 
+    private static final String HYGENE_CONSOLE_LOGO = new StringBuilder()
+            .append("   %......%\n")
+            .append("   %      %       __  __   \n")
+            .append("    %,,,,%       / / / /_  ______ ____  ____  ___ \n")
+            .append("   %      %     / /_/ / / / / __ `/ _ \\/ __ \\/ _ \\\n")
+            .append("   %,,,,,,%    / __  / /_/ / /_/ /  __/ / / /  __/\n")
+            .append("   %      %   /_/ /_/\\__, /\\__, /\\___/_/ /_/\\___/   \n")
+            .append("    %,,,,%          /____//____/ \n")
+            .append("   %      %\n")
+            .append("   %......%\n\n").toString();
+
     private GraphVisualizer graphVisualizer;
 
     @FXML
@@ -57,6 +68,8 @@ public final class ConsoleController implements Initializable {
 
         consoleContent.setEditable(false);
         consoleContent.setFocusTraversable(false);
+
+        appendLogItem(HYGENE_CONSOLE_LOGO);
     }
 
     /**
