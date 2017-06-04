@@ -28,6 +28,7 @@ import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmark;
+import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -52,7 +53,6 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
     private static final int ARC_SIZE = 10;
-    private static final int NODE_OUTLINE_WIDTH = 3;
     /**
      * Font used inside the nodes, this should always be a monospace font.
      */
@@ -87,6 +87,7 @@ public final class GraphVisualizer {
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
+    private final NodeDrawingToolkit nodeDrawingToolkit;
 
     private RTree rTree;
 
@@ -125,6 +126,8 @@ public final class GraphVisualizer {
                 .addListener((observable, oldValue, newValue) -> setGraph(newValue));
         graphDimensionsCalculator.getObservableQueryNodes()
                 .addListener((ListChangeListener<NewNode>) change -> draw());
+
+        nodeDrawingToolkit = new NodeDrawingToolkit();
     }
 
 
@@ -136,8 +139,12 @@ public final class GraphVisualizer {
      * @param node       id of node to draw
      * @param charWidth  the width of character
      * @param charHeight the height of a character
+     * @param highlight  the boolean indicating whether to highlight this node
+     * @param bookmarked the boolean indicating whether this node is bookmarked
+     * @param drawText   the boolean indicating whether this node should have text
      */
-    private void drawNode(final NewNode node, final double charWidth, final double charHeight) {
+    private void drawNode(final NewNode node, final double charWidth, final double charHeight, final boolean highlight,
+                          final boolean bookmarked, final boolean drawText) {
         final double rectX = graphDimensionsCalculator.computeXPosition(node);
         final double rectY = graphDimensionsCalculator.computeYPosition(node);
         final double rectWidth = graphDimensionsCalculator.computeWidth(node);
@@ -146,16 +153,13 @@ public final class GraphVisualizer {
         graphicsContext.setFill(node.getColor().getFXColor());
         graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
 
-        if (selectedNodeProperty.get() != null && node instanceof Segment
-                && selectedNodeProperty.get().getId() == ((Segment) node).getId()) {
-            highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
-        }
-
         if (!(node instanceof Segment)) {
             return;
         }
 
-
+        if (highlight) {
+            nodeDrawingToolkit.highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
+        }
         final int nodeId = ((Segment) node).getId();
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
@@ -167,37 +171,22 @@ public final class GraphVisualizer {
             final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeightProperty().getValue()
                     + 0.25 * charHeight;
 
+        if (drawText) {
             try {
                 final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
-                graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+                nodeDrawingToolkit.drawText(rectX, rectY, rectWidth, rectHeight, charWidth, charHeight, sequence);
             } catch (final ParseException e) {
                 LOGGER.error("An parse exception occurred while attempting"
                         + " to retrieve node's " + nodeId + " metadata from drawing", e);
             }
         }
-
         if (bookmarked) {
-            drawBookmarkFlag(rectX, rectY, rectWidth);
+            nodeDrawingToolkit.drawBookmarkFlag(rectX, rectY, rectWidth,
+                    graphDimensionsCalculator.getLaneHeightProperty().get() - nodeHeightProperty.get(),
+                    canvas.getHeight());
         }
 
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
-    }
-
-    /**
-     * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.
-     *
-     * @param rectX          the upper left x position of the node
-     * @param rectY          the upper left y position of the node
-     * @param rectWidth      the width of the node
-     * @param rectHeight     the height of the node
-     * @param highlightColor the color of the highlight
-     */
-    private void highlightNode(final double rectX, final double rectY, final double rectWidth, final double rectHeight,
-                               final Color highlightColor) {
-        graphicsContext.setStroke(highlightColor);
-        graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
-        graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2.0, rectY - NODE_OUTLINE_WIDTH / 2.0,
-                rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
     }
 
     /**
@@ -331,7 +320,11 @@ public final class GraphVisualizer {
 
         clear();
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(node, charWidth, charHeight);
+            drawNode(nodeId, charWidth, charHeight,
+                    selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId,
+                    bookmarkedNodeIds.contains(nodeId),
+                    nodeMetadataCache.has(nodeId)
+                            && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT);
 
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
@@ -408,6 +401,7 @@ public final class GraphVisualizer {
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
+        this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {
             if (rTree == null) {
