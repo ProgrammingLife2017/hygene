@@ -27,6 +27,12 @@ import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.bookmark.SimpleBookmark;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -170,6 +176,10 @@ public final class GraphVisualizer {
             }
         }
 
+        if (bookmarked) {
+            drawBookmarkFlag(rectX, rectY, rectWidth);
+        }
+
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
     }
 
@@ -307,6 +317,16 @@ public final class GraphVisualizer {
 
         final double charWidth = getCharWidth(nodeFont);
         final double charHeight = getCharHeight(nodeFont);
+
+        final List<Integer> bookmarkedNodeIds = new ArrayList<>();
+        try {
+            final List<SimpleBookmark> bookmarks = Hygene.getInstance().getSimpleBookmarkStore().getSimpleBookmarks();
+            for (final SimpleBookmark simpleBookmark : bookmarks) {
+                bookmarkedNodeIds.add(simpleBookmark.getBookmark().getNodeId());
+            }
+        } catch (final UIInitialisationException e) {
+            LOGGER.error("Unable to get bookmarks.", e);
+        }
 
         clear();
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {

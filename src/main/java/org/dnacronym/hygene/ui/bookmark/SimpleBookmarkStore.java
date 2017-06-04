@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.bookmark;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,7 @@ public final class SimpleBookmarkStore {
      * @param graphStore                the {@link GraphStore} to be observed by this class
      * @param graphVisualizer           the {@link GraphVisualizer} to be used by this class
      * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} to be used by this class
-     * @param sequenceVisualizer the {@link SequenceVisualizer} to be used by this class
+     * @param sequenceVisualizer        the {@link SequenceVisualizer} to be used by this class
      * @see SimpleBookmark
      */
     public SimpleBookmarkStore(final GraphStore graphStore, final GraphVisualizer graphVisualizer,
@@ -62,6 +63,7 @@ public final class SimpleBookmarkStore {
 
         simpleBookmarks = new ArrayList<>();
         observableSimpleBookmarks = FXCollections.observableList(simpleBookmarks);
+        observableSimpleBookmarks.addListener((ListChangeListener<SimpleBookmark>) listener -> graphVisualizer.draw());
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
             try {
