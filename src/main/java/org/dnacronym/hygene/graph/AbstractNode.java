@@ -43,7 +43,7 @@ public abstract class AbstractNode {
      *
      * @return the X position
      */
-    public int getxPosition() {
+    public int getXPosition() {
         return xPosition;
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractNode {
      *
      * @return the Y position
      */
-    public int getyPosition() {
+    public int getYPosition() {
         return yPosition;
     }
 

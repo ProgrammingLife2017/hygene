@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph;
 
-
 import java.util.Set;
+
 
 /**
  * Class representing a single, non-artificial segment node.
