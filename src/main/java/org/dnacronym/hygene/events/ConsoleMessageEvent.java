@@ -10,7 +10,7 @@ public final class ConsoleMessageEvent {
     private final ConsoleMessage consoleMessage;
 
     /**
-     * Instantiates a new Console Message Event.
+     * Instantiates a new {@link ConsoleMessageEvent}.
      *
      * @param consoleMessage the {@link ConsoleMessage}
      */
@@ -18,8 +18,9 @@ public final class ConsoleMessageEvent {
         this.consoleMessage = consoleMessage;
     }
 
+
     /**
-     * Gets console message.
+     * Gets the {@link ConsoleMessage}.
      *
      * @return the console message
      */
