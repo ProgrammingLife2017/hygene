@@ -59,8 +59,7 @@ public final class JFXAppender extends AbstractAppender {
     })
     public void append(final LogEvent event) {
         try {
-            HygeneEventBus.getInstance().post(new ConsoleMessage(
-                    new String(this.getLayout().toByteArray(event), StandardCharsets.UTF_8), event));
+            HygeneEventBus.getInstance().post(event);
         } catch (final RuntimeException e) {
             // We can't actually log the exception here since that would cause the same problem
         }

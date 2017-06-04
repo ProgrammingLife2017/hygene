@@ -31,8 +31,8 @@ public final class ConsoleMessage {
      * @param appender the appender
      * @param event    the {@link LogEvent}
      */
-    public ConsoleMessage(final String formattedMessage, final LogEvent event) {
-        this(formattedMessage);
+    public ConsoleMessage(final LogEvent event) {
+        this(event.getMessage().getFormattedMessage());
         styleClass = getColor(event.getLevel());
     }
 
