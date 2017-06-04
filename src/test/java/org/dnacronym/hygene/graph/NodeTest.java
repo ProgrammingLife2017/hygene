@@ -9,9 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link Node} class.
  */
-class NodeTest extends AbstractNodeTest {
-    static final int ID = 1;
-    static final int LINE_NUMBER = 2;
+final class NodeTest extends AbstractNodeTest {
+    private static final int ID = 1;
+    private static final int LINE_NUMBER = 2;
 
     private Node node;
 
@@ -21,6 +21,7 @@ class NodeTest extends AbstractNodeTest {
         node = new Node(ID, LINE_NUMBER, SEQUENCE_LENGTH, INCOMING_EDGES, OUTGOING_EDGES);
         setAbstractNode(node);
     }
+
 
     @Test
     void testGetId() {

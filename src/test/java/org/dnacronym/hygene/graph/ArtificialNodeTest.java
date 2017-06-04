@@ -10,9 +10,9 @@ import static org.mockito.Mockito.mock;
 /**
  * Test suite for the {@link ArtificialNode} class.
  */
-class ArtificialNodeTest extends AbstractNodeTest {
-    static final AbstractNode ORIGINAL_SOURCE = mock(AbstractNode.class);
-    static final AbstractNode ORIGINAL_DESTINATION = mock(AbstractNode.class);
+final class ArtificialNodeTest extends AbstractNodeTest {
+    private static final AbstractNode ORIGINAL_SOURCE = mock(AbstractNode.class);
+    private static final AbstractNode ORIGINAL_DESTINATION = mock(AbstractNode.class);
 
     private ArtificialNode artificialNode;
 

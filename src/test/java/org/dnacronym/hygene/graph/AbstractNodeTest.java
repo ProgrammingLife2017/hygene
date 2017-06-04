@@ -22,19 +22,19 @@ abstract class AbstractNodeTest {
 
 
     @Test
-    void testGetSequenceLength() {
+    final void testGetSequenceLength() {
         assertThat(abstractNode.getSequenceLength()).isEqualTo(SEQUENCE_LENGTH);
     }
 
     @Test
-    void testGetXPosition() {
+    final void testGetXPosition() {
         abstractNode.setXPosition(X_POSITION);
 
         assertThat(abstractNode.getXPosition()).isEqualTo(X_POSITION);
     }
 
     @Test
-    void testGetYPosition() {
+    final void testGetYPosition() {
         abstractNode.setYPosition(Y_POSITION);
 
         assertThat(abstractNode.getYPosition()).isEqualTo(Y_POSITION);
@@ -46,7 +46,7 @@ abstract class AbstractNodeTest {
     }
 
     @Test
-    void testGetOutgoingEdges() {
+    final void testGetOutgoingEdges() {
         assertThat(abstractNode.getOutgoingEdges()).isEqualTo(OUTGOING_EDGES);
     }
 
