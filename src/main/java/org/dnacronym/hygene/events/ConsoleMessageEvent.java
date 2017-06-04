@@ -9,6 +9,7 @@ import org.dnacronym.hygene.ui.console.ConsoleMessage;
 public final class ConsoleMessageEvent {
     private final ConsoleMessage consoleMessage;
 
+
     /**
      * Instantiates a new {@link ConsoleMessageEvent}.
      *
