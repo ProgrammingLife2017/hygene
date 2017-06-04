@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link Edge} class.
  */
-final class EdgeTest extends AbstractEdgeTest {
+final class EdgeTest extends GenericEdgeTest {
     private static final int LINE_NUMBER = 1;
 
     private Edge edge;
@@ -17,7 +17,7 @@ final class EdgeTest extends AbstractEdgeTest {
     @BeforeEach
     void setUp() {
         edge = new Edge(FROM, TO, LINE_NUMBER);
-        setAbstractEdge(edge);
+        setGenericEdge(edge);
     }
 
 

@@ -6,23 +6,23 @@ import java.util.Set;
 /**
  * Class representing a generic node.
  */
-public abstract class AbstractNode {
+public class GenericNode {
     private final int sequenceLength;
-    private final Set<AbstractEdge> incomingEdges;
-    private final Set<AbstractEdge> outgoingEdges;
+    private final Set<GenericEdge> incomingEdges;
+    private final Set<GenericEdge> outgoingEdges;
     private int xPosition;
     private int yPosition;
 
 
     /**
-     * Constructs a new {@link AbstractNode} instance.
+     * Constructs a new {@link GenericNode} instance.
      *
      * @param sequenceLength the length of the node
      * @param incomingEdges  the incoming edges
      * @param outgoingEdges  the outgoing edges
      */
-    public AbstractNode(final int sequenceLength, final Set<AbstractEdge> incomingEdges,
-                        final Set<AbstractEdge> outgoingEdges) {
+    protected GenericNode(final int sequenceLength, final Set<GenericEdge> incomingEdges,
+                          final Set<GenericEdge> outgoingEdges) {
         this.sequenceLength = sequenceLength;
         this.incomingEdges = incomingEdges;
         this.outgoingEdges = outgoingEdges;
@@ -34,7 +34,7 @@ public abstract class AbstractNode {
      *
      * @return the sequence length
      */
-    public int getSequenceLength() {
+    public final int getSequenceLength() {
         return sequenceLength;
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractNode {
      *
      * @return the X position
      */
-    public int getXPosition() {
+    public final int getXPosition() {
         return xPosition;
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractNode {
      *
      * @param xPosition the X position
      */
-    public void setXPosition(final int xPosition) {
+    public final void setXPosition(final int xPosition) {
         this.xPosition = xPosition;
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractNode {
      *
      * @return the Y position
      */
-    public int getYPosition() {
+    public final int getYPosition() {
         return yPosition;
     }
 
@@ -70,7 +70,7 @@ public abstract class AbstractNode {
      *
      * @param yPosition the Y position
      */
-    public void setYPosition(final int yPosition) {
+    public final void setYPosition(final int yPosition) {
         this.yPosition = yPosition;
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractNode {
      *
      * @return the incoming edges
      */
-    public Set<AbstractEdge> getIncomingEdges() {
+    public final Set<GenericEdge> getIncomingEdges() {
         return incomingEdges;
     }
 
@@ -88,7 +88,7 @@ public abstract class AbstractNode {
      *
      * @return the outgoing edges
      */
-    public Set<AbstractEdge> getOutgoingEdges() {
+    public final Set<GenericEdge> getOutgoingEdges() {
         return outgoingEdges;
     }
 }

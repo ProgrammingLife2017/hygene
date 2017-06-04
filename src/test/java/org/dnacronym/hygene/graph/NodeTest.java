@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test suite for the {@link Node} class.
  */
-final class NodeTest extends AbstractNodeTest {
+final class NodeTest extends GenericNodeTest {
     private static final int ID = 1;
     private static final int LINE_NUMBER = 2;
 
@@ -19,7 +19,7 @@ final class NodeTest extends AbstractNodeTest {
     @BeforeEach
     void setUp() {
         node = new Node(ID, LINE_NUMBER, SEQUENCE_LENGTH, INCOMING_EDGES, OUTGOING_EDGES);
-        setAbstractNode(node);
+        setGenericNode(node);
     }
 
 

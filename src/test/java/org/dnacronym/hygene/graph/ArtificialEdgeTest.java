@@ -9,8 +9,8 @@ import static org.mockito.Mockito.mock;
 /**
  * Test suite for the {@link ArtificialEdge} class.
  */
-final class ArtificialEdgeTest extends AbstractEdgeTest {
-    private static final AbstractEdge ORIGINAL_EDGE = mock(AbstractEdge.class);
+final class ArtificialEdgeTest extends GenericEdgeTest {
+    private static final GenericEdge ORIGINAL_EDGE = mock(GenericEdge.class);
 
     private ArtificialEdge artificialEdge;
 
@@ -18,7 +18,7 @@ final class ArtificialEdgeTest extends AbstractEdgeTest {
     @BeforeEach
     void setUp() {
         artificialEdge = new ArtificialEdge(FROM, TO, ORIGINAL_EDGE);
-        setAbstractEdge(artificialEdge);
+        setGenericEdge(artificialEdge);
     }
 
 

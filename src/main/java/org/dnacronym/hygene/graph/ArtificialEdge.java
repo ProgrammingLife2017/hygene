@@ -4,8 +4,8 @@ package org.dnacronym.hygene.graph;
 /**
  * Class representing an artificial edge, to be used for graph layout.
  */
-public final class ArtificialEdge extends AbstractEdge {
-    private final AbstractEdge originalEdge;
+public final class ArtificialEdge extends GenericEdge {
+    private final GenericEdge originalEdge;
 
 
     /**
@@ -15,7 +15,7 @@ public final class ArtificialEdge extends AbstractEdge {
      * @param to           the destination of the edge
      * @param originalEdge the original edge this artificial edge is replacing
      */
-    public ArtificialEdge(final AbstractNode from, final AbstractNode to, final AbstractEdge originalEdge) {
+    public ArtificialEdge(final GenericNode from, final GenericNode to, final GenericEdge originalEdge) {
         super(from, to);
         this.originalEdge = originalEdge;
     }
@@ -26,7 +26,7 @@ public final class ArtificialEdge extends AbstractEdge {
      *
      * @return the original edge
      */
-    public AbstractEdge getOriginalEdge() {
+    public GenericEdge getOriginalEdge() {
         return originalEdge;
     }
 }

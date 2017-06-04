@@ -6,9 +6,9 @@ import java.util.Set;
 /**
  * Class representing an artificial node, to be used for graph layout.
  */
-public final class ArtificialNode extends AbstractNode {
-    private final AbstractNode originalSource;
-    private final AbstractNode originalDestination;
+public final class ArtificialNode extends GenericNode {
+    private final GenericNode originalSource;
+    private final GenericNode originalDestination;
 
 
     /**
@@ -20,9 +20,9 @@ public final class ArtificialNode extends AbstractNode {
      * @param originalSource      the original source node this artificial node is (indirectly) connected to
      * @param originalDestination the original destination node this artificial node is (indirectly) connected to
      */
-    public ArtificialNode(final int sequenceLength, final Set<AbstractEdge> incomingEdges,
-                          final Set<AbstractEdge> outgoingEdges, final AbstractNode originalSource,
-                          final AbstractNode originalDestination) {
+    public ArtificialNode(final int sequenceLength, final Set<GenericEdge> incomingEdges,
+                          final Set<GenericEdge> outgoingEdges, final GenericNode originalSource,
+                          final GenericNode originalDestination) {
         super(sequenceLength, incomingEdges, outgoingEdges);
         this.originalSource = originalSource;
         this.originalDestination = originalDestination;
@@ -34,7 +34,7 @@ public final class ArtificialNode extends AbstractNode {
      *
      * @return the original source node
      */
-    public AbstractNode getOriginalSource() {
+    public GenericNode getOriginalSource() {
         return originalSource;
     }
 
@@ -43,7 +43,7 @@ public final class ArtificialNode extends AbstractNode {
      *
      * @return the original destination edge
      */
-    public AbstractNode getOriginalDestination() {
+    public GenericNode getOriginalDestination() {
         return originalDestination;
     }
 }

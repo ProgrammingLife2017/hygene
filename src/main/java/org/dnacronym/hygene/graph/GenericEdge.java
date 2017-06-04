@@ -4,18 +4,18 @@ package org.dnacronym.hygene.graph;
 /**
  * Class representing a generic edge.
  */
-public abstract class AbstractEdge {
-    private final AbstractNode from;
-    private final AbstractNode to;
+public class GenericEdge {
+    private final GenericNode from;
+    private final GenericNode to;
 
 
     /**
-     * Constructs a new {@link AbstractEdge} instance.
+     * Constructs a new {@link GenericEdge} instance.
      *
      * @param from the source of the edge
      * @param to   the destination of the edge
      */
-    public AbstractEdge(final AbstractNode from, final AbstractNode to) {
+    protected GenericEdge(final GenericNode from, final GenericNode to) {
         this.from = from;
         this.to = to;
     }
@@ -26,7 +26,7 @@ public abstract class AbstractEdge {
      *
      * @return the source node
      */
-    public AbstractNode getFrom() {
+    public final GenericNode getFrom() {
         return from;
     }
 
@@ -35,7 +35,7 @@ public abstract class AbstractEdge {
      *
      * @return the destination node
      */
-    public AbstractNode getTo() {
+    public final GenericNode getTo() {
         return to;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Class representing a single, non-artificial segment node.
  */
-public final class Node extends AbstractNode {
+public final class Node extends GenericNode {
     private final int id;
     private final int lineNumber;
 
@@ -20,8 +20,8 @@ public final class Node extends AbstractNode {
      * @param incomingEdges  the incoming edges
      * @param outgoingEdges  the outgoing edges
      */
-    public Node(final int id, final int lineNumber, final int sequenceLength, final Set<AbstractEdge> incomingEdges,
-                final Set<AbstractEdge> outgoingEdges) {
+    public Node(final int id, final int lineNumber, final int sequenceLength, final Set<GenericEdge> incomingEdges,
+                final Set<GenericEdge> outgoingEdges) {
         super(sequenceLength, incomingEdges, outgoingEdges);
         this.id = id;
         this.lineNumber = lineNumber;
