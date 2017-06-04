@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.console;
 
 import com.google.common.eventbus.Subscribe;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -77,15 +78,31 @@ public final class ConsoleController implements Initializable {
     }
 
     /**
-     * Append a new Console Message to the consoleTextFlow.
+     * Append a new Console Message to the console.
      *
      * @param message the message
      */
     void appendLogItem(final ConsoleMessage message) {
         if (consoleContent != null) {
             consoleContent.appendText(message.getMessage());
-            consoleContent.setStyleClass(0, consoleContent.getCaretPosition(), "green");
+            consoleContent.setStyleClass(0, consoleContent.getCaretPosition(), message.getStyleClass());
         }
+    }
+
+    /**
+     * Append a new message to the console.
+     *
+     * @param message the message
+     */
+    void appendLogItem(final String message) {
+        appendLogItem(new ConsoleMessage(message));
+    }
+
+    /**
+     * Clears the console.
+     */
+    public void clearConsole() {
+        consoleContent.clear();
     }
 
     /**
@@ -107,10 +124,28 @@ public final class ConsoleController implements Initializable {
         if (keyEvent.getCode().equals(KeyCode.ENTER)) {
             final String input = consoleInput.getCharacters().toString();
 
-            consoleInput.clear();
+            appendLogItem("> " + input + "\n");
 
-            // Todo: Handle commands
-            appendLogItem(new ConsoleMessage("> " + input + "\n"));
+            parseCommand(input);
+
+            consoleInput.clear();
+        }
+    }
+
+    /**
+     * Takes a command and parses it.
+     */
+    public void parseCommand(final String command) {
+        switch (command) {
+            case "clear":
+                clearConsole();
+                break;
+            case "exit":
+                Platform.runLater(Platform::exit);
+                break;
+            default:
+                appendLogItem(command + " is not recognized as an internal or external command.\n");
+                break;
         }
     }
 }
