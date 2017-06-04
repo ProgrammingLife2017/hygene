@@ -44,6 +44,8 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
+    private static final int ARC_SIZE = 10;
+    private static final int NODE_OUTLINE_WIDTH = 3;
     /**
      * Font used inside the nodes, this should always be a monospace font.
      */
@@ -133,16 +135,20 @@ public final class GraphVisualizer {
         final double rectWidth = graphDimensionsCalculator.computeWidth(nodeId);
         final double rectHeight = nodeHeightProperty.get();
 
-        graphicsContext.setFill(getNodeColor(nodeId, graph));
-        graphicsContext.fillRect(rectX, rectY, rectWidth, rectHeight);
+        graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
+        graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
+
+        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+            highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
+        }
 
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
             graphicsContext.setFill(Color.BLACK);
 
-            final int charCount = (int) (rectWidth / charWidth);
+            final int charCount = (int) Math.max((rectWidth - ARC_SIZE) / charWidth, 0);
 
-            final double fontX = rectX + 0.5 * (rectWidth - charCount * charWidth);
+            final double fontX = rectX + 0.5 * (rectWidth + (ARC_SIZE / 4.0) - charCount * charWidth);
             final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeightProperty().getValue()
                     + 0.25 * charHeight;
 
@@ -156,6 +162,23 @@ public final class GraphVisualizer {
         }
 
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
+    }
+
+    /**
+     * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.
+     *
+     * @param rectX          the upper left x position of the node
+     * @param rectY          the upper left y position of the node
+     * @param rectWidth      the width of the node
+     * @param rectHeight     the height of the node
+     * @param highlightColor the color of the highlight
+     */
+    private void highlightNode(final double rectX, final double rectY, final double rectWidth, final double rectHeight,
+                               final Color highlightColor) {
+        graphicsContext.setStroke(highlightColor);
+        graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
+        graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2.0, rectY - NODE_OUTLINE_WIDTH / 2.0,
+                rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
     }
 
     /**
@@ -194,21 +217,6 @@ public final class GraphVisualizer {
         final Text t = new Text("X");
         t.setFont(font);
         return t.getLayoutBounds().getHeight();
-    }
-
-    /**
-     * Retrieve the {@link Color} of a specific node.
-     *
-     * @param nodeId the node id
-     * @param graph  the {@link Graph}
-     * @return the {@link Color}
-     */
-    private Color getNodeColor(final int nodeId, final Graph graph) {
-        final Node selectedNode = getSelectedNodeProperty().get();
-        if (selectedNode != null && selectedNode.getId() == nodeId) {
-            return NodeColor.BRIGHT_GREEN.getFXColor();
-        }
-        return graph.getColor(nodeId).getFXColor();
     }
 
     /**
