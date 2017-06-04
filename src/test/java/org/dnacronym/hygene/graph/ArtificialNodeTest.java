@@ -19,8 +19,7 @@ final class ArtificialNodeTest extends GenericNodeTest {
 
     @BeforeEach
     void setUp() {
-        artificialNode = new ArtificialNode(SEQUENCE_LENGTH, INCOMING_EDGES, OUTGOING_EDGES, ORIGINAL_SOURCE,
-                ORIGINAL_DESTINATION);
+        artificialNode = new ArtificialNode(INCOMING_EDGES, OUTGOING_EDGES, ORIGINAL_SOURCE, ORIGINAL_DESTINATION);
         setGenericNode(artificialNode);
     }
 

@@ -7,7 +7,6 @@ import java.util.Set;
  * Class representing a generic node.
  */
 public class GenericNode {
-    private final int sequenceLength;
     private final Set<GenericEdge> incomingEdges;
     private final Set<GenericEdge> outgoingEdges;
     private int xPosition;
@@ -17,26 +16,14 @@ public class GenericNode {
     /**
      * Constructs a new {@link GenericNode} instance.
      *
-     * @param sequenceLength the length of the node
      * @param incomingEdges  the incoming edges
      * @param outgoingEdges  the outgoing edges
      */
-    protected GenericNode(final int sequenceLength, final Set<GenericEdge> incomingEdges,
-                          final Set<GenericEdge> outgoingEdges) {
-        this.sequenceLength = sequenceLength;
+    protected GenericNode(final Set<GenericEdge> incomingEdges, final Set<GenericEdge> outgoingEdges) {
         this.incomingEdges = incomingEdges;
         this.outgoingEdges = outgoingEdges;
     }
 
-
-    /**
-     * Returns the sequence length.
-     *
-     * @return the sequence length
-     */
-    public final int getSequenceLength() {
-        return sequenceLength;
-    }
 
     /**
      * Returns the X position.

@@ -9,6 +9,7 @@ import java.util.Set;
 public final class Node extends GenericNode {
     private final int id;
     private final int lineNumber;
+    private final int sequenceLength;
 
 
     /**
@@ -22,9 +23,10 @@ public final class Node extends GenericNode {
      */
     public Node(final int id, final int lineNumber, final int sequenceLength, final Set<GenericEdge> incomingEdges,
                 final Set<GenericEdge> outgoingEdges) {
-        super(sequenceLength, incomingEdges, outgoingEdges);
+        super(incomingEdges, outgoingEdges);
         this.id = id;
         this.lineNumber = lineNumber;
+        this.sequenceLength = sequenceLength;
     }
 
 
@@ -44,5 +46,14 @@ public final class Node extends GenericNode {
      */
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    /**
+     * Returns the sequence length.
+     *
+     * @return the sequence length
+     */
+    public int getSequenceLength() {
+        return sequenceLength;
     }
 }

@@ -12,19 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test suite for the {@link GenericNode} class.
  */
 abstract class GenericNodeTest {
-    static final int SEQUENCE_LENGTH = 1;
-    static final int X_POSITION = 2;
-    static final int Y_POSITION = 3;
+    static final int X_POSITION = 1;
+    static final int Y_POSITION = 2;
     static final Set<GenericEdge> INCOMING_EDGES = new HashSet<>();
     static final Set<GenericEdge> OUTGOING_EDGES = new HashSet<>();
 
     private GenericNode genericNode;
 
-
-    @Test
-    final void testGetSequenceLength() {
-        assertThat(genericNode.getSequenceLength()).isEqualTo(SEQUENCE_LENGTH);
-    }
 
     @Test
     final void testGetXPosition() {
