@@ -12,7 +12,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
@@ -53,26 +52,45 @@ final class FileMetadataTest extends FileDatabaseTestBase {
     @Test
     void testVerifyMetadata() throws IOException, SQLException {
         final String testFileName = "src/test/resources/persistence-test.gfa";
-        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
-                "UTF-8"))) {
-            out.println("Content before modification");
-        }
 
-        final FileDatabase testDatabase = new FileDatabase(testFileName);
-        testDatabase.close();
+        writeStringToFile(testFileName, "Content before modification");
+        final String hashBeforeModification = getStoredFileHash(testFileName);
 
-        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(testFileName),
-                "UTF-8"))) {
-            out.println("Content after modification");
-        }
+        writeStringToFile(testFileName, "Content after modification");
+        final String hashAfterModification = getStoredFileHash(testFileName);
 
-        final Throwable throwable = catchThrowable(() -> new FileDatabase(testFileName));
-
-        assertThat(throwable).isInstanceOf(FileDigestDatabaseException.class);
+        assertThat(hashBeforeModification).isNotEqualTo(hashAfterModification);
 
         if (!(new File(testFileName)).delete()
                 || !(new File(testFileName + FileDatabaseDriver.DB_FILE_EXTENSION)).delete()) {
             throw new IOException("Failed to clean up test file and database.");
+        }
+    }
+
+    /**
+     * Writes the given content to a file.
+     *
+     * @param fileName the name of the file
+     * @param content  the content
+     * @throws IOException in case of an error during IO operations
+     */
+    private void writeStringToFile(final String fileName, final String content) throws IOException {
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName),
+                "UTF-8"))) {
+            out.println(content);
+        }
+    }
+
+    /**
+     * Returns the stored hash digest of a certain file.
+     *
+     * @param fileName the file
+     * @return the digest as it is stored in the database
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    private String getStoredFileHash(final String fileName) throws SQLException, IOException {
+        try (FileDatabase testDatabase = new FileDatabase(fileName)) {
+            return testDatabase.getFileMetadata().getMetadataValue(FileMetadata.DIGEST_KEY_NAME);
         }
     }
 }
