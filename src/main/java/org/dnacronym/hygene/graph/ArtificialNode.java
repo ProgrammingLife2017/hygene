@@ -5,6 +5,9 @@ import java.util.Set;
 
 /**
  * Class representing an artificial node, to be used for graph layout.
+ *
+ * This is a 'dummy node', used to create space in complex graph scenarios. As a consequence, it is not intended to be
+ * drawn and serves as a connector of {@link ArtificialEdge}s.
  */
 public final class ArtificialNode extends GenericNode {
     private final GenericNode originalSource;

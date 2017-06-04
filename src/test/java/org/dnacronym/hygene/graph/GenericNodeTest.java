@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -12,12 +13,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test suite for the {@link GenericNode} class.
  */
 abstract class GenericNodeTest {
-    static final int X_POSITION = 1;
-    static final int Y_POSITION = 2;
-    static final Set<GenericEdge> INCOMING_EDGES = new HashSet<>();
-    static final Set<GenericEdge> OUTGOING_EDGES = new HashSet<>();
+    static final int X_POSITION = 31;
+    static final int Y_POSITION = 64;
 
     private GenericNode genericNode;
+    private Set<GenericEdge> incomingEdges;
+    private Set<GenericEdge> outgoingEdges;
+
+
+    @BeforeEach
+    void setUp() {
+        incomingEdges = new HashSet<>();
+        outgoingEdges = new HashSet<>();
+    }
 
 
     @Test
@@ -36,14 +44,32 @@ abstract class GenericNodeTest {
 
     @Test
     void testGetIncomingEdges() {
-        assertThat(genericNode.getIncomingEdges()).isEqualTo(INCOMING_EDGES);
+        assertThat(genericNode.getIncomingEdges()).isEqualTo(getIncomingEdges());
     }
 
     @Test
     final void testGetOutgoingEdges() {
-        assertThat(genericNode.getOutgoingEdges()).isEqualTo(OUTGOING_EDGES);
+        assertThat(genericNode.getOutgoingEdges()).isEqualTo(outgoingEdges);
     }
 
+
+    /**
+     * Returns the incoming edges.
+     *
+     * @return the incoming edges
+     */
+    final Set<GenericEdge> getIncomingEdges() {
+        return incomingEdges;
+    }
+
+    /**
+     * Returns the outgoing edges.
+     *
+     * @return the outgoing edges
+     */
+    final Set<GenericEdge> getOutgoingEdges() {
+        return outgoingEdges;
+    }
 
     /**
      * Sets the {@link GenericNode} instance to be tested.

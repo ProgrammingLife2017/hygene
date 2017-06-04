@@ -10,16 +10,18 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test suite for the {@link Node} class.
  */
 final class NodeTest extends GenericNodeTest {
-    private static final int ID = 1;
-    private static final int LINE_NUMBER = 2;
-    static final int SEQUENCE_LENGTH = 3;
+    private static final int ID = 39;
+    private static final int LINE_NUMBER = 56;
+    static final int SEQUENCE_LENGTH = 45;
 
     private Node node;
 
 
     @BeforeEach
     void setUp() {
-        node = new Node(ID, LINE_NUMBER, SEQUENCE_LENGTH, INCOMING_EDGES, OUTGOING_EDGES);
+        super.setUp();
+
+        node = new Node(ID, LINE_NUMBER, SEQUENCE_LENGTH, getIncomingEdges(), getOutgoingEdges());
         setGenericNode(node);
     }
 

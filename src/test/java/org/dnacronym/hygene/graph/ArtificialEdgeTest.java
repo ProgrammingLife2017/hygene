@@ -6,24 +6,27 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+
 /**
  * Test suite for the {@link ArtificialEdge} class.
  */
 final class ArtificialEdgeTest extends GenericEdgeTest {
-    private static final GenericEdge ORIGINAL_EDGE = mock(GenericEdge.class);
-
     private ArtificialEdge artificialEdge;
+    private GenericEdge originalEdge;
 
 
     @BeforeEach
     void setUp() {
-        artificialEdge = new ArtificialEdge(FROM, TO, ORIGINAL_EDGE);
+        super.setUp();
+
+        originalEdge = mock(GenericEdge.class);
+        artificialEdge = new ArtificialEdge(getFrom(), getTo(), originalEdge);
         setGenericEdge(artificialEdge);
     }
 
 
     @Test
     void testGetOriginalEdge() {
-        assertThat(artificialEdge.getOriginalEdge()).isEqualTo(ORIGINAL_EDGE);
+        assertThat(artificialEdge.getOriginalEdge()).isEqualTo(originalEdge);
     }
 }

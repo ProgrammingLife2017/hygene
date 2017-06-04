@@ -11,26 +11,30 @@ import static org.mockito.Mockito.mock;
  * Test suite for the {@link ArtificialNode} class.
  */
 final class ArtificialNodeTest extends GenericNodeTest {
-    private static final GenericNode ORIGINAL_SOURCE = mock(GenericNode.class);
-    private static final GenericNode ORIGINAL_DESTINATION = mock(GenericNode.class);
-
     private ArtificialNode artificialNode;
+    private GenericNode originalSource;
+    private GenericNode originalDestination;
 
 
     @BeforeEach
     void setUp() {
-        artificialNode = new ArtificialNode(INCOMING_EDGES, OUTGOING_EDGES, ORIGINAL_SOURCE, ORIGINAL_DESTINATION);
+        super.setUp();
+
+        originalSource = mock(GenericNode.class);
+        originalDestination = mock(GenericNode.class);
+        artificialNode = new ArtificialNode(getIncomingEdges(), getOutgoingEdges(), originalSource,
+                originalDestination);
         setGenericNode(artificialNode);
     }
 
 
     @Test
     void testGetOriginalSource() {
-        assertThat(artificialNode.getOriginalSource()).isEqualTo(ORIGINAL_SOURCE);
+        assertThat(artificialNode.getOriginalSource()).isEqualTo(originalSource);
     }
 
     @Test
     void testGetOriginalDestination() {
-        assertThat(artificialNode.getOriginalDestination()).isEqualTo(ORIGINAL_DESTINATION);
+        assertThat(artificialNode.getOriginalDestination()).isEqualTo(originalDestination);
     }
 }

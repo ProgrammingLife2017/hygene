@@ -15,9 +15,11 @@ public class GenericNode {
 
     /**
      * Constructs a new {@link GenericNode} instance.
+     * <p>
+     * This class should not be instantiated for regular use, please use {@link Node} instead.
      *
-     * @param incomingEdges  the incoming edges
-     * @param outgoingEdges  the outgoing edges
+     * @param incomingEdges the incoming edges
+     * @param outgoingEdges the outgoing edges
      */
     protected GenericNode(final Set<GenericEdge> incomingEdges, final Set<GenericEdge> outgoingEdges) {
         this.incomingEdges = incomingEdges;

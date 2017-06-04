@@ -5,18 +5,21 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
  * Test suite for the {@link Edge} class.
  */
 final class EdgeTest extends GenericEdgeTest {
-    private static final int LINE_NUMBER = 1;
+    private static final int LINE_NUMBER = 29;
 
     private Edge edge;
 
 
     @BeforeEach
     void setUp() {
-        edge = new Edge(FROM, TO, LINE_NUMBER);
+        super.setUp();
+
+        edge = new Edge(getFrom(), getTo(), LINE_NUMBER);
         setGenericEdge(edge);
     }
 
