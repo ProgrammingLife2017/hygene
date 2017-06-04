@@ -57,9 +57,9 @@ public final class ConsoleMessage {
      * @param level the log level represent by {@link Level}
      * @return the style class
      */
-    private static String getColor(final Level level) {
+    static String getColor(final Level level) {
         if (level == null || level.toString() == null) {
-            return "default";
+            return "green";
         }
 
         switch (level.toString()) {
@@ -71,7 +71,7 @@ public final class ConsoleMessage {
                 return "blue";
             case "TRACE":
                 return "yellow";
-            case "INFO;":
+            case "INFO":
             default:
                 return "green";
         }
