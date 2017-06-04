@@ -11,6 +11,7 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.dnacronym.hygene.core.HygeneEventBus;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -58,7 +59,8 @@ public final class JFXAppender extends AbstractAppender {
     })
     public void append(final LogEvent event) {
         try {
-            HygeneEventBus.getInstance().post(new ConsoleMessage(this, event));
+            HygeneEventBus.getInstance().post(new ConsoleMessage(
+                    new String(this.getLayout().toByteArray(event), StandardCharsets.UTF_8), event));
         } catch (final RuntimeException e) {
             // We can't actually log the exception here since that would cause the same problem
         }
