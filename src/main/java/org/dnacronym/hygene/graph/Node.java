@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -86,7 +88,7 @@ public class Node {
     }
 
     @Override
-    public final boolean equals(final Object o) {
+    public final boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }
