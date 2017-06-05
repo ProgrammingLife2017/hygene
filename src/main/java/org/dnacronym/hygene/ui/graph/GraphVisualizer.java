@@ -13,8 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
@@ -24,7 +22,6 @@ import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmark;
@@ -52,15 +49,6 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
-    private static final int ARC_SIZE = 10;
-    /**
-     * Font used inside the nodes, this should always be a monospace font.
-     */
-    private static final String DEFAULT_NODE_FONT = "Consolas";
-    /**
-     * Scalar for the size of the node text font as fraction of the node's height.
-     */
-    private static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
@@ -76,6 +64,7 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<Node> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
+    private final List<Integer> bookmarkedNodes;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
@@ -189,42 +178,7 @@ public final class GraphVisualizer {
         rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
     }
 
-    /**
-     * Generates a new {@link Font} that will be scaled such that it fits inside a node.
-     *
-     * @param nodeHeight the node height
-     * @return the generated {@link Font}
-     */
-    private Font generateNodeFont(final double nodeHeight) {
-        final double font1PHeight = getCharHeight(new Font(DEFAULT_NODE_FONT, 1));
-
-        final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
-
-        return new Font(DEFAULT_NODE_FONT, fontSize);
-    }
-
-    /**
-     * Computes the width of a single character for a specific font.
-     *
-     * @param font the {@link Font}
-     * @return the width in pixels
-     */
-    private double getCharWidth(final Font font) {
-        final Text t = new Text("X");
-        t.setFont(font);
-        return t.getLayoutBounds().getWidth();
-    }
-
-    /**
-     * Computes the height of a single character for a specific font.
-     *
-     * @param font the {@link Font}
-     * @return the width in pixels
-     */
-    private double getCharHeight(final Font font) {
-        final Text t = new Text("X");
-        t.setFont(font);
-        return t.getLayoutBounds().getHeight();
+        rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
     }
 
     /**
@@ -301,12 +255,6 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
-        final Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
-        graphicsContext.setFont(nodeFont);
-
-        final double charWidth = getCharWidth(nodeFont);
-        final double charHeight = getCharHeight(nodeFont);
-
         // TODO refactor UI package to decentralize all classes, to avoid strong coupling and getters
         final List<Integer> bookmarkedNodeIds = new ArrayList<>();
         try {
@@ -318,7 +266,10 @@ public final class GraphVisualizer {
             LOGGER.error("Unable to get bookmarks.", e);
         }
 
-        clear();
+        clear();nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        nodeDrawingToolkit.setLaneHeight(graphDimensionsCalculator.getLaneHeightProperty().get());
+
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(nodeId, charWidth, charHeight,
                     selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId,
