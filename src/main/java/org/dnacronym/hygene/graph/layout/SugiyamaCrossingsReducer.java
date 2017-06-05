@@ -1,0 +1,16 @@
+package org.dnacronym.hygene.graph.layout;
+
+import org.dnacronym.hygene.graph.Node;
+
+
+/**
+ * Part of the {@link SugiyamaLayout} algorithm, reduces the number of edge crossings in a layout.
+ */
+public interface SugiyamaCrossingsReducer {
+    /**
+     * Reduces the number of edge crossings in the given layers.
+     *
+     * @param layers an array of layers
+     */
+    void reduceCrossings(Node[][] layers);
+}
