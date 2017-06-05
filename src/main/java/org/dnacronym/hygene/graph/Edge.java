@@ -53,7 +53,7 @@ public class Edge {
      * @return {@code true} iff. this object is the same as {@code o}
      */
     @Override
-    @SuppressWarnings("checkstyle:designforextension") // to be overridden and used in subclasses
+    @SuppressWarnings("checkstyle:designforextension") // To be overridden and used in subclasses
     public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
@@ -72,10 +72,10 @@ public class Edge {
      * This method should be overridden in subclasses. It is encouraged to be used for verification of the equality of
      * state of this superclass.
      *
-     * @return a hash code value for this object
+     * @return the hash code value for this object
      */
     @Override
-    @SuppressWarnings("checkstyle:designforextension") // to be overridden and used in subclasses
+    @SuppressWarnings("checkstyle:designforextension") // To be overridden and used in subclasses
     public int hashCode() {
         return Objects.hash(from, to);
     }
