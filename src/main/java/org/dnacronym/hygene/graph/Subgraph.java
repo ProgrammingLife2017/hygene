@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,28 +29,52 @@ public final class Subgraph {
 
     /**
      * Returns the nodes.
+     * <p>
+     * The returned set is an immutable view of the actual set.
      *
      * @return the nodes
      */
     public Set<Node> getNodes() {
-        return nodes;
+        return Collections.unmodifiableSet(nodes);
+    }
+
+    /**
+     * Adds the given node to the set of nodes.
+     *
+     * @param node the node to be added
+     */
+    public void addNode(final Node node) {
+        nodes.add(node);
+    }
+
+    /**
+     * Removes the given node from the set of nodes.
+     *
+     * @param node the node to be removed
+     */
+    public void removeNode(final Node node) {
+        nodes.remove(node);
     }
 
     /**
      * Returns the neighbours of the source node.
+     * <p>
+     * The returned set is an immutable view of the actual set.
      *
      * @return the neighbours of the source node
      */
     public Set<Node> getSourceNeighbours() {
-        return sourceNeighbours;
+        return Collections.unmodifiableSet(sourceNeighbours);
     }
 
     /**
      * Returns the neighbours of the sink node.
+     * <p>
+     * The returned set is an immutable view of the actual set.
      *
      * @return the neighbours of the sink node
      */
     public Set<Node> getSinkNeighbours() {
-        return sinkNeighbours;
+        return Collections.unmodifiableSet(sinkNeighbours);
     }
 }

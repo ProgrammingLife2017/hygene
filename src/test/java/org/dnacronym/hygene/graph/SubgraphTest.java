@@ -7,12 +7,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 
 /**
  * Test suite for the {@link Subgraph} class.
  */
-class SubgraphTest {
+final class SubgraphTest {
     private Subgraph subgraph;
     private Set<Node> nodes;
 
@@ -27,6 +28,23 @@ class SubgraphTest {
     @Test
     void testGetNodes() {
         assertThat(subgraph.getNodes()).isEqualTo(nodes);
+    }
+
+    @Test
+    void testAddNode() {
+        final Node node = mock(Node.class);
+        subgraph.addNode(node);
+        assertThat(subgraph.getNodes()).containsExactly(node);
+    }
+
+    @Test
+    void testRemoveNode() {
+        final Node node = mock(Node.class);
+        subgraph.addNode(node);
+        assertThat(subgraph.getNodes()).containsExactly(node);
+
+        subgraph.removeNode(node);
+        assertThat(subgraph.getNodes()).isEmpty();
     }
 
     @Test

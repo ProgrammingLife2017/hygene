@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Test suite for the {@link GraphSelection} class.
  */
-class GraphSelectionTest {
+final class GraphSelectionTest {
     private GraphSelection graphSelection;
     private Set<Node> nodes;
     private Set<Edge> edges;
