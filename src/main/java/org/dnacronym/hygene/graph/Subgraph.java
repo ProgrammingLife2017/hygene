@@ -68,15 +68,15 @@ public final class Subgraph {
 
         if (node.getIncomingEdges().isEmpty()) {
             sourceNeighbours.add(node);
-            sourceNeighbours.removeAll(node.getOutgoingEdges().stream()
-                    .map(Edge::getTo).collect(Collectors.toList()));
         }
+        sourceNeighbours.removeAll(node.getOutgoingEdges().stream()
+                .map(Edge::getTo).collect(Collectors.toList()));
 
         if (node.getOutgoingEdges().isEmpty()) {
             sinkNeighbours.add(node);
-            sinkNeighbours.removeAll(node.getIncomingEdges().stream()
-                    .map(Edge::getFrom).collect(Collectors.toList()));
         }
+        sinkNeighbours.removeAll(node.getIncomingEdges().stream()
+                .map(Edge::getFrom).collect(Collectors.toList()));
     }
 
     /**
