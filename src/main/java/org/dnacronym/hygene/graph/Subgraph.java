@@ -38,10 +38,14 @@ public final class Subgraph {
         sinkNeighbours.clear();
 
         nodes.forEach(node -> {
-            if (node.getIncomingEdges().isEmpty()) {
+            if (node.getIncomingEdges().stream()
+                    .filter(edge -> nodes.contains(edge.getFrom())).collect(Collectors.toList())
+                    .isEmpty()) {
                 sourceNeighbours.add(node);
             }
-            if (node.getOutgoingEdges().isEmpty()) {
+            if (node.getOutgoingEdges().stream()
+                    .filter(edge -> nodes.contains(edge.getTo())).collect(Collectors.toList())
+                    .isEmpty()) {
                 sinkNeighbours.add(node);
             }
         });
