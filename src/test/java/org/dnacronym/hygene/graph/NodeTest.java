@@ -43,7 +43,7 @@ abstract class NodeTest {
     }
 
     @Test
-    void testGetIncomingEdges() {
+    final void testGetIncomingEdges() {
         assertThat(node.getIncomingEdges()).isEqualTo(getIncomingEdges());
     }
 
