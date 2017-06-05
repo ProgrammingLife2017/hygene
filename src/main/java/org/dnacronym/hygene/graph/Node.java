@@ -4,56 +4,80 @@ import java.util.Set;
 
 
 /**
- * Class representing a single, non-dummy segment node.
+ * Class representing a generic node.
  */
-public final class Node extends GenericNode {
-    private final int id;
-    private final int lineNumber;
-    private final int sequenceLength;
+public class Node {
+    private final Set<Edge> incomingEdges;
+    private final Set<Edge> outgoingEdges;
+    private int xPosition;
+    private int yPosition;
 
 
     /**
      * Constructs a new {@link Node} instance.
+     * <p>
+     * This class should not be instantiated for regular use, please use {@link Segment} instead.
      *
-     * @param id             the internal ID of the node
-     * @param lineNumber     the number of the corresponding segment in the GFA file this node was defined in
-     * @param sequenceLength the length of the node
-     * @param incomingEdges  the incoming edges
-     * @param outgoingEdges  the outgoing edges
+     * @param incomingEdges the incoming edges
+     * @param outgoingEdges the outgoing edges
      */
-    public Node(final int id, final int lineNumber, final int sequenceLength, final Set<GenericEdge> incomingEdges,
-                final Set<GenericEdge> outgoingEdges) {
-        super(incomingEdges, outgoingEdges);
-        this.id = id;
-        this.lineNumber = lineNumber;
-        this.sequenceLength = sequenceLength;
+    protected Node(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
+        this.incomingEdges = incomingEdges;
+        this.outgoingEdges = outgoingEdges;
     }
 
 
     /**
-     * Returns the id.
+     * Returns the X position.
      *
-     * @return the id
+     * @return the X position
      */
-    public int getId() {
-        return id;
+    public final int getXPosition() {
+        return xPosition;
     }
 
     /**
-     * Returns the line number.
+     * Sets the X position.
      *
-     * @return the line number
+     * @param xPosition the X position
      */
-    public int getLineNumber() {
-        return lineNumber;
+    public final void setXPosition(final int xPosition) {
+        this.xPosition = xPosition;
     }
 
     /**
-     * Returns the sequence length.
+     * Returns the Y position.
      *
-     * @return the sequence length
+     * @return the Y position
      */
-    public int getSequenceLength() {
-        return sequenceLength;
+    public final int getYPosition() {
+        return yPosition;
+    }
+
+    /**
+     * Sets the Y position.
+     *
+     * @param yPosition the Y position
+     */
+    public final void setYPosition(final int yPosition) {
+        this.yPosition = yPosition;
+    }
+
+    /**
+     * Returns the incoming edges.
+     *
+     * @return the incoming edges
+     */
+    public final Set<Edge> getIncomingEdges() {
+        return incomingEdges;
+    }
+
+    /**
+     * Returns the outgoing edges.
+     *
+     * @return the outgoing edges
+     */
+    public final Set<Edge> getOutgoingEdges() {
+        return outgoingEdges;
     }
 }

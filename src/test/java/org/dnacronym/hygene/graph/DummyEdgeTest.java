@@ -10,18 +10,18 @@ import static org.mockito.Mockito.mock;
 /**
  * Test suite for the {@link DummyEdge} class.
  */
-final class DummyEdgeTest extends GenericEdgeTest {
+final class DummyEdgeTest extends EdgeTest {
     private DummyEdge dummyEdge;
-    private GenericEdge originalEdge;
+    private Edge originalEdge;
 
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
-        originalEdge = mock(GenericEdge.class);
+        originalEdge = mock(Edge.class);
         dummyEdge = new DummyEdge(getFrom(), getTo(), originalEdge);
-        setGenericEdge(dummyEdge);
+        setEdge(dummyEdge);
     }
 
 

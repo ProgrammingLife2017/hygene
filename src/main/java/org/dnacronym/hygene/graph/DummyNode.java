@@ -4,7 +4,7 @@ import java.util.Set;
 
 
 /**
- * Class representing an dummy node, to be used for graph layout.
+ * Class representing a dummy node, to be used for graph layout.
  * <p>
  * This is a 'dummy node', used to create space in complex graph scenarios. As a consequence, it is not intended to be
  * drawn and serves as a connector of {@link DummyEdge}s. One or more of these {@link DummyNode}s forms a 'diversion',
@@ -19,13 +19,13 @@ import java.util.Set;
  * X * Y * Z
  * </pre>
  * <i>
- * A and B are {@link Node}s and the connection between them is an {@link Edge}. The diversion in this scenario
+ * A and B are {@link Segment}s and the connection between them is an {@link Link}. The diversion in this scenario
  * consists of the 'stars' (representing {@link DummyEdge}s) and the {@link DummyNode}s they connect (X, Y, and Z).
  * </i>
  */
-public final class DummyNode extends GenericNode {
-    private final GenericNode diversionSource;
-    private final GenericNode diversionDestination;
+public final class DummyNode extends Node {
+    private final Node diversionSource;
+    private final Node diversionDestination;
 
 
     /**
@@ -36,8 +36,8 @@ public final class DummyNode extends GenericNode {
      * @param diversionSource      the original source node this dummy node is (indirectly) connected to
      * @param diversionDestination the original destination node this dummy node is (indirectly) connected to
      */
-    public DummyNode(final Set<GenericEdge> incomingEdges, final Set<GenericEdge> outgoingEdges,
-                     final GenericNode diversionSource, final GenericNode diversionDestination) {
+    public DummyNode(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges,
+                     final Node diversionSource, final Node diversionDestination) {
         super(incomingEdges, outgoingEdges);
         this.diversionSource = diversionSource;
         this.diversionDestination = diversionDestination;
@@ -49,7 +49,7 @@ public final class DummyNode extends GenericNode {
      *
      * @return the diversion source node
      */
-    public GenericNode getDiversionSource() {
+    public Node getDiversionSource() {
         return diversionSource;
     }
 
@@ -58,7 +58,7 @@ public final class DummyNode extends GenericNode {
      *
      * @return the diversion destination node
      */
-    public GenericNode getDiversionDestination() {
+    public Node getDiversionDestination() {
         return diversionDestination;
     }
 }

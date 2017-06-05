@@ -10,21 +10,21 @@ import static org.mockito.Mockito.mock;
 /**
  * Test suite for the {@link DummyNode} class.
  */
-final class DummyNodeTest extends GenericNodeTest {
+final class DummyNodeTest extends NodeTest {
     private DummyNode dummyNode;
-    private GenericNode diversionSource;
-    private GenericNode diversionDestination;
+    private Node diversionSource;
+    private Node diversionDestination;
 
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
-        diversionSource = mock(GenericNode.class);
-        diversionDestination = mock(GenericNode.class);
+        diversionSource = mock(Node.class);
+        diversionDestination = mock(Node.class);
         dummyNode = new DummyNode(getIncomingEdges(), getOutgoingEdges(), diversionSource,
                 diversionDestination);
-        setGenericNode(dummyNode);
+        setNode(dummyNode);
     }
 
 

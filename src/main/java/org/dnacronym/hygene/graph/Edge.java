@@ -2,31 +2,40 @@ package org.dnacronym.hygene.graph;
 
 
 /**
- * Class representing a single, non-dummy edge.
+ * Class representing a generic edge.
  */
-public final class Edge extends GenericEdge {
-    private final int lineNumber;
+public class Edge {
+    private final Node from;
+    private final Node to;
 
 
     /**
      * Constructs a new {@link Edge} instance.
      *
-     * @param from       the source of the edge
-     * @param to         the destination of the edge
-     * @param lineNumber the number of the corresponding link in the GFA file this edge was defined in
+     * @param from the source of the edge
+     * @param to   the destination of the edge
      */
-    public Edge(final GenericNode from, final GenericNode to, final int lineNumber) {
-        super(from, to);
-        this.lineNumber = lineNumber;
+    protected Edge(final Node from, final Node to) {
+        this.from = from;
+        this.to = to;
     }
 
 
     /**
-     * Returns the line number.
+     * Returns the source node.
      *
-     * @return the line number
+     * @return the source node
      */
-    public int getLineNumber() {
-        return lineNumber;
+    public final Node getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns the destination node.
+     *
+     * @return the destination node
+     */
+    public final Node getTo() {
+        return to;
     }
 }
