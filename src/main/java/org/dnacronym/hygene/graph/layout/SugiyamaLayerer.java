@@ -7,6 +7,7 @@ import org.dnacronym.hygene.graph.Subgraph;
 /**
  * Part of the {@link SugiyamaLayout} algorithm, layers a {@link Subgraph} into a number of layers.
  */
+@SuppressWarnings("squid:S1609") // Not a function
 public interface SugiyamaLayerer {
     /**
      * Layers the given {@link Subgraph} into a number of layers.
