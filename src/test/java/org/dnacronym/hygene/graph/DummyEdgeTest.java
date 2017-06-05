@@ -8,10 +8,10 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Test suite for the {@link ArtificialEdge} class.
+ * Test suite for the {@link DummyEdge} class.
  */
-final class ArtificialEdgeTest extends GenericEdgeTest {
-    private ArtificialEdge artificialEdge;
+final class DummyEdgeTest extends GenericEdgeTest {
+    private DummyEdge dummyEdge;
     private GenericEdge originalEdge;
 
 
@@ -20,13 +20,13 @@ final class ArtificialEdgeTest extends GenericEdgeTest {
         super.setUp();
 
         originalEdge = mock(GenericEdge.class);
-        artificialEdge = new ArtificialEdge(getFrom(), getTo(), originalEdge);
-        setGenericEdge(artificialEdge);
+        dummyEdge = new DummyEdge(getFrom(), getTo(), originalEdge);
+        setGenericEdge(dummyEdge);
     }
 
 
     @Test
     void testGetOriginalEdge() {
-        assertThat(artificialEdge.getOriginalEdge()).isEqualTo(originalEdge);
+        assertThat(dummyEdge.getOriginalEdge()).isEqualTo(originalEdge);
     }
 }

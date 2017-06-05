@@ -4,24 +4,24 @@ package org.dnacronym.hygene.graph;
 /**
  * Class representing an artificial edge, to be used for graph layout.
  * <p>
- * Such an {@link ArtificialEdge} connects at least one {@link ArtificialNode} to at most one non-artificial
+ * Such an {@link DummyEdge} connects at least one {@link DummyNode} to at most one non-artificial
  * {@link GenericNode}.
  */
-public final class ArtificialEdge extends GenericEdge {
+public final class DummyEdge extends GenericEdge {
     private final GenericEdge originalEdge;
 
 
     /**
-     * Constructs a new {@link ArtificialEdge} instance.
+     * Constructs a new {@link DummyEdge} instance.
      *
      * @param from         the source of the edge
      * @param to           the destination of the edge
-     * @param originalEdge the original edge this artificial edge is replacing (cannot be an {@link ArtificialEdge})
+     * @param originalEdge the original edge this artificial edge is replacing (cannot be an {@link DummyEdge})
      */
-    public ArtificialEdge(final GenericNode from, final GenericNode to, final GenericEdge originalEdge) {
+    public DummyEdge(final GenericNode from, final GenericNode to, final GenericEdge originalEdge) {
         super(from, to);
 
-        assert !(originalEdge instanceof ArtificialEdge);
+        assert !(originalEdge instanceof DummyEdge);
         this.originalEdge = originalEdge;
     }
 
