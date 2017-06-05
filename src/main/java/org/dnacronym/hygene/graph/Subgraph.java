@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 /**
  * Class representing a subgraph.
  */
-@SuppressWarnings("squid:S2094") // Temporary stub class
 public final class Subgraph {
     private final Set<Node> nodes;
     private final Set<Node> sourceNeighbours;
