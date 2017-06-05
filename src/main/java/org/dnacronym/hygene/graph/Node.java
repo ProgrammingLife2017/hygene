@@ -4,7 +4,7 @@ import java.util.Set;
 
 
 /**
- * Class representing a single, non-artificial segment node.
+ * Class representing a single, non-dummy segment node.
  */
 public final class Node extends GenericNode {
     private final int id;

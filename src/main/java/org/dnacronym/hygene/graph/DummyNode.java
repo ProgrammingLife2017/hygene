@@ -4,12 +4,12 @@ import java.util.Set;
 
 
 /**
- * Class representing an artificial node, to be used for graph layout.
+ * Class representing an dummy node, to be used for graph layout.
  * <p>
  * This is a 'dummy node', used to create space in complex graph scenarios. As a consequence, it is not intended to be
  * drawn and serves as a connector of {@link DummyEdge}s. One or more of these {@link DummyNode}s forms a 'diversion',
- * which is a path starting from one non-artificial node, followed by one or more {@link DummyNode}s (connected by
- * {@link DummyEdge}s). The diversion reaches its end when it connects to the first non-artificial node again.
+ * which is a path starting from one non-dummy node, followed by one or more {@link DummyNode}s (connected by
+ * {@link DummyEdge}s). The diversion reaches its end when it connects to the first non-dummy node again.
  * <p>
  * An example of such a diversion is illustrated below:
  * <p>
@@ -33,8 +33,8 @@ public final class DummyNode extends GenericNode {
      *
      * @param incomingEdges        the incoming edges
      * @param outgoingEdges        the outgoing edges
-     * @param diversionSource      the original source node this artificial node is (indirectly) connected to
-     * @param diversionDestination the original destination node this artificial node is (indirectly) connected to
+     * @param diversionSource      the original source node this dummy node is (indirectly) connected to
+     * @param diversionDestination the original destination node this dummy node is (indirectly) connected to
      */
     public DummyNode(final Set<GenericEdge> incomingEdges, final Set<GenericEdge> outgoingEdges,
                      final GenericNode diversionSource, final GenericNode diversionDestination) {

@@ -2,7 +2,7 @@ package org.dnacronym.hygene.graph;
 
 
 /**
- * Class representing a single, non-artificial edge.
+ * Class representing a single, non-dummy edge.
  */
 public final class Edge extends GenericEdge {
     private final int lineNumber;
