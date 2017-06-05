@@ -1,8 +1,5 @@
 package org.dnacronym.hygene.graph;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -26,6 +23,7 @@ import java.util.Set;
  * consists of the 'stars' (representing {@link DummyEdge}s) and the {@link DummyNode}s they connect (X, Y, and Z).
  * </i>
  */
+@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
 public final class DummyNode extends Node {
     private final Node diversionSource;
     private final Node diversionDestination;
@@ -63,26 +61,5 @@ public final class DummyNode extends Node {
      */
     public Node getDiversionDestination() {
         return diversionDestination;
-    }
-
-    @Override
-    public boolean equals(final @Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final DummyNode dummyNode = (DummyNode) o;
-        return Objects.equals(diversionSource, dummyNode.diversionSource)
-                && Objects.equals(diversionDestination, dummyNode.diversionDestination);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), diversionSource, diversionDestination);
     }
 }

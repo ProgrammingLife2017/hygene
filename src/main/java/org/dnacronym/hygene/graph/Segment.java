@@ -1,14 +1,12 @@
 package org.dnacronym.hygene.graph;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Objects;
 import java.util.Set;
 
 
 /**
  * Class representing a single, non-dummy segment node.
  */
+@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
 public final class Segment extends Node {
     private final int id;
     private final int lineNumber;
@@ -58,27 +56,5 @@ public final class Segment extends Node {
      */
     public int getSequenceLength() {
         return sequenceLength;
-    }
-
-    @Override
-    public boolean equals(final @Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final Segment segment = (Segment) o;
-        return id == segment.id
-                && lineNumber == segment.lineNumber
-                && sequenceLength == segment.sequenceLength;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), id, lineNumber, sequenceLength);
     }
 }

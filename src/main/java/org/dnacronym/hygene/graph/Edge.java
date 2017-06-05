@@ -1,14 +1,14 @@
 package org.dnacronym.hygene.graph;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
  * Class representing a generic edge.
  */
 public class Edge {
+    private final UUID uuid;
     private final Node from;
     private final Node to;
 
@@ -20,6 +20,7 @@ public class Edge {
      * @param to   the destination of the edge
      */
     protected Edge(final Node from, final Node to) {
+        this.uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;
     }
@@ -43,18 +44,8 @@ public class Edge {
         return to;
     }
 
-    /**
-     * Indicates whether some other object is "equal to" this one.
-     * <p>
-     * This method should be overridden in subclasses. Please make use of the {@link #hashCode()} function of this class
-     * for verification of the fields of this class.
-     *
-     * @param o the reference object with which to compare
-     * @return {@code true} iff. this object is the same as {@code o}
-     */
     @Override
-    @SuppressWarnings("checkstyle:designforextension") // To be overridden and used in subclasses
-    public boolean equals(final @Nullable Object o) {
+    public final boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -62,21 +53,11 @@ public class Edge {
             return false;
         }
         final Edge edge = (Edge) o;
-        return Objects.equals(from, edge.from)
-                && Objects.equals(to, edge.to);
+        return Objects.equals(uuid, edge.uuid);
     }
 
-    /**
-     * Returns a hash code value for the object.
-     * <p>
-     * This method should be overridden in subclasses. It is encouraged to be used for verification of the equality of
-     * state of this superclass.
-     *
-     * @return the hash code value for this object
-     */
     @Override
-    @SuppressWarnings("checkstyle:designforextension") // To be overridden and used in subclasses
-    public int hashCode() {
-        return Objects.hash(from, to);
+    public final int hashCode() {
+        return Objects.hash(uuid);
     }
 }

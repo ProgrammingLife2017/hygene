@@ -1,13 +1,10 @@
 package org.dnacronym.hygene.graph;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Objects;
-
 
 /**
  * Class representing a single, non-dummy edge.
  */
+@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
 public final class Link extends Edge {
     private final int lineNumber;
 
@@ -32,25 +29,5 @@ public final class Link extends Edge {
      */
     public int getLineNumber() {
         return lineNumber;
-    }
-
-    @Override
-    public boolean equals(final @Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        final Link link = (Link) o;
-        return lineNumber == link.lineNumber;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), lineNumber);
     }
 }
