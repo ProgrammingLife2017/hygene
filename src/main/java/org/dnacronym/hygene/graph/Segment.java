@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -55,5 +56,27 @@ public final class Segment extends Node {
      */
     public int getSequenceLength() {
         return sequenceLength;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final Segment segment = (Segment) o;
+        return id == segment.id
+                && lineNumber == segment.lineNumber
+                && sequenceLength == segment.sequenceLength;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, lineNumber, sequenceLength);
     }
 }

@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -79,5 +80,42 @@ public class Node {
      */
     public final Set<Edge> getOutgoingEdges() {
         return outgoingEdges;
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     * <p>
+     * This method should be overridden in subclasses. Please make use of the {@link #hashCode()} function of this class
+     * for verification of the fields of this class.
+     *
+     * @param o the reference object with which to compare
+     * @return {@code true} iff. this object is the same as {@code o}
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Node node = (Node) o;
+        return xPosition == node.xPosition
+                && yPosition == node.yPosition
+                && Objects.equals(incomingEdges, node.incomingEdges)
+                && Objects.equals(outgoingEdges, node.outgoingEdges);
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     * <p>
+     * This method should be overridden in subclasses. It is encouraged to be used for verification of the equality of
+     * state of this superclass.
+     *
+     * @return a hash code value for this object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(incomingEdges, outgoingEdges, xPosition, yPosition);
     }
 }

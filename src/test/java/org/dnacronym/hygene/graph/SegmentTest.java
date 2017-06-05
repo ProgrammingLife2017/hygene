@@ -1,7 +1,11 @@
 package org.dnacronym.hygene.graph;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,5 +43,16 @@ final class SegmentTest extends NodeTest {
     @Test
     void testGetSequenceLength() {
         assertThat(segment.getSequenceLength()).isEqualTo(SEQUENCE_LENGTH);
+    }
+
+    @Test
+    void testEquals() {
+        EqualsVerifier.forClass(Segment.class)
+                .withRedefinedSuperclass()
+                .withPrefabValues(Node.class,
+                        new Segment(59, 56, 15, new HashSet<>(), new HashSet<>()),
+                        new Segment(21, 48, 88, new HashSet<>(), new HashSet<>()))
+                .suppress(Warning.NONFINAL_FIELDS) // X and Y position need to be set dynamically during layout
+                .verify();
     }
 }

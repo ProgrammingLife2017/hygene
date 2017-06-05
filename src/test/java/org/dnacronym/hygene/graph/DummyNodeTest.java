@@ -1,7 +1,11 @@
 package org.dnacronym.hygene.graph;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -36,5 +40,16 @@ final class DummyNodeTest extends NodeTest {
     @Test
     void testGetOriginalDestination() {
         assertThat(dummyNode.getDiversionDestination()).isEqualTo(diversionDestination);
+    }
+
+    @Test
+    void testEquals() {
+        EqualsVerifier.forClass(DummyNode.class)
+                .withRedefinedSuperclass()
+                .withPrefabValues(Node.class,
+                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)),
+                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)))
+                .suppress(Warning.NONFINAL_FIELDS) // X and Y position need to be set dynamically during layout
+                .verify();
     }
 }

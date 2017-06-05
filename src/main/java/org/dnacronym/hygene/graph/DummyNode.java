@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -60,5 +61,26 @@ public final class DummyNode extends Node {
      */
     public Node getDiversionDestination() {
         return diversionDestination;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final DummyNode dummyNode = (DummyNode) o;
+        return Objects.equals(diversionSource, dummyNode.diversionSource)
+                && Objects.equals(diversionDestination, dummyNode.diversionDestination);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), diversionSource, diversionDestination);
     }
 }
