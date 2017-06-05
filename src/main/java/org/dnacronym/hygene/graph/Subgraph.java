@@ -3,6 +3,7 @@ package org.dnacronym.hygene.graph;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -64,7 +65,18 @@ public final class Subgraph {
      */
     public void addNode(final Node node) {
         nodes.add(node);
-        detectSourceAndSinkNeighbours();
+
+        if (node.getIncomingEdges().isEmpty()) {
+            sourceNeighbours.add(node);
+            sourceNeighbours.removeAll(node.getOutgoingEdges().stream()
+                    .map(Edge::getTo).collect(Collectors.toList()));
+        }
+
+        if (node.getOutgoingEdges().isEmpty()) {
+            sinkNeighbours.add(node);
+            sinkNeighbours.removeAll(node.getIncomingEdges().stream()
+                    .map(Edge::getFrom).collect(Collectors.toList()));
+        }
     }
 
     /**
@@ -84,7 +96,7 @@ public final class Subgraph {
      *
      * @return the neighbours of the source node
      */
-    public Set<Node> getSourceNeighbours() {
+    Set<Node> getSourceNeighbours() {
         return Collections.unmodifiableSet(sourceNeighbours);
     }
 
@@ -95,7 +107,7 @@ public final class Subgraph {
      *
      * @return the neighbours of the sink node
      */
-    public Set<Node> getSinkNeighbours() {
+    Set<Node> getSinkNeighbours() {
         return Collections.unmodifiableSet(sinkNeighbours);
     }
 }
