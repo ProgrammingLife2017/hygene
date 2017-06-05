@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -42,5 +43,21 @@ class GraphSelectionTest {
 
         assertThat(emptySelection.getNodes()).isEmpty();
         assertThat(emptySelection.getEdges()).isEmpty();
+    }
+
+    @Test
+    void testGetNodesWithAddedNodes() {
+        final Node node = new Segment(62, 22, 19, new HashSet<>(), new HashSet<>());
+        graphSelection.getNodes().add(node);
+
+        assertThat(graphSelection.getNodes()).containsExactly(node);
+    }
+
+    @Test
+    void testGetEdgesWithAddedEdges() {
+        final Edge edge = new Link(mock(Node.class), mock(Node.class), 74);
+        graphSelection.getEdges().add(edge);
+
+        assertThat(graphSelection.getEdges()).containsExactly(edge);
     }
 }
