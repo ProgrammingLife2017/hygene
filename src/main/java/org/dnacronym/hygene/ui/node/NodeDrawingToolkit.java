@@ -30,16 +30,16 @@ public final class NodeDrawingToolkit {
 
     private double canvasHeight;
     private double laneHeight;
-    private double nodeY;
-    private double nodeX;
-    private double nodeWidth;
     private double nodeHeight;
-    private Color nodeColor;
-    private String sequence;
-
     private double charWidth;
     private double charHeight;
     private Font nodeFont;
+
+    private double nodeY;
+    private double nodeX;
+    private double nodeWidth;
+    private Color nodeColor;
+    private String sequence;
 
     private boolean highlight;
     private boolean drawSequence;
@@ -127,7 +127,6 @@ public final class NodeDrawingToolkit {
      * @param nodeColor the color of the node
      * @return current instance of the toolkit to provide a fluent interface
      */
-    // TODO replace this with a node color toolkit
     public NodeDrawingToolkit setNodeColor(final Color nodeColor) {
         this.nodeColor = nodeColor;
         return this;
@@ -158,9 +157,7 @@ public final class NodeDrawingToolkit {
             drawNodeSequence(charWidth, charHeight);
         }
         if (bookmarked) {
-            drawNodeBookmark(
-                    laneHeight - nodeHeight,
-                    canvasHeight);
+            drawNodeBookmark(laneHeight - nodeHeight, canvasHeight);
         }
     }
 
@@ -182,7 +179,6 @@ public final class NodeDrawingToolkit {
         this.nodeFont = new Font(DEFAULT_NODE_FONT, fontSize);
 
         text.setFont(nodeFont);
-
         this.charWidth = text.getLayoutBounds().getWidth();
         this.charHeight = text.getLayoutBounds().getHeight();
     }
@@ -209,8 +205,7 @@ public final class NodeDrawingToolkit {
      * @param arrowHeight       the height the arrow should be
      * @param bottomYIdentifier the bottom y position of the identifier at the bottom of the graph
      */
-    @SuppressWarnings("MagicNumber")
-    // Using constants here does not make the method more readable.
+    @SuppressWarnings("MagicNumber") // Using constants here does not make the method more readable.
     void drawNodeBookmark(final double arrowHeight, final double bottomYIdentifier) {
         graphicsContext.setFill(Color.RED);
 

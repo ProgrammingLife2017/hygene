@@ -64,7 +64,6 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<Node> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
-    private final List<Integer> bookmarkedNodes;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
@@ -93,13 +92,11 @@ public final class GraphVisualizer {
      */
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator) {
         HygeneEventBus.getInstance().register(this);
-
         this.graphDimensionsCalculator = graphDimensionsCalculator;
 
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
-
-        getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
+        selectedNodeProperty.addListener((observable, oldValue, newValue) -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -174,9 +171,6 @@ public final class GraphVisualizer {
                     graphDimensionsCalculator.getLaneHeightProperty().get() - nodeHeightProperty.get(),
                     canvas.getHeight());
         }
-
-        rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
-    }
 
         rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
     }
