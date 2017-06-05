@@ -24,8 +24,27 @@ public final class Subgraph {
 
         sourceNeighbours = new HashSet<>();
         sinkNeighbours = new HashSet<>();
+
+        detectSourceAndSinkNeighbours();
     }
 
+
+    /**
+     * Updates the lists of source and sink neighbours, based on the current node set.
+     */
+    private void detectSourceAndSinkNeighbours() {
+        sourceNeighbours.clear();
+        sinkNeighbours.clear();
+
+        nodes.forEach(node -> {
+            if (node.getIncomingEdges().isEmpty()) {
+                sourceNeighbours.add(node);
+            }
+            if (node.getOutgoingEdges().isEmpty()) {
+                sinkNeighbours.add(node);
+            }
+        });
+    }
 
     /**
      * Returns the nodes.
@@ -45,6 +64,7 @@ public final class Subgraph {
      */
     public void addNode(final Node node) {
         nodes.add(node);
+        detectSourceAndSinkNeighbours();
     }
 
     /**
@@ -54,6 +74,7 @@ public final class Subgraph {
      */
     public void removeNode(final Node node) {
         nodes.remove(node);
+        detectSourceAndSinkNeighbours();
     }
 
     /**
