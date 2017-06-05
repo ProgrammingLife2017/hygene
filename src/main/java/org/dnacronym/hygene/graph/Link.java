@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.graph;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
+
 
 /**
  * Class representing a single, non-dummy edge.
@@ -33,7 +35,7 @@ public final class Link extends Edge {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }

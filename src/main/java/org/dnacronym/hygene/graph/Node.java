@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -92,7 +94,8 @@ public class Node {
      * @return {@code true} iff. this object is the same as {@code o}
      */
     @Override
-    public boolean equals(final Object o) {
+    @SuppressWarnings("checkstyle:designforextension") // to be overridden and used in subclasses
+    public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -115,6 +118,7 @@ public class Node {
      * @return a hash code value for this object
      */
     @Override
+    @SuppressWarnings("checkstyle:designforextension") // to be overridden and used in subclasses
     public int hashCode() {
         return Objects.hash(incomingEdges, outgoingEdges, xPosition, yPosition);
     }

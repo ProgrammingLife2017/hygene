@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -59,7 +61,7 @@ public final class Segment extends Node {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }
