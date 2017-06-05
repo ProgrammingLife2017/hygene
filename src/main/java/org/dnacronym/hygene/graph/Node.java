@@ -4,12 +4,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 
 /**
  * Class representing a generic node.
  */
 public class Node {
+    private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
     private int xPosition;
@@ -25,6 +27,7 @@ public class Node {
      * @param outgoingEdges the outgoing edges
      */
     protected Node(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
+        this.uuid = UUID.randomUUID();
         this.incomingEdges = incomingEdges;
         this.outgoingEdges = outgoingEdges;
     }
@@ -84,18 +87,8 @@ public class Node {
         return outgoingEdges;
     }
 
-    /**
-     * Indicates whether some other object is "equal to" this one.
-     * <p>
-     * This method should be overridden in subclasses. Please make use of the {@link #hashCode()} function of this class
-     * for verification of the fields of this class.
-     *
-     * @param o the reference object with which to compare
-     * @return {@code true} iff. this object is the same as {@code o}
-     */
     @Override
-    @SuppressWarnings("checkstyle:designforextension") // To be overridden and used in subclasses
-    public boolean equals(final @Nullable Object o) {
+    public final boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -103,23 +96,11 @@ public class Node {
             return false;
         }
         final Node node = (Node) o;
-        return xPosition == node.xPosition
-                && yPosition == node.yPosition
-                && Objects.equals(incomingEdges, node.incomingEdges)
-                && Objects.equals(outgoingEdges, node.outgoingEdges);
+        return Objects.equals(uuid, node.uuid);
     }
 
-    /**
-     * Returns a hash code value for the object.
-     * <p>
-     * This method should be overridden in subclasses. It is encouraged to be used for verification of the equality of
-     * state of this superclass.
-     *
-     * @return the hash code value for this object
-     */
     @Override
-    @SuppressWarnings("checkstyle:designforextension") // To be overridden and used in subclasses
-    public int hashCode() {
-        return Objects.hash(incomingEdges, outgoingEdges, xPosition, yPosition);
+    public final int hashCode() {
+        return Objects.hash(uuid);
     }
 }

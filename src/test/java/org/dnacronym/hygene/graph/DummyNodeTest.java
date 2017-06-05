@@ -49,7 +49,7 @@ final class DummyNodeTest extends NodeTest {
                 .withPrefabValues(Node.class,
                         new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)),
                         new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)))
-                .suppress(Warning.NONFINAL_FIELDS) // X and Y position need to be set dynamically during layout
+                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }
 }

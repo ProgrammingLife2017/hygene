@@ -52,7 +52,7 @@ final class SegmentTest extends NodeTest {
                 .withPrefabValues(Node.class,
                         new Segment(59, 56, 15, new HashSet<>(), new HashSet<>()),
                         new Segment(21, 48, 88, new HashSet<>(), new HashSet<>()))
-                .suppress(Warning.NONFINAL_FIELDS) // X and Y position need to be set dynamically during layout
+                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }
 }

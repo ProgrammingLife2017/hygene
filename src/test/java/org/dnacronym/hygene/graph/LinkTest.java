@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +41,7 @@ final class LinkTest extends EdgeTest {
                 .withPrefabValues(Node.class,
                         new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)),
                         new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)))
+                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }
 }
