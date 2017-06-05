@@ -38,14 +38,10 @@ public final class Subgraph {
         sinkNeighbours.clear();
 
         nodes.forEach(node -> {
-            if (node.getIncomingEdges().stream()
-                    .filter(edge -> nodes.contains(edge.getFrom())).collect(Collectors.toList())
-                    .isEmpty()) {
+            if (isSourceNeighbour(node)) {
                 sourceNeighbours.add(node);
             }
-            if (node.getOutgoingEdges().stream()
-                    .filter(edge -> nodes.contains(edge.getTo())).collect(Collectors.toList())
-                    .isEmpty()) {
+            if (isSinkNeighbour(node)) {
                 sinkNeighbours.add(node);
             }
         });
@@ -70,13 +66,13 @@ public final class Subgraph {
     public void addNode(final Node node) {
         nodes.add(node);
 
-        if (node.getIncomingEdges().isEmpty()) {
+        if (isSourceNeighbour(node)) {
             sourceNeighbours.add(node);
         }
         sourceNeighbours.removeAll(node.getOutgoingEdges().stream()
                 .map(Edge::getTo).collect(Collectors.toList()));
 
-        if (node.getOutgoingEdges().isEmpty()) {
+        if (isSinkNeighbour(node)) {
             sinkNeighbours.add(node);
         }
         sinkNeighbours.removeAll(node.getIncomingEdges().stream()
@@ -91,6 +87,34 @@ public final class Subgraph {
     public void removeNode(final Node node) {
         nodes.remove(node);
         detectSourceAndSinkNeighbours();
+    }
+
+    /**
+     * Checks whether the given node is a neighbour of the subgraph source.
+     *
+     * @param node the node to be checked
+     * @return {@code true} iff. the node is a neighbour of the subgraph source
+     */
+    private boolean isSourceNeighbour(final Node node) {
+        return node.getIncomingEdges().stream()
+                .filter(edge -> nodes.contains(edge.getFrom()))
+                .map(Edge::getFrom)
+                .collect(Collectors.toSet())
+                .isEmpty();
+    }
+
+    /**
+     * Checks whether the given node is a neighbour of the subgraph sink.
+     *
+     * @param node the node to be checked
+     * @return {@code true} iff. the node is a neighbour of the subgraph sink
+     */
+    private boolean isSinkNeighbour(final Node node) {
+        return node.getOutgoingEdges().stream()
+                .filter(edge -> nodes.contains(edge.getTo()))
+                .map(Edge::getTo)
+                .collect(Collectors.toSet())
+                .isEmpty();
     }
 
     /**
