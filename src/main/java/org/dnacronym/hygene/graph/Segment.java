@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Class representing a single, non-dummy segment node.
  */
-@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
+@SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
 public final class Segment extends Node {
     private final int id;
     private final int lineNumber;

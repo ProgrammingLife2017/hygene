@@ -4,7 +4,7 @@ package org.dnacronym.hygene.graph;
 /**
  * Class representing a single, non-dummy edge.
  */
-@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
+@SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
 public final class Link extends Edge {
     private final int lineNumber;
 

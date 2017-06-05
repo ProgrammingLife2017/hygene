@@ -4,7 +4,7 @@ package org.dnacronym.hygene.graph;
 /**
  * Class representing a dummy edge, to be used for graph layout.
  */
-@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
+@SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
 public final class DummyEdge extends Edge {
     private final Edge originalEdge;
 

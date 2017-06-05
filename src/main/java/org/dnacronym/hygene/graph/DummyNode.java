@@ -23,7 +23,7 @@ import java.util.Set;
  * consists of the 'stars' (representing {@link DummyEdge}s) and the {@link DummyNode}s they connect (X, Y, and Z).
  * </i>
  */
-@SuppressWarnings("squid:S2160") // Superclass equals / hashCode use UUID, which is unique enough
+@SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
 public final class DummyNode extends Node {
     private final Node diversionSource;
     private final Node diversionDestination;
