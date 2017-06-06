@@ -1,3 +1,7 @@
+## Hygene
+*.hygene
+*.hygenecache
+
 ## Java
 # Compiled class file
 *.class
