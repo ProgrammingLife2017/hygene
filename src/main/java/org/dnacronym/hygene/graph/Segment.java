@@ -12,7 +12,7 @@ public final class Segment extends NewNode {
     /**
      * The minimal length of a segment.
      */
-    private static final int MIN_SEGMENT_LENGTH = 100;
+    public static final int MIN_SEGMENT_LENGTH = 1000;
 
     private final int id;
     private final int lineNumber;

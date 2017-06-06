@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.graph.Segment;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -9,6 +11,8 @@ import java.util.Queue;
  * using FAFOSP, the Felix Algorithm For Optimal Segment Positioning.
  */
 public final class Fafosp {
+    private static final int COLUMN_WIDTH = Segment.MIN_SEGMENT_LENGTH;
+
     private final Graph graph;
     private final int[][] nodeArrays;
     private final GraphIterator iterator;
@@ -63,22 +67,19 @@ public final class Fafosp {
      * @param id the node's identifier
      */
     private void horizontal(final int id) {
-        final int[] widths = {-1, -1}; // Edge count, sequence length
+        final int[] width = {-1}; // Edge count, sequence length
         iterator.visitDirectNeighboursWhile(id, SequenceDirection.LEFT,
                 neighbour -> graph.getUnscaledXPosition(neighbour) >= 0,
-                ignored -> widths[1] = -1,
-                neighbour -> {
-                    final int newWidth = graph.getUnscaledXPosition(neighbour);
-                    if (newWidth > widths[1]) {
-                        widths[0] = graph.getUnscaledXEdgeCount(neighbour);
-                        widths[1] = newWidth;
-                    }
-                }
+                ignored -> width[0] = -1,
+                neighbour -> width[0] = Math.max(
+                        width[0],
+                        graph.getUnscaledXPosition(neighbour) + graph.getSequenceLength(neighbour)
+                )
         );
 
-        if (widths[1] >= 0) {
-            graph.setUnscaledXEdgeCount(id, widths[0] + 1);
-            graph.setUnscaledXPosition(id, widths[1] + graph.getLength(id));
+        if (width[0] >= 0) {
+            final int horizontalPosition = width[0] + COLUMN_WIDTH;
+            graph.setUnscaledXPosition(id, ((horizontalPosition + COLUMN_WIDTH - 1) / COLUMN_WIDTH) * COLUMN_WIDTH);
         }
     }
 
