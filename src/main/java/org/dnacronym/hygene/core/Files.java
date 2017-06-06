@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.core;
 
-
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -125,11 +124,11 @@ public final class Files {
      * Copies resources to the app data folder to be accessible via the native file system.
      *
      * @param directory source directory within resources
-     * @return destination directory
+     * @return the destination directory
      * @throws IOException if the source directory is not valid or the copy operation could not be performed
      */
     public File copyResourcesToAppData(final String directory) throws IOException {
-        final File destination = Paths.get(getAppDataFile("") + directory).toFile();
+        final File destination = getAppDataFile(directory);
 
         try {
             FileUtils.copyDirectory(
