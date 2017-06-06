@@ -1,8 +1,12 @@
 package org.dnacronym.hygene.persistence;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 
 
@@ -11,12 +15,15 @@ import java.sql.SQLException;
  */
 @SuppressWarnings("initialization") // due to setup actions that need to be executed in the constructor
 public final class FileDatabase implements AutoCloseable {
+    private static final Logger LOGGER = LogManager.getLogger(FileDatabase.class);
+
     static final int DB_VERSION = 6;
 
     private final String fileName;
-    private final FileDatabaseDriver fileDatabaseDriver;
-    private final FileBookmarks fileBookmarks;
-    private final FileGenomeIndex fileGenomeIndex;
+    private FileDatabaseDriver fileDatabaseDriver;
+    private FileMetadata fileMetadata;
+    private FileBookmarks fileBookmarks;
+    private FileGenomeIndex fileGenomeIndex;
 
 
     /**
@@ -34,23 +41,49 @@ public final class FileDatabase implements AutoCloseable {
         }
 
         final boolean databaseAlreadyExisted = new File(fileName + FileDatabaseDriver.DB_FILE_EXTENSION).exists();
-        fileDatabaseDriver = new FileDatabaseDriver(fileName);
-
-        final FileMetadata fileMetadata = new FileMetadata(this);
-        fileBookmarks = new FileBookmarks(this);
-        fileGenomeIndex = new FileGenomeIndex(this);
+        initializeDatabase();
 
         if (databaseAlreadyExisted) {
-            fileMetadata.verifyMetadata();
+            try {
+                fileMetadata.verifyMetadata();
+            } catch (final IOException e) {
+                LOGGER.info("Rebuilding file database...", e);
+                Files.delete(new File(fileName + FileDatabaseDriver.DB_FILE_EXTENSION).toPath());
+                initializeDatabase();
+                setUpDatabase();
+            }
         } else {
-            fileDatabaseDriver.setUpTable(fileMetadata.getTable());
-            fileMetadata.storeMetadata();
-
-            fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
-            fileDatabaseDriver.setUpTable(fileGenomeIndex.getTable());
+            setUpDatabase();
         }
     }
 
+    /**
+     * Initializes the file database.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    private void initializeDatabase() throws SQLException {
+        fileDatabaseDriver = new FileDatabaseDriver(fileName);
+        fileMetadata = new FileMetadata(this);
+
+        fileBookmarks = new FileBookmarks(this);
+        fileGenomeIndex = new FileGenomeIndex(this);
+    }
+
+
+    /**
+     * Sets up the tables of the database.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     * @throws IOException  in the case of an error during IO operations
+     */
+    private void setUpDatabase() throws SQLException, IOException {
+        fileDatabaseDriver.setUpTable(fileMetadata.getTable());
+        fileMetadata.storeMetadata();
+
+        fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
+        fileDatabaseDriver.setUpTable(fileGenomeIndex.getTable());
+    }
 
     /**
      * Returns the file name.
@@ -68,6 +101,15 @@ public final class FileDatabase implements AutoCloseable {
      */
     FileDatabaseDriver getFileDatabaseDriver() {
         return fileDatabaseDriver;
+    }
+
+    /**
+     * Returns the {@link FileMetadata} instance.
+     *
+     * @return the {@link FileMetadata} instance
+     */
+    public FileMetadata getFileMetadata() {
+        return fileMetadata;
     }
 
     /**
