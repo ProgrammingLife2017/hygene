@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -19,6 +20,15 @@ public class Node {
 
 
     /**
+     * Constructs a new {@link Node} instance without any edges.
+     * <p>
+     * This class should not be instantiated for regular use, please use {@link Segment} instead.
+     */
+    protected Node() {
+        this(new HashSet<>(), new HashSet<>());
+    }
+
+    /**
      * Constructs a new {@link Node} instance.
      * <p>
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
@@ -32,6 +42,15 @@ public class Node {
         this.outgoingEdges = outgoingEdges;
     }
 
+
+    /**
+     * Returns this {@link Node}'s {@link UUID}.
+     *
+     * @return this {@link Node}'s {@link UUID}
+     */
+    public final UUID getUuid() {
+        return uuid;
+    }
 
     /**
      * Returns the X position.
