@@ -5,53 +5,14 @@ import org.dnacronym.hygene.models.Node;
 
 
 /**
- * Scheme for deciding color of node.
+ * Classes that implement this interface decide the color of nodes based on the set mode.
  */
-public final class ColorScheme {
-    private NodeColor nodeColor = new NodeColorSequenceLength();
-
-
+public interface ColorScheme {
     /**
-     * Sets the current color modes, affecting the color fill of nodes.
+     * Calculate the {@link Color} of a {@link Node} based on the set values and the {@link Color} mode.
      *
-     * @param colorMode the mode of coloring nodes
+     * @param node the node which has to be colored
+     * @return the {@link Color} of the node
      */
-    public void setNodeColor(final ColorMode colorMode) {
-        this.nodeColor = colorMode.nodeColor;
-    }
-
-    /**
-     * Gets the fill {@link Color} of a {@link Node}.
-     *
-     * @param node the {@link Node} to fill
-     * @return the {@link Color} of a node
-     */
-    public Color getColor(final Node node) {
-        return nodeColor.calculateColor(node);
-    }
-
-    /**
-     * The {@link Color} mode of a {@link Node}.
-     */
-    @SuppressWarnings("PMD.SingularField") // This is the most logical place to store this instance.
-    public enum ColorMode {
-        /**
-         * Make the color dependent on the sequence length, determined by {@link NodeColorSequenceLength}.
-         */
-        SEQUENCE_LENGTH(new NodeColorSequenceLength()),
-        /**
-         * Make the color dependent on the amount of incoming edges, determined by {@link NodeColorIncomingEdges}.
-         */
-        INCOMING_EDGES(new NodeColorIncomingEdges()),
-        /**
-         * Make the color dependent on the amount of outgoing edges, determined by {@link NodeColorOutgoingEdges}.
-         */
-        OUTGOING_EDGES(new NodeColorOutgoingEdges());
-
-        private NodeColor nodeColor;
-
-        ColorMode(final NodeColor nodeColor) {
-            this.nodeColor = nodeColor;
-        }
-    }
+    Color calculateColor(final Node node);
 }

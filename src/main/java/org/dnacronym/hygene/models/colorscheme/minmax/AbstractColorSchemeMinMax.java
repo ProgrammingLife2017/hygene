@@ -1,6 +1,7 @@
-package org.dnacronym.hygene.models.colorscheme;
+package org.dnacronym.hygene.models.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.models.colorscheme.ColorScheme;
 
 
 /**
@@ -10,12 +11,20 @@ import javafx.scene.paint.Color;
  * and maximum color being determined by said value of the {@link org.dnacronym.hygene.models.Node} and it's position
  * in the scale of {@code [0, max value]}.
  */
-abstract class AbstractNodeColorMinMax implements NodeColor {
-    private static final int DEFAULT_MAX_VALUE = 100;
-
-    private int maxValue = DEFAULT_MAX_VALUE;
+public abstract class AbstractColorSchemeMinMax implements ColorScheme {
+    private int maxValue;
     private Color minColor = Color.BLUE;
     private Color maxColor = Color.RED;
+
+
+    /**
+     * Creates an instance of {@link AbstractColorSchemeMinMax}.
+     *
+     * @param maxValue the max value before max {@link Color} is given
+     */
+    public AbstractColorSchemeMinMax(final int maxValue) {
+        this.maxValue = maxValue;
+    }
 
 
     /**
@@ -27,7 +36,7 @@ abstract class AbstractNodeColorMinMax implements NodeColor {
      * @param value the value to decide the color for
      * @return the color of the value
      */
-    protected Color calculateColor(final double value) {
+    final Color calculateColor(final double value) {
         return minColor.interpolate(maxColor, Math.min(1, value / maxValue));
     }
 
@@ -38,25 +47,34 @@ abstract class AbstractNodeColorMinMax implements NodeColor {
      *
      * @param maxValue the value at which max color is achieved
      */
-    public void setMaxValue(final int maxValue) {
+    public final void setMaxValue(final int maxValue) {
         this.maxValue = maxValue;
     }
 
     /**
-     * Sets the minimum color of the node.
+     * Returns the max value.
      *
-     * @param minColor the minimum color of the node
+     * @return the max value of this {@link ColorScheme}
      */
-    public void setMinColor(final Color minColor) {
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    /**
+     * Sets the minimum color of the color scheme.
+     *
+     * @param minColor the minimum color of the color scheme
+     */
+    public final void setMinColor(final Color minColor) {
         this.minColor = minColor;
     }
 
     /**
-     * Sets the maximum color of the node.
+     * Sets the maximum color of the color scheme.
      *
-     * @param maxColor the maximum color of the node
+     * @param maxColor the maximum color of the color scheme
      */
-    public void setMaxColor(final Color maxColor) {
+    public final void setMaxColor(final Color maxColor) {
         this.maxColor = maxColor;
     }
 }
