@@ -14,8 +14,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
+import org.dnacronym.hygene.graph.CenterPointQuery;
+import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.GraphQuery;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.List;
  * fill the screen lengthwise.
  *
  * @see GraphDimensionsCalculator
- * @see GraphQuery
+ * @see CenterPointQuery
  */
 @SuppressWarnings("PMD.TooManyFields") // This class is tightly coupled, and does not need to be divided further.
 public final class GraphDimensionsCalculator {
@@ -57,15 +60,16 @@ public final class GraphDimensionsCalculator {
      * The {@link Graph} used to get the unscaled coordinates of nodes.
      */
     private final ObjectProperty<Graph> graphProperty;
-    private GraphQuery graphQuery;
+    private CenterPointQuery centerPointQuery;
+    private Subgraph subgraph;
 
     private int minX;
     private int maxX;
     private int minY;
     private Dimension2D canvasDimension;
 
-    private final ObservableList<Integer> observableQueryNodes;
-    private final ReadOnlyListWrapper<Integer> readOnlyObservableNodes;
+    private final ObservableList<NewNode> observableQueryNodes;
+    private final ReadOnlyListWrapper<NewNode> readOnlyObservableNodes;
 
 
     /**
@@ -84,14 +88,14 @@ public final class GraphDimensionsCalculator {
             centerNodeIdProperty.set(Math.max(
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
-            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+            centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
             calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
-            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+            centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
             calculate();
         });
 
@@ -137,27 +141,28 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
-        final List<Integer> neighbours = new LinkedList<>();
-        neighbours.add(centerNodeId);
-        graphQuery.visit(nodeId -> {
-            neighbours.add(nodeId);
+        final List<NewNode> neighbours = new LinkedList<>();
+        subgraph.getNodes().forEach(node -> {
+            neighbours.add(node);
 
-            final int nodeLeftX = graph.getUnscaledXPosition(nodeId)
-                    + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
+            if (!(node instanceof Segment)) {
+                return;
+            }
+
+            final int nodeLeftX = node.getXPosition() - node.getLength();
             if (tempMinX[0] > nodeLeftX) {
                 tempMinX[0] = nodeLeftX;
-                minXNodeIdProperty.set(nodeId);
+                minXNodeIdProperty.setValue(((Segment) node).getId());
             }
 
-            final int nodeRightX = graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId)
-                    + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
+            final int nodeRightX = node.getXPosition();
             if (tempMaxX[0] < nodeRightX) {
                 tempMaxX[0] = nodeRightX;
-                maxXNodeIdProperty.set(nodeId);
+                maxXNodeIdProperty.setValue(((Segment) node).getId());
             }
 
-            tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
-            tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
+            tempMinY[0] = Math.min(tempMinY[0], node.getYPosition());
+            tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
         this.minX = tempMinX[0];
@@ -180,7 +185,8 @@ public final class GraphDimensionsCalculator {
      */
     void setGraph(final Graph graph) {
         graphProperty.set(graph);
-        graphQuery = new GraphQuery(graph);
+        centerPointQuery = new CenterPointQuery(graph);
+        subgraph = centerPointQuery.getCache();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
@@ -193,8 +199,8 @@ public final class GraphDimensionsCalculator {
      * Gets the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of the
      * {@link GraphDimensionsCalculator}.
      *
-     * @return the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of
-     * {@link GraphDimensionsCalculator}
+     * @return the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of {@link
+     * GraphDimensionsCalculator}
      */
     public ReadOnlyObjectProperty<Graph> getGraphProperty() {
         return graphProperty;
@@ -216,34 +222,32 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute x position of a node within the current canvas.
      *
-     * @param nodeId the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute x position of a node within the current canvas
      */
-    double computeXPosition(final int nodeId) {
-        final Graph graph = graphProperty.get();
-        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId)
-                + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
+    double computeXPosition(final NewNode node) {
+        final int xPosition = node.getXPosition() - node.getLength();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
      * Computes the absolute right x position of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute right x position of a node within the current canvas
      */
-    double computeRightXPosition(final int nodeId) {
-        return computeXPosition(nodeId) + computeWidth(nodeId);
+    double computeRightXPosition(final NewNode node) {
+        return computeXPosition(node) + computeWidth(node);
     }
 
     /**
      * Computes the absolute y position of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute y position of a node within the current canvas
      */
-    double computeYPosition(final int nodeId) {
-        final int yPosition = graphProperty.get().getUnscaledYPosition(nodeId);
+    double computeYPosition(final NewNode node) {
+        final int yPosition = node.getYPosition();
         return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2
                 - nodeHeightProperty.get() / 2;
     }
@@ -251,38 +255,38 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute middle y position of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute middle y position of a node within the current canvas
      */
-    double computeMiddleYPosition(final int nodeId) {
-        return computeYPosition(nodeId) + nodeHeightProperty.get() / 2;
+    double computeMiddleYPosition(final NewNode node) {
+        return computeYPosition(node) + nodeHeightProperty.get() / 2;
     }
 
     /**
      * Computes the width of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node a {@link NewNode}
      * @return the width of a node
      */
-    double computeWidth(final int nodeId) {
-        return (double) graphProperty.get().getLength(nodeId) / (maxX - minX) * canvasDimension.getWidth();
+    double computeWidth(final NewNode node) {
+        return (double) node.getLength() / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the node id in the current query with the smallest
-     * (leftmost) x position.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link NewNode} in the current query with the
+     * smallest (leftmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the smallest x position
+     * @return the {@link ReadOnlyIntegerProperty} describing the {@link NewNode} with the smallest x position
      */
     public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the node id in the current query with the largest
-     * (rightmost) x position.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link NewNode} in the current query with the
+     * largest (rightmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the largest x position
+     * @return the {@link ReadOnlyIntegerProperty} describing the {@link NewNode} with the largest x position
      */
     public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
         return maxXNodeIdProperty;
@@ -322,9 +326,9 @@ public final class GraphDimensionsCalculator {
      * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
      * center node id or radius is changed to a new value, new canvas dimensions are set, or if the graph is updated.
      *
-     * @return the {@link ReadOnlyListProperty} of the id's of the cached nodes
+     * @return a {@link ReadOnlyListProperty} of the {@link NewNode} in the cache
      */
-    public ReadOnlyListProperty<Integer> getObservableQueryNodes() {
+    public ReadOnlyListProperty<NewNode> getObservableQueryNodes() {
         return readOnlyObservableNodes;
     }
 

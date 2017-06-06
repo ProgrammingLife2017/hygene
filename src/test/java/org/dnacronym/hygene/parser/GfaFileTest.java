@@ -43,6 +43,7 @@ final class GfaFileTest {
         MetadataParserFactory.setInstance(null);
         if (currentFileName != null) {
             Files.deleteIfExists(Paths.get(currentFileName + FileDatabaseDriver.DB_FILE_EXTENSION));
+            Files.deleteIfExists(Paths.get(currentFileName + ".hygenecache"));
         }
     }
 

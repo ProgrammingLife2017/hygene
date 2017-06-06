@@ -1,15 +1,16 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
-import com.google.common.collect.ImmutableSet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.GraphQueryChangeEvent;
+import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.models.GraphIterator;
+import org.dnacronym.hygene.models.NodeDistanceMap;
+import org.dnacronym.hygene.models.SequenceDirection;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -21,8 +22,13 @@ import java.util.function.Consumer;
  * will always be in the cache, the cache may contain more nodes. The excessive nodes are flushed from the cache by
  * rebuilding the cache after a number of calls.
  */
-@SuppressWarnings("PMD.TooManyMethods") // This is a cohesive class that does not need refactoring
-public final class GraphQuery {
+public final class CenterPointQuery {
+    /**
+     * The width of an edge.
+     */
+    // TODO Move this constant to the layout algorithm.
+    private static final int EDGE_WIDTH = 1000;
+
     /**
      * The maximal acceptable difference between the preferred radius and the cached radius.
      */
@@ -46,17 +52,17 @@ public final class GraphQuery {
      */
     private final GraphIterator iterator;
     /**
-     * Maps each node in the cache to the distance from the centre point of the query.
+     * Maps {@link Graph} node ids to {@link NewNode} {@link UUID}s.
      */
-    private final NodeDistanceMap cache;
+    private final Map<Integer, UUID> nodes;
     /**
-     * Lists all nodes in the cache of which all left neighbours are not in the cache.
+     * The backing cache.
      */
-    private final List<Integer> sourceNeighbours;
+    private final Subgraph subgraph;
     /**
-     * Lists all nodes in the cache of which all right neighbours are not in the cache.
+     * Maps each node id in the cache to the distance from the centre point of the query.
      */
-    private final List<Integer> sinkNeighbours;
+    private final NodeDistanceMap distanceMap;
 
     /**
      * The node id of the centre node in the current query.
@@ -73,17 +79,16 @@ public final class GraphQuery {
 
 
     /**
-     * Constructs a new {@link GraphQuery}.
+     * Constructs a new {@link CenterPointQuery}.
      *
      * @param graph the {@link Graph} to query on
      */
-    public GraphQuery(final Graph graph) {
+    public CenterPointQuery(final Graph graph) {
         this.graph = graph;
         this.iterator = new GraphIterator(graph);
-        this.cache = new NodeDistanceMap();
-
-        this.sourceNeighbours = new ArrayList<>();
-        this.sinkNeighbours = new ArrayList<>();
+        this.nodes = new HashMap<>();
+        this.subgraph = new Subgraph();
+        this.distanceMap = new NodeDistanceMap();
     }
 
 
@@ -126,9 +131,22 @@ public final class GraphQuery {
         this.radius = radius;
         this.cacheRadius = radius;
 
-        cache.clear();
-        iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, node) -> cache.setDistance(node, depth));
-        findSentinelNeighbours();
+        clear();
+
+        iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> {
+            if (nodeId == 0 || nodeId == graph.getNodeArrays().length - 1) {
+                return;
+            }
+
+            distanceMap.setDistance(nodeId, depth);
+
+            final NewNode node = new Segment(nodeId, graph.getLineNumber(nodeId), graph.getSequenceLength(nodeId));
+            node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
+            node.setYPosition(graph.getUnscaledYPosition(nodeId));
+            nodes.put(nodeId, node.getUuid());
+            subgraph.addNode(node);
+        });
+        iterator.visitIndirectNeighboursWithinRange(centre, radius - 1, (depth, nodeId) -> addEdges(nodeId));
 
         postEvent();
     }
@@ -138,7 +156,7 @@ public final class GraphQuery {
      *
      * @param centre a node id
      */
-    public void moveTo(final int centre) {
+    public void setCenter(final int centre) {
         if (centre < 0) {
             throw new IllegalArgumentException("Centre point node id cannot be negative.");
         }
@@ -168,57 +186,24 @@ public final class GraphQuery {
     }
 
     /**
-     * Visits all nodes in the cache and applies the given {@link Consumer} to them.
+     * Returns the backing {@link Subgraph} cache.
      *
-     * @param action a {@link Consumer} for node ids
+     * @return the backing {@link Subgraph} cache.
      */
-    public void visit(final Consumer<Integer> action) {
-        cache.keySet().forEach(action::accept);
+    public Subgraph getCache() {
+        return subgraph;
     }
 
-    /**
-     * Visits all nodes in the cache in breadth-first order and applies the given {@link Consumer} to them.
-     *
-     * @param direction the direction to visit in
-     * @param action    a {@link Consumer} for node ids
+
+    /*
+     * Query methods
      */
-    public void visitBFS(final SequenceDirection direction, final Consumer<Integer> action) {
-        final Queue<Integer> queue = new LinkedList<>();
-        queue.addAll(direction.ternary(sinkNeighbours, sourceNeighbours));
-
-        final boolean[] visited = new boolean[graph.getNodeArrays().length];
-        while (!queue.isEmpty()) {
-            final int head = queue.remove();
-            if (visited[head]) {
-                continue;
-            }
-
-            action.accept(head);
-            visited[head] = true;
-
-            iterator.visitDirectNeighbours(head, direction, index -> {
-                if (!visited[index] && cache.containsNode(index)) {
-                    queue.add(index);
-                }
-            });
-        }
-    }
-
-    /**
-     * Returns an immutable set of the node IDs that should be present in the graph visualization.
-     *
-     * @return an immutable set of the node IDs that should be present in the graph visualization
-     */
-    public Set<Integer> getNodeIds() {
-        return ImmutableSet.copyOf(cache.keySet());
-    }
-
 
     /**
      * Ensures that the query on the cached centre and radius are a superset of the preferred centre and radius.
      */
     private void fixCentre() {
-        final Integer centreDistance = cache.getDistance(centre);
+        final Integer centreDistance = distanceMap.getDistance(centre);
         if (centreDistance == null || cacheRadius >= radius * MAX_RADIUS_FACTOR) {
             query(centre, radius);
             return;
@@ -236,39 +221,10 @@ public final class GraphQuery {
      */
     private void incrementCacheRadius() {
         cacheRadius++;
-        cache.getNodes(cacheRadius - 1).forEach(node ->
-                iterator.visitDirectNeighbours(node, neighbour -> cache.setDistance(neighbour, cacheRadius)));
-        findSentinelNeighbours();
-    }
 
-    /**
-     * Finds the neighbours of the (virtual) source and sink nodes, and puts them in the respective {@link List}s.
-     */
-    @SuppressWarnings("squid:S00108") // False positive, empty lambdas cannot be removed
-    private void findSentinelNeighbours() {
-        sourceNeighbours.clear();
-        sinkNeighbours.clear();
-
-        visit(node -> {
-            final boolean[] hasNeighbours = {false, false};
-
-            iterator.visitDirectNeighboursWhile(node, SequenceDirection.LEFT,
-                    neighbour -> !cache.containsNode(neighbour),
-                    neighbour -> hasNeighbours[0] = true,
-                    ignored -> {}
-            );
-            iterator.visitDirectNeighboursWhile(node, SequenceDirection.RIGHT,
-                    neighbour -> !cache.containsNode(neighbour),
-                    neighbour -> hasNeighbours[1] = true,
-                    ignored -> {}
-            );
-
-            if (!hasNeighbours[0]) {
-                sourceNeighbours.add(node);
-            }
-            if (!hasNeighbours[1]) {
-                sinkNeighbours.add(node);
-            }
+        distanceMap.getNodes(cacheRadius - 1).forEach(nodeId -> {
+            iterator.visitDirectNeighbours(nodeId, neighbour -> distanceMap.setDistance(neighbour, cacheRadius));
+            addEdges(nodeId);
         });
     }
 
@@ -281,7 +237,7 @@ public final class GraphQuery {
         final int newRadius = radius + increment;
         assert newRadius >= radius;
 
-        final Integer centreDistance = cache.getDistance(centre);
+        final Integer centreDistance = distanceMap.getDistance(centre);
         if (centreDistance == null) {
             // This branch should be unreachable, but is required by the Checker Framework
             query(centre, newRadius);
@@ -320,10 +276,73 @@ public final class GraphQuery {
         }
     }
 
+
+    /*
+     * Helper methods
+     */
+
+    /**
+     * Empties the {@link CenterPointQuery}.
+     */
+    private void clear() {
+        nodes.clear();
+        subgraph.clear();
+        distanceMap.clear();
+    }
+
+    /**
+     * Returns the {@link NewNode} with the given id, or {@code null} if there is no such node in the cache.
+     *
+     * @param nodeId a node id, as given by the {@link Graph}
+     * @return the {@link NewNode} with the given id, or {@code null} if there is no such node in the cache.
+     */
+    private @Nullable NewNode getNode(final int nodeId) {
+        final UUID uuid = nodes.get(nodeId);
+        if (uuid == null) {
+            return null;
+        }
+
+        return subgraph.getNode(uuid);
+    }
+
+    /**
+     * Adds all edges from the specified node to the corresponding {@link NewNode} if both ends of the edge are in the
+     * cache.
+     *
+     * @param nodeId a node id, as given by the {@link Graph}
+     */
+    private void addEdges(final int nodeId) {
+        final NewNode node = getNode(nodeId);
+        if (node == null) {
+            return;
+        }
+
+        iterator.visitDirectNeighbours(nodeId, SequenceDirection.RIGHT, neighbourId -> {
+            final NewNode neighbour = getNode(neighbourId);
+            if (node == null || neighbour == null) {
+                return;
+            }
+
+            final Edge edge = new Edge(node, neighbour);
+            node.getOutgoingEdges().add(edge);
+            neighbour.getIncomingEdges().add(edge);
+        });
+        iterator.visitDirectNeighbours(nodeId, SequenceDirection.LEFT, neighbourId -> {
+            final NewNode neighbour = getNode(neighbourId);
+            if (node == null || neighbour == null) {
+                return;
+            }
+
+            final Edge edge = new Edge(neighbour, node);
+            node.getIncomingEdges().add(edge);
+            neighbour.getOutgoingEdges().add(edge);
+        });
+    }
+
     /**
      * Posts event indicating a change in the center point query to the event bus.
      */
     private void postEvent() {
-        HygeneEventBus.getInstance().post(new GraphQueryChangeEvent(this));
+        HygeneEventBus.getInstance().post(new CenterPointQueryChangeEvent(this));
     }
 }

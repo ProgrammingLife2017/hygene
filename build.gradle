@@ -79,6 +79,9 @@ dependencies {
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
     compile("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
+
+    // Equals Verifier
+    compile("nl.jqno.equalsverifier:equalsverifier:${equalsVerifierVersion}")
 }
 
 jar {
