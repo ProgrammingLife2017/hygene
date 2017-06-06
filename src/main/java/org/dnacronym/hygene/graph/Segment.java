@@ -70,4 +70,9 @@ public final class Segment extends Node {
     public int getSequenceLength() {
         return sequenceLength;
     }
+
+    @Override
+    public int getLength() {
+        return Math.max(100, sequenceLength);
+    }
 }

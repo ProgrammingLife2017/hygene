@@ -62,4 +62,9 @@ public final class DummyNode extends Node {
     public Node getDiversionDestination() {
         return diversionDestination;
     }
+
+    @Override
+    public int getLength() {
+        return 0;
+    }
 }

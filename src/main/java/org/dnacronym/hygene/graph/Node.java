@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.models.NodeColor;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Class representing a generic node.
  */
-public class Node {
+public abstract class Node {
     private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
@@ -104,6 +105,18 @@ public class Node {
      */
     public final Set<Edge> getOutgoingEdges() {
         return outgoingEdges;
+    }
+
+    /**
+     * Returns the length of the node when visualized.
+     *
+     * @return the length of the node when visualized
+     */
+    public abstract int getLength();
+
+    //
+    public final NodeColor getColor() {
+        return NodeColor.BLACK;
     }
 
     @Override

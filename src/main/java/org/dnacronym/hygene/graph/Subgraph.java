@@ -122,6 +122,7 @@ public final class Subgraph {
      * @return {@code true} iff. the subgraph was changed
      */
     public boolean addNode(final Node node) {
+        segments.put(node.getUuid(), node);
         return nodes.add(node);
     }
 

@@ -128,9 +128,15 @@ public final class CenterPointQuery {
         clear();
 
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> {
+            if (nodeId == 0 || nodeId == graph.getNodeArrays().length - 1) {
+                return;
+            }
+
             distanceMap.setDistance(nodeId, depth);
 
             final Node node = new Segment(nodeId, graph.getLineNumber(nodeId), graph.getSequenceLength(nodeId));
+            node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * 1000);
+            node.setYPosition(graph.getUnscaledYPosition(nodeId));
             nodes.put(nodeId, node.getUuid());
             subgraph.addNode(node);
         });

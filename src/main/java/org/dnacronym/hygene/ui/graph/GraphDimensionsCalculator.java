@@ -14,6 +14,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
+import org.dnacronym.hygene.graph.CenterPointQuery;
+import org.dnacronym.hygene.graph.Node;
+import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
 
@@ -57,15 +61,16 @@ public final class GraphDimensionsCalculator {
      * The {@link Graph} used to get the unscaled coordinates of nodes.
      */
     private final ObjectProperty<Graph> graphProperty;
-    private GraphQuery graphQuery;
+    private CenterPointQuery graphQuery;
+    private Subgraph subgraph;
 
     private int minX;
     private int maxX;
     private int minY;
     private Dimension2D canvasDimension;
 
-    private final ObservableList<Integer> observableQueryNodes;
-    private final ReadOnlyListWrapper<Integer> readOnlyObservableNodes;
+    private final ObservableList<Node> observableQueryNodes;
+    private final ReadOnlyListWrapper<Node> readOnlyObservableNodes;
 
 
     /**
@@ -137,27 +142,28 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
-        final List<Integer> neighbours = new LinkedList<>();
-        neighbours.add(centerNodeId);
-        graphQuery.visit(nodeId -> {
-            neighbours.add(nodeId);
+        final List<Node> neighbours = new LinkedList<>();
+        subgraph.getNodes().forEach(node -> {
+            neighbours.add(node);
 
-            final int nodeLeftX = graph.getUnscaledXPosition(nodeId)
-                    + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
+            if (!(node instanceof Segment)) {
+                return;
+            }
+
+            final int nodeLeftX = node.getXPosition() - node.getLength();
             if (tempMinX[0] > nodeLeftX) {
                 tempMinX[0] = nodeLeftX;
-                minXNodeIdProperty.set(nodeId);
+                minXNodeIdProperty.setValue(((Segment) node).getId());
             }
 
-            final int nodeRightX = graph.getUnscaledXPosition(nodeId) + graph.getLength(nodeId)
-                    + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
+            final int nodeRightX = node.getXPosition();
             if (tempMaxX[0] < nodeRightX) {
                 tempMaxX[0] = nodeRightX;
-                maxXNodeIdProperty.set(nodeId);
+                maxXNodeIdProperty.setValue(((Segment) node).getId());
             }
 
-            tempMinY[0] = Math.min(tempMinY[0], graph.getUnscaledYPosition(nodeId));
-            tempMaxY[0] = Math.max(tempMaxY[0], graph.getUnscaledYPosition(nodeId));
+            tempMinY[0] = Math.min(tempMinY[0], node.getYPosition());
+            tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
         this.minX = tempMinX[0];
@@ -180,7 +186,8 @@ public final class GraphDimensionsCalculator {
      */
     void setGraph(final Graph graph) {
         graphProperty.set(graph);
-        graphQuery = new GraphQuery(graph);
+        graphQuery = new CenterPointQuery(graph);
+        subgraph = graphQuery.getCache();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
@@ -216,34 +223,32 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute x position of a node within the current canvas.
      *
-     * @param nodeId the id of the node
+     * @param node the id of the node
      * @return the absolute x position of a node within the current canvas
      */
-    double computeXPosition(final int nodeId) {
-        final Graph graph = graphProperty.get();
-        final int xPosition = graph.getUnscaledXPosition(nodeId) - graph.getLength(nodeId)
-                + graph.getUnscaledXEdgeCount(nodeId) * DEFAULT_EDGE_WIDTH;
+    double computeXPosition(final Node node) {
+        final int xPosition = node.getXPosition() - node.getLength();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
      * Computes the absolute right x position of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node the id of the node
      * @return the absolute right x position of a node within the current canvas
      */
-    double computeRightXPosition(final int nodeId) {
-        return computeXPosition(nodeId) + computeWidth(nodeId);
+    double computeRightXPosition(final Node node) {
+        return computeXPosition(node) + computeWidth(node);
     }
 
     /**
      * Computes the absolute y position of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node the id of the node
      * @return the absolute y position of a node within the current canvas
      */
-    double computeYPosition(final int nodeId) {
-        final int yPosition = graphProperty.get().getUnscaledYPosition(nodeId);
+    double computeYPosition(final Node node) {
+        final int yPosition = node.getYPosition();
         return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2
                 - nodeHeightProperty.get() / 2;
     }
@@ -251,21 +256,21 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute middle y position of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node the id of the node
      * @return the absolute middle y position of a node within the current canvas
      */
-    double computeMiddleYPosition(final int nodeId) {
-        return computeYPosition(nodeId) + nodeHeightProperty.get() / 2;
+    double computeMiddleYPosition(final Node node) {
+        return computeYPosition(node) + nodeHeightProperty.get() / 2;
     }
 
     /**
      * Computes the width of a node in pixels within the set canvas dimensions.
      *
-     * @param nodeId the id of the node
+     * @param node the id of the node
      * @return the width of a node
      */
-    double computeWidth(final int nodeId) {
-        return (double) graphProperty.get().getLength(nodeId) / (maxX - minX) * canvasDimension.getWidth();
+    double computeWidth(final Node node) {
+        return (double) node.getLength() / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
@@ -324,7 +329,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return the {@link ReadOnlyListProperty} of the id's of the cached nodes
      */
-    public ReadOnlyListProperty<Integer> getObservableQueryNodes() {
+    public ReadOnlyListProperty<Node> getObservableQueryNodes() {
         return readOnlyObservableNodes;
     }
 
