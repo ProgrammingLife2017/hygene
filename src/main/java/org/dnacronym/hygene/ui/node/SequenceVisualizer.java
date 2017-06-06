@@ -203,7 +203,7 @@ public final class SequenceVisualizer {
         for (int i = offsetProperty.get() - 1; i >= 0; i--, onscreen++) {
             final double topRightX = canvas.getWidth() / 2 - SQUARE_WIDTH
                     + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
-            if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
+            if (topRightX < HORIZONTAL_GAP) {
                 break;
             }
 
