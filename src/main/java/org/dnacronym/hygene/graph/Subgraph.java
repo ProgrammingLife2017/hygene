@@ -23,6 +23,15 @@ public final class Subgraph {
 
 
     /**
+     * Constructs a new, empty {@link Subgraph} instance.
+     */
+    public Subgraph() {
+        this.nodes = new HashSet<>();
+        this.sourceNeighbours = new HashSet<>();
+        this.sinkNeighbours = new HashSet<>();
+    }
+
+    /**
      * Constructs a new {@link Subgraph} instance.
      *
      * @param nodes the nodes of this subgraph
@@ -101,21 +110,51 @@ public final class Subgraph {
      * Adds the given node to the set of nodes.
      *
      * @param node the node to be added
+     * @return {@code true} iff. the subgraph was changed
      */
-    public void addNode(final Node node) {
-        nodes.add(node);
+    public boolean addNode(final Node node) {
+        final boolean changed = nodes.add(node);
+        if (!changed) {
+            return false;
+        }
 
         if (isSourceNeighbour(node)) {
             sourceNeighbours.add(node);
         }
-        sourceNeighbours.removeAll(node.getOutgoingEdges().stream()
-                .map(Edge::getTo).collect(Collectors.toList()));
-
         if (isSinkNeighbour(node)) {
             sinkNeighbours.add(node);
         }
+        sourceNeighbours.removeAll(node.getOutgoingEdges().stream()
+                .map(Edge::getTo).collect(Collectors.toList()));
         sinkNeighbours.removeAll(node.getIncomingEdges().stream()
                 .map(Edge::getFrom).collect(Collectors.toList()));
+
+        return true;
+    }
+
+    /**
+     * Adds the given nodes.
+     *
+     * @param nodes the nodes to be added
+     * @return {@code true} iff. the subgraph was changed
+     */
+    public boolean addNodes(final Collection<Node> nodes) {
+        final boolean changed = this.nodes.addAll(nodes);
+        if (!changed) {
+            return false;
+        }
+
+        detectSourceAndSinkNeighbours();
+        return true;
+    }
+
+    /**
+     * Clears all nodes from this subgraph.
+     */
+    public void clear() {
+        nodes.clear();
+        sourceNeighbours.clear();
+        sinkNeighbours.clear();
     }
 
     /**
