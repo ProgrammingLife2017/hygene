@@ -199,8 +199,8 @@ public final class GraphDimensionsCalculator {
      * Gets the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of the
      * {@link GraphDimensionsCalculator}.
      *
-     * @return the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of
-     * {@link GraphDimensionsCalculator}
+     * @return the {@link ReadOnlyObjectProperty} which describes the current {@link Graph} of {@link
+     * GraphDimensionsCalculator}
      */
     public ReadOnlyObjectProperty<Graph> getGraphProperty() {
         return graphProperty;
@@ -222,7 +222,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute x position of a node within the current canvas.
      *
-     * @param node the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute x position of a node within the current canvas
      */
     double computeXPosition(final NewNode node) {
@@ -233,7 +233,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute right x position of a node in pixels within the set canvas dimensions.
      *
-     * @param node the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute right x position of a node within the current canvas
      */
     double computeRightXPosition(final NewNode node) {
@@ -243,7 +243,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute y position of a node in pixels within the set canvas dimensions.
      *
-     * @param node the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute y position of a node within the current canvas
      */
     double computeYPosition(final NewNode node) {
@@ -255,7 +255,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute middle y position of a node in pixels within the set canvas dimensions.
      *
-     * @param node the id of the node
+     * @param node a {@link NewNode}
      * @return the absolute middle y position of a node within the current canvas
      */
     double computeMiddleYPosition(final NewNode node) {
@@ -265,7 +265,7 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the width of a node in pixels within the set canvas dimensions.
      *
-     * @param node the id of the node
+     * @param node a {@link NewNode}
      * @return the width of a node
      */
     double computeWidth(final NewNode node) {
@@ -273,20 +273,20 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the node id in the current query with the smallest
-     * (leftmost) x position.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link NewNode} in the current query with the
+     * smallest (leftmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the smallest x position
+     * @return the {@link ReadOnlyIntegerProperty} describing the {@link NewNode} with the smallest x position
      */
     public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the node id in the current query with the largest
-     * (rightmost) x position.
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link NewNode} in the current query with the
+     * largest (rightmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the id of the node with the largest x position
+     * @return the {@link ReadOnlyIntegerProperty} describing the {@link NewNode} with the largest x position
      */
     public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
         return maxXNodeIdProperty;
@@ -326,7 +326,7 @@ public final class GraphDimensionsCalculator {
      * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
      * center node id or radius is changed to a new value, new canvas dimensions are set, or if the graph is updated.
      *
-     * @return the {@link ReadOnlyListProperty} of the id's of the cached nodes
+     * @return a {@link ReadOnlyListProperty} of the {@link NewNode} in the cache
      */
     public ReadOnlyListProperty<NewNode> getObservableQueryNodes() {
         return readOnlyObservableNodes;
