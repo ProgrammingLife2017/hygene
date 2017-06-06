@@ -24,6 +24,12 @@ import java.util.UUID;
  */
 public final class CenterPointQuery {
     /**
+     * The width of an edge.
+     */
+    // TODO Move this constant to the layout algorithm.
+    private static final int EDGE_WIDTH = 1000;
+
+    /**
      * The maximal acceptable difference between the preferred radius and the cached radius.
      */
     private static final int MAX_RADIUS_DIFFERENCE = 10;
@@ -135,7 +141,7 @@ public final class CenterPointQuery {
             distanceMap.setDistance(nodeId, depth);
 
             final Node node = new Segment(nodeId, graph.getLineNumber(nodeId), graph.getSequenceLength(nodeId));
-            node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * 1000);
+            node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
             node.setYPosition(graph.getUnscaledYPosition(nodeId));
             nodes.put(nodeId, node.getUuid());
             subgraph.addNode(node);

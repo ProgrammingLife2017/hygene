@@ -47,34 +47,20 @@ final class GraphDimensionsCalculatorTest {
     }
 
     @Test
-    void testComputeXPosition() {
-        final Segment segment = new Segment(0, 0, 0);
-        assertThat(graphDimensionsCalculator.computeXPosition(segment)).isEqualTo(-400);
-    }
-
-    @Test
-    void testComputeRightXPosition() {
-        final Segment segment = new Segment(0, 0, 0);
-        assertThat(graphDimensionsCalculator.computeRightXPosition(segment)).isEqualTo(0);
-    }
-
-    @Test
     void testComputeYPosition() {
         final Segment segment = new Segment(0, 0, 0);
+        segment.setYPosition(30);
+
         assertThat(graphDimensionsCalculator.computeYPosition(segment)).isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
     }
 
     @Test
     void testComputeMiddleYPosition() {
         final Segment segment = new Segment(0, 0, 0);
+        segment.setYPosition(30);
+
         assertThat(graphDimensionsCalculator.computeMiddleYPosition(segment))
                 .isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
-    }
-
-    @Test
-    void testComputeWidth() {
-        final Segment segment = new Segment(0, 0, 0);
-        assertThat(graphDimensionsCalculator.computeWidth(segment)).isEqualTo(400);
     }
 
     @Test
@@ -99,6 +85,7 @@ final class GraphDimensionsCalculatorTest {
         graphDimensionsCalculator.getRadiusProperty().set(1000);
         assertThat(graphDimensionsCalculator.getRadiusProperty().get()).isEqualTo(1);
     }
+
 
     private Graph createGraph() {
         return new Graph(new int[][] {

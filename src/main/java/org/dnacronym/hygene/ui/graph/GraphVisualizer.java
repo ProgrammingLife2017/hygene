@@ -114,9 +114,10 @@ public final class GraphVisualizer {
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        graphDimensionsCalculator.getGraphProperty().addListener((observable, oldValue, newValue) ->
-                setGraph(newValue));
-        graphDimensionsCalculator.getObservableQueryNodes().addListener((ListChangeListener<org.dnacronym.hygene.graph.Node>) change -> draw());
+        graphDimensionsCalculator.getGraphProperty()
+                .addListener((observable, oldValue, newValue) -> setGraph(newValue));
+        graphDimensionsCalculator.getObservableQueryNodes()
+                .addListener((ListChangeListener<org.dnacronym.hygene.graph.Node>) change -> draw());
     }
 
 

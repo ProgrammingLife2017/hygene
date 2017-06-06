@@ -114,7 +114,11 @@ public abstract class Node {
      */
     public abstract int getLength();
 
-    //
+    /**
+     * Returns the color of the node.
+     *
+     * @return the color of the node
+     */
     public final NodeColor getColor() {
         return NodeColor.BLACK;
     }

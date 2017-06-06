@@ -19,7 +19,6 @@ import org.dnacronym.hygene.graph.Node;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.GraphQuery;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +35,7 @@ import java.util.List;
  * fill the screen lengthwise.
  *
  * @see GraphDimensionsCalculator
- * @see GraphQuery
+ * @see org.dnacronym.hygene.models.GraphQuery
  */
 @SuppressWarnings("PMD.TooManyFields") // This class is tightly coupled, and does not need to be divided further.
 public final class GraphDimensionsCalculator {
