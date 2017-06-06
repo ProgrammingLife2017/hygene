@@ -26,6 +26,11 @@ final class ColorSchemeBaseCountTest {
 
 
     @Test
+    void testGetBase() {
+        assertThat(colorSchemeBaseCount.getBase()).isEqualTo("G");
+    }
+
+    @Test
     void testBaseCount() throws ParseException {
         final Node node = mock(Node.class);
         final NodeMetadata nodeMetadata = mock(NodeMetadata.class);

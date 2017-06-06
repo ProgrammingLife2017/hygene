@@ -7,6 +7,7 @@ import org.dnacronym.hygene.models.Node;
 /**
  * Classes that implement this interface decide the color of nodes based on the set mode.
  */
+@SuppressWarnings("squid:S1609") // This isn't a functional interface.
 public interface ColorScheme {
     /**
      * Calculates the {@link Color} of a {@link Node} based on its attributes and the {@link Color} mode.
