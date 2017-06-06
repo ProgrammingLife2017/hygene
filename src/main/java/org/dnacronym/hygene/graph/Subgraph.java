@@ -97,9 +97,7 @@ public final class Subgraph {
         final Predicate<Edge> filter = direction.ternary(
                 edge -> nodes.contains(edge.getFrom()),
                 edge -> nodes.contains(edge.getTo()));
-        final Function<Edge, Node> mapper = direction.ternary(
-                edge -> edge.getFrom(),
-                edge -> edge.getTo());
+        final Function<Edge, Node> mapper = direction.ternary(Edge::getFrom, Edge::getTo);
         return direction.ternary(node.getIncomingEdges(), node.getOutgoingEdges()).stream()
                 .filter(filter)
                 .map(mapper)
