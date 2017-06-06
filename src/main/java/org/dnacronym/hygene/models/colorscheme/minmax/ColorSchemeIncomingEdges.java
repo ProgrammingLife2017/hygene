@@ -8,14 +8,15 @@ import org.dnacronym.hygene.models.Node;
  * The color is determined by the number of incoming edges of a node.
  */
 public final class ColorSchemeIncomingEdges extends AbstractColorSchemeMinMax {
-    private static final int DEFAULT_MAX = 5;
-
-
     /**
-     * Creates instance of {@link ColorSchemeIncomingEdges} with max value set to {@value DEFAULT_MAX}.
+     * Creates an instance of {@link ColorSchemeIncomingEdges}.
+     *
+     * @param maxValue the max value before max {@link Color} is given
+     * @param minColor the minimum color of the color scheme
+     * @param maxColor the maximum color of the color scheme
      */
-    public ColorSchemeIncomingEdges() {
-        super(DEFAULT_MAX);
+    public ColorSchemeIncomingEdges(final int maxValue, final Color minColor, final Color maxColor) {
+        super(maxValue, minColor, maxColor);
     }
 
 

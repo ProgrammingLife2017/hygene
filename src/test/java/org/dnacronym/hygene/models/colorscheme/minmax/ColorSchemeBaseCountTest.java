@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models.colorscheme.minmax;
 
+import javafx.scene.paint.Color;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.ParseException;
@@ -14,16 +15,15 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests of {@link ColorSchemeBaseCount}.
  */
-final class ColorSchemeBaseCountTest extends ColorSchemeMinMaxBase {
+final class ColorSchemeBaseCountTest {
     private ColorSchemeBaseCount colorSchemeBaseCount;
 
 
     @BeforeEach
     void beforeEach() {
-        this.colorSchemeBaseCount = new ColorSchemeBaseCount();
-        colorSchemeBaseCount.setMinColor(getMinColor());
-        colorSchemeBaseCount.setMaxColor(getMaxColor());
+        this.colorSchemeBaseCount = new ColorSchemeBaseCount(Color.CORNSILK, Color.ANTIQUEWHITE, "G");
     }
+
 
     @Test
     void testBaseCount() throws ParseException {
@@ -34,21 +34,7 @@ final class ColorSchemeBaseCountTest extends ColorSchemeMinMaxBase {
         when(nodeMetadata.getSequence()).thenReturn(sequence);
 
         assertThat(colorSchemeBaseCount.calculateColor(node)).isEqualTo(
-                getMinColor().interpolate(getMaxColor(), 2.0 / sequence.length())
-        );
-    }
-
-    @Test
-    void testBaseCountSetBase() throws ParseException {
-        final Node node = mock(Node.class);
-        final NodeMetadata nodeMetadata = mock(NodeMetadata.class);
-        final String sequence = "AGGAA";
-        when(node.retrieveMetadata()).thenReturn(nodeMetadata);
-        when(nodeMetadata.getSequence()).thenReturn(sequence);
-
-        colorSchemeBaseCount.setBase("A");
-        assertThat(colorSchemeBaseCount.calculateColor(node)).isEqualTo(
-                getMinColor().interpolate(getMaxColor(), 3.0 / sequence.length())
+                Color.CORNSILK.interpolate(Color.ANTIQUEWHITE, 2.0 / sequence.length())
         );
     }
 }

@@ -18,19 +18,12 @@ final class FixedColorTest {
 
     @BeforeEach
     void beforeEach() {
-        fixedColor = new FixedColorScheme();
+        fixedColor = new FixedColorScheme(Color.ALICEBLUE);
     }
 
-
-    @Test
-    void testDefaultFixedColor() {
-        assertThat(fixedColor.calculateColor(mock(Node.class))).isEqualTo(Color.PURPLE);
-    }
 
     @Test
     void testSetFixedColor() {
-        fixedColor.setColor(Color.ALICEBLUE);
-
         assertThat(fixedColor.calculateColor(mock(Node.class))).isEqualTo(Color.ALICEBLUE);
     }
 }

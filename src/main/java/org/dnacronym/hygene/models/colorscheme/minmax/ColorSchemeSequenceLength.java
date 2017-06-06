@@ -8,14 +8,15 @@ import org.dnacronym.hygene.models.Node;
  * The color is determined by the sequence length.
  */
 public final class ColorSchemeSequenceLength extends AbstractColorSchemeMinMax {
-    private static final int DEFAULT_MAX = 100;
-
-
     /**
-     * Creates instance of {@link ColorSchemeSequenceLength} with max value set to {@value DEFAULT_MAX}.
+     * Creates an instance of {@link ColorSchemeSequenceLength}.
+     *
+     * @param maxValue the max value before max {@link Color} is given
+     * @param minColor the minimum color of the color scheme
+     * @param maxColor the maximum color of the color scheme
      */
-    public ColorSchemeSequenceLength() {
-        super(DEFAULT_MAX);
+    public ColorSchemeSequenceLength(final int maxValue, final Color minColor, final Color maxColor) {
+        super(maxValue, minColor, maxColor);
     }
 
 

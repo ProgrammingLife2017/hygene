@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models.colorscheme.minmax;
 
+import javafx.scene.paint.Color;
 import org.dnacronym.hygene.models.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,22 +13,15 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests of {@link ColorSchemeIncomingEdges}.
  */
-final class ColorSchemeIncomingEdgesTest extends ColorSchemeMinMaxBase {
+final class ColorSchemeIncomingEdgesTest {
     private ColorSchemeIncomingEdges colorSchemeIncomingEdges;
 
 
     @BeforeEach
     void beforeEach() {
-        colorSchemeIncomingEdges = new ColorSchemeIncomingEdges();
-        colorSchemeIncomingEdges.setMinColor(getMinColor());
-        colorSchemeIncomingEdges.setMaxColor(getMaxColor());
+        colorSchemeIncomingEdges = new ColorSchemeIncomingEdges(10, Color.BLACK, Color.GREEN);
     }
 
-
-    @Test
-    void testDefaultMaxValue() {
-        assertThat(colorSchemeIncomingEdges.getMaxValue()).isEqualTo(5);
-    }
 
     @Test
     void testIncomingEdgesColor() {
@@ -35,7 +29,7 @@ final class ColorSchemeIncomingEdgesTest extends ColorSchemeMinMaxBase {
         when(node.getNumberOfIncomingEdges()).thenReturn(3);
 
         assertThat(colorSchemeIncomingEdges.calculateColor(node)).isEqualTo(
-                getMinColor().interpolate(getMaxColor(), 3.0 / colorSchemeIncomingEdges.getMaxValue())
+                Color.BLACK.interpolate(Color.GREEN, 3.0 / 10)
         );
     }
 }

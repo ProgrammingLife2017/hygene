@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models.colorscheme.minmax;
 
+import javafx.scene.paint.Color;
 import org.dnacronym.hygene.models.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,22 +13,15 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests of {@link ColorSchemeSequenceLength}.
  */
-final class ColorSchemeSequenceLengthTest extends ColorSchemeMinMaxBase {
+final class ColorSchemeSequenceLengthTest {
     private ColorSchemeSequenceLength colorSchemeSequenceLength;
 
 
     @BeforeEach
     void beforeEach() {
-        colorSchemeSequenceLength = new ColorSchemeSequenceLength();
-        colorSchemeSequenceLength.setMinColor(getMinColor());
-        colorSchemeSequenceLength.setMaxColor(getMaxColor());
+        colorSchemeSequenceLength = new ColorSchemeSequenceLength(12, Color.CHOCOLATE, Color.CYAN);
     }
 
-
-    @Test
-    void testDefaultMaxValue() {
-        assertThat(colorSchemeSequenceLength.getMaxValue()).isEqualTo(100);
-    }
 
     @Test
     void testSequenceLengthColor() {
@@ -35,7 +29,7 @@ final class ColorSchemeSequenceLengthTest extends ColorSchemeMinMaxBase {
         when(node.getSequenceLength()).thenReturn(78);
 
         assertThat(colorSchemeSequenceLength.calculateColor(node)).isEqualTo(
-                getMinColor().interpolate(getMaxColor(), 78.0 / colorSchemeSequenceLength.getMaxValue())
+                Color.CHOCOLATE.interpolate(Color.CYAN, 78.0 / 12)
         );
     }
 }
