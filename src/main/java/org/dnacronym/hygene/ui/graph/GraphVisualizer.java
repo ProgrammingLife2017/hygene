@@ -19,12 +19,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
+import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
-import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.parser.ParseException;
 
 
@@ -114,9 +115,10 @@ public final class GraphVisualizer {
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        graphDimensionsCalculator.getGraphProperty().addListener((observable, oldValue, newValue) ->
-                setGraph(newValue));
-        graphDimensionsCalculator.getObservableQueryNodes().addListener((ListChangeListener<Integer>) change -> draw());
+        graphDimensionsCalculator.getGraphProperty()
+                .addListener((observable, oldValue, newValue) -> setGraph(newValue));
+        graphDimensionsCalculator.getObservableQueryNodes()
+                .addListener((ListChangeListener<NewNode>) change -> draw());
     }
 
 
@@ -125,23 +127,30 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
-     * @param nodeId     id of node to draw
+     * @param node       id of node to draw
      * @param charWidth  the width of character
      * @param charHeight the height of a character
      */
-    private void drawNode(final int nodeId, final double charWidth, final double charHeight) {
-        final double rectX = graphDimensionsCalculator.computeXPosition(nodeId);
-        final double rectY = graphDimensionsCalculator.computeYPosition(nodeId);
-        final double rectWidth = graphDimensionsCalculator.computeWidth(nodeId);
+    private void drawNode(final NewNode node, final double charWidth, final double charHeight) {
+        final double rectX = graphDimensionsCalculator.computeXPosition(node);
+        final double rectY = graphDimensionsCalculator.computeYPosition(node);
+        final double rectWidth = graphDimensionsCalculator.computeWidth(node);
         final double rectHeight = nodeHeightProperty.get();
 
-        graphicsContext.setFill(graph.getColor(nodeId).getFXColor());
+        graphicsContext.setFill(node.getColor().getFXColor());
         graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
 
-        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+        if (selectedNodeProperty.get() != null && node instanceof Segment
+                && selectedNodeProperty.get().getId() == ((Segment) node).getId()) {
             highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
         }
 
+        if (!(node instanceof Segment)) {
+            return;
+        }
+
+
+        final int nodeId = ((Segment) node).getId();
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
             graphicsContext.setFill(Color.BLACK);
@@ -224,20 +233,23 @@ public final class GraphVisualizer {
      * <p>
      * The edge is afterwards added to the {@link RTree}.
      *
-     * @param fromNodeId edge origin node ID
-     * @param toNodeId   edge destination node ID
+     * @param fromNode edge origin node ID
+     * @param toNode   edge destination node ID
      */
-    private void drawEdge(final int fromNodeId, final int toNodeId) {
-        final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNodeId);
-        final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNodeId);
-        final double toX = graphDimensionsCalculator.computeXPosition(toNodeId);
-        final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNodeId);
+    private void drawEdge(final NewNode fromNode,
+                          final NewNode toNode) {
+        final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
+        final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
+        final double toX = graphDimensionsCalculator.computeXPosition(toNode);
+        final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
 
         graphicsContext.setStroke(getEdgeColor());
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
         graphicsContext.strokeLine(fromX, fromY, toX, toY);
 
-        rTree.addEdge(fromNodeId, toNodeId, fromX, fromY, toX, toY);
+        if (fromNode instanceof Segment && toNode instanceof Segment) {
+            rTree.addEdge(((Segment) fromNode).getId(), ((Segment) toNode).getId(), fromX, fromY, toX, toY);
+        }
     }
 
 
@@ -297,12 +309,10 @@ public final class GraphVisualizer {
         final double charHeight = getCharHeight(nodeFont);
 
         clear();
-        for (final Integer nodeId : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(nodeId, charWidth, charHeight);
+        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
+            drawNode(node, charWidth, charHeight);
 
-            graph.iterator().visitDirectNeighbours(
-                    nodeId, SequenceDirection.RIGHT,
-                    neighbourId -> drawEdge(nodeId, neighbourId));
+            node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
         if (displayLaneBordersProperty.get()) {

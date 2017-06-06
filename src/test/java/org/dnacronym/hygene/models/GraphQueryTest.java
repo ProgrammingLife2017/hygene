@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -362,9 +361,11 @@ class GraphQueryTest extends GraphTestBase {
      */
 
     /**
-     * Returns all nodes that can be visited by the current {@link GraphQuery} using {@link GraphQuery#visit(Consumer)}.
+     * Returns all nodes that can be visited by the current {@link GraphQuery} using
+     * {@link GraphQuery#visit(java.util.function.Consumer)}.
      *
-     * @return all nodes that can be visited by the current {@link GraphQuery} using {@link GraphQuery#visit(Consumer)}
+     * @return all nodes that can be visited by the current {@link GraphQuery} using {@link
+     * GraphQuery#visit(java.util.function.Consumer)}
      */
     private List<Integer> collectVisit() {
         final List<Integer> nodes = new ArrayList<>();

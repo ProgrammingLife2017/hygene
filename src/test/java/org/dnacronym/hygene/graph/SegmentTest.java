@@ -49,7 +49,7 @@ final class SegmentTest extends NodeTest {
     void testEquals() {
         EqualsVerifier.forClass(Segment.class)
                 .withRedefinedSuperclass()
-                .withPrefabValues(Node.class,
+                .withPrefabValues(NewNode.class,
                         new Segment(59, 56, 15, new HashSet<>(), new HashSet<>()),
                         new Segment(21, 48, 88, new HashSet<>(), new HashSet<>()))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)

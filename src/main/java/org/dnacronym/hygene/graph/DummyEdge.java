@@ -16,7 +16,7 @@ public final class DummyEdge extends Edge {
      * @param to           the destination of the edge
      * @param originalEdge the original edge this dummy edge is replacing (cannot be a {@link DummyEdge})
      */
-    public DummyEdge(final Node from, final Node to, final Edge originalEdge) {
+    public DummyEdge(final NewNode from, final NewNode to, final Edge originalEdge) {
         super(from, to);
 
         assert !(originalEdge instanceof DummyEdge);

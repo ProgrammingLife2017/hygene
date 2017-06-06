@@ -24,6 +24,12 @@ import java.util.UUID;
  */
 public final class CenterPointQuery {
     /**
+     * The width of an edge.
+     */
+    // TODO Move this constant to the layout algorithm.
+    private static final int EDGE_WIDTH = 1000;
+
+    /**
      * The maximal acceptable difference between the preferred radius and the cached radius.
      */
     private static final int MAX_RADIUS_DIFFERENCE = 10;
@@ -46,7 +52,7 @@ public final class CenterPointQuery {
      */
     private final GraphIterator iterator;
     /**
-     * Maps {@link Graph} node ids to {@link Node} {@link UUID}s.
+     * Maps {@link Graph} node ids to {@link NewNode} {@link UUID}s.
      */
     private final Map<Integer, UUID> nodes;
     /**
@@ -128,9 +134,15 @@ public final class CenterPointQuery {
         clear();
 
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> {
+            if (nodeId == 0 || nodeId == graph.getNodeArrays().length - 1) {
+                return;
+            }
+
             distanceMap.setDistance(nodeId, depth);
 
-            final Node node = new Segment(nodeId, graph.getLineNumber(nodeId), graph.getSequenceLength(nodeId));
+            final NewNode node = new Segment(nodeId, graph.getLineNumber(nodeId), graph.getSequenceLength(nodeId));
+            node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
+            node.setYPosition(graph.getUnscaledYPosition(nodeId));
             nodes.put(nodeId, node.getUuid());
             subgraph.addNode(node);
         });
@@ -279,12 +291,12 @@ public final class CenterPointQuery {
     }
 
     /**
-     * Returns the {@link Node} with the given id, or {@code null} if there is no such node in the cache.
+     * Returns the {@link NewNode} with the given id, or {@code null} if there is no such node in the cache.
      *
      * @param nodeId a node id, as given by the {@link Graph}
-     * @return the {@link Node} with the given id, or {@code null} if there is no such node in the cache.
+     * @return the {@link NewNode} with the given id, or {@code null} if there is no such node in the cache.
      */
-    private @Nullable Node getNode(final int nodeId) {
+    private @Nullable NewNode getNode(final int nodeId) {
         final UUID uuid = nodes.get(nodeId);
         if (uuid == null) {
             return null;
@@ -294,19 +306,19 @@ public final class CenterPointQuery {
     }
 
     /**
-     * Adds all edges from the specified node to the corresponding {@link Node} if both ends of the edge are in the
+     * Adds all edges from the specified node to the corresponding {@link NewNode} if both ends of the edge are in the
      * cache.
      *
      * @param nodeId a node id, as given by the {@link Graph}
      */
     private void addEdges(final int nodeId) {
-        final Node node = getNode(nodeId);
+        final NewNode node = getNode(nodeId);
         if (node == null) {
             return;
         }
 
         iterator.visitDirectNeighbours(nodeId, SequenceDirection.RIGHT, neighbourId -> {
-            final Node neighbour = getNode(neighbourId);
+            final NewNode neighbour = getNode(neighbourId);
             if (node == null || neighbour == null) {
                 return;
             }
@@ -316,7 +328,7 @@ public final class CenterPointQuery {
             neighbour.getIncomingEdges().add(edge);
         });
         iterator.visitDirectNeighbours(nodeId, SequenceDirection.LEFT, neighbourId -> {
-            final Node neighbour = getNode(neighbourId);
+            final NewNode neighbour = getNode(neighbourId);
             if (node == null || neighbour == null) {
                 return;
             }

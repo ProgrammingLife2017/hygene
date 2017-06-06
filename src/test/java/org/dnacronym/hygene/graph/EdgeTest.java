@@ -12,14 +12,14 @@ import static org.mockito.Mockito.mock;
  */
 abstract class EdgeTest {
     private Edge edge;
-    private Node from;
-    private Node to;
+    private NewNode from;
+    private NewNode to;
 
 
     @BeforeEach
     void setUp() {
-        from = mock(Node.class);
-        to = mock(Node.class);
+        from = mock(NewNode.class);
+        to = mock(NewNode.class);
     }
 
 
@@ -39,7 +39,7 @@ abstract class EdgeTest {
      *
      * @return the source node
      */
-    final Node getFrom() {
+    final NewNode getFrom() {
         return from;
     }
 
@@ -48,7 +48,7 @@ abstract class EdgeTest {
      *
      * @return the destination node
      */
-    final Node getTo() {
+    final NewNode getTo() {
         return to;
     }
 

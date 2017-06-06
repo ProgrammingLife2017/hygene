@@ -11,8 +11,8 @@ import java.util.UUID;
  */
 public class Edge {
     private final UUID uuid;
-    private final Node from;
-    private final Node to;
+    private final NewNode from;
+    private final NewNode to;
 
 
     /**
@@ -21,7 +21,7 @@ public class Edge {
      * @param from the source of the edge
      * @param to   the destination of the edge
      */
-    protected Edge(final Node from, final Node to) {
+    protected Edge(final NewNode from, final NewNode to) {
         this.uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;
@@ -33,7 +33,7 @@ public class Edge {
      *
      * @return the source node
      */
-    public final Node getFrom() {
+    public final NewNode getFrom() {
         return from;
     }
 
@@ -42,7 +42,7 @@ public class Edge {
      *
      * @return the destination node
      */
-    public final Node getTo() {
+    public final NewNode getTo() {
         return to;
     }
 

@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.Node;
+import org.dnacronym.hygene.graph.NewNode;
 
 
 /**
@@ -9,7 +9,7 @@ import org.dnacronym.hygene.graph.Node;
  */
 public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReducer {
     @Override
-    public void reduceCrossings(final Node[][] layers) {
+    public void reduceCrossings(final NewNode[][] layers) {
         throw new UnsupportedOperationException("This is a stub implementation and has not yet been implemented.");
     }
 }

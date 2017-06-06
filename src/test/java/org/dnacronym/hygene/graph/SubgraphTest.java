@@ -22,7 +22,7 @@ final class SubgraphTest {
     private static final Random RANDOM = new Random();
 
     private Subgraph subgraph;
-    private Set<Node> nodes;
+    private Set<NewNode> nodes;
 
 
     @BeforeEach
@@ -39,14 +39,14 @@ final class SubgraphTest {
 
     @Test
     void testAddNode() {
-        final Node node = mock(Node.class);
+        final NewNode node = mock(NewNode.class);
         subgraph.addNode(node);
         assertThat(subgraph.getNodes()).containsExactly(node);
     }
 
     @Test
     void testRemoveNode() {
-        final Node node = mock(Node.class);
+        final NewNode node = mock(NewNode.class);
         subgraph.addNode(node);
         assertThat(subgraph.getNodes()).containsExactly(node);
 
@@ -65,7 +65,8 @@ final class SubgraphTest {
 
         subgraph.addNodes(Arrays.asList(segment1, segment2, segment3));
 
-        assertThat(subgraph.getNeighbours(segment1, SequenceDirection.RIGHT)).containsExactlyInAnyOrder(segment2, segment3);
+        assertThat(subgraph.getNeighbours(segment1, SequenceDirection.RIGHT))
+                .containsExactlyInAnyOrder(segment2, segment3);
     }
 
     @Test
@@ -82,7 +83,7 @@ final class SubgraphTest {
 
         subgraph.addNodes(Arrays.asList(segment1, segment2, segment3, segment4));
 
-        final List<Node> nodes = new ArrayList<>(subgraph.getNodesBFS(SequenceDirection.RIGHT));
+        final List<NewNode> nodes = new ArrayList<>(subgraph.getNodesBFS(SequenceDirection.RIGHT));
 
         assertThat(nodes).doesNotHaveDuplicates();
         assertThat(nodes.indexOf(segment1)).isLessThan(nodes.indexOf(segment2));

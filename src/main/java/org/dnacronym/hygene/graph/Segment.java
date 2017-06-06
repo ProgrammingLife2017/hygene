@@ -8,7 +8,12 @@ import java.util.Set;
  * Class representing a single, non-dummy segment node.
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
-public final class Segment extends Node {
+public final class Segment extends NewNode {
+    /**
+     * The minimal length of a segment.
+     */
+    private static final int MIN_SEGMENT_LENGTH = 100;
+
     private final int id;
     private final int lineNumber;
     private final int sequenceLength;
@@ -69,5 +74,10 @@ public final class Segment extends Node {
      */
     public int getSequenceLength() {
         return sequenceLength;
+    }
+
+    @Override
+    public int getLength() {
+        return Math.max(MIN_SEGMENT_LENGTH, sequenceLength);
     }
 }

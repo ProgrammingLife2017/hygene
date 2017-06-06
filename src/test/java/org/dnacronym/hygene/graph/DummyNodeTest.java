@@ -16,16 +16,16 @@ import static org.mockito.Mockito.mock;
  */
 final class DummyNodeTest extends NodeTest {
     private DummyNode dummyNode;
-    private Node diversionSource;
-    private Node diversionDestination;
+    private NewNode diversionSource;
+    private NewNode diversionDestination;
 
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
-        diversionSource = mock(Node.class);
-        diversionDestination = mock(Node.class);
+        diversionSource = mock(NewNode.class);
+        diversionDestination = mock(NewNode.class);
         dummyNode = new DummyNode(getIncomingEdges(), getOutgoingEdges(), diversionSource,
                 diversionDestination);
         setNode(dummyNode);
@@ -46,9 +46,9 @@ final class DummyNodeTest extends NodeTest {
     void testEquals() {
         EqualsVerifier.forClass(DummyNode.class)
                 .withRedefinedSuperclass()
-                .withPrefabValues(Node.class,
-                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)),
-                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)))
+                .withPrefabValues(NewNode.class,
+                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(NewNode.class), mock(NewNode.class)),
+                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(NewNode.class), mock(NewNode.class)))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }

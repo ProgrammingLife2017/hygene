@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.models.NodeColor;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Class representing a generic node.
  */
-public class Node {
+public abstract class NewNode {
     private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
@@ -20,23 +21,23 @@ public class Node {
 
 
     /**
-     * Constructs a new {@link Node} instance without any edges.
+     * Constructs a new {@link NewNode} instance without any edges.
      * <p>
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
      */
-    protected Node() {
+    protected NewNode() {
         this(new HashSet<>(), new HashSet<>());
     }
 
     /**
-     * Constructs a new {@link Node} instance.
+     * Constructs a new {@link NewNode} instance.
      * <p>
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
      *
      * @param incomingEdges the incoming edges
      * @param outgoingEdges the outgoing edges
      */
-    protected Node(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
+    protected NewNode(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
         this.uuid = UUID.randomUUID();
         this.incomingEdges = incomingEdges;
         this.outgoingEdges = outgoingEdges;
@@ -44,9 +45,9 @@ public class Node {
 
 
     /**
-     * Returns this {@link Node}'s {@link UUID}.
+     * Returns this {@link NewNode}'s {@link UUID}.
      *
-     * @return this {@link Node}'s {@link UUID}
+     * @return this {@link NewNode}'s {@link UUID}
      */
     public final UUID getUuid() {
         return uuid;
@@ -106,6 +107,22 @@ public class Node {
         return outgoingEdges;
     }
 
+    /**
+     * Returns the length of the node when visualized.
+     *
+     * @return the length of the node when visualized
+     */
+    public abstract int getLength();
+
+    /**
+     * Returns the color of the node.
+     *
+     * @return the color of the node
+     */
+    public final NodeColor getColor() {
+        return NodeColor.BLACK;
+    }
+
     @Override
     public final boolean equals(final @Nullable Object o) {
         if (this == o) {
@@ -114,7 +131,7 @@ public class Node {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Node node = (Node) o;
+        final NewNode node = (NewNode) o;
         return Objects.equals(uuid, node.uuid);
     }
 

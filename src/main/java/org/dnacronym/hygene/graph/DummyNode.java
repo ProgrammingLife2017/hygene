@@ -24,9 +24,9 @@ import java.util.Set;
  * </i>
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
-public final class DummyNode extends Node {
-    private final Node diversionSource;
-    private final Node diversionDestination;
+public final class DummyNode extends NewNode {
+    private final NewNode diversionSource;
+    private final NewNode diversionDestination;
 
 
     /**
@@ -38,7 +38,7 @@ public final class DummyNode extends Node {
      * @param diversionDestination the original destination node this dummy node is (indirectly) connected to
      */
     public DummyNode(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges,
-                     final Node diversionSource, final Node diversionDestination) {
+                     final NewNode diversionSource, final NewNode diversionDestination) {
         super(incomingEdges, outgoingEdges);
         this.diversionSource = diversionSource;
         this.diversionDestination = diversionDestination;
@@ -50,7 +50,7 @@ public final class DummyNode extends Node {
      *
      * @return the diversion source node
      */
-    public Node getDiversionSource() {
+    public NewNode getDiversionSource() {
         return diversionSource;
     }
 
@@ -59,7 +59,12 @@ public final class DummyNode extends Node {
      *
      * @return the diversion destination node
      */
-    public Node getDiversionDestination() {
+    public NewNode getDiversionDestination() {
         return diversionDestination;
+    }
+
+    @Override
+    public int getLength() {
+        return 0;
     }
 }
