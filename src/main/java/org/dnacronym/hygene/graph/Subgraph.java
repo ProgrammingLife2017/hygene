@@ -6,6 +6,7 @@ import org.dnacronym.hygene.models.SequenceDirection;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -77,7 +78,7 @@ public final class Subgraph {
             }
         });
 
-        final Set<Node> visited = new HashSet<>();
+        final Set<Node> visited = new LinkedHashSet<>();
         while (!queue.isEmpty()) {
             final Node head = queue.remove();
             if (visited.contains(head)) {
