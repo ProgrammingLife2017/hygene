@@ -19,6 +19,8 @@ import static org.mockito.Mockito.mock;
  * Test suite for the {@link Subgraph} class.
  */
 final class SubgraphTest {
+    private static final Random RANDOM = new Random();
+
     private Subgraph subgraph;
     private Set<Node> nodes;
 
@@ -96,7 +98,7 @@ final class SubgraphTest {
      * @param rightSegment the right segment
      */
     private static void connectSegments(final Segment leftSegment, final Segment rightSegment) {
-        final Link link = new Link(leftSegment, rightSegment, new Random().nextInt());
+        final Link link = new Link(leftSegment, rightSegment, RANDOM.nextInt());
         leftSegment.getOutgoingEdges().add(link);
         rightSegment.getIncomingEdges().add(link);
     }
