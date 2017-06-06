@@ -8,16 +8,16 @@ import java.util.Set;
 /**
  * Represents a change in the center point query.
  */
-public final class CenterPointQueryChangeEvent {
+public final class GraphQueryChangeEvent {
     private final GraphQuery graphQuery;
 
 
     /**
-     * Constructs and initializes {@link CenterPointQueryChangeEvent}.
+     * Constructs and initializes {@link GraphQueryChangeEvent}.
      *
      * @param graphQuery the query that was updated
      */
-    public CenterPointQueryChangeEvent(final GraphQuery graphQuery) {
+    public GraphQueryChangeEvent(final GraphQuery graphQuery) {
         this.graphQuery = graphQuery;
     }
 

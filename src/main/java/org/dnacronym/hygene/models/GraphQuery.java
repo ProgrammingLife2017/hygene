@@ -2,7 +2,7 @@ package org.dnacronym.hygene.models;
 
 import com.google.common.collect.ImmutableSet;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.events.GraphQueryChangeEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -324,6 +324,6 @@ public final class GraphQuery {
      * Posts event indicating a change in the center point query to the event bus.
      */
     private void postEvent() {
-        HygeneEventBus.getInstance().post(new CenterPointQueryChangeEvent(this));
+        HygeneEventBus.getInstance().post(new GraphQueryChangeEvent(this));
     }
 }

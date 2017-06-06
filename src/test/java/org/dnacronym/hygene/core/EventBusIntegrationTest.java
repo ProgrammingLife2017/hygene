@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.core;
 
 import com.google.common.eventbus.Subscribe;
-import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.events.GraphQueryChangeEvent;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphQuery;
 import org.dnacronym.hygene.models.Node;
@@ -34,7 +34,7 @@ public final class EventBusIntegrationTest {
         private GraphQuery graphQuery;
 
         @Subscribe
-        public void centerPointQueryChanged(final CenterPointQueryChangeEvent event) {
+        public void centerPointQueryChanged(final GraphQueryChangeEvent event) {
             graphQuery = event.getGraphQuery();
         }
 
