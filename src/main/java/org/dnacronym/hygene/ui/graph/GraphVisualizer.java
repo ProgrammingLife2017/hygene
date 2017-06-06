@@ -138,7 +138,8 @@ public final class GraphVisualizer {
         graphicsContext.setFill(node.getColor().getFXColor());
         graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
 
-        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().equals(node)) {
+        if (selectedNodeProperty.get() != null && node instanceof Segment
+                && selectedNodeProperty.get().getId() == ((Segment) node).getId()) {
             highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
         }
 

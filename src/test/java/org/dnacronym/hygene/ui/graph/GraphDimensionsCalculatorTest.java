@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.scene.canvas.Canvas;
 import org.assertj.core.data.Offset;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -17,6 +18,9 @@ import static org.mockito.Mockito.when;
  * Unit tests of {@link GraphDimensionsCalculator}s.
  */
 final class GraphDimensionsCalculatorTest {
+    private static final double CANVAS_WIDTH = 400.0;
+    private static final double CANVAS_HEIGHT = 300.0;
+
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphStore graphStore;
 
@@ -44,27 +48,33 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testComputeXPosition() {
-        assertThat(graphDimensionsCalculator.computeXPosition(0)).isEqualTo(-400);
+        final Segment segment = new Segment(0, 0, 0);
+        assertThat(graphDimensionsCalculator.computeXPosition(segment)).isEqualTo(-400);
     }
 
     @Test
     void testComputeRightXPosition() {
-        assertThat(graphDimensionsCalculator.computeRightXPosition(0)).isEqualTo(0);
+        final Segment segment = new Segment(0, 0, 0);
+        assertThat(graphDimensionsCalculator.computeRightXPosition(segment)).isEqualTo(0);
     }
 
     @Test
     void testComputeYPosition() {
-        assertThat(graphDimensionsCalculator.computeYPosition(0)).isEqualTo(300.0 / 2, Offset.offset(1.0));
+        final Segment segment = new Segment(0, 0, 0);
+        assertThat(graphDimensionsCalculator.computeYPosition(segment)).isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
     }
 
     @Test
     void testComputeMiddleYPosition() {
-        assertThat(graphDimensionsCalculator.computeMiddleYPosition(0)).isEqualTo(300.0 / 2, Offset.offset(1.0));
+        final Segment segment = new Segment(0, 0, 0);
+        assertThat(graphDimensionsCalculator.computeMiddleYPosition(segment))
+                .isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
     }
 
     @Test
     void testComputeWidth() {
-        assertThat(graphDimensionsCalculator.computeWidth(0)).isEqualTo(400);
+        final Segment segment = new Segment(0, 0, 0);
+        assertThat(graphDimensionsCalculator.computeWidth(segment)).isEqualTo(400);
     }
 
     @Test
@@ -91,7 +101,7 @@ final class GraphDimensionsCalculatorTest {
     }
 
     private Graph createGraph() {
-        return new Graph(new int[][]{
+        return new Graph(new int[][] {
                 NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
@@ -101,7 +111,7 @@ final class GraphDimensionsCalculatorTest {
     }
 
     private Graph createTwoNodeGraph() {
-        return new Graph(new int[][]{
+        return new Graph(new int[][] {
                 NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
@@ -118,8 +128,8 @@ final class GraphDimensionsCalculatorTest {
     private Canvas mockCanvas() {
         final Canvas canvas = mock(Canvas.class);
 
-        when(canvas.getWidth()).thenReturn(400.0);
-        when(canvas.getHeight()).thenReturn(300.0);
+        when(canvas.getWidth()).thenReturn(CANVAS_WIDTH);
+        when(canvas.getHeight()).thenReturn(CANVAS_HEIGHT);
 
         return canvas;
     }
