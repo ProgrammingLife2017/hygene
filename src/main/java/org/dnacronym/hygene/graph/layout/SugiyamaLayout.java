@@ -25,6 +25,7 @@ public final class SugiyamaLayout implements Layout {
 
     @Override
     public void layOut(final Subgraph subgraph) {
-        crossingsReducer.reduceCrossings(layerer.layer(subgraph));
+//        crossingsReducer.reduceCrossings(layerer.layer(subgraph));
+        layerer.layer(subgraph);
     }
 }
