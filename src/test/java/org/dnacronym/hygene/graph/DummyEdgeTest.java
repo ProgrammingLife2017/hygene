@@ -38,9 +38,9 @@ final class DummyEdgeTest extends EdgeTest {
     void testEquals() {
         EqualsVerifier.forClass(DummyEdge.class)
                 .withRedefinedSuperclass()
-                .withPrefabValues(Node.class,
-                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)),
-                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(Node.class), mock(Node.class)))
+                .withPrefabValues(NewNode.class,
+                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(NewNode.class), mock(NewNode.class)),
+                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(NewNode.class), mock(NewNode.class)))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }

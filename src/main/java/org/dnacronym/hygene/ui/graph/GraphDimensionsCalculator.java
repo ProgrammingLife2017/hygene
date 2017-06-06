@@ -15,7 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.graph.Node;
+import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.models.Graph;
@@ -68,8 +68,8 @@ public final class GraphDimensionsCalculator {
     private int minY;
     private Dimension2D canvasDimension;
 
-    private final ObservableList<Node> observableQueryNodes;
-    private final ReadOnlyListWrapper<Node> readOnlyObservableNodes;
+    private final ObservableList<NewNode> observableQueryNodes;
+    private final ReadOnlyListWrapper<NewNode> readOnlyObservableNodes;
 
 
     /**
@@ -141,7 +141,7 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
-        final List<Node> neighbours = new LinkedList<>();
+        final List<NewNode> neighbours = new LinkedList<>();
         subgraph.getNodes().forEach(node -> {
             neighbours.add(node);
 
@@ -225,7 +225,7 @@ public final class GraphDimensionsCalculator {
      * @param node the id of the node
      * @return the absolute x position of a node within the current canvas
      */
-    double computeXPosition(final Node node) {
+    double computeXPosition(final NewNode node) {
         final int xPosition = node.getXPosition() - node.getLength();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
@@ -236,7 +236,7 @@ public final class GraphDimensionsCalculator {
      * @param node the id of the node
      * @return the absolute right x position of a node within the current canvas
      */
-    double computeRightXPosition(final Node node) {
+    double computeRightXPosition(final NewNode node) {
         return computeXPosition(node) + computeWidth(node);
     }
 
@@ -246,7 +246,7 @@ public final class GraphDimensionsCalculator {
      * @param node the id of the node
      * @return the absolute y position of a node within the current canvas
      */
-    double computeYPosition(final Node node) {
+    double computeYPosition(final NewNode node) {
         final int yPosition = node.getYPosition();
         return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2
                 - nodeHeightProperty.get() / 2;
@@ -258,7 +258,7 @@ public final class GraphDimensionsCalculator {
      * @param node the id of the node
      * @return the absolute middle y position of a node within the current canvas
      */
-    double computeMiddleYPosition(final Node node) {
+    double computeMiddleYPosition(final NewNode node) {
         return computeYPosition(node) + nodeHeightProperty.get() / 2;
     }
 
@@ -268,7 +268,7 @@ public final class GraphDimensionsCalculator {
      * @param node the id of the node
      * @return the width of a node
      */
-    double computeWidth(final Node node) {
+    double computeWidth(final NewNode node) {
         return (double) node.getLength() / (maxX - minX) * canvasDimension.getWidth();
     }
 
@@ -328,7 +328,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return the {@link ReadOnlyListProperty} of the id's of the cached nodes
      */
-    public ReadOnlyListProperty<Node> getObservableQueryNodes() {
+    public ReadOnlyListProperty<NewNode> getObservableQueryNodes() {
         return readOnlyObservableNodes;
     }
 

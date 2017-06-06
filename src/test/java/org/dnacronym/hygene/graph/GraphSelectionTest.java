@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
  */
 final class GraphSelectionTest {
     private GraphSelection graphSelection;
-    private Set<Node> nodes;
+    private Set<NewNode> nodes;
     private Set<Edge> edges;
 
 
@@ -47,7 +47,7 @@ final class GraphSelectionTest {
 
     @Test
     void testGetNodesWithAddedNodes() {
-        final Node node = new Segment(62, 22, 19, new HashSet<>(), new HashSet<>());
+        final NewNode node = new Segment(62, 22, 19, new HashSet<>(), new HashSet<>());
         graphSelection.getNodes().add(node);
 
         assertThat(graphSelection.getNodes()).containsExactly(node);
@@ -55,7 +55,7 @@ final class GraphSelectionTest {
 
     @Test
     void testGetEdgesWithAddedEdges() {
-        final Edge edge = new Link(mock(Node.class), mock(Node.class), 74);
+        final Edge edge = new Link(mock(NewNode.class), mock(NewNode.class), 74);
         graphSelection.getEdges().add(edge);
 
         assertThat(graphSelection.getEdges()).containsExactly(edge);

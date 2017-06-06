@@ -11,7 +11,7 @@ import java.util.Set;
  * any of the nodes in the collection.
  */
 public final class GraphSelection {
-    private final Set<Node> nodes;
+    private final Set<NewNode> nodes;
     private final Set<Edge> edges;
 
 
@@ -21,7 +21,7 @@ public final class GraphSelection {
      * @param nodes the nodes of this collection
      * @param edges the edges of this collection
      */
-    public GraphSelection(final Set<Node> nodes, final Set<Edge> edges) {
+    public GraphSelection(final Set<NewNode> nodes, final Set<Edge> edges) {
         this.nodes = nodes;
         this.edges = edges;
     }
@@ -40,7 +40,7 @@ public final class GraphSelection {
      *
      * @return the nodes
      */
-    public Set<Node> getNodes() {
+    public Set<NewNode> getNodes() {
         return nodes;
     }
 

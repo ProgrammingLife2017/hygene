@@ -51,7 +51,8 @@ final class GraphDimensionsCalculatorTest {
         final Segment segment = new Segment(0, 0, 0);
         segment.setYPosition(30);
 
-        assertThat(graphDimensionsCalculator.computeYPosition(segment)).isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
+        assertThat(graphDimensionsCalculator.computeYPosition(segment))
+                .isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
     }
 
     @Test

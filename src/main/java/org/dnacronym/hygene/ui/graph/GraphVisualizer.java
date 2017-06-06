@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
+import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
@@ -117,7 +118,7 @@ public final class GraphVisualizer {
         graphDimensionsCalculator.getGraphProperty()
                 .addListener((observable, oldValue, newValue) -> setGraph(newValue));
         graphDimensionsCalculator.getObservableQueryNodes()
-                .addListener((ListChangeListener<org.dnacronym.hygene.graph.Node>) change -> draw());
+                .addListener((ListChangeListener<NewNode>) change -> draw());
     }
 
 
@@ -130,7 +131,7 @@ public final class GraphVisualizer {
      * @param charWidth  the width of character
      * @param charHeight the height of a character
      */
-    private void drawNode(final org.dnacronym.hygene.graph.Node node, final double charWidth, final double charHeight) {
+    private void drawNode(final NewNode node, final double charWidth, final double charHeight) {
         final double rectX = graphDimensionsCalculator.computeXPosition(node);
         final double rectY = graphDimensionsCalculator.computeYPosition(node);
         final double rectWidth = graphDimensionsCalculator.computeWidth(node);
@@ -235,8 +236,8 @@ public final class GraphVisualizer {
      * @param fromNode edge origin node ID
      * @param toNode   edge destination node ID
      */
-    private void drawEdge(final org.dnacronym.hygene.graph.Node fromNode,
-                          final org.dnacronym.hygene.graph.Node toNode) {
+    private void drawEdge(final NewNode fromNode,
+                          final NewNode toNode) {
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
@@ -308,7 +309,7 @@ public final class GraphVisualizer {
         final double charHeight = getCharHeight(nodeFont);
 
         clear();
-        for (final org.dnacronym.hygene.graph.Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
+        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node, charWidth, charHeight);
 
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));

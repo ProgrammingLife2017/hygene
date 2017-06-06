@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
  * Class representing a subgraph.
  */
 public final class Subgraph {
-    private final Set<Node> nodes;
-    private final Map<UUID, Node> segments;
+    private final Set<NewNode> nodes;
+    private final Map<UUID, NewNode> segments;
 
 
     /**
@@ -37,19 +37,19 @@ public final class Subgraph {
      *
      * @param nodes the nodes of this subgraph
      */
-    public Subgraph(final Set<Node> nodes) {
+    public Subgraph(final Set<NewNode> nodes) {
         this.nodes = nodes;
-        this.segments = nodes.stream().collect(Collectors.toMap(Node::getUuid, node -> node));
+        this.segments = nodes.stream().collect(Collectors.toMap(NewNode::getUuid, node -> node));
     }
 
 
     /**
-     * Returns the {@link Node} with the given {@link UUID}, or {code null} if no such node exists.
+     * Returns the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists.
      *
      * @param nodeId a {@link UUID}
-     * @return the {@link Node} with the given {@link UUID}, or {code null} if no such node exists.
+     * @return the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists.
      */
-    public @Nullable Node getNode(final UUID nodeId) {
+    public @Nullable NewNode getNode(final UUID nodeId) {
         return segments.get(nodeId);
     }
 
@@ -60,27 +60,27 @@ public final class Subgraph {
      *
      * @return the nodes
      */
-    public Set<Node> getNodes() {
+    public Set<NewNode> getNodes() {
         return Collections.unmodifiableSet(nodes);
     }
 
     /**
-     * Returns a {@link Collection} of all the {@link Node}s in this {@link Subgraph} in breadth-first order.
+     * Returns a {@link Collection} of all the {@link NewNode}s in this {@link Subgraph} in breadth-first order.
      *
      * @param direction the direction to traverse in
-     * @return a {@link Collection} of all the {@link Node}s in this {@link Subgraph} in breadth-first order
+     * @return a {@link Collection} of all the {@link NewNode}s in this {@link Subgraph} in breadth-first order
      */
-    public Collection<Node> getNodesBFS(final SequenceDirection direction) {
-        final Queue<Node> queue = new LinkedList<>();
+    public Collection<NewNode> getNodesBFS(final SequenceDirection direction) {
+        final Queue<NewNode> queue = new LinkedList<>();
         nodes.forEach(node -> {
             if (direction.ternary(isSinkNeighbour(node), isSourceNeighbour(node))) {
                 queue.add(node);
             }
         });
 
-        final Set<Node> visited = new LinkedHashSet<>();
+        final Set<NewNode> visited = new LinkedHashSet<>();
         while (!queue.isEmpty()) {
-            final Node head = queue.remove();
+            final NewNode head = queue.remove();
             if (visited.contains(head)) {
                 continue;
             }
@@ -100,15 +100,15 @@ public final class Subgraph {
     /**
      * Returns a {@link Set} of the given node's neighbours.
      *
-     * @param node      a {@link Node}
+     * @param node      a {@link NewNode}
      * @param direction the direction of the neighbours
      * @return a {@link Set} of the given node's neighbours.
      */
-    public Set<Node> getNeighbours(final Node node, final SequenceDirection direction) {
+    public Set<NewNode> getNeighbours(final NewNode node, final SequenceDirection direction) {
         final Predicate<Edge> filter = direction.ternary(
                 edge -> nodes.contains(edge.getFrom()),
                 edge -> nodes.contains(edge.getTo()));
-        final Function<Edge, Node> mapper = direction.ternary(Edge::getFrom, Edge::getTo);
+        final Function<Edge, NewNode> mapper = direction.ternary(Edge::getFrom, Edge::getTo);
         return direction.ternary(node.getIncomingEdges(), node.getOutgoingEdges()).stream()
                 .filter(filter)
                 .map(mapper)
@@ -121,7 +121,7 @@ public final class Subgraph {
      * @param node the node to be added
      * @return {@code true} iff. the subgraph was changed
      */
-    public boolean addNode(final Node node) {
+    public boolean addNode(final NewNode node) {
         segments.put(node.getUuid(), node);
         return nodes.add(node);
     }
@@ -132,15 +132,15 @@ public final class Subgraph {
      * @param nodes the nodes to be added
      * @return {@code true} iff. the subgraph was changed
      */
-    public boolean addNodes(final Collection<Node> nodes) {
+    public boolean addNodes(final Collection<NewNode> nodes) {
         return this.nodes.addAll(nodes);
     }
 
     /**
-     * Returns {@code true} iff. this subgraph contains a {@link Node} with the given {@link UUID}.
+     * Returns {@code true} iff. this subgraph contains a {@link NewNode} with the given {@link UUID}.
      *
      * @param nodeId a {@link UUID}
-     * @return {@code true} iff. this subgraph contains a {@link Node} with the given {@link UUID}.
+     * @return {@code true} iff. this subgraph contains a {@link NewNode} with the given {@link UUID}.
      */
     public boolean contains(final UUID nodeId) {
         return getNode(nodeId) != null;
@@ -151,7 +151,7 @@ public final class Subgraph {
      *
      * @param node the node to be removed
      */
-    public void removeNode(final Node node) {
+    public void removeNode(final NewNode node) {
         nodes.remove(node);
     }
 
@@ -169,7 +169,7 @@ public final class Subgraph {
      * @param node the node to be checked
      * @return {@code true} iff. the node is a neighbour of the subgraph source
      */
-    private boolean isSourceNeighbour(final Node node) {
+    private boolean isSourceNeighbour(final NewNode node) {
         return getNeighbours(node, SequenceDirection.LEFT).isEmpty();
     }
 
@@ -179,7 +179,7 @@ public final class Subgraph {
      * @param node the node to be checked
      * @return {@code true} iff. the node is a neighbour of the subgraph sink
      */
-    private boolean isSinkNeighbour(final Node node) {
+    private boolean isSinkNeighbour(final NewNode node) {
         return getNeighbours(node, SequenceDirection.RIGHT).isEmpty();
     }
 }

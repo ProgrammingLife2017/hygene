@@ -16,7 +16,7 @@ public final class Link extends Edge {
      * @param to         the destination of the edge
      * @param lineNumber the number of the corresponding link in the GFA file this edge was defined in
      */
-    public Link(final Node from, final Node to, final int lineNumber) {
+    public Link(final NewNode from, final NewNode to, final int lineNumber) {
         super(from, to);
         this.lineNumber = lineNumber;
     }

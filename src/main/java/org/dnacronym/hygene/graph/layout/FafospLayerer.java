@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.Node;
+import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
 
@@ -13,7 +13,7 @@ import org.dnacronym.hygene.graph.Subgraph;
  */
 public final class FafospLayerer implements SugiyamaLayerer {
     @Override
-    public Node[][] layer(final Subgraph subgraph) {
+    public NewNode[][] layer(final Subgraph subgraph) {
         throw new UnsupportedOperationException("This is a stub implementation and has not yet been implemented.");
     }
 }

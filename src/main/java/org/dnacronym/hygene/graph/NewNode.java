@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Class representing a generic node.
  */
-public abstract class Node {
+public abstract class NewNode {
     private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
@@ -21,23 +21,23 @@ public abstract class Node {
 
 
     /**
-     * Constructs a new {@link Node} instance without any edges.
+     * Constructs a new {@link NewNode} instance without any edges.
      * <p>
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
      */
-    protected Node() {
+    protected NewNode() {
         this(new HashSet<>(), new HashSet<>());
     }
 
     /**
-     * Constructs a new {@link Node} instance.
+     * Constructs a new {@link NewNode} instance.
      * <p>
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
      *
      * @param incomingEdges the incoming edges
      * @param outgoingEdges the outgoing edges
      */
-    protected Node(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
+    protected NewNode(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
         this.uuid = UUID.randomUUID();
         this.incomingEdges = incomingEdges;
         this.outgoingEdges = outgoingEdges;
@@ -45,9 +45,9 @@ public abstract class Node {
 
 
     /**
-     * Returns this {@link Node}'s {@link UUID}.
+     * Returns this {@link NewNode}'s {@link UUID}.
      *
-     * @return this {@link Node}'s {@link UUID}
+     * @return this {@link NewNode}'s {@link UUID}
      */
     public final UUID getUuid() {
         return uuid;
@@ -131,7 +131,7 @@ public abstract class Node {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Node node = (Node) o;
+        final NewNode node = (NewNode) o;
         return Objects.equals(uuid, node.uuid);
     }
 
