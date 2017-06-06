@@ -22,15 +22,10 @@ import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmark;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -249,25 +244,13 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
-        // TODO refactor UI package to decentralize all classes, to avoid strong coupling and getters
-        final List<Integer> bookmarkedNodeIds = new ArrayList<>();
-        try {
-            final List<SimpleBookmark> bookmarks = Hygene.getInstance().getSimpleBookmarkStore().getSimpleBookmarks();
-            for (final SimpleBookmark simpleBookmark : bookmarks) {
-                bookmarkedNodeIds.add(simpleBookmark.getBookmark().getNodeId());
-            }
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to get bookmarks.", e);
-        }
-
-        clear();nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setLaneHeight(graphDimensionsCalculator.getLaneHeightProperty().get());
 
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(nodeId, charWidth, charHeight,
                     selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId,
-                    bookmarkedNodeIds.contains(nodeId),
                     nodeMetadataCache.has(nodeId)
                             && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT);
 

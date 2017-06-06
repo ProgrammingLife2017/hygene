@@ -6,7 +6,6 @@ import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
@@ -34,17 +33,15 @@ final class NodeDrawingToolkitTest {
     @Test
     void testNodeHeight() {
         nodeDrawingToolkit.setNodeHeight(10);
-        nodeDrawingToolkit.drawNode();
+        nodeDrawingToolkit.fillNode(0, 0, 10, Color.BLACK);
 
-        verify(graphicsContext).fillRoundRect(anyDouble(), anyDouble(), anyDouble(), eq(10.0), anyDouble(), anyDouble());
+        verify(graphicsContext).fillRoundRect(
+                anyDouble(), anyDouble(), anyDouble(), eq(10.0), anyDouble(), anyDouble());
     }
 
     @Test
     void testNodeColorDraw() {
-        nodeDrawingToolkit
-                .setDimensions(10, 20, 30)
-                .setNodeColor(Color.ALICEBLUE)
-                .drawNode();
+        nodeDrawingToolkit.fillNode(10, 20, 30, Color.ALICEBLUE);
 
         verify(graphicsContext).setFill(Color.ALICEBLUE);
         verify(graphicsContext).fillRoundRect(10, 20, 30, 0, 10, 10);
@@ -52,34 +49,17 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testHighlightNodeDraw() {
-        nodeDrawingToolkit
-                .setDimensions(10, 20, 30)
-                .setHighlighted(true)
-                .drawNode();
+        nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeColor.BRIGHT_GREEN.getFXColor());
 
         verify(graphicsContext, atLeast(1)).setStroke(NodeColor.BRIGHT_GREEN.getFXColor());
         verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10, 10);
     }
 
     @Test
-    void testDrawBookmarkFlagArrow() {
-        nodeDrawingToolkit
-                .setDimensions(10, 10, 10)
-                .setBookmarked(true)
-                .drawNode();
-
-        verify(graphicsContext).fillPolygon(any(double[].class), any(double[].class), eq(8));
-    }
-
-    @Test
     void testDrawText() {
         final String text = "test text";
 
-        nodeDrawingToolkit
-                .setDimensions(10, 10, 100)
-                .setSequence(text)
-                .setDrawSequence(true)
-                .drawNode();
+        nodeDrawingToolkit.drawNodeSequence(0, 0, 100, text);
 
         verify(graphicsContext).fillText(eq(text), anyDouble(), anyDouble());
     }
@@ -88,11 +68,7 @@ final class NodeDrawingToolkitTest {
     void testDrawTextTrimmed() {
         final String text = "test text";
 
-        nodeDrawingToolkit
-                .setDimensions(10, 10, 1)
-                .setSequence(text)
-                .setDrawSequence(true)
-                .drawNode();
+        nodeDrawingToolkit.drawNodeSequence(0, 0, 0, text);
 
         verify(graphicsContext).fillText(eq(""), anyDouble(), anyDouble());
     }
