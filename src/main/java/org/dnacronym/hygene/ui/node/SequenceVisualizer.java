@@ -23,6 +23,7 @@ public final class SequenceVisualizer {
     private static final double HORIZONTAL_GAP = 10;
     private static final double VERTICAL_GAP = 5;
     private static final double ARC_SIZE = 10;
+    private static final double CENTER_OUTLINE_WIDTH = 2;
 
     private static final double TEXT_HEIGHT_PORTION_OFFSET = 0.75;
 
@@ -178,24 +179,55 @@ public final class SequenceVisualizer {
             return;
         }
 
-        int onscreen = 0;
-        for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++, onscreen++) {
-            final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setLineWidth(CENTER_OUTLINE_WIDTH);
+        graphicsContext.strokeRoundRect(
+                canvas.getWidth() / 2 - SQUARE_WIDTH - HORIZONTAL_GAP / 2,
+                VERTICAL_GAP - CENTER_OUTLINE_WIDTH - CENTER_OUTLINE_WIDTH / 2,
+                SQUARE_WIDTH + HORIZONTAL_GAP,
+                SQUARE_HEIGHT * 2 + VERTICAL_GAP * 2 + CENTER_OUTLINE_WIDTH,
+                ARC_SIZE, ARC_SIZE);
 
+        int onscreen = 0;
+        graphicsContext.setLineWidth(1);
+        for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++, onscreen++) {
+            final double topRightX = canvas.getWidth() / 2 - SQUARE_WIDTH
+                    + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
             if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
-                onScreenBasesProperty.set(onscreen);
                 break;
             }
 
-            final String base = String.valueOf(sequenceProperty.get().charAt(i));
-
-            drawSquare(base, topRightX, VERTICAL_GAP,
-                    i == hoveredBaseIdProperty.get() ? Color.RED : Color.BLUE, Color.BLACK);
-            drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT,
-                    i == hoveredBaseIdProperty.get() ? Color.DARKRED : Color.DARKBLUE, Color.BLACK);
-
-            rTree.addNode(i, topRightX, VERTICAL_GAP, SQUARE_WIDTH, SQUARE_HEIGHT * 2 + VERTICAL_GAP);
+            drawBase(topRightX, i);
         }
+
+        for (int i = offsetProperty.get() - 1; i >= 0; i--, onscreen++) {
+            final double topRightX = canvas.getWidth() / 2 - SQUARE_WIDTH
+                    + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
+            if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
+                break;
+            }
+
+            drawBase(topRightX, i);
+        }
+
+        onScreenBasesProperty.set(onscreen);
+    }
+
+    /**
+     * Draws a base onscreen.
+     *
+     * @param topRightX the top right x position of the base on the canvas
+     * @param i         the base offset in the sequence
+     */
+    private void drawBase(final double topRightX, final int i) {
+        final String base = String.valueOf(sequenceProperty.get().charAt(i));
+
+        drawSquare(base, topRightX, VERTICAL_GAP,
+                i == hoveredBaseIdProperty.get() ? Color.RED : Color.BLUE, Color.BLACK);
+        drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT,
+                i == hoveredBaseIdProperty.get() ? Color.DARKRED : Color.DARKBLUE, Color.BLACK);
+
+        rTree.addNode(i, topRightX, VERTICAL_GAP, SQUARE_WIDTH, SQUARE_HEIGHT * 2 + VERTICAL_GAP);
     }
 
     /**
