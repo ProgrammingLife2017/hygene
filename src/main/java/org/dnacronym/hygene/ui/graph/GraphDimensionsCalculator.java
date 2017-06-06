@@ -35,7 +35,7 @@ import java.util.List;
  * fill the screen lengthwise.
  *
  * @see GraphDimensionsCalculator
- * @see org.dnacronym.hygene.models.GraphQuery
+ * @see CenterPointQuery
  */
 @SuppressWarnings("PMD.TooManyFields") // This class is tightly coupled, and does not need to be divided further.
 public final class GraphDimensionsCalculator {
@@ -60,7 +60,7 @@ public final class GraphDimensionsCalculator {
      * The {@link Graph} used to get the unscaled coordinates of nodes.
      */
     private final ObjectProperty<Graph> graphProperty;
-    private CenterPointQuery graphQuery;
+    private CenterPointQuery centerPointQuery;
     private Subgraph subgraph;
 
     private int minX;
@@ -88,14 +88,14 @@ public final class GraphDimensionsCalculator {
             centerNodeIdProperty.set(Math.max(
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
-            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+            centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
             calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
-            graphQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
+            centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
             calculate();
         });
 
@@ -185,8 +185,8 @@ public final class GraphDimensionsCalculator {
      */
     void setGraph(final Graph graph) {
         graphProperty.set(graph);
-        graphQuery = new CenterPointQuery(graph);
-        subgraph = graphQuery.getCache();
+        centerPointQuery = new CenterPointQuery(graph);
+        subgraph = centerPointQuery.getCache();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
