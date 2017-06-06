@@ -70,4 +70,12 @@ final class RTreeTest {
                 (fromNodeId, toNodeId) -> fail("Found an edge, while expecting no results")
         );
     }
+
+    @Test
+    void testFindNearNodeNoEdge() {
+        final RTree rTree = new RTree();
+        rTree.addNode(20, 0, 0, 5, 5);
+
+        rTree.find(100, 100, nodeId -> assertThat(nodeId).isEqualTo(20));
+    }
 }

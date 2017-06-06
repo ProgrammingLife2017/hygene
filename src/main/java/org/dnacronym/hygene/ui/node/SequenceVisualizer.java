@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.dnacronym.hygene.ui.graph.RTree;
 
+import java.util.Optional;
+
 
 /**
  * Visualizer which shows a nice representation of the selected node.
@@ -78,18 +80,10 @@ public final class SequenceVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.widthProperty().addListener((observable, oldValue, newValue) -> draw());
-        canvas.setOnMouseClicked(event -> {
-            if (rTree == null) {
-                return;
-            }
-            rTree.find(event.getX(), event.getY(), offsetProperty::set);
-        });
-        canvas.setOnMouseMoved(event -> {
-            if (rTree == null) {
-                return;
-            }
-            rTree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set);
-        });
+        canvas.setOnMouseClicked(event ->
+            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), offsetProperty::set)));
+        canvas.setOnMouseMoved(event ->
+            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set)));
         canvas.setOnMouseExited(event -> hoveredBaseIdProperty.set(-1));
     }
 
