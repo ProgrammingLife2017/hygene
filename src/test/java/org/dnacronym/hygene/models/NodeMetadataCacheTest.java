@@ -66,8 +66,9 @@ final class NodeMetadataCacheTest {
     @Test
     void testThatNodeMetadataIsCachedOnlyOnce() throws ParseException, InterruptedException {
         graphQuery.query(2, 0);
-        graphQuery.query(2, 0);
+        nodeMetaDatacache.getThread().join();
 
+        graphQuery.query(2, 0);
         nodeMetaDatacache.getThread().join();
 
         assertThat(nodeMetaDatacache.has(2)).isTrue();
