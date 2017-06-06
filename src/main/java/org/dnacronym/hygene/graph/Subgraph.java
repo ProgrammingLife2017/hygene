@@ -124,12 +124,7 @@ public final class Subgraph {
      * @return {@code true} iff. the subgraph was changed
      */
     public boolean addNode(final Node node) {
-        final boolean changed = nodes.add(node);
-        if (!changed) {
-            return false;
-        }
-
-        return true;
+        return nodes.add(node);
     }
 
     /**
@@ -139,12 +134,7 @@ public final class Subgraph {
      * @return {@code true} iff. the subgraph was changed
      */
     public boolean addNodes(final Collection<Node> nodes) {
-        final boolean changed = this.nodes.addAll(nodes);
-        if (!changed) {
-            return false;
-        }
-
-        return true;
+        return this.nodes.addAll(nodes);
     }
 
     /**
