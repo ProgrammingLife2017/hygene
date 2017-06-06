@@ -1,9 +1,13 @@
 package org.dnacronym.hygene.core;
 
+
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -115,6 +119,28 @@ public final class Files {
      */
     public File getTemporaryFile(final String prefix) throws IOException {
         return File.createTempFile(prefix, ".tmp");
+    }
+
+    /**
+     * Copies resources to the app data folder to be accessible via the native file system.
+     *
+     * @param directory source directory within resources
+     * @return destination directory
+     * @throws IOException if the source directory is not valid or the copy operation could not be performed
+     */
+    public File copyResourcesToAppData(final String directory) throws IOException {
+        final File destination = Paths.get(getAppDataFile("") + directory).toFile();
+
+        try {
+            FileUtils.copyDirectory(
+                    new File(getResourceUrl(directory).toURI()),
+                    destination
+            );
+        } catch (final URISyntaxException e) {
+            throw new IOException("Source directory is not valid.", e);
+        }
+
+        return destination;
     }
 
     /**

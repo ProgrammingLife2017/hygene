@@ -10,6 +10,7 @@ import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.GraphLoader;
+import org.dnacronym.hygene.persistence.UnexpectedDatabaseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -78,7 +79,7 @@ public final class GfaFile {
                 graphLoader.dumpGraph(graph.getNodeArrays(), fileName);
                 LOGGER.info("Finished dumping the graph to the database");
             }
-        } catch (final IOException | SQLException e) {
+        } catch (final UnexpectedDatabaseException | IOException | SQLException e) {
             LOGGER.error("Could not open file database to restore graph.", e);
             throw new ParseException("Could not open file database to restore graph.", e);
         }

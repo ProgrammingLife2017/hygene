@@ -54,6 +54,7 @@ dependencies {
     // Apache Commons
     compile("commons-codec:commons-codec:${commonsCodecVersion}")
     compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
+    compile("commons-io:commons-io:${commonsIOVersion}")
 
     // FindBugs annotations
     compile("com.google.code.findbugs:annotations:${findBugsAnnotations}")
