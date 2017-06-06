@@ -72,10 +72,7 @@ public final class Subgraph {
     public Collection<Node> getNodesBFS(final SequenceDirection direction) {
         final Queue<Node> queue = new LinkedList<>();
         nodes.forEach(node -> {
-            if (isSourceNeighbour(node)) {
-                queue.add(node);
-            }
-            if (isSinkNeighbour(node)) {
+            if (direction.ternary(isSinkNeighbour(node), isSourceNeighbour(node))) {
                 queue.add(node);
             }
         });
