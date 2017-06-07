@@ -21,7 +21,7 @@ public class Edge {
      * @param from the source of the edge
      * @param to   the destination of the edge
      */
-    protected Edge(final NewNode from, final NewNode to) {
+    public Edge(final NewNode from, final NewNode to) {
         this.uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;
