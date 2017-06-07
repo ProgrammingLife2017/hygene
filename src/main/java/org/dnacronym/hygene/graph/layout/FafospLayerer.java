@@ -18,11 +18,6 @@ import java.util.Collection;
 public final class FafospLayerer implements SugiyamaLayerer {
     private static final int LAYER_WIDTH = 1000;
 
-    // Checklist:
-    // 1 Align all elements to horizontal layers
-    // 2 Create layers
-    // 3 Determine layer heights
-    // 4 Assign nodes to layers and add dummy nodes
 
     @Override
     public NewNode[][] layer(final Subgraph subgraph) {
@@ -39,7 +34,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
 
-    //
+    /**
+     * Allocates and returns an array of layers into which the given nodes can be placed.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return an array of layers
+     */
     private NewNode[][] getLayers(final Collection<NewNode> nodes) {
         final int[] layerHeights = getHeights(nodes);
         final NewNode[][] layers = new NewNode[layerHeights.length][];
@@ -51,7 +51,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
         return layers;
     }
 
-    //
+    /**
+     * Places the given nodes into the proper layers.
+     *
+     * @param nodes  a {@link Collection} of {@link NewNode}s
+     * @param layers an array of layers
+     */
     private void addToLayers(final Collection<NewNode> nodes, final NewNode[][] layers) {
         nodes.forEach(node -> {
             final int nodeStartLayer = positionToLayer(node.getXPosition());
@@ -100,23 +105,34 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
 
-    //
+    /**
+     * Returns the number of the layer the given position would be in.
+     *
+     * @param position a position
+     * @return the number of the layer the given position would be in
+     */
     private int positionToLayer(final int position) {
+        assert position >= 0;
         return ((position + LAYER_WIDTH - 1) / LAYER_WIDTH) * LAYER_WIDTH;
     }
 
-    //
-    private int layerToPosition(final int column) {
-        return column * LAYER_WIDTH;
-    }
-
-    //
+    /**
+     * Returns the number of layers necessary for the given nodes.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return the number of layers necessary for the given nodes
+     */
     private int getLayerCount(final Collection<NewNode> nodes) {
         final int maxPosition = nodes.stream().map(NewNode::getXPosition).max(Integer::compare).get();
         return positionToLayer(maxPosition);
     }
 
-    //
+    /**
+     * Returns the number of {@link NewNode}s per layer.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return the number of {@link NewNode}s per layer
+     */
     private int[] getHeights(final Collection<NewNode> nodes) {
         final int layerCount = getLayerCount(nodes);
         final int[] heights = new int[layerCount];
@@ -142,11 +158,16 @@ public final class FafospLayerer implements SugiyamaLayerer {
         return heights;
     }
 
-    //
-    private void addToLayerSomewhere(final NewNode[] layer, final NewNode value) {
+    /**
+     * Adds the given {@link NewNode} somewhere in the given layer.
+     *
+     * @param layer a layer
+     * @param node  a {@link NewNode}
+     */
+    private void addToLayerSomewhere(final NewNode[] layer, final NewNode node) {
         for (int i = 0; i < layer.length; i++) {
             if (layer[i] == null) {
-                layer[i] = value;
+                layer[i] = node;
                 return;
             }
         }
