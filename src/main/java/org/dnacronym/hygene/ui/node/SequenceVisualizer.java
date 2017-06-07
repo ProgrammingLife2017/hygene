@@ -20,7 +20,7 @@ import java.util.Optional;
  * Visualizer which shows a nice representation of the selected node.
  */
 public final class SequenceVisualizer {
-    private static final double SQUARE_WIDTH = 30;
+    private static final double SQUARE_WIDTH = 35;
     private static final double SQUARE_HEIGHT = 40;
     private static final double HORIZONTAL_GAP = 10;
     private static final double VERTICAL_GAP = 5;
@@ -80,10 +80,13 @@ public final class SequenceVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.widthProperty().addListener((observable, oldValue, newValue) -> draw());
-        canvas.setOnMouseClicked(event ->
-            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), offsetProperty::set)));
+        canvas.setOnMouseClicked(event -> {
+            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), offsetProperty::set));
+            // Do a second search as base nodes have been shifted.
+            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set));
+        });
         canvas.setOnMouseMoved(event ->
-            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set)));
+                Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set)));
         canvas.setOnMouseExited(event -> hoveredBaseIdProperty.set(-1));
     }
 
