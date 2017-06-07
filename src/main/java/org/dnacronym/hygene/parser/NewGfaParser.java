@@ -12,9 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -42,7 +40,7 @@ public final class NewGfaParser {
 
 
     /**
-     * Constructs and initializes a new instance of {@link GfaParser}.
+     * Constructs and initializes a new instance of {@link NewGfaParser}.
      */
     public NewGfaParser() {
         this.nodeIds = new ConcurrentHashMap<>();
@@ -106,9 +104,11 @@ public final class NewGfaParser {
      *
      * @param gfa             a buffered reader of a GFA file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
-     * @throws IOException if the given GFA file is not valid
+     * @throws IOException    if the given GFA file is not valid
+     * @throws ParseException if a line does not have enough tokens
      */
-    private void allocateNodes(final BufferedReader gfa, final ProgressUpdater progressUpdater) throws IOException {
+    private void allocateNodes(final BufferedReader gfa, final ProgressUpdater progressUpdater)
+            throws IOException, ParseException {
         addNodeId(SOURCE_NAME);
         String line;
         while ((line = gfa.readLine()) != null) {
@@ -140,80 +140,88 @@ public final class NewGfaParser {
     /**
      * Parses a line of a GFA-compliant {@link String} and adds it to the node vectors.
      *
-     * @param line   a line of a GFA-compliant {@link String}
-     * @param offset the current line number
+     * @param line       a line of a GFA-compliant {@link String}
+     * @param lineNumber the current line number
      * @throws ParseException if the given {@link String}s are not GFA-compliant
      */
-    private void parseLine(final String line, final int offset) throws ParseException {
-        final StringTokenizer st = new StringTokenizer(line, "\t");
-        if (!st.hasMoreTokens()) {
+    private void parseLine(final String line, final int lineNumber) throws ParseException {
+        if (line.indexOf('\t') < 0) {
             return;
         }
 
-        final String recordType = st.nextToken();
-        switch (recordType) {
-            case "H":
-            case "C":
-            case "P":
+        switch (line.charAt(0)) {
+            case 'H':
+            case 'C':
+            case 'P':
                 break;
 
-            case "S":
-                parseSegment(st, offset);
+            case 'S':
+                parseSegment(line, 2, lineNumber);
                 break;
 
-            case "L":
-                parseLink(st, offset);
+            case 'L':
+                parseLink(line, 2, lineNumber);
                 break;
 
             default:
-                throw new ParseException("Unknown record type `" + recordType + "` on line " + offset);
+                throw new ParseException("Unknown record type `" + line.charAt(0) + "` on line " + lineNumber);
         }
     }
 
     /**
      * Parses a line to a {@link Segment}.
      *
-     * @param st     the {@link StringTokenizer} in which each token is a GFA field
-     * @param offset the current line number, used for debugging
-     * @throws ParseException if the {@link Segment} is not GFA-compliant
+     * @param line       a line
+     * @param lineOffset the offset in the line to start parsing the segment at
+     * @param lineNumber the current line number, used for debugging
+     * @throws ParseException if the line does not have enough tokens
      */
-    private void parseSegment(final StringTokenizer st, final int offset) throws ParseException {
+    private void parseSegment(final String line, final int lineOffset, final int lineNumber) throws ParseException {
         try {
-            final String name = st.nextToken();
-            final String sequence = st.nextToken();
+            final int nameEnd = line.indexOf('\t', lineOffset);
+            final String name = line.substring(lineOffset, nameEnd);
+            final int sequenceEnd = line.indexOf('\t', nameEnd + 1);
+            final String sequence = sequenceEnd < 0
+                    ? line.substring(nameEnd + 1)
+                    : line.substring(nameEnd + 1, sequenceEnd);
 
             final int nodeId = getNodeId(name);
 
-            nodeArrays[nodeId][Node.NODE_LINE_NUMBER_INDEX] = offset;
+            nodeArrays[nodeId][Node.NODE_LINE_NUMBER_INDEX] = lineNumber;
             nodeArrays[nodeId][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
             nodeArrays[nodeId][Node.NODE_COLOR_INDEX] = NodeColor.sequenceToColor(sequence).ordinal();
 
-        } catch (final NoSuchElementException e) {
-            throw new ParseException("Not enough parameters for segment on line " + offset, e);
+        } catch (final StringIndexOutOfBoundsException e) {
+            throw new ParseException("Not enough parameters for segment on line " + lineNumber, e);
         }
     }
 
     /**
      * Parses a line to a {@link Link}.
      *
-     * @param st     the {@link StringTokenizer} in which each token is a GFA field
-     * @param offset the current line number, used for debugging
-     * @throws ParseException if the {@link Link} is not GFA-compliant
+     * @param line       a line
+     * @param lineOffset the offset in the line to start parsing the link at
+     * @param lineNumber the current line number, used for debugging
+     * @throws ParseException if the line does not have enough tokens
      */
-    private void parseLink(final StringTokenizer st, final int offset) throws ParseException {
+    private void parseLink(final String line, final int lineOffset, final int lineNumber)
+            throws ParseException {
         try {
-            final String from = st.nextToken();
-            st.nextToken();
-            final String to = st.nextToken();
-            st.nextToken();
+            final int fromEnd = line.indexOf('\t', lineOffset);
+            final String from = line.substring(lineOffset, fromEnd);
+            final int toStart = line.indexOf('\t', fromEnd + 1) + 1;
+            final int toEnd = line.indexOf('\t', toStart);
+            final String to = toEnd < 0
+                    ? line.substring(toStart)
+                    : line.substring(toStart, toEnd);
 
             final int fromId = getNodeId(from);
             final int toId = getNodeId(to);
 
-            addIncomingEdge(fromId, toId, offset);
-            addOutgoingEdge(fromId, toId, offset);
-        } catch (final NoSuchElementException e) {
-            throw new ParseException("Not enough parameters for link on line " + offset, e);
+            addIncomingEdge(fromId, toId, lineNumber);
+            addOutgoingEdge(fromId, toId, lineNumber);
+        } catch (final StringIndexOutOfBoundsException e) {
+            throw new ParseException("Not enough parameters for link on line " + lineNumber, e);
         }
     }
 
@@ -222,11 +230,17 @@ public final class NewGfaParser {
      *
      * @param line a GFA file line
      * @return the name of the node (the node id)
+     * @throws ParseException if a line does not have enough tokens
      */
-    private String parseNodeName(final String line) {
-        final String name = line.substring(2);
+    private String parseNodeName(final String line) throws ParseException {
+        try {
+            final int startIndex = line.indexOf('\t');
+            final int endIndex = line.indexOf('\t', startIndex + 1);
 
-        return name.substring(0, name.indexOf('\t'));
+            return line.substring(startIndex + 1, endIndex);
+        } catch (final StringIndexOutOfBoundsException e) {
+            throw new ParseException("Invalid segment line.", e);
+        }
     }
 
     /**
