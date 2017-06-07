@@ -21,8 +21,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
     @Override
     public NewNode[][] layer(final Subgraph subgraph) {
-        if (subgraph.getNodes().size() == 0) {
-            return null;
+        if (subgraph.getNodes().isEmpty()) {
+            return new NewNode[0][];
         }
 
         final Collection<NewNode> nodes = subgraph.getNodes();
@@ -40,6 +40,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param nodes a {@link Collection} of {@link NewNode}s
      * @return an array of layers
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
     private NewNode[][] getLayers(final Collection<NewNode> nodes) {
         final int[] layerHeights = getHeights(nodes);
         final NewNode[][] layers = new NewNode[layerHeights.length][];
@@ -57,6 +58,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param nodes  a {@link Collection} of {@link NewNode}s
      * @param layers an array of layers
      */
+    @SuppressWarnings({
+            "PMD.AvoidInstantiatingObjectsInLoops", // That is exactly what this method should do
+            "PMD.ConfusingTernary" // Checking for not null is not confusing
+    })
     private void addToLayers(final Collection<NewNode> nodes, final NewNode[][] layers) {
         nodes.forEach(node -> {
             final int nodeStartLayer = positionToLayer(node.getXPosition());
@@ -82,8 +87,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
                     final DummyEdge outgoing;
                     if (layer == minLayer) {
                         incoming = new DummyEdge(node, dummy, edge);
-                    } else {
+                    } else if (previousDummy != null) {
                         incoming = new DummyEdge(previousDummy, dummy, edge);
+                    } else {
+                        throw new IllegalStateException("previousDummy is null but current dummy is not first dummy");
                     }
                     if (layer == maxLayer) {
                         outgoing = new DummyEdge(dummy, neighbour, edge);
@@ -122,8 +129,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param nodes a {@link Collection} of {@link NewNode}s
      * @return the number of layers necessary for the given nodes
      */
+    @SuppressWarnings("squid:S3346") // False positive; assert doesn't have side effects
     private int getLayerCount(final Collection<NewNode> nodes) {
-        final int maxPosition = nodes.stream().map(NewNode::getXPosition).max(Integer::compare).get();
+        assert !nodes.isEmpty();
+
+        final int maxPosition = nodes.stream().map(NewNode::getXPosition).max(Integer::compare)
+                .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
         return positionToLayer(maxPosition);
     }
 
