@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.GraphQueryChangeEvent;
+import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.parser.ParseException;
 
@@ -81,7 +81,7 @@ public final class NodeMetadataCache {
     }
 
     /**
-     * Handles the {@link GraphQueryChangeEvent} by adding new items to the cache.
+     * Handles the {@link CenterPointQueryChangeEvent} by adding new items to the cache.
      * <p>
      * The process of retrieving items is done in a background thread to not influence the performance
      * of the application.
@@ -89,7 +89,7 @@ public final class NodeMetadataCache {
      * @param event the event describing the change in the center point query
      */
     @Subscribe
-    public void centerPointQueryChanged(final GraphQueryChangeEvent event) {
+    public void centerPointQueryChanged(final CenterPointQueryChangeEvent event) {
         if (event.getRadius() > CACHE_RADIUS_THRESHOLD
                 || event.getCenterPoint() == previousCenterPoint && event.getRadius() == previousRadius) {
             return;
