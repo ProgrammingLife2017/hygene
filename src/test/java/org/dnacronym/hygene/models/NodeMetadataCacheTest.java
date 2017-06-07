@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.models;
 
 import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParser;
 import org.dnacronym.hygene.parser.ParseException;
@@ -34,7 +35,7 @@ final class NodeMetadataCacheTest {
 
     private MetadataParser metadataParser;
     private Graph graph;
-    private GraphQuery graphQuery;
+    private CenterPointQuery query;
     private NodeMetadataCache nodeMetaDatacache;
 
 
@@ -42,7 +43,7 @@ final class NodeMetadataCacheTest {
     void setUp() throws ParseException {
         metadataParser = spyMetadataParser();
         graph = createGraph();
-        graphQuery = new GraphQuery(graph);
+        query = new CenterPointQuery(graph);
         nodeMetaDatacache = new NodeMetadataCache(graph);
 
         HygeneEventBus.getInstance().register(nodeMetaDatacache);
@@ -58,7 +59,7 @@ final class NodeMetadataCacheTest {
 
     @Test
     void testThatNodeMetadataIsCached() throws ParseException, InterruptedException {
-        graphQuery.query(2, 0);
+        query.query(2, 0);
 
         nodeMetaDatacache.getThread().join();
 
@@ -72,10 +73,10 @@ final class NodeMetadataCacheTest {
 
     @Test
     void testThatNodeMetadataIsCachedOnlyOnce() throws ParseException, InterruptedException {
-        graphQuery.query(2, 0);
+        query.query(2, 0);
         nodeMetaDatacache.getThread().join();
 
-        graphQuery.query(2, 0);
+        query.query(2, 0);
         nodeMetaDatacache.getThread().join();
 
         assertThat(nodeMetaDatacache.has(2)).isTrue();
@@ -86,8 +87,8 @@ final class NodeMetadataCacheTest {
 
     @Test
     void testThatOldNodeMetadataCacheIsRemoved() throws ParseException, InterruptedException {
-        graphQuery.query(2, 0);
-        graphQuery.query(1, 0);
+        query.query(2, 0);
+        query.query(1, 0);
 
         nodeMetaDatacache.getThread().join();
 
@@ -97,13 +98,13 @@ final class NodeMetadataCacheTest {
 
     @Test
     void testThatNewQueriesDoNotRemoveOldCache() throws ParseException, InterruptedException {
-        graphQuery.query(1, 0);
+        query.query(1, 0);
 
         nodeMetaDatacache.getThread().join();
 
         final Node node = nodeMetaDatacache.getOrRetrieve(1);
 
-        graphQuery.query(1, 0);
+        query.query(1, 0);
 
         nodeMetaDatacache.getThread().join();
 
@@ -112,7 +113,7 @@ final class NodeMetadataCacheTest {
 
     @Test
     void testThatNodesOfLargeRadiusCenterPointQueriesAreNotCached() throws ParseException, InterruptedException {
-        graphQuery.query(1, 200);
+        query.query(1, 200);
 
         assertThat(nodeMetaDatacache.getThread()).isNull();
         assertThat(nodeMetaDatacache.has(1)).isFalse();
@@ -120,7 +121,7 @@ final class NodeMetadataCacheTest {
 
     @Test
     void testThatUncachedNodeCanBeRetrieved() throws ParseException, InterruptedException {
-        graphQuery.query(1, 0);
+        query.query(1, 0);
 
         assertThat(nodeMetaDatacache.has(2)).isFalse();
         assertThat(nodeMetaDatacache.getOrRetrieve(2).retrieveMetadata().getSequence()).isEqualTo("TCAAGG");
