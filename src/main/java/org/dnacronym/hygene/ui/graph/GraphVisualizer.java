@@ -117,54 +117,31 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
-     * @param node       id of node to draw
-     * @param charWidth  the width of character
-     * @param charHeight the height of a character
-     * @param highlight  the boolean indicating whether to highlight this node
-     * @param bookmarked the boolean indicating whether this node is bookmarked
-     * @param drawText   the boolean indicating whether this node should have text
+     * @param node the node to draw
      */
-    private void drawNode(final NewNode node, final double charWidth, final double charHeight, final boolean highlight,
-                          final boolean bookmarked, final boolean drawText) {
-        final double rectX = graphDimensionsCalculator.computeXPosition(node);
-        final double rectY = graphDimensionsCalculator.computeYPosition(node);
-        final double rectWidth = graphDimensionsCalculator.computeWidth(node);
-        final double rectHeight = nodeHeightProperty.get();
-
-        graphicsContext.setFill(node.getColor().getFXColor());
-        graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
-
+    private void drawNode(final NewNode node) {
         if (!(node instanceof Segment)) {
             return;
         }
 
-        if (highlight) {
-            nodeDrawingToolkit.highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
-        }
         final int nodeId = ((Segment) node).getId();
+        final double nodeX = graphDimensionsCalculator.computeXPosition(node);
+        final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+        final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
+
+        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, graph.getColor(nodeId).getFXColor());
+        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeColor.BRIGHT_GREEN.getFXColor());
+        }
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
-            graphicsContext.setFill(Color.BLACK);
-
-            final int charCount = (int) Math.max((rectWidth - ARC_SIZE) / charWidth, 0);
-
-            final double fontX = rectX + 0.5 * (rectWidth + (ARC_SIZE / 4.0) - charCount * charWidth);
-            final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeightProperty().getValue()
-                    + 0.25 * charHeight;
-
-        if (drawText) {
             try {
                 final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
-                nodeDrawingToolkit.drawText(rectX, rectY, rectWidth, rectHeight, charWidth, charHeight, sequence);
+                nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
             } catch (final ParseException e) {
                 LOGGER.error("An parse exception occurred while attempting"
                         + " to retrieve node's " + nodeId + " metadata from drawing", e);
             }
-        }
-        if (bookmarked) {
-            nodeDrawingToolkit.drawBookmarkFlag(rectX, rectY, rectWidth,
-                    graphDimensionsCalculator.getLaneHeightProperty().get() - nodeHeightProperty.get(),
-                    canvas.getHeight());
         }
 
         rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
@@ -178,6 +155,7 @@ public final class GraphVisualizer {
      * @param fromNode edge origin node ID
      * @param toNode   edge destination node ID
      */
+
     private void drawEdge(final NewNode fromNode,
                           final NewNode toNode) {
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
@@ -246,14 +224,8 @@ public final class GraphVisualizer {
 
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
-        nodeDrawingToolkit.setLaneHeight(graphDimensionsCalculator.getLaneHeightProperty().get());
-
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(nodeId, charWidth, charHeight,
-                    selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId,
-                    nodeMetadataCache.has(nodeId)
-                            && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT);
-
+            drawNode(node);
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
