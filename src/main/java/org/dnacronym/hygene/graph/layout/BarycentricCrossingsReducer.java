@@ -26,24 +26,26 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Reduces the crossings between two layers.
      * <p>
-     * First it will compute the ordinal position of a node then it will sort the nodes according to this ordinal
+     * First it will compute the ordinal position of a node then it will sort the nodes according to these ordinal
      * positions and return them in array.
+     * <p>
+     * The ordinal position is computed by dividing the sum of ordinal positions of the parents of a node in layer 1
+     * by the total number of parents the node haves. So, the ordinal position of a node will be the average of the
+     * ordinal positions of its parents.
      *
      * @param layer1 the layer for which the node positions are already known
      * @param layer2 the layer for which we want to determine the node positions
      * @return the nodes from layer 2 sorted by the computed ordinal position
      */
     private NewNode[] reduceCrossingsBetweenLayers(final NewNode[] layer1, final NewNode[] layer2) {
-        final Map<NewNode, Double> positions = new LinkedHashMap<>(); // ordinal => node id
+        final Map<NewNode, Double> positions = new LinkedHashMap<>(); // maps nodes to ordinal positions
 
         for (int i = 0; i < layer2.length; i++) {
             final NewNode node = layer2[i];
 
             final int[] neighboursInLayer1 = neighboursInLayer1(node, layer1);
 
-            final int numberOfNeighbours = neighboursInLayer1.length;
-
-            final double nodeOrdinal = 1 / (double) numberOfNeighbours * IntStream.of(neighboursInLayer1).sum();
+            final double nodeOrdinal = (double) IntStream.of(neighboursInLayer1).sum() / neighboursInLayer1.length;
 
             positions.put(node, nodeOrdinal);
         }
