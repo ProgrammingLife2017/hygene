@@ -1,24 +1,26 @@
 package org.dnacronym.hygene.events;
 
-import org.dnacronym.hygene.models.GraphQuery;
+import org.dnacronym.hygene.graph.CenterPointQuery;
+import org.dnacronym.hygene.graph.Segment;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
  * Represents a change in the center point query.
  */
 public final class CenterPointQueryChangeEvent {
-    private final GraphQuery graphQuery;
+    private final CenterPointQuery centerPointQuery;
 
 
     /**
      * Constructs and initializes {@link CenterPointQueryChangeEvent}.
      *
-     * @param graphQuery the query that was updated
+     * @param centerPointQuery the query that was updated
      */
-    public CenterPointQueryChangeEvent(final GraphQuery graphQuery) {
-        this.graphQuery = graphQuery;
+    public CenterPointQueryChangeEvent(final CenterPointQuery centerPointQuery) {
+        this.centerPointQuery = centerPointQuery;
     }
 
 
@@ -27,8 +29,8 @@ public final class CenterPointQueryChangeEvent {
      *
      * @return the updated query
      */
-    public GraphQuery getGraphQuery() {
-        return graphQuery;
+    public CenterPointQuery getCenterPointQuery() {
+        return centerPointQuery;
     }
 
     /**
@@ -37,7 +39,10 @@ public final class CenterPointQueryChangeEvent {
      * @return a set of node IDs
      */
     public Set<Integer> getNodeIds() {
-        return graphQuery.getNodeIds();
+        return centerPointQuery.getCache().getNodes().stream()
+                .filter(node -> node instanceof Segment)
+                .map(node -> ((Segment) node).getId())
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -46,7 +51,7 @@ public final class CenterPointQueryChangeEvent {
      * @return the new center point of the center point query
      */
     public int getCenterPoint() {
-        return graphQuery.getCentre();
+        return centerPointQuery.getCentre();
     }
 
     /**
@@ -55,6 +60,6 @@ public final class CenterPointQueryChangeEvent {
      * @return the new radius of the center point query
      */
     public int getRadius() {
-        return graphQuery.getRadius();
+        return centerPointQuery.getRadius();
     }
 }

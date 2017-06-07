@@ -40,6 +40,8 @@
         <exclude name="LongVariable" />
         <!-- Avoid duplication because we override the minimum property. -->
         <exclude name="ShortClassName" />
+        <!-- Exposes implementation details. -->
+        <exclude name="AbstractNaming" />
     </rule>
     <rule ref="rulesets/java/naming.xml/LongVariable">
         <properties>

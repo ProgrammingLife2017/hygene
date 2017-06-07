@@ -11,17 +11,21 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.dnacronym.hygene.ui.graph.RTree;
+
+import java.util.Optional;
 
 
 /**
  * Visualizer which shows a nice representation of the selected node.
  */
 public final class SequenceVisualizer {
-    private static final double SQUARE_WIDTH = 30;
+    private static final double SQUARE_WIDTH = 35;
     private static final double SQUARE_HEIGHT = 40;
     private static final double HORIZONTAL_GAP = 10;
     private static final double VERTICAL_GAP = 5;
     private static final double ARC_SIZE = 10;
+    private static final double CENTER_OUTLINE_WIDTH = 2;
 
     private static final double TEXT_HEIGHT_PORTION_OFFSET = 0.75;
 
@@ -33,6 +37,9 @@ public final class SequenceVisualizer {
     private final BooleanProperty visibleProperty;
     private final IntegerProperty onScreenBasesProperty;
 
+    private RTree rTree;
+    private final IntegerProperty hoveredBaseIdProperty;
+
 
     /**
      * Create instance of {@link SequenceVisualizer}.
@@ -41,6 +48,7 @@ public final class SequenceVisualizer {
         sequenceProperty = new SimpleStringProperty();
         offsetProperty = new SimpleIntegerProperty();
         onScreenBasesProperty = new SimpleIntegerProperty();
+        hoveredBaseIdProperty = new SimpleIntegerProperty(-1);
 
         sequenceProperty.addListener((observable, oldValue, newValue) -> {
             if (offsetProperty.get() == 0) {
@@ -49,6 +57,7 @@ public final class SequenceVisualizer {
             offsetProperty.set(0);
         });
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
+        hoveredBaseIdProperty.addListener((observable, oldValue, newValue) -> draw());
 
         visibleProperty = new SimpleBooleanProperty();
         visibleProperty.addListener((observable, oldValue, newValue) -> {
@@ -58,9 +67,11 @@ public final class SequenceVisualizer {
         });
     }
 
-
     /**
      * Sets the {@link Canvas} for use by the visualizer.
+     * <p>
+     * When the user clicks on the canvas, if the x and y coordinates intersect with a base then the offset is updated
+     * to the given base. If the mouse is hovered over a base the hovered base id is updated.
      *
      * @param canvas {@link Canvas} for use by the visualizer
      */
@@ -69,42 +80,14 @@ public final class SequenceVisualizer {
         this.graphicsContext = canvas.getGraphicsContext2D();
 
         canvas.widthProperty().addListener((observable, oldValue, newValue) -> draw());
-    }
-
-    /**
-     * Returns the {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} is visible.
-     *
-     * @return {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} if visible
-     */
-    public BooleanProperty getVisibleProperty() {
-        return visibleProperty;
-    }
-
-    /**
-     * Returns the {@link StringProperty} which decides the sequence.
-     *
-     * @return {@link StringProperty} which decides the sequence
-     */
-    public StringProperty getSequenceProperty() {
-        return sequenceProperty;
-    }
-
-    /**
-     * Returns the {@link ReadOnlyIntegerProperty} which decides the offset.
-     *
-     * @return {@link ReadOnlyIntegerProperty} which decides the sequence
-     */
-    public ReadOnlyIntegerProperty getOffsetProperty() {
-        return offsetProperty;
-    }
-
-    /**
-     * Returns the {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas.
-     *
-     * @return {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas
-     */
-    public ReadOnlyIntegerProperty getOnScreenBasesCountProperty() {
-        return onScreenBasesProperty;
+        canvas.setOnMouseClicked(event -> {
+            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), offsetProperty::set));
+            // Do a second search as base nodes have been shifted.
+            Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set));
+        });
+        canvas.setOnMouseMoved(event ->
+                Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set)));
+        canvas.setOnMouseExited(event -> hoveredBaseIdProperty.set(-1));
     }
 
     /**
@@ -174,16 +157,18 @@ public final class SequenceVisualizer {
     }
 
     /**
-     * Clear the canvas.
+     * Clears the canvas and reset the {@link RTree).
      */
     private void clear() {
+        rTree = new RTree();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     /**
-     * Visualize the current sequenceProperty with the current offset.
+     * Visualizes the current sequenceProperty with the current offset.
      * <p>
-     * If sequence is null then area is only cleared.
+     * If sequence is null then area is only cleared. If a base offset is equal to the hovered on base, then its color
+     * is red instead of blue.
      */
     private void draw() {
         clear();
@@ -191,19 +176,90 @@ public final class SequenceVisualizer {
             return;
         }
 
-        int onscreen = 0;
-        for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++, onscreen++) {
-            final double topRightX = HORIZONTAL_GAP + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setLineWidth(CENTER_OUTLINE_WIDTH);
+        graphicsContext.strokeRoundRect(
+                canvas.getWidth() / 2 - SQUARE_WIDTH - HORIZONTAL_GAP / 2,
+                VERTICAL_GAP - CENTER_OUTLINE_WIDTH - CENTER_OUTLINE_WIDTH / 2,
+                SQUARE_WIDTH + HORIZONTAL_GAP,
+                SQUARE_HEIGHT * 2 + VERTICAL_GAP * 2 + CENTER_OUTLINE_WIDTH,
+                ARC_SIZE, ARC_SIZE);
 
+        int onscreen = 0;
+        graphicsContext.setLineWidth(1);
+        for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++, onscreen++) {
+            final double topRightX = canvas.getWidth() / 2 - SQUARE_WIDTH
+                    + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
             if (topRightX + SQUARE_WIDTH > canvas.getWidth()) {
-                onScreenBasesProperty.set(onscreen);
                 break;
             }
 
-            final String base = String.valueOf(sequenceProperty.get().charAt(i));
-
-            drawSquare(base, topRightX, VERTICAL_GAP, Color.BLUE, Color.BLACK);
-            drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT, Color.DARKBLUE, Color.BLACK);
+            drawBase(topRightX, i);
         }
+
+        for (int i = offsetProperty.get() - 1; i >= 0; i--, onscreen++) {
+            final double topRightX = canvas.getWidth() / 2 - SQUARE_WIDTH
+                    + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
+            if (topRightX < HORIZONTAL_GAP) {
+                break;
+            }
+
+            drawBase(topRightX, i);
+        }
+
+        onScreenBasesProperty.set(onscreen);
+    }
+
+    /**
+     * Draws a base onscreen.
+     *
+     * @param topRightX the top right x position of the base on the canvas
+     * @param i         the base offset in the sequence
+     */
+    private void drawBase(final double topRightX, final int i) {
+        final String base = String.valueOf(sequenceProperty.get().charAt(i));
+
+        drawSquare(base, topRightX, VERTICAL_GAP,
+                i == hoveredBaseIdProperty.get() ? Color.RED : Color.BLUE, Color.BLACK);
+        drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT,
+                i == hoveredBaseIdProperty.get() ? Color.DARKRED : Color.DARKBLUE, Color.BLACK);
+
+        rTree.addNode(i, topRightX, VERTICAL_GAP, SQUARE_WIDTH, SQUARE_HEIGHT * 2 + VERTICAL_GAP);
+    }
+
+    /**
+     * Returns the {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} is visible.
+     *
+     * @return the {@link BooleanProperty} which decides if the {@link javafx.scene.layout.Pane} if visible
+     */
+    public BooleanProperty getVisibleProperty() {
+        return visibleProperty;
+    }
+
+    /**
+     * Returns the {@link StringProperty} which decides the sequence.
+     *
+     * @return the {@link StringProperty} which decides the sequence
+     */
+    public StringProperty getSequenceProperty() {
+        return sequenceProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyIntegerProperty} which decides the offset.
+     *
+     * @return the {@link ReadOnlyIntegerProperty} which decides the offset
+     */
+    public ReadOnlyIntegerProperty getOffsetProperty() {
+        return offsetProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas.
+     *
+     * @return the {@link ReadOnlyIntegerProperty} which describes the amount of bases drawn on the canvas
+     */
+    public ReadOnlyIntegerProperty getOnScreenBasesCountProperty() {
+        return onScreenBasesProperty;
     }
 }
