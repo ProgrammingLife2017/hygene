@@ -2,10 +2,12 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.dnacronym.hygene.graph.DummyEdge;
 import org.dnacronym.hygene.graph.DummyNode;
+import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 
 /**
@@ -71,12 +73,18 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 addToLayerSomewhere(layers[layer], node);
             }
 
-            node.getOutgoingEdges().forEach(edge -> {
+            final Iterator<Edge> edges = node.getOutgoingEdges().iterator();
+            while (edges.hasNext()) {
+                final Edge edge = edges.next();
                 final NewNode neighbour = edge.getTo();
                 final int neighbourStartLayer = positionToLayer(neighbour.getXPosition());
 
                 final int minLayer = nodeEndLayer + 1;
                 final int maxLayer = neighbourStartLayer - 1;
+
+                if (maxLayer - minLayer > 0) {
+                    edges.remove();
+                }
 
                 DummyNode previousDummy = null;
                 for (int layer = minLayer; layer <= maxLayer; layer++) {
@@ -107,7 +115,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
                     previousDummy = dummy;
                 }
-            });
+            }
         });
     }
 
@@ -118,6 +126,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param position a position
      * @return the number of the layer the given position would be in
      */
+
     private int positionToLayer(final int position) {
         assert position >= 0;
         return ((position + LAYER_WIDTH - 1) / LAYER_WIDTH) * LAYER_WIDTH;
