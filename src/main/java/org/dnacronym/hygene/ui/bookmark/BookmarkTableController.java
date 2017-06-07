@@ -71,6 +71,7 @@ public final class BookmarkTableController implements Initializable {
 
 
     @Override
+    @SuppressWarnings("squid:MaximumInheritanceDepth") // We need to overwrite the behaviour of table cells.
     public void initialize(final URL location, final ResourceBundle resources) {
         nodeId.setCellValueFactory(cell -> cell.getValue().getNodeIdProperty());
         baseOffset.setCellValueFactory(cell -> cell.getValue().getBaseOffsetProperty());
