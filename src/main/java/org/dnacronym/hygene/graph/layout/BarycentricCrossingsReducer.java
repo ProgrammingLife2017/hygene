@@ -5,8 +5,12 @@ import org.dnacronym.hygene.graph.NewNode;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 
@@ -50,7 +54,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             positions.put(node, nodeOrdinal);
         }
 
-       return positions.entrySet()
+        return positions.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.naturalOrder()))
                 .map(Map.Entry::getKey)
@@ -73,5 +77,51 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
                 .mapToInt(v -> ArrayUtils.indexOf(layer1, v.getFrom()) + 1)
                 .sorted()
                 .toArray();
+    }
+
+    /**
+     * Returns the maximum number of children with the same distance to the given node.
+     *
+     * @param layers an array of layers
+     * @param node   a {@link NewNode}
+     * @return the maximum number of children with the same distance to the given node
+     */
+    @SuppressWarnings("PMD.UnusedPrivateMethod") // This method will be used later
+    // TODO use this method and remove the suppression above
+    private int getMaxChildrenWidth(final NewNode node) {
+        int[] maxChildrenWidth = {-1};
+
+        final Set<NewNode> visited = new HashSet<>();
+        final Queue<NewNode> queue = new LinkedList<>();
+        queue.add(node);
+
+        final int[] depthIncreaseTimes = {1, 0};
+        while (!queue.isEmpty()) {
+            final NewNode head = queue.remove();
+
+            if (!visited.contains(head)) {
+                visited.add(head);
+
+                head.getOutgoingEdges().forEach(edge -> {
+                    if (!visited.contains(edge.getTo())) {
+                        depthIncreaseTimes[1]++;
+                        queue.add(edge.getTo());
+                    }
+                });
+            }
+
+            depthIncreaseTimes[0]--;
+            if (depthIncreaseTimes[0] <= 0) {
+                depthIncreaseTimes[0] = depthIncreaseTimes[1];
+                depthIncreaseTimes[1] = 0;
+
+                maxChildrenWidth[0] = Math.max(maxChildrenWidth[0], depthIncreaseTimes[0]);
+                if (depthIncreaseTimes[0] == 1) {
+                    return maxChildrenWidth[0];
+                }
+            }
+        }
+
+        return maxChildrenWidth[0];
     }
 }
