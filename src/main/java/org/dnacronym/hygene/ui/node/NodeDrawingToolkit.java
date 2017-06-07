@@ -57,14 +57,14 @@ public final class NodeDrawingToolkit {
         final double font1PHeight = text.getLayoutBounds().getHeight();
         final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
         this.nodeFont = new Font(DEFAULT_NODE_FONT, fontSize);
-
         text.setFont(nodeFont);
+
         this.charWidth = text.getLayoutBounds().getWidth();
         this.charHeight = text.getLayoutBounds().getHeight();
     }
 
     /**
-     * Fills the set node.
+     * Fills a round rectangle based on the node position and width, with the set {@link Color} fill.
      *
      * @param nodeX     the top left x position of the node
      * @param nodeY     the top left y position of the node
@@ -99,10 +99,10 @@ public final class NodeDrawingToolkit {
     /**
      * Draw a sequence as black text inside a node.
      *
-     * @param nodeX      the top left x position of the node
-     * @param nodeY      the top left y position of the node
-     * @param nodeWidth  the width of the node
-     * @param sequence   the sequence of the node
+     * @param nodeX     the top left x position of the node
+     * @param nodeY     the top left y position of the node
+     * @param nodeWidth the width of the node
+     * @param sequence  the sequence of the node
      */
     public void drawNodeSequence(final double nodeX, final double nodeY, final double nodeWidth,
                                  final String sequence) {
