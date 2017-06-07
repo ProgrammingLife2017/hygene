@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public final class BarycentricCrossingsReducerTest {
 
     /**
-     *  1   2   3
-     * / \ / \ / \
+     *   1   2   3
+     *  / \ / \ / \
      * 4   5   6   7
      */
     @Test
@@ -37,9 +37,9 @@ public final class BarycentricCrossingsReducerTest {
     }
 
     /**
-     *  1   2
-     * /  /  \  \
-     * 4     5   6
+     * 1   2
+     * | /  \  \
+     * 4     5  6
      */
     @Test
     void testGraph2() {
@@ -55,10 +55,10 @@ public final class BarycentricCrossingsReducerTest {
     }
 
     /**
-     *    1       2
-     * /   \   \ /  /
-     *      \ / \ /
-     * 4     5   6
+     *     1        2
+     *    / \   \ /  /
+     *  /     \ / \ /
+     * 4       5   6
      */
     @Test
     void testGraph3() {
@@ -72,6 +72,7 @@ public final class BarycentricCrossingsReducerTest {
 
         assertThat(layers[1]).containsExactly(layer2.get(4), layer2.get(5), layer2.get(6));
     }
+
 
     private Map<Integer, NewNode> createLayer(final int... nodeIds) {
         final Map<Integer, NewNode> layer = new HashMap<>();
