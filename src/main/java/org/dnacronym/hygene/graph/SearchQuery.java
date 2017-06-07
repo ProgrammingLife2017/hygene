@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 /**
  * Class to be used for a query on node metadata of a graph.
  */
-public final class Query {
+public final class SearchQuery {
     private static final int BATCH_SIZE = 1000;
 
     private final GfaFile gfaFile;
@@ -28,11 +28,11 @@ public final class Query {
 
 
     /**
-     * Constructs a new {@link Query} instance.
+     * Constructs a new {@link SearchQuery} instance.
      *
      * @param gfaFile the file to be queried
      */
-    public Query(final GfaFile gfaFile) {
+    public SearchQuery(final GfaFile gfaFile) {
         this.gfaFile = gfaFile;
         this.numNodesInGraph = gfaFile.getGraph().getNodeArrays().length;
     }
