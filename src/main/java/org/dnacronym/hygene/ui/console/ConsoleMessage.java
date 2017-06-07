@@ -8,10 +8,13 @@ import org.apache.logging.log4j.core.LogEvent;
  * This class is a generic wrapper representing console messages.
  */
 public final class ConsoleMessage {
-    private static final String DEFAULT_STYLE_CLASS = "green";
+    private static final String GREEN_TEXT_STYLE_CLASS = "green";
+    private static final String RED_TEXT_STYLE_CLASS = "red";
+    private static final String BLUE_TEXT_STYLE_CLASS = "blue";
+    private static final String YELLOW_TEXT_STYLE_CLASS = "yellow";
 
     private final String message;
-    private String styleClass = DEFAULT_STYLE_CLASS;
+    private String styleClass = GREEN_TEXT_STYLE_CLASS;
 
 
     /**
@@ -60,21 +63,21 @@ public final class ConsoleMessage {
      */
     static String getColor(final Level level) {
         if (level == null || level.toString() == null) {
-            return DEFAULT_STYLE_CLASS;
+            return GREEN_TEXT_STYLE_CLASS;
         }
 
         switch (level.toString()) {
             case "FATAL":
             case "ERROR":
             case "WARN":
-                return "red";
+                return RED_TEXT_STYLE_CLASS;
             case "DEBUG":
-                return "blue";
+                return BLUE_TEXT_STYLE_CLASS;
             case "TRACE":
-                return "yellow";
+                return YELLOW_TEXT_STYLE_CLASS;
             case "INFO":
             default:
-                return DEFAULT_STYLE_CLASS;
+                return GREEN_TEXT_STYLE_CLASS;
         }
     }
 }
