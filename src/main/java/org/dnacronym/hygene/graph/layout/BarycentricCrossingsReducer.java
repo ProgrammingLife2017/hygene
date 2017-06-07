@@ -26,7 +26,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Reduces the crossings between two layers.
      * <p>
-     * First it will compute the ordinal position of a node then it will sort the nodes according to these ordinal
+     * First it will compute the ordinal position of a node, then it will sort the nodes according to these ordinal
      * positions and return them in array.
      * <p>
      * The ordinal position is computed by dividing the sum of ordinal positions of the parents of a node in layer 1
