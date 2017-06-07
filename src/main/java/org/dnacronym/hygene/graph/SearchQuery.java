@@ -61,7 +61,7 @@ public final class SearchQuery {
      */
     public Set<Integer> executeQuery(final Predicate<NodeMetadata> isInQuery) throws ParseException {
         final MetadataParser metadataParser = new MetadataParser();
-        final int numBatches = numNodesInGraph / BATCH_SIZE;
+        final int numBatches = numNodesInGraph / BATCH_SIZE + 1;
         final Set<Integer> nodeIds = new HashSet<>();
 
         for (int batchIndex = 0; batchIndex < numBatches; batchIndex++) {
