@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -28,6 +29,11 @@ public final class DummyNode extends NewNode {
     private final NewNode diversionSource;
     private final NewNode diversionDestination;
 
+
+    //
+    public DummyNode(final NewNode diversionSource, final NewNode diversionDestination) {
+        this(new HashSet<>(), new HashSet<>(), diversionSource, diversionDestination);
+    }
 
     /**
      * Constructs a new {@link DummyNode} instance.

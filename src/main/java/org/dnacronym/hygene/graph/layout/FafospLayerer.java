@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.DummyEdge;
+import org.dnacronym.hygene.graph.DummyNode;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
@@ -31,11 +33,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
         final Collection<NewNode> nodes = subgraph.getNodes();
         final NewNode[][] layers = getLayers(nodes);
 
-        nodes.forEach(node -> {
-            //
-        });
+        addToLayers(nodes, layers);
 
-        return new NewNode[0][];
+        return layers;
     }
 
 
@@ -65,8 +65,35 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 final NewNode neighbour = edge.getTo();
                 final int neighbourStartLayer = positionToLayer(neighbour.getXPosition());
 
-                for (int layer = nodeEndLayer + 1; layer < neighbourStartLayer; layer++) {
-                    addToLayerSomewhere(layers[layer], neighbour);
+                final int minLayer = nodeEndLayer + 1;
+                final int maxLayer = neighbourStartLayer - 1;
+
+                DummyNode previousDummy = null;
+                for (int layer = minLayer; layer <= maxLayer; layer++) {
+                    final DummyNode dummy = new DummyNode(node, neighbour);
+                    addToLayerSomewhere(layers[layer], dummy);
+
+                    final DummyEdge incoming;
+                    final DummyEdge outgoing;
+                    if (layer == minLayer) {
+                        incoming = new DummyEdge(node, dummy, edge);
+                    } else {
+                        incoming = new DummyEdge(previousDummy, dummy, edge);
+                    }
+                    if (layer == maxLayer) {
+                        outgoing = new DummyEdge(dummy, neighbour, edge);
+                    } else {
+                        outgoing = null;
+                    }
+
+                    incoming.getFrom().getOutgoingEdges().add(incoming);
+                    incoming.getTo().getIncomingEdges().add(incoming);
+                    if (outgoing != null) {
+                        outgoing.getFrom().getOutgoingEdges().add(outgoing);
+                        outgoing.getTo().getIncomingEdges().add(outgoing);
+                    }
+
+                    previousDummy = dummy;
                 }
             });
         });
