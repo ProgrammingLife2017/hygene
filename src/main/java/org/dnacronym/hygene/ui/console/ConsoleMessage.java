@@ -1,20 +1,20 @@
 package org.dnacronym.hygene.ui.console;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
-import org.checkerframework.checker.initialization.qual.Initialized;
-
-import java.nio.charset.StandardCharsets;
 
 
 /**
  * This class is a generic wrapper representing console messages.
  */
 public final class ConsoleMessage {
-    private final Text node;
+    private static final String GREEN_TEXT_STYLE_CLASS = "green";
+    private static final String RED_TEXT_STYLE_CLASS = "red";
+    private static final String BLUE_TEXT_STYLE_CLASS = "blue";
+    private static final String YELLOW_TEXT_STYLE_CLASS = "yellow";
+
+    private final String message;
+    private String styleClass = GREEN_TEXT_STYLE_CLASS;
 
 
     /**
@@ -23,55 +23,61 @@ public final class ConsoleMessage {
      * @param message the message
      */
     public ConsoleMessage(final String message) {
-        node = new Text(message);
-        node.setFill(Color.LIGHTGRAY);
+        this.message = message;
     }
 
     /**
      * Constructor for {@link ConsoleMessage} used when creating a {@link ConsoleMessage} from a Log4J2
-     * {@link LogEvent}. An {@link Appender} is passed such that the {@link LogEvent} can be properly parsed.
+     * {@link LogEvent}.
      *
-     * @param appender the appender
-     * @param event    the {@link LogEvent}
+     * @param event the {@link LogEvent}
      */
-    public ConsoleMessage(@Initialized final Appender appender, final LogEvent event) {
-        this(new String(appender.getLayout().toByteArray(event), StandardCharsets.UTF_8));
-
-        node.setFill(getColor(event.getLevel()));
+    public ConsoleMessage(final LogEvent event) {
+        this(event.getMessage().getFormattedMessage());
+        styleClass = getColor(event.getLevel());
     }
 
     /**
-     * Gets the {@link Text} node.
+     * Gets the log message.
      *
-     * @return the {@link Text} node
+     * @return the log message
      */
-    public Text getNode() {
-        return node;
+    public String getMessage() {
+        return message;
     }
 
     /**
-     * Returns a JavaFX color corresponding to a certain log level.
+     * Gets the style class.
      *
-     * @param level the loglevel represent by {@link Level}
-     * @return the {@link Color}
+     * @return the style class
      */
-    private static @Initialized Color getColor(final Level level) {
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    /**
+     * Returns a style class corresponding to a certain log level.
+     *
+     * @param level the log level represent by {@link Level}
+     * @return the style class
+     */
+    static String getColor(final Level level) {
         if (level == null || level.toString() == null) {
-            return Color.BLACK;
+            return GREEN_TEXT_STYLE_CLASS;
         }
 
         switch (level.toString()) {
             case "FATAL":
             case "ERROR":
             case "WARN":
-                return Color.RED;
+                return RED_TEXT_STYLE_CLASS;
             case "DEBUG":
-                return Color.BLUE;
+                return BLUE_TEXT_STYLE_CLASS;
             case "TRACE":
-                return Color.GREEN;
-            case "INFO;":
+                return YELLOW_TEXT_STYLE_CLASS;
+            case "INFO":
             default:
-                return Color.LIGHTGRAY;
+                return GREEN_TEXT_STYLE_CLASS;
         }
     }
 }

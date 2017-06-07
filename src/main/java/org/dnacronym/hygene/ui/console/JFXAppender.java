@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.ui.console;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -10,6 +8,7 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.dnacronym.hygene.core.HygeneEventBus;
 
 import java.io.Serializable;
 
@@ -19,8 +18,6 @@ import java.io.Serializable;
  */
 @Plugin(name = "JFXAppender", category = "Core", elementType = "appender", printObject = true)
 public final class JFXAppender extends AbstractAppender {
-    private static volatile ObjectProperty<ConsoleMessage> latestLogEvent = new SimpleObjectProperty<>();
-
     /**
      * Constructor for creating a new JFXAppender.
      *
@@ -33,16 +30,10 @@ public final class JFXAppender extends AbstractAppender {
     protected JFXAppender(final String name, final Filter filter, final Layout<? extends Serializable> layout,
                           final boolean ignoreExceptions) {
         super(name, filter, layout, ignoreExceptions);
+
+        HygeneEventBus.getInstance().register(this);
     }
 
-    /**
-     * Gets the console message binding represented by {@link ObjectProperty<ConsoleMessage>}.
-     *
-     * @return the {@link ObjectProperty<ConsoleMessage>}
-     */
-    public static ObjectProperty<ConsoleMessage> getLatestLogEvent() {
-        return latestLogEvent;
-    }
 
     /**
      * Method for initializing a new instance of JFXAppender; used by Log4j.
@@ -67,7 +58,7 @@ public final class JFXAppender extends AbstractAppender {
     })
     public void append(final LogEvent event) {
         try {
-            latestLogEvent.setValue(new ConsoleMessage(this, event));
+            HygeneEventBus.getInstance().post(event);
         } catch (final RuntimeException e) {
             // We can't actually log the exception here since that would cause the same problem
         }
