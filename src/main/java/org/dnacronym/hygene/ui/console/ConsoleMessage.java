@@ -44,7 +44,7 @@ public final class ConsoleMessage {
     }
 
     /**
-     * Gets style class.
+     * Gets the style class.
      *
      * @return the style class
      */

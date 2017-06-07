@@ -10,6 +10,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 /**
  * Units tests for {@link ConsoleMessage}.
  */
@@ -18,6 +19,7 @@ class ConsoleMessageTest {
     private LogEvent logEvent;
     private Message message;
 
+
     @BeforeEach
     void setUp() {
         consoleMessage = new ConsoleMessage("The message");
@@ -25,6 +27,7 @@ class ConsoleMessageTest {
         message = mock(Message.class);
         when(logEvent.getMessage()).thenReturn(message);
     }
+
 
     @Test
     void testGetMessage() {

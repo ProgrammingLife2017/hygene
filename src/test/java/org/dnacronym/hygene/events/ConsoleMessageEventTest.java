@@ -1,11 +1,10 @@
 package org.dnacronym.hygene.events;
 
 import org.dnacronym.hygene.ui.console.ConsoleMessage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * Unit test for {@link ConsoleMessageEvent}
