@@ -13,8 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
@@ -27,6 +25,7 @@ import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 
 
 /**
@@ -45,16 +44,6 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
-    private static final int ARC_SIZE = 10;
-    private static final int NODE_OUTLINE_WIDTH = 3;
-    /**
-     * Font used inside the nodes, this should always be a monospace font.
-     */
-    private static final String DEFAULT_NODE_FONT = "Consolas";
-    /**
-     * Scalar for the size of the node text font as fraction of the node's height.
-     */
-    private static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
@@ -81,6 +70,7 @@ public final class GraphVisualizer {
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
+    private final NodeDrawingToolkit nodeDrawingToolkit;
 
     private RTree rTree;
 
@@ -97,13 +87,11 @@ public final class GraphVisualizer {
      */
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator) {
         HygeneEventBus.getInstance().register(this);
-
         this.graphDimensionsCalculator = graphDimensionsCalculator;
 
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
-
-        getSelectedNodeProperty().addListener((observable, oldValue, newValue) -> draw());
+        selectedNodeProperty.addListener((observable, oldValue, newValue) -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -119,6 +107,8 @@ public final class GraphVisualizer {
                 .addListener((observable, oldValue, newValue) -> setGraph(newValue));
         graphDimensionsCalculator.getObservableQueryNodes()
                 .addListener((ListChangeListener<NewNode>) change -> draw());
+
+        nodeDrawingToolkit = new NodeDrawingToolkit();
     }
 
 
@@ -127,105 +117,34 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
-     * @param node       id of node to draw
-     * @param charWidth  the width of character
-     * @param charHeight the height of a character
+     * @param node the node to draw
      */
-    private void drawNode(final NewNode node, final double charWidth, final double charHeight) {
-        final double rectX = graphDimensionsCalculator.computeXPosition(node);
-        final double rectY = graphDimensionsCalculator.computeYPosition(node);
-        final double rectWidth = graphDimensionsCalculator.computeWidth(node);
-        final double rectHeight = nodeHeightProperty.get();
-
-        graphicsContext.setFill(node.getColor().getFXColor());
-        graphicsContext.fillRoundRect(rectX, rectY, rectWidth, rectHeight, ARC_SIZE, ARC_SIZE);
-
-        if (selectedNodeProperty.get() != null && node instanceof Segment
-                && selectedNodeProperty.get().getId() == ((Segment) node).getId()) {
-            highlightNode(rectX, rectY, rectWidth, rectHeight, NodeColor.BRIGHT_GREEN.getFXColor());
-        }
-
+    private void drawNode(final NewNode node) {
         if (!(node instanceof Segment)) {
             return;
         }
 
-
         final int nodeId = ((Segment) node).getId();
+        final double nodeX = graphDimensionsCalculator.computeXPosition(node);
+        final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+        final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
+
+        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, graph.getColor(nodeId).getFXColor());
+        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeColor.BRIGHT_GREEN.getFXColor());
+        }
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
-            graphicsContext.setFill(Color.BLACK);
-
-            final int charCount = (int) Math.max((rectWidth - ARC_SIZE) / charWidth, 0);
-
-            final double fontX = rectX + 0.5 * (rectWidth + (ARC_SIZE / 4.0) - charCount * charWidth);
-            final double fontY = rectY + 0.5 * graphDimensionsCalculator.getNodeHeightProperty().getValue()
-                    + 0.25 * charHeight;
-
             try {
                 final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
-                graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+                nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
             } catch (final ParseException e) {
                 LOGGER.error("An parse exception occurred while attempting"
                         + " to retrieve node's " + nodeId + " metadata from drawing", e);
             }
         }
 
-        rTree.addNode(nodeId, rectX, rectY, rectWidth, rectHeight);
-    }
-
-    /**
-     * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.
-     *
-     * @param rectX          the upper left x position of the node
-     * @param rectY          the upper left y position of the node
-     * @param rectWidth      the width of the node
-     * @param rectHeight     the height of the node
-     * @param highlightColor the color of the highlight
-     */
-    private void highlightNode(final double rectX, final double rectY, final double rectWidth, final double rectHeight,
-                               final Color highlightColor) {
-        graphicsContext.setStroke(highlightColor);
-        graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
-        graphicsContext.strokeRoundRect(rectX - NODE_OUTLINE_WIDTH / 2.0, rectY - NODE_OUTLINE_WIDTH / 2.0,
-                rectWidth + NODE_OUTLINE_WIDTH, rectHeight + NODE_OUTLINE_WIDTH, ARC_SIZE, ARC_SIZE);
-    }
-
-    /**
-     * Generates a new {@link Font} that will be scaled such that it fits inside a node.
-     *
-     * @param nodeHeight the node height
-     * @return the generated {@link Font}
-     */
-    private Font generateNodeFont(final double nodeHeight) {
-        final double font1PHeight = getCharHeight(new Font(DEFAULT_NODE_FONT, 1));
-
-        final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
-
-        return new Font(DEFAULT_NODE_FONT, fontSize);
-    }
-
-    /**
-     * Computes the width of a single character for a specific font.
-     *
-     * @param font the {@link Font}
-     * @return the width in pixels
-     */
-    private double getCharWidth(final Font font) {
-        final Text t = new Text("X");
-        t.setFont(font);
-        return t.getLayoutBounds().getWidth();
-    }
-
-    /**
-     * Computes the height of a single character for a specific font.
-     *
-     * @param font the {@link Font}
-     * @return the width in pixels
-     */
-    private double getCharHeight(final Font font) {
-        final Text t = new Text("X");
-        t.setFont(font);
-        return t.getLayoutBounds().getHeight();
+        rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
     }
 
     /**
@@ -236,6 +155,7 @@ public final class GraphVisualizer {
      * @param fromNode edge origin node ID
      * @param toNode   edge destination node ID
      */
+
     private void drawEdge(final NewNode fromNode,
                           final NewNode toNode) {
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
@@ -302,16 +222,10 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
-        final Font nodeFont = generateNodeFont(nodeHeightProperty.getValue());
-        graphicsContext.setFont(nodeFont);
-
-        final double charWidth = getCharWidth(nodeFont);
-        final double charHeight = getCharHeight(nodeFont);
-
         clear();
+        nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(node, charWidth, charHeight);
-
+            drawNode(node);
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
@@ -387,6 +301,7 @@ public final class GraphVisualizer {
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
+        this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {
             if (rTree == null) {
