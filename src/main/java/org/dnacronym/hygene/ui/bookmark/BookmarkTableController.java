@@ -6,10 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
@@ -26,6 +28,7 @@ import java.util.ResourceBundle;
  */
 public final class BookmarkTableController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BookmarkTableController.class);
+    private static final int DESCRIPTION_TEXT_PADDING = 10;
 
     private SimpleBookmarkStore simpleBookmarkStore;
     private GraphStore graphStore;
@@ -73,6 +76,23 @@ public final class BookmarkTableController implements Initializable {
         baseOffset.setCellValueFactory(cell -> cell.getValue().getBaseOffsetProperty());
         description.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
         radius.setCellValueFactory(cell -> cell.getValue().getRadiusProperty());
+
+        description.setCellFactory(param -> new TableCell<SimpleBookmark, String>() {
+            @Override
+            protected void updateItem(final String item, final boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                final Text text = new Text(item);
+                text.setWrappingWidth(param.getWidth() - DESCRIPTION_TEXT_PADDING);
+                setPrefHeight(text.getLayoutBounds().getHeight());
+
+                setGraphic(text);
+            }
+        });
 
         bookmarksTable.setRowFactory(tableView -> {
             final TableRow<SimpleBookmark> simpleBookmarkTableRow = new TableRow<>();
