@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.graph;
 
+import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.models.colorscheme.ColorScheme;
+import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,6 +15,8 @@ import java.util.UUID;
  * Class representing a generic node.
  */
 public abstract class NewNode {
+    private static ColorScheme colorScheme = new FixedColorScheme(Color.BLACK);
+
     private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
@@ -115,12 +119,30 @@ public abstract class NewNode {
     public abstract int getLength();
 
     /**
+     * Returns the color scheme.
+     *
+     * @return the color scheme
+     */
+    public static ColorScheme getColorScheme() {
+        return colorScheme;
+    }
+
+    /**
+     * Sets the color scheme.
+     *
+     * @param colorScheme the color scheme
+     */
+    public static void setColorScheme(final ColorScheme colorScheme) {
+        NewNode.colorScheme = colorScheme;
+    }
+
+    /**
      * Returns the color of the node.
      *
      * @return the color of the node
      */
-    public final NodeColor getColor() {
-        return NodeColor.BLACK;
+    public final Color getColor() {
+        return colorScheme.calculateColor(this);
     }
 
     @Override

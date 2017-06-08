@@ -3,24 +3,50 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.models.colorscheme.ColorScheme;
+import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
+import org.dnacronym.hygene.models.colorscheme.minmax.ColorSchemeIncomingEdges;
+import org.dnacronym.hygene.models.colorscheme.minmax.ColorSchemeOutgoingEdges;
+import org.dnacronym.hygene.models.colorscheme.minmax.ColorSchemeSequenceLength;
+import org.dnacronym.hygene.models.colorscheme.minmax.ColorSchemeTotalEdges;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 /**
  * Settings controller for the basic settings.
  */
 public final class BasicSettingsViewController extends AbstractSettingsController {
+    public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
+            new Pair<>("Fixed Color", new FixedColorScheme(Color.CORAL)),
+            new Pair<>("Number of Incoming Edges", new ColorSchemeIncomingEdges(5, Color.ALICEBLUE, Color.CORAL)),
+            new Pair<>("Number of Outgoing Edges", new ColorSchemeOutgoingEdges(5, Color.ALICEBLUE, Color.CORAL)),
+            new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
+            new Pair<>("Length of Sequence", new ColorSchemeSequenceLength(5000, Color.ALICEBLUE, Color.CORAL))
+    ));
+
     private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
 
     @FXML
     private Slider nodeHeight;
+    @FXML
+    private ComboBox<Pair<String, ColorScheme>> nodeColorScheme;
     @FXML
     private ColorPicker edgeColor;
     @FXML
@@ -35,6 +61,29 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
         edgeColor.setValue(getGraphVisualizer().getEdgeColorProperty().get());
         panningSensitivity.setValue(getGraphMovementCalculator().getPanningSensitivityProperty().get());
         zoomingSensitivity.setValue(getGraphMovementCalculator().getZoomingSensitivityProperty().get());
+
+        setUpNodeColorSchemeComboBox();
+    }
+
+    /**
+     * Sets up the {@link ComboBox} listing all node color scheme choices.
+     */
+    private void setUpNodeColorSchemeComboBox() {
+        nodeColorScheme.setConverter(new StringConverter<Pair<String, ColorScheme>>() {
+            @Override
+            public String toString(final Pair<String, ColorScheme> object) {
+                return object.getKey();
+            }
+
+            @Override
+            public Pair<String, ColorScheme> fromString(final String string) {
+                return NODE_COLOR_SCHEMES.stream()
+                        .filter(pair -> pair.getKey().equals(string))
+                        .collect(Collectors.toList()).get(0);
+            }
+        });
+        nodeColorScheme.getItems().addAll(NODE_COLOR_SCHEMES);
+        nodeColorScheme.getSelectionModel().selectFirst();
     }
 
     /**
@@ -90,6 +139,24 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
             final double newValue = ((Slider) mouseEvent.getSource()).getValue();
             getGraphMovementCalculator().getZoomingSensitivityProperty().setValue(newValue);
             LOGGER.info("Zooming sensitivity has been set to " + newValue + ".");
+        });
+    }
+
+    /**
+     * When the user selects a {@link ColorScheme} from the {@link ComboBox}.
+     *
+     * @param actionEvent the event
+     */
+    @FXML
+    void onNodeColorSchemeChanged(final ActionEvent actionEvent) {
+        getSettings().addRunnable(() -> {
+            NewNode.setColorScheme(nodeColorScheme.getValue().getValue());
+            LOGGER.info("Node color scheme has been set to " + nodeColorScheme.getValue().getKey() + ".");
+            try {
+                Hygene.getInstance().getGraphVisualizer().draw();
+            } catch (final UIInitialisationException e) {
+                LOGGER.error("UI was expected to be initialized on redraw, but was uninitialized.", e);
+            }
         });
     }
 }

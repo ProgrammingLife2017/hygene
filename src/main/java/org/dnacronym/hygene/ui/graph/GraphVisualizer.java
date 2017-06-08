@@ -28,6 +28,7 @@ import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 
 /**
@@ -103,6 +104,8 @@ public final class GraphVisualizer {
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
 
+        NewNode.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(0).getValue());
+
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -133,7 +136,7 @@ public final class GraphVisualizer {
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
-        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, graph.getColor(nodeId).getFXColor());
+        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
         if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
