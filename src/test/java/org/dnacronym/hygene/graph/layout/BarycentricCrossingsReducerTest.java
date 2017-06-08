@@ -132,6 +132,7 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
         assertThatLayerContainsExactly(layers[5], 8, 9, 10);
     }
 
+
     private void assertThatLayerContainsExactly(final NewNode[] layer, final int... nodeIds) {
         assertThat(layer).hasSameSizeAs(nodeIds);
 
