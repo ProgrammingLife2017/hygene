@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.DummyNode;
 import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
@@ -29,7 +30,12 @@ abstract class LayerConstructingTestBase {
         final Map<Integer, NewNode> layer = new HashMap<>();
 
         Arrays.stream(nodeIds).forEach(nodeId -> {
-            final NewNode node = nodes.computeIfAbsent(nodeId, id -> new Segment(id, 0, 0));
+            final NewNode node = nodes.computeIfAbsent(nodeId, id -> {
+                if (id < 0) {
+                    return new DummyNode(null, null);
+                }
+                return new Segment(id, 0, 0);
+            });
             layer.put(nodeId, node);
         });
 
