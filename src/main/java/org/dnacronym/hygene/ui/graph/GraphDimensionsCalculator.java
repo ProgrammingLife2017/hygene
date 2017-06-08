@@ -44,6 +44,7 @@ public final class GraphDimensionsCalculator {
      */
     private static final int DEFAULT_EDGE_WIDTH = 1000;
     private static final int DEFAULT_RADIUS = 10;
+    private static final int DEFAULT_LANE_COUNT = 10;
 
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
@@ -170,11 +171,7 @@ public final class GraphDimensionsCalculator {
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
-        if (laneCountProperty.get() > 10) {
-            laneHeightProperty.set(canvasDimension.getHeight() / laneCountProperty.get());
-        } else {
-            laneHeightProperty.set(canvasDimension.getHeight() / 10);
-        }
+        laneHeightProperty.set(canvasDimension.getHeight() / Math.max(laneCountProperty.get(), DEFAULT_LANE_COUNT));
         laneCountProperty.set(Math.abs(maxY - minY) + 1);
 
         observableQueryNodes.setAll(neighbours);
