@@ -32,7 +32,7 @@ public final class LengthyNodeFinder {
     /**
      * Finds lengthy nodes and indicates how long the lengthy children of a node are.
      * <p>
-     * A DFS is performed to find children of the a node that are lengthy. The DFS is started from every node in the
+     * A DFS is performed to find children of the node that are lengthy. The DFS is started from every node in the
      * first layer.
      *
      * @param layers an array of layers
@@ -66,7 +66,7 @@ public final class LengthyNodeFinder {
                 for (final Edge edge : element.node.getOutgoingEdges()) {
                     parentOf.put(edge.getTo(), element.node);
 
-                    // skip layers if lengthy node, because there are no edges between the same node on different layers
+                    // Skip layers if lengthy node, because there are no edges between the same node on different layers
                     stack.add(new StackElement(edge.getTo(), element.layer + (length > 0 ? length : 1)));
                 }
             }

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Utility methods for testing functionality that uses node layers.
  * <p>
@@ -16,6 +17,7 @@ import java.util.Map;
  */
 abstract class LayerConstructingTestBase {
     private HashMap<Integer, NewNode> nodes;
+
 
     @BeforeEach
     void setUpLayerConstructingTestBase() {
@@ -35,7 +37,7 @@ abstract class LayerConstructingTestBase {
     }
 
     protected void createEdges(final int[][] edges,
-                             final Map<Integer, NewNode> layer1, final Map<Integer, NewNode> layer2) {
+                               final Map<Integer, NewNode> layer1, final Map<Integer, NewNode> layer2) {
         Arrays.stream(edges).forEach(edgeArray -> {
                     final NewNode source = layer1.get(edgeArray[0]);
                     final NewNode destination = layer2.get(edgeArray[1]);
@@ -48,7 +50,7 @@ abstract class LayerConstructingTestBase {
     }
 
     protected NewNode[][] combineLayers(final Map<Integer, NewNode>... layers) {
-        final NewNode[][] result =  new NewNode[layers.length][];
+        final NewNode[][] result = new NewNode[layers.length][];
 
         for (int i = 0; i < layers.length; i++) {
             result[i] = layers[i].values().stream().toArray(NewNode[]::new);
