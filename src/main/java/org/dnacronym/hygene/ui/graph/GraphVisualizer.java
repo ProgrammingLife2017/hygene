@@ -23,6 +23,7 @@ import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadataCache;
+import org.dnacronym.hygene.models.colorscheme.minmax.ColorSchemeTotalEdges;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
@@ -100,6 +101,8 @@ public final class GraphVisualizer {
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         graphDimensionsCalculator.getNodeHeightProperty().bind(nodeHeightProperty);
 
+        NewNode.setColorScheme(new ColorSchemeTotalEdges(10, Color.LIGHTBLUE, Color.CORAL));
+
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -133,7 +136,7 @@ public final class GraphVisualizer {
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
-        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, graph.getColor(nodeId).getFXColor());
+        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
         if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
