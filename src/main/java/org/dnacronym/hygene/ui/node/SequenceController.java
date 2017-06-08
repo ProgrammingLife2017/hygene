@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -31,6 +32,7 @@ public final class SequenceController implements Initializable {
 
     private SequenceVisualizer sequenceVisualizer;
     private GraphVisualizer graphVisualizer;
+    private GraphStore graphStore;
 
     @FXML
     private TitledPane sequenceViewPane;
@@ -53,6 +55,7 @@ public final class SequenceController implements Initializable {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
+            setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
         }
@@ -74,14 +77,16 @@ public final class SequenceController implements Initializable {
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
         sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
-        sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty());
-        sequenceViewPane.managedProperty().bind(sequenceVisualizer.getVisibleProperty());
+        sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
+        sequenceViewPane.managedProperty().bind(sequenceVisualizer.getVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
     }
 
     /**
      * Sets the {@link GraphVisualizer} for use by the controller.
      *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
+     * @param graphVisualizer the {@link GraphVisualizer} for use by the controller
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
@@ -90,10 +95,19 @@ public final class SequenceController implements Initializable {
     /**
      * Sets the {@link SequenceVisualizer} for use by the controller.
      *
-     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller
+     * @param sequenceVisualizer the {@link SequenceVisualizer} for use by the controller
      */
     void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
         this.sequenceVisualizer = sequenceVisualizer;
+    }
+
+    /**
+     * Sets the {@link GraphStore} for use by the controller.
+     *
+     * @param graphStore the {@link GraphStore} for use by the controller
+     */
+    void setGraphStore(final GraphStore graphStore) {
+        this.graphStore = graphStore;
     }
 
     /**

@@ -60,12 +60,8 @@ public final class SequenceVisualizer {
         hoveredBaseIdProperty.addListener((observable, oldValue, newValue) -> draw());
 
         visibleProperty = new SimpleBooleanProperty(false);
-        visibleProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                draw();
-            }
-        });
     }
+
 
     /**
      * Sets the {@link Canvas} for use by the visualizer.
