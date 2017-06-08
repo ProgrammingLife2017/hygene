@@ -4,7 +4,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -61,7 +60,7 @@ public final class Subgraph {
      * @return the nodes
      */
     public Set<NewNode> getNodes() {
-        return Collections.unmodifiableSet(nodes);
+        return nodes;
     }
 
     /**

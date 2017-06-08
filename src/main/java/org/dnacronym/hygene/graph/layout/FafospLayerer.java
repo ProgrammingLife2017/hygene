@@ -70,6 +70,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
             "squid:S1188" // Cannot reduce lambda length without creating helper methods with large signatures
     })
     private void addToLayers(final Collection<NewNode> nodes, final NewNode[][] layers) {
+        final Set<NewNode> allDummyNodes = new HashSet<>();
+
         nodes.forEach(node -> {
             forEachLayer(node, layer -> addToLayerSomewhere(layers[layer], node));
 
@@ -79,6 +81,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 final Edge edge = edges.next();
                 final NewNode neighbour = edge.getTo();
 
+                if (layerSize(edge) < 0) {
+                    continue;
+                }
                 edges.remove();
                 neighbour.getIncomingEdges().remove(edge);
 
@@ -87,10 +92,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 final List<DummyNode> dummyNodes = new ArrayList<>();
                 forEachLayer(edge, layer -> {
                     final DummyNode dummy = new DummyNode(node, neighbour);
+                    dummy.setXPosition(layer * LAYER_WIDTH);
 
                     dummyNodes.add(dummy);
                     addToLayerSomewhere(layers[layer], dummy);
                 });
+                allDummyNodes.addAll(dummyNodes);
 
 
                 // Insert edges
@@ -113,6 +120,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
             node.getOutgoingEdges().addAll(firstEdges);
         });
+
+        nodes.addAll(allDummyNodes);
     }
 
 
@@ -170,6 +179,19 @@ public final class FafospLayerer implements SugiyamaLayerer {
     private int positionToLayer(final int position) {
         assert position >= 0;
         return (position + LAYER_WIDTH - 1) / LAYER_WIDTH;
+    }
+
+    /**
+     * Returns the number of layers the given {@link Edge} traverses.
+     *
+     * @param edge an {@link Edge}
+     * @return the number of layers the given {@link Edge} traverses
+     */
+    private int layerSize(final Edge edge) {
+        final int startLayer = positionToLayer(edge.getFrom().getXPosition() + edge.getFrom().getLength());
+        final int endLayer = positionToLayer(edge.getTo().getXPosition()) - 1;
+
+        return endLayer - startLayer;
     }
 
     /**
