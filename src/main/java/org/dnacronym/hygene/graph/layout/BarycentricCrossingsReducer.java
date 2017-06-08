@@ -193,8 +193,10 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             // Make the result list bigger if needed
             enlargeList(result, resultPosition);
 
-            while (result.get(resultPosition) != null && !(result.get(resultPosition) instanceof FillNode)) {
+            while (result.get(resultPosition) != null) {
                 resultPosition++;
+
+                enlargeList(result, resultPosition);
             }
 
             result.set(resultPosition, entry.getKey());
