@@ -15,11 +15,10 @@ final class FillNodeTest extends NodeTest {
 
     @BeforeEach
     void setUp() {
-        super.setUp();
-
         fillNode = new FillNode();
         setNode(fillNode);
     }
+
 
     @Test
     void testGetLength() {
