@@ -1,15 +1,14 @@
 package org.dnacronym.hygene.ui.bookmark;
 
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
@@ -26,14 +25,13 @@ import java.util.ResourceBundle;
  */
 public final class BookmarkTableController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BookmarkTableController.class);
+    private static final int DESCRIPTION_TEXT_PADDING = 10;
 
     private SimpleBookmarkStore simpleBookmarkStore;
     private GraphStore graphStore;
 
     @FXML
-    private AnchorPane tableAnchor;
-    @FXML
-    private ScrollPane bookmarksPane;
+    private ScrollPane tablePane;
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
      * center node id in {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} is updated to the one in the
@@ -49,8 +47,6 @@ public final class BookmarkTableController implements Initializable {
     private TableColumn<SimpleBookmark, Number> radius;
     @FXML
     private TableColumn<SimpleBookmark, String> description;
-    @FXML
-    private Button hideButton;
 
 
     /**
@@ -68,11 +64,29 @@ public final class BookmarkTableController implements Initializable {
 
 
     @Override
+    @SuppressWarnings("squid:MaximumInheritanceDepth") // We need to overwrite the behaviour of table cells
     public void initialize(final URL location, final ResourceBundle resources) {
         nodeId.setCellValueFactory(cell -> cell.getValue().getNodeIdProperty());
         baseOffset.setCellValueFactory(cell -> cell.getValue().getBaseOffsetProperty());
         description.setCellValueFactory(cell -> cell.getValue().getDescriptionProperty());
         radius.setCellValueFactory(cell -> cell.getValue().getRadiusProperty());
+
+        description.setCellFactory(param -> new TableCell<SimpleBookmark, String>() {
+            @Override
+            protected void updateItem(final String item, final boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                final Text text = new Text(item);
+                text.setWrappingWidth(param.getWidth() - DESCRIPTION_TEXT_PADDING);
+                setPrefHeight(text.getLayoutBounds().getHeight());
+
+                setGraphic(text);
+            }
+        });
 
         bookmarksTable.setRowFactory(tableView -> {
             final TableRow<SimpleBookmark> simpleBookmarkTableRow = new TableRow<>();
@@ -86,14 +100,10 @@ public final class BookmarkTableController implements Initializable {
 
         bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
 
-        tableAnchor.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        tableAnchor.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        hideButton.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
-                .then(">")
-                .otherwise("<"));
-
-        bookmarksPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        bookmarksPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        tablePane.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
+        tablePane.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
     }
 
     /**

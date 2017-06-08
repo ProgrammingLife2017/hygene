@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.node;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,10 +47,18 @@ final class NodeDrawingToolkitTest {
     }
 
     @Test
-    void testHighlightNodeDraw() {
-        nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeColor.BRIGHT_GREEN.getFXColor());
+    void testHighlightSelectedNodeDraw() {
+        nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeDrawingToolkit.HighlightType.SELECTED);
 
-        verify(graphicsContext, atLeast(1)).setStroke(NodeColor.BRIGHT_GREEN.getFXColor());
+        verify(graphicsContext, atLeast(1)).setStroke(Color.rgb(0, 255, 46));
+        verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10, 10);
+    }
+
+    @Test
+    void testHighlightBookmarkedNodeDraw() {
+        nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeDrawingToolkit.HighlightType.BOOKMARKED);
+
+        verify(graphicsContext, atLeast(1)).setStroke(Color.RED);
         verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10, 10);
     }
 

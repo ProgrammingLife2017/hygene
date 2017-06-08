@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
  * a bookmark identifier of a node.
  */
 public final class NodeDrawingToolkit {
+    private static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     private static final int NODE_OUTLINE_WIDTH = 3;
     private static final int ARC_SIZE = 10;
     /**
@@ -26,6 +27,7 @@ public final class NodeDrawingToolkit {
 
     private GraphicsContext graphicsContext;
 
+    private double canvasHeight;
     private double nodeHeight;
     private double charWidth;
     private double charHeight;
@@ -64,6 +66,15 @@ public final class NodeDrawingToolkit {
     }
 
     /**
+     * Sets the canvas height.
+     *
+     * @param canvasHeight the canvas height
+     */
+    public void setCanvasHeight(final double canvasHeight) {
+        this.canvasHeight = canvasHeight;
+    }
+
+    /**
      * Fills a round rectangle based on the node position and width, with the set {@link Color} fill.
      *
      * @param nodeX     the top left x position of the node
@@ -79,14 +90,14 @@ public final class NodeDrawingToolkit {
     /**
      * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.
      *
-     * @param nodeX          the top left x position of the node
-     * @param nodeY          the top left y position of the node
-     * @param nodeWidth      the width of the node
-     * @param highlightColor the color of the highlight
+     * @param nodeX         the top left x position of the node
+     * @param nodeY         the top left y position of the node
+     * @param nodeWidth     the width of the node
+     * @param highlightType the type of highlight
      */
     public void drawNodeHighlight(final double nodeX, final double nodeY, final double nodeWidth,
-                                  final Color highlightColor) {
-        graphicsContext.setStroke(highlightColor);
+                                  final HighlightType highlightType) {
+        graphicsContext.setStroke(highlightType.color);
         graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
         graphicsContext.strokeRoundRect(
                 nodeX - NODE_OUTLINE_WIDTH / 2.0,
@@ -94,6 +105,21 @@ public final class NodeDrawingToolkit {
                 nodeWidth + NODE_OUTLINE_WIDTH,
                 nodeHeight + NODE_OUTLINE_WIDTH,
                 ARC_SIZE, ARC_SIZE);
+
+        if (highlightType == HighlightType.BOOKMARKED) {
+            drawBookmarkIndicator(nodeX, nodeWidth);
+        }
+    }
+
+    /**
+     * Draws a bookmark indicator at the bottom of the graph.
+     *
+     * @param nodeX     the left x position of the node to bookmark
+     * @param nodeWidth the width of the node to bookmark
+     */
+    private void drawBookmarkIndicator(final double nodeX, final double nodeWidth) {
+        graphicsContext.setFill(HighlightType.BOOKMARKED.color);
+        graphicsContext.fillRect(nodeX, canvasHeight - BOOKMARK_INDICATOR_HEIGHT, nodeWidth, BOOKMARK_INDICATOR_HEIGHT);
     }
 
     /**
@@ -114,5 +140,25 @@ public final class NodeDrawingToolkit {
         final double fontY = nodeY + nodeHeight / 2 + charHeight / 2;
 
         graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+    }
+
+    /**
+     * A highlight type denotes what the highlight type is.
+     */
+    public enum HighlightType {
+        SELECTED(Color.rgb(0, 255, 46)),
+        BOOKMARKED(Color.RED);
+
+        private Color color;
+
+
+        /**
+         * Creates a new {@link HighlightType}.
+         *
+         * @param color the {@link Color} of the highlight type
+         */
+        HighlightType(final Color color) {
+            this.color = color;
+        }
     }
 }

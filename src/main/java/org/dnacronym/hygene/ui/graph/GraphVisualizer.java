@@ -22,10 +22,12 @@ import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.runnable.Hygene;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 
 /**
@@ -39,6 +41,7 @@ import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
+@SuppressWarnings("PMD.ExcessiveImports") // This will be fixed at a later date
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
@@ -117,9 +120,10 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
-     * @param node the node to draw
+     * @param node       the node to draw
+     * @param bookmarked the boolean indicating whether this node is bookmarked
      */
-    private void drawNode(final NewNode node) {
+    private void drawNode(final NewNode node, final boolean bookmarked) {
         if (!(node instanceof Segment)) {
             return;
         }
@@ -131,7 +135,7 @@ public final class GraphVisualizer {
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, graph.getColor(nodeId).getFXColor());
         if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeColor.BRIGHT_GREEN.getFXColor());
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
@@ -142,6 +146,9 @@ public final class GraphVisualizer {
                 LOGGER.error("An parse exception occurred while attempting"
                         + " to retrieve node's " + nodeId + " metadata from drawing", e);
             }
+        }
+        if (bookmarked) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
         rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
@@ -222,10 +229,18 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
+        SimpleBookmarkStore simpleBookmarkStore = null;
+        try {
+            simpleBookmarkStore = Hygene.getInstance().getSimpleBookmarkStore();
+        } catch (final UIInitialisationException e) {
+            LOGGER.error("Unable to retrieve bookmarks.", e);
+        }
+
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(node);
+            drawNode(node, simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node));
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
