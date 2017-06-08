@@ -75,7 +75,7 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeTwoWithOneNode() {
-        final NewNode node = new Segment(95, 44, 65);
+        final NewNode node = new Segment(95, 44, 1065);
         addAtPosition(node, 69);
 
         final NewNode[][] layout = layerer.layer(subgraph);
@@ -90,8 +90,8 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeTwoWithMultipleNodes() {
-        final NewNode nodeA = new Segment(30, 62, 89);
-        final NewNode nodeB = new Segment(96, 61, 77);
+        final NewNode nodeA = new Segment(30, 62, 1089);
+        final NewNode nodeB = new Segment(96, 61, 1077);
         addAtPosition(nodeA, 76);
         addAtPosition(nodeB, 57);
 
@@ -109,7 +109,7 @@ final class FafospLayererTest {
     void testSizeTwoWithMultipleDifferentNodes() {
         final NewNode nodeA = new Segment(41, 26, 90);
         final NewNode nodeB = new Segment(70, 71, 58);
-        final NewNode nodeC = new Segment(90, 90, 16);
+        final NewNode nodeC = new Segment(90, 90, 1056);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 0);
         addAtPosition(nodeC, 72);
