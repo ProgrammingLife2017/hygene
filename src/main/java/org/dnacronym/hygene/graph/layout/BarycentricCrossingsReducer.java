@@ -50,7 +50,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             positions.put(node, nodeOrdinal);
         }
 
-       return positions.entrySet()
+        return positions.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.naturalOrder()))
                 .map(Map.Entry::getKey)
