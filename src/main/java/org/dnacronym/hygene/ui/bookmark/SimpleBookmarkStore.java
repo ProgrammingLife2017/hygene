@@ -7,6 +7,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileBookmarks;
@@ -81,15 +83,6 @@ public final class SimpleBookmarkStore {
 
 
     /**
-     * The {@link BooleanProperty} which decides the visibility of the table.
-     *
-     * @return {@link BooleanProperty} which decides the visibility of the table
-     */
-    public BooleanProperty getTableVisibleProperty() {
-        return tableVisibleProperty;
-    }
-
-    /**
      * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
      */
     public void writeBookmarksToFile() {
@@ -136,6 +129,36 @@ public final class SimpleBookmarkStore {
         } catch (final ParseException e) {
             LOGGER.error("Unable to create bookmark %s.", bookmark, e);
         }
+    }
+
+    /**
+     * Checks whether this {@link NewNode} is bookmarked.
+     *
+     * @param node the {@link NewNode} which may or may not be bookmarked
+     * @return true if {@link NewNode} has been bookmarked
+     */
+    public boolean containsBookmark(final NewNode node) {
+        if (!(node instanceof Segment)) {
+            return false;
+        }
+
+        final int nodeId = ((Segment) node).getId();
+        for (final SimpleBookmark simpleBookmark : simpleBookmarks) {
+            if (simpleBookmark.getBookmark().getNodeId() == nodeId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets the {@link BooleanProperty} which decides the visibility of the table.
+     *
+     * @return {@link BooleanProperty} which decides the visibility of the table
+     */
+    public BooleanProperty getTableVisibleProperty() {
+        return tableVisibleProperty;
     }
 
     /**

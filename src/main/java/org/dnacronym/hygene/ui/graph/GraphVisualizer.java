@@ -24,14 +24,10 @@ import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmark;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -233,12 +229,9 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
-        final List<Integer> bookmarkedNodeIds = new ArrayList<>();
+        SimpleBookmarkStore simpleBookmarkStore = null;
         try {
-            final SimpleBookmarkStore simpleBookmarkStore = Hygene.getInstance().getSimpleBookmarkStore();
-            for (final SimpleBookmark simpleBookmark : simpleBookmarkStore.getSimpleBookmarks()) {
-                bookmarkedNodeIds.add(simpleBookmark.getBookmark().getNodeId());
-            }
+            simpleBookmarkStore = Hygene.getInstance().getSimpleBookmarkStore();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to retrieve bookmarks.", e);
         }
@@ -247,7 +240,7 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(node, bookmarkedNodeIds.contains(node instanceof Segment ? ((Segment) node).getId() : -1));
+            drawNode(node, simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node));
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
