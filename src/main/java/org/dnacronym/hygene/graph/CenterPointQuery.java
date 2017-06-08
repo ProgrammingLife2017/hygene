@@ -3,8 +3,6 @@ package org.dnacronym.hygene.graph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
-import org.dnacronym.hygene.graph.layout.Layout;
-import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.NodeDistanceMap;
@@ -44,8 +42,6 @@ public final class CenterPointQuery {
      * deemed necessary to rebuild the cache.
      */
     private static final int MAX_SET_RADIUS_INCREASE = 5;
-    //
-    private static final Layout LAYOUT = new SugiyamaLayout();
 
     /**
      * The queried {@link Graph}.
@@ -151,7 +147,6 @@ public final class CenterPointQuery {
             subgraph.addNode(node);
         });
         iterator.visitIndirectNeighboursWithinRange(centre, radius - 1, (depth, nodeId) -> addEdges(nodeId));
-        LAYOUT.layOut(subgraph);
 
         postEvent();
     }
@@ -231,7 +226,6 @@ public final class CenterPointQuery {
             iterator.visitDirectNeighbours(nodeId, neighbour -> distanceMap.setDistance(neighbour, cacheRadius));
             addEdges(nodeId);
         });
-        LAYOUT.layOut(subgraph);
     }
 
     /**

@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
 
@@ -26,13 +25,6 @@ public final class SugiyamaLayout implements Layout {
 
     @Override
     public void layOut(final Subgraph subgraph) {
-        final NewNode[][] layers = layerer.layer(subgraph);
-        crossingsReducer.reduceCrossings(layers);
-
-        for (final NewNode[] layer : layers) {
-            for (int i = 0; i < layer.length; i++) {
-                layer[i].setYPosition(i);
-            }
-        }
+        crossingsReducer.reduceCrossings(layerer.layer(subgraph));
     }
 }
