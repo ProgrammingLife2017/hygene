@@ -29,13 +29,13 @@ public final class SugiyamaLayout implements Layout {
         final NewNode[][] layers = layerer.layer(subgraph);
         crossingsReducer.reduceCrossings(layers);
 
-        for (int i = 0; i < layers.length; i++) {
-            for (final NewNode newNode : layers[i]) {
-                if (newNode == null) {
+        for (final NewNode[] layer : layers) {
+            for (int i = 0; i < layer.length; i++) {
+                if (layer[i] == null) {
                     continue;
                 }
 
-                newNode.setYPosition(i);
+                layer[i].setYPosition(i);
             }
         }
     }
