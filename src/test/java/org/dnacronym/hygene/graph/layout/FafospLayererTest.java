@@ -157,6 +157,7 @@ final class FafospLayererTest {
 
         assertThat(nodeA.getOutgoingEdges()).hasSize(1);
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
+
         assertThatNodeIsDummy(dummy);
         assertThat(getNextDummy(dummy)).isEqualTo(nodeB);
     }
@@ -180,6 +181,7 @@ final class FafospLayererTest {
 
         assertThat(nodeA.getOutgoingEdges()).hasSize(1);
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
+
         assertThatNodeIsDummy(dummyA);
         assertThatNodeIsDummy(dummyB);
         assertThatNodeIsDummy(dummyC);
@@ -212,11 +214,14 @@ final class FafospLayererTest {
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
         assertThat(nodeC.getIncomingEdges()).hasSize(1);
         assertThat(nodeD.getIncomingEdges()).hasSize(1);
+
         assertThatNodeIsDummy(dummyB1);
         assertThatNodeIsDummy(dummyB2);
         assertThat(getPreviousDummy(dummyB2)).isEqualTo(nodeA);
+
         assertThatNodeIsDummy(dummyC1);
         assertThat(getPreviousDummy(dummyC1)).isEqualTo(nodeA);
+
         assertThatNodeIsDummy(dummyD1);
         assertThatNodeIsDummy(dummyD2);
         assertThat(getPreviousDummy(dummyD2)).isEqualTo(nodeA);
@@ -224,7 +229,47 @@ final class FafospLayererTest {
 
     @Test
     void testSubstitutionDummyEdge() {
-        //
+        final NewNode nodeA = new Segment(71, 5, 68);
+        final NewNode nodeB = new Segment(18, 99, 54);
+        final NewNode nodeC = new Segment(35, 76, 40);
+        final NewNode nodeD = new Segment(63, 32, 36);
+        addEdge(nodeA, nodeB);
+        addEdge(nodeA, nodeC);
+        addEdge(nodeB, nodeD);
+        addEdge(nodeC, nodeD);
+        addAtPosition(nodeA, 0);
+        addAtPosition(nodeB, 3000);
+        addAtPosition(nodeC, 2000);
+        addAtPosition(nodeD, 5000);
+
+        layerer.layer(subgraph);
+        final NewNode dummyAB1 = getPreviousDummy(nodeB);
+        final NewNode dummyAB2 = getPreviousDummy(dummyAB1);
+        final NewNode dummyAC = getPreviousDummy(nodeC);
+        final NewNode dummyBD = getNextDummy(nodeB);
+        final NewNode dummyCD1 = getNextDummy(nodeC);
+        final NewNode dummyCD2 = getNextDummy(dummyCD1);
+
+        assertThat(nodeA.getOutgoingEdges()).hasSize(2);
+        assertThat(nodeB.getIncomingEdges()).hasSize(1);
+        assertThat(nodeB.getOutgoingEdges()).hasSize(1);
+        assertThat(nodeC.getIncomingEdges()).hasSize(1);
+        assertThat(nodeC.getOutgoingEdges()).hasSize(1);
+        assertThat(nodeD.getIncomingEdges()).hasSize(2);
+
+        assertThat(getPreviousDummy(dummyAB2)).isEqualTo(nodeA);
+        assertThatNodeIsDummy(dummyAB2);
+        assertThatNodeIsDummy(dummyAB1);
+
+        assertThat(getPreviousDummy(dummyAC)).isEqualTo(nodeA);
+        assertThatNodeIsDummy(dummyAC);
+
+        assertThatNodeIsDummy(dummyBD);
+        assertThat(getNextDummy(dummyBD)).isEqualTo(nodeD);
+
+        assertThatNodeIsDummy(dummyCD1);
+        assertThatNodeIsDummy(dummyCD2);
+        assertThat(getNextDummy(dummyCD2)).isEqualTo(nodeD);
     }
 
 
