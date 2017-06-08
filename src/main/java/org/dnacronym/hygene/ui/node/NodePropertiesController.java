@@ -1,13 +1,11 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +27,6 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
-    private SequenceVisualizer sequenceVisualizer;
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
 
@@ -47,8 +44,6 @@ public final class NodePropertiesController implements Initializable {
     private TextField rightNeighbours;
     @FXML
     private TextField position;
-    @FXML
-    private ToggleButton viewSequence;
 
 
     /**
@@ -56,7 +51,6 @@ public final class NodePropertiesController implements Initializable {
      */
     public NodePropertiesController() {
         try {
-            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
         } catch (final UIInitialisationException e) {
@@ -78,18 +72,6 @@ public final class NodePropertiesController implements Initializable {
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
-        sequenceVisualizer.getVisibleProperty().bind(Bindings.and(
-                graphVisualizer.getSelectedNodeProperty().isNotNull(),
-                viewSequence.selectedProperty()));
-    }
-
-    /**
-     * Sets the {@link SequenceVisualizer} for use by the controller.
-     *
-     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller
-     */
-    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
-        this.sequenceVisualizer = sequenceVisualizer;
     }
 
     /**

@@ -59,7 +59,7 @@ public final class SequenceVisualizer {
         offsetProperty.addListener((observable, oldValue, newValue) -> draw());
         hoveredBaseIdProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        visibleProperty = new SimpleBooleanProperty();
+        visibleProperty = new SimpleBooleanProperty(false);
         visibleProperty.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 draw();

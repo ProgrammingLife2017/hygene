@@ -1,7 +1,6 @@
-package org.dnacronym.hygene.ui;
+package org.dnacronym.hygene.ui.menu;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,11 +12,8 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
-import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
@@ -44,18 +40,12 @@ public final class MenuController implements Initializable {
     private FileChooser fileChooser;
     private GraphStore graphStore;
     private Settings settings;
-    private SimpleBookmarkStore simpleBookmarkStore;
 
     @FXML
     private MenuBar menuBar;
 
     @FXML
     private Menu recentFilesMenu;
-    @FXML
-    private MenuItem toggleBookmarkTable;
-
-    private ConsoleView consoleView;
-    private HelpMenuView helpMenuView;
 
     private SettingsView settingsView;
 
@@ -69,7 +59,6 @@ public final class MenuController implements Initializable {
         try {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setSettings(Hygene.getInstance().getSettings());
-            setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
 
             populateRecentFilesMenu();
             initFileChooser();
@@ -77,10 +66,6 @@ public final class MenuController implements Initializable {
             LOGGER.error("Failed to initialize MenuController.", e);
             new ErrorDialogue(e).show();
         }
-
-        toggleBookmarkTable.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
-                .then("Hide bookmarks")
-                .otherwise("Show bookmarks"));
     }
 
     /**
@@ -90,15 +75,6 @@ public final class MenuController implements Initializable {
      */
     void setSettings(final Settings settings) {
         this.settings = settings;
-    }
-
-    /**
-     * Sets the {@link SimpleBookmarkStore} for use by the controller.
-     *
-     * @param simpleBookmarkStore the {@link SimpleBookmarkStore} for use by the controller
-     */
-    void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
-        this.simpleBookmarkStore = simpleBookmarkStore;
     }
 
     /**
@@ -134,57 +110,6 @@ public final class MenuController implements Initializable {
     void settingsAction() {
         settingsView = new SettingsView(settings);
         settingsView.show();
-    }
-
-    /**
-     * Opens an independent stage showing the console window.
-     *
-     * @param event {@link ActionEvent} associated with the event
-     * @throws IOException if unable to located the FXML resource
-     */
-    @FXML
-    void openConsoleAction(final ActionEvent event) throws IOException {
-        try {
-            if (consoleView == null) {
-                consoleView = new ConsoleView();
-                LOGGER.info("Launched GUI console window");
-            }
-
-            consoleView.bringToFront();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error(e);
-        }
-    }
-
-    /**
-     * Opens an independent stage showing the help menu.
-     *
-     * @param actionEvent {@link ActionEvent} associated with the event
-     * @throws IOException if unable to locate FXML resource
-     */
-    public void openHelpAction(final ActionEvent actionEvent) throws IOException {
-        try {
-            if (helpMenuView == null) {
-                helpMenuView = new HelpMenuView();
-                LOGGER.info("Launched GUI help menu");
-            }
-
-            helpMenuView.bringToFront();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error(e);
-        }
-        actionEvent.consume();
-    }
-
-    /**
-     * When the user wants to toggle the visibility of the BookmarksTable.
-     *
-     * @param actionEvent the {@link ActionEvent}
-     */
-    @FXML
-    void toggleBookmarksTableAction(final ActionEvent actionEvent) {
-        simpleBookmarkStore.getTableVisibleProperty().set(!simpleBookmarkStore.getTableVisibleProperty().get());
-        actionEvent.consume();
     }
 
     /**
@@ -283,30 +208,12 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Returns the {@link ConsoleView} attached to this menu.
-     *
-     * @return the {@link ConsoleView}
-     */
-    public ConsoleView getConsoleView() {
-        return consoleView;
-    }
-
-    /**
      * Gets settings view.
      *
      * @return the {@link SettingsView}
      */
     public SettingsView getSettingsView() {
         return settingsView;
-    }
-
-    /**
-     * Gets the {@link HelpMenuView}.
-     *
-     * @return the {@link HelpMenuView}
-     */
-    public HelpMenuView getHelpMenuView() {
-        return helpMenuView;
     }
 
     /**

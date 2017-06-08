@@ -6,7 +6,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <MenuBar fx:id="menuBar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="org.dnacronym.hygene.ui.MenuController">
+         fx:controller="org.dnacronym.hygene.ui.menu.MenuController">
     <menus>
         <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>
@@ -34,28 +34,6 @@
                 </MenuItem>
             </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Tools">
-            <items>
-                <MenuItem fx:id="openConsole" mnemonicParsing="false" onAction="#openConsoleAction" text="Console">
-                    <accelerator>
-                        <KeyCodeCombination alt="UP" code="T" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
-                    </accelerator>
-                </MenuItem>
-            </items>
-            <items>
-                <MenuItem fx:id="toggleBookmarkTable" mnemonicParsing="false" text="Bookmarks"
-                          onAction="#toggleBookmarksTableAction">
-                    <accelerator>
-                        <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
-                    </accelerator>
-                </MenuItem>
-                <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem fx:id="openHelp" mnemonicParsing="false" onAction="#openHelpAction" text="Help">
-                    <accelerator>
-                        <KeyCodeCombination alt="UP" code="H" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
-                    </accelerator>
-                </MenuItem>
-            </items>
-        </Menu>
+        <fx:include source="tools_menu.fxml"/>
     </menus>
 </MenuBar>

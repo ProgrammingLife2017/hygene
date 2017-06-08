@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -70,11 +69,6 @@ public final class SequenceController implements Initializable {
         });
 
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
-
-        final BooleanBinding visible = graphVisualizer.getSelectedNodeProperty().isNotNull()
-                .and(sequenceVisualizer.getVisibleProperty());
-        sequenceViewPane.visibleProperty().bind(visible);
-        sequenceViewPane.managedProperty().bind(visible);
         sequenceCanvas.widthProperty().bind(sequenceViewPane.widthProperty().subtract(CANVAS_PADDING * 2));
     }
 
@@ -118,7 +112,7 @@ public final class SequenceController implements Initializable {
             final String sequence = node.retrieveMetadata().getSequence();
             sequenceVisualizer.getSequenceProperty().set(sequence);
             sequenceTextArea.setText(sequence);
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", node, e);
         }
     }
