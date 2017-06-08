@@ -70,8 +70,10 @@ public final class NodePropertiesController implements Initializable {
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
 
-        nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
-        nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull()
+                .and(graphVisualizer.getNodePropertiesVisibleProperty()));
+        nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull()
+                .and(graphVisualizer.getNodePropertiesVisibleProperty()));
     }
 
     /**

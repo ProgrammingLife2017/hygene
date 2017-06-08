@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.console.ConsoleView;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -27,6 +28,7 @@ public final class ToolsMenuController implements Initializable {
 
     private SimpleBookmarkStore simpleBookmarkStore;
     private SequenceVisualizer sequenceVisualizer;
+    private GraphVisualizer graphVisualizer;
 
     private ConsoleView consoleView;
     private HelpMenuView helpMenuView;
@@ -42,6 +44,7 @@ public final class ToolsMenuController implements Initializable {
         try {
             setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
             setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
+            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
         }
@@ -71,6 +74,16 @@ public final class ToolsMenuController implements Initializable {
      */
     void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
         this.sequenceVisualizer = sequenceVisualizer;
+    }
+
+    /**
+     * Set the {@link GraphVisualizer}, whose selected node can be bound to the UI elements in the controller.
+     *
+     * @param graphVisualizer {@link GraphVisualizer} who's selected node we are interested in
+     * @see GraphVisualizer#selectedNodeProperty
+     */
+    void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
+        this.graphVisualizer = graphVisualizer;
     }
 
     /**
@@ -134,6 +147,9 @@ public final class ToolsMenuController implements Initializable {
      */
     @FXML
     void toggleNodePropertiesAction(final ActionEvent actionEvent) {
+        graphVisualizer.getNodePropertiesVisibleProperty().set(
+                !graphVisualizer.getNodePropertiesVisibleProperty().get()
+        );
         actionEvent.consume();
     }
 
