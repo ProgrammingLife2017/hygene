@@ -15,5 +15,5 @@ public interface ColorScheme {
      * @param node the node which has to be colored
      * @return the {@link Color} of the node
      */
-    Color calculateColor(final NewNode node);
+    Color calculateColor(NewNode node);
 }

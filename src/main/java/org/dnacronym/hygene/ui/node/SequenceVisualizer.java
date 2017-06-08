@@ -85,8 +85,8 @@ public final class SequenceVisualizer {
             // Do a second search as base nodes have been shifted.
             Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set));
         });
-        canvas.setOnMouseMoved(event ->
-                Optional.of(rTree).ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set)));
+        canvas.setOnMouseMoved(event -> Optional.of(rTree)
+                .ifPresent(tree -> tree.find(event.getX(), event.getY(), hoveredBaseIdProperty::set)));
         canvas.setOnMouseExited(event -> hoveredBaseIdProperty.set(-1));
     }
 

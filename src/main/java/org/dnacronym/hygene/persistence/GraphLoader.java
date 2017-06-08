@@ -76,9 +76,10 @@ public final class GraphLoader {
     }
 
     /**
-     * Dumps the given graph into the file database.
+     * Dumps the given graph into the specified file.
      *
-     * @param graph the graph to dump
+     * @param graph    the graph to dump
+     * @param fileName the destination filename
      */
     public void dumpGraph(final int[][] graph, final String fileName) {
         LOGGER.info("Dumping graph to storage.");
@@ -104,9 +105,10 @@ public final class GraphLoader {
     }
 
     /**
-     * Restores the graph dump into a graph.
+     * Restores the graph dump in the specified file into a graph.
      *
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
+     * @param fileName        the target filename
      * @return a graph
      * @throws IOException if we cannot read from the cache file
      */
