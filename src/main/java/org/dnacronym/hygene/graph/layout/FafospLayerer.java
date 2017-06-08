@@ -6,10 +6,13 @@ import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 
 /**
@@ -30,28 +33,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
         }
 
         final Collection<NewNode> nodes = subgraph.getNodes();
-        final NewNode[][] layers = getLayers(nodes);
+        final NewNode[][] layers = createLayers(nodes);
 
         addToLayers(nodes, layers);
-
-        return layers;
-    }
-
-
-    /**
-     * Allocates and returns an array of layers into which the given nodes can be placed.
-     *
-     * @param nodes a {@link Collection} of {@link NewNode}s
-     * @return an array of layers
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
-    private NewNode[][] getLayers(final Collection<NewNode> nodes) {
-        final int[] layerHeights = getHeights(nodes);
-        final NewNode[][] layers = new NewNode[layerHeights.length][];
-
-        for (int i = 0; i < layers.length; i++) {
-            layers[i] = new NewNode[layerHeights[i]];
-        }
 
         return layers;
     }
@@ -64,70 +48,118 @@ public final class FafospLayerer implements SugiyamaLayerer {
      */
     @SuppressWarnings({
             "PMD.AvoidInstantiatingObjectsInLoops", // That is exactly what this method should do
-            "PMD.ConfusingTernary" // Checking for not null is not confusing
+            "PMD.ConfusingTernary", // Checking for not null is not confusing
+            "squid:S1188" // Cannot reduce lambda length without creating helper methods with large signatures
     })
     private void addToLayers(final Collection<NewNode> nodes, final NewNode[][] layers) {
         nodes.forEach(node -> {
-            final int nodeStartLayer = positionToLayer(node.getXPosition());
-            final int nodeEndLayer = positionToLayer(node.getXPosition() + node.getLength());
+            forEachLayer(node, layer -> addToLayerSomewhere(layers[layer], node));
 
-            for (int layer = nodeStartLayer; layer < nodeEndLayer; layer++) {
-                addToLayerSomewhere(layers[layer], node);
-            }
-
-            final Set<Edge> toAdd = new HashSet<>();
+            final Set<Edge> firstEdges = new HashSet<>();
             final Iterator<Edge> edges = node.getOutgoingEdges().iterator();
             while (edges.hasNext()) {
                 final Edge edge = edges.next();
                 final NewNode neighbour = edge.getTo();
-                final int neighbourStartLayer = positionToLayer(neighbour.getXPosition());
 
-                final int minLayer = nodeEndLayer;
-                final int maxLayer = neighbourStartLayer - 1;
-                assert maxLayer >= minLayer;
-
-                neighbour.getIncomingEdges().remove(edge);
                 edges.remove();
+                neighbour.getIncomingEdges().remove(edge);
 
-                DummyNode previousDummy = null;
-                for (int layer = minLayer; layer <= maxLayer; layer++) {
+
+                // Create dummy nodes
+                final List<DummyNode> dummyNodes = new ArrayList<>();
+                forEachLayer(edge, layer -> {
                     final DummyNode dummy = new DummyNode(node, neighbour);
+
+                    dummyNodes.add(dummy);
                     addToLayerSomewhere(layers[layer], dummy);
+                });
 
-                    final DummyEdge incoming;
-                    final DummyEdge outgoing;
-                    if (layer == minLayer) {
-                        incoming = new DummyEdge(node, dummy, edge);
-                    } else if (previousDummy != null) {
-                        incoming = new DummyEdge(previousDummy, dummy, edge);
-                    } else {
-                        throw new IllegalStateException("previousDummy is null but current dummy is not first dummy");
-                    }
-                    if (layer == maxLayer) {
-                        outgoing = new DummyEdge(dummy, neighbour, edge);
-                    } else {
-                        outgoing = null;
-                    }
 
-                    if (incoming.getFrom().equals(node)) {
-                        toAdd.add(incoming);
-                    } else {
-                        incoming.getFrom().getOutgoingEdges().add(incoming);
-                    }
-                    incoming.getTo().getIncomingEdges().add(incoming);
-                    if (outgoing != null) {
-                        outgoing.getFrom().getOutgoingEdges().add(outgoing);
-                        outgoing.getTo().getIncomingEdges().add(outgoing);
-                    }
+                // Insert edges
+                final DummyEdge firstEdge = new DummyEdge(node, dummyNodes.get(0), edge);
+                firstEdges.add(firstEdge); // Add it after the iterator to prevent concurrent modification
+                dummyNodes.get(0).getIncomingEdges().add(firstEdge);
 
-                    previousDummy = dummy;
+                final DummyNode lastNode = dummyNodes.get(dummyNodes.size() - 1);
+                final DummyEdge lastEdge = new DummyEdge(lastNode, neighbour, edge);
+                lastNode.getOutgoingEdges().add(lastEdge);
+                neighbour.getIncomingEdges().add(lastEdge);
+
+                for (int i = 0; i < dummyNodes.size() - 1; i++) {
+                    final DummyEdge middleEdge = new DummyEdge(dummyNodes.get(i), dummyNodes.get(i + 1), edge);
+
+                    dummyNodes.get(i).getOutgoingEdges().add(middleEdge);
+                    dummyNodes.get(i + 1).getIncomingEdges().add(middleEdge);
                 }
             }
 
-            node.getOutgoingEdges().addAll(toAdd);
+            node.getOutgoingEdges().addAll(firstEdges);
         });
     }
 
+
+    /*
+     * Calculations
+     */
+
+    /**
+     * Calculates the number of layers necessary for the given nodes.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return the number of layers necessary for the given nodes
+     */
+    @SuppressWarnings("squid:S3346") // False positive; assert doesn't have side effects
+    private int calculateLayerCount(final Collection<NewNode> nodes) {
+        assert !nodes.isEmpty();
+
+        final int maxPosition = nodes.stream()
+                .map(node -> node.getXPosition() + node.getLength())
+                .max(Integer::compare)
+                .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
+        return positionToLayer(maxPosition);
+    }
+
+    /**
+     * Calculates the number of {@link NewNode}s per layer.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return the number of {@link NewNode}s per layer
+     */
+    private int[] calculateHeights(final Collection<NewNode> nodes) {
+        final int layerCount = calculateLayerCount(nodes);
+        final int[] heights = new int[layerCount];
+
+        nodes.forEach(node -> {
+            forEachLayer(node, layer -> heights[layer]++);
+
+            node.getOutgoingEdges().forEach(edge -> forEachLayer(edge, layer -> heights[layer]++));
+        });
+
+        return heights;
+    }
+
+    /**
+     * Allocates and returns an array of layers into which the given nodes can be placed.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return an array of layers
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
+    private NewNode[][] createLayers(final Collection<NewNode> nodes) {
+        final int[] layerHeights = calculateHeights(nodes);
+        final NewNode[][] layers = new NewNode[layerHeights.length][];
+
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = new NewNode[layerHeights[i]];
+        }
+
+        return layers;
+    }
+
+
+    /*
+     * Utility methods
+     */
 
     /**
      * Returns the number of the layer the given position would be in.
@@ -141,53 +173,33 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
     /**
-     * Returns the number of layers necessary for the given nodes.
+     * Executes the given {@link Consumer} for each layer in which the given {@link NewNode} is.
      *
-     * @param nodes a {@link Collection} of {@link NewNode}s
-     * @return the number of layers necessary for the given nodes
+     * @param node   a {@link NewNode}
+     * @param action a {@link Consumer} for layer indices
      */
-    @SuppressWarnings("squid:S3346") // False positive; assert doesn't have side effects
-    private int getLayerCount(final Collection<NewNode> nodes) {
-        assert !nodes.isEmpty();
+    private void forEachLayer(final NewNode node, final Consumer<Integer> action) {
+        final int startLayer = positionToLayer(node.getXPosition());
+        final int endLayer = positionToLayer(node.getXPosition() + node.getLength()) - 1;
 
-        final int maxPosition = nodes.stream()
-                .map(node -> node.getXPosition() + node.getLength())
-                .max(Integer::compare)
-                .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
-        return positionToLayer(maxPosition);
+        for (int layer = startLayer; layer <= endLayer; layer++) {
+            action.accept(layer);
+        }
     }
 
     /**
-     * Returns the number of {@link NewNode}s per layer.
+     * Executes the given {@link Consumer} for each layer the given {@link Edge} traverses.
      *
-     * @param nodes a {@link Collection} of {@link NewNode}s
-     * @return the number of {@link NewNode}s per layer
+     * @param edge   an {@link Edge}
+     * @param action a {@link Consumer} for layer indices
      */
-    private int[] getHeights(final Collection<NewNode> nodes) {
-        final int layerCount = getLayerCount(nodes);
-        final int[] heights = new int[layerCount];
+    private void forEachLayer(final Edge edge, final Consumer<Integer> action) {
+        final int startLayer = positionToLayer(edge.getFrom().getXPosition() + edge.getFrom().getLength());
+        final int endLayer = positionToLayer(edge.getTo().getXPosition()) - 1;
 
-        nodes.forEach(node -> {
-            final int nodeStartLayer = positionToLayer(node.getXPosition());
-            final int nodeEndLayer = positionToLayer(node.getXPosition() + node.getLength());
-
-            for (int layer = nodeStartLayer; layer < nodeEndLayer; layer++) {
-                heights[layer]++;
-            }
-
-            node.getOutgoingEdges().forEach(edge -> {
-                final NewNode neighbour = edge.getTo();
-                final int neighbourStartLayer = positionToLayer(neighbour.getXPosition());
-
-                final int minLayer = nodeEndLayer;
-                final int maxLayer = neighbourStartLayer - 1;
-                for (int layer = minLayer; layer <= maxLayer; layer++) {
-                    heights[layer]++;
-                }
-            });
-        });
-
-        return heights;
+        for (int layer = startLayer; layer <= endLayer; layer++) {
+            action.accept(layer);
+        }
     }
 
     /**
@@ -204,6 +216,6 @@ public final class FafospLayerer implements SugiyamaLayerer {
             }
         }
 
-        throw new IllegalStateException("Layer is full, getHeights method is erroneous.");
+        throw new IllegalStateException("Layer is full, calculateHeights method is erroneous.");
     }
 }
