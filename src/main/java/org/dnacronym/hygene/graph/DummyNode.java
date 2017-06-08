@@ -1,8 +1,5 @@
 package org.dnacronym.hygene.graph;
 
-import java.util.HashSet;
-import java.util.Set;
-
 
 /**
  * Class representing a dummy node, to be used for graph layout.
@@ -37,20 +34,6 @@ public final class DummyNode extends NewNode {
      * @param diversionDestination the original destination node this dummy node is (indirectly) connected to
      */
     public DummyNode(final NewNode diversionSource, final NewNode diversionDestination) {
-        this(new HashSet<>(), new HashSet<>(), diversionSource, diversionDestination);
-    }
-
-    /**
-     * Constructs a new {@link DummyNode} instance.
-     *
-     * @param incomingEdges        the incoming edges
-     * @param outgoingEdges        the outgoing edges
-     * @param diversionSource      the original source node this dummy node is (indirectly) connected to
-     * @param diversionDestination the original destination node this dummy node is (indirectly) connected to
-     */
-    public DummyNode(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges,
-                     final NewNode diversionSource, final NewNode diversionDestination) {
-        super(incomingEdges, outgoingEdges);
         this.diversionSource = diversionSource;
         this.diversionDestination = diversionDestination;
     }

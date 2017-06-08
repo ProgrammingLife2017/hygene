@@ -47,7 +47,7 @@ final class GraphSelectionTest {
 
     @Test
     void testGetNodesWithAddedNodes() {
-        final NewNode node = new Segment(62, 22, 19, new HashSet<>(), new HashSet<>());
+        final NewNode node = new Segment(62, 22, 19);
         graphSelection.getNodes().add(node);
 
         assertThat(graphSelection.getNodes()).containsExactly(node);
