@@ -80,4 +80,11 @@ public final class Segment extends NewNode {
     public int getLength() {
         return Math.max(MIN_SEGMENT_LENGTH, sequenceLength);
     }
+
+    @Override
+    public String toString() {
+        return "Segment{" +
+                "id=" + id +
+                '}';
+    }
 }

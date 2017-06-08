@@ -67,4 +67,26 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
 
         assertThat(layers[1]).containsExactly(layer2.get(4), layer2.get(5), layer2.get(6));
     }
+
+    /**
+     *     1  2
+     *    /  \||
+     *  /     ||\
+     * 3      2  4
+     */
+    @Test
+    void testGraph4() {
+        final Map<Integer, NewNode> layer0 = createLayer(0);
+        final Map<Integer, NewNode> layer1 = createLayer(1, 2);
+        final Map<Integer, NewNode> layer2 = createLayer(3, 2, 4);
+        createEdges(new int[][] {{0, 1}, {0, 2}}, layer0, layer1);
+        createEdges(new int[][] {{1, 3}, {1, 4}}, layer1, layer2);
+
+        final NewNode[][] layers = combineLayers(layer0, layer1, layer2);
+
+        new BarycentricCrossingsReducer().reduceCrossings(layers);
+
+        assertThat(layers[1]).containsExactly(layer1.get(2), layer1.get(1));
+        assertThat(layers[2]).containsExactly(layer2.get(2), layer2.get(3), layer2.get(4));
+    }
 }
