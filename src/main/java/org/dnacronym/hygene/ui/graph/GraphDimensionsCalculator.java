@@ -171,8 +171,8 @@ public final class GraphDimensionsCalculator {
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
-        laneHeightProperty.set(canvasDimension.getHeight() / Math.max(laneCountProperty.get(), DEFAULT_LANE_COUNT));
-        laneCountProperty.set(Math.abs(maxY - minY) + 1);
+        laneCountProperty.set(Math.max(Math.abs(maxY - minY) + 1, DEFAULT_LANE_COUNT));
+        laneHeightProperty.set(canvasDimension.getHeight() / laneCountProperty.get());
 
         observableQueryNodes.setAll(neighbours);
     }
