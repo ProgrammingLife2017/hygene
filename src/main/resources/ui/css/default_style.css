@@ -9,3 +9,7 @@
     -fx-background-color: transparent;
     -fx-background-radius: 0;
 }
+
+.mnemonic-underline {
+    -fx-stroke: -fx-text-base-color;
+}

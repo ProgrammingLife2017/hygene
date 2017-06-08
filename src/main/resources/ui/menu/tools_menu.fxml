@@ -18,19 +18,22 @@
             </accelerator>
         </MenuItem>
         <SeparatorMenuItem mnemonicParsing="false"/>
-        <MenuItem mnemonicParsing="false" text="NodeProperties" onAction="#toggleNodePropertiesAction"/>
-        <MenuItem mnemonicParsing="false" text="BookmarkCreate" onAction="#toggleBookmarkCreateAction">
+        <MenuItem fx:id="toggleNodeProperties" onAction="#toggleNodePropertiesAction">
             <accelerator>
-                <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
-        <MenuItem fx:id="toggleBookmarkTable" mnemonicParsing="false" onAction="#toggleBookmarksTableAction"
-                  text="BookmarkTable">
+        <MenuItem fx:id="toggleBookmarkCreate" onAction="#toggleBookmarkCreateAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="K" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem fx:id="toggleBookmarkTable" onAction="#toggleBookmarksTableAction">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
-        <MenuItem mnemonicParsing="false" text="SequenceView" onAction="#toggleSequenceVisualizerAction">
+        <MenuItem fx:id="toggleSequenceVisualizer" onAction="#toggleSequenceVisualizerAction">
             <accelerator>
                 <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>

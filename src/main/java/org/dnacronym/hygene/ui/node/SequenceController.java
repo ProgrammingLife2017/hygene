@@ -174,6 +174,7 @@ public final class SequenceController implements Initializable {
         if (!setOffset.getText().isEmpty()) {
             sequenceVisualizer.setOffset(Integer.parseInt(setOffset.getText()));
         }
+        setOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
 
         actionEvent.consume();
     }

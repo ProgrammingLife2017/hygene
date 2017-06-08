@@ -35,6 +35,12 @@ public final class ToolsMenuController implements Initializable {
 
     @FXML
     private MenuItem toggleBookmarkTable;
+    @FXML
+    private MenuItem toggleBookmarkCreate;
+    @FXML
+    private MenuItem toggleNodeProperties;
+    @FXML
+    private MenuItem toggleSequenceVisualizer;
 
 
     /**
@@ -54,8 +60,17 @@ public final class ToolsMenuController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         toggleBookmarkTable.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
-                .then("Hide bookmarks")
-                .otherwise("Show bookmarks"));
+                .then("Hide _bookmarks table")
+                .otherwise("Show _bookmarks table"));
+        toggleBookmarkCreate.textProperty().bind(Bindings.when(simpleBookmarkStore.getBookmarkCreateVisibleProperty())
+                .then("Hide bookmar_k create")
+                .otherwise("Show bookmar_k create"));
+        toggleNodeProperties.textProperty().bind(Bindings.when(graphVisualizer.getNodePropertiesVisibleProperty())
+                .then("Hide node _properties")
+                .otherwise("Show node _properties"));
+        toggleSequenceVisualizer.textProperty().bind(Bindings.when(sequenceVisualizer.getVisibleProperty())
+                .then("Hide s_equence view")
+                .otherwise("Show s_equence view"));
     }
 
     /**
