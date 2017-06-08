@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.FillNode;
 import org.dnacronym.hygene.graph.NewNode;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("JavadocStyle") // Using Javadoc with alternative style in this test
 public final class BarycentricCrossingsReducerTest extends LayerConstructingTestBase {
     /**
-     *   1   2   3
-     *  / \ / \ / \
+     * 1   2   3
+     * / \ / \ / \
      * 4   5   6   7
      */
     @Test
@@ -29,7 +30,7 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
 
         new BarycentricCrossingsReducer().reduceCrossings(layers);
 
-        assertThat(layers[1]).containsExactly(layer2.get(4), layer2.get(5), layer2.get(6), layer2.get(7));
+        assertThatLayerContainsExactly(layers[1], 4, 5, 6, 7);
     }
 
     /**
@@ -47,13 +48,13 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
 
         new BarycentricCrossingsReducer().reduceCrossings(layers);
 
-        assertThat(layers[1]).containsExactly(layer2.get(4), layer2.get(5), layer2.get(6));
+        assertThatLayerContainsExactly(layers[1], 4, 5, 6);
     }
 
     /**
-     *     1        2
-     *    / \   \ /  /
-     *  /     \ / \ /
+     * 1        2
+     * / \   \ /  /
+     * /     \ / \ /
      * 4       5   6
      */
     @Test
@@ -66,15 +67,15 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
 
         new BarycentricCrossingsReducer().reduceCrossings(layers);
 
-        assertThat(layers[1]).containsExactly(layer2.get(4), layer2.get(5), layer2.get(6));
+        assertThatLayerContainsExactly(layers[1], 4, 5, 6);
     }
 
     /**
-     *         0
-     *      /  |  \
-     *     1  2    5
-     *    /  \||   ||
-     *  /     ||\  ||
+     * 0
+     * /  |  \
+     * 1  2    5
+     * /  \||   ||
+     * /     ||\  ||
      * 3      2  4 5
      */
     @Test
@@ -89,22 +90,22 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
 
         new BarycentricCrossingsReducer().reduceCrossings(layers);
 
-        assertThat(layers[1]).containsExactly(layer1.get(2), layer1.get(5), layer1.get(1));
-        assertThat(layers[2]).containsExactly(layer2.get(2), layer2.get(5), layer2.get(3), layer2.get(4));
+        assertThatLayerContainsExactly(layers[1], 2, 5, 1);
+        assertThatLayerContainsExactly(layers[2], 2, 5, 3, 4);
     }
 
     /**
-     *     0
-     *   /   \
-     *  1     2
-     *  ||    |
-     *  1     3
-     *  |     | \
-     *  5     4  11
-     *  | \   || |
-     *  6  7  4  12
-     *  | / \
-     *  8 9 10
+     * 0
+     * /   \
+     * 1     2
+     * ||    |
+     * 1     3
+     * |     | \
+     * 5     4  11
+     * | \   || |
+     * 6  7  4  12
+     * | / \
+     * 8 9 10
      */
     @Test
     void testGraph5() {
@@ -124,13 +125,23 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
 
         new BarycentricCrossingsReducer().reduceCrossings(layers);
 
-        System.out.println(Arrays.toString(layers[0]));
-        System.out.println(Arrays.toString(layers[1]));
-        System.out.println(Arrays.toString(layers[2]));
-        System.out.println(Arrays.toString(layers[3]));
-        System.out.println(Arrays.toString(layers[4]));
-        System.out.println(Arrays.toString(layers[5]));
-//        assertThat(layers[1]).containsExactly(layer1.get(2), layer1.get(5), layer1.get(1));
-//        assertThat(layers[2]).containsExactly(layer2.get(2), layer2.get(5), layer2.get(3), layer2.get(4));
+        assertThatLayerContainsExactly(layers[0], 0);
+        assertThatLayerContainsExactly(layers[1], 1, 2);
+        assertThatLayerContainsExactly(layers[2], 1, 3);
+        assertThatLayerContainsExactly(layers[3], 5, -1, -1, 4, 11);
+        assertThatLayerContainsExactly(layers[4], 6, 7, -1, 4, 12);
+        assertThatLayerContainsExactly(layers[5], 8, 9, 10);
+    }
+
+    private void assertThatLayerContainsExactly(final NewNode[] layer, final int... nodeIds) {
+        assertThat(layer).hasSameSizeAs(nodeIds);
+
+        for (int i = 0; i < layer.length; i++) {
+            if (nodeIds[i] < 0) {
+                assertThat(layer[i]).isInstanceOf(FillNode.class);
+            } else {
+                assertThat(layer[i]).isEqualTo(nodes.get(nodeIds[i]));
+            }
+        }
     }
 }

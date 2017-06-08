@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.FillNode;
 import org.dnacronym.hygene.graph.NewNode;
 
 import java.util.ArrayList;
@@ -69,9 +70,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         final Map<NewNode, Double> positions = new LinkedHashMap<>(); // Maps nodes to ordinal positions
 
         final List<@Nullable NewNode> result = new ArrayList<>();
-        for (int i = result.size(); i < layer2.length; i++) {
-            result.add(null);
-        }
+        enlargeList(result, layer2.length - 1);
 
         final List<NewNode> nonLengthy = giveLengthyNodesSamePosition(layer1, layer2, result);
         final Map<Integer, NewNode> lengthy = IntStream.range(0, result.size())
@@ -95,7 +94,12 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
         addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(result, layer2Index, layers);
 
-        return result.toArray(new NewNode[result.size()]);
+        return result.stream().map(node -> {
+            if (node == null) {
+                return new FillNode();
+            }
+            return node;
+        }).toArray(NewNode[]::new);
     }
 
     /**
@@ -132,7 +136,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         Arrays.stream(layer2).forEach(layer2Node -> {
             final int layer1Position = ArrayUtils.indexOf(layer1, layer2Node);
             if (layer1Position > -1) {
-                enlargeListWithDummyNodes(result, layer1Position);
+                enlargeList(result, layer1Position);
                 result.set(layer1Position, layer2Node);
             } else {
                 nonLengthy.add(layer2Node);
@@ -187,9 +191,9 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             }
 
             // Make the result list bigger if needed
-            enlargeListWithDummyNodes(result, resultPosition);
+            enlargeList(result, resultPosition);
 
-            while (result.get(resultPosition) != null) {
+            while (result.get(resultPosition) != null && !(result.get(resultPosition) instanceof FillNode)) {
                 resultPosition++;
             }
 
@@ -238,7 +242,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * @param result  the result list to be enlarged
      * @param newSize the new size of the list
      */
-    private void enlargeListWithDummyNodes(final List<@Nullable NewNode> result, final int newSize) {
+    private void enlargeList(final List<@Nullable NewNode> result, final int newSize) {
         if (result.size() - 1 < newSize) {
             for (int i = result.size(); i <= newSize; i++) {
                 result.add(null);
