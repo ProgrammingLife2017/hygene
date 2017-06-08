@@ -8,8 +8,8 @@ import org.dnacronym.hygene.models.colorscheme.ColorScheme;
  * Classes that extend from this class use a certain value of a node to calculate the color.
  * <p>
  * The color is determined as an interpolation of the minimum and maximum color, with the interpolation of the minimum
- * and maximum color being determined by said value of the {@link org.dnacronym.hygene.models.Node} and its position in
- * the scale of {@code [0, max value]}.
+ * and maximum color being determined by said value of the {@link org.dnacronym.hygene.graph.NewNode} and its position
+ * in the scale of {@code [0, max value]}.
  */
 public abstract class AbstractColorSchemeMinMax implements ColorScheme {
     private final int maxValue;

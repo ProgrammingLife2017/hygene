@@ -1,12 +1,12 @@
 package org.dnacronym.hygene.models.colorscheme.fixed;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.models.colorscheme.ColorScheme;
 
 
 /**
- * The {@link Color} is fixed, and not dependent on any specific {@link Node}.
+ * The {@link Color} is fixed, and not dependent on any specific {@link NewNode}.
  */
 public final class FixedColorScheme implements ColorScheme {
     private final Color color;
@@ -23,7 +23,7 @@ public final class FixedColorScheme implements ColorScheme {
 
 
     @Override
-    public Color calculateColor(final Node node) {
+    public Color calculateColor(final NewNode node) {
         return color;
     }
 }

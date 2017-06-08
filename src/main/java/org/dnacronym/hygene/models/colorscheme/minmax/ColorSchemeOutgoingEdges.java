@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.models.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.NewNode;
 
 
 /**
@@ -21,7 +21,7 @@ public final class ColorSchemeOutgoingEdges extends AbstractColorSchemeMinMax {
 
 
     @Override
-    public Color calculateColor(final Node node) {
-        return calculateColor(node.getNumberOfOutgoingEdges());
+    public Color calculateColor(final NewNode node) {
+        return calculateColor(node.getOutgoingEdges().size());
     }
 }

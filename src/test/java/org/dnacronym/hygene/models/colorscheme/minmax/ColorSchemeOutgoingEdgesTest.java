@@ -1,9 +1,11 @@
 package org.dnacronym.hygene.models.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.NewNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -24,12 +26,15 @@ final class ColorSchemeOutgoingEdgesTest {
 
 
     @Test
+    @SuppressWarnings("unchecked")
     void testOutgoingEdgesColor() {
-        final Node node = mock(Node.class);
-        when(node.getNumberOfOutgoingEdges()).thenReturn(3);
+        final NewNode node = mock(NewNode.class);
+        final Set outgoing = mock(Set.class);
+        when(outgoing.size()).thenReturn(5);
+        when(node.getOutgoingEdges()).thenReturn(outgoing);
 
         assertThat(colorSchemeOutgoingEdges.calculateColor(node)).isEqualTo(
-                Color.AZURE.interpolate(Color.BURLYWOOD, 3.0 / 32)
+                Color.AZURE.interpolate(Color.BURLYWOOD, 5.0 / 32)
         );
     }
 }

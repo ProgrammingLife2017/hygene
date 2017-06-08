@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.models.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.NewNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,17 +19,27 @@ final class ColorSchemeSequenceLengthTest {
 
     @BeforeEach
     void beforeEach() {
-        colorSchemeSequenceLength = new ColorSchemeSequenceLength(12, Color.CHOCOLATE, Color.CYAN);
+        colorSchemeSequenceLength = new ColorSchemeSequenceLength(120, Color.CHOCOLATE, Color.CYAN);
     }
 
 
     @Test
-    void testSequenceLengthColor() {
-        final Node node = mock(Node.class);
-        when(node.getSequenceLength()).thenReturn(78);
+    void testSequenceLengthCap() {
+        final NewNode node = mock(NewNode.class);
+        when(node.getLength()).thenReturn(200);
 
         assertThat(colorSchemeSequenceLength.calculateColor(node)).isEqualTo(
-                Color.CHOCOLATE.interpolate(Color.CYAN, 78.0 / 12)
+                Color.CHOCOLATE.interpolate(Color.CYAN, 1)
+        );
+    }
+
+    @Test
+    void testSequenceLengthColor() {
+        final NewNode node = mock(NewNode.class);
+        when(node.getLength()).thenReturn(78);
+
+        assertThat(colorSchemeSequenceLength.calculateColor(node)).isEqualTo(
+                Color.CHOCOLATE.interpolate(Color.CYAN, 78.0 / 120)
         );
     }
 }

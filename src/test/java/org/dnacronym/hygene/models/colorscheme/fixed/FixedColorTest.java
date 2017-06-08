@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.models.colorscheme.fixed;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.NewNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +24,6 @@ final class FixedColorTest {
 
     @Test
     void testSetFixedColor() {
-        assertThat(fixedColor.calculateColor(mock(Node.class))).isEqualTo(Color.ALICEBLUE);
+        assertThat(fixedColor.calculateColor(mock(NewNode.class))).isEqualTo(Color.ALICEBLUE);
     }
 }
