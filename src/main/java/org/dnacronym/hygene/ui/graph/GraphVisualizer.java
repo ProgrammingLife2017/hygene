@@ -23,10 +23,9 @@ import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadataCache;
-import org.dnacronym.hygene.models.colorscheme.minmax.ColorSchemeTotalEdges;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -101,10 +100,10 @@ public final class GraphVisualizer {
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
         graphDimensionsCalculator.getNodeHeightProperty().bind(nodeHeightProperty);
 
-        NewNode.setColorScheme(new ColorSchemeTotalEdges(10, Color.LIGHTBLUE, Color.CORAL));
-
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        NewNode.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(0).getValue());
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
