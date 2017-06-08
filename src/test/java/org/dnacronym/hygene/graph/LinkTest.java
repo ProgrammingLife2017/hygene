@@ -5,8 +5,6 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -39,8 +37,8 @@ final class LinkTest extends EdgeTest {
         EqualsVerifier.forClass(Link.class)
                 .withRedefinedSuperclass()
                 .withPrefabValues(NewNode.class,
-                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(NewNode.class), mock(NewNode.class)),
-                        new DummyNode(new HashSet<>(), new HashSet<>(), mock(NewNode.class), mock(NewNode.class)))
+                        new DummyNode(mock(NewNode.class), mock(NewNode.class)),
+                        new DummyNode(mock(NewNode.class), mock(NewNode.class)))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }

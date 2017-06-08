@@ -5,8 +5,6 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -23,9 +21,7 @@ final class SegmentTest extends NodeTest {
 
     @BeforeEach
     void setUp() {
-        super.setUp();
-
-        segment = new Segment(ID, LINE_NUMBER, SEQUENCE_LENGTH, getIncomingEdges(), getOutgoingEdges());
+        segment = new Segment(ID, LINE_NUMBER, SEQUENCE_LENGTH);
         setNode(segment);
     }
 
@@ -50,8 +46,8 @@ final class SegmentTest extends NodeTest {
         EqualsVerifier.forClass(Segment.class)
                 .withRedefinedSuperclass()
                 .withPrefabValues(NewNode.class,
-                        new Segment(59, 56, 15, new HashSet<>(), new HashSet<>()),
-                        new Segment(21, 48, 88, new HashSet<>(), new HashSet<>()))
+                        new Segment(59, 56, 15),
+                        new Segment(21, 48, 88))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }

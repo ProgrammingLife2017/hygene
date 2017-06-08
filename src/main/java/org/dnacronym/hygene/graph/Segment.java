@@ -1,8 +1,5 @@
 package org.dnacronym.hygene.graph;
 
-import java.util.HashSet;
-import java.util.Set;
-
 
 /**
  * Class representing a single, non-dummy segment node.
@@ -27,22 +24,6 @@ public final class Segment extends NewNode {
      * @param sequenceLength the length of the node
      */
     public Segment(final int id, final int lineNumber, final int sequenceLength) {
-        this(id, lineNumber, sequenceLength, new HashSet<>(), new HashSet<>());
-    }
-
-    /**
-     * Constructs a new {@link Segment} instance.
-     *
-     * @param id             the internal ID of the node
-     * @param lineNumber     the number of the corresponding segment in the GFA file this node was defined in
-     * @param sequenceLength the length of the node
-     * @param incomingEdges  the incoming edges
-     * @param outgoingEdges  the outgoing edges
-     */
-    public Segment(final int id, final int lineNumber, final int sequenceLength, final Set<Edge> incomingEdges,
-                   final Set<Edge> outgoingEdges) {
-        super(incomingEdges, outgoingEdges);
-
         this.id = id;
         this.lineNumber = lineNumber;
         this.sequenceLength = sequenceLength;

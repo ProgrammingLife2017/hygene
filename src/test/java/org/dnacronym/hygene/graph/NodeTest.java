@@ -1,10 +1,6 @@
 package org.dnacronym.hygene.graph;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,15 +13,6 @@ abstract class NodeTest {
     static final int Y_POSITION = 64;
 
     private NewNode node;
-    private Set<Edge> incomingEdges;
-    private Set<Edge> outgoingEdges;
-
-
-    @BeforeEach
-    void setUp() {
-        incomingEdges = new HashSet<>();
-        outgoingEdges = new HashSet<>();
-    }
 
 
     @Test
@@ -44,32 +31,14 @@ abstract class NodeTest {
 
     @Test
     final void testGetIncomingEdges() {
-        assertThat(node.getIncomingEdges()).isEqualTo(getIncomingEdges());
+        assertThat(node.getIncomingEdges()).isEmpty();
     }
 
     @Test
     final void testGetOutgoingEdges() {
-        assertThat(node.getOutgoingEdges()).isEqualTo(outgoingEdges);
+        assertThat(node.getOutgoingEdges()).isEmpty();
     }
 
-
-    /**
-     * Returns the incoming edges.
-     *
-     * @return the incoming edges
-     */
-    final Set<Edge> getIncomingEdges() {
-        return incomingEdges;
-    }
-
-    /**
-     * Returns the outgoing edges.
-     *
-     * @return the outgoing edges
-     */
-    final Set<Edge> getOutgoingEdges() {
-        return outgoingEdges;
-    }
 
     /**
      * Sets the {@link NewNode} instance to be tested.
