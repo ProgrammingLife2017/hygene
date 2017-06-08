@@ -9,7 +9,6 @@ import org.dnacronym.hygene.graph.Subgraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -22,6 +21,7 @@ import java.util.function.Consumer;
  * FAFOSP stands for "Felix Algorithm For Optimal Segment Positioning", and is a now-obsolete algorithm for laying
  * out graphs. Its algorithm for calculating horizontal layouts, FAFOSP-X, is still useful, however.
  */
+@SuppressWarnings("PMD.TooManyMethods") // Unfeasible to refactor to multiple classes
 public final class FafospLayerer implements SugiyamaLayerer {
     private static final int LAYER_WIDTH = 1000;
 
@@ -64,64 +64,35 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param nodes  a {@link Collection} of {@link NewNode}s
      * @param layers an array of layers
      */
-    @SuppressWarnings({
-            "PMD.AvoidInstantiatingObjectsInLoops", // That is exactly what this method should do
-            "PMD.ConfusingTernary", // Checking for not null is not confusing
-            "squid:S1188" // Cannot reduce lambda length without creating helper methods with large signatures
-    })
     private void addToLayers(final Collection<NewNode> nodes, final NewNode[][] layers) {
-        final Set<NewNode> allDummyNodes = new HashSet<>();
+        final Set<NewNode> addNodeLater = new HashSet<>();
 
         nodes.forEach(node -> {
             forEachLayer(node, layer -> addToLayerSomewhere(layers[layer], node));
 
-            final Set<Edge> firstEdges = new HashSet<>();
-            final Iterator<Edge> edges = node.getOutgoingEdges().iterator();
-            while (edges.hasNext()) {
-                final Edge edge = edges.next();
-                final NewNode neighbour = edge.getTo();
+            final Set<Edge> addEdgeLater = new HashSet<>();
+            final Set<Edge> removeEdgeLater = new HashSet<>();
 
+            node.getOutgoingEdges().forEach(edge -> {
                 if (layerSize(edge) < 0) {
-                    continue;
+                    return;
                 }
-                edges.remove();
-                neighbour.getIncomingEdges().remove(edge);
 
+                edge.getTo().getIncomingEdges().remove(edge);
+                removeEdgeLater.add(edge);
 
-                // Create dummy nodes
-                final List<DummyNode> dummyNodes = new ArrayList<>();
-                forEachLayer(edge, layer -> {
-                    final DummyNode dummy = new DummyNode(node, neighbour);
-                    dummy.setXPosition(layer * LAYER_WIDTH);
+                final List<DummyNode> dummyNodes = createDummyNodes(layers, edge);
+                addNodeLater.addAll(dummyNodes);
 
-                    dummyNodes.add(dummy);
-                    addToLayerSomewhere(layers[layer], dummy);
-                });
-                allDummyNodes.addAll(dummyNodes);
+                final Edge firstEdge = connectDummies(edge, dummyNodes);
+                addEdgeLater.add(firstEdge);
+            });
 
-
-                // Insert edges
-                final DummyEdge firstEdge = new DummyEdge(node, dummyNodes.get(0), edge);
-                firstEdges.add(firstEdge); // Add it after the iterator to prevent concurrent modification
-                dummyNodes.get(0).getIncomingEdges().add(firstEdge);
-
-                final DummyNode lastNode = dummyNodes.get(dummyNodes.size() - 1);
-                final DummyEdge lastEdge = new DummyEdge(lastNode, neighbour, edge);
-                lastNode.getOutgoingEdges().add(lastEdge);
-                neighbour.getIncomingEdges().add(lastEdge);
-
-                for (int i = 0; i < dummyNodes.size() - 1; i++) {
-                    final DummyEdge middleEdge = new DummyEdge(dummyNodes.get(i), dummyNodes.get(i + 1), edge);
-
-                    dummyNodes.get(i).getOutgoingEdges().add(middleEdge);
-                    dummyNodes.get(i + 1).getIncomingEdges().add(middleEdge);
-                }
-            }
-
-            node.getOutgoingEdges().addAll(firstEdges);
+            node.getOutgoingEdges().addAll(addEdgeLater);
+            node.getOutgoingEdges().removeAll(removeEdgeLater);
         });
 
-        nodes.addAll(allDummyNodes);
+        nodes.addAll(addNodeLater);
     }
 
 
@@ -163,6 +134,59 @@ public final class FafospLayerer implements SugiyamaLayerer {
         });
 
         return heights;
+    }
+
+    /**
+     * Creates a collection of unconnected {@link DummyNode}s, adds them to the correct layer, and sets their
+     * horizontal position.
+     *
+     * @param layers an array of layers
+     * @param edge   the {@link Edge} to replace with {@link DummyNode}s
+     * @return a collection of unconnected {@link DummyNode}s
+     */
+    private List<DummyNode> createDummyNodes(final NewNode[][] layers, final Edge edge) {
+        final List<DummyNode> dummyNodes = new ArrayList<>();
+
+        forEachLayer(edge, layer -> {
+            final DummyNode dummy = new DummyNode(edge.getFrom(), edge.getTo());
+            dummy.setXPosition(layer * LAYER_WIDTH);
+
+            dummyNodes.add(dummy);
+            addToLayerSomewhere(layers[layer], dummy);
+        });
+
+        return dummyNodes;
+    }
+
+    /**
+     * Connects the given {@link DummyNode}s with {@link DummyEdge}s and returns the first edge.
+     * <p>
+     * The returned {@link DummyEdge} is not added to the {@link NewNode} from which it departs, because this might
+     * result in a {@link java.util.ConcurrentModificationException}.
+     *
+     * @param edge       the original {@link Edge} that was replaced with {@link DummyNode}s
+     * @param dummyNodes the {@link DummyNode}s that replaced the given {@link Edge}
+     * @return the first of the added {@link DummyEdge}s
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Cannot be avoided
+    private Edge connectDummies(final Edge edge, final List<DummyNode> dummyNodes) {
+        final Edge firstEdge = new DummyEdge(edge.getFrom(), dummyNodes.get(0), edge);
+        // `firstEdge` should be added to `edge.getFrom()` by caller to prevent concurrent modification
+        dummyNodes.get(0).getIncomingEdges().add(firstEdge);
+
+        final NewNode lastNode = dummyNodes.get(dummyNodes.size() - 1);
+        final Edge lastEdge = new DummyEdge(lastNode, edge.getTo(), edge);
+        lastNode.getOutgoingEdges().add(lastEdge);
+        edge.getTo().getIncomingEdges().add(lastEdge);
+
+        for (int i = 0; i < dummyNodes.size() - 1; i++) {
+            final Edge middleEdge = new DummyEdge(dummyNodes.get(i), dummyNodes.get(i + 1), edge);
+
+            dummyNodes.get(i).getOutgoingEdges().add(middleEdge);
+            dummyNodes.get(i + 1).getIncomingEdges().add(middleEdge);
+        }
+
+        return firstEdge;
     }
 
 
