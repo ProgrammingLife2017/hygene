@@ -83,8 +83,6 @@ public final class Segment extends NewNode {
 
     @Override
     public String toString() {
-        return "Segment{" +
-                "id=" + id +
-                '}';
+        return "Segment{id=" + id + "}";
     }
 }
