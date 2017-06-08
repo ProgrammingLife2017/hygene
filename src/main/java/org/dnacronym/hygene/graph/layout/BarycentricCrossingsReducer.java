@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,7 +41,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         final Map<NewNode, Integer> lengthyNodes = lengthyNodeFinder.findInLayers(layers);
 
         for (int i = 1; i < layers.length; i++) {
-            layers[i] = reduceCrossingsBetweenLayers(layers[i - 1], layers[i], lengthyNodes);
+            layers[i] = reduceCrossingsBetweenLayers(layers, i, lengthyNodes);
         }
     }
 
@@ -54,22 +55,29 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * by the total number of parents the node haves. So, the ordinal position of a node will be the average of the
      * ordinal positions of its parents.
      *
-     * @param layer1       the layer for which the node positions are already known
-     * @param layer2       the layer for which we want to determine the node positions
+     * @param layers       the layers
+     * @param layer2Index  the index of the second layer, will also be used to compute the second layer
      * @param lengthyNodes a map mapping nodes to the summed length of all its lengthy children
      * @return the nodes from layer 2 sorted by the computed ordinal position
      */
     @SuppressWarnings("nullness") // False positive
-    private NewNode[] reduceCrossingsBetweenLayers(final NewNode[] layer1, final NewNode[] layer2,
+    private NewNode[] reduceCrossingsBetweenLayers(final NewNode[][] layers, final int layer2Index,
                                                    final Map<NewNode, Integer> lengthyNodes) {
+        final NewNode[] layer1 = layers[layer2Index - 1];
+        final NewNode[] layer2 = layers[layer2Index];
+
         final Map<NewNode, Double> positions = new LinkedHashMap<>(); // Maps nodes to ordinal positions
 
         final List<@Nullable NewNode> result = new ArrayList<>();
-        for (int i = 0; i < layer2.length; i++) {
+        for (int i = result.size(); i < layer2.length; i++) {
             result.add(null);
         }
 
         final List<NewNode> nonLengthy = giveLengthyNodesSamePosition(layer1, layer2, result);
+        final Map<Integer, NewNode> lengthy = IntStream.range(0, result.size())
+                .filter(index -> result.get(index) != null)
+                .boxed()
+                .collect(Collectors.toMap(Function.identity(), result::get, (a, b) -> a, LinkedHashMap::new));
 
         for (final NewNode node : nonLengthy) {
             final int[] neighboursInLayer1 = neighboursInLayer1(node, layer1);
@@ -79,13 +87,13 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             positions.put(node, nodeOrdinal);
         }
 
-        final List<NewNode> sortedNonLengthy = positions.entrySet()
-                .stream()
+        final Map<NewNode, Double> sortedNonLengthy = positions.entrySet().stream()
                 .sorted(getNodeOrderingComparator(lengthyNodes))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
 
-        fillGapsWithResults(sortedNonLengthy, result);
+        fillGapsWithResults(sortedNonLengthy, lengthy, result);
+
+        addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(result, layer2Index, layers);
 
         return result.toArray(new NewNode[result.size()]);
     }
@@ -112,19 +120,20 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Puts lengthy nodes in the same position in the results as their parent.
      *
-     * @param layer1  the nodes in layer 1
-     * @param layer2  the nodes in layer 2
-     * @param results the results of the current iteration
+     * @param layer1 the nodes in layer 1
+     * @param layer2 the nodes in layer 2
+     * @param result the results of the current iteration
      * @return list containing all nodes that are not lengthy
      */
     private List<NewNode> giveLengthyNodesSamePosition(final NewNode[] layer1, final NewNode[] layer2,
-                                                       final List<@Nullable NewNode> results) {
+                                                       final List<@Nullable NewNode> result) {
         final List<NewNode> nonLengthy = new ArrayList<>();
 
         Arrays.stream(layer2).forEach(layer2Node -> {
             final int layer1Position = ArrayUtils.indexOf(layer1, layer2Node);
             if (layer1Position > -1) {
-                results.set(layer1Position, layer2Node);
+                enlargeListWithDummyNodes(result, layer1Position);
+                result.set(layer1Position, layer2Node);
             } else {
                 nonLengthy.add(layer2Node);
             }
@@ -160,31 +169,89 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Fills the gaps around the pre-positioned lengthy nodes with the nodes of the result of the crossing reduction.
      *
-     * @param sortedNonLengthy a list of non lengthy nodes in the correct order
+     * @param sortedNonLengthy a map from non lengthy nodes in the correct order to their positions
+     * @param lengthy          a map from the positions of lengthy nodes to the lengthy nodes in the correct order
      * @param result           the result of the current iteration
      */
-    private void fillGapsWithResults(final List<NewNode> sortedNonLengthy, final List<@Nullable NewNode> result) {
+    private void fillGapsWithResults(final Map<NewNode, Double> sortedNonLengthy,
+                                     final Map<Integer, NewNode> lengthy,
+                                     final List<@Nullable NewNode> result) {
         int resultPosition = 0;
-        for (final NewNode node : sortedNonLengthy) {
+        for (final Map.Entry<NewNode, Double> entry : sortedNonLengthy.entrySet()) {
+
+            // Make sure that nodes are correctly aligned between/around lengthy nodes
+            for (final Map.Entry<Integer, NewNode> lengthyEntry : lengthy.entrySet()) {
+                if (entry.getValue() > lengthyEntry.getKey()) {
+                    resultPosition = lengthyEntry.getKey() + 1;
+                }
+            }
+
+            // Make the result list bigger if needed
+            enlargeListWithDummyNodes(result, resultPosition);
+
             while (result.get(resultPosition) != null) {
                 resultPosition++;
             }
 
-            result.set(resultPosition, node);
+            result.set(resultPosition, entry.getKey());
 
             resultPosition++;
         }
     }
 
     /**
+     * Adds dummy nodes between nodes with a large children width and lengthy nodes, in order to move lengthy nodes
+     * to the right.
+     *
+     * @param result      the result of the current iteration
+     * @param layer2Index the index of the second layer
+     * @param layers      the layers
+     */
+    @SuppressWarnings("squid:ForLoopCounterChangedCheck") // For this specific implementation this is not a problem
+    private void addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(final List<@Nullable NewNode> result,
+                                                                      final int layer2Index, final NewNode[][] layers) {
+        for (int i = 0; i < result.size() - 1; i++) {
+            final NewNode node = result.get(i);
+            final NewNode rightNeighbour = result.get(i + 1);
+
+            if (node == null || rightNeighbour == null) {
+                continue;
+            }
+
+            if (lengthyNodeFinder.isLengthy(rightNeighbour, layer2Index, layers)) {
+                final int childrenWidth = getMaxChildrenWidth(node);
+
+                for (int child = 0; child < childrenWidth - 1; child++) {
+                    result.add(i + 1, null);
+                }
+
+                if (childrenWidth > 0) {
+                    i += childrenWidth - 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * Enlarges the result list to the given size padded with null values.
+     *
+     * @param result  the result list to be enlarged
+     * @param newSize the new size of the list
+     */
+    private void enlargeListWithDummyNodes(final List<@Nullable NewNode> result, final int newSize) {
+        if (result.size() - 1 < newSize) {
+            for (int i = result.size(); i <= newSize; i++) {
+                result.add(null);
+            }
+        }
+    }
+
+    /**
      * Returns the maximum number of children with the same distance to the given node.
      *
-     * @param layers an array of layers
-     * @param node   a {@link NewNode}
+     * @param node a {@link NewNode}
      * @return the maximum number of children with the same distance to the given node
      */
-    @SuppressWarnings("PMD.UnusedPrivateMethod") // This method will be used later
-    // TODO use this method and remove the suppression above
     private int getMaxChildrenWidth(final NewNode node) {
         int[] maxChildrenWidth = {-1};
 
