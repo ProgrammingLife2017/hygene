@@ -24,7 +24,7 @@ public final class SearchQuery {
     private static final int BATCH_SIZE = 1000;
 
     private final GfaFile gfaFile;
-    private final int numNodesInGraph;
+    private final int numberOfNodesInGraph;
 
 
     /**
@@ -34,7 +34,7 @@ public final class SearchQuery {
      */
     public SearchQuery(final GfaFile gfaFile) {
         this.gfaFile = gfaFile;
-        this.numNodesInGraph = gfaFile.getGraph().getNodeArrays().length;
+        this.numberOfNodesInGraph = gfaFile.getGraph().getNodeArrays().length;
     }
 
 
@@ -46,10 +46,7 @@ public final class SearchQuery {
      * @throws ParseException if the GFA file is invalid in some form
      */
     public Set<Integer> executeNameRegexQuery(final String regex) throws ParseException {
-        return executeQuery(nodeMetadata -> {
-            final Pattern pattern = Pattern.compile(regex);
-            return pattern.matcher(nodeMetadata.getName()).matches();
-        });
+        return executeQuery(nodeMetadata -> Pattern.compile(regex).matcher(nodeMetadata.getName()).matches());
     }
 
     /**
@@ -61,7 +58,7 @@ public final class SearchQuery {
      */
     public Set<Integer> executeQuery(final Predicate<NodeMetadata> isInQuery) throws ParseException {
         final MetadataParser metadataParser = new MetadataParser();
-        final int numBatches = numNodesInGraph / BATCH_SIZE + 1;
+        final int numBatches = numberOfNodesInGraph / BATCH_SIZE + 1;
         final Set<Integer> nodeIds = new HashSet<>();
 
         for (int batchIndex = 0; batchIndex < numBatches; batchIndex++) {
@@ -83,9 +80,10 @@ public final class SearchQuery {
      * @return the sorted map of node IDs to line numbers
      */
     private Map<Integer, Integer> getLineNumbersOfBatch(final int batchIndex) {
-        final List<Integer> batchNodeIds = IntStream.rangeClosed(
-                batchIndex * BATCH_SIZE + 1, Math.max(batchIndex * (BATCH_SIZE + 1), numNodesInGraph - 2)
-        ).boxed().collect(Collectors.toList());
+        final List<Integer> batchNodeIds = IntStream
+                .rangeClosed(batchIndex * BATCH_SIZE + 1,
+                        Math.max(batchIndex * (BATCH_SIZE + 1), numberOfNodesInGraph - 2))
+                .boxed().collect(Collectors.toList());
 
         return batchNodeIds.stream()
                 .sorted(Comparator.comparingInt(nodeId -> gfaFile.getGraph().getLineNumber(nodeId)))

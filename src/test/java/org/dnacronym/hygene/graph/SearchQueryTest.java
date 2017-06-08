@@ -3,8 +3,6 @@ package org.dnacronym.hygene.graph;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
-import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
-import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +33,6 @@ class SearchQueryTest {
 
     @AfterEach
     void afterEach() throws IOException {
-        NewGfaParserFactory.setInstance(null);
-        MetadataParserFactory.setInstance(null);
         Files.deleteIfExists(Paths.get(GFA_TEST_FILE + FileDatabaseDriver.DB_FILE_EXTENSION));
         Files.deleteIfExists(Paths.get(GFA_TEST_FILE + ".hygenecache"));
     }
