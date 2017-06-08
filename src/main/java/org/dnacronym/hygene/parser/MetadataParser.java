@@ -5,10 +5,10 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 
 import java.io.BufferedReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -46,8 +46,8 @@ public final class MetadataParser {
      * Parses the metadata of multiple nodes with limited file IO by reading the file only once.
      *
      * @param gfa         a reference to the current {@link GfaFile}
-     * @param lineNumbers the line numbers where the nodes should be located, sorted from lowest to highest,
-     *                    results will be given the same key as provided in this map
+     * @param lineNumbers the line numbers where the nodes should be located, sorted from lowest to highest, results
+     *                    will be given the same key as provided in this map
      * @return a map in the {@code provided key => node metadata} format
      * @throws ParseException if the GFA file or given line is invalid
      */
@@ -72,8 +72,8 @@ public final class MetadataParser {
                 st.nextToken();
                 final String name = st.nextToken();
                 final String sequence = st.nextToken();
-            st.nextToken(); // Ignore asterisk
-            final List<String> genomes = parseGenomes(st.nextToken(), lineNumber);
+                st.nextToken(); // Ignore asterisk
+                final List<String> genomes = parseGenomes(st.nextToken(), lineNumber);
 
                 result.put(entry.getKey(), new NodeMetadata(name, sequence, genomes));
             } catch (final NoSuchElementException e) {
