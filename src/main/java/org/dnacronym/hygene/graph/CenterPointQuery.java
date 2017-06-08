@@ -152,7 +152,7 @@ public final class CenterPointQuery {
             nodes.put(nodeId, node.getUuid());
             subgraph.addNode(node);
         });
-        iterator.visitIndirectNeighboursWithinRange(centre, radius - 1, (depth, nodeId) -> addEdges(nodeId));
+        iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> addEdges(nodeId));
         LAYOUT.layOut(subgraph);
 
         postEvent();
@@ -334,16 +334,6 @@ public final class CenterPointQuery {
             final Edge edge = new Edge(node, neighbour);
             node.getOutgoingEdges().add(edge);
             neighbour.getIncomingEdges().add(edge);
-        });
-        iterator.visitDirectNeighbours(nodeId, SequenceDirection.LEFT, neighbourId -> {
-            final NewNode neighbour = getNode(neighbourId);
-            if (node == null || neighbour == null) {
-                return;
-            }
-
-            final Edge edge = new Edge(neighbour, node);
-            node.getIncomingEdges().add(edge);
-            neighbour.getOutgoingEdges().add(edge);
         });
     }
 
