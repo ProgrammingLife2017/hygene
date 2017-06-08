@@ -41,6 +41,24 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
     /**
+     * Allocates and returns an array of layers into which the given nodes can be placed.
+     *
+     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @return an array of layers
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
+    private NewNode[][] createLayers(final Collection<NewNode> nodes) {
+        final int[] layerHeights = calculateHeights(nodes);
+        final NewNode[][] layers = new NewNode[layerHeights.length][];
+
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = new NewNode[layerHeights[i]];
+        }
+
+        return layers;
+    }
+
+    /**
      * Places the given nodes into the proper layers.
      *
      * @param nodes  a {@link Collection} of {@link NewNode}s
@@ -136,24 +154,6 @@ public final class FafospLayerer implements SugiyamaLayerer {
         });
 
         return heights;
-    }
-
-    /**
-     * Allocates and returns an array of layers into which the given nodes can be placed.
-     *
-     * @param nodes a {@link Collection} of {@link NewNode}s
-     * @return an array of layers
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
-    private NewNode[][] createLayers(final Collection<NewNode> nodes) {
-        final int[] layerHeights = calculateHeights(nodes);
-        final NewNode[][] layers = new NewNode[layerHeights.length][];
-
-        for (int i = 0; i < layers.length; i++) {
-            layers[i] = new NewNode[layerHeights[i]];
-        }
-
-        return layers;
     }
 
 
