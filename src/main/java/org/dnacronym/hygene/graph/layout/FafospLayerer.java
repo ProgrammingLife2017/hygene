@@ -7,7 +7,9 @@ import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -73,18 +75,19 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 addToLayerSomewhere(layers[layer], node);
             }
 
+            final Set<Edge> toAdd = new HashSet<>();
             final Iterator<Edge> edges = node.getOutgoingEdges().iterator();
             while (edges.hasNext()) {
                 final Edge edge = edges.next();
                 final NewNode neighbour = edge.getTo();
                 final int neighbourStartLayer = positionToLayer(neighbour.getXPosition());
 
-                final int minLayer = nodeEndLayer + 1;
+                final int minLayer = nodeEndLayer;
                 final int maxLayer = neighbourStartLayer - 1;
+                assert maxLayer >= minLayer;
 
-                if (maxLayer - minLayer > 0) {
-                    edges.remove();
-                }
+                neighbour.getIncomingEdges().remove(edge);
+                edges.remove();
 
                 DummyNode previousDummy = null;
                 for (int layer = minLayer; layer <= maxLayer; layer++) {
@@ -106,7 +109,11 @@ public final class FafospLayerer implements SugiyamaLayerer {
                         outgoing = null;
                     }
 
-                    incoming.getFrom().getOutgoingEdges().add(incoming);
+                    if (incoming.getFrom().equals(node)) {
+                        toAdd.add(incoming);
+                    } else {
+                        incoming.getFrom().getOutgoingEdges().add(incoming);
+                    }
                     incoming.getTo().getIncomingEdges().add(incoming);
                     if (outgoing != null) {
                         outgoing.getFrom().getOutgoingEdges().add(outgoing);
@@ -116,6 +123,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
                     previousDummy = dummy;
                 }
             }
+
+            node.getOutgoingEdges().addAll(toAdd);
         });
     }
 
@@ -126,10 +135,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param position a position
      * @return the number of the layer the given position would be in
      */
-
     private int positionToLayer(final int position) {
         assert position >= 0;
-        return ((position + LAYER_WIDTH - 1) / LAYER_WIDTH) * LAYER_WIDTH;
+        return (position + LAYER_WIDTH - 1) / LAYER_WIDTH;
     }
 
     /**
@@ -142,7 +150,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
     private int getLayerCount(final Collection<NewNode> nodes) {
         assert !nodes.isEmpty();
 
-        final int maxPosition = nodes.stream().map(NewNode::getXPosition).max(Integer::compare)
+        final int maxPosition = nodes.stream()
+                .map(node -> node.getXPosition() + node.getLength())
+                .max(Integer::compare)
                 .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
         return positionToLayer(maxPosition);
     }
@@ -169,7 +179,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 final NewNode neighbour = edge.getTo();
                 final int neighbourStartLayer = positionToLayer(neighbour.getXPosition());
 
-                for (int layer = nodeEndLayer + 1; layer < neighbourStartLayer; layer++) {
+                final int minLayer = nodeEndLayer;
+                final int maxLayer = neighbourStartLayer - 1;
+                for (int layer = minLayer; layer <= maxLayer; layer++) {
                     heights[layer]++;
                 }
             });
@@ -192,6 +204,6 @@ public final class FafospLayerer implements SugiyamaLayerer {
             }
         }
 
-        throw new IllegalStateException("");
+        throw new IllegalStateException("Layer is full, getHeights method is erroneous.");
     }
 }
