@@ -17,8 +17,7 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(600);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
     }
 
     @Test
@@ -29,10 +28,8 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(700);
-        assertThat(getGraph().getUnscaledXEdgeCount(2)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1100);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(3000);
     }
 
     @Test
@@ -43,12 +40,9 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(300);
-        assertThat(getGraph().getUnscaledXEdgeCount(2)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1300);
-        assertThat(getGraph().getUnscaledXEdgeCount(3)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1700);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(4000);
     }
 
     @Test
@@ -59,12 +53,9 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(900);
-        assertThat(getGraph().getUnscaledXEdgeCount(2)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(2800);
-        assertThat(getGraph().getUnscaledXEdgeCount(3)).isEqualTo(3);
-        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(3300);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(3000);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(6000);
     }
 
     /**
@@ -78,14 +69,10 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(700);
-        assertThat(getGraph().getUnscaledXEdgeCount(2)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1200);
-        assertThat(getGraph().getUnscaledXEdgeCount(3)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(2100);
-        assertThat(getGraph().getUnscaledXEdgeCount(4)).isEqualTo(3);
-        assertThat(getGraph().getUnscaledXPosition(4)).isEqualTo(3300);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(3000);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(3000);
+        assertThat(getGraph().getUnscaledXPosition(4)).isEqualTo(6000);
     }
 
     /**
@@ -99,12 +86,9 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1400);
-        assertThat(getGraph().getUnscaledXEdgeCount(2)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(2900);
-        assertThat(getGraph().getUnscaledXEdgeCount(3)).isEqualTo(3);
-        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(3700);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(4000);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(7000);
     }
 
     @Test
@@ -115,11 +99,8 @@ final class NewFafospXTest extends GraphTestBase {
 
         getGraph().fafosp().horizontal();
 
-        assertThat(getGraph().getUnscaledXEdgeCount(1)).isEqualTo(1);
-        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(300);
-        assertThat(getGraph().getUnscaledXEdgeCount(2)).isEqualTo(3);
-        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(1500);
-        assertThat(getGraph().getUnscaledXEdgeCount(3)).isEqualTo(2);
-        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(1000);
+        assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(5000);
+        assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(3000);
     }
 }

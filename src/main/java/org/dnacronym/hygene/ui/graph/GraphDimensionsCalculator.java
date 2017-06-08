@@ -226,7 +226,7 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     double computeXPosition(final NewNode node) {
-        final int xPosition = node.getXPosition() - node.getLength();
+        final int xPosition = node.getXPosition();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
 
