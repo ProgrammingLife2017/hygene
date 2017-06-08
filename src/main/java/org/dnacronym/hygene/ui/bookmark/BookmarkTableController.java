@@ -1,16 +1,13 @@
 package org.dnacronym.hygene.ui.bookmark;
 
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,9 +31,7 @@ public final class BookmarkTableController implements Initializable {
     private GraphStore graphStore;
 
     @FXML
-    private AnchorPane tableAnchor;
-    @FXML
-    private ScrollPane bookmarksPane;
+    private ScrollPane tablePane;
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
      * center node id in {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} is updated to the one in the
@@ -52,8 +47,6 @@ public final class BookmarkTableController implements Initializable {
     private TableColumn<SimpleBookmark, Number> radius;
     @FXML
     private TableColumn<SimpleBookmark, String> description;
-    @FXML
-    private Button hideButton;
 
 
     /**
@@ -107,14 +100,10 @@ public final class BookmarkTableController implements Initializable {
 
         bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
 
-        tableAnchor.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        tableAnchor.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty());
-        hideButton.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
-                .then(">")
-                .otherwise("<"));
-
-        bookmarksPane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        bookmarksPane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
+        tablePane.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty().and(
+                graphStore.getGfaFileProperty().isNotNull()));
+        tablePane.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty().and(
+                graphStore.getGfaFileProperty().isNotNull()));
     }
 
     /**
