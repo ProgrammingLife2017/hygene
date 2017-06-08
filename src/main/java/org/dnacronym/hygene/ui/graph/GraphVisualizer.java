@@ -115,7 +115,7 @@ public final class GraphVisualizer {
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
-        nodePropertiesVisibleProperty = new SimpleBooleanProperty(true);
+        nodePropertiesVisibleProperty = new SimpleBooleanProperty();
 
         graphDimensionsCalculator.getGraphProperty()
                 .addListener((observable, oldValue, newValue) -> setGraph(newValue));
