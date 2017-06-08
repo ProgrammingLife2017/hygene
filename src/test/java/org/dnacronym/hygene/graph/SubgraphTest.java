@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -22,19 +20,17 @@ final class SubgraphTest {
     private static final Random RANDOM = new Random();
 
     private Subgraph subgraph;
-    private Set<NewNode> nodes;
 
 
     @BeforeEach
     void setUp() {
-        nodes = new HashSet<>();
-        subgraph = new Subgraph(nodes);
+        subgraph = new Subgraph();
     }
 
 
     @Test
     void testGetNodes() {
-        assertThat(subgraph.getNodes()).isEqualTo(nodes);
+        assertThat(subgraph.getNodes()).isEmpty();
     }
 
     @Test
