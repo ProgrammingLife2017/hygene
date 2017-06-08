@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<Menu mnemonicParsing="false" text="View" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.dnacronym.hygene.ui.menu.ViewMenuController">
+    <items>
+        <MenuItem fx:id="toggleNodeProperties" onAction="#toggleNodePropertiesAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem fx:id="toggleBookmarkCreate" onAction="#toggleBookmarkCreateAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="K" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem fx:id="toggleBookmarkTable" onAction="#toggleBookmarkTableAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem fx:id="toggleSequenceVisualizer" onAction="#toggleSequenceVisualizerAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+    </items>
+</Menu>

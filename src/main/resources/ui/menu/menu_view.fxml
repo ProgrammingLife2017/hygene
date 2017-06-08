@@ -34,6 +34,7 @@
                 </MenuItem>
             </items>
         </Menu>
+        <fx:include source="view_menu.fxml"/>
         <fx:include source="tools_menu.fxml"/>
     </menus>
 </MenuBar>
