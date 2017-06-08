@@ -151,6 +151,7 @@ public final class NodeDrawingToolkit {
 
         private Color color;
 
+
         /**
          * Creates a new {@link HighlightType}.
          *

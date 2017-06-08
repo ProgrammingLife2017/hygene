@@ -45,7 +45,7 @@ import java.util.List;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings("PMD.ExcessiveImports") // This will be fixed at a later date.
+@SuppressWarnings("PMD.ExcessiveImports") // This will be fixed at a later date
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
@@ -125,9 +125,9 @@ public final class GraphVisualizer {
      * The node is afterwards added to the {@link RTree}.
      *
      * @param node       the node to draw
-     * @param bookmarked the list of ids of bookmarked nodes
+     * @param bookmarked the boolean indicating whether this node is bookmarked
      */
-    private void drawNode(final NewNode node, final List<Integer> bookmarked) {
+    private void drawNode(final NewNode node, final boolean bookmarked) {
         if (!(node instanceof Segment)) {
             return;
         }
@@ -151,7 +151,7 @@ public final class GraphVisualizer {
                         + " to retrieve node's " + nodeId + " metadata from drawing", e);
             }
         }
-        if (bookmarked.contains(nodeId)) {
+        if (bookmarked) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
@@ -247,7 +247,7 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(node, bookmarkedNodeIds);
+            drawNode(node, bookmarkedNodeIds.contains(node instanceof Segment ? ((Segment) node).getId() : -1));
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
