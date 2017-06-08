@@ -13,10 +13,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<TitledPane animated="false" collapsible="false" text="Node Sequence View" xmlns="http://javafx.com/javafx/8"
+<TitledPane fx:id="sequenceViewPane" animated="false" collapsible="false" text="Node Sequence View"
+            xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.node.SequenceController">
     <content>
-        <AnchorPane fx:id="sequenceViewPane" maxWidth="Infinity" prefHeight="210.0" prefWidth="850.0">
+        <AnchorPane maxWidth="Infinity" prefHeight="210.0" prefWidth="850.0">
             <children>
                 <Canvas fx:id="sequenceCanvas" height="100.0" AnchorPane.bottomAnchor="10.0"
                         AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0"/>

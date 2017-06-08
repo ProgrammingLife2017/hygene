@@ -144,6 +144,9 @@ public final class ToolsMenuController implements Initializable {
      */
     @FXML
     void toggleBookmarkCreateAction(final ActionEvent actionEvent) {
+        simpleBookmarkStore.getBookmarkCreateVisibleProperty().set(
+                !simpleBookmarkStore.getBookmarkCreateVisibleProperty().get()
+        );
         actionEvent.consume();
     }
 
