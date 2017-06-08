@@ -81,7 +81,7 @@ public final class SimpleBookmarkStore {
         });
 
         tableVisibleProperty = new SimpleBooleanProperty();
-        bookmarkCreateVisibleProperty = new SimpleBooleanProperty();
+        bookmarkCreateVisibleProperty = new SimpleBooleanProperty(true);
     }
 
 
