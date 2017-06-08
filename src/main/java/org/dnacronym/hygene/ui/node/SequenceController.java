@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +34,8 @@ public final class SequenceController implements Initializable {
 
     @FXML
     private TitledPane sequenceViewPane;
+    @FXML
+    private GridPane sequenceGrid;
     @FXML
     private TextField lengthField;
     @FXML
@@ -69,7 +72,7 @@ public final class SequenceController implements Initializable {
         });
 
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
-        sequenceCanvas.widthProperty().bind(sequenceViewPane.widthProperty().subtract(CANVAS_PADDING * 2));
+        sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
         sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty());
         sequenceViewPane.managedProperty().bind(sequenceVisualizer.getVisibleProperty());
