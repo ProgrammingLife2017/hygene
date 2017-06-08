@@ -70,7 +70,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         final Map<NewNode, Double> positions = new LinkedHashMap<>(); // Maps nodes to ordinal positions
 
         final List<@Nullable NewNode> result = new ArrayList<>();
-        enlargeList(result, layer2.length - 1);
+        enlargeList(result, layer2.length);
 
         final List<NewNode> nonLengthy = giveLengthyNodesSamePosition(layer1, layer2, result);
         final Map<Integer, NewNode> lengthy = IntStream.range(0, result.size())
@@ -136,7 +136,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         Arrays.stream(layer2).forEach(layer2Node -> {
             final int layer1Position = ArrayUtils.indexOf(layer1, layer2Node);
             if (layer1Position > -1) {
-                enlargeList(result, layer1Position);
+                enlargeList(result, layer1Position + 1);
                 result.set(layer1Position, layer2Node);
             } else {
                 nonLengthy.add(layer2Node);
@@ -191,12 +191,12 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             }
 
             // Make the result list bigger if needed
-            enlargeList(result, resultPosition);
+            enlargeList(result, resultPosition + 1);
 
             while (result.get(resultPosition) != null) {
                 resultPosition++;
 
-                enlargeList(result, resultPosition);
+                enlargeList(result, resultPosition + 1);
             }
 
             result.set(resultPosition, entry.getKey());
@@ -245,7 +245,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * @param newSize the new size of the list
      */
     private void enlargeList(final List<@Nullable NewNode> result, final int newSize) {
-        while (result.size() <= newSize) {
+        while (result.size() < newSize) {
             result.add(null);
         }
     }
