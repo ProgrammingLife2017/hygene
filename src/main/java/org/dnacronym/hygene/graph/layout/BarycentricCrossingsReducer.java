@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.NewNode;
 
@@ -26,7 +25,7 @@ import java.util.stream.IntStream;
 @SuppressWarnings("keyfor") // Not possible to add the annotations for this within the lambdas used
 public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReducer {
     private final LengthyNodeFinder lengthyNodeFinder;
-    private @MonotonicNonNull Map<NewNode, Integer> lengthyNodes;
+
 
     /**
      * Constructs and initializes {@link BarycentricCrossingsReducer}.
@@ -35,12 +34,13 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         lengthyNodeFinder = new LengthyNodeFinder();
     }
 
+
     @Override
     public void reduceCrossings(final NewNode[][] layers) {
-        lengthyNodes = lengthyNodeFinder.findInLayers(layers);
+        final Map<NewNode, Integer> lengthyNodes = lengthyNodeFinder.findInLayers(layers);
 
         for (int i = 1; i < layers.length; i++) {
-            layers[i] = reduceCrossingsBetweenLayers(layers[i - 1], layers[i]);
+            layers[i] = reduceCrossingsBetweenLayers(layers[i - 1], layers[i], lengthyNodes);
         }
     }
 
@@ -54,13 +54,15 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * by the total number of parents the node haves. So, the ordinal position of a node will be the average of the
      * ordinal positions of its parents.
      *
-     * @param layer1 the layer for which the node positions are already known
-     * @param layer2 the layer for which we want to determine the node positions
+     * @param layer1       the layer for which the node positions are already known
+     * @param layer2       the layer for which we want to determine the node positions
+     * @param lengthyNodes a map mapping nodes to the summed length of all its lengthy children
      * @return the nodes from layer 2 sorted by the computed ordinal position
      */
-    @SuppressWarnings("nullness") // false positive
-    private NewNode[] reduceCrossingsBetweenLayers(final NewNode[] layer1, final NewNode[] layer2) {
-        final Map<NewNode, Double> positions = new LinkedHashMap<>(); // maps nodes to ordinal positions
+    @SuppressWarnings("nullness") // False positive
+    private NewNode[] reduceCrossingsBetweenLayers(final NewNode[] layer1, final NewNode[] layer2,
+                                                   final Map<NewNode, Integer> lengthyNodes) {
+        final Map<NewNode, Double> positions = new LinkedHashMap<>(); // Maps nodes to ordinal positions
 
         final List<@Nullable NewNode> result = new ArrayList<>();
         for (int i = 0; i < layer2.length; i++) {
@@ -79,7 +81,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
         final List<NewNode> sortedNonLengthy = positions.entrySet()
                 .stream()
-                .sorted(getNodeOrderingComparator())
+                .sorted(getNodeOrderingComparator(lengthyNodes))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
@@ -110,8 +112,8 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Puts lengthy nodes in the same position in the results as their parent.
      *
-     * @param layer1 the nodes in layer 1
-     * @param layer2 the nodes in layer 2
+     * @param layer1  the nodes in layer 1
+     * @param layer2  the nodes in layer 2
      * @param results the results of the current iteration
      * @return list containing all nodes that are not lengthy
      */
@@ -137,12 +139,13 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * First it will compare the ordinal positions, if they are not equal then the lengthy nodes length of a node will
      * be compared. The highest lengthy nodes length will be put on the left.
      *
+     * @param lengthyNodes map mapping nodes to the summed length of all its lengthy children
      * @return a comparator
      */
-    private Comparator<Map.Entry<NewNode, Double>> getNodeOrderingComparator() {
+    private Comparator<Map.Entry<NewNode, Double>> getNodeOrderingComparator(final Map<NewNode, Integer> lengthyNodes) {
         return (entry1, entry2) -> {
             final int compare = Double.compare(entry1.getValue(), entry2.getValue());
-            if (compare == 0 && lengthyNodes != null) {
+            if (compare == 0) {
                 final Integer lengthyNodeLengthEntry1 = lengthyNodes.get(entry1.getKey());
                 final Integer lengthyNodeLengthEntry2 = lengthyNodes.get(entry2.getKey());
 
@@ -158,7 +161,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * Fills the gaps around the pre-positioned lengthy nodes with the nodes of the result of the crossing reduction.
      *
      * @param sortedNonLengthy a list of non lengthy nodes in the correct order
-     * @param result the result of the current iteration
+     * @param result           the result of the current iteration
      */
     private void fillGapsWithResults(final List<NewNode> sortedNonLengthy, final List<@Nullable NewNode> result) {
         int resultPosition = 0;
