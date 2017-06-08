@@ -37,7 +37,7 @@ final class ColorSchemeTotalEdgesTest {
         when(node.getOutgoingEdges()).thenReturn(outgoing);
 
         assertThat(colorSchemeTotalEdges.calculateColor(node)).isEqualTo(
-                Color.BROWN.interpolate(Color.CORNSILK, 6.0 / colorSchemeTotalEdges.getMaxValue())
+                Color.BROWN.interpolate(Color.CORNSILK, 6.0 / 44)
         );
     }
 }
