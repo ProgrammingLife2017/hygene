@@ -174,15 +174,6 @@ public final class SimpleBookmarkStore {
     }
 
     /**
-     * The {@link BooleanProperty} which decides the visibility of the table.
-     *
-     * @return {@link BooleanProperty} which decides the visibility of the table
-     */
-    public BooleanProperty getTableVisibleProperty() {
-        return tableVisibleProperty;
-    }
-
-    /**
      * The {@link BooleanProperty} which decides the visibility of the bookmark create pane.
      *
      * @return {@link BooleanProperty} which decides the visibility of the bookmark create pane

@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.menu;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -23,9 +26,19 @@ final class ViewMenuControllerTest extends UITestBase {
 
     @Override
     public void beforeEach() {
+        final BooleanProperty bookmarkTableVisible = new SimpleBooleanProperty();
+        final BooleanProperty bookmarkCreateVisible = new SimpleBooleanProperty();
         simpleBookmarkStore = mock(SimpleBookmarkStore.class);
+        when(simpleBookmarkStore.getTableVisibleProperty()).thenReturn(bookmarkTableVisible);
+        when(simpleBookmarkStore.getBookmarkCreateVisibleProperty()).thenReturn(bookmarkCreateVisible);
+
+        final BooleanProperty sequenceVisible = new SimpleBooleanProperty();
         sequenceVisualizer = mock(SequenceVisualizer.class);
+        when(sequenceVisualizer.getVisibleProperty()).thenReturn(sequenceVisible);
+
+        final BooleanProperty nodePropertiesVisible = new SimpleBooleanProperty();
         graphVisualizer = mock(GraphVisualizer.class);
+        when(graphVisualizer.getNodePropertiesVisibleProperty()).thenReturn(nodePropertiesVisible);
 
         viewMenuController = new ViewMenuController();
         viewMenuController.setSimpleBookmarkStore(simpleBookmarkStore);
@@ -65,9 +78,8 @@ final class ViewMenuControllerTest extends UITestBase {
     void testToggleNodeProperties() {
         final boolean original = graphVisualizer.getNodePropertiesVisibleProperty().get();
 
-        viewMenuController.toggleSequenceVisualizerAction(mock(ActionEvent.class));
+        viewMenuController.toggleNodePropertiesAction(mock(ActionEvent.class));
 
         assertThat(graphVisualizer.getNodePropertiesVisibleProperty().get()).isNotEqualTo(original);
-
     }
 }
