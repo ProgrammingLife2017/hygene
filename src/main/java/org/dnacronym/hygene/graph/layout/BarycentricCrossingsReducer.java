@@ -245,10 +245,8 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * @param newSize the new size of the list
      */
     private void enlargeList(final List<@Nullable NewNode> result, final int newSize) {
-        if (result.size() - 1 < newSize) {
-            for (int i = result.size(); i <= newSize; i++) {
-                result.add(null);
-            }
+        while (result.size() <= newSize) {
+            result.add(null);
         }
     }
 
