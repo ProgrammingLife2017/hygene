@@ -385,7 +385,7 @@ public final class GraphVisualizer {
             hoverNodeProperty.set(-1);
             rTree.find(event.getX(), event.getY(), hoverNodeProperty::set);
         });
-        canvas.setOnMouseExited(event -> hoverNodeProperty.set(-1));
+        canvas.setOnMouseExited(event -> hoverNodeIdProperty.set(-1));
 
         graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), canvas.getHeight());
         canvas.widthProperty().addListener((observable, oldValue, newValue) ->
