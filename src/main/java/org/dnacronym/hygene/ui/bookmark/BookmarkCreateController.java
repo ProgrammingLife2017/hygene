@@ -162,9 +162,6 @@ public final class BookmarkCreateController implements Initializable {
             final int radiusValue = Integer.parseInt(radiusString);
 
             simpleBookmarkStore.addBookmark(new Bookmark(nodeId, baseOffsetValue, radiusValue, description.getText()));
-
-            baseOffset.clear();
-            radius.clear();
             description.clear();
         }
 
