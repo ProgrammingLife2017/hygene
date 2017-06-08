@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,11 +15,6 @@
                 <AnchorPane layoutX="40.0" layoutY="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0"
                             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <Label text="Bookmarks" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
-                            <tooltip>
-                                <Tooltip text="All bookmarks associated with the currently loaded GFA graph."/>
-                            </tooltip>
-                        </Label>
                         <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
                                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
                                    AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">

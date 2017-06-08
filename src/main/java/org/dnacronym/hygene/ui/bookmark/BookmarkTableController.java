@@ -100,10 +100,10 @@ public final class BookmarkTableController implements Initializable {
 
         bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
 
-        tablePane.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty().and(
-                graphStore.getGfaFileProperty().isNotNull()));
-        tablePane.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty().and(
-                graphStore.getGfaFileProperty().isNotNull()));
+        tablePane.managedProperty().bind(simpleBookmarkStore.getTableVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
+        tablePane.visibleProperty().bind(simpleBookmarkStore.getTableVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
     }
 
     /**
