@@ -52,3 +52,10 @@ This week we took a huge hit from removing old code (in terms of coverage). Beca
 The UI remains hard to test and we're working on improving our UI tests with a JavaFX end-to-end testing framework, which should allow us to test actual interaction with the UI better. Setting it up is, however, rather painful.
 
 Our coverage of this week decreased a little to 79% (CodeCov 76%).
+
+## Sprint 6
+This week we tested the new code we added to the project. There are not many comments to be made about our testing process. 
+
+Due to time constraints we did add some thing that *could* have been tested better, but we will make sure to improve the tests where necessary over the coming weeks.
+
+Our coverage of this week increased to 80% (CodeCov 77%).
