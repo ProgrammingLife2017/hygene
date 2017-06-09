@@ -321,7 +321,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
             }
 
             final NewNode layer1Parent = possibleLayer1Parent.get().getFrom();
-            final NewNode layer3Child = possibleLayer1Parent.get().getTo();
+            final NewNode layer3Child = possibleLayer3Child.get().getTo();
 
             final int positionOfNodeInLayer1 = ArrayUtils.indexOf(layer1, layer1Parent);
             final int positionOfNodeInLayer2 = i;
