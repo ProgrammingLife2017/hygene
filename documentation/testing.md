@@ -59,5 +59,3 @@ This week we tested the new code we added to the project. There are not many com
 Due to time constraints we did add some thing that *could* have been tested better, but we will make sure to improve the tests where necessary over the coming weeks.
 
 Our coverage of this week increased to 80% (CodeCov 77%).
-
-
