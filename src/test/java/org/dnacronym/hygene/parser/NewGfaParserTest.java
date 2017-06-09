@@ -74,7 +74,7 @@ final class NewGfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getLineNumber(3)).isEqualTo(3);
-        assertThat(graph.getLength(3)).isEqualTo(100);
+        assertThat(graph.getLength(3)).isEqualTo(500);
         assertThat(graph.getColor(3)).isEqualTo(NodeColor.BLACK);
     }
 

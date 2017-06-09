@@ -13,7 +13,7 @@ import org.dnacronym.hygene.parser.GfaFile;
  * [[nodeLineNumber, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
  */
 public final class Graph {
-    static final int MINIMUM_SEQUENCE_LENGTH = 100;
+    static final int MINIMUM_SEQUENCE_LENGTH = 500;
 
     private final int[][] nodeArrays;
     private final GfaFile gfaFile;
