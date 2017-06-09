@@ -63,6 +63,8 @@ public final class QueryController implements Initializable {
                 .and(query.getVisibleProperty()));
         queryPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull()
                 .and(query.getVisibleProperty()));
+
+        queriedTable.setItems(query.getQueriedNodes());
     }
 
     /**
@@ -85,6 +87,7 @@ public final class QueryController implements Initializable {
 
     @FXML
     void queryAction(final ActionEvent actionEvent) {
+        query.query(sequenceField.getText());
         actionEvent.consume();
     }
 }
