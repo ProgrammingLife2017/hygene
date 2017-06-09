@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -67,39 +66,33 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         final NewNode[] layer1 = layers[layer2Index - 1];
         final NewNode[] layer2 = layers[layer2Index];
 
+        final List<@Nullable NewNode> newLayer2 = new ArrayList<>();
+        enlargeList(newLayer2, layer2.length);
+
+        final Map<Integer, NewNode> lengthy = giveLengthyNodesSamePosition(layer1, layer2, newLayer2);
+        final List<NewNode> nonLengthy = Arrays.stream(layer2)
+                .filter(node -> !lengthy.containsValue(node))
+                .collect(Collectors.toList());
+
         final Map<NewNode, Double> positions = new LinkedHashMap<>(); // Maps nodes to ordinal positions
-
-        final List<@Nullable NewNode> result = new ArrayList<>();
-        enlargeList(result, layer2.length);
-
-        final List<NewNode> nonLengthy = giveLengthyNodesSamePosition(layer1, layer2, result);
-        final Map<Integer, NewNode> lengthy = IntStream.range(0, result.size())
-                .filter(index -> result.get(index) != null)
-                .boxed()
-                .collect(Collectors.toMap(Function.identity(), result::get, (a, b) -> a, LinkedHashMap::new));
 
         for (final NewNode node : nonLengthy) {
             final int[] neighboursInLayer1 = neighboursInLayer1(node, layer1);
 
-            final double nodeOrdinal = (double) IntStream.of(neighboursInLayer1).sum() / neighboursInLayer1.length;
+            final double averageOfParents = (double) IntStream.of(neighboursInLayer1).sum() / neighboursInLayer1.length;
 
-            positions.put(node, nodeOrdinal);
+            positions.put(node, averageOfParents);
         }
 
         final Map<NewNode, Double> sortedNonLengthy = positions.entrySet().stream()
                 .sorted(getNodeOrderingComparator(lengthyNodes))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
 
-        fillGapsWithResults(sortedNonLengthy, lengthy, result);
+        fillGapsWithResults(sortedNonLengthy, lengthy, newLayer2);
 
-        addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(result, layer2Index, layers);
+        addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(newLayer2, layer2Index, layers);
 
-        return result.stream().map(node -> {
-            if (node == null) {
-                return new FillNode();
-            }
-            return node;
-        }).toArray(NewNode[]::new);
+        return newLayer2.stream().map(node -> node == null ? new FillNode() : node).toArray(NewNode[]::new);
     }
 
     /**
@@ -120,30 +113,28 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
                 .toArray();
     }
 
-
     /**
      * Puts lengthy nodes in the same position in the results as their parent.
      *
      * @param layer1 the nodes in layer 1
      * @param layer2 the nodes in layer 2
-     * @param result the results of the current iteration
-     * @return list containing all nodes that are not lengthy
+     * @param newLayer2 the results of the current iteration
+     * @return map from position in results to lengthy nodes
      */
-    private List<NewNode> giveLengthyNodesSamePosition(final NewNode[] layer1, final NewNode[] layer2,
-                                                       final List<@Nullable NewNode> result) {
-        final List<NewNode> nonLengthy = new ArrayList<>();
+    private Map<Integer, NewNode> giveLengthyNodesSamePosition(final NewNode[] layer1, final NewNode[] layer2,
+                                                       final List<@Nullable NewNode> newLayer2) {
+        final Map<Integer, NewNode> lengthy = new LinkedHashMap<>();
 
         Arrays.stream(layer2).forEach(layer2Node -> {
             final int layer1Position = ArrayUtils.indexOf(layer1, layer2Node);
             if (layer1Position > -1) {
-                enlargeList(result, layer1Position + 1);
-                result.set(layer1Position, layer2Node);
-            } else {
-                nonLengthy.add(layer2Node);
+                enlargeList(newLayer2, layer1Position + 1);
+                newLayer2.set(layer1Position, layer2Node);
+                lengthy.put(layer1Position, layer2Node);
             }
         });
 
-        return nonLengthy;
+        return lengthy;
     }
 
     /**
@@ -209,16 +200,16 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * Adds dummy nodes between nodes with a large children width and lengthy nodes, in order to move lengthy nodes
      * to the right.
      *
-     * @param result      the result of the current iteration
+     * @param newLayer2      the result of the current iteration
      * @param layer2Index the index of the second layer
      * @param layers      the layers
      */
     @SuppressWarnings("squid:ForLoopCounterChangedCheck") // For this specific implementation this is not a problem
-    private void addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(final List<@Nullable NewNode> result,
+    private void addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(final List<@Nullable NewNode> newLayer2,
                                                                       final int layer2Index, final NewNode[][] layers) {
-        for (int i = 0; i < result.size() - 1; i++) {
-            final NewNode node = result.get(i);
-            final NewNode rightNeighbour = result.get(i + 1);
+        for (int i = 0; i < newLayer2.size() - 1; i++) {
+            final NewNode node = newLayer2.get(i);
+            final NewNode rightNeighbour = newLayer2.get(i + 1);
 
             if (node == null || rightNeighbour == null) {
                 continue;
@@ -228,7 +219,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
                 final int childrenWidth = getMaxChildrenWidth(node);
 
                 for (int child = 0; child < childrenWidth - 1; child++) {
-                    result.add(i + 1, null);
+                    newLayer2.add(i + 1, null);
                 }
 
                 if (childrenWidth > 0) {
