@@ -99,7 +99,7 @@ public final class Hygene extends Application {
         graphVisualizer = new GraphVisualizer(graphDimensionsCalculator);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
 
-        query = new Query();
+        query = new Query(graphStore);
 
         sequenceVisualizer = new SequenceVisualizer();
 

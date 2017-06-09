@@ -11,6 +11,7 @@ import javafx.scene.control.TitledPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -87,7 +88,12 @@ public final class QueryController implements Initializable {
 
     @FXML
     void queryAction(final ActionEvent actionEvent) {
-        query.query(sequenceField.getText());
+        try {
+            query.query(sequenceField.getText());
+        } catch (final ParseException e) {
+            LOGGER.error("Unable to parse graph for querying.", e);
+        }
+
         actionEvent.consume();
     }
 }
