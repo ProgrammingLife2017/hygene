@@ -1,9 +1,13 @@
 package org.dnacronym.hygene.parser;
 
+import org.dnacronym.hygene.models.Annotation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -23,24 +27,43 @@ public final class GffParser {
      * @return list of things
      * @throws ParseException if unable to parse the {@link GffFile}
      */
-    public List<String[]> parse(final GffFile gffFile) throws ParseException {
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ugh
+    public List<Annotation> parse(final GffFile gffFile) throws ParseException {
         final BufferedReader bufferedReader = gffFile.readFile();
 
-        final List<String[]> things = new ArrayList<>();
+        final Map<String, Annotation> annotations = new HashMap<>();
         try {
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
-                throw new ParseException("GFF file does not have the appropriate header : " + GFF_VERSION_HEADER);
+                throw new ParseException("GFF file does not have the appropriate header: " + GFF_VERSION_HEADER
+                        + ", it was: '" + line + "'.");
             }
 
             for (int i = 0; (line = bufferedReader.readLine()) != null; i++) {
-                things.add(parseLine(line, i));
+                final String[] columns = parseLine(line, i);
+                final String seqId = columns[0];
+
+                if (!annotations.containsKey(seqId)) {
+                    annotations.put(seqId, new Annotation(seqId));
+                }
+
+                final Annotation annotation = annotations.get(seqId);
+
+                final String[] attributes = columns[8].split(";");
+                for (final String attribute : attributes) {
+                    final String[] attributePair = attribute.split("=");
+                    if (attributePair.length != 2) {
+                        throw new ParseException("Attributes of line " + i + " contained an error.");
+                    }
+
+                    annotation.setAttribute(attributePair[0], attributePair[1]);
+                }
             }
         } catch (final IOException e) {
             throw new ParseException("An error while reading the GFF file.", e);
         }
 
-        return things;
+        return new ArrayList<>(annotations.values());
     }
 
     /**

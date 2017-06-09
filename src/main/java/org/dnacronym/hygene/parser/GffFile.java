@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.parser;
 
+import org.dnacronym.hygene.models.Annotation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -48,7 +50,7 @@ public final class GffFile {
      * @return a {@link String} list representing the thing
      * @throws ParseException if the file content is not GFF-compliant
      */
-    public List<String[]> parse() throws ParseException {
+    public List<Annotation> parse() throws ParseException {
         return gffParser.parse(this);
     }
 }
