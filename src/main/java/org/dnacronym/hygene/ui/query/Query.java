@@ -62,7 +62,7 @@ public final class Query {
             return;
         }
 
-        final Set<Integer> nodeIds = searchQuery.executeNameRegexQuery(sequence);
+        final Set<Integer> nodeIds = searchQuery.executeSequenceRegexQuery(sequence);
         final List<NewNode> nodes = new ArrayList<>();
         for (final Integer nodeId : nodeIds) {
             nodes.add(new Segment(nodeId, 0, 0)); // Not sure where to go from here
