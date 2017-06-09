@@ -4,14 +4,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.SearchQuery;
-import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 
@@ -20,7 +16,7 @@ import java.util.Set;
  */
 public final class Query {
     private final BooleanProperty visibleProperty;
-    private final ObservableList<NewNode> queriedNodes;
+    private final ObservableList<Integer> queriedNodeIds;
 
     private SearchQuery searchQuery;
 
@@ -32,11 +28,10 @@ public final class Query {
      */
     public Query(final GraphStore graphStore) {
         this.visibleProperty = new SimpleBooleanProperty(true);
-        queriedNodes = FXCollections.observableArrayList();
+        queriedNodeIds = FXCollections.observableArrayList();
 
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-            searchQuery = new SearchQuery(newValue);
-        });
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
+                setSearchQuery(new SearchQuery(newValue)));
     }
 
 
@@ -63,12 +58,7 @@ public final class Query {
         }
 
         final Set<Integer> nodeIds = searchQuery.executeSequenceRegexQuery(sequence);
-        final List<NewNode> nodes = new ArrayList<>();
-        for (final Integer nodeId : nodeIds) {
-            nodes.add(new Segment(nodeId, 0, 0)); // Not sure where to go from here
-        }
-
-        queriedNodes.setAll(nodes);
+        queriedNodeIds.setAll(nodeIds);
     }
 
     /**
@@ -81,11 +71,11 @@ public final class Query {
     }
 
     /**
-     * Returns the {@link ObservableList} of the most recently queried nodes.
+     * Returns the {@link ObservableList} of the most recently queried node ids.
      *
-     * @return the {@link ObservableList} of the most recently queried nodes
+     * @return the {@link ObservableList} of the most recently queried node ids
      */
-    public ObservableList<NewNode> getQueriedNodes() {
-        return queriedNodes;
+    public ObservableList<Integer> getQueriedNodes() {
+        return queriedNodeIds;
     }
 }

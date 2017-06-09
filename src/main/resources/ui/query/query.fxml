@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<TitledPane fx:id="queryPane" animated="false" collapsible="false" prefHeight="400.0" prefWidth="600.0" text="Queries"
-            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+<TitledPane fx:id="queryPane" animated="false" collapsible="false" prefHeight="100.0" prefWidth="600.0" text="Queries"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.query.QueryController">
     <content>
         <GridPane hgap="5.0" vgap="20.0">
@@ -22,29 +19,17 @@
                 <ColumnConstraints hgrow="SOMETIMES"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
             <children>
                 <Label text="Query sequence"/>
-                <TextField fx:id="sequenceField" promptText="query sequence" GridPane.columnIndex="1">
+                <TextField fx:id="sequenceField" promptText="query regex" GridPane.columnIndex="1">
                     <tooltip>
-                        <Tooltip text="Query nodes, and gives all nodes wich contain this sequence."/>
+                        <Tooltip text="Query nodes, and gives all nodes which contain this regex."/>
                     </tooltip>
                 </TextField>
-                <TableView fx:id="queriedTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647"
-                           GridPane.rowIndex="1">
-                    <columns>
-                        <TableColumn fx:id="nodeColumn" prefWidth="75.0" text="Node"/>
-                        <TableColumn fx:id="sequenceColumn" prefWidth="75.0" text="Sequence"/>
-                        <TableColumn fx:id="sequenceLengthColumn" prefWidth="75.0" text="Length"/>
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                </TableView>
-                <Button fx:id="queryButton" mnemonicParsing="false" text="Query" GridPane.columnIndex="2"
-                        onAction="#queryAction"/>
+                <Button fx:id="queryButton" mnemonicParsing="false" onAction="#queryAction" text="Query"
+                        GridPane.columnIndex="2"/>
             </children>
         </GridPane>
     </content>

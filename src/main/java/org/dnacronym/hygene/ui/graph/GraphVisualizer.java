@@ -118,7 +118,7 @@ public final class GraphVisualizer {
         graphDimensionsCalculator.getObservableQueryNodes()
                 .addListener((ListChangeListener<NewNode>) change -> draw());
 
-        query.getQueriedNodes().addListener((ListChangeListener<NewNode>) observable -> draw());
+        query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
         nodeDrawingToolkit = new NodeDrawingToolkit();
     }
@@ -255,7 +255,7 @@ public final class GraphVisualizer {
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
-                    query.getQueriedNodes().contains(node));
+                    node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
