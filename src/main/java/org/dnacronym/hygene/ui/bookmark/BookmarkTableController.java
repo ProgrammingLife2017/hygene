@@ -3,11 +3,11 @@ package org.dnacronym.hygene.ui.bookmark;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,7 @@ public final class BookmarkTableController implements Initializable {
     private GraphStore graphStore;
 
     @FXML
-    private ScrollPane tablePane;
+    private TitledPane tablePane;
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
      * center node id in {@link org.dnacronym.hygene.ui.graph.GraphVisualizer} is updated to the one in the

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<TitledPane fx:id="queryPane" animated="false" collapsible="false" prefHeight="100.0" prefWidth="600.0" text="Queries"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.query.QueryController">
+    <content>
+        <GridPane hgap="5.0" vgap="20.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <children>
+                <Label text="Query sequence"/>
+                <TextField fx:id="sequenceField" promptText="query regex" GridPane.columnIndex="1">
+                    <tooltip>
+                        <Tooltip text="Query nodes, and gives all nodes which contain this regex."/>
+                    </tooltip>
+                </TextField>
+                <Button fx:id="queryButton" mnemonicParsing="false" onAction="#queryAction" text="Query"
+                        GridPane.columnIndex="2"/>
+            </children>
+        </GridPane>
+    </content>
+</TitledPane>

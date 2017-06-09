@@ -49,6 +49,18 @@ public final class SearchQuery {
         return executeQuery(nodeMetadata -> Pattern.compile(regex).matcher(nodeMetadata.getName()).matches());
     }
 
+
+    /**
+     * Executes the given regex query on all node sequences.
+     *
+     * @param regex the regex to test against
+     * @return the IDs of nodes with sequences matching the regex
+     * @throws ParseException if the GFA file is invalid in some form
+     */
+    public Set<Integer> executeSequenceRegexQuery(final String regex) throws ParseException {
+        return executeQuery(nodeMetadata -> Pattern.compile(regex).matcher(nodeMetadata.getSequence()).matches());
+    }
+
     /**
      * Executes a query on the GFA file.
      *
