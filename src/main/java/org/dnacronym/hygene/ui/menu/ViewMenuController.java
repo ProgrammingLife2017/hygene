@@ -11,6 +11,7 @@ import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
+import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -28,6 +29,7 @@ public final class ViewMenuController implements Initializable {
     private SequenceVisualizer sequenceVisualizer;
     private GraphVisualizer graphVisualizer;
     private GraphStore graphStore;
+    private Query query;
 
     @FXML
     private MenuItem toggleBookmarkTable;
@@ -37,6 +39,8 @@ public final class ViewMenuController implements Initializable {
     private MenuItem toggleNodeProperties;
     @FXML
     private MenuItem toggleSequenceVisualizer;
+    @FXML
+    private MenuItem toggleQuery;
 
 
     /**
@@ -48,6 +52,7 @@ public final class ViewMenuController implements Initializable {
             setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
             setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
             setGraphStore(Hygene.getInstance().getGraphStore());
+            setQuery(Hygene.getInstance().getQuery());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
         }
@@ -60,6 +65,7 @@ public final class ViewMenuController implements Initializable {
         toggleBookmarkCreate.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
         toggleNodeProperties.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
         toggleSequenceVisualizer.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+        toggleQuery.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
 
         toggleBookmarkTable.textProperty().bind(Bindings.when(simpleBookmarkStore.getTableVisibleProperty())
                 .then("Hide _bookmarks table")
@@ -73,6 +79,9 @@ public final class ViewMenuController implements Initializable {
         toggleSequenceVisualizer.textProperty().bind(Bindings.when(sequenceVisualizer.getVisibleProperty())
                 .then("Hide s_equence view")
                 .otherwise("Show s_equence view"));
+        toggleQuery.textProperty().bind(Bindings.when(query.getVisibleProperty())
+                .then("Hide _query view")
+                .otherwise("Show _query view"));
     }
 
     /**
@@ -110,6 +119,15 @@ public final class ViewMenuController implements Initializable {
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
+    }
+
+    /**
+     * Sets the {@link Query} for use by the controller.
+     *
+     * @param query the {@link Query} for use by the controller
+     */
+    void setQuery(final Query query) {
+        this.query = query;
     }
 
     /**
@@ -157,6 +175,17 @@ public final class ViewMenuController implements Initializable {
     @FXML
     void toggleSequenceVisualizerAction(final ActionEvent actionEvent) {
         sequenceVisualizer.getVisibleProperty().set(!sequenceVisualizer.getVisibleProperty().get());
+        actionEvent.consume();
+    }
+
+    /**
+     * When the user wants to toggle the visibility of the query pane.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void toggleQueryAction(final ActionEvent actionEvent) {
+        query.getVisibleProperty().set(!query.getVisibleProperty().get());
         actionEvent.consume();
     }
 }

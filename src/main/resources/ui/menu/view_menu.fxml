@@ -26,5 +26,10 @@
                 <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
+        <MenuItem fx:id="toggleQuery" onAction="#toggleQueryAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
     </items>
 </Menu>
