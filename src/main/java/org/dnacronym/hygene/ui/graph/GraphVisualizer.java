@@ -26,6 +26,7 @@ import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
@@ -60,6 +61,7 @@ public final class GraphVisualizer {
     private static final double EDGE_OPACITY_BETA = 4.25;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
+    private final Query query;
 
     private final ObjectProperty<Node> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
@@ -88,10 +90,12 @@ public final class GraphVisualizer {
      * {@code null}.
      *
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
+     * @param query                     the {@link Query} used to get the currently queried nodes
      */
-    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator) {
+    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator, final Query query) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
+        this.query = query;
 
         selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
@@ -114,6 +118,8 @@ public final class GraphVisualizer {
         graphDimensionsCalculator.getObservableQueryNodes()
                 .addListener((ListChangeListener<NewNode>) change -> draw());
 
+        query.getQueriedNodes().addListener((ListChangeListener<NewNode>) observable -> draw());
+
         nodeDrawingToolkit = new NodeDrawingToolkit();
     }
 
@@ -125,8 +131,9 @@ public final class GraphVisualizer {
      *
      * @param node       the node to draw
      * @param bookmarked the boolean indicating whether this node is bookmarked
+     * @param queried    the boolean indicating whether this node has been queried
      */
-    private void drawNode(final NewNode node, final boolean bookmarked) {
+    private void drawNode(final NewNode node, final boolean bookmarked, final boolean queried) {
         if (!(node instanceof Segment)) {
             return;
         }
@@ -139,6 +146,9 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
         if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
+        }
+        if (queried) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
         }
         if (nodeMetadataCache.has(nodeId)
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
@@ -243,7 +253,9 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            drawNode(node, simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node));
+            drawNode(node,
+                    simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
+                    query.getQueriedNodes().contains(node));
             node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 

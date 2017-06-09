@@ -94,12 +94,11 @@ public final class Hygene extends Application {
     public void init() throws IOException, SQLException {
         graphStore = new GraphStore();
         settings = new Settings(graphStore);
+        query = new Query(graphStore);
 
         graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
-        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator);
+        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, query);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
-
-        query = new Query(graphStore);
 
         sequenceVisualizer = new SequenceVisualizer();
 

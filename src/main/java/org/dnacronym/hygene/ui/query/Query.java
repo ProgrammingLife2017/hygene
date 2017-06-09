@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.SearchQuery;
-import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 
@@ -23,7 +23,7 @@ public final class Query {
     private final ObservableList<NewNode> queriedNodes;
 
     private SearchQuery searchQuery;
-    private Graph graph;
+
 
     /**
      * Creates instance of {@link Query}.
@@ -36,7 +36,6 @@ public final class Query {
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
             searchQuery = new SearchQuery(newValue);
-            graph = newValue.getGraph();
         });
     }
 
@@ -54,7 +53,10 @@ public final class Query {
      * Performs a query by looking at the sequences of nodes and returning the nodes which contain the passed sequence.
      *
      * @param sequence the sequence to search for inside the sequences of nodes
+     * @throws ParseException if unable to execute a regex query
+     * @see SearchQuery
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // this is temporary
     public void query(final String sequence) throws ParseException {
         if (searchQuery == null) {
             return;
@@ -63,7 +65,7 @@ public final class Query {
         final Set<Integer> nodeIds = searchQuery.executeNameRegexQuery(sequence);
         final List<NewNode> nodes = new ArrayList<>();
         for (final Integer nodeId : nodeIds) {
-            // graph does not use NewNode, not sure where to go from here.
+            nodes.add(new Segment(nodeId, 0, 0)); // Not sure where to go from here
         }
 
         queriedNodes.setAll(nodes);
