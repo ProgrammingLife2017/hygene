@@ -52,7 +52,7 @@ final class GraphDimensionsCalculatorTest {
         segment.setYPosition(30);
 
         assertThat(graphDimensionsCalculator.computeYPosition(segment))
-                .isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
+                .isEqualTo(CANVAS_HEIGHT / 2 / 10, Offset.offset(1.0));
     }
 
     @Test
@@ -61,12 +61,12 @@ final class GraphDimensionsCalculatorTest {
         segment.setYPosition(30);
 
         assertThat(graphDimensionsCalculator.computeMiddleYPosition(segment))
-                .isEqualTo(CANVAS_HEIGHT / 2, Offset.offset(1.0));
+                .isEqualTo(CANVAS_HEIGHT / 2 / 10, Offset.offset(1.0));
     }
 
     @Test
     void testComputeAndGetLaneHeight() {
-        assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300);
+        assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300 / 10);
     }
 
     @Test
