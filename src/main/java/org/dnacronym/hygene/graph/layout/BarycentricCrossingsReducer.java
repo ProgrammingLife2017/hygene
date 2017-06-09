@@ -2,6 +2,8 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.DummyNode;
+import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.FillNode;
 import org.dnacronym.hygene.graph.NewNode;
 
@@ -13,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +26,7 @@ import java.util.stream.IntStream;
  * Part of the {@link SugiyamaLayout} algorithm, reduces the number of edge crossings in a layout using the
  * barycentric method.
  */
-@SuppressWarnings("keyfor") // Not possible to add the annotations for this within the lambdas used
+@SuppressWarnings({"keyfor", "PMD.CyclomaticComplexity"}) // Not possible to add the annotations for this within the lambdas used
 public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReducer {
     private final LengthyNodeFinder lengthyNodeFinder;
 
@@ -42,6 +45,10 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
         for (int i = 1; i < layers.length; i++) {
             layers[i] = reduceCrossingsBetweenLayers(layers, i, lengthyNodes);
+        }
+
+        for (int i = 1; i < layers.length - 1; i++) {
+            layers[i] = fixJumpingEdges(layers, i);
         }
     }
 
@@ -136,6 +143,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
         return lengthy;
     }
+
 
     /**
      * Compares two map entries with a node as key and the ordinal position as value.
@@ -282,5 +290,64 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         }
 
         return maxChildrenWidth[0];
+    }
+
+    /**
+     * Fixes jumping edges ( e.g. _/\_ ) between dummy nodes.
+     *
+     * @param layers      the array of layers
+     * @param layer2Index the index of layer 2
+     * @return a new version of layer 2
+     */
+    @SuppressWarnings({"squid:S135", "squid:S3776", "squid:S134", "nullness", "PMD.AvoidInstantiatingObjectsInLoops"})
+    // It is not feasible to reduce the complexity at this stage
+    private NewNode[] fixJumpingEdges(final NewNode[][] layers, final int layer2Index) {
+        final NewNode[] layer1 = layers[layer2Index - 1];
+        @Nullable NewNode[] layer2 = layers[layer2Index];
+        final NewNode[] layer3 = layers[layer2Index + 1];
+
+        for (int i = layer2.length - 1; i >= 0; i--) {
+            final NewNode node = layer2[i];
+
+            if (!(node instanceof DummyNode)) {
+                continue;
+            }
+
+            final Optional<Edge> possibleLayer1Parent = node.getIncomingEdges().stream().findFirst();
+            final Optional<Edge> possibleLayer3Child = node.getOutgoingEdges().stream().findFirst();
+
+            if (!possibleLayer1Parent.isPresent() || !possibleLayer3Child.isPresent()) {
+                continue;
+            }
+
+            final NewNode layer1Parent = possibleLayer1Parent.get().getFrom();
+            final NewNode layer3Child = possibleLayer1Parent.get().getTo();
+
+            final int positionOfNodeInLayer1 = ArrayUtils.indexOf(layer1, layer1Parent);
+            final int positionOfNodeInLayer2 = i;
+            final int positionOfNodeInLayer3 = ArrayUtils.indexOf(layer3, layer3Child);
+
+            if (positionOfNodeInLayer1 == -1 || positionOfNodeInLayer3 == -1) {
+                continue;
+            }
+
+            if (positionOfNodeInLayer1 == positionOfNodeInLayer3 && positionOfNodeInLayer1 != positionOfNodeInLayer2) {
+                if (positionOfNodeInLayer1 >= layer2.length) {
+                    // Fill
+                    layer2 = Arrays.copyOf(layer2, positionOfNodeInLayer1 + 1);
+                    for (int j = i; j < positionOfNodeInLayer1; j++) {
+                        layer2[i] = new FillNode();
+                    }
+                    layer2[positionOfNodeInLayer1] = node;
+                } else if (layer2[positionOfNodeInLayer1] instanceof FillNode) {
+                    // Swap
+                    final NewNode fillNode = layer2[positionOfNodeInLayer1];
+                    layer2[positionOfNodeInLayer1] = node;
+                    layer2[i] = fillNode;
+                }
+            }
+        }
+
+        return layer2;
     }
 }
