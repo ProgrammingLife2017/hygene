@@ -147,7 +147,8 @@ public final class NodeDrawingToolkit {
      */
     public enum HighlightType {
         SELECTED(Color.rgb(0, 255, 46)),
-        BOOKMARKED(Color.RED);
+        BOOKMARKED(Color.RED),
+        QUERIED(Color.PURPLE);
 
         private Color color;
 

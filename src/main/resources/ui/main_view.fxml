@@ -21,7 +21,12 @@
     </left>
 
     <right>
-        <fx:include source="bookmark/bookmarks_table_view.fxml"/>
+        <ScrollPane hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
+            <VBox>
+                <fx:include source="bookmark/bookmarks_table_view.fxml"/>
+                <fx:include source="query/query.fxml"/>
+            </VBox>
+        </ScrollPane>
     </right>
 
     <center>

@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
-<ScrollPane fx:id="tablePane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkTableController">
+<TitledPane fx:id="tablePane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkTableController"
+            animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Bookmarks">
     <content>
-        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Bookmarks">
-            <content>
-                <AnchorPane layoutX="40.0" layoutY="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0"
-                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <children>
-                        <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
-                                   AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                                   AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
-                            <columns>
-                                <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
-                                <TableColumn fx:id="baseOffset" editable="false" prefWidth="100.0" text="Base Offset"/>
-                                <TableColumn fx:id="radius" editable="false" prefWidth="75" text="Radius"/>
-                                <TableColumn fx:id="description" editable="false" prefWidth="150.0" text="Description"/>
-                            </columns>
-                            <tooltip>
-                                <Tooltip text="Overview of all bases of the current genome sequence."/>
-                            </tooltip>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                            </columnResizePolicy>
-                        </TableView>
-                    </children>
-                </AnchorPane>
-            </content>
-        </TitledPane>
+        <AnchorPane layoutX="40.0" layoutY="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
+                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                           AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
+                    <columns>
+                        <TableColumn fx:id="nodeId" editable="false" prefWidth="75.0" text="Node"/>
+                        <TableColumn fx:id="baseOffset" editable="false" prefWidth="100.0" text="Base Offset"/>
+                        <TableColumn fx:id="radius" editable="false" prefWidth="75" text="Radius"/>
+                        <TableColumn fx:id="description" editable="false" prefWidth="150.0" text="Description"/>
+                    </columns>
+                    <tooltip>
+                        <Tooltip text="Overview of all bases of the current genome sequence."/>
+                    </tooltip>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </AnchorPane>
     </content>
-</ScrollPane>
+</TitledPane>

@@ -17,6 +17,7 @@ import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
+import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.Settings;
 
 import java.io.File;
@@ -47,6 +48,8 @@ public final class Hygene extends Application {
     private GraphDimensionsCalculator graphDimensionsCalculator;
 
     private SequenceVisualizer sequenceVisualizer;
+
+    private Query query;
 
     private Settings settings;
 
@@ -95,6 +98,8 @@ public final class Hygene extends Application {
         graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
         graphVisualizer = new GraphVisualizer(graphDimensionsCalculator);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
+
+        query = new Query();
 
         sequenceVisualizer = new SequenceVisualizer();
 
@@ -216,6 +221,15 @@ public final class Hygene extends Application {
      */
     public GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;
+    }
+
+    /**
+     * Gets the {@link Query} of the application.
+     *
+     * @return the {@link Query} of the application
+     */
+    public Query getQuery() {
+        return query;
     }
 
     /**
