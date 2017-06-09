@@ -12,6 +12,8 @@ import org.dnacronym.hygene.models.colorscheme.ColorScheme;
  * in the scale of {@code [0, max value]}.
  */
 public abstract class AbstractColorSchemeMinMax implements ColorScheme {
+    private static final double COLOR_LOWER_BOUND = 0.25;
+
     private final int maxValue;
     private final Color minColor;
     private final Color maxColor;
@@ -42,7 +44,7 @@ public abstract class AbstractColorSchemeMinMax implements ColorScheme {
      * @return the color of the value
      */
     final Color calculateColor(final double value) {
-        return minColor.interpolate(maxColor, Math.min(1, value / maxValue));
+        return minColor.interpolate(maxColor, Math.max(Math.min(1, value / maxValue), COLOR_LOWER_BOUND));
     }
 
     /**
