@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.models;
 
-import org.dnacronym.hygene.graph.Segment;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -11,7 +9,7 @@ import java.util.Queue;
  * using FAFOSP, the Felix Algorithm For Optimal Segment Positioning.
  */
 public final class Fafosp {
-    private static final int COLUMN_WIDTH = Segment.MIN_SEGMENT_LENGTH;
+    private static final int COLUMN_WIDTH = 1000;
 
     private final Graph graph;
     private final int[][] nodeArrays;
@@ -73,7 +71,7 @@ public final class Fafosp {
                 ignored -> width[0] = -1,
                 neighbour -> width[0] = Math.max(
                         width[0],
-                        graph.getUnscaledXPosition(neighbour) + graph.getSequenceLength(neighbour)
+                        graph.getUnscaledXPosition(neighbour) + graph.getLength(neighbour)
                 )
         );
 

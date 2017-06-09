@@ -3,6 +3,8 @@ package org.dnacronym.hygene.graph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.graph.layout.Layout;
+import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.NodeDistanceMap;
@@ -23,6 +25,10 @@ import java.util.UUID;
  * rebuilding the cache after a number of calls.
  */
 public final class CenterPointQuery {
+    /**
+     * The algorithm to lay out nodes.
+     */
+    private static final Layout LAYOUT = new SugiyamaLayout();
     /**
      * The width of an edge.
      */
@@ -146,7 +152,8 @@ public final class CenterPointQuery {
             nodes.put(nodeId, node.getUuid());
             subgraph.addNode(node);
         });
-        iterator.visitIndirectNeighboursWithinRange(centre, radius - 1, (depth, nodeId) -> addEdges(nodeId));
+        iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> addEdges(nodeId));
+        LAYOUT.layOut(subgraph);
 
         postEvent();
     }
@@ -226,6 +233,7 @@ public final class CenterPointQuery {
             iterator.visitDirectNeighbours(nodeId, neighbour -> distanceMap.setDistance(neighbour, cacheRadius));
             addEdges(nodeId);
         });
+        LAYOUT.layOut(subgraph);
     }
 
     /**
@@ -326,16 +334,6 @@ public final class CenterPointQuery {
             final Edge edge = new Edge(node, neighbour);
             node.getOutgoingEdges().add(edge);
             neighbour.getIncomingEdges().add(edge);
-        });
-        iterator.visitDirectNeighbours(nodeId, SequenceDirection.LEFT, neighbourId -> {
-            final NewNode neighbour = getNode(neighbourId);
-            if (node == null || neighbour == null) {
-                return;
-            }
-
-            final Edge edge = new Edge(neighbour, node);
-            node.getIncomingEdges().add(edge);
-            neighbour.getOutgoingEdges().add(edge);
         });
     }
 

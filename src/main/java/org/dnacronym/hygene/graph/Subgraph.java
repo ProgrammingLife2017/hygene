@@ -4,8 +4,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -29,16 +27,7 @@ public final class Subgraph {
      * Constructs a new, empty {@link Subgraph} instance.
      */
     public Subgraph() {
-        this(new HashSet<>());
-    }
-
-    /**
-     * Constructs a new {@link Subgraph} instance.
-     *
-     * @param nodes the nodes of this subgraph
-     */
-    public Subgraph(final Set<NewNode> nodes) {
-        this.nodes = nodes;
+        this.nodes = new LinkedHashSet<>();
         this.segments = nodes.stream().collect(Collectors.toMap(NewNode::getUuid, node -> node));
     }
 
@@ -61,7 +50,7 @@ public final class Subgraph {
      * @return the nodes
      */
     public Set<NewNode> getNodes() {
-        return Collections.unmodifiableSet(nodes);
+        return nodes;
     }
 
     /**

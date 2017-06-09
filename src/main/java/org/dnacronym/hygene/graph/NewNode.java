@@ -5,7 +5,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.colorscheme.ColorScheme;
 import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -30,21 +30,9 @@ public abstract class NewNode {
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
      */
     protected NewNode() {
-        this(new HashSet<>(), new HashSet<>());
-    }
-
-    /**
-     * Constructs a new {@link NewNode} instance.
-     * <p>
-     * This class should not be instantiated for regular use, please use {@link Segment} instead.
-     *
-     * @param incomingEdges the incoming edges
-     * @param outgoingEdges the outgoing edges
-     */
-    protected NewNode(final Set<Edge> incomingEdges, final Set<Edge> outgoingEdges) {
         this.uuid = UUID.randomUUID();
-        this.incomingEdges = incomingEdges;
-        this.outgoingEdges = outgoingEdges;
+        this.incomingEdges = new LinkedHashSet<>();
+        this.outgoingEdges = new LinkedHashSet<>();
     }
 
 

@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -22,19 +20,17 @@ final class SubgraphTest {
     private static final Random RANDOM = new Random();
 
     private Subgraph subgraph;
-    private Set<NewNode> nodes;
 
 
     @BeforeEach
     void setUp() {
-        nodes = new HashSet<>();
-        subgraph = new Subgraph(nodes);
+        subgraph = new Subgraph();
     }
 
 
     @Test
     void testGetNodes() {
-        assertThat(subgraph.getNodes()).isEqualTo(nodes);
+        assertThat(subgraph.getNodes()).isEmpty();
     }
 
     @Test
@@ -56,9 +52,9 @@ final class SubgraphTest {
 
     @Test
     void testGetNeighbours() {
-        final Segment segment1 = new Segment(100, 83, 88, new HashSet<>(), new HashSet<>());
-        final Segment segment2 = new Segment(42, 67, 22, new HashSet<>(), new HashSet<>());
-        final Segment segment3 = new Segment(87, 72, 47, new HashSet<>(), new HashSet<>());
+        final Segment segment1 = new Segment(100, 83, 88);
+        final Segment segment2 = new Segment(42, 67, 22);
+        final Segment segment3 = new Segment(87, 72, 47);
 
         connectSegments(segment1, segment2);
         connectSegments(segment1, segment3);
@@ -71,10 +67,10 @@ final class SubgraphTest {
 
     @Test
     void testGetNodesBFS() {
-        final Segment segment1 = new Segment(1, 63, 19, new HashSet<>(), new HashSet<>());
-        final Segment segment2 = new Segment(2, 90, 32, new HashSet<>(), new HashSet<>());
-        final Segment segment3 = new Segment(3, 98, 14, new HashSet<>(), new HashSet<>());
-        final Segment segment4 = new Segment(4, 55, 10, new HashSet<>(), new HashSet<>());
+        final Segment segment1 = new Segment(1, 63, 19);
+        final Segment segment2 = new Segment(2, 90, 32);
+        final Segment segment3 = new Segment(3, 98, 14);
+        final Segment segment4 = new Segment(4, 55, 10);
 
         connectSegments(segment1, segment2);
         connectSegments(segment1, segment3);
