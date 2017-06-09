@@ -76,6 +76,22 @@ public final class LengthyNodeFinder {
     }
 
     /**
+     * Determines if a node is lengthy.
+     *
+     * @param node   the node to check
+     * @param layer  the number of the layer that contains the given node
+     * @param layers the array of all layers
+     * @return true if a node is lengthy
+     */
+    public boolean isLengthy(final NewNode node, final int layer, final NewNode[][] layers) {
+        if (layers.length <= layer + 1) {
+            return false;
+        }
+
+        return ArrayUtils.contains(layers[layer + 1], node);
+    }
+
+    /**
      * Finds the number of layers in which the node is lengthy, if it is lengthy.
      *
      * @param node   the node for which the length needs to be computed
@@ -96,22 +112,6 @@ public final class LengthyNodeFinder {
         }
 
         return length;
-    }
-
-    /**
-     * Determines if a node is lengthy.
-     *
-     * @param node   the node to check
-     * @param layer  the number of the layer that contains the given node
-     * @param layers the array of all layers
-     * @return true if a node is lengthy
-     */
-    private boolean isLengthy(final NewNode node, final int layer, final NewNode[][] layers) {
-        if (layers.length <= layer + 1) {
-            return false;
-        }
-
-        return ArrayUtils.contains(layers[layer + 1], node);
     }
 
     /**

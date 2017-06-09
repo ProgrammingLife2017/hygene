@@ -16,7 +16,7 @@ import java.util.Map;
  * This class is intended to be extended.
  */
 abstract class LayerConstructingTestBase {
-    private HashMap<Integer, NewNode> nodes;
+    protected HashMap<Integer, NewNode> nodes;
 
 
     @BeforeEach

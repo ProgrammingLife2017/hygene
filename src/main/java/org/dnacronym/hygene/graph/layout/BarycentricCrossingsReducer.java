@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.FillNode;
 import org.dnacronym.hygene.graph.NewNode;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         final Map<NewNode, Integer> lengthyNodes = lengthyNodeFinder.findInLayers(layers);
 
         for (int i = 1; i < layers.length; i++) {
-            layers[i] = reduceCrossingsBetweenLayers(layers[i - 1], layers[i], lengthyNodes);
+            layers[i] = reduceCrossingsBetweenLayers(layers, i, lengthyNodes);
         }
     }
 
@@ -54,40 +55,44 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * by the total number of parents the node haves. So, the ordinal position of a node will be the average of the
      * ordinal positions of its parents.
      *
-     * @param layer1       the layer for which the node positions are already known
-     * @param layer2       the layer for which we want to determine the node positions
+     * @param layers       the layers
+     * @param layer2Index  the index of the second layer, will also be used to compute the second layer
      * @param lengthyNodes a map mapping nodes to the summed length of all its lengthy children
      * @return the nodes from layer 2 sorted by the computed ordinal position
      */
     @SuppressWarnings("nullness") // False positive
-    private NewNode[] reduceCrossingsBetweenLayers(final NewNode[] layer1, final NewNode[] layer2,
+    private NewNode[] reduceCrossingsBetweenLayers(final NewNode[][] layers, final int layer2Index,
                                                    final Map<NewNode, Integer> lengthyNodes) {
+        final NewNode[] layer1 = layers[layer2Index - 1];
+        final NewNode[] layer2 = layers[layer2Index];
+
+        final List<@Nullable NewNode> newLayer2 = new ArrayList<>();
+        enlargeList(newLayer2, layer2.length);
+
+        final Map<Integer, NewNode> lengthy = giveLengthyNodesSamePosition(layer1, layer2, newLayer2);
+        final List<NewNode> nonLengthy = Arrays.stream(layer2)
+                .filter(node -> !lengthy.containsValue(node))
+                .collect(Collectors.toList());
+
         final Map<NewNode, Double> positions = new LinkedHashMap<>(); // Maps nodes to ordinal positions
-
-        final List<@Nullable NewNode> result = new ArrayList<>();
-        for (int i = 0; i < layer2.length; i++) {
-            result.add(null);
-        }
-
-        final List<NewNode> nonLengthy = giveLengthyNodesSamePosition(layer1, layer2, result);
 
         for (final NewNode node : nonLengthy) {
             final int[] neighboursInLayer1 = neighboursInLayer1(node, layer1);
 
-            final double nodeOrdinal = (double) IntStream.of(neighboursInLayer1).sum() / neighboursInLayer1.length;
+            final double averageOfParents = (double) IntStream.of(neighboursInLayer1).sum() / neighboursInLayer1.length;
 
-            positions.put(node, nodeOrdinal);
+            positions.put(node, averageOfParents);
         }
 
-        final List<NewNode> sortedNonLengthy = positions.entrySet()
-                .stream()
+        final Map<NewNode, Double> sortedNonLengthy = positions.entrySet().stream()
                 .sorted(getNodeOrderingComparator(lengthyNodes))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
 
-        fillGapsWithResults(sortedNonLengthy, result);
+        fillGapsWithResults(sortedNonLengthy, lengthy, newLayer2);
 
-        return result.toArray(new NewNode[result.size()]);
+        addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(newLayer2, layer2Index, layers);
+
+        return newLayer2.stream().map(node -> node == null ? new FillNode() : node).toArray(NewNode[]::new);
     }
 
     /**
@@ -108,29 +113,28 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
                 .toArray();
     }
 
-
     /**
      * Puts lengthy nodes in the same position in the results as their parent.
      *
-     * @param layer1  the nodes in layer 1
-     * @param layer2  the nodes in layer 2
-     * @param results the results of the current iteration
-     * @return list containing all nodes that are not lengthy
+     * @param layer1 the nodes in layer 1
+     * @param layer2 the nodes in layer 2
+     * @param newLayer2 the results of the current iteration
+     * @return map from position in results to lengthy nodes
      */
-    private List<NewNode> giveLengthyNodesSamePosition(final NewNode[] layer1, final NewNode[] layer2,
-                                                       final List<@Nullable NewNode> results) {
-        final List<NewNode> nonLengthy = new ArrayList<>();
+    private Map<Integer, NewNode> giveLengthyNodesSamePosition(final NewNode[] layer1, final NewNode[] layer2,
+                                                       final List<@Nullable NewNode> newLayer2) {
+        final Map<Integer, NewNode> lengthy = new LinkedHashMap<>();
 
         Arrays.stream(layer2).forEach(layer2Node -> {
             final int layer1Position = ArrayUtils.indexOf(layer1, layer2Node);
             if (layer1Position > -1) {
-                results.set(layer1Position, layer2Node);
-            } else {
-                nonLengthy.add(layer2Node);
+                enlargeList(newLayer2, layer1Position + 1);
+                newLayer2.set(layer1Position, layer2Node);
+                lengthy.put(layer1Position, layer2Node);
             }
         });
 
-        return nonLengthy;
+        return lengthy;
     }
 
     /**
@@ -160,31 +164,89 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Fills the gaps around the pre-positioned lengthy nodes with the nodes of the result of the crossing reduction.
      *
-     * @param sortedNonLengthy a list of non lengthy nodes in the correct order
+     * @param sortedNonLengthy a map from non lengthy nodes in the correct order to their positions
+     * @param lengthy          a map from the positions of lengthy nodes to the lengthy nodes in the correct order
      * @param result           the result of the current iteration
      */
-    private void fillGapsWithResults(final List<NewNode> sortedNonLengthy, final List<@Nullable NewNode> result) {
+    private void fillGapsWithResults(final Map<NewNode, Double> sortedNonLengthy,
+                                     final Map<Integer, NewNode> lengthy,
+                                     final List<@Nullable NewNode> result) {
         int resultPosition = 0;
-        for (final NewNode node : sortedNonLengthy) {
-            while (result.get(resultPosition) != null) {
-                resultPosition++;
+        for (final Map.Entry<NewNode, Double> entry : sortedNonLengthy.entrySet()) {
+
+            // Make sure that nodes are correctly aligned between/around lengthy nodes
+            for (final Map.Entry<Integer, NewNode> lengthyEntry : lengthy.entrySet()) {
+                if (entry.getValue() > lengthyEntry.getKey()) {
+                    resultPosition = lengthyEntry.getKey() + 1;
+                }
             }
 
-            result.set(resultPosition, node);
+            // Make the result list bigger if needed
+            enlargeList(result, resultPosition + 1);
+
+            while (result.get(resultPosition) != null) {
+                resultPosition++;
+
+                enlargeList(result, resultPosition + 1);
+            }
+
+            result.set(resultPosition, entry.getKey());
 
             resultPosition++;
         }
     }
 
     /**
+     * Adds dummy nodes between nodes with a large children width and lengthy nodes, in order to move lengthy nodes
+     * to the right.
+     *
+     * @param newLayer2      the result of the current iteration
+     * @param layer2Index the index of the second layer
+     * @param layers      the layers
+     */
+    @SuppressWarnings("squid:ForLoopCounterChangedCheck") // For this specific implementation this is not a problem
+    private void addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(final List<@Nullable NewNode> newLayer2,
+                                                                      final int layer2Index, final NewNode[][] layers) {
+        for (int i = 0; i < newLayer2.size() - 1; i++) {
+            final NewNode node = newLayer2.get(i);
+            final NewNode rightNeighbour = newLayer2.get(i + 1);
+
+            if (node == null || rightNeighbour == null) {
+                continue;
+            }
+
+            if (lengthyNodeFinder.isLengthy(rightNeighbour, layer2Index, layers)) {
+                final int childrenWidth = getMaxChildrenWidth(node);
+
+                for (int child = 0; child < childrenWidth - 1; child++) {
+                    newLayer2.add(i + 1, null);
+                }
+
+                if (childrenWidth > 0) {
+                    i += childrenWidth - 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * Enlarges the result list to the given size padded with null values.
+     *
+     * @param result  the result list to be enlarged
+     * @param newSize the new size of the list
+     */
+    private void enlargeList(final List<@Nullable NewNode> result, final int newSize) {
+        while (result.size() < newSize) {
+            result.add(null);
+        }
+    }
+
+    /**
      * Returns the maximum number of children with the same distance to the given node.
      *
-     * @param layers an array of layers
-     * @param node   a {@link NewNode}
+     * @param node a {@link NewNode}
      * @return the maximum number of children with the same distance to the given node
      */
-    @SuppressWarnings("PMD.UnusedPrivateMethod") // This method will be used later
-    // TODO use this method and remove the suppression above
     private int getMaxChildrenWidth(final NewNode node) {
         int[] maxChildrenWidth = {-1};
 
