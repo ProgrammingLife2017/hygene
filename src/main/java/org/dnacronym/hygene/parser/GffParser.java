@@ -1,23 +1,34 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.Annotation;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.models.FeatureAnnotation;
+import org.dnacronym.hygene.models.GeneAnnotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
- * GFF parser.
+ * Parses GFF files.
+ * <p>
+ * These files become {@link GeneAnnotation}s.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
+ * @see GeneAnnotation
  */
 public final class GffParser {
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int GFF_COLUMNS = 9;
+
+    private static final int SEQ_ID_COLUMN = 0;
+    private static final int SOURCE_COLUMN = 1;
+    private static final int TYPE_COLUMN = 2;
+    private static final int START_COLUMN = 3;
+    private static final int END_COLUMN = 4;
+    private static final int SCORE_COLUMN = 5;
+    private static final int STRAND_COLUMN = 6;
+    private static final int PHASE_COLUMN = 7;
+    private static final int ATTRIBUTES_COLUMN = 8;
 
 
     /**
@@ -27,11 +38,11 @@ public final class GffParser {
      * @return list of things
      * @throws ParseException if unable to parse the {@link GffFile}
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ugh
-    public List<Annotation> parse(final GffFile gffFile) throws ParseException {
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // An object is only instantiated once
+    public GeneAnnotation parse(final GffFile gffFile) throws ParseException {
         final BufferedReader bufferedReader = gffFile.readFile();
 
-        final Map<String, Annotation> annotations = new HashMap<>();
+        @MonotonicNonNull GeneAnnotation geneAnnotation = null;
         try {
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
@@ -39,31 +50,69 @@ public final class GffParser {
                         + ", it was: '" + line + "'.");
             }
 
-            for (int i = 0; (line = bufferedReader.readLine()) != null; i++) {
-                final String[] columns = parseLine(line, i);
-                final String seqId = columns[0];
+            int lineNumber = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                lineNumber++;
 
-                if (!annotations.containsKey(seqId)) {
-                    annotations.put(seqId, new Annotation(seqId));
+                if (line.isEmpty()) {
+                    continue;
                 }
 
-                final Annotation annotation = annotations.get(seqId);
+                final String[] columns = parseLine(line, lineNumber);
+                final String seqId = columns[SEQ_ID_COLUMN];
 
-                final String[] attributes = columns[8].split(";");
-                for (final String attribute : attributes) {
-                    final String[] attributePair = attribute.split("=");
-                    if (attributePair.length != 2) {
-                        throw new ParseException("Attributes of line " + i + " contained an error.");
-                    }
-
-                    annotation.setAttribute(attributePair[0], attributePair[1]);
+                if (geneAnnotation == null) {
+                    geneAnnotation = new GeneAnnotation(seqId);
+                } else if (!geneAnnotation.getSeqId().equals(seqId)) {
+                    throw new ParseException("GFF file contains more than one seqid: '" + geneAnnotation.getSeqId()
+                            + "' and '" + seqId + "'.");
                 }
+
+                geneAnnotation.addFeatureAnnotation(makeFeatureAnnotation(columns, lineNumber));
             }
         } catch (final IOException e) {
-            throw new ParseException("An error while reading the GFF file.", e);
+            throw new ParseException("An error occurred while reading the GFF file.", e);
         }
 
-        return new ArrayList<>(annotations.values());
+        if (geneAnnotation == null) {
+            throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
+        }
+
+        return geneAnnotation;
+    }
+
+    /**
+     * Returns a feature annotation representing the current line.
+     *
+     * @param columns    the columns of the line to convert to a feature annotation
+     * @param lineNumber the line number in the file
+     * @return a {@link FeatureAnnotation} representing the current row in the file
+     * @throws ParseException if the attribute section of the row is invalid
+     */
+    private FeatureAnnotation makeFeatureAnnotation(final String[] columns, final int lineNumber)
+            throws ParseException {
+        final FeatureAnnotation featureAnnotation = new FeatureAnnotation(
+                columns[SOURCE_COLUMN],
+                columns[TYPE_COLUMN],
+                columns[START_COLUMN],
+                columns[END_COLUMN],
+                columns[SCORE_COLUMN],
+                columns[STRAND_COLUMN],
+                columns[PHASE_COLUMN]
+        );
+
+        final String[] attributes = columns[ATTRIBUTES_COLUMN].split(";");
+        for (final String attribute : attributes) {
+            final String[] keyValuePair = attribute.split("=");
+            if (keyValuePair.length != 2) {
+                throw new ParseException("The attributes at line " + lineNumber
+                        + " contained an invalid key value pair:" + attribute + ".");
+            }
+
+            featureAnnotation.setAttribute(keyValuePair[0], keyValuePair[1]);
+        }
+
+        return featureAnnotation;
     }
 
     /**
