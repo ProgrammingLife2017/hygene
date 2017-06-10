@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 
@@ -78,13 +79,31 @@ public final class GenomeIndex {
      *
      * @param genome the name of the genome to query for
      * @param base   the base to query for
-     * @return the ID of the closest node to the desired point
+     * @return if found, the point of that closest node
      * @throws SQLException in the case of an error during SQL operations
      */
-    public int getClosestNodeId(final String genome, final int base) throws SQLException {
-        final GenomeIndexPoint closestIndexPoint = fileGenomeIndex.getClosestNodeToBase(getGenomeId(genome), base);
+    public Optional<GenomePoint> getClosestNodeId(final String genome, final int base) throws SQLException {
+        final int genomeId = getGenomeId(genome);
 
-        return closestIndexPoint.getNodeId();
+        final GenomePoint closestIndexPoint = fileGenomeIndex.getClosestNodeToBase(genomeId, base);
+        final SequenceDirection sequenceDirection = base - closestIndexPoint.getBase() > 0 ?
+                SequenceDirection.RIGHT : SequenceDirection.LEFT;
+
+        int currentBase = closestIndexPoint.getBase();
+        int currentNodeId = closestIndexPoint.getNodeId();
+
+        while (Math.abs(currentBase - closestIndexPoint.getBase()) <= DEFAULT_BASE_CACHE_INTERVAL) {
+            if (base >= currentBase && base < currentBase + gfaFile.getGraph().getSequenceLength(currentNodeId)) {
+                return Optional.of(new GenomePoint(genomeId, base, currentNodeId, base - currentBase));
+            }
+
+            currentBase += gfaFile.getGraph().getSequenceLength(currentNodeId);
+            gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId, sequenceDirection, nodeId -> {
+                
+            });
+        }
+
+        return Optional.empty();
     }
 
 

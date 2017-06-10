@@ -2,7 +2,7 @@ package org.dnacronym.hygene.persistence;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.coordinatesystem.GenomeIndexPoint;
+import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -72,19 +72,19 @@ public final class FileGenomeIndex {
      * @return the ID of the closest node, or -1 if it could not be found
      * @throws SQLException in the case of an error during SQL operations
      */
-    public GenomeIndexPoint getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
+    public GenomePoint getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
         final String sql = "SELECT * FROM " + TABLE_NAME
                 + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId
                 + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ") ASC"
                 + " LIMIT 1";
 
-        return (GenomeIndexPoint) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
+        return (GenomePoint) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
             try {
-                return new GenomeIndexPoint(
+                return new GenomePoint(
                         resultSet.getInt(GENOME_ID_COLUMN_NAME),
                         resultSet.getInt(BASE_COLUMN_NAME),
-                        resultSet.getInt(NODE_ID_COLUMN_NAME)
-                );
+                        resultSet.getInt(NODE_ID_COLUMN_NAME),
+                        0);
             } catch (final SQLException e) {
                 LOGGER.error("Unable to retrieve closest node to base " + base + " in genome no. " + genomeId + ".", e);
                 return null;
