@@ -3,6 +3,7 @@ package org.dnacronym.hygene.coordinatesystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.GraphIterator;
+import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParser;
@@ -76,13 +77,15 @@ public final class GenomeIndex {
 
     /**
      * Looks for the node that comes closest to the wanted genome-base point in the coordinate system.
+     * <p>
+     * Does a directed search from the closest index point to find the node containing the desired genome-base point.
      *
      * @param genome the name of the genome to query for
      * @param base   the base to query for
-     * @return if found, the point of that closest node
+     * @return if found, the point of the base in that node
      * @throws SQLException in the case of an error during SQL operations
      */
-    public Optional<GenomePoint> getClosestNodeId(final String genome, final int base) throws SQLException {
+    public Optional<GenomePoint> getClosestNode(final String genome, final int base) throws SQLException {
         final int genomeId = getGenomeId(genome);
 
         final GenomePoint closestIndexPoint = fileGenomeIndex.getClosestNodeToBase(genomeId, base);
@@ -90,17 +93,31 @@ public final class GenomeIndex {
                 SequenceDirection.RIGHT : SequenceDirection.LEFT;
 
         int currentBase = closestIndexPoint.getBase();
-        int currentNodeId = closestIndexPoint.getNodeId();
+        final int[] currentNodeId = {closestIndexPoint.getNodeId()};
 
         while (Math.abs(currentBase - closestIndexPoint.getBase()) <= DEFAULT_BASE_CACHE_INTERVAL) {
-            if (base >= currentBase && base < currentBase + gfaFile.getGraph().getSequenceLength(currentNodeId)) {
-                return Optional.of(new GenomePoint(genomeId, base, currentNodeId, base - currentBase));
+            if (base >= currentBase && base < currentBase + gfaFile.getGraph().getSequenceLength(currentNodeId[0])) {
+                return Optional.of(new GenomePoint(genomeId, base, currentNodeId[0], base - currentBase));
             }
 
-            currentBase += gfaFile.getGraph().getSequenceLength(currentNodeId);
-            gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId, sequenceDirection, nodeId -> {
-                
+            currentBase += gfaFile.getGraph().getSequenceLength(currentNodeId[0]);
+            final int oldNodeId = currentNodeId[0];
+            gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId[0], sequenceDirection, nodeId -> {
+                try {
+                    final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(
+                            gfaFile.getGraph().getLineNumber(nodeId));
+                    if (nodeMetadata.getGenomes().contains(genome)) {
+                        currentNodeId[0] = nodeId;
+                    }
+                } catch (final ParseException e) {
+                    LOGGER.error("Parsing node metadata of " + nodeId + " for genome coordinate lookup failed.", e);
+                }
             });
+
+            if (oldNodeId == currentNodeId[0]) {
+                // As we are assuming that paths of genomes must be connected, this cannot be the case
+                break;
+            }
         }
 
         return Optional.empty();
@@ -151,7 +168,7 @@ public final class GenomeIndex {
 
             if (!nextGenome.isEmpty()) {
                 genomeBaseCounts.put(nextGenome, 0);
-                genomeBaseDiffCounts.put(nextGenome, -baseCacheInterval);
+                genomeBaseDiffCounts.put(nextGenome, -1);
                 genomeNames.add(nextGenome);
             }
         }
@@ -191,13 +208,16 @@ public final class GenomeIndex {
                 }
 
                 final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
+                if (genomeBaseDiffCount < 0) {
+                    fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), 0, nodeId);
+                    genomeBaseDiffCounts.put(genome, 0);
+                } else if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
                     final int baseIndexPosition = genomeBaseDiffCount + nodeBaseCount + genomeBaseCount;
                     fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
                     genomeBaseDiffCounts.put(genome, 0);
                     genomeBaseCounts.put(genome, baseIndexPosition);
                 } else {
-                    genomeBaseCounts.put(genome, genomeBaseDiffCount + nodeBaseCount);
+                    genomeBaseCounts.put(genome, genomeBaseCount + nodeBaseCount);
                 }
             }
         } catch (final ParseException | SQLException e) {

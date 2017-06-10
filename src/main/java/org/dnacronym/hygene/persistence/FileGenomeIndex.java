@@ -80,6 +80,9 @@ public final class FileGenomeIndex {
 
         return (GenomePoint) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
             try {
+                if (!resultSet.next()) {
+                    throw new SQLException("No genome index point found in database.");
+                }
                 return new GenomePoint(
                         resultSet.getInt(GENOME_ID_COLUMN_NAME),
                         resultSet.getInt(BASE_COLUMN_NAME),
