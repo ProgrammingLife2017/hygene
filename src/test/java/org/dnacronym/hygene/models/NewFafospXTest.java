@@ -103,4 +103,16 @@ final class NewFafospXTest extends GraphTestBase {
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(6000);
         assertThat(getGraph().getUnscaledXPosition(3)).isEqualTo(4000);
     }
+
+    @Test
+    void testOverflow() {
+        createGraph(2);
+        addEdges(new int[][] {{0, 1}});
+        setSequenceLengths(new int[][] {{0, Integer.MAX_VALUE}, {1, 100}});
+
+        getGraph().fafosp().horizontal();
+
+        assertThat(getGraph().getUnscaledXPosition(0)).isEqualTo(0);
+        assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(-2147481000);
+    }
 }
