@@ -3,11 +3,8 @@ package org.dnacronym.hygene.persistence;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-import org.dnacronym.hygene.core.Files;
 import org.sqlite.SQLiteConfig;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -28,13 +25,8 @@ import java.util.stream.Collectors;
 )
 public final class FileDatabaseDriver implements AutoCloseable {
     public static final String DB_FILE_EXTENSION = ".hygene";
-    public static final String FILE_IO_EXTENSION_RESOURCE_DIRECTORY = "/sqlite-fileio";
-    public static final String FILE_IO_EXTENSION_PATH = "fileio";
-    public static final String FILE_IO_EXTENSION_WIN_X86_PATH = "x86/fileio";
-    public static final String WIN_X86_OS_ARCHITECTURE_NAME = "x86";
 
     private final Connection connection;
-    private boolean fileIOEnabled;
 
 
     /**
@@ -45,38 +37,10 @@ public final class FileDatabaseDriver implements AutoCloseable {
      */
     FileDatabaseDriver(final String fileName) throws SQLException {
         final SQLiteConfig config = new SQLiteConfig();
-        config.enableLoadExtension(true);
 
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName + DB_FILE_EXTENSION, config.toProperties());
     }
 
-
-    /**
-     * Enables the file IO extension for SQLite.
-     *
-     * @throws SQLException if the file IO extension cannot be loaded
-     */
-    synchronized void enableFileIO() throws SQLException {
-        if (fileIOEnabled) {
-            return;
-        }
-
-        String extensionPath = FILE_IO_EXTENSION_PATH;
-        if (SystemUtils.IS_OS_WINDOWS && SystemUtils.OS_ARCH.equals(WIN_X86_OS_ARCHITECTURE_NAME)) {
-            extensionPath = FILE_IO_EXTENSION_WIN_X86_PATH;
-        }
-
-        try {
-            final String extensionDirectory = Files.getInstance()
-                    .copyResourcesToAppData(FILE_IO_EXTENSION_RESOURCE_DIRECTORY)
-                    .getAbsolutePath();
-
-            raw("SELECT load_extension('" + extensionDirectory + "/" + extensionPath + "')");
-            fileIOEnabled = true;
-        } catch (final IOException e) {
-            throw new SQLException("Extension could not be loaded", e);
-        }
-    }
 
     /**
      * Creates the given tables in the database.
