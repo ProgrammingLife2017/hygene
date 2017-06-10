@@ -82,7 +82,9 @@ public final class GenomeIndex {
      * @throws SQLException in the case of an error during SQL operations
      */
     public int getClosestNodeId(final String genome, final int base) throws SQLException {
-        return fileGenomeIndex.getClosestNodeToBase(getGenomeId(genome), base);
+        final GenomeIndexPoint closestIndexPoint = fileGenomeIndex.getClosestNodeToBase(getGenomeId(genome), base);
+
+        return closestIndexPoint.getNodeId();
     }
 
 
