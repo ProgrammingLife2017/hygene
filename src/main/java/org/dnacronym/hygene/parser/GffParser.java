@@ -46,8 +46,8 @@ public final class GffParser {
      * @return list of things
      * @throws ParseException if unable to parse the {@link GffFile}
      */
-    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S135"})
-    // An object is only instantiated once. Using a single break would result in ugly nested ifs.
+    @SuppressWarnings({"squid:S135", "PMD"})
+    // An object is only instantiated once. PMD suppressed for the time being till method is refactored
     public SequenceAnnotation parse(final GffFile gffFile) throws ParseException {
         final BufferedReader bufferedReader = gffFile.readFile();
 

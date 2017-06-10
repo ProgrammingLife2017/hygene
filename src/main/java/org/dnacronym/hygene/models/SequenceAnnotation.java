@@ -46,7 +46,7 @@ public final class SequenceAnnotation {
     }
 
     /**
-     * Adds a single item of meta-data to the {@link SequenceAnnotation}
+     * Adds a single item of meta-data to the {@link SequenceAnnotation}.
      *
      * @param metaData item of meta-data to add
      */
@@ -66,8 +66,8 @@ public final class SequenceAnnotation {
     /**
      * Adds a {@link FeatureAnnotation} to this {@link SequenceAnnotation}.
      * <p>
-     * This adds to the graph structure of the {@link SequenceAnnotation}, as it is appended to the relevant parent. If it
-     * has no parent, it is simply stored internally.
+     * This adds to the graph structure of the {@link SequenceAnnotation}, as it is appended to the relevant parent. If
+     * it has no parent, it is simply stored internally.
      *
      * @param featureAnnotation the {@link FeatureAnnotation} to add to this {@link SequenceAnnotation}. Must have an id
      */
