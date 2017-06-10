@@ -6,6 +6,8 @@ import org.dnacronym.hygene.models.GeneAnnotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -33,16 +35,24 @@ public final class GffParser {
 
     /**
      * Parse the file.
+     * <p>
+     * Firstly checks that the files starts with the '{@value GFF_VERSION_HEADER}'.<br>
+     * Afterwards, starts parsing the file. Blank lines are ignored. Lines starting with '##' are added as file
+     * meta-data to the {@link GeneAnnotation}.<br>
+     * All other lines are parsed and converted to {@link FeatureAnnotation}s to be stored in the
+     * {@link GeneAnnotation}.
      *
      * @param gffFile the file
      * @return list of things
      * @throws ParseException if unable to parse the {@link GffFile}
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // An object is only instantiated once
+    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S135"})
+    // An object is only instantiated once. Using a single break would result in ugly nested ifs.
     public GeneAnnotation parse(final GffFile gffFile) throws ParseException {
         final BufferedReader bufferedReader = gffFile.readFile();
 
         @MonotonicNonNull GeneAnnotation geneAnnotation = null;
+        final List<String> fileMetaData = new ArrayList<>();
         try {
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
@@ -53,8 +63,11 @@ public final class GffParser {
             int lineNumber = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
-
                 if (line.isEmpty()) {
+                    continue;
+                }
+                if (line.startsWith("##")) {
+                    fileMetaData.add(line.substring(2, line.length() - 1));
                     continue;
                 }
 
@@ -76,6 +89,10 @@ public final class GffParser {
 
         if (geneAnnotation == null) {
             throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
+        }
+
+        for (final String metaData : fileMetaData) {
+            geneAnnotation.addMetaData(metaData);
         }
 
         return geneAnnotation;

@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,6 +17,7 @@ public final class GeneAnnotation {
     private final String seqId;
 
     private final Map<String, FeatureAnnotation> featureAnnotations;
+    private final List<String> metaData;
 
 
     /**
@@ -25,6 +28,7 @@ public final class GeneAnnotation {
     public GeneAnnotation(final String seqId) {
         this.seqId = seqId;
         featureAnnotations = new HashMap<>();
+        metaData = new ArrayList<>();
     }
 
 
@@ -39,6 +43,24 @@ public final class GeneAnnotation {
      */
     public String getSeqId() {
         return seqId;
+    }
+
+    /**
+     * Adds a single item of meta-data to the {@link GeneAnnotation}
+     *
+     * @param metaData item of meta-data to add
+     */
+    public void addMetaData(final String metaData) {
+        this.metaData.add(metaData);
+    }
+
+    /**
+     * Returns the list of meta-data of this {@link GeneAnnotation}.
+     *
+     * @return the list of meta-data of this {@link GeneAnnotation}
+     */
+    public List<String> getMetaData() {
+        return metaData;
     }
 
     /**
