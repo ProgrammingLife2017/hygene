@@ -1,30 +1,33 @@
 package org.dnacronym.hygene.models;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
  * FeatureAnnotation for features.
  * <p>
  * These features are retrieved from GFF files. Each line of the file corresponds with a single feature. Together, a
- * collection of {@link FeatureAnnotation}s form a {@link GeneAnnotation}.
+ * collection of {@link FeatureAnnotation}s form a {@link SequenceAnnotation}.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
  * @see org.dnacronym.hygene.parser.GffParser
- * @see GeneAnnotation
+ * @see SequenceAnnotation
  */
 public final class FeatureAnnotation {
-    private static final Set<String> VALID_ATTRIBUTES = new HashSet<>(Arrays.asList(
+    /**
+     * Set of valid attributes of a single feature annotation.
+     */
+    public static final ImmutableSet<String> VALID_ATTRIBUTES = ImmutableSet.copyOf(Arrays.asList(
             "ID", "Name", "Alias", "Parent", "Target", "Gap", "Derives_from", "Note", "Dbxref", "Ontology_term",
             "Is_circular"));
 
-    private final Map<String, String> attributes;
+    private final Map<String, String[]> attributes;
     private final List<FeatureAnnotation> children;
 
     private final String source;
@@ -70,7 +73,7 @@ public final class FeatureAnnotation {
      * "Genbank." In effect, the source is used to extend the feature ontology by adding a qualifier to the type
      * creating a new composite type that is a subclass of the type in the type column.
      *
-     * @return the source of the {@link GeneAnnotation}
+     * @return the source of the {@link SequenceAnnotation}
      */
     public String getSource() {
         return source;
@@ -83,7 +86,7 @@ public final class FeatureAnnotation {
      * Sequence Ontology or an SO accession number. The latter alternative is distinguished using the syntax SO:000000.
      * In either case, it must be sequence_feature (SO:0000110) or an is_a child of it.
      *
-     * @return the type of the {@link GeneAnnotation}
+     * @return the type of the {@link SequenceAnnotation}
      */
     public String getType() {
         return type;
@@ -101,8 +104,8 @@ public final class FeatureAnnotation {
      * For zero-length features, such as insertion sites, start equals end and the implied site is to the right of the
      * indicated base in the direction of the landmark.
      *
-     * @return the start of the {@link GeneAnnotation}
-     * @see GeneAnnotation#getSeqId()
+     * @return the start of the {@link SequenceAnnotation}
+     * @see SequenceAnnotation#getSeqId()
      */
     public String getStart() {
         return start;
@@ -120,8 +123,8 @@ public final class FeatureAnnotation {
      * For zero-length features, such as insertion sites, start equals end and the implied site is to the right of the
      * indicated base in the direction of the landmark.
      *
-     * @return the end of the {@link GeneAnnotation}
-     * @see GeneAnnotation#getSeqId()
+     * @return the end of the {@link SequenceAnnotation}
+     * @see SequenceAnnotation#getSeqId()
      */
     public String getEnd() {
         return end;
@@ -134,7 +137,7 @@ public final class FeatureAnnotation {
      * score are ill-defined. It is strongly recommended that E-values be used for sequence similarity features, and
      * that P-values be used for ab initio gene prediction features.
      *
-     * @return the score of the {@link GeneAnnotation}
+     * @return the score of the {@link SequenceAnnotation}
      */
     public String getScore() {
         return score;
@@ -147,7 +150,7 @@ public final class FeatureAnnotation {
      * features that are not stranded. In addition, ? can be used for features whose strandedness is relevant, but
      * unknown.
      *
-     * @return the strand of the {@link GeneAnnotation}
+     * @return the strand of the {@link SequenceAnnotation}
      */
     public String getStrand() {
         return strand;
@@ -168,7 +171,7 @@ public final class FeatureAnnotation {
      * <p>
      * The phase is REQUIRED for all CDS features.
      *
-     * @return the phase of the {@link GeneAnnotation}
+     * @return the phase of the {@link SequenceAnnotation}
      */
     public String getPhase() {
         return phase;
@@ -176,6 +179,8 @@ public final class FeatureAnnotation {
 
     /**
      * Sets an attribute of the annotation.
+     * <p>
+     * Values must be separated by a comma.
      *
      * @param name  the name of the attribute
      * @param value the value of the attribute
@@ -186,7 +191,8 @@ public final class FeatureAnnotation {
                     + VALID_ATTRIBUTES.toString());
         }
 
-        attributes.put(name, value);
+        final String[] values = value.split(",");
+        attributes.put(name, values);
     }
 
     /**
@@ -194,7 +200,7 @@ public final class FeatureAnnotation {
      *
      * @return the attributes of the annotation
      */
-    public Map<String, String> getAttributes() {
+    public Map<String, String[]> getAttributes() {
         return attributes;
     }
 

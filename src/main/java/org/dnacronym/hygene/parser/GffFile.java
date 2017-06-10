@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.GeneAnnotation;
+import org.dnacronym.hygene.models.SequenceAnnotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +30,15 @@ public final class GffFile {
 
 
     /**
+     * Returns the name of the GFF file.
+     *
+     * @return the name of the GFF file
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
      * Reads a GFF file into memory and gives its contents as a {@link BufferedReader}.
      *
      * @return the contents of the GFF file
@@ -46,10 +55,10 @@ public final class GffFile {
     /**
      * Parses this GFF file.
      *
-     * @return a {@link GeneAnnotation} representing the file
+     * @return a {@link SequenceAnnotation} representing the file
      * @throws ParseException if the file content is not GFF-compliant
      */
-    public GeneAnnotation parse() throws ParseException {
+    public SequenceAnnotation parse() throws ParseException {
         return gffParser.parse(this);
     }
 }

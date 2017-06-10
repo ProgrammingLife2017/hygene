@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @see org.dnacronym.hygene.parser.GffParser
  */
-public final class GeneAnnotation {
+public final class SequenceAnnotation {
     private final String seqId;
 
     private final Map<String, FeatureAnnotation> featureAnnotations;
@@ -25,7 +25,7 @@ public final class GeneAnnotation {
      *
      * @param seqId the id of the genome
      */
-    public GeneAnnotation(final String seqId) {
+    public SequenceAnnotation(final String seqId) {
         this.seqId = seqId;
         featureAnnotations = new HashMap<>();
         metaData = new ArrayList<>();
@@ -46,7 +46,7 @@ public final class GeneAnnotation {
     }
 
     /**
-     * Adds a single item of meta-data to the {@link GeneAnnotation}
+     * Adds a single item of meta-data to the {@link SequenceAnnotation}
      *
      * @param metaData item of meta-data to add
      */
@@ -55,33 +55,41 @@ public final class GeneAnnotation {
     }
 
     /**
-     * Returns the list of meta-data of this {@link GeneAnnotation}.
+     * Returns the list of meta-data of this {@link SequenceAnnotation}.
      *
-     * @return the list of meta-data of this {@link GeneAnnotation}
+     * @return the list of meta-data of this {@link SequenceAnnotation}
      */
     public List<String> getMetaData() {
         return metaData;
     }
 
     /**
-     * Adds a {@link FeatureAnnotation} to this {@link GeneAnnotation}.
+     * Adds a {@link FeatureAnnotation} to this {@link SequenceAnnotation}.
      * <p>
-     * This adds to the graph structure of the {@link GeneAnnotation}, as it is appended to the relevant parent. If it
+     * This adds to the graph structure of the {@link SequenceAnnotation}, as it is appended to the relevant parent. If it
      * has no parent, it is simply stored internally.
      *
-     * @param featureAnnotation the {@link FeatureAnnotation} to add to this {@link GeneAnnotation}. Must have an id
+     * @param featureAnnotation the {@link FeatureAnnotation} to add to this {@link SequenceAnnotation}. Must have an id
      */
     public void addFeatureAnnotation(final FeatureAnnotation featureAnnotation) {
-        final String id = featureAnnotation.getAttributes().get("ID");
+        final String[] id = featureAnnotation.getAttributes().get("ID");
         if (id == null) {
             throw new IllegalArgumentException("The given feature annotation did not contain an id.");
         }
+        if (id.length > 1) {
+            throw new IllegalArgumentException("The given feature annotation contained more than 1 id, it contained: "
+                    + id.length);
+        }
 
-        featureAnnotations.put(id, featureAnnotation);
+        featureAnnotations.put(id[0], featureAnnotation);
 
-        final String parentId = featureAnnotation.getAttributes().get("Parent");
-        if (parentId != null && featureAnnotations.containsKey(parentId)) {
-            featureAnnotations.get(parentId).addChild(featureAnnotation);
+        final String[] parentIds = featureAnnotation.getAttributes().get("Parent");
+        if (parentIds != null) {
+            for (final String parentId : parentIds) {
+                if (featureAnnotations.containsKey(parentId)) {
+                    featureAnnotations.get(parentId).addChild(featureAnnotation);
+                }
+            }
         }
     }
 }

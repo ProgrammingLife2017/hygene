@@ -2,7 +2,7 @@ package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.FeatureAnnotation;
-import org.dnacronym.hygene.models.GeneAnnotation;
+import org.dnacronym.hygene.models.SequenceAnnotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +13,10 @@ import java.util.List;
 /**
  * Parses GFF files.
  * <p>
- * These files become {@link GeneAnnotation}s.
+ * These files become {@link SequenceAnnotation}s.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
- * @see GeneAnnotation
+ * @see SequenceAnnotation
  */
 public final class GffParser {
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
@@ -38,9 +38,9 @@ public final class GffParser {
      * <p>
      * Firstly checks that the files starts with the '{@value GFF_VERSION_HEADER}'.<br>
      * Afterwards, starts parsing the file. Blank lines are ignored. Lines starting with '##' are added as file
-     * meta-data to the {@link GeneAnnotation}.<br>
+     * meta-data to the {@link SequenceAnnotation}.<br>
      * All other lines are parsed and converted to {@link FeatureAnnotation}s to be stored in the
-     * {@link GeneAnnotation}.
+     * {@link SequenceAnnotation}.
      *
      * @param gffFile the file
      * @return list of things
@@ -48,10 +48,10 @@ public final class GffParser {
      */
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S135"})
     // An object is only instantiated once. Using a single break would result in ugly nested ifs.
-    public GeneAnnotation parse(final GffFile gffFile) throws ParseException {
+    public SequenceAnnotation parse(final GffFile gffFile) throws ParseException {
         final BufferedReader bufferedReader = gffFile.readFile();
 
-        @MonotonicNonNull GeneAnnotation geneAnnotation = null;
+        @MonotonicNonNull SequenceAnnotation sequenceAnnotation = null;
         final List<String> fileMetaData = new ArrayList<>();
         try {
             String line = bufferedReader.readLine();
@@ -63,7 +63,7 @@ public final class GffParser {
             int lineNumber = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
-                if (line.isEmpty()) {
+                if (line.isEmpty() || line.charAt(0) == '#' && line.charAt(1) != '#') {
                     continue;
                 }
                 if (line.startsWith("##")) {
@@ -74,28 +74,28 @@ public final class GffParser {
                 final String[] columns = parseLine(line, lineNumber);
                 final String seqId = columns[SEQ_ID_COLUMN];
 
-                if (geneAnnotation == null) {
-                    geneAnnotation = new GeneAnnotation(seqId);
-                } else if (!geneAnnotation.getSeqId().equals(seqId)) {
-                    throw new ParseException("GFF file contains more than one seqid: '" + geneAnnotation.getSeqId()
+                if (sequenceAnnotation == null) {
+                    sequenceAnnotation = new SequenceAnnotation(seqId);
+                } else if (!sequenceAnnotation.getSeqId().equals(seqId)) {
+                    throw new ParseException("GFF file contains more than one seqid: '" + sequenceAnnotation.getSeqId()
                             + "' and '" + seqId + "'.");
                 }
 
-                geneAnnotation.addFeatureAnnotation(makeFeatureAnnotation(columns, lineNumber));
+                sequenceAnnotation.addFeatureAnnotation(makeFeatureAnnotation(columns, lineNumber));
             }
         } catch (final IOException e) {
             throw new ParseException("An error occurred while reading the GFF file.", e);
         }
 
-        if (geneAnnotation == null) {
+        if (sequenceAnnotation == null) {
             throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
         }
 
         for (final String metaData : fileMetaData) {
-            geneAnnotation.addMetaData(metaData);
+            sequenceAnnotation.addMetaData(metaData);
         }
 
-        return geneAnnotation;
+        return sequenceAnnotation;
     }
 
     /**
@@ -141,7 +141,7 @@ public final class GffParser {
      * @throws ParseException if the line does not consist of 9 tab delimited columns
      */
     private String[] parseLine(final String line, final int lineNumber) throws ParseException {
-        final String[] columns = line.split("\\t");
+        final String[] columns = line.split("\\s+");
         if (columns.length != GFF_COLUMNS) {
             throw new ParseException("Line " + lineNumber + " did not contain " + GFF_COLUMNS
                     + " columns, it contained " + columns.length + ".");
