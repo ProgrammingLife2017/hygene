@@ -30,13 +30,13 @@ final class RecentDirectoryTest {
     void testStoreGet() throws IOException {
         final File testDirectory = new File("TestDirectory");
 
-        RecentDirectory.store(testDirectory);
-        assertThat(RecentDirectory.get().getAbsolutePath()).isEqualTo(testDirectory.getAbsolutePath());
+        RecentDirectory.store("type", testDirectory);
+        assertThat(RecentDirectory.get("type").getAbsolutePath()).isEqualTo(testDirectory.getAbsolutePath());
     }
 
     @Test
     void testGetWithMissingDataFile() throws IOException {
-        assertThat(RecentDirectory.get().getAbsolutePath()).isEqualTo(System.getProperty("user.home"));
+        assertThat(RecentDirectory.get("type").getAbsolutePath()).isEqualTo(System.getProperty("user.home"));
     }
 
 
@@ -47,6 +47,6 @@ final class RecentDirectoryTest {
      */
     private void deleteDataFile() throws IOException {
         Files.deleteIfExists(org.dnacronym.hygene.core.Files.getInstance()
-                .getAppDataFile(RecentDirectory.DATA_FILE_NAME).toPath());
+                .getAppDataFile("type" + RecentDirectory.DATA_FILE_NAME).toPath());
     }
 }

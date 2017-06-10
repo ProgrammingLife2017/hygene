@@ -10,7 +10,7 @@
     <menus>
         <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>
-                <MenuItem fx:id="fileOpen" mnemonicParsing="false" onAction="#openFileAction" text="Open">
+                <MenuItem fx:id="fileOpen" mnemonicParsing="false" onAction="#openGfaFileAction" text="Open">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
                     </accelerator>
@@ -20,6 +20,12 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="No recently opened files"/>
                     </items>
                 </Menu>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem fx:id="gffFileOpen" mnemonicParsing="false" onAction="#openGffFileAction" text="Open GFF file">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="G" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                    </accelerator>
+                </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#settingsAction" text="Settings">
                     <accelerator>
