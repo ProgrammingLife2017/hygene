@@ -6,7 +6,7 @@ package org.dnacronym.hygene.coordinatesystem;
  */
 public final class GenomeIndexPoint {
     private final int genomeId;
-    private final int baseId;
+    private final int base;
     private final int nodeId;
 
 
@@ -14,12 +14,12 @@ public final class GenomeIndexPoint {
      * Constructs a new {@link GenomeIndexPoint} instance.
      *
      * @param genomeId the ID of the genome
-     * @param baseId   the base count in that genome at the beginning of the node
+     * @param base     the base count in that genome at the beginning of the node
      * @param nodeId   the ID of the node at that index point
      */
-    public GenomeIndexPoint(final int genomeId, final int baseId, final int nodeId) {
+    public GenomeIndexPoint(final int genomeId, final int base, final int nodeId) {
         this.genomeId = genomeId;
-        this.baseId = baseId;
+        this.base = base;
         this.nodeId = nodeId;
     }
 
@@ -34,12 +34,12 @@ public final class GenomeIndexPoint {
     }
 
     /**
-     * Returns the base ID.
+     * Returns the base.
      *
-     * @return the base ID
+     * @return the base
      */
-    public int getBaseId() {
-        return baseId;
+    public int getBase() {
+        return base;
     }
 
     /**
