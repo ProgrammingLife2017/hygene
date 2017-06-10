@@ -63,18 +63,18 @@ public final class GraphStore {
     }
 
     /**
-     * Get the {@link ObjectProperty} that stores the {@link GfaFile}.
+     * Gets the {@link ObjectProperty} that stores the {@link GfaFile}.
      *
-     * @return {@link ObjectProperty} that stores the {@link GfaFile}
+     * @return the {@link ObjectProperty} that stores the {@link GfaFile}
      */
     public ObjectProperty<GfaFile> getGfaFileProperty() {
         return gfaFileProperty;
     }
 
     /**
-     * Get the {@link ObjectProperty} that stores the GFF file.
+     * Gets the {@link ObjectProperty} that stores the GFF file.
      *
-     * @return {@link ObjectProperty} that stores the GFF file
+     * @return the {@link ObjectProperty} that stores the GFF file
      */
     public ObjectProperty getGffFileProperty() {
         return gffFileProperty;
