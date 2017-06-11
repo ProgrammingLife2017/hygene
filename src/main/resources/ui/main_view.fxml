@@ -49,6 +49,9 @@
     </center>
 
     <bottom>
-        <fx:include source="node/sequence_view.fxml"/>
+        <VBox>
+            <fx:include source="node/sequence_view.fxml"/>
+            <fx:include source="progressbar/progress_bar_main.fxml"/>
+        </VBox>
     </bottom>
 </BorderPane>
