@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.core;
 
 import com.google.common.eventbus.Subscribe;
-import org.dnacronym.hygene.events.GraphQueryChangeEvent;
+import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.GraphQuery;
 import org.dnacronym.hygene.models.Node;
 import org.junit.jupiter.api.Test;
 
@@ -19,27 +19,27 @@ public final class EventBusIntegrationTest {
 
     @Test
     void testThatEventsCanBePostedAndListenedTo() {
-        final GraphQuery graphQuery = new GraphQuery(new Graph(DUMMY_GRAPH, null));
+        final CenterPointQuery centerPointQuery = new CenterPointQuery(new Graph(DUMMY_GRAPH, null));
 
         final CenterPointQueryChangeEventListener listener = new CenterPointQueryChangeEventListener();
         HygeneEventBus.getInstance().register(listener);
 
-        graphQuery.query(0, 1);
+        centerPointQuery.query(0, 1);
 
-        assertThat(graphQuery).isEqualTo(listener.getGraphQuery());
+        assertThat(centerPointQuery).isEqualTo(listener.getCenterPointQuery());
     }
 
 
     private static class CenterPointQueryChangeEventListener {
-        private GraphQuery graphQuery;
+        private CenterPointQuery centerPointQuery;
 
         @Subscribe
-        public void centerPointQueryChanged(final GraphQueryChangeEvent event) {
-            graphQuery = event.getGraphQuery();
+        public void centerPointQueryChanged(final CenterPointQueryChangeEvent event) {
+            centerPointQuery = event.getCenterPointQuery();
         }
 
-        public GraphQuery getGraphQuery() {
-            return graphQuery;
+        public CenterPointQuery getCenterPointQuery() {
+            return centerPointQuery;
         }
     }
 }
