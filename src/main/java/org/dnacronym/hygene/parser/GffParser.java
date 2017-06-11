@@ -55,8 +55,9 @@ public final class GffParser {
      * @throws ParseException if unable to parse the {@link java.io.File}, which can either be caused by an
      *                        {@link IOException} when opening the file or a semantic error in the GFF file itself
      */
-    @SuppressWarnings({"squid:S135", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity",
-            "PMD.StdCyclomaticComplexity"}) // An object is only instantiated once.
+    @SuppressWarnings({"squid:S135", // An object is only instantiated once.
+            "squid:S3776", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity",
+            "PMD.StdCyclomaticComplexity"}) // Splitting this method up further decreases readability
     public FeatureAnnotation parse(final String gffFile) throws ParseException {
         @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
         final List<String> fileMetaData = new ArrayList<>();

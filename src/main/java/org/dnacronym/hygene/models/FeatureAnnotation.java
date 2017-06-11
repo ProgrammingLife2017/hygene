@@ -105,8 +105,8 @@ public final class FeatureAnnotation {
                     throw new IllegalArgumentException("Reference made to non-existent parent: '" + parentId + "'.");
                 }
 
-                final List<SubFeatureAnnotation> subFeatureAnnotations = subFeatureAnnotationsMap.get(parentId);
-                for (final SubFeatureAnnotation annotation : subFeatureAnnotations) {
+                final List<SubFeatureAnnotation> annotations = subFeatureAnnotationsMap.get(parentId);
+                for (final SubFeatureAnnotation annotation : annotations) {
                     annotation.addChild(subFeatureAnnotation);
                 }
             }
