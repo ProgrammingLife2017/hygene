@@ -90,10 +90,10 @@ public final class GenomePoint {
             return false;
         }
         final GenomePoint that = (GenomePoint) o;
-        return genomeId == that.genomeId &&
-                base == that.base &&
-                nodeId == that.nodeId &&
-                baseOffsetInNode == that.baseOffsetInNode;
+        return genomeId == that.genomeId
+                && base == that.base
+                && nodeId == that.nodeId
+                && baseOffsetInNode == that.baseOffsetInNode;
     }
 
     @Override
