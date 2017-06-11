@@ -2,6 +2,7 @@ package org.dnacronym.hygene.core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -30,7 +31,7 @@ public final class ThrottledRunnable {
     private final Runnable action;
     private final int timeout;
 
-    private ScheduledFuture<?> future;
+    private @MonotonicNonNull ScheduledFuture<?> future;
     private Instant waitUntil;
 
 
