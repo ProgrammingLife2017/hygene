@@ -6,6 +6,9 @@ import org.dnacronym.hygene.models.SubFeatureAnnotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,21 +44,24 @@ public final class GffParser {
      * '##' are added as file meta-data to the {@link FeatureAnnotation}.
      * <p>
      * All other lines are parsed and converted to {@link SubFeatureAnnotation}s to be stored in the
-     * {@link FeatureAnnotation}.
+     * {@link FeatureAnnotation}. Only the first encountered seqid is used to construct a {@link FeatureAnnotation}, all
+     * subsequent seqid's are ignored and assumed to be correct.
      *
-     * @param gffFile the GFF file to parse
+     * @param gffFile the path of the GFF file to parse
      * @return a {@link FeatureAnnotation} representing the GFF file
-     * @throws ParseException if unable to parse the {@link GffFile}, which can either be caused by an
-     *                        {@link IOException} or a semantic error in the GFF file itself
+     * @throws IOException    if unable to close the {@link BufferedReader} of the file
+     * @throws ParseException if unable to parse the {@link java.io.File}, which can either be caused by an
+     *                        {@link IOException} when opening the file or a semantic error in the GFF file itself
      */
-    @SuppressWarnings({"squid:S135", "PMD"})
-    // An object is only instantiated once. PMD suppressed for the time being till method is refactored
-    public FeatureAnnotation parse(final GffFile gffFile) throws ParseException {
-        final BufferedReader bufferedReader = gffFile.readFile();
-
+    @SuppressWarnings({"squid:S135", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity",
+            "PMD.StdCyclomaticComplexity"}) // An object is only instantiated once.
+    public FeatureAnnotation parse(final String gffFile) throws IOException, ParseException {
         @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
         final List<String> fileMetaData = new ArrayList<>();
+
+        BufferedReader bufferedReader = null;
         try {
+            bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8);
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
                 throw new ParseException("GFF file does not have the appropriate header: " + GFF_VERSION_HEADER
@@ -77,15 +83,16 @@ public final class GffParser {
                 final String seqId = columns[SEQ_ID_COLUMN];
                 if (featureAnnotation == null) {
                     featureAnnotation = createFeatureAnnotation(seqId, lineNumber);
-                } else if (!featureAnnotation.getSeqId().equals(seqId)) {
-                    throw new ParseException("GFF file contains more than one seqid: '" + featureAnnotation.getSeqId()
-                            + "' and '" + seqId + "'.");
                 }
 
                 featureAnnotation.addSubFeatureAnnotation(makeSubFeatureAnnotation(columns, lineNumber));
             }
         } catch (final IOException e) {
             throw new ParseException("An error occurred while reading the GFF file.", e);
+        } finally {
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
         }
 
         if (featureAnnotation == null) {

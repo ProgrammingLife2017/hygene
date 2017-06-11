@@ -32,8 +32,8 @@ public final class SubFeatureAnnotation {
 
     private final String source;
     private final String type;
-    private final String start;
-    private final String end;
+    private final int start;
+    private final int end;
     private final double score;
     private final String strand;
     private final int phase;
@@ -61,8 +61,16 @@ public final class SubFeatureAnnotation {
 
         this.source = source;
         this.type = type;
-        this.start = start;
-        this.end = end;
+        try {
+            this.start = Integer.parseInt(start);
+        } catch (final NumberFormatException e) {
+            throw new IllegalArgumentException("The start was not a valid natural number, it was '" + start + "'.", e);
+        }
+        try {
+            this.end = Integer.parseInt(end);
+        } catch (final NumberFormatException e) {
+            throw new IllegalArgumentException("The end was not a valid natural number, it was '" + end + "'.", e);
+        }
 
         if (".".equals(score)) {
             this.score = -1;
@@ -71,7 +79,7 @@ public final class SubFeatureAnnotation {
                 this.score = Double.parseDouble(score);
             } catch (final NumberFormatException e) {
                 throw new IllegalArgumentException("The score was not a valid floating point number, it was: '"
-                        + score +"'.", e);
+                        + score + "'.", e);
             }
         }
 
@@ -138,7 +146,7 @@ public final class SubFeatureAnnotation {
      * @return the start of the {@link FeatureAnnotation}
      * @see FeatureAnnotation#getSeqId()
      */
-    public String getStart() {
+    public int getStart() {
         return start;
     }
 
@@ -157,7 +165,7 @@ public final class SubFeatureAnnotation {
      * @return the end of the {@link FeatureAnnotation}
      * @see FeatureAnnotation#getSeqId()
      */
-    public String getEnd() {
+    public int getEnd() {
         return end;
     }
 

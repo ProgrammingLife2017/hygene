@@ -11,12 +11,17 @@ import java.util.Map;
  * <p>
  * A gene annotation consists of {@link SubFeatureAnnotation}s, which form a graph representing the gene.
  *
+ * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
  * @see org.dnacronym.hygene.parser.GffParser
  */
 public final class FeatureAnnotation {
     private final String seqId;
 
-    private final Map<String, SubFeatureAnnotation> featureAnnotations;
+    private final List<SubFeatureAnnotation> featureAnnotations;
+    /**
+     * Map used for quick access of annotations to build up a hierarchy and quickly retrieve parent nodes.
+     */
+    private final Map<String, List<SubFeatureAnnotation>> featureAnnotationsMap;
     private final List<String> metaData;
 
 
@@ -32,7 +37,8 @@ public final class FeatureAnnotation {
         }
 
         this.seqId = seqId;
-        featureAnnotations = new HashMap<>();
+        featureAnnotations = new ArrayList<>();
+        featureAnnotationsMap = new HashMap<>();
         metaData = new ArrayList<>();
     }
 
@@ -71,32 +77,42 @@ public final class FeatureAnnotation {
     /**
      * Adds a {@link SubFeatureAnnotation} to this {@link FeatureAnnotation}.
      * <p>
-     * This adds to the graph structure of the {@link FeatureAnnotation}, as it is appended to the relevant parent. If
-     * it has no parent, it is simply stored internally.
+     * This adds to the graph structure of the {@link FeatureAnnotation}, as it is added to the relevant parent. If it
+     * has no parent, it is simply stored internally.<br>
+     * All {@link SubFeatureAnnotation}s with the same Id's are appended to the same list. Each of these list in turn
+     * form a transcript.
      *
-     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to this {@link FeatureAnnotation}. Must have
-     *                             an id
+     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to this {@link FeatureAnnotation}.
      */
     public void addSubFeatureAnnotation(final SubFeatureAnnotation subFeatureAnnotation) {
         final String[] id = subFeatureAnnotation.getAttributes().get("ID");
-        if (id == null) {
-            throw new IllegalArgumentException("The given feature annotation did not contain an id.");
-        }
-        if (id.length > 1) {
+        if (id != null && id.length != 1) {
             throw new IllegalArgumentException("The given feature annotation contained more than 1 id, it contained: "
                     + id.length);
         }
 
-        featureAnnotations.put(id[0], subFeatureAnnotation);
+        if (id != null) {
+            if (!featureAnnotationsMap.containsKey(id[0])) {
+                featureAnnotationsMap.put(id[0], new ArrayList<>());
+            }
+            featureAnnotationsMap.get(id[0]).add(subFeatureAnnotation);
+        }
 
         final String[] parentIds = subFeatureAnnotation.getAttributes().get("Parent");
         if (parentIds != null) {
             for (final String parentId : parentIds) {
-                if (featureAnnotations.containsKey(parentId)) {
-                    featureAnnotations.get(parentId).addChild(subFeatureAnnotation);
+                if (!featureAnnotationsMap.containsKey(parentId)) {
+                    throw new IllegalStateException("Reference made to non-existent parent: '" + parentId + "'.");
+                }
+
+                final List<SubFeatureAnnotation> subFeatureAnnotations = featureAnnotationsMap.get(parentId);
+                for (final SubFeatureAnnotation annotation : subFeatureAnnotations) {
+                    annotation.addChild(subFeatureAnnotation);
                 }
             }
         }
+
+        featureAnnotations.add(subFeatureAnnotation);
     }
 
     /**
@@ -105,6 +121,6 @@ public final class FeatureAnnotation {
      * @return the {@link SubFeatureAnnotation}s of this {@link FeatureAnnotation}
      */
     public List<SubFeatureAnnotation> getFeatureAnnotations() {
-        return new ArrayList<>(featureAnnotations.values());
+        return featureAnnotations;
     }
 }
