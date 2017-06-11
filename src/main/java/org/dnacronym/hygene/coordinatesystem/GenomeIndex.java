@@ -99,38 +99,23 @@ public final class GenomeIndex {
                 ? SequenceDirection.RIGHT : SequenceDirection.LEFT;
 
         int currentBase = closestIndexPoint.getBase();
-        final int[] currentNodeId = {closestIndexPoint.getNodeId()};
+        int currentNodeId = closestIndexPoint.getNodeId();
 
         while (Math.abs(currentBase - closestIndexPoint.getBase()) <= DEFAULT_BASE_CACHE_INTERVAL) {
-            if (base >= currentBase && base < currentBase + gfaFile.getGraph().getSequenceLength(currentNodeId[0])) {
-                return Optional.of(new GenomePoint(genomeId, base, currentNodeId[0], base - currentBase));
+            if (base >= currentBase && base < currentBase + gfaFile.getGraph().getSequenceLength(currentNodeId)) {
+                return Optional.of(new GenomePoint(genomeId, base, currentNodeId, base - currentBase));
             }
 
-            final int oldNodeId = currentNodeId[0];
-            gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId[0], sequenceDirection, nodeId -> {
-                if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
-                    // Ignore sentinel nodes
-                    return;
-                }
+            final int oldNodeId = currentNodeId;
+            currentNodeId = getNextNodeInGenome(oldNodeId, sequenceDirection, genome);
 
-                try {
-                    final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(
-                            gfaFile.getGraph().getLineNumber(nodeId));
-                    if (nodeMetadata.getGenomes().contains(genome)) {
-                        currentNodeId[0] = nodeId;
-                    }
-                } catch (final ParseException e) {
-                    LOGGER.error("Parsing node metadata of " + nodeId + " for genome coordinate lookup failed.", e);
-                }
-            });
             if (sequenceDirection == SequenceDirection.LEFT) {
-                currentBase -= gfaFile.getGraph().getSequenceLength(currentNodeId[0]);
+                currentBase -= gfaFile.getGraph().getSequenceLength(currentNodeId);
             } else {
                 currentBase += gfaFile.getGraph().getSequenceLength(oldNodeId);
             }
 
-
-            if (oldNodeId == currentNodeId[0]) {
+            if (oldNodeId == currentNodeId) {
                 // As we are assuming that paths of genomes must be connected, this cannot be the case
                 break;
             }
@@ -139,6 +124,26 @@ public final class GenomeIndex {
         return Optional.empty();
     }
 
+    private int getNextNodeInGenome(final int oldNode, final SequenceDirection sequenceDirection, final String genome) {
+        final int[] currentNodeId = {oldNode};
+        gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId[0], sequenceDirection, nodeId -> {
+            if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
+                // Ignore sentinel nodes
+                return;
+            }
+
+            try {
+                final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(
+                        gfaFile.getGraph().getLineNumber(nodeId));
+                if (nodeMetadata.getGenomes().contains(genome)) {
+                    currentNodeId[0] = nodeId;
+                }
+            } catch (final ParseException e) {
+                LOGGER.error("Parsing node metadata of " + nodeId + " for genome coordinate lookup failed.", e);
+            }
+        });
+        return currentNodeId[0];
+    }
 
     /**
      * Retrieves the list of genomes in the GFA file from the header.
