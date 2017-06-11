@@ -107,15 +107,12 @@ public final class GffParser {
      * @throws ParseException if an error occurred whilst making the {@link FeatureAnnotation}
      */
     private FeatureAnnotation createFeatureAnnotation(final String seqId, final int lineNumber) throws ParseException {
-        final FeatureAnnotation featureAnnotation;
-
         try {
-            featureAnnotation = new FeatureAnnotation(seqId);
+            return new FeatureAnnotation(seqId);
         } catch (final IllegalArgumentException e) {
-            throw new ParseException("An error occurred whilst reading line " + lineNumber + ".", e);
+            throw new ParseException("An error occurred while reading line " + lineNumber + ": Unable to create a "
+                    + FeatureAnnotation.class.getSimpleName() + ".", e);
         }
-
-        return featureAnnotation;
     }
 
     /**
@@ -129,6 +126,7 @@ public final class GffParser {
     private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns, final int lineNumber)
             throws ParseException {
         final SubFeatureAnnotation subFeatureAnnotation;
+
         try {
             subFeatureAnnotation = new SubFeatureAnnotation(
                     columns[SOURCE_COLUMN],
@@ -140,7 +138,8 @@ public final class GffParser {
                     columns[PHASE_COLUMN]
             );
         } catch (final IllegalArgumentException e) {
-            throw new ParseException("An error occurred while parsing line " + lineNumber + ".", e);
+            throw new ParseException("An error occurred while parsing line " + lineNumber + ": Unable to create a "
+                    + SubFeatureAnnotation.class.getSimpleName() + ".", e);
         }
 
         final String[] attributes = columns[ATTRIBUTES_COLUMN].split(";");
@@ -148,7 +147,7 @@ public final class GffParser {
             final String[] keyValuePair = attribute.split("=");
             if (keyValuePair.length != 2) {
                 throw new ParseException("The attributes at line " + lineNumber
-                        + " contained an invalid key value pair:" + attribute + ".");
+                        + " contained an key without a value:" + attribute + ".");
             }
 
             subFeatureAnnotation.setAttribute(keyValuePair[0], keyValuePair[1]);

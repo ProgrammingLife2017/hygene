@@ -53,6 +53,7 @@ public final class SubFeatureAnnotation {
      * @param phase  the phase of the {@link SubFeatureAnnotation}. If it has a value, it must be one of 0, 1 or 2, else
      *               {@link IllegalArgumentException} is thrown
      */
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public SubFeatureAnnotation(final String source, final String type, final String start, final String end,
                                 final String score, final String strand, final String phase) {
         attributes = new HashMap<>();
@@ -69,21 +70,25 @@ public final class SubFeatureAnnotation {
             try {
                 this.score = Double.parseDouble(score);
             } catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("The score was not a valid floating point number, it was: "
-                        + score, e);
+                throw new IllegalArgumentException("The score was not a valid floating point number, it was: '"
+                        + score +"'.", e);
             }
         }
 
-        if ("+".equals(start) || "-".equals(start) || ".".equals(start)) {
+        if ("+".equals(strand) || "-".equals(strand) || ".".equals(strand)) {
             this.strand = strand;
         } else {
-            throw new IllegalArgumentException("Strand was not '+', '-' or '.', it was: " + strand + ".");
+            throw new IllegalArgumentException("Strand was not '+', '-' or '.', it was: '" + strand + "'.");
         }
 
         if (".".equals(phase)) {
             this.phase = -1;
         } else {
-            this.phase = Integer.parseInt(phase);
+            try {
+                this.phase = Integer.parseInt(phase);
+            } catch (final NumberFormatException e) {
+                throw new IllegalArgumentException("The phase was not a valid natural number, it was: " + score, e);
+            }
             if (this.phase < 0 || this.phase > 2) {
                 throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: " + phase + ".");
             }
