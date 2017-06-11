@@ -106,9 +106,13 @@ public final class GenomeIndex {
                 return Optional.of(new GenomePoint(genomeId, base, currentNodeId[0], base - currentBase));
             }
 
-            currentBase += gfaFile.getGraph().getSequenceLength(currentNodeId[0]);
             final int oldNodeId = currentNodeId[0];
             gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId[0], sequenceDirection, nodeId -> {
+                if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
+                    // Ignore sentinel nodes
+                    return;
+                }
+
                 try {
                     final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(
                             gfaFile.getGraph().getLineNumber(nodeId));
@@ -119,6 +123,12 @@ public final class GenomeIndex {
                     LOGGER.error("Parsing node metadata of " + nodeId + " for genome coordinate lookup failed.", e);
                 }
             });
+            if (sequenceDirection == SequenceDirection.LEFT) {
+                currentBase -= gfaFile.getGraph().getSequenceLength(currentNodeId[0]);
+            } else {
+                currentBase += gfaFile.getGraph().getSequenceLength(oldNodeId);
+            }
+
 
             if (oldNodeId == currentNodeId[0]) {
                 // As we are assuming that paths of genomes must be connected, this cannot be the case
