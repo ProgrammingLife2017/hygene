@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -32,29 +33,36 @@ public final class Fafosp {
      * Calculates the optimal horizontal position of each node in the {@link Graph}.
      */
     public void horizontal() {
+        final long[] xPositions = new long[nodeArrays.length];
+        Arrays.fill(xPositions, -1);
+
         final Queue<Integer> queue = new LinkedList<>();
         iterator.visitDirectNeighbours(0, SequenceDirection.RIGHT, queue::add);
-        graph.setUnscaledXPosition(0, 0);
+        xPositions[0] = 0;
 
         while (!queue.isEmpty()) {
             final Integer head = queue.remove();
 
             // Horizontal position may have been set since it was added to the queue
-            if (graph.getUnscaledXPosition(head) >= 0) {
+            if (xPositions[head] >= 0) {
                 continue;
             }
 
-            horizontal(head);
+            horizontal(xPositions, head);
 
             // Horizontal position cannot always be determined by FAFOSP-X
-            if (graph.getUnscaledXPosition(head) >= 0) {
+            if (xPositions[head] >= 0) {
                 // Add neighbours of which horizontal position was not set
                 iterator.visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
-                    if (graph.getUnscaledXPosition(neighbour) < 0) {
+                    if (xPositions[neighbour] < 0) {
                         queue.add(neighbour);
                     }
                 });
             }
+        }
+
+        for (int i = 0; i < xPositions.length; i++) {
+            graph.setUnscaledXPosition(i, (int) (xPositions[i] / COLUMN_WIDTH));
         }
     }
 
@@ -64,20 +72,20 @@ public final class Fafosp {
      *
      * @param id the node's identifier
      */
-    private void horizontal(final int id) {
-        final int[] width = {-1}; // Edge count, sequence length
+    private void horizontal(final long[] xPositions, final int id) {
+        final long[] width = {-1}; // Edge count, sequence length
         iterator.visitDirectNeighboursWhile(id, SequenceDirection.LEFT,
-                neighbour -> graph.getUnscaledXPosition(neighbour) >= 0,
+                neighbour -> xPositions[neighbour] >= 0,
                 ignored -> width[0] = -1,
                 neighbour -> width[0] = Math.max(
                         width[0],
-                        graph.getUnscaledXPosition(neighbour) + graph.getLength(neighbour)
+                        xPositions[neighbour] + graph.getLength(neighbour)
                 )
         );
 
         if (width[0] >= 0) {
-            final int horizontalPosition = width[0] + COLUMN_WIDTH;
-            graph.setUnscaledXPosition(id, ((horizontalPosition + COLUMN_WIDTH - 1) / COLUMN_WIDTH) * COLUMN_WIDTH);
+            final long horizontalPosition = width[0] + COLUMN_WIDTH;
+            xPositions[id] = ((horizontalPosition + COLUMN_WIDTH - 1) / COLUMN_WIDTH) * COLUMN_WIDTH;
         }
     }
 
