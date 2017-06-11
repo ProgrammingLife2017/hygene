@@ -139,11 +139,4 @@ final class SequenceVisualizerTest {
         assertThat(sequenceVisualizer.getOffsetProperty().get()).isEqualTo(2);
         verify(graphicsContext, times(2)).clearRect(anyDouble(), anyDouble(), anyDouble(), anyDouble());
     }
-
-    @Test
-    void testVisibleChange() {
-        sequenceVisualizer.getVisibleProperty().set(true);
-
-        verify(graphicsContext).clearRect(anyDouble(), anyDouble(), anyDouble(), anyDouble());
-    }
 }

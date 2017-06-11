@@ -27,7 +27,7 @@ public final class Query {
      * @param graphStore the {@link GraphStore} used to retrieve the most up to date graph
      */
     public Query(final GraphStore graphStore) {
-        this.visibleProperty = new SimpleBooleanProperty(true);
+        this.visibleProperty = new SimpleBooleanProperty(false);
         queriedNodeIds = FXCollections.observableArrayList();
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->

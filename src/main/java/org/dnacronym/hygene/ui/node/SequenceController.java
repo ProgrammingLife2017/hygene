@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,12 +7,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -31,9 +32,12 @@ public final class SequenceController implements Initializable {
 
     private SequenceVisualizer sequenceVisualizer;
     private GraphVisualizer graphVisualizer;
+    private GraphStore graphStore;
 
     @FXML
-    private Pane sequenceViewPane;
+    private TitledPane sequenceViewPane;
+    @FXML
+    private GridPane sequenceGrid;
     @FXML
     private TextField lengthField;
     @FXML
@@ -51,6 +55,7 @@ public final class SequenceController implements Initializable {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
+            setGraphStore(Hygene.getInstance().getGraphStore());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
         }
@@ -70,18 +75,18 @@ public final class SequenceController implements Initializable {
         });
 
         graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
+        sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
-        final BooleanBinding visible = graphVisualizer.getSelectedNodeProperty().isNotNull()
-                .and(sequenceVisualizer.getVisibleProperty());
-        sequenceViewPane.visibleProperty().bind(visible);
-        sequenceViewPane.managedProperty().bind(visible);
-        sequenceCanvas.widthProperty().bind(sequenceViewPane.widthProperty().subtract(CANVAS_PADDING * 2));
+        sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
+        sequenceViewPane.managedProperty().bind(sequenceVisualizer.getVisibleProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
     }
 
     /**
      * Sets the {@link GraphVisualizer} for use by the controller.
      *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
+     * @param graphVisualizer the {@link GraphVisualizer} for use by the controller
      */
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
@@ -90,10 +95,19 @@ public final class SequenceController implements Initializable {
     /**
      * Sets the {@link SequenceVisualizer} for use by the controller.
      *
-     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller
+     * @param sequenceVisualizer the {@link SequenceVisualizer} for use by the controller
      */
     void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
         this.sequenceVisualizer = sequenceVisualizer;
+    }
+
+    /**
+     * Sets the {@link GraphStore} for use by the controller.
+     *
+     * @param graphStore the {@link GraphStore} for use by the controller
+     */
+    void setGraphStore(final GraphStore graphStore) {
+        this.graphStore = graphStore;
     }
 
     /**
@@ -107,7 +121,7 @@ public final class SequenceController implements Initializable {
         if (node == null) {
             lengthField.clear();
             sequenceTextArea.clear();
-            sequenceVisualizer.getSequenceProperty().set("");
+            sequenceVisualizer.getSequenceProperty().set(null);
             return;
         }
 
@@ -118,7 +132,7 @@ public final class SequenceController implements Initializable {
             final String sequence = node.retrieveMetadata().getSequence();
             sequenceVisualizer.getSequenceProperty().set(sequence);
             sequenceTextArea.setText(sequence);
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", node, e);
         }
     }
@@ -177,6 +191,7 @@ public final class SequenceController implements Initializable {
         if (!setOffset.getText().isEmpty()) {
             sequenceVisualizer.setOffset(Integer.parseInt(setOffset.getText()));
         }
+        setOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
 
         actionEvent.consume();
     }

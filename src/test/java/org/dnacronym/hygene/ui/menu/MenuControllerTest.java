@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui;
+package org.dnacronym.hygene.ui.menu;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,9 +7,8 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.dnacronym.hygene.parser.ProgressUpdater;
-import org.dnacronym.hygene.ui.console.ConsoleView;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -20,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
@@ -115,24 +113,6 @@ final class MenuControllerTest extends UITestBase {
     }
 
     @Test
-    void testOpenConsoleActionInit() throws Exception {
-        final ActionEvent action = mock(ActionEvent.class);
-
-        final CompletableFuture<Object> future = new CompletableFuture<>();
-
-        interact(() -> {
-            try {
-                menuController.openConsoleAction(action);
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-            future.complete(menuController.getConsoleView());
-        });
-
-        assertThat(future.get()).isNotNull();
-    }
-
-    @Test
     void testOpenSettingsWindowInit() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
 
@@ -160,62 +140,5 @@ final class MenuControllerTest extends UITestBase {
         });
 
         assertThat(future.get().getStage().isShowing()).isTrue();
-    }
-
-    @Test
-    void testOpenHelpMenuViewWindowInitialization() throws ExecutionException, InterruptedException {
-        final CompletableFuture<HelpMenuView> future = new CompletableFuture<>();
-
-        interact(() -> {
-            try {
-                menuController.openHelpAction(new ActionEvent());
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-            future.complete(menuController.getHelpMenuView());
-        });
-
-        assertThat(future.get()).isNotNull();
-        assertThat(future.get().getStage().isShowing()).isTrue();
-    }
-
-    @Test
-    void testOpenConsoleActionWindowState() throws Exception {
-        final ActionEvent action = mock(ActionEvent.class);
-
-        final CompletableFuture<ConsoleView> future = new CompletableFuture<>();
-
-        interact(() -> {
-            try {
-                menuController.openConsoleAction(action);
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-            future.complete(menuController.getConsoleView());
-        });
-
-        assertThat(future.get().getStage().isShowing()).isTrue();
-    }
-
-    @Test
-    void testConsoleWindowPersistence() throws Exception {
-        final ActionEvent action = mock(ActionEvent.class);
-
-        final CompletableFuture<ConsoleView> future1 = new CompletableFuture<>();
-        final CompletableFuture<ConsoleView> future2 = new CompletableFuture<>();
-
-        interact(() -> {
-            try {
-                menuController.openConsoleAction(action);
-                future1.complete(menuController.getConsoleView());
-                menuController.openConsoleAction(action);
-                future2.complete(menuController.getConsoleView());
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        // We want the actions object reference to be the same.
-        assertThat(future1.get()).isEqualTo(future2.get());
     }
 }

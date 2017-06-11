@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<Menu mnemonicParsing="false" text="Tools" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.dnacronym.hygene.ui.menu.ToolsMenuController">
+    <items>
+        <MenuItem fx:id="openConsole" mnemonicParsing="false" onAction="#openConsoleAction" text="Console">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="T" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem fx:id="openHelp" mnemonicParsing="false" onAction="#openHelpAction" text="Help">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="H" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+    </items>
+</Menu>

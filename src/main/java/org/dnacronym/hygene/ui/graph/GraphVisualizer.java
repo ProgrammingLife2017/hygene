@@ -78,6 +78,9 @@ public final class GraphVisualizer {
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
 
+    // TODO move to relevant class (which is yet to be created)
+    private final BooleanProperty nodePropertiesVisibleProperty;
+
     private RTree rTree;
 
 
@@ -112,6 +115,7 @@ public final class GraphVisualizer {
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
+        nodePropertiesVisibleProperty = new SimpleBooleanProperty();
 
         graphDimensionsCalculator.getGraphProperty()
                 .addListener((observable, oldValue, newValue) -> setGraph(newValue));
@@ -417,5 +421,14 @@ public final class GraphVisualizer {
      */
     public BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;
+    }
+
+    /**
+     * Returns the property which determines whether to show the node properties view.
+     *
+     * @return the property which decides whether to show the node properties view
+     */
+    public BooleanProperty getNodePropertiesVisibleProperty() {
+        return nodePropertiesVisibleProperty;
     }
 }

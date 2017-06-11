@@ -83,8 +83,10 @@ public final class BookmarkCreateController implements Initializable {
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
 
-        bookmarkCreatePane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
-        bookmarkCreatePane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
+        bookmarkCreatePane.visibleProperty().bind(simpleBookmarkStore.getBookmarkCreateVisibleProperty()
+                .and(graphDimensionsCalculator.getGraphProperty().isNotNull()));
+        bookmarkCreatePane.managedProperty().bind(simpleBookmarkStore.getBookmarkCreateVisibleProperty()
+                .and(graphDimensionsCalculator.getGraphProperty().isNotNull()));
     }
 
     /**
