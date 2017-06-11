@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.coordinatesystem;
 
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
+
 
 /**
  * Class representing an index point in the genome coordinate system.
