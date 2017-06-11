@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
  * Class responsible for indexing the genome coordinate system of a file.
  */
 public final class GenomeIndex {
-    private static final int DEFAULT_BASE_CACHE_INTERVAL = 1000;
+    private static final int DEFAULT_BASE_CACHE_INTERVAL = 50;
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
     private final GfaFile gfaFile;
