@@ -7,12 +7,17 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import org.dnacronym.hygene.parser.ProgressUpdater;
+
+import java.util.function.Consumer;
 
 
 /**
  * Deals with the on-screen progress bar in the application.
  */
 public final class ProgressBarMainStatus {
+    private static final int PROGRESS_TOTAL = 100;
+
     private final DoubleProperty progressProperty;
     private final StringProperty statusProperty;
 
@@ -27,21 +32,26 @@ public final class ProgressBarMainStatus {
 
 
     /**
-     * Binds the progress property and displays the dialog.
+     * Monitors a given task, and updates the current status and progress accordingly.
      *
-     * @param task an executable task to measure progress on
+     * @param task the {@link Consumer<ProgressUpdater>} to monitor.
      */
-    public void activateProgressBar(final Task<?> task) {
-        progressProperty.bind(task.progressProperty());
-    }
+    public void monitorTask(final Consumer<ProgressUpdater> task) {
+        final Task<Void> progressTask = new Task<Void>() {
+            @Override
+            public Void call() throws InterruptedException {
+                task.accept((progress, message) -> {
+                    this.updateProgress(progress, PROGRESS_TOTAL);
+                    statusProperty.set(message);
+                });
+                return null;
+            }
+        };
 
-    /**
-     * Updates the progress text.
-     *
-     * @param text the text to be displayed
-     */
-    public void updateProgressText(final String text) {
-        statusProperty.set(text);
+        progressProperty.unbind();
+        progressProperty.bind(progressTask.progressProperty());
+
+        new Thread(progressTask).start();
     }
 
     /**

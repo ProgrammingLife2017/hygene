@@ -1,13 +1,15 @@
 package org.dnacronym.hygene.ui.progressbar;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.concurrent.Task;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Consumer;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -36,18 +38,10 @@ final class ProgressBarMainStatusTest {
     @Test
     @SuppressWarnings("unchecked")
     void testTaskProgress() {
-        final Task<Void> task = mock(Task.class);
-        when(task.progressProperty()).thenReturn(new SimpleDoubleProperty(0.6));
+        final Consumer<ProgressUpdater> consumer = mock(Consumer.class);
 
-        progressBarMainStatus.activateProgressBar(task);
+        progressBarMainStatus.monitorTask(consumer);
 
-        assertThat(progressBarMainStatus.getProgressProperty().get()).isEqualTo(0.6);
-    }
-
-    @Test
-    void testTaskStatus() {
-        progressBarMainStatus.updateProgressText("test");
-
-        assertThat(progressBarMainStatus.getStatusProperty().get()).isEqualTo("test");
+        verify(consumer).accept(any());
     }
 }
