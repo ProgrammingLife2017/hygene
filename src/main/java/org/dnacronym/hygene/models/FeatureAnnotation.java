@@ -102,7 +102,7 @@ public final class FeatureAnnotation {
         if (parentIds != null) {
             for (final String parentId : parentIds) {
                 if (!featureAnnotationsMap.containsKey(parentId)) {
-                    throw new IllegalStateException("Reference made to non-existent parent: '" + parentId + "'.");
+                    throw new IllegalArgumentException("Reference made to non-existent parent: '" + parentId + "'.");
                 }
 
                 final List<SubFeatureAnnotation> subFeatureAnnotations = featureAnnotationsMap.get(parentId);

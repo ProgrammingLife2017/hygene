@@ -60,6 +60,7 @@ public final class GffParser {
         final List<String> fileMetaData = new ArrayList<>();
 
         BufferedReader bufferedReader = null;
+        int lineNumber = 1;
         try {
             bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8);
             String line = bufferedReader.readLine();
@@ -68,7 +69,6 @@ public final class GffParser {
                         + ", it was: '" + line + "'.");
             }
 
-            int lineNumber = 1;
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
                 if (line.isEmpty() || line.charAt(0) == '#' && line.charAt(1) != '#') {
@@ -88,7 +88,9 @@ public final class GffParser {
                 featureAnnotation.addSubFeatureAnnotation(makeSubFeatureAnnotation(columns, lineNumber));
             }
         } catch (final IOException e) {
-            throw new ParseException("An error occurred while reading the GFF file.", e);
+            throw new ParseException("An IO error occurred while reading the GFF file.", e);
+        } catch (final IllegalArgumentException e) {
+            throw new ParseException("An error occurred while reading line " + lineNumber + " of the GFF file.", e);
         } finally {
             if (bufferedReader != null) {
                 bufferedReader.close();
@@ -153,8 +155,8 @@ public final class GffParser {
         for (final String attribute : attributes) {
             final String[] keyValuePair = attribute.split("=");
             if (keyValuePair.length != 2) {
-                throw new ParseException("The attributes at line " + lineNumber
-                        + " contained an key without a value:" + attribute + ".");
+                throw new ParseException("The attributes at line " + lineNumber + " contained an key without a value:"
+                        + attribute + ".");
             }
 
             subFeatureAnnotation.setAttribute(keyValuePair[0], keyValuePair[1]);

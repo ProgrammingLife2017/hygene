@@ -91,8 +91,15 @@ final class GffParserTest {
     }
 
     /**
-     * Parse exceptions.
+     * {@link ParseException}s.
      */
+
+    @Test
+    void testOpenNonExistentFile() {
+        final Throwable throwable = catchThrowable(() -> gffParser.parse("asdf.gff"));
+
+        assertThat(throwable).isInstanceOf(ParseException.class);
+    }
 
     @Test
     void testNoHeader() {
@@ -194,6 +201,22 @@ final class GffParserTest {
     void testInvalidEnd() {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/invalid_end.gff"));
+
+        assertThat(throwable).isInstanceOf(ParseException.class);
+    }
+
+    @Test
+    void testNonExistentParent() {
+        final Throwable throwable = catchThrowable(() ->
+                gffParser.parse("src/test/resources/gff/non_existent_parent.gff"));
+
+        assertThat(throwable).isInstanceOf(ParseException.class);
+    }
+
+    @Test
+    void testMultipleID() {
+        final Throwable throwable = catchThrowable(() ->
+                gffParser.parse("src/test/resources/gff/multiple_id.gff"));
 
         assertThat(throwable).isInstanceOf(ParseException.class);
     }

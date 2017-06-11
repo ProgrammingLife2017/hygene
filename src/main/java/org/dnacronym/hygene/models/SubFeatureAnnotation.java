@@ -231,6 +231,10 @@ public final class SubFeatureAnnotation {
         }
 
         final String[] values = value.split(",");
+        if ("ID".equals(name) && values.length > 1) {
+            throw new IllegalArgumentException("The ID tag had more than one id, it had: " + values.length + ".");
+        }
+
         attributes.put(name, values);
     }
 
