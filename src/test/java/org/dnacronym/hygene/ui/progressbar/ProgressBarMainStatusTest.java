@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.progressbar;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.concurrent.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,14 +30,14 @@ final class ProgressBarMainStatusTest {
 
     @Test
     void testInitialStatus() {
-        assertThat(progressBarMainStatus.getStatusProperty().get()).isEmpty();
+        assertThat(progressBarMainStatus.getStatusProperty().get()).isNull();
     }
 
     @Test
     @SuppressWarnings("unchecked")
     void testTaskProgress() {
         final Task<Void> task = mock(Task.class);
-        when(task.getProgress()).thenReturn(0.6);
+        when(task.progressProperty()).thenReturn(new SimpleDoubleProperty(0.6));
 
         progressBarMainStatus.activateProgressBar(task);
 

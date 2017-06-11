@@ -14,9 +14,9 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the progress bar embedded in the application.
+ * Controller for the progress bar embedded in the main view of the application.
  */
-public class ProgressBarMainController implements Initializable {
+public final class ProgressBarMainController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(ProgressBarMainController.class);
 
     private ProgressBarMainStatus progressBarMainStatus;
@@ -40,7 +40,7 @@ public class ProgressBarMainController implements Initializable {
 
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         progress.visibleProperty().bind(progressBarMainStatus.getProgressProperty().isNotEqualTo(1)
                 .and(progressBarMainStatus.getProgressProperty().isNotEqualTo(0)));
         status.visibleProperty().bind(progressBarMainStatus.getProgressProperty().isNotEqualTo(1)

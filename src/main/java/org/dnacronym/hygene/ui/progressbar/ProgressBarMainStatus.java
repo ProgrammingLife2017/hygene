@@ -12,7 +12,7 @@ import javafx.concurrent.Task;
 /**
  * Deals with the on-screen progress bar in the application.
  */
-public class ProgressBarMainStatus {
+public final class ProgressBarMainStatus {
     private final DoubleProperty progressProperty;
     private final StringProperty statusProperty;
 
@@ -31,7 +31,7 @@ public class ProgressBarMainStatus {
      *
      * @param task an executable task to measure progress on
      */
-    void activateProgressBar(final Task<?> task) {
+    public void activateProgressBar(final Task<?> task) {
         progressProperty.bind(task.progressProperty());
     }
 
@@ -40,7 +40,7 @@ public class ProgressBarMainStatus {
      *
      * @param text the text to be displayed
      */
-    void updateProgressText(final String text) {
+    public void updateProgressText(final String text) {
         statusProperty.set(text);
     }
 
