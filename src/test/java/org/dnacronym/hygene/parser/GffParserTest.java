@@ -47,7 +47,7 @@ final class GffParserTest {
     @Test
     void testFeaturesSize() throws ParseException, IOException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE);
-        assertThat(featureAnnotation.getFeatureAnnotations()).hasSize(23);
+        assertThat(featureAnnotation.getSubFeatureAnnotations()).hasSize(23);
     }
 
     /**
@@ -60,7 +60,7 @@ final class GffParserTest {
     void testGeneChildren() throws IOException, ParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE);
 
-        final SubFeatureAnnotation geneAnnotation = featureAnnotation.getFeatureAnnotations().get(0);
+        final SubFeatureAnnotation geneAnnotation = featureAnnotation.getSubFeatureAnnotations().get(0);
 
         assertThat(geneAnnotation.getAttributes().get("ID")[0]).isEqualTo("gene00001");
 
@@ -75,10 +75,10 @@ final class GffParserTest {
     void testTranscripts() throws IOException, ParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE);
 
-        final SubFeatureAnnotation transcriptedProtean1 = featureAnnotation.getFeatureAnnotations().get(10);
-        final SubFeatureAnnotation transcriptedProtean2 = featureAnnotation.getFeatureAnnotations().get(11);
-        final SubFeatureAnnotation transcriptedProtean3 = featureAnnotation.getFeatureAnnotations().get(12);
-        final SubFeatureAnnotation transcriptedProtean4 = featureAnnotation.getFeatureAnnotations().get(13);
+        final SubFeatureAnnotation transcriptedProtean1 = featureAnnotation.getSubFeatureAnnotations().get(10);
+        final SubFeatureAnnotation transcriptedProtean2 = featureAnnotation.getSubFeatureAnnotations().get(11);
+        final SubFeatureAnnotation transcriptedProtean3 = featureAnnotation.getSubFeatureAnnotations().get(12);
+        final SubFeatureAnnotation transcriptedProtean4 = featureAnnotation.getSubFeatureAnnotations().get(13);
 
         assertThat(transcriptedProtean1.getStart()).isEqualTo(1201);
         assertThat(transcriptedProtean1.getEnd()).isEqualTo(1500);

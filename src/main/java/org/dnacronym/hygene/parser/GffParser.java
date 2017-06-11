@@ -161,8 +161,8 @@ public final class GffParser {
         for (final String attribute : attributes) {
             final String[] keyValuePair = attribute.split("=");
             if (keyValuePair.length != 2) {
-                throw new ParseException("The attributes at line " + lineNumber + " contained an key without a value:"
-                        + attribute + ".");
+                throw new ParseException("The attributes at line " + lineNumber + " contained an key without a value: '"
+                        + attribute + "'.");
             }
 
             subFeatureAnnotation.setAttribute(keyValuePair[0], keyValuePair[1]);

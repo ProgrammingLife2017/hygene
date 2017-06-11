@@ -10,9 +10,9 @@ import java.util.Map;
 
 
 /**
- * SubFeatureAnnotation for features.
+ * sub features of features.
  * <p>
- * These features are retrieved from GFF files. Each line of the file corresponds with a single feature. Together, a
+ * These features are retrieved from GFF files. Each line of the file corresponds with a single sub feature. Together, a
  * collection of {@link SubFeatureAnnotation}s form a {@link FeatureAnnotation}.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
@@ -95,10 +95,11 @@ public final class SubFeatureAnnotation {
             try {
                 this.phase = Integer.parseInt(phase);
             } catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("The phase was not a valid natural number, it was: " + score, e);
+                throw new IllegalArgumentException("The phase was not a valid natural number, it was: '" + score
+                        + "'.", e);
             }
             if (this.phase < 0 || this.phase > 2) {
-                throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: " + phase + ".");
+                throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: '" + phase + "'.");
             }
         }
     }
@@ -112,7 +113,7 @@ public final class SubFeatureAnnotation {
      * "Genbank." In effect, the source is used to extend the feature ontology by adding a qualifier to the type
      * creating a new composite type that is a subclass of the type in the type column.
      *
-     * @return the source of the {@link FeatureAnnotation}
+     * @return the source of the {@link SubFeatureAnnotation}
      */
     public String getSource() {
         return source;
@@ -125,7 +126,7 @@ public final class SubFeatureAnnotation {
      * Sequence Ontology or an SO accession number. The latter alternative is distinguished using the syntax SO:000000.
      * In either case, it must be sequence_feature (SO:0000110) or an is_a child of it.
      *
-     * @return the type of the {@link FeatureAnnotation}
+     * @return the type of the {@link SubFeatureAnnotation}
      */
     public String getType() {
         return type;
@@ -143,7 +144,7 @@ public final class SubFeatureAnnotation {
      * For zero-length features, such as insertion sites, start equals end and the implied site is to the right of the
      * indicated base in the direction of the landmark.
      *
-     * @return the start of the {@link FeatureAnnotation}
+     * @return the start of the {@link SubFeatureAnnotation}
      * @see FeatureAnnotation#getSeqId()
      */
     public int getStart() {
@@ -162,7 +163,7 @@ public final class SubFeatureAnnotation {
      * For zero-length features, such as insertion sites, start equals end and the implied site is to the right of the
      * indicated base in the direction of the landmark.
      *
-     * @return the end of the {@link FeatureAnnotation}
+     * @return the end of the {@link SubFeatureAnnotation}
      * @see FeatureAnnotation#getSeqId()
      */
     public int getEnd() {
@@ -176,7 +177,7 @@ public final class SubFeatureAnnotation {
      * score are ill-defined. It is strongly recommended that E-values be used for sequence similarity features, and
      * that P-values be used for ab initio gene prediction features.
      *
-     * @return the score of the {@link FeatureAnnotation}
+     * @return the score of the {@link SubFeatureAnnotation}
      */
     public double getScore() {
         return score;
@@ -189,7 +190,7 @@ public final class SubFeatureAnnotation {
      * features that are not stranded. In addition, ? can be used for features whose strandedness is relevant, but
      * unknown.
      *
-     * @return the strand of the {@link FeatureAnnotation}
+     * @return the strand of the {@link SubFeatureAnnotation}
      */
     public String getStrand() {
         return strand;
@@ -210,7 +211,7 @@ public final class SubFeatureAnnotation {
      * <p>
      * The phase is REQUIRED for all CDS features.
      *
-     * @return the phase of the {@link FeatureAnnotation}
+     * @return the phase of the {@link SubFeatureAnnotation}
      */
     public int getPhase() {
         return phase;
@@ -227,7 +228,7 @@ public final class SubFeatureAnnotation {
     public void setAttribute(final String name, final String value) {
         if (!VALID_ATTRIBUTES.contains(name)) {
             throw new IllegalArgumentException("The tag: " + name + " is not a valid attribute tag. Must be one of: "
-                    + VALID_ATTRIBUTES.toString());
+                    + VALID_ATTRIBUTES.toString() + ".");
         }
 
         final String[] values = value.split(",");
@@ -239,18 +240,19 @@ public final class SubFeatureAnnotation {
     }
 
     /**
-     * Returns the attributes of this annotation.
+     * Returns the attributes of this {@link SubFeatureAnnotation}.
      *
-     * @return the attributes of the annotation
+     * @return the attributes of the {@link SubFeatureAnnotation}
      */
     public Map<String, String[]> getAttributes() {
         return attributes;
     }
 
     /**
-     * Add a child to this feature annotation.
+     * Add a child to this {@link SubFeatureAnnotation}.
      *
-     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to the children of this feature annotation
+     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to the children of this
+     *                             {@link SubFeatureAnnotation}
      */
     public void addChild(final SubFeatureAnnotation subFeatureAnnotation) {
         children.add(subFeatureAnnotation);

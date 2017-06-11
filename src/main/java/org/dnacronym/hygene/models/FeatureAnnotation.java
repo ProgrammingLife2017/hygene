@@ -7,9 +7,9 @@ import java.util.Map;
 
 
 /**
- * A gene annotation is an object representing a single GFF file.
+ * A {@link FeatureAnnotation} is an object representing a single GFF file.
  * <p>
- * A gene annotation consists of {@link SubFeatureAnnotation}s, which form a graph representing the gene.
+ * A gene annotation consists of {@link SubFeatureAnnotation}s, which form a graph representing the feature.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
  * @see org.dnacronym.hygene.parser.GffParser
@@ -17,11 +17,11 @@ import java.util.Map;
 public final class FeatureAnnotation {
     private final String seqId;
 
-    private final List<SubFeatureAnnotation> featureAnnotations;
+    private final List<SubFeatureAnnotation> subFeatureAnnotations;
     /**
      * Map used for quick access of annotations to build up a hierarchy and quickly retrieve parent nodes.
      */
-    private final Map<String, List<SubFeatureAnnotation>> featureAnnotationsMap;
+    private final Map<String, List<SubFeatureAnnotation>> subFeatureAnnotationsMap;
     private final List<String> metaData;
 
 
@@ -37,8 +37,8 @@ public final class FeatureAnnotation {
         }
 
         this.seqId = seqId;
-        featureAnnotations = new ArrayList<>();
-        featureAnnotationsMap = new HashMap<>();
+        subFeatureAnnotations = new ArrayList<>();
+        subFeatureAnnotationsMap = new HashMap<>();
         metaData = new ArrayList<>();
     }
 
@@ -88,31 +88,31 @@ public final class FeatureAnnotation {
         final String[] id = subFeatureAnnotation.getAttributes().get("ID");
         if (id != null && id.length != 1) {
             throw new IllegalArgumentException("The given feature annotation contained more than 1 id, it contained: "
-                    + id.length);
+                    + id.length + ".");
         }
 
         if (id != null) {
-            if (!featureAnnotationsMap.containsKey(id[0])) {
-                featureAnnotationsMap.put(id[0], new ArrayList<>());
+            if (!subFeatureAnnotationsMap.containsKey(id[0])) {
+                subFeatureAnnotationsMap.put(id[0], new ArrayList<>());
             }
-            featureAnnotationsMap.get(id[0]).add(subFeatureAnnotation);
+            subFeatureAnnotationsMap.get(id[0]).add(subFeatureAnnotation);
         }
 
         final String[] parentIds = subFeatureAnnotation.getAttributes().get("Parent");
         if (parentIds != null) {
             for (final String parentId : parentIds) {
-                if (!featureAnnotationsMap.containsKey(parentId)) {
+                if (!subFeatureAnnotationsMap.containsKey(parentId)) {
                     throw new IllegalArgumentException("Reference made to non-existent parent: '" + parentId + "'.");
                 }
 
-                final List<SubFeatureAnnotation> subFeatureAnnotations = featureAnnotationsMap.get(parentId);
+                final List<SubFeatureAnnotation> subFeatureAnnotations = subFeatureAnnotationsMap.get(parentId);
                 for (final SubFeatureAnnotation annotation : subFeatureAnnotations) {
                     annotation.addChild(subFeatureAnnotation);
                 }
             }
         }
 
-        featureAnnotations.add(subFeatureAnnotation);
+        subFeatureAnnotations.add(subFeatureAnnotation);
     }
 
     /**
@@ -120,7 +120,7 @@ public final class FeatureAnnotation {
      *
      * @return the {@link SubFeatureAnnotation}s of this {@link FeatureAnnotation}
      */
-    public List<SubFeatureAnnotation> getFeatureAnnotations() {
-        return featureAnnotations;
+    public List<SubFeatureAnnotation> getSubFeatureAnnotations() {
+        return subFeatureAnnotations;
     }
 }
