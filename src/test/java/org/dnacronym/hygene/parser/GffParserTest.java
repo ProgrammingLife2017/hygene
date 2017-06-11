@@ -1,12 +1,12 @@
 package org.dnacronym.hygene.parser;
 
-
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+
 
 /**
  * Unit tests of {@link GffParser}.
@@ -126,6 +126,14 @@ final class GffParserTest {
     void testTooLargePhase() {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse(new GffFile("src/test/resources/gff/too_large_phase.gff")));
+
+        assertThat(throwable).isInstanceOf(ParseException.class);
+    }
+
+    @Test
+    void testMultipleSeqId() {
+        final Throwable throwable = catchThrowable(() ->
+                gffParser.parse(new GffFile("src/test/resources/gff/multiple_seq_id.gff")));
 
         assertThat(throwable).isInstanceOf(ParseException.class);
     }

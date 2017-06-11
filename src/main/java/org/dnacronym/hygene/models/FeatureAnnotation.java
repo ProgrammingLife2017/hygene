@@ -74,9 +74,10 @@ public final class FeatureAnnotation {
      * This adds to the graph structure of the {@link FeatureAnnotation}, as it is appended to the relevant parent. If
      * it has no parent, it is simply stored internally.
      *
-     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to this {@link FeatureAnnotation}. Must have an id
+     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to this {@link FeatureAnnotation}. Must have
+     *                             an id
      */
-    public void addFeatureAnnotation(final SubFeatureAnnotation subFeatureAnnotation) {
+    public void addSubFeatureAnnotation(final SubFeatureAnnotation subFeatureAnnotation) {
         final String[] id = subFeatureAnnotation.getAttributes().get("ID");
         if (id == null) {
             throw new IllegalArgumentException("The given feature annotation did not contain an id.");

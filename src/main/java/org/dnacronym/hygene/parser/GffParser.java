@@ -34,17 +34,19 @@ public final class GffParser {
 
 
     /**
-     * Parse the file.
+     * Parses a GFF file.
      * <p>
      * Firstly checks that the files starts with the '{@value GFF_VERSION_HEADER}'.<br>
-     * Afterwards, starts parsing the file. Blank lines are ignored. Lines starting with '##' are added as file
-     * meta-data to the {@link FeatureAnnotation}.<br>
+     * Afterwards, starts parsing the file. Blank lines and lines starting with '#' are ignored. Lines starting with
+     * '##' are added as file meta-data to the {@link FeatureAnnotation}.
+     * <p>
      * All other lines are parsed and converted to {@link SubFeatureAnnotation}s to be stored in the
      * {@link FeatureAnnotation}.
      *
-     * @param gffFile the file
-     * @return list of things
-     * @throws ParseException if unable to parse the {@link GffFile}
+     * @param gffFile the GFF file to parse
+     * @return a {@link FeatureAnnotation} representing the GFF file
+     * @throws ParseException if unable to parse the {@link GffFile}, which can either be caused by an
+     *                        {@link IOException} or a semantic error in the GFF file itself
      */
     @SuppressWarnings({"squid:S135", "PMD"})
     // An object is only instantiated once. PMD suppressed for the time being till method is refactored
@@ -65,27 +67,22 @@ public final class GffParser {
                 lineNumber++;
                 if (line.isEmpty() || line.charAt(0) == '#' && line.charAt(1) != '#') {
                     continue;
-                }
-                if (line.startsWith("##")) {
+                } else if (line.startsWith("##")) {
                     fileMetaData.add(line.substring(2, line.length() - 1));
                     continue;
                 }
 
                 final String[] columns = parseLine(line, lineNumber);
-                final String seqId = columns[SEQ_ID_COLUMN];
 
+                final String seqId = columns[SEQ_ID_COLUMN];
                 if (featureAnnotation == null) {
-                    try {
-                        featureAnnotation = new FeatureAnnotation(seqId);
-                    } catch (final IllegalArgumentException e) {
-                        throw new ParseException("An error occured whilst reading line " + lineNumber + ".", e);
-                    }
+                    featureAnnotation = createFeatureAnnotation(seqId, lineNumber);
                 } else if (!featureAnnotation.getSeqId().equals(seqId)) {
                     throw new ParseException("GFF file contains more than one seqid: '" + featureAnnotation.getSeqId()
                             + "' and '" + seqId + "'.");
                 }
 
-                featureAnnotation.addFeatureAnnotation(makeFeatureAnnotation(columns, lineNumber));
+                featureAnnotation.addSubFeatureAnnotation(makeSubFeatureAnnotation(columns, lineNumber));
             }
         } catch (final IOException e) {
             throw new ParseException("An error occurred while reading the GFF file.", e);
@@ -94,7 +91,6 @@ public final class GffParser {
         if (featureAnnotation == null) {
             throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
         }
-
         for (final String metaData : fileMetaData) {
             featureAnnotation.addMetaData(metaData);
         }
@@ -103,14 +99,34 @@ public final class GffParser {
     }
 
     /**
-     * Returns a feature annotation representing the current line.
+     * Creates a {@link FeatureAnnotation} representing the current file.
+     *
+     * @param seqId      the seqId of the {@link FeatureAnnotation}
+     * @param lineNumber the line number
+     * @return a {@link FeatureAnnotation} representing the current file
+     * @throws ParseException if an error occurred whilst making the {@link FeatureAnnotation}
+     */
+    private FeatureAnnotation createFeatureAnnotation(final String seqId, final int lineNumber) throws ParseException {
+        final FeatureAnnotation featureAnnotation;
+
+        try {
+            featureAnnotation = new FeatureAnnotation(seqId);
+        } catch (final IllegalArgumentException e) {
+            throw new ParseException("An error occurred whilst reading line " + lineNumber + ".", e);
+        }
+
+        return featureAnnotation;
+    }
+
+    /**
+     * Creates a {@link SubFeatureAnnotation} annotation representing the current line.
      *
      * @param columns    the columns of the line to convert to a feature annotation
      * @param lineNumber the line number in the file
      * @return a {@link SubFeatureAnnotation} representing the current row in the file
      * @throws ParseException if the attribute section of the row is invalid
      */
-    private SubFeatureAnnotation makeFeatureAnnotation(final String[] columns, final int lineNumber)
+    private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns, final int lineNumber)
             throws ParseException {
         final SubFeatureAnnotation subFeatureAnnotation;
         try {
