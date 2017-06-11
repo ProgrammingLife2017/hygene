@@ -124,6 +124,15 @@ public final class GenomeIndex {
         return Optional.empty();
     }
 
+    /**
+     * Evaluates the direct neighbours in the given {@code sequenceDirection} and chooses the one with the given
+     * {@code genome}.
+     *
+     * @param oldNode           the ID of the old node
+     * @param sequenceDirection the direction in which to search
+     * @param genome            the genome to query for
+     * @return the next node in that genome (in the given direction)
+     */
     private int getNextNodeInGenome(final int oldNode, final SequenceDirection sequenceDirection, final String genome) {
         final int[] currentNodeId = {oldNode};
         gfaFile.getGraph().iterator().visitDirectNeighbours(currentNodeId[0], sequenceDirection, nodeId -> {
