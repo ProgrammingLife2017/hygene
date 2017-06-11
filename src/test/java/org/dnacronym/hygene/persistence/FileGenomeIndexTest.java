@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.persistence;
 
+import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,16 +40,16 @@ final class FileGenomeIndexTest extends FileDatabaseTestBase {
 
     @Test
     void testStoreAndRetrieve() throws SQLException {
-        fileGenomeIndex.addGenomeIndexPoint(0, 1, 1);
+        fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(0, 1, 1));
 
-        assertThat(fileGenomeIndex.getClosestNodeToBase(0, 2)).isEqualTo(1);
+        assertThat(fileGenomeIndex.getClosestNodeToBase(0, 2)).isEqualTo(new GenomePoint(0, 1, 1));
     }
 
     @Test
     void testStoreAndRetrieveMultipleOptions() throws SQLException {
-        fileGenomeIndex.addGenomeIndexPoint(0, 1, 1);
-        fileGenomeIndex.addGenomeIndexPoint(0, 5, 2);
+        fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(0, 1, 1));
+        fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(0, 5, 2));
 
-        assertThat(fileGenomeIndex.getClosestNodeToBase(0, 2)).isEqualTo(1);
+        assertThat(fileGenomeIndex.getClosestNodeToBase(0, 2)).isEqualTo(new GenomePoint(0, 1, 1));
     }
 }

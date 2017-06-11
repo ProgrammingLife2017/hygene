@@ -2,6 +2,7 @@ package org.dnacronym.hygene.persistence;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 
 import java.sql.SQLException;
@@ -51,16 +52,14 @@ public final class FileGenomeIndex {
     /**
      * Adds a new genome index point with the given data attributes.
      *
-     * @param genomeId a numeric ID representing the genome this index belongs to
-     * @param base     the base count at this index point
-     * @param nodeId   the ID of the node that belongs to that index point
+     * @param genomePoint the point to be indexed ({@link GenomePoint#baseOffsetInNode} will be discarded)
      * @throws SQLException in the case of an error during SQL operations
      */
-    public void addGenomeIndexPoint(final int genomeId, final int base, final int nodeId) throws SQLException {
+    public void addGenomeIndexPoint(final GenomePoint genomePoint) throws SQLException {
         fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(
-                String.valueOf(genomeId),
-                String.valueOf(base),
-                String.valueOf(nodeId)
+                String.valueOf(genomePoint.getGenomeId()),
+                String.valueOf(genomePoint.getBase()),
+                String.valueOf(genomePoint.getNodeId())
         ));
     }
 
@@ -72,7 +71,7 @@ public final class FileGenomeIndex {
      * @return the ID of the closest node, or -1 if it could not be found
      * @throws SQLException in the case of an error during SQL operations
      */
-    public GenomePoint getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
+    public @Nullable GenomePoint getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
         final String sql = "SELECT * FROM " + TABLE_NAME
                 + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId
                 + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ") ASC"
@@ -86,8 +85,7 @@ public final class FileGenomeIndex {
                 return new GenomePoint(
                         resultSet.getInt(GENOME_ID_COLUMN_NAME),
                         resultSet.getInt(BASE_COLUMN_NAME),
-                        resultSet.getInt(NODE_ID_COLUMN_NAME),
-                        0);
+                        resultSet.getInt(NODE_ID_COLUMN_NAME));
             } catch (final SQLException e) {
                 LOGGER.error("Unable to retrieve closest node to base " + base + " in genome no. " + genomeId + ".", e);
                 return null;

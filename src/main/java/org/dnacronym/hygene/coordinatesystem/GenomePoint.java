@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.coordinatesystem;
 
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -80,7 +82,7 @@ public final class GenomePoint {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }

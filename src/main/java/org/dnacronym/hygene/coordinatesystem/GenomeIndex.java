@@ -85,12 +85,18 @@ public final class GenomeIndex {
      * @return if found, the point of the base in that node
      * @throws SQLException in the case of an error during SQL operations
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // The instance created is unique and only created once
     public Optional<GenomePoint> getClosestNode(final String genome, final int base) throws SQLException {
         final int genomeId = getGenomeId(genome);
 
         final GenomePoint closestIndexPoint = fileGenomeIndex.getClosestNodeToBase(genomeId, base);
-        final SequenceDirection sequenceDirection = base - closestIndexPoint.getBase() > 0 ?
-                SequenceDirection.RIGHT : SequenceDirection.LEFT;
+        if (closestIndexPoint == null) {
+            LOGGER.error("Found no index point for genome " + genome + " and base " + base + ".");
+            return Optional.empty();
+        }
+
+        final SequenceDirection sequenceDirection = base - closestIndexPoint.getBase() > 0
+                ? SequenceDirection.RIGHT : SequenceDirection.LEFT;
 
         int currentBase = closestIndexPoint.getBase();
         final int[] currentNodeId = {closestIndexPoint.getNodeId()};
@@ -191,6 +197,7 @@ public final class GenomeIndex {
      *
      * @param nodeId the ID of the node
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // The instances created are needed for data transfer
     private void evaluateNode(final int nodeId) {
         if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
             return;
@@ -208,12 +215,14 @@ public final class GenomeIndex {
                 }
 
                 final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                if (genomeBaseDiffCount < 0) {
-                    fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), 0, nodeId);
+
+                if (genomeBaseDiffCount == -1) {
+                    fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(getGenomeId(genome), 0, nodeId));
                     genomeBaseDiffCounts.put(genome, 0);
                 } else if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
                     final int baseIndexPosition = genomeBaseDiffCount + nodeBaseCount + genomeBaseCount;
-                    fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
+                    fileGenomeIndex.addGenomeIndexPoint(
+                            new GenomePoint(getGenomeId(genome), baseIndexPosition, nodeId));
                     genomeBaseDiffCounts.put(genome, 0);
                     genomeBaseCounts.put(genome, baseIndexPosition);
                 } else {
