@@ -109,9 +109,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
     private int calculateLayerCount(final Collection<NewNode> nodes) {
         assert !nodes.isEmpty();
 
-        final int maxPosition = nodes.stream()
+        final long maxPosition = nodes.stream()
                 .map(node -> node.getXPosition() + node.getLength())
-                .max(Integer::compare)
+                .max(Long::compare)
                 .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
         return positionToLayer(maxPosition);
     }
@@ -199,9 +199,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param position a position
      * @return the number of the layer the given position would be in
      */
-    private int positionToLayer(final int position) {
+    private int positionToLayer(final long position) {
         assert position >= 0;
-        return (position + LAYER_WIDTH - 1) / LAYER_WIDTH;
+        return (int) ((position + LAYER_WIDTH - 1) / LAYER_WIDTH);
     }
 
     /**

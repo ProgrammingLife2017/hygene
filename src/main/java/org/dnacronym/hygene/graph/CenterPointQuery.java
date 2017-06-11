@@ -168,7 +168,7 @@ public final class CenterPointQuery {
             distanceMap.setDistance(nodeId, depth);
 
             final NewNode node = new Segment(nodeId, graph.getByteOffset(nodeId), graph.getSequenceLength(nodeId));
-            node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
+            node.setXPosition((long) graph.getUnscaledXPosition(nodeId) * EDGE_WIDTH);
             node.setYPosition(graph.getUnscaledYPosition(nodeId));
             subgraph.add(node);
         });

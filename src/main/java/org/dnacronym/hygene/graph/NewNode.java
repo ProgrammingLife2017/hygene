@@ -22,7 +22,7 @@ public abstract class NewNode {
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
 
-    private int xPosition;
+    private long xPosition;
     private int yPosition;
 
 
@@ -52,7 +52,7 @@ public abstract class NewNode {
      *
      * @return the X position
      */
-    public final int getXPosition() {
+    public final long getXPosition() {
         return xPosition;
     }
 
@@ -61,7 +61,7 @@ public abstract class NewNode {
      *
      * @param xPosition the X position
      */
-    public final void setXPosition(final int xPosition) {
+    public final void setXPosition(final long xPosition) {
         this.xPosition = xPosition;
     }
 

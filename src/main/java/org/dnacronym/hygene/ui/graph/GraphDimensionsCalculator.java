@@ -67,8 +67,8 @@ public final class GraphDimensionsCalculator {
     private final ObjectProperty<Graph> graphProperty;
     private CenterPointQuery centerPointQuery;
 
-    private int minX;
-    private int maxX;
+    private long minX;
+    private long maxX;
     private int minY;
     private Dimension2D canvasDimension;
 
@@ -157,11 +157,10 @@ public final class GraphDimensionsCalculator {
         }
 
         final int centerNodeId = centerNodeIdProperty.get();
-        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
-                + graph.getUnscaledXEdgeCount(centerNodeId) * DEFAULT_EDGE_WIDTH;
+        final long unscaledCenterX = (long) graph.getUnscaledXPosition(centerNodeId) * DEFAULT_EDGE_WIDTH;
 
-        final int[] tempMinX = {unscaledCenterX};
-        final int[] tempMaxX = {unscaledCenterX};
+        final long[] tempMinX = {unscaledCenterX};
+        final long[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
         final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
 
@@ -173,13 +172,13 @@ public final class GraphDimensionsCalculator {
                 return;
             }
 
-            final int nodeLeftX = node.getXPosition() - node.getLength();
+            final long nodeLeftX = node.getXPosition();
             if (tempMinX[0] > nodeLeftX) {
                 tempMinX[0] = nodeLeftX;
                 minXNodeIdProperty.setValue(((Segment) node).getId());
             }
 
-            final int nodeRightX = node.getXPosition();
+            final long nodeRightX = node.getXPosition() + node.getLength();
             if (tempMaxX[0] < nodeRightX) {
                 tempMaxX[0] = nodeRightX;
                 maxXNodeIdProperty.setValue(((Segment) node).getId());
@@ -246,7 +245,7 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     double computeXPosition(final NewNode node) {
-        final int xPosition = node.getXPosition();
+        final long xPosition = node.getXPosition();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
 
@@ -289,7 +288,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     double computeWidth(final NewNode node) {
-        return (double) node.getLength() / (maxX - minX) * canvasDimension.getWidth();
+        return ((long) node.getLength()) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
