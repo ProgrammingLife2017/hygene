@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.parser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.SubFeatureAnnotation;
@@ -22,6 +24,7 @@ import java.util.List;
  * @see FeatureAnnotation
  */
 public final class GffParser {
+    private static final Logger LOGGER = LogManager.getLogger(GffParser.class);
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int GFF_COLUMNS = 9;
 
@@ -49,13 +52,12 @@ public final class GffParser {
      *
      * @param gffFile the path of the GFF file to parse
      * @return a {@link FeatureAnnotation} representing the GFF file
-     * @throws IOException    if unable to close the {@link BufferedReader} of the file
      * @throws ParseException if unable to parse the {@link java.io.File}, which can either be caused by an
      *                        {@link IOException} when opening the file or a semantic error in the GFF file itself
      */
     @SuppressWarnings({"squid:S135", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity",
             "PMD.StdCyclomaticComplexity"}) // An object is only instantiated once.
-    public FeatureAnnotation parse(final String gffFile) throws IOException, ParseException {
+    public FeatureAnnotation parse(final String gffFile) throws ParseException {
         @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
         final List<String> fileMetaData = new ArrayList<>();
 
@@ -93,7 +95,11 @@ public final class GffParser {
             throw new ParseException("An error occurred while reading line " + lineNumber + " of the GFF file.", e);
         } finally {
             if (bufferedReader != null) {
-                bufferedReader.close();
+                try {
+                    bufferedReader.close();
+                } catch (final IOException e) {
+                    LOGGER.error("Unable to close the reader of the GFF file.", e);
+                }
             }
         }
 

@@ -53,7 +53,7 @@ public final class SubFeatureAnnotation {
      * @param phase  the phase of the {@link SubFeatureAnnotation}. If it has a value, it must be one of 0, 1 or 2, else
      *               {@link IllegalArgumentException} is thrown
      */
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "squid:S3776"}) // There is little use in splitting this constructor
     public SubFeatureAnnotation(final String source, final String type, final String start, final String end,
                                 final String score, final String strand, final String phase) {
         attributes = new HashMap<>();
