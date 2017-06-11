@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.coordinatesystem;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +43,10 @@ class GenomePointTest {
     @Test
     void testGetBaseOffsetInNode() {
         assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(BASE_OFFSET);
+    }
+
+    @Test
+    void testEquals() {
+        EqualsVerifier.forClass(GenomePoint.class).verify();
     }
 }

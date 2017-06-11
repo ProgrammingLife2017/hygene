@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.coordinatesystem;
 
 
+import java.util.Objects;
+
 /**
  * Class representing an index point in the genome coordinate system.
  */
@@ -24,6 +26,20 @@ public final class GenomePoint {
         this.base = base;
         this.nodeId = nodeId;
         this.baseOffsetInNode = baseOffsetInNode;
+    }
+
+    /**
+     * Constructs a new {@link GenomePoint} instance for a point that is located at the beginning of a node.
+     *
+     * @param genomeId the ID of the genome
+     * @param base     the base count in that genome at the beginning of the node
+     * @param nodeId   the ID of the node at that index point
+     */
+    public GenomePoint(final int genomeId, final int base, final int nodeId) {
+        this.genomeId = genomeId;
+        this.base = base;
+        this.nodeId = nodeId;
+        this.baseOffsetInNode = 0;
     }
 
 
@@ -61,5 +77,25 @@ public final class GenomePoint {
      */
     public int getBaseOffsetInNode() {
         return baseOffsetInNode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final GenomePoint that = (GenomePoint) o;
+        return genomeId == that.genomeId &&
+                base == that.base &&
+                nodeId == that.nodeId &&
+                baseOffsetInNode == that.baseOffsetInNode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(genomeId, base, nodeId, baseOffsetInNode);
     }
 }
