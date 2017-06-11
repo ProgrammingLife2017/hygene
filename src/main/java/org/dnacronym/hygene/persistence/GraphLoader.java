@@ -94,7 +94,6 @@ public final class GraphLoader {
             cache.write(graph);
 
             LOGGER.info("Load temporary file into the database.");
-            fileDatabaseDriver.enableFileIO();
             fileDatabaseDriver.raw("INSERT INTO " + TABLE_NAME + " VALUES(" + KEY_COLUMN_VALUE + ","
                     + graph.length + ",\"Coming soon\")");
         } catch (final SQLException | IOException e) {

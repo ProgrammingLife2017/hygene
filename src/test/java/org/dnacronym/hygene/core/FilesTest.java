@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.core;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
@@ -55,17 +54,5 @@ final class FilesTest {
         Files.getInstance().putAppData(TEST_FILE_NAME, testData);
 
         assertThat(Files.getInstance().getAppData(TEST_FILE_NAME)).contains(testData);
-    }
-
-    @Test
-    void testGetResourceViaAppDataCache() throws IOException {
-        try {
-            final File cachedFile = Files.getInstance().copyResourcesToAppData("/sqlite-fileio");
-
-            assertThat(cachedFile).exists();
-            assertThat(new File(cachedFile.getAbsolutePath() + "/fileio.dll")).exists();
-        } finally {
-            FileUtils.deleteDirectory(Files.getInstance().getAppDataFile("sqlite-fileio"));
-        }
     }
 }
