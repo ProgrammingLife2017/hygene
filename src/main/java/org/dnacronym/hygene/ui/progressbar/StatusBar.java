@@ -15,17 +15,17 @@ import java.util.function.Consumer;
 /**
  * Deals with the on-screen progress bar in the application.
  */
-public final class ProgressBarMainStatus {
-    private static final int PROGRESS_TOTAL = 100;
+public final class StatusBar {
+    private static final int PROGRESS_MAX = 100;
 
     private final DoubleProperty progressProperty;
     private final StringProperty statusProperty;
 
 
     /**
-     * Creates an instance of {@link ProgressBarMainStatus}.
+     * Creates an instance of {@link StatusBar}.
      */
-    public ProgressBarMainStatus() {
+    public StatusBar() {
         progressProperty = new SimpleDoubleProperty();
         statusProperty = new SimpleStringProperty();
     }
@@ -41,7 +41,7 @@ public final class ProgressBarMainStatus {
             @Override
             public Void call() throws InterruptedException {
                 task.accept((progress, message) -> {
-                    this.updateProgress(progress, PROGRESS_TOTAL);
+                    this.updateProgress(progress, PROGRESS_MAX);
                     statusProperty.set(message);
                 });
                 return null;

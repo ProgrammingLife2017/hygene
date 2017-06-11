@@ -5,7 +5,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.HBox?>
 <HBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.dnacronym.hygene.ui.progressbar.ProgressBarMainController">
+      fx:controller="org.dnacronym.hygene.ui.progressbar.StatusBarController">
     <children>
         <ProgressBar fx:id="progress" prefWidth="200.0"/>
         <Label fx:id="status" maxWidth="Infinity" text="..."/>

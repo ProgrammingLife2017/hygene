@@ -13,26 +13,26 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * Unit tests of {@link ProgressBarMainStatus}.
+ * Unit tests of {@link StatusBar}.
  */
-final class ProgressBarMainStatusTest {
-    private ProgressBarMainStatus progressBarMainStatus;
+final class StatusBarTest {
+    private StatusBar statusBar;
 
 
     @BeforeEach
     void beforeEach() {
-        progressBarMainStatus = new ProgressBarMainStatus();
+        statusBar = new StatusBar();
     }
 
 
     @Test
     void testInitialProgress() {
-        assertThat(progressBarMainStatus.getProgressProperty().get()).isEqualTo(0.0);
+        assertThat(statusBar.getProgressProperty().get()).isEqualTo(0.0);
     }
 
     @Test
     void testInitialStatus() {
-        assertThat(progressBarMainStatus.getStatusProperty().get()).isNull();
+        assertThat(statusBar.getStatusProperty().get()).isNull();
     }
 
     @Test
@@ -40,7 +40,7 @@ final class ProgressBarMainStatusTest {
     void testTaskProgress() {
         final Consumer<ProgressUpdater> consumer = mock(Consumer.class);
 
-        progressBarMainStatus.monitorTask(consumer);
+        statusBar.monitorTask(consumer);
 
         verify(consumer).accept(any());
     }
