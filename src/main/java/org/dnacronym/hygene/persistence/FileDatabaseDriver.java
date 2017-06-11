@@ -3,6 +3,7 @@ package org.dnacronym.hygene.persistence;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.sqlite.SQLiteConfig;
 
 import java.sql.Connection;
