@@ -57,6 +57,9 @@ dependencies {
     // RichTextFx
     compile("org.fxmisc.richtext:richtextfx:${richTextFxVersion}")
 
+    // ControlsFX
+    compile("org.controlsfx:controlsfx:${controlsFXVersion}")
+
     // Apache Commons
     compile("commons-codec:commons-codec:${commonsCodecVersion}")
     compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
