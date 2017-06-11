@@ -1,224 +1,109 @@
 package org.dnacronym.hygene.models;
 
-import com.google.common.collect.ImmutableSet;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 /**
- * FeatureAnnotation for features.
+ * A gene annotation is an object representing a single GFF file.
  * <p>
- * These features are retrieved from GFF files. Each line of the file corresponds with a single feature. Together, a
- * collection of {@link FeatureAnnotation}s form a {@link SequenceAnnotation}.
+ * A gene annotation consists of {@link SubFeatureAnnotation}s, which form a graph representing the gene.
  *
- * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
  * @see org.dnacronym.hygene.parser.GffParser
- * @see SequenceAnnotation
  */
 public final class FeatureAnnotation {
-    /**
-     * Set of valid attributes of a single feature annotation.
-     */
-    public static final ImmutableSet<String> VALID_ATTRIBUTES = ImmutableSet.copyOf(Arrays.asList(
-            "ID", "Name", "Alias", "Parent", "Target", "Gap", "Derives_from", "Note", "Dbxref", "Ontology_term",
-            "Is_circular"));
+    private final String seqId;
 
-    private final Map<String, String[]> attributes;
-    private final List<FeatureAnnotation> children;
-
-    private final String source;
-    private final String type;
-    private final String start;
-    private final String end;
-    private final String score;
-    private final String strand;
-    private final String phase;
+    private final Map<String, SubFeatureAnnotation> featureAnnotations;
+    private final List<String> metaData;
 
 
     /**
-     * Creates an instance of a {@link FeatureAnnotation}.
+     * Creates an instance of {@link SubFeatureAnnotation}.
      *
-     * @param source the source of the {@link FeatureAnnotation}
-     * @param type   the type of the {@link FeatureAnnotation}
-     * @param start  the start of the {@link FeatureAnnotation}
-     * @param end    the end of the {@link FeatureAnnotation}
-     * @param score  the score of the {@link FeatureAnnotation}
-     * @param strand the strand of the {@link FeatureAnnotation}
-     * @param phase  the phase of the {@link FeatureAnnotation}
+     * @param seqId the id of the genome. If it starts with an unescaped '>' character an
+     *              {@link IllegalArgumentException} is thrown
      */
-    public FeatureAnnotation(final String source, final String type, final String start, final String end,
-                             final String score, final String strand, final String phase) {
-        attributes = new HashMap<>();
-        children = new ArrayList<>();
-
-        this.source = source;
-        this.type = type;
-        this.start = start;
-        this.end = end;
-        this.score = score;
-        this.strand = strand;
-        this.phase = phase;
-    }
-
-
-    /**
-     * Returns the source of the {@link FeatureAnnotation}.
-     * <p>
-     * The source is a free text qualifier intended to describe the algorithm or operating procedure that generated this
-     * feature. Typically this is the name of a piece of software, such as "Genescan" or a database name, such as
-     * "Genbank." In effect, the source is used to extend the feature ontology by adding a qualifier to the type
-     * creating a new composite type that is a subclass of the type in the type column.
-     *
-     * @return the source of the {@link SequenceAnnotation}
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * Returns the type of the {@link FeatureAnnotation}.
-     * <p>
-     * The type of the feature (previously called the "method"). This is constrained to be either a term from the
-     * Sequence Ontology or an SO accession number. The latter alternative is distinguished using the syntax SO:000000.
-     * In either case, it must be sequence_feature (SO:0000110) or an is_a child of it.
-     *
-     * @return the type of the {@link SequenceAnnotation}
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Returns the start of the {@link FeatureAnnotation}.
-     * <p>
-     * The start coordinate of the feature are given in positive 1-based integer coordinates, relative to the
-     * landmark given in column one. Start is always less than or equal to end. For features that cross the origin of a
-     * circular feature (e.g. most bacterial genomes, plasmids, and some viral genomes), the requirement for start to be
-     * less than or equal to end is satisfied by making end = the position of the end + the length of the landmark
-     * feature.
-     * <p>
-     * For zero-length features, such as insertion sites, start equals end and the implied site is to the right of the
-     * indicated base in the direction of the landmark.
-     *
-     * @return the start of the {@link SequenceAnnotation}
-     * @see SequenceAnnotation#getSeqId()
-     */
-    public String getStart() {
-        return start;
-    }
-
-    /**
-     * Returns the end of the {@link FeatureAnnotation}.
-     * <p>
-     * The end coordinate of the feature are given in positive 1-based integer coordinates, relative to the
-     * landmark given in column one. Start is always less than or equal to end. For features that cross the origin of a
-     * circular feature (e.g. most bacterial genomes, plasmids, and some viral genomes), the requirement for start to be
-     * less than or equal to end is satisfied by making end = the position of the end + the length of the landmark
-     * feature.
-     * <p>
-     * For zero-length features, such as insertion sites, start equals end and the implied site is to the right of the
-     * indicated base in the direction of the landmark.
-     *
-     * @return the end of the {@link SequenceAnnotation}
-     * @see SequenceAnnotation#getSeqId()
-     */
-    public String getEnd() {
-        return end;
-    }
-
-    /**
-     * Returns the score of the {@link FeatureAnnotation}.
-     * <p>
-     * The score of the feature, a floating point number. As in earlier versions of the format, the semantics of the
-     * score are ill-defined. It is strongly recommended that E-values be used for sequence similarity features, and
-     * that P-values be used for ab initio gene prediction features.
-     *
-     * @return the score of the {@link SequenceAnnotation}
-     */
-    public String getScore() {
-        return score;
-    }
-
-    /**
-     * Returns the strand of the {@link FeatureAnnotation}.
-     * <p>
-     * The strand of the feature. + for positive strand (relative to the landmark), - for minus strand, and . for
-     * features that are not stranded. In addition, ? can be used for features whose strandedness is relevant, but
-     * unknown.
-     *
-     * @return the strand of the {@link SequenceAnnotation}
-     */
-    public String getStrand() {
-        return strand;
-    }
-
-    /**
-     * Returns the phase of the {@link FeatureAnnotation}.
-     * <p>
-     * For features of type "CDS", the phase indicates where the feature begins with reference to the reading frame. The
-     * phase is one of the integers 0, 1, or 2, indicating the number of bases that should be removed from the beginning
-     * of this feature to reach the first base of the next codon. In other words, a phase of "0" indicates that the next
-     * codon begins at the first base of the region described by the current line, a phase of "1" indicates that the
-     * next codon begins at the second base of this region, and a phase of "2" indicates that the codon begins at the
-     * third base of this region. This is NOT to be confused with the frame, which is simply start modulo 3.
-     * <p>
-     * For forward strand features, phase is counted from the start field. For reverse strand features, phase is counted
-     * from the end field.
-     * <p>
-     * The phase is REQUIRED for all CDS features.
-     *
-     * @return the phase of the {@link SequenceAnnotation}
-     */
-    public String getPhase() {
-        return phase;
-    }
-
-    /**
-     * Sets an attribute of the annotation.
-     * <p>
-     * Values must be separated by a comma.
-     *
-     * @param name  the name of the attribute
-     * @param value the value of the attribute
-     */
-    public void setAttribute(final String name, final String value) {
-        if (!VALID_ATTRIBUTES.contains(name)) {
-            throw new IllegalArgumentException("The tag: " + name + " is not a valid attribute tag. Must be one of: "
-                    + VALID_ATTRIBUTES.toString());
+    public FeatureAnnotation(final String seqId) {
+        if (seqId.charAt(0) == '>') {
+            throw new IllegalArgumentException("Seqid " + seqId + " started with the unescaped character '>'.");
         }
 
-        final String[] values = value.split(",");
-        attributes.put(name, values);
+        this.seqId = seqId;
+        featureAnnotations = new HashMap<>();
+        metaData = new ArrayList<>();
+    }
+
+
+    /**
+     * Returns the sequence id of this annotation.
+     * <p>
+     * The ID of the landmark used to establish the coordinate system for the current feature. IDs may contain any
+     * characters, but must escape any characters not in the set [a-zA-Z0-9.:^*$@!+_?-|]. In particular, IDs may not
+     * contain unescaped whitespace and must not begin with an unescaped ">".
+     *
+     * @return the sequence id of this annotation
+     */
+    public String getSeqId() {
+        return seqId;
     }
 
     /**
-     * Returns the attributes of this annotation.
+     * Adds a single item of meta-data to the {@link FeatureAnnotation}.
      *
-     * @return the attributes of the annotation
+     * @param metaData item of meta-data to add
      */
-    public Map<String, String[]> getAttributes() {
-        return attributes;
+    public void addMetaData(final String metaData) {
+        this.metaData.add(metaData);
     }
 
     /**
-     * Add a child to this feature annotation.
+     * Returns the list of meta-data of this {@link FeatureAnnotation}.
      *
-     * @param featureAnnotation the {@link FeatureAnnotation} to add to the children of this feature annotation
+     * @return the list of meta-data of this {@link FeatureAnnotation}
      */
-    public void addChild(final FeatureAnnotation featureAnnotation) {
-        children.add(featureAnnotation);
+    public List<String> getMetaData() {
+        return metaData;
     }
 
     /**
-     * Returns the list of children of this {@link FeatureAnnotation}.
+     * Adds a {@link SubFeatureAnnotation} to this {@link FeatureAnnotation}.
+     * <p>
+     * This adds to the graph structure of the {@link FeatureAnnotation}, as it is appended to the relevant parent. If
+     * it has no parent, it is simply stored internally.
      *
-     * @return the list of {@link FeatureAnnotation}s that are the children of this {@link FeatureAnnotation}
+     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} to add to this {@link FeatureAnnotation}. Must have an id
      */
-    public List<FeatureAnnotation> getChildren() {
-        return children;
+    public void addFeatureAnnotation(final SubFeatureAnnotation subFeatureAnnotation) {
+        final String[] id = subFeatureAnnotation.getAttributes().get("ID");
+        if (id == null) {
+            throw new IllegalArgumentException("The given feature annotation did not contain an id.");
+        }
+        if (id.length > 1) {
+            throw new IllegalArgumentException("The given feature annotation contained more than 1 id, it contained: "
+                    + id.length);
+        }
+
+        featureAnnotations.put(id[0], subFeatureAnnotation);
+
+        final String[] parentIds = subFeatureAnnotation.getAttributes().get("Parent");
+        if (parentIds != null) {
+            for (final String parentId : parentIds) {
+                if (featureAnnotations.containsKey(parentId)) {
+                    featureAnnotations.get(parentId).addChild(subFeatureAnnotation);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the {@link SubFeatureAnnotation}s of this {@link FeatureAnnotation}.
+     *
+     * @return the {@link SubFeatureAnnotation}s of this {@link FeatureAnnotation}
+     */
+    public List<SubFeatureAnnotation> getFeatureAnnotations() {
+        return new ArrayList<>(featureAnnotations.values());
     }
 }

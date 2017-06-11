@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.SequenceAnnotation;
+import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.parser.factories.GffParserFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -41,10 +41,10 @@ final class GffFileTest {
     }
 
     @Test
-    void testReadFile() throws ParseException {
+    void testReadFileSeqId() throws ParseException {
         final GffFile gfaFile = new GffFile(GFF_TEST_FILE);
-        final SequenceAnnotation genomeIndex = gfaFile.parse();
+        final FeatureAnnotation feature = gfaFile.parse();
 
-        assertThat(genomeIndex.getSeqId()).isEqualTo("ctg123");
+        assertThat(feature.getSeqId()).isEqualTo("ctg123");
     }
 }
