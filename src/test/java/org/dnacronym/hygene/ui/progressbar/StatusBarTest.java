@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.progressbar;
 
 import org.dnacronym.hygene.parser.ProgressUpdater;
-import org.junit.jupiter.api.BeforeEach;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
@@ -15,12 +15,12 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests of {@link StatusBar}.
  */
-final class StatusBarTest {
+final class StatusBarTest extends UITestBase {
     private StatusBar statusBar;
 
 
-    @BeforeEach
-    void beforeEach() {
+    @Override
+    public void beforeEach() {
         statusBar = new StatusBar();
     }
 
@@ -40,7 +40,7 @@ final class StatusBarTest {
     void testTaskProgress() {
         final Consumer<ProgressUpdater> consumer = mock(Consumer.class);
 
-        statusBar.monitorTask(consumer);
+        interact(() -> statusBar.monitorTask(consumer));
 
         verify(consumer).accept(any());
     }
