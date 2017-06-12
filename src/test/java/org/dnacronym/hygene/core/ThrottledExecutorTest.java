@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.core;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -13,6 +14,56 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  * Unit tests for {@link ThrottledExecutor}.
  */
 class ThrottledExecutorTest {
+    /**
+     * An integer that can be used in lambdas.
+     */
+    private final int[] number = {0};
+    /**
+     * Increments the {@code number} field, and then sleeps for 500 milliseconds.
+     */
+    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
+    private final Runnable incrementBeforeDelay = () -> {
+        number[0]++;
+        try {
+            Thread.sleep(500);
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
+    };
+    /**
+     * Increments the {@code number} field after sleeping for 500 milliseconds.
+     */
+    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
+    private final Runnable incrementAfterDelay = () -> {
+        try {
+            Thread.sleep(500);
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
+        number[0]++;
+    };
+
+    private ThrottledExecutor executor;
+
+
+    @BeforeEach
+    void beforeEach() {
+        number[0] = 0;
+        executor = createExecutor(0);
+    }
+
+    /**
+     * Sets the {@link ThrottledExecutor} to be used in this class' tests.
+     * <p>
+     * This method should be overridden in subclasses that wish to make use of these tests.
+     *
+     * @param timeout the timeout
+     */
+    ThrottledExecutor createExecutor(final int timeout) {
+        return new ThrottledExecutor(timeout);
+    }
+
+
     /**
      * Tests that a timeout of fewer than 0 milliseconds is not accepted.
      */
@@ -28,11 +79,8 @@ class ThrottledExecutorTest {
      */
     @Test
     void testRuns() {
-        final int[] number = {0};
-        final ThrottledExecutor runnable = new ThrottledExecutor(34);
-
-        runnable.run(() -> number[0]++);
-        runnable.block();
+        executor.run(() -> number[0]++);
+        executor.block();
 
         assertThat(number[0]).isEqualTo(1);
     }
@@ -42,13 +90,10 @@ class ThrottledExecutorTest {
      */
     @Test
     void testRunsTwice() {
-        final int[] number = {0};
-        final ThrottledExecutor runnable = new ThrottledExecutor(55);
-
-        runnable.run(() -> number[0]++);
-        runnable.block();
-        runnable.run(() -> number[0]++);
-        runnable.block();
+        executor.run(() -> number[0]++);
+        executor.block();
+        executor.run(() -> number[0]++);
+        executor.block();
 
         assertThat(number[0]).isEqualTo(2);
     }
@@ -58,14 +103,13 @@ class ThrottledExecutorTest {
      */
     @Test
     void testRunsTwiceDelay() {
-        final int[] number = {0};
-        final ThrottledExecutor runnable = new ThrottledExecutor(500);
+        executor = createExecutor(500);
 
-        runnable.run(() -> number[0]++);
-        runnable.block();
+        executor.run(() -> number[0]++);
+        executor.block();
         final Instant then = Instant.now();
-        runnable.run(() -> number[0]++);
-        runnable.block();
+        executor.run(() -> number[0]++);
+        executor.block();
         final long time = Duration.between(then, Instant.now()).toMillis();
 
         assertThat(time).isGreaterThan(250);
@@ -76,12 +120,9 @@ class ThrottledExecutorTest {
      */
     @Test
     void testInterruptOnce() {
-        final int[] number = {0};
-        final ThrottledExecutor runnable = new ThrottledExecutor(0);
-
-        runnable.run(() -> number[0]++);
-        runnable.run(() -> number[0]++);
-        runnable.block();
+        executor.run(incrementAfterDelay);
+        executor.run(incrementAfterDelay);
+        executor.block();
 
         assertThat(number[0]).isEqualTo(1);
     }
@@ -92,13 +133,10 @@ class ThrottledExecutorTest {
      */
     @Test
     void testInterruptTwice() {
-        final int[] number = {0};
-        final ThrottledExecutor runnable = new ThrottledExecutor(0);
-
-        runnable.run(() -> number[0]++);
-        runnable.run(() -> number[0]++);
-        runnable.run(() -> number[0]++);
-        runnable.block();
+        executor.run(incrementAfterDelay);
+        executor.run(incrementAfterDelay);
+        executor.run(incrementAfterDelay);
+        executor.block();
 
         assertThat(number[0]).isEqualTo(1);
     }
@@ -108,24 +146,11 @@ class ThrottledExecutorTest {
      * sees that the second run scheduled a run.
      */
     @Test
-    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testScheduled() {
-        final int[] number = {0};
-        final Runnable action = () -> {
-            number[0]++;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        };
-
-        final ThrottledExecutor runnable = new ThrottledExecutor(500);
-
-        runnable.run(action);
-        runnable.run(action);
-        runnable.run(action);
-        runnable.block();
+        executor.run(incrementBeforeDelay);
+        executor.run(incrementBeforeDelay);
+        executor.run(incrementBeforeDelay);
+        executor.block();
 
         assertThat(number[0]).isEqualTo(1);
     }
@@ -139,31 +164,16 @@ class ThrottledExecutorTest {
      */
     @Test
     void testStopWithoutRun() {
-        final ThrottledExecutor runnable = new ThrottledExecutor(500);
-
-        runnable.stop();
-        runnable.block();
+        executor.stop();
+        executor.block();
     }
 
     /**
      * Tests that a runnable is cancelled after {@link ThrottledExecutor#stop()} is called.
      */
-    @Test
-    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testStop() {
-        final int[] number = {0};
-        final ThrottledExecutor runnable = new ThrottledExecutor(59);
-
-        runnable.run(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (final InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            number[0]++;
-        });
-        runnable.stop();
+        executor.run(incrementAfterDelay);
+        executor.stop();
 
         assertThat(number[0]).isEqualTo(0);
     }
@@ -176,9 +186,7 @@ class ThrottledExecutorTest {
      */
     @Test
     void testBlockWithoutRun() {
-        final ThrottledExecutor runnable = new ThrottledExecutor(500);
-
-        runnable.block();
+        executor.block();
     }
 
     /**
@@ -188,12 +196,10 @@ class ThrottledExecutorTest {
      */
     @Test
     void testBlockInterrupted() {
-        final ThrottledExecutor runnable = new ThrottledExecutor(500);
-
-        runnable.run(() -> {
+        executor.run(() -> {
             throw new RuntimeException("Dummy exception");
         });
-        runnable.block();
+        executor.block();
     }
 
     /**
@@ -203,10 +209,8 @@ class ThrottledExecutorTest {
      */
     @Test
     void testBlockAfterStop() {
-        final ThrottledExecutor runnable = new ThrottledExecutor(12);
-
-        runnable.run(() -> {});
-        runnable.stop();
-        runnable.block();
+        executor.run(() -> {});
+        executor.stop();
+        executor.block();
     }
 }
