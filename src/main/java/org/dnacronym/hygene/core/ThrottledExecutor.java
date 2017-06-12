@@ -17,18 +17,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * A threaded {@link Runnable} that can only be called a limited number of times.
  * <p>
- * When {@link #run()} is called and there is no thread currently running, the action is scheduled until a later
+ * When {@link #run(Runnable)} is called and there is no thread currently running, the action is scheduled until a later
  * moment if executing it now would violate the timeout between executions, or it is executed immediately otherwise.
  * <p>
- * When {@link #run()} is called while a thread is currently running, that thread is interrupted. If no action is
- * scheduled, the action is scheduled until a later moment if executing it now would violate the timeout between
+ * When {@link #run(Runnable)} is called while a thread is currently running, that thread is interrupted. If no action
+ * is scheduled, the action is scheduled until a later moment if executing it now would violate the timeout between
  * executions, or it is executed immediately otherwise.
  */
 public final class ThrottledExecutor {
     private static final Logger LOGGER = LogManager.getLogger(ThrottledExecutor.class);
 
     private final ScheduledExecutorService executor;
-    private final Runnable action;
     private final int timeout;
 
     private @MonotonicNonNull ScheduledFuture<?> future;
@@ -38,16 +37,14 @@ public final class ThrottledExecutor {
     /**
      * Constructs a new {@link ThrottledExecutor}.
      *
-     * @param action  an action to perform
      * @param timeout the minimal time between each execution in milliseconds
      */
-    public ThrottledExecutor(final Runnable action, final int timeout) {
+    public ThrottledExecutor(final int timeout) {
         if (timeout < 0) {
             throw new IllegalArgumentException("The limit must be a positive integer.");
         }
 
         this.executor = Executors.newSingleThreadScheduledExecutor();
-        this.action = action;
         this.timeout = timeout;
 
         this.waitUntil = Instant.now();
@@ -56,8 +53,10 @@ public final class ThrottledExecutor {
 
     /**
      * Tries to execute the action in a separate thread, or schedules one if that is not possible.
+     *
+     * @param action the {@link Runnable} to execute or schedule
      */
-    public synchronized void run() {
+    public synchronized void run(final Runnable action) {
         if (future != null && !future.isDone() && !future.isCancelled()) {
             if (future.getDelay(TimeUnit.MILLISECONDS) >= 0) {
                 return;
