@@ -10,7 +10,7 @@ import java.io.IOException;
  * Class responsible for storing and retrieving the recently opened directory (in the {@link javafx.stage.FileChooser}).
  */
 public final class RecentDirectory {
-    static final String DATA_FILE_NAME = "-recently-opened-directory.txt";
+    static final String DATA_FILE_NAME_SUFFIX = "-recently-opened-directory.txt";
 
 
     /**
@@ -30,11 +30,11 @@ public final class RecentDirectory {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized File get(final String type) throws IOException {
-        if (!Files.getInstance().getAppDataFile(type + DATA_FILE_NAME).exists()) {
+        if (!Files.getInstance().getAppDataFile(type + DATA_FILE_NAME_SUFFIX).exists()) {
             return new File(System.getProperty("user.home"));
         }
 
-        final String content = Files.getInstance().getAppData(type + DATA_FILE_NAME);
+        final String content = Files.getInstance().getAppData(type + DATA_FILE_NAME_SUFFIX);
 
         return new File(content.trim());
     }
@@ -47,6 +47,6 @@ public final class RecentDirectory {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized void store(final String type, final File directory) throws IOException {
-        Files.getInstance().putAppData(type + DATA_FILE_NAME, directory.getAbsolutePath());
+        Files.getInstance().putAppData(type + DATA_FILE_NAME_SUFFIX, directory.getAbsolutePath());
     }
 }

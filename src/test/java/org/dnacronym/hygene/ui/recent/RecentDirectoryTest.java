@@ -47,6 +47,6 @@ final class RecentDirectoryTest {
      */
     private void deleteDataFile() throws IOException {
         Files.deleteIfExists(org.dnacronym.hygene.core.Files.getInstance()
-                .getAppDataFile("type" + RecentDirectory.DATA_FILE_NAME).toPath());
+                .getAppDataFile("type" + RecentDirectory.DATA_FILE_NAME_SUFFIX).toPath());
     }
 }
