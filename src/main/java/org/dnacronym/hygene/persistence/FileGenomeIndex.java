@@ -22,6 +22,7 @@ public final class FileGenomeIndex {
     private static final String NODE_ID_COLUMN_NAME = "node_id";
 
     private final FileDatabaseDriver fileDatabaseDriver;
+    private final FileDatabase fileDatabase;
 
 
     /**
@@ -31,6 +32,7 @@ public final class FileGenomeIndex {
      */
     public FileGenomeIndex(final FileDatabase fileDatabase) {
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
+        this.fileDatabase = fileDatabase;
     }
 
 
