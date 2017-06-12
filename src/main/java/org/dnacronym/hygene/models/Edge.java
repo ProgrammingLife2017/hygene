@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.models;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
 public final class Edge implements Comparable<Edge> {
     private final int from;
     private final int to;
-    private final int lineNumber;
+    private final int byteOffset;
     private final @Nullable Graph graph;
 
 
@@ -21,14 +22,14 @@ public final class Edge implements Comparable<Edge> {
      *
      * @param from       node from which the edge originates
      * @param to         node at which the edge ends
-     * @param lineNumber line number of GFA file where the edge is specified
+     * @param byteOffset byte offset of GFA file where the edge is specified
      * @param graph      a reference to the graph that the edge belongs to, in case there is no graph (yet) for this
      *                   edge to be on, null is accepted
      */
-    public Edge(final int from, final int to, final int lineNumber, final @Nullable Graph graph) {
+    public Edge(final int from, final int to, final int byteOffset, final @Nullable Graph graph) {
         this.from = from;
         this.to = to;
-        this.lineNumber = lineNumber;
+        this.byteOffset = byteOffset;
         this.graph = graph;
     }
 
@@ -52,12 +53,12 @@ public final class Edge implements Comparable<Edge> {
     }
 
     /**
-     * Getter for the {@link Edge}'s line number.
+     * Getter for the {@link Edge}'s byte offset.
      *
-     * @return the edge's line number
+     * @return the edge's byte offset
      */
-    public int getLineNumber() {
-        return lineNumber;
+    public long getByteOffset() {
+        return UnsignedInteger.toLong(byteOffset);
     }
 
     /**
@@ -111,11 +112,11 @@ public final class Edge implements Comparable<Edge> {
 
         final Edge edge = (Edge) other;
 
-        return to == edge.to && from == edge.from && lineNumber == edge.lineNumber;
+        return to == edge.to && from == edge.from && byteOffset == edge.byteOffset;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(to, from, lineNumber);
+        return Objects.hash(to, from, byteOffset);
     }
 }

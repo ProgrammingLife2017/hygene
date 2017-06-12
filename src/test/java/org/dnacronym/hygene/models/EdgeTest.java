@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,9 +19,9 @@ final class EdgeTest {
 
     @Test
     void testGetLineNumber() {
-        final Edge edge = new Edge(4, 3, 12, null);
+        final Edge edge = new Edge(4, 3, UnsignedInteger.fromLong(12), null);
 
-        assertThat(edge.getLineNumber()).isEqualTo(12);
+        assertThat(edge.getByteOffset()).isEqualTo(12);
     }
 
     @Test

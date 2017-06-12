@@ -121,12 +121,12 @@ public final class GfaFile {
     /**
      * Parses an edge's metadata to a {@link EdgeMetadata} object.
      *
-     * @param lineNumber Line number of the edge within the GFA file
+     * @param byteOffset byte offset of the edge within the GFA file
      * @return a {@link EdgeMetadata} object
      * @throws ParseException if the edge metadata cannot be parsed
      */
-    public EdgeMetadata parseEdgeMetadata(final int lineNumber) throws ParseException {
-        return metadataParser.parseEdgeMetadata(this, lineNumber);
+    public EdgeMetadata parseEdgeMetadata(final long byteOffset) throws ParseException {
+        return metadataParser.parseEdgeMetadata(this, byteOffset);
     }
 
     /**

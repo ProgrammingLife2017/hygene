@@ -4,7 +4,6 @@ import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadata;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +26,6 @@ final class MetadataParsingIntegrationTest {
     }
 
     @Test
-    @Disabled
     void testGetEdgeMetadata() throws ParseException {
         final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse(ProgressUpdater.DUMMY);

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public final class MetadataParser {
     public static final String GENOME_LIST_HEADER_PREFIX = "ORI:Z:";
-
-    private int readerPosition;
 
 
     /**
@@ -94,16 +91,16 @@ public final class MetadataParser {
      * Parses the metadata of a link (edge) to an {@link EdgeMetadata} object.
      *
      * @param gfa        string containing the contents of the GFA file
-     * @param lineNumber the line number where the edge should be located
+     * @param byteOffset the byte offset where the edge should be located
      * @return an {@link EdgeMetadata} object containing a link's metadata
      * @throws ParseException if the GFA file or given line is invalid
      */
-    public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final int lineNumber) throws ParseException {
-        final String line = getLine(createReader(gfa), lineNumber);
+    public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final long byteOffset) throws ParseException {
+        final String line = getLine(gfa.getRandomAccessFile(), byteOffset);
 
-        validateLine(line, "L", lineNumber);
+        validateLine(line, "L", byteOffset);
 
-        final StringTokenizer st = initializeStringTokenizer(line, lineNumber);
+        final StringTokenizer st = initializeStringTokenizer(line, byteOffset);
 
         try {
             st.nextToken();
@@ -115,37 +112,8 @@ public final class MetadataParser {
 
             return new EdgeMetadata(fromOrient, toOrient, overlap);
         } catch (final NoSuchElementException e) {
-            throw new ParseException("Not enough parameters for link on line " + lineNumber, e);
+            throw new ParseException("Not enough parameters for link at position " + byteOffset, e);
         }
-    }
-
-    /**
-     * Finds a specific line within the string representation of a GFA file.
-     * <p>
-     * Will be removed once edges are retrieved via byte offsets.
-     *
-     * @param gfa        string containing the contents of the GFA file
-     * @param lineNumber the line number where the node or edge should be located
-     * @return the line of the file belonging to the node or edge
-     * @throws ParseException if the line number is out of bounds
-     */
-    private String getLine(final BufferedReader gfa, final int lineNumber) throws ParseException {
-        if (lineNumber <= 0) {
-            throw new ParseException("Line " + lineNumber + " is not a valid line number.");
-        }
-
-        final int offset = (lineNumber - 1) - readerPosition;
-        if (offset < 0) {
-            throw new ParseException("Line " + lineNumber + " cannot be lower than the previous line number.");
-        }
-
-        final String line = gfa.lines().skip(offset).findFirst().orElseThrow(
-                () -> new ParseException("Line " + lineNumber + " is not found in GFA file.")
-        );
-
-        readerPosition = lineNumber;
-
-        return line;
     }
 
     /**
@@ -200,18 +168,6 @@ public final class MetadataParser {
             throw new ParseException("Line at position " + byteOffset + " is not valid");
         }
         return st;
-    }
-
-    /**
-     * Creates a new reader for a GFA file and resets the reader position.
-     *
-     * @param gfaFile a reference to the current {@link GfaFile}
-     * @return {@link BufferedReader} for a {@link GfaFile}
-     * @throws ParseException if a buffered reader cannot be initiated
-     */
-    private BufferedReader createReader(final GfaFile gfaFile) throws ParseException {
-        readerPosition = 0;
-        return gfaFile.readFile();
     }
 
     /**

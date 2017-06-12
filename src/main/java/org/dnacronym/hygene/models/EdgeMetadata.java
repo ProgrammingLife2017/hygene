@@ -39,7 +39,7 @@ public final class EdgeMetadata {
         return Optional.ofNullable(edge.getGraph())
                 .orElseThrow(() -> new ParseException("Cannot parse metadata for edge because graph is unknown"))
                 .getGfaFile()
-                .parseEdgeMetadata(edge.getLineNumber());
+                .parseEdgeMetadata(edge.getByteOffset());
     }
 
 
