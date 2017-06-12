@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
  * scheduled, the action is scheduled until a later moment if executing it now would violate the timeout between
  * executions, or it is executed immediately otherwise.
  */
-public final class ThrottledRunnable {
-    private static final Logger LOGGER = LogManager.getLogger(ThrottledRunnable.class);
+public final class ThrottledExecutor {
+    private static final Logger LOGGER = LogManager.getLogger(ThrottledExecutor.class);
 
     private final ScheduledExecutorService executor;
     private final Runnable action;
@@ -36,12 +36,12 @@ public final class ThrottledRunnable {
 
 
     /**
-     * Constructs a new {@link ThrottledRunnable}.
+     * Constructs a new {@link ThrottledExecutor}.
      *
      * @param action  an action to perform
      * @param timeout the minimal time between each execution in milliseconds
      */
-    public ThrottledRunnable(final Runnable action, final int timeout) {
+    public ThrottledExecutor(final Runnable action, final int timeout) {
         if (timeout < 0) {
             throw new IllegalArgumentException("The limit must be a positive integer.");
         }

@@ -10,15 +10,15 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 /**
- * Unit tests for {@link ThrottledRunnable}.
+ * Unit tests for {@link ThrottledExecutor}.
  */
-class ThrottledRunnableTest {
+class ThrottledExecutorTest {
     /**
      * Tests that a timeout of fewer than 0 milliseconds is not accepted.
      */
     @Test
     void testIllegalTimeout() {
-        final Throwable throwable = catchThrowable(() -> new ThrottledRunnable(() -> {}, -24));
+        final Throwable throwable = catchThrowable(() -> new ThrottledExecutor(() -> {}, -24));
 
         assertThat(throwable).isInstanceOf(IllegalArgumentException.class);
     }
@@ -29,7 +29,7 @@ class ThrottledRunnableTest {
     @Test
     void testRuns() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> number[0]++, 34);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> number[0]++, 34);
 
         runnable.run();
         runnable.block();
@@ -43,7 +43,7 @@ class ThrottledRunnableTest {
     @Test
     void testRunsTwice() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> number[0]++, 55);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> number[0]++, 55);
 
         runnable.run();
         runnable.block();
@@ -59,7 +59,7 @@ class ThrottledRunnableTest {
     @Test
     void testRunsTwiceDelay() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> number[0]++, 500);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> number[0]++, 500);
 
         runnable.run();
         runnable.block();
@@ -77,7 +77,7 @@ class ThrottledRunnableTest {
     @Test
     void testInterruptOnce() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> number[0]++, 0);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> number[0]++, 0);
 
         runnable.run();
         runnable.run();
@@ -93,7 +93,7 @@ class ThrottledRunnableTest {
     @Test
     void testInterruptTwice() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> number[0]++, 0);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> number[0]++, 0);
 
         runnable.run();
         runnable.run();
@@ -111,7 +111,7 @@ class ThrottledRunnableTest {
     @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testScheduled() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> {
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> {
             number[0]++;
             try {
                 Thread.sleep(1000);
@@ -130,27 +130,27 @@ class ThrottledRunnableTest {
 
 
     /**
-     * Tests that nothing happens when {@link ThrottledRunnable#stop()} is called but {@link ThrottledRunnable#run()} is
+     * Tests that nothing happens when {@link ThrottledExecutor#stop()} is called but {@link ThrottledExecutor#run()} is
      * never called.
      * <p>
      * This method does not contain an assert because it tests that a method returns at all.
      */
     @Test
     void testStopWithoutRun() {
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> {}, 500);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> {}, 500);
 
         runnable.stop();
         runnable.block();
     }
 
     /**
-     * Tests that a runnable is cancelled after {@link ThrottledRunnable#stop()} is called.
+     * Tests that a runnable is cancelled after {@link ThrottledExecutor#stop()} is called.
      */
     @Test
     @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testStop() {
         final int[] number = {0};
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> {
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> {
             try {
                 Thread.sleep(1000);
             } catch (final InterruptedException e) {
@@ -168,13 +168,13 @@ class ThrottledRunnableTest {
 
 
     /**
-     * Tests that a block returns if {@link ThrottledRunnable#run()} is never called.
+     * Tests that a block returns if {@link ThrottledExecutor#run()} is never called.
      * <p>
      * This method does not contain an assert because it tests that a method returns at all.
      */
     @Test
     void testBlockWithoutRun() {
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> {}, 500);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> {}, 500);
 
         runnable.block();
     }
@@ -186,7 +186,7 @@ class ThrottledRunnableTest {
      */
     @Test
     void testBlockInterrupted() {
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> {
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> {
             throw new RuntimeException("Dummy exception");
         }, 500);
 
@@ -201,7 +201,7 @@ class ThrottledRunnableTest {
      */
     @Test
     void testBlockAfterStop() {
-        final ThrottledRunnable runnable = new ThrottledRunnable(() -> {}, 12);
+        final ThrottledExecutor runnable = new ThrottledExecutor(() -> {}, 12);
 
         runnable.run();
         runnable.stop();
