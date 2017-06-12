@@ -25,6 +25,10 @@ import java.util.List;
  */
 public final class GffParser {
     private static final Logger LOGGER = LogManager.getLogger(GffParser.class);
+    /**
+     * An error message which takes a line number and a message.
+     */
+    private static final String ERROR_MESSAGE_LINE = "An error occurred whilst parsing line %d: %s.";
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int GFF_COLUMNS = 9;
 
@@ -68,8 +72,8 @@ public final class GffParser {
             bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8);
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
-                throw new ParseException("GFF file does not have the appropriate header: " + GFF_VERSION_HEADER
-                        + ", it was: '" + line + "'.");
+                throw new ParseException(String.format(ERROR_MESSAGE_LINE, lineNumber, "GFF file does not have the "
+                        + "appropriate header: '" + GFF_VERSION_HEADER + "', it was: '" + line + "'"));
             }
 
             while ((line = bufferedReader.readLine()) != null) {
@@ -81,19 +85,19 @@ public final class GffParser {
                     continue;
                 }
 
-                final String[] columns = parseLine(line, lineNumber);
+                final String[] columns = parseLine(line);
 
                 final String seqId = columns[SEQ_ID_COLUMN];
                 if (featureAnnotation == null) {
-                    featureAnnotation = createFeatureAnnotation(seqId, lineNumber);
+                    featureAnnotation = createFeatureAnnotation(seqId);
                 }
 
-                featureAnnotation.addSubFeatureAnnotation(makeSubFeatureAnnotation(columns, lineNumber));
+                featureAnnotation.addSubFeatureAnnotation(makeSubFeatureAnnotation(columns));
             }
         } catch (final IOException e) {
             throw new ParseException("An IO error occurred while reading the GFF file.", e);
         } catch (final IllegalArgumentException e) {
-            throw new ParseException("An error occurred while reading line " + lineNumber + " of the GFF file.", e);
+            throw new ParseException(String.format(ERROR_MESSAGE_LINE, lineNumber, "There was an invalid value"), e);
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -117,53 +121,38 @@ public final class GffParser {
     /**
      * Creates a {@link FeatureAnnotation} representing the current file.
      *
-     * @param seqId      the seqId of the {@link FeatureAnnotation}
-     * @param lineNumber the line number
+     * @param seqId the seqId of the {@link FeatureAnnotation}
      * @return a {@link FeatureAnnotation} representing the current file
-     * @throws ParseException if an error occurred whilst making the {@link FeatureAnnotation}
      */
-    private FeatureAnnotation createFeatureAnnotation(final String seqId, final int lineNumber) throws ParseException {
-        try {
-            return new FeatureAnnotation(seqId);
-        } catch (final IllegalArgumentException e) {
-            throw new ParseException("An error occurred while reading line " + lineNumber + ": Unable to create a "
-                    + FeatureAnnotation.class.getSimpleName() + ".", e);
-        }
+    private FeatureAnnotation createFeatureAnnotation(final String seqId) {
+        return new FeatureAnnotation(seqId);
     }
 
     /**
      * Creates a {@link SubFeatureAnnotation} annotation representing the current line.
      *
-     * @param columns    the columns of the line to convert to a feature annotation
-     * @param lineNumber the line number in the file
+     * @param columns the columns of the line to convert to a feature annotation
      * @return a {@link SubFeatureAnnotation} representing the current row in the file
-     * @throws ParseException if the attribute section of the row is invalid
+     * @throws IllegalArgumentException if an error occurred whilst making a {@link SubFeatureAnnotation}
      */
-    private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns, final int lineNumber)
-            throws ParseException {
+    private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns) {
         final SubFeatureAnnotation subFeatureAnnotation;
 
-        try {
-            subFeatureAnnotation = new SubFeatureAnnotation(
-                    columns[SOURCE_COLUMN],
-                    columns[TYPE_COLUMN],
-                    columns[START_COLUMN],
-                    columns[END_COLUMN],
-                    columns[SCORE_COLUMN],
-                    columns[STRAND_COLUMN],
-                    columns[PHASE_COLUMN]
-            );
-        } catch (final IllegalArgumentException e) {
-            throw new ParseException("An error occurred while parsing line " + lineNumber + ": Unable to create a "
-                    + SubFeatureAnnotation.class.getSimpleName() + ".", e);
-        }
+        subFeatureAnnotation = new SubFeatureAnnotation(
+                columns[SOURCE_COLUMN],
+                columns[TYPE_COLUMN],
+                columns[START_COLUMN],
+                columns[END_COLUMN],
+                columns[SCORE_COLUMN],
+                columns[STRAND_COLUMN],
+                columns[PHASE_COLUMN]);
 
         final String[] attributes = columns[ATTRIBUTES_COLUMN].split(";");
         for (final String attribute : attributes) {
             final String[] keyValuePair = attribute.split("=");
             if (keyValuePair.length != 2) {
-                throw new ParseException("The attributes at line " + lineNumber + " contained an key without a value: '"
-                        + attribute + "'.");
+                throw new IllegalArgumentException("An attribute contained a key without a value: '" + attribute
+                        + "'.");
             }
 
             subFeatureAnnotation.setAttribute(keyValuePair[0], keyValuePair[1]);
@@ -175,16 +164,14 @@ public final class GffParser {
     /**
      * Parses a single line of a GFF file.
      *
-     * @param line       the string containing the line contents of the file
-     * @param lineNumber the line number in the file
+     * @param line the string containing the line contents of the file
      * @return a {@link String} array representing the columns of a line
-     * @throws ParseException if the line does not consist of 9 tab delimited columns
      */
-    private String[] parseLine(final String line, final int lineNumber) throws ParseException {
+    private String[] parseLine(final String line) {
         final String[] columns = line.split("\\s+");
         if (columns.length != GFF_COLUMNS) {
-            throw new ParseException("Line " + lineNumber + " did not contain " + GFF_COLUMNS
-                    + " columns, it contained " + columns.length + ".");
+            throw new IllegalArgumentException("Line did not contain " + GFF_COLUMNS + " columns, it contained "
+                    + columns.length + " columns");
         }
 
         return columns;

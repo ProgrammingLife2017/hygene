@@ -33,7 +33,7 @@ public final class FeatureAnnotation {
      */
     public FeatureAnnotation(final String seqId) {
         if (seqId.charAt(0) == '>') {
-            throw new IllegalArgumentException("Seqid " + seqId + " started with the unescaped character '>'.");
+            throw new IllegalArgumentException("Seqid '" + seqId + "' started with the unescaped character '>'.");
         }
 
         this.seqId = seqId;
