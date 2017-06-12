@@ -159,7 +159,8 @@ public final class MetadataParser {
         try {
             gfa.seek(byteOffset);
 
-            return gfa.readLine();
+            return Optional.ofNullable(gfa.readLine())
+                    .orElseThrow(() -> new ParseException("Line was null and could not be read."));
         } catch (final IOException e) {
             throw new ParseException("Line could not be read.", e);
         }

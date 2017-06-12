@@ -39,7 +39,7 @@ configurations {
 dependencies {
     // Biojjava
     compile("org.biojava:biojava-core:${biojavaVersion}")
-gradle
+
     // Logger
     compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     compile("org.apache.logging.log4j:log4j-jul:${log4jVersion}")

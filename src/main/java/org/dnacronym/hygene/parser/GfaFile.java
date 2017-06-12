@@ -168,7 +168,7 @@ public final class GfaFile {
      * Returns an input stream to read the GFA file.
      *
      * @return an input stream to read the GFA file
-     * @throws FileNotFoundException
+     * @throws ParseException if file could not be found
      */
     public InputStream getInputStream() throws ParseException {
         try {
@@ -178,6 +178,12 @@ public final class GfaFile {
         }
     }
 
+    /**
+     * Returns a random access file for the GFA file.
+     *
+     * @return a random access file for the GFA file
+     * @throws ParseException if file could not be found
+     */
     public RandomAccessFile getRandomAccessFile() throws ParseException {
         try {
             return new RandomAccessFile(fileName, RANDOM_ACCESS_FILE_MODE);

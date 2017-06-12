@@ -13,6 +13,7 @@ import org.dnacronym.hygene.models.SequenceDirection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -70,23 +71,24 @@ public final class NewGfaParser {
             nodeArrays = new int[nodeIds.size()][];
             Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
 
-            final BufferedReaderBytesRead lineParsingReader = new BufferedReaderBytesRead(new InputStreamReader(gfaFile.getInputStream()));
+            try (BufferedReaderBytesRead lineParsingReader = new BufferedReaderBytesRead(
+                    new InputStreamReader(gfaFile.getInputStream(), StandardCharsets.UTF_8))) {
+                int iteration = 0;
+                long byteOffset = 0;
+                String line;
+                LOGGER.info("Start parsing lines");
+                while ((line = lineParsingReader.readLine()) != null) {
+                    if (iteration % PROGRESS_UPDATE_INTERVAL == 0) {
+                        progressUpdater.updateProgress(
+                                (int) (PROGRESS_ALLOCATE_TOTAL + PROGRESS_PARSE_LINE_TOTAL * iteration / lineCount),
+                                "Parsing nodes and edges..."
+                        );
+                    }
+                    parseLine(line, byteOffset);
 
-            int iteration = 0;
-            long byteOffset = 0;
-            String line;
-            LOGGER.info("Start parsing lines");
-            while ((line = lineParsingReader.readLine()) != null) {
-                if (iteration % PROGRESS_UPDATE_INTERVAL == 0) {
-                    progressUpdater.updateProgress(
-                            (int) (PROGRESS_ALLOCATE_TOTAL + PROGRESS_PARSE_LINE_TOTAL * iteration / lineCount),
-                            "Parsing nodes and edges..."
-                    );
+                    byteOffset = lineParsingReader.getBytesRead();
+                    iteration++;
                 }
-                parseLine(line, byteOffset);
-
-                byteOffset = lineParsingReader.getBytesRead();
-                iteration++;
             }
             LOGGER.info("Finished parsing lines");
         } catch (final IOException e) {

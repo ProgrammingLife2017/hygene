@@ -106,9 +106,9 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(3);
+        final NodeMetadata nodeMetadata = gfaFile.parseNodeMetadata(38);
 
-        verify(metadataParser).parseNodeMetadata(gfaFile, 3);
+        verify(metadataParser).parseNodeMetadata(gfaFile, 38);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
     }
 

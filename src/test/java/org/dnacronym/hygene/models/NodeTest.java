@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,7 +76,7 @@ final class NodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[] {
-                1, 5, 4, 6, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                UnsignedInteger.fromLong(1), 5, 4, 6, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }
 
