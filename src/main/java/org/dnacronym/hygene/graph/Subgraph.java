@@ -143,7 +143,7 @@ public final class Subgraph {
      * @param nodes the nodes to be added
      */
     public void addAll(final Collection<NewNode> nodes) {
-        nodes.forEach(node -> idempotentAdd(node));
+        nodes.forEach(this::idempotentAdd);
     }
 
     /**
