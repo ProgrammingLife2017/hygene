@@ -37,7 +37,7 @@ configurations {
 }
 
 dependencies {
-    // Biojjava
+    // Biojava
     compile("org.biojava:biojava-core:${biojavaVersion}")
 
     // Logger
