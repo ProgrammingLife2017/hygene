@@ -34,7 +34,7 @@ public final class StatusBar {
     /**
      * Monitors a given task, and updates the current status and progress accordingly.
      *
-     * @param task the {@link Consumer<ProgressUpdater>} to monitor.
+     * @param task the {@link Consumer<ProgressUpdater>} to monitor
      */
     public void monitorTask(final Consumer<ProgressUpdater> task) {
         final Task<Void> progressTask = new Task<Void>() {
