@@ -147,14 +147,18 @@ public final class GffParser {
     private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns) {
         final SubFeatureAnnotation subFeatureAnnotation;
 
-        subFeatureAnnotation = new SubFeatureAnnotation(
-                columns[SOURCE_COLUMN],
-                columns[TYPE_COLUMN],
-                columns[START_COLUMN],
-                columns[END_COLUMN],
-                columns[SCORE_COLUMN],
-                columns[STRAND_COLUMN],
-                columns[PHASE_COLUMN]);
+        try {
+            subFeatureAnnotation = new SubFeatureAnnotation(
+                    columns[SOURCE_COLUMN],
+                    columns[TYPE_COLUMN],
+                    Integer.parseInt(columns[START_COLUMN]),
+                    Integer.parseInt(columns[END_COLUMN]),
+                    Double.parseDouble(columns[SCORE_COLUMN]),
+                    columns[STRAND_COLUMN],
+                    Integer.parseInt(columns[PHASE_COLUMN]));
+        } catch (final NumberFormatException e) {
+            throw new IllegalArgumentException("A number could not be parsed.", e);
+        }
 
         final String[] attributes = columns[ATTRIBUTES_COLUMN].split(";");
         for (final String attribute : attributes) {

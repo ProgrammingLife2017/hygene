@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +24,9 @@ public final class SubFeatureAnnotation {
     /**
      * Set of valid attributes of a single feature annotation.
      */
-    public static final ImmutableSet<String> VALID_ATTRIBUTES = ImmutableSet.copyOf(Arrays.asList(
+    public static final ImmutableSet<String> VALID_ATTRIBUTES = ImmutableSet.copyOf(new HashSet<>(Arrays.asList(
             "ID", "Name", "Alias", "Parent", "Target", "Gap", "Derives_from", "Note", "Dbxref", "Ontology_term",
-            "Is_circular"));
+            "Is_circular")));
 
     private final Map<String, String[]> attributes;
     private final List<SubFeatureAnnotation> children;
@@ -45,7 +46,8 @@ public final class SubFeatureAnnotation {
      * @param source the source of the {@link SubFeatureAnnotation}
      * @param type   the type of the {@link SubFeatureAnnotation}
      * @param start  the start of the {@link SubFeatureAnnotation}
-     * @param end    the end of the {@link SubFeatureAnnotation}
+     * @param end    the end of the {@link SubFeatureAnnotation}. Must be after start, else
+     *               {@link IllegalArgumentException} is thrown
      * @param score  the score of the {@link SubFeatureAnnotation}. If it has a value, it must be a valid floating point
      *               number, else {@link IllegalArgumentException} is thrown
      * @param strand the strand of the {@link SubFeatureAnnotation}. Must be one of '.', '-' or '+', else
@@ -54,54 +56,28 @@ public final class SubFeatureAnnotation {
      *               {@link IllegalArgumentException} is thrown
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "squid:S3776"}) // There is little use in splitting this constructor
-    public SubFeatureAnnotation(final String source, final String type, final String start, final String end,
-                                final String score, final String strand, final String phase) {
+    public SubFeatureAnnotation(final String source, final String type, final int start, final int end,
+                                final double score, final String strand, final int phase) {
+        if (end < start) {
+            throw new IllegalArgumentException("Start (" + start + ") was not before end (" + end + ")");
+        }
+        if (phase < 0 || phase > 2) {
+            throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: '" + phase + "'.");
+        }
+        if (!"+".equals(strand) && !"-".equals(strand) && !".".equals(strand)) {
+            throw new IllegalArgumentException("Strand was not '+', '-' or '.', it was: '" + strand + "'.");
+        }
+
         attributes = new HashMap<>();
         children = new ArrayList<>();
 
         this.source = source;
         this.type = type;
-        try {
-            this.start = Integer.parseInt(start);
-        } catch (final NumberFormatException e) {
-            throw new IllegalArgumentException("The start was not a valid natural number, it was '" + start + "'.", e);
-        }
-        try {
-            this.end = Integer.parseInt(end);
-        } catch (final NumberFormatException e) {
-            throw new IllegalArgumentException("The end was not a valid natural number, it was '" + end + "'.", e);
-        }
-
-        if (".".equals(score)) {
-            this.score = -1;
-        } else {
-            try {
-                this.score = Double.parseDouble(score);
-            } catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("The score was not a valid floating point number, it was: '"
-                        + score + "'.", e);
-            }
-        }
-
-        if ("+".equals(strand) || "-".equals(strand) || ".".equals(strand)) {
-            this.strand = strand;
-        } else {
-            throw new IllegalArgumentException("Strand was not '+', '-' or '.', it was: '" + strand + "'.");
-        }
-
-        if (".".equals(phase)) {
-            this.phase = -1;
-        } else {
-            try {
-                this.phase = Integer.parseInt(phase);
-            } catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("The phase was not a valid natural number, it was: '" + score
-                        + "'.", e);
-            }
-            if (this.phase < 0 || this.phase > 2) {
-                throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: '" + phase + "'.");
-            }
-        }
+        this.start = start;
+        this.end = end;
+        this.score = score;
+        this.strand = strand;
+        this.phase = phase;
     }
 
 
