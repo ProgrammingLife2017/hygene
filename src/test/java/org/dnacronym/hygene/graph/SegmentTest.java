@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 final class SegmentTest extends NodeTest {
     private static final int ID = 39;
-    private static final int LINE_NUMBER = 56;
+    private static final int BYTE_OFFSET = 56;
     static final int SEQUENCE_LENGTH = 45;
 
     private Segment segment;
@@ -21,7 +21,7 @@ final class SegmentTest extends NodeTest {
 
     @BeforeEach
     void setUp() {
-        segment = new Segment(ID, LINE_NUMBER, SEQUENCE_LENGTH);
+        segment = new Segment(ID, BYTE_OFFSET, SEQUENCE_LENGTH);
         setNode(segment);
     }
 
@@ -33,7 +33,7 @@ final class SegmentTest extends NodeTest {
 
     @Test
     void testGetByteOffset() {
-        assertThat(segment.getByteOffset()).isEqualTo(LINE_NUMBER);
+        assertThat(segment.getByteOffset()).isEqualTo(BYTE_OFFSET);
     }
 
     @Test

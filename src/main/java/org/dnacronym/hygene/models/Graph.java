@@ -11,7 +11,7 @@ import org.dnacronym.hygene.parser.GfaFile;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
+ * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1ByteOffset...]]
  */
 public final class Graph {
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
@@ -75,10 +75,10 @@ public final class Graph {
     }
 
     /**
-     * Getter for the line number where the {@link Node}'s metadata resides.
+     * Getter for the byte offset where the {@link Node}'s metadata resides.
      *
      * @param id the {@link Node}'s id
-     * @return the {@link Node}'s line number
+     * @return the {@link Node}'s byte offset
      */
     public long getByteOffset(final int id) {
         return UnsignedInteger.toLong(nodeArrays[id][Node.NODE_BYTE_OFFSET_INDEX]);

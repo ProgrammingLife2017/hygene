@@ -6,11 +6,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link SequenceGraph}.
+ * Unit tests for {@link Graph}.
  */
 final class GraphTest {
     @Test
-    void testGetLineNumber() {
+    void testGetByteOffset() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withByteOffset(3).create().toArray());
 
         assertThat(graph.getByteOffset(0)).isEqualTo(3);

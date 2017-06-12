@@ -120,9 +120,9 @@ public final class MetadataParser {
      * Finds a specific line within the string representation of a GFA file.
      *
      * @param gfa        string containing the contents of the GFA file
-     * @param byteOffset the line number where the node or edge should be located
+     * @param byteOffset the byte offset where the node or edge should be located
      * @return the line of the file belonging to the node or edge
-     * @throws ParseException if the line number is out of bounds
+     * @throws ParseException if the byte offset is out of bounds
      */
     private String getLine(final RandomAccessFile gfa, final long byteOffset) throws ParseException {
         if (byteOffset < 0) {
@@ -171,7 +171,7 @@ public final class MetadataParser {
     }
 
     /**
-     * Returns all genomes of the node on the given {@code lineNumber}.
+     * Returns all genomes of the node on the given {@code byteOffset}.
      * <p>
      * It does this by reading the appropriate genome header field of that line.
      *

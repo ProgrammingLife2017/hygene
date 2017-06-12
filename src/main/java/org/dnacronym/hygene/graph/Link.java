@@ -6,7 +6,7 @@ package org.dnacronym.hygene.graph;
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
 public final class Link extends Edge {
-    private final int lineNumber;
+    private final int byteOffset;
 
 
     /**
@@ -14,20 +14,20 @@ public final class Link extends Edge {
      *
      * @param from       the source of the edge
      * @param to         the destination of the edge
-     * @param lineNumber the number of the corresponding link in the GFA file this edge was defined in
+     * @param byteOffset the byte offset of the corresponding link in the GFA file this edge was defined in
      */
-    public Link(final NewNode from, final NewNode to, final int lineNumber) {
+    public Link(final NewNode from, final NewNode to, final int byteOffset) {
         super(from, to);
-        this.lineNumber = lineNumber;
+        this.byteOffset = byteOffset;
     }
 
 
     /**
-     * Returns the line number.
+     * Returns the byte offset.
      *
-     * @return the line number
+     * @return the byte offset
      */
-    public int getLineNumber() {
-        return lineNumber;
+    public int getByteOffset() {
+        return byteOffset;
     }
 }
