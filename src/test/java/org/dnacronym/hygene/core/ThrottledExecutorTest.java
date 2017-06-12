@@ -18,29 +18,30 @@ class ThrottledExecutorTest {
      * An integer that can be used in lambdas.
      */
     private final int[] number = {0};
+
     /**
      * Increments the {@code number} field, and then sleeps for 500 milliseconds.
      */
     @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
-    private final Runnable incrementBeforeDelay = () -> {
-        number[0]++;
+    final Runnable incrementBeforeDelay = () -> {
         try {
+            number[0]++;
             Thread.sleep(500);
         } catch (final InterruptedException e) {
-            e.printStackTrace();
+            // Do nothing because this is intentional
         }
     };
     /**
      * Increments the {@code number} field after sleeping for 500 milliseconds.
      */
     @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
-    private final Runnable incrementAfterDelay = () -> {
+    final Runnable incrementAfterDelay = () -> {
         try {
             Thread.sleep(500);
+            number[0]++;
         } catch (final InterruptedException e) {
-            e.printStackTrace();
+            // Do nothing because this is intentional
         }
-        number[0]++;
     };
 
     private ThrottledExecutor executor;
@@ -171,6 +172,7 @@ class ThrottledExecutorTest {
     /**
      * Tests that a runnable is cancelled after {@link ThrottledExecutor#stop()} is called.
      */
+    @Test
     void testStop() {
         executor.run(incrementAfterDelay);
         executor.stop();
