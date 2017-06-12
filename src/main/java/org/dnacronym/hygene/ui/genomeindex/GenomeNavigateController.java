@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
+import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
@@ -53,21 +54,29 @@ public final class GenomeNavigateController implements Initializable {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setGraphStore(Hygene.getInstance().getGraphStore());
 
-            graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-                try {
-                    genomeIndex = new GenomeIndex(newValue, new FileDatabase(newValue.getFileName()));
-                    genomeIndex.populateIndex();
-                    populateGenomeComboBox();
-                } catch (final SQLException | IOException | ParseException e) {
-                    LOGGER.error("Unable to load genome info from file.", e);
-                }
-            });
+            graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
+                    triggerGenomeIndex(newValue));
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
             new ErrorDialogue(e).show();
         }
     }
 
+
+    /**
+     * Triggers the population of the genome index.
+     *
+     * @param gfaFile the new {@link GfaFile} instance
+     */
+    private void triggerGenomeIndex(final GfaFile gfaFile) {
+        try {
+            genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
+            genomeIndex.populateIndex();
+            populateGenomeComboBox();
+        } catch (final SQLException | IOException | ParseException e) {
+            LOGGER.error("Unable to load genome info from file.", e);
+        }
+    }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -78,6 +87,9 @@ public final class GenomeNavigateController implements Initializable {
         genomeNavigatePane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
 
+    /**
+     * Populates the {@link ComboBox} of genome names.
+     */
     private void populateGenomeComboBox() {
         genome.getItems().clear();
         genome.getItems().addAll(genomeIndex.getGenomeNames());
@@ -102,10 +114,17 @@ public final class GenomeNavigateController implements Initializable {
         this.graphStore = graphStore;
     }
 
+    /**
+     * On click of the 'go' button for a genome coordinate query.
+     *
+     * @param actionEvent the event associated with this action
+     */
     @FXML
     public void onGoAction(final ActionEvent actionEvent) {
         try {
-            final GenomePoint genomePoint = genomeIndex.getClosestNode(genome.getValue(), base.getValue()).get();
+            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), base.getValue())
+                    .orElseThrow(() ->
+                            new SQLException("Genome-base combination could not be found in database."));
 
             if (genomePoint.getNodeId() == -1) {
                 new WarningDialogue("Genome-base combination could not be found in graph.").show();
@@ -116,7 +135,5 @@ public final class GenomeNavigateController implements Initializable {
         } catch (SQLException e) {
             LOGGER.error("Error while looking for genome-base index.", e);
         }
-
-        actionEvent.consume();
     }
 }
