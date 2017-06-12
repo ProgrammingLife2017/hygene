@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
@@ -63,30 +65,6 @@ public final class GenomeNavigateController implements Initializable {
                 triggerGenomeIndex(newValue));
     }
 
-
-    /**
-     * Triggers the population of the genome index.
-     *
-     * @param gfaFile the new {@link GfaFile} instance
-     */
-    private void triggerGenomeIndex(final GfaFile gfaFile) {
-        indexFinished = false;
-
-        hygeneInstance.getStatusBar().monitorTask(progressUpdater -> {
-            final Thread worker = new Thread(() -> {
-                try {
-                    genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
-                    genomeIndex.populateIndex(progressUpdater);
-                    populateGenomeComboBox();
-                    indexFinished = true;
-                } catch (final SQLException | IOException e) {
-                    LOGGER.error("Unable to load genome info from file.", e);
-                }
-            });
-            worker.setDaemon(true); // Automatically shut down this thread when the main thread exits
-            worker.start();
-        });
-    }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -150,21 +128,16 @@ public final class GenomeNavigateController implements Initializable {
         final int selectedBase;
 
         try {
-            selectedBase = base.getValue();
-        } catch (final NumberFormatException e) {
-            LOGGER.warn("Attempted to enter non-numeric input in base field, aborting.");
-            return;
-        }
-
-        try {
-            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), selectedBase)
+            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), base.getValue())
                     .orElseThrow(() ->
                             new SQLException("Genome-base combination could not be found in database."));
 
-            hygeneInstance.getGraphDimensionsCalculator().getCenterNodeIdProperty().set(genomePoint.getNodeId());
-
-            graphVisualizer.setSelectedSegment(genomePoint.getNodeId());
-            hygeneInstance.getSequenceVisualizer().setOffset(genomePoint.getBaseOffsetInNode());
+            if (genomePoint.getNodeId() == -1) {
+                new WarningDialogue("Genome-base combination could not be found in graph.").show();
+                return;
+            }
+            graphVisualizer.getSelectedNodeProperty().setValue(
+                    graphStore.getGfaFileProperty().get().getGraph().getNode(genomePoint.getNodeId()));
         } catch (SQLException e) {
             LOGGER.error("Error while looking for genome-base index.", e);
             new WarningDialogue("Genome-base combination could not be found in graph.").show();
