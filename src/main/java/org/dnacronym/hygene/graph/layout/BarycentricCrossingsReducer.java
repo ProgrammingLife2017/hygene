@@ -41,6 +41,10 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
     @Override
     public void reduceCrossings(final NewNode[][] layers) {
+        if (layers.length == 0) {
+            return;
+        }
+
         final Map<NewNode, Integer> lengthyNodes = lengthyNodeFinder.findInLayers(layers);
 
         for (int i = 1; i < layers.length; i++) {

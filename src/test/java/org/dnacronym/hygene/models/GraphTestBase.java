@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 abstract class GraphTestBase {
     private Graph graph;
     private int[][] nodeArrays;
-    private GraphQuery graphQuery;
 
 
     /**
@@ -26,7 +25,6 @@ abstract class GraphTestBase {
     void afterEach() {
         graph = null;
         nodeArrays = null;
-        graphQuery = null;
     }
 
 
@@ -45,28 +43,12 @@ abstract class GraphTestBase {
     }
 
     /**
-     * Creates a new {@link GraphQuery} for the current {@link Graph}, and sets it in this {@link GraphTestBase}.
-     */
-    final void createGraphQuery() {
-        graphQuery = new GraphQuery(graph);
-    }
-
-    /**
      * Returns the current {@link Graph}.
      *
      * @return the current {@link Graph}
      */
     final Graph getGraph() {
         return graph;
-    }
-
-    /**
-     * Returns the current {@link GraphQuery}.
-     *
-     * @return the current {@link GraphQuery}
-     */
-    final GraphQuery getGraphQuery() {
-        return graphQuery;
     }
 
     /**
