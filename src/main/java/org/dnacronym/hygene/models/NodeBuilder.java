@@ -71,12 +71,12 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the line number for the {@link Node} under construction.
+     * Sets the byte offset for the {@link Node} under construction.
      *
      * @param byteOffset the byte offset of the node within the GFA file
      * @return current instance of the builder to provide a fluent interface
      */
-    public NodeBuilder withLineNumber(final long byteOffset) {
+    public NodeBuilder withByteOffset(final long byteOffset) {
         this.byteOffset = byteOffset;
 
         return this;

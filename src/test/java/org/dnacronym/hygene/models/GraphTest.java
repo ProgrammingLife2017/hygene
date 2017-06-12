@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class GraphTest {
     @Test
     void testGetLineNumber() {
-        final Graph graph = createGraphWithNodes(NodeBuilder.start().withLineNumber(3).create().toArray());
+        final Graph graph = createGraphWithNodes(NodeBuilder.start().withByteOffset(3).create().toArray());
 
         assertThat(graph.getByteOffset(0)).isEqualTo(3);
     }
