@@ -179,9 +179,7 @@ public final class GraphVisualizer {
      * @param fromNode edge origin node ID
      * @param toNode   edge destination node ID
      */
-
-    private void drawEdge(final NewNode fromNode,
-                          final NewNode toNode) {
+    private void drawEdge(final NewNode fromNode, final NewNode toNode) {
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
