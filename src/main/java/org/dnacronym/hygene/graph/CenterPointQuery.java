@@ -150,7 +150,7 @@ public final class CenterPointQuery {
             node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
             node.setYPosition(graph.getUnscaledYPosition(nodeId));
             nodes.put(nodeId, node.getUuid());
-            subgraph.addNode(node);
+            subgraph.add(node);
         });
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> addEdges(nodeId));
         LAYOUT.layOut(subgraph);
