@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * A threaded {@link Runnable} that can only be called a limited number of times
+ * A threaded {@link Runnable} that can only be called a limited number of times.
  * <p>
  * When {@link #run()} is called and there is no thread currently running, the action is scheduled until a later
  * moment if executing it now would violate the timeout between executions, or it is executed immediately otherwise.
