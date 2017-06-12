@@ -66,9 +66,9 @@ public class ThrottledExecutor {
         if (future != null && !future.isDone() && !future.isCancelled()) {
             if (future.getDelay(TimeUnit.MILLISECONDS) >= 0) {
                 return;
-            } else {
-                future.cancel(true);
             }
+
+            future.cancel(true);
         }
 
         final long delay = Math.max(0, Duration.between(Instant.now(), waitUntil).toMillis());
