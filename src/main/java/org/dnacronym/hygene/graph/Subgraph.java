@@ -4,6 +4,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -19,16 +20,14 @@ import java.util.stream.Collectors;
  * Class representing a subgraph.
  */
 public final class Subgraph {
-    private final Set<NewNode> nodes;
-    private final Map<UUID, NewNode> segments;
+    private final Map<UUID, NewNode> nodes;
 
 
     /**
      * Constructs a new, empty {@link Subgraph} instance.
      */
     public Subgraph() {
-        this.nodes = new LinkedHashSet<>();
-        this.segments = nodes.stream().collect(Collectors.toMap(NewNode::getUuid, node -> node));
+        this.nodes = new LinkedHashMap<>();
     }
 
 
@@ -39,18 +38,16 @@ public final class Subgraph {
      * @return the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists.
      */
     public @Nullable NewNode getNode(final UUID nodeId) {
-        return segments.get(nodeId);
+        return nodes.get(nodeId);
     }
 
     /**
      * Returns the nodes.
-     * <p>
-     * The returned set is an immutable view of the actual set.
      *
      * @return the nodes
      */
-    public Set<NewNode> getNodes() {
-        return nodes;
+    public Collection<NewNode> getNodes() {
+        return nodes.values();
     }
 
     /**
@@ -61,7 +58,7 @@ public final class Subgraph {
      */
     public Collection<NewNode> getNodesBFS(final SequenceDirection direction) {
         final Queue<NewNode> queue = new LinkedList<>();
-        nodes.forEach(node -> {
+        nodes.values().forEach(node -> {
             if (direction.ternary(isSinkNeighbour(node), isSourceNeighbour(node))) {
                 queue.add(node);
             }
@@ -77,7 +74,7 @@ public final class Subgraph {
             visited.add(head);
 
             getNeighbours(head, direction).forEach(neighbour -> {
-                if (!visited.contains(neighbour) && nodes.contains(neighbour)) {
+                if (!visited.contains(neighbour) && nodes.containsValue(neighbour)) {
                     queue.add(neighbour);
                 }
             });
@@ -95,8 +92,8 @@ public final class Subgraph {
      */
     public Set<NewNode> getNeighbours(final NewNode node, final SequenceDirection direction) {
         final Predicate<Edge> filter = direction.ternary(
-                edge -> nodes.contains(edge.getFrom()),
-                edge -> nodes.contains(edge.getTo()));
+                edge -> nodes.containsValue(edge.getFrom()),
+                edge -> nodes.containsValue(edge.getTo()));
         final Function<Edge, NewNode> mapper = direction.ternary(Edge::getFrom, Edge::getTo);
         return direction.ternary(node.getIncomingEdges(), node.getOutgoingEdges()).stream()
                 .filter(filter)
@@ -108,31 +105,28 @@ public final class Subgraph {
      * Adds the given node to the set of nodes.
      *
      * @param node the node to be added
-     * @return {@code true} iff. the subgraph was changed
      */
-    public boolean addNode(final NewNode node) {
-        segments.put(node.getUuid(), node);
-        return nodes.add(node);
+    public void addNode(final NewNode node) {
+        nodes.put(node.getUuid(), node);
     }
 
     /**
      * Adds the given nodes.
      *
      * @param nodes the nodes to be added
-     * @return {@code true} iff. the subgraph was changed
      */
-    public boolean addNodes(final Collection<NewNode> nodes) {
-        return this.nodes.addAll(nodes);
+    public void addNodes(final Collection<NewNode> nodes) {
+        nodes.forEach(node -> this.nodes.put(node.getUuid(), node));
     }
 
     /**
-     * Returns {@code true} iff. this subgraph contains a {@link NewNode} with the given {@link UUID}.
+     * Returns {@code true} iff. this subgraph contains the given {@link NewNode}.
      *
-     * @param nodeId a {@link UUID}
-     * @return {@code true} iff. this subgraph contains a {@link NewNode} with the given {@link UUID}.
+     * @param node a {@link NewNode}
+     * @return {@code true} iff. this subgraph contains the given {@link NewNode}
      */
-    public boolean contains(final UUID nodeId) {
-        return getNode(nodeId) != null;
+    public boolean contains(final NewNode node) {
+        return getNode(node.getUuid()) != null;
     }
 
     /**
@@ -141,7 +135,7 @@ public final class Subgraph {
      * @param node the node to be removed
      */
     public void removeNode(final NewNode node) {
-        nodes.remove(node);
+        nodes.remove(node.getUuid());
     }
 
     /**

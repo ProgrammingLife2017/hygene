@@ -32,10 +32,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
             return new NewNode[0][];
         }
 
-        final Collection<NewNode> nodes = subgraph.getNodes();
-        final NewNode[][] layers = createLayers(nodes);
+        final NewNode[][] layers = createLayers(subgraph);
 
-        addToLayers(nodes, layers);
+        addToLayers(subgraph, layers);
 
         return layers;
     }
@@ -43,12 +42,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Allocates and returns an array of layers into which the given nodes can be placed.
      *
-     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @param subgraph a {@link Subgraph}
      * @return an array of layers
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
-    private NewNode[][] createLayers(final Collection<NewNode> nodes) {
-        final int[] layerHeights = calculateHeights(nodes);
+    private NewNode[][] createLayers(final Subgraph subgraph) {
+        final int[] layerHeights = calculateHeights(subgraph.getNodes());
         final NewNode[][] layers = new NewNode[layerHeights.length][];
 
         for (int i = 0; i < layers.length; i++) {
@@ -61,13 +60,13 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Places the given nodes into the proper layers.
      *
-     * @param nodes  a {@link Collection} of {@link NewNode}s
+     * @param subgraph a {@link Subgraph}
      * @param layers an array of layers
      */
-    private void addToLayers(final Collection<NewNode> nodes, final NewNode[][] layers) {
+    private void addToLayers(final Subgraph subgraph, final NewNode[][] layers) {
         final Set<NewNode> addNodeLater = new HashSet<>();
 
-        nodes.forEach(node -> {
+        subgraph.getNodes().forEach(node -> {
             forEachLayer(node, layer -> addToLayerSomewhere(layers[layer], node));
 
             final Set<Edge> addEdgeLater = new HashSet<>();
@@ -92,7 +91,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
             node.getOutgoingEdges().removeAll(removeEdgeLater);
         });
 
-        nodes.addAll(addNodeLater);
+        subgraph.addNodes(addNodeLater);
     }
 
 
