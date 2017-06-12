@@ -42,7 +42,7 @@ final class FileGenomeIndexTest extends FileDatabaseTestBase {
     void testStoreAndRetrieve() throws SQLException {
         fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(0, 1, 1));
 
-        assertThat(fileGenomeIndex.getClosestNodeToBase(0, 2)).isEqualTo(new GenomePoint(0, 1, 1));
+        assertThat(fileGenomeIndex.getGenomePoint(0, 2)).isEqualTo(new GenomePoint(0, 2, 1, 1));
     }
 
     @Test
@@ -50,6 +50,6 @@ final class FileGenomeIndexTest extends FileDatabaseTestBase {
         fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(0, 1, 1));
         fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(0, 5, 2));
 
-        assertThat(fileGenomeIndex.getClosestNodeToBase(0, 2)).isEqualTo(new GenomePoint(0, 1, 1));
+        assertThat(fileGenomeIndex.getGenomePoint(0, 4)).isEqualTo(new GenomePoint(0, 4, 1, 3));
     }
 }

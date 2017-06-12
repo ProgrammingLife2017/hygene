@@ -64,17 +64,19 @@ public final class FileGenomeIndex {
     }
 
     /**
-     * Retrieves the ID of the node that is closest to the given base in the given genome.
+     * Retrieves the ID of the node that contains the given base in the given genome.
      *
      * @param genomeId the ID of the genome
      * @param base     the base number
-     * @return the ID of the closest node, or -1 if it could not be found
+     * @return the ID of the node containing that base, or -1 if it could not be found
      * @throws SQLException in the case of an error during SQL operations
      */
-    public @Nullable GenomePoint getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
-        final String sql = "SELECT * FROM " + TABLE_NAME
-                + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId
-                + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ") ASC"
+    public @Nullable GenomePoint getGenomePoint(final int genomeId, final int base) throws SQLException {
+        final String sql = "SELECT " + BASE_COLUMN_NAME + "," + NODE_ID_COLUMN_NAME + ","
+                + "(" + base + " - " + BASE_COLUMN_NAME + ") AS base_difference"
+                + " FROM " + TABLE_NAME
+                + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId + " AND base_difference >= 0"
+                + " ORDER BY base_difference ASC"
                 + " LIMIT 1";
 
         return (GenomePoint) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
@@ -83,11 +85,12 @@ public final class FileGenomeIndex {
                     throw new SQLException("No genome index point found in database.");
                 }
                 return new GenomePoint(
-                        resultSet.getInt(GENOME_ID_COLUMN_NAME),
-                        resultSet.getInt(BASE_COLUMN_NAME),
-                        resultSet.getInt(NODE_ID_COLUMN_NAME));
+                        genomeId,
+                        base,
+                        resultSet.getInt(NODE_ID_COLUMN_NAME),
+                        resultSet.getInt("base_difference"));
             } catch (final SQLException e) {
-                LOGGER.error("Unable to retrieve closest node to base " + base + " in genome no. " + genomeId + ".", e);
+                LOGGER.error("Unable to retrieve closest node to base " + base + " in genome " + genomeId + ".", e);
                 return null;
             }
         });
