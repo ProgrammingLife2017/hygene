@@ -169,7 +169,7 @@ public final class MenuController implements Initializable {
      * Initializes the file chooser dialog.
      *
      * @param extensionName a descriptive name for the extension
-     * @param extension the desired file extension
+     * @param extension     the desired file extension
      * @return an initialized file chooser with filters set for the given file extension
      */
     FileChooser initFileChooser(final String extensionName, final String extension) {
