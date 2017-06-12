@@ -42,11 +42,11 @@ public final class Subgraph {
     /**
      * Returns the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists.
      *
-     * @param nodeId a {@link UUID}
+     * @param nodeUuid a {@link UUID}
      * @return the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists
      */
-    public @Nullable NewNode getNode(final UUID nodeId) {
-        return nodes.get(nodeId);
+    public @Nullable NewNode getNode(final UUID nodeUuid) {
+        return nodes.get(nodeUuid);
     }
 
     /**
@@ -169,11 +169,11 @@ public final class Subgraph {
     /**
      * Returns {@code true} iff. a {@link Segment} with the given id is present in this subgraph.
      *
-     * @param id the id of a {@link Segment}
+     * @param segmentId the id of a {@link Segment}
      * @return {@code true} iff. a {@link Segment} with the given id is present in this subgraph
      */
-    public boolean containsSegment(final int id) {
-        return segments.containsKey(id);
+    public boolean containsSegment(final int segmentId) {
+        return segments.containsKey(segmentId);
     }
 
     /**
@@ -206,9 +206,9 @@ public final class Subgraph {
     }
 
     /**
-     * Adds a {@link NewNode} without any unexpected side-effects.
+     * Adds a {@link NewNode} without any other side effects.
      * <p>
-     * Calling this method twice with the same {@link NewNode} will result in no side-effects whatsoever, thus
+     * Calling this method twice with the same {@link NewNode} will result in no side effects whatsoever, thus
      * promising idempotence.
      *
      * @param node a {@link NewNode}
