@@ -181,4 +181,13 @@ public final class GenomeIndex {
             LOGGER.warn("Failed to read metadata of node " + nodeId + ".", e);
         }
     }
+
+    /**
+     * Returns the list of genome names.
+     *
+     * @return the list of genome names
+     */
+    public List<String> getGenomeNames() {
+        return genomeNames;
+    }
 }

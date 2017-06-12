@@ -47,7 +47,7 @@
                                 <ComboBox fx:id="genome" maxWidth="Infinity" GridPane.columnIndex="1"
                                           GridPane.rowIndex="1"/>
                                 <Spinner fx:id="base" maxWidth="Infinity" GridPane.columnIndex="1"
-                                         GridPane.rowIndex="2"/>
+                                         GridPane.rowIndex="2" editable="true"/>
                                 <Button mnemonicParsing="false" onAction="#onGoAction" text="Go"
                                         GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                     <tooltip>

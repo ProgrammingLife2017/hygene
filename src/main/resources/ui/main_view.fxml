@@ -36,13 +36,16 @@
 
     <right>
         <HBox>
-            <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
+            <ScrollPane fx:id="rightPane"hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
                 <VBox>
                     <TitledPane animated="false" text="All Bookmarks">
                         <fx:include source="bookmark/bookmarks_table_view.fxml"/>
                     </TitledPane>
                     <TitledPane animated="false" text="Query">
                         <fx:include source="query/query.fxml"/>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Genome Navigation">
+                        <fx:include source="genomeindex/genome_navigate_view.fxml"/>
                     </TitledPane>
                 </VBox>
             </ScrollPane>
