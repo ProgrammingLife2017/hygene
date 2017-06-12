@@ -26,8 +26,6 @@ public final class GraphStore {
     public static final String GFF_FILE_NAME = "GFF";
 
     private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
-    // TODO: Add generic property
-    private final ObjectProperty gffFileProperty = new SimpleObjectProperty<>();
 
     /**
      * Loads a sequence graph into memory.
@@ -69,14 +67,5 @@ public final class GraphStore {
      */
     public ObjectProperty<GfaFile> getGfaFileProperty() {
         return gfaFileProperty;
-    }
-
-    /**
-     * Gets the {@link ObjectProperty} that stores the GFF file.
-     *
-     * @return the {@link ObjectProperty} that stores the GFF file
-     */
-    public ObjectProperty getGffFileProperty() {
-        return gffFileProperty;
     }
 }
