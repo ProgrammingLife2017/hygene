@@ -43,6 +43,7 @@ class ThrottledDefaultExecutorTest extends ThrottledExecutorTest {
         });
 
         executor.run();
+        Thread.sleep(500);
         executor.run(() -> number[0]--);
         executor.block();
 
