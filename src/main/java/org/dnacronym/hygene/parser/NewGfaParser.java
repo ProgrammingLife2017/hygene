@@ -12,6 +12,7 @@ import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -71,25 +72,8 @@ public final class NewGfaParser {
             nodeArrays = new int[nodeIds.size()][];
             Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
 
-            try (BufferedReaderBytesRead lineParsingReader = new BufferedReaderBytesRead(
-                    new InputStreamReader(gfaFile.getInputStream(), StandardCharsets.UTF_8))) {
-                int iteration = 0;
-                long byteOffset = 0;
-                String line;
-                LOGGER.info("Start parsing lines");
-                while ((line = lineParsingReader.readLine()) != null) {
-                    if (iteration % PROGRESS_UPDATE_INTERVAL == 0) {
-                        progressUpdater.updateProgress(
-                                (int) (PROGRESS_ALLOCATE_TOTAL + PROGRESS_PARSE_LINE_TOTAL * iteration / lineCount),
-                                "Parsing nodes and edges..."
-                        );
-                    }
-                    parseLine(line, byteOffset);
-
-                    byteOffset = lineParsingReader.getBytesRead();
-                    iteration++;
-                }
-            }
+            LOGGER.info("Start parsing lines");
+            parseLines(gfaFile.getInputStream(), progressUpdater);
             LOGGER.info("Finished parsing lines");
         } catch (final IOException e) {
             throw new ParseException("An error while reading the GFA file.", e);
@@ -141,6 +125,38 @@ public final class NewGfaParser {
     private void addNodeId(final String nodeName) {
         nodeIds.put(nodeName, nodeVectorPosition.get());
         nodeVectorPosition.incrementAndGet();
+    }
+
+    /**
+     * Parses lines of a GFA file to nodes and edges.
+     *
+     * @param inputStream     input stream of the gfa file
+     * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
+     * @throws IOException    if the gfa file could not be read
+     * @throws ParseException if the gfa file could not be parsed
+     */
+    private void parseLines(final InputStream inputStream, final ProgressUpdater progressUpdater)
+            throws IOException, ParseException {
+        try (BufferedReaderBytesRead lineParsingReader = new BufferedReaderBytesRead(
+                new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            int iteration = 0;
+            long byteOffset = 0;
+            String line;
+
+            while ((line = lineParsingReader.readLine()) != null) {
+                if (iteration % PROGRESS_UPDATE_INTERVAL == 0) {
+                    progressUpdater.updateProgress(
+                            (int) (PROGRESS_ALLOCATE_TOTAL + PROGRESS_PARSE_LINE_TOTAL * iteration / lineCount),
+                            "Parsing nodes and edges..."
+                    );
+                }
+                parseLine(line, byteOffset);
+
+                byteOffset = lineParsingReader.getBytesRead();
+                iteration++;
+            }
+        }
     }
 
     /**
