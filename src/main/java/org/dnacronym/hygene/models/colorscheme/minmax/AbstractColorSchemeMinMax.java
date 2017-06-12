@@ -38,7 +38,8 @@ public abstract class AbstractColorSchemeMinMax implements ColorScheme {
      * Calculates the color based on the passed value, max value, min color and max color.
      * <p>
      * The color is determined to be an interpolation of the minimum and maximum color. The interpolation amount is on a
-     * scale from 0 to 1, and determined to be the value of the value divided by the max value capped off at 1.
+     * scale from {@value COLOR_LOWER_BOUND} to 1, and determined to be the value of the value divided by the max value
+     * capped off at 1.
      *
      * @param value the value to decide the color for
      * @return the color of the value
