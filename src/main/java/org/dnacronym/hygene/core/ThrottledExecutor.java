@@ -15,16 +15,22 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * A threaded {@link Runnable} that can only be called a limited number of times.
+ * A threaded executor of {@code Runnable}s of which the number of calls over time can be throttled.
  * <p>
- * When {@link #run(Runnable)} is called and there is no thread currently running, the action is scheduled until a later
- * moment if executing it now would violate the timeout between executions, or it is executed immediately otherwise.
+ * The {@code ThreadedExecutor} is useful if an action must be executed in a thread, this action must be interrupted
+ * whenever some event occurs, and these interrupts occur very often. When this is the case, the {@code
+ * ThreadedExecutor} makes sure that these interrupts cannot occur too often, and that there is only very little
+ * overhead for managing threads.
  * <p>
- * When {@link #run(Runnable)} is called while a thread is currently running, that thread is interrupted. If no action
- * is scheduled, the action is scheduled until a later moment if executing it now would violate the timeout between
- * executions, or it is executed immediately otherwise.
+ * The timeout is measured as the time in milliseconds after the invocation of the action. If the action is
+ * interrupted using {@link #stop()}, the timeout is reset.
+ * <p>
+ * When {@link #run(Runnable)} is called and there is no action currently running, the action is executed as soon as
+ * the minimal timeout has passed.
+ * When {@link #run(Runnable)} is called while a thread is currently running, that thread is interrupted, and the new
+ * action is executed as soon as the minimal timeout has passed.
  */
-public final class ThrottledExecutor {
+public class ThrottledExecutor {
     private static final Logger LOGGER = LogManager.getLogger(ThrottledExecutor.class);
 
     private final ScheduledExecutorService executor;
@@ -41,7 +47,7 @@ public final class ThrottledExecutor {
      */
     public ThrottledExecutor(final int timeout) {
         if (timeout < 0) {
-            throw new IllegalArgumentException("The limit must be a positive integer.");
+            throw new IllegalArgumentException("The timeout must be a positive integer.");
         }
 
         this.executor = Executors.newSingleThreadScheduledExecutor();
@@ -56,7 +62,7 @@ public final class ThrottledExecutor {
      *
      * @param action the {@link Runnable} to execute or schedule
      */
-    public synchronized void run(final Runnable action) {
+    public final synchronized void run(final Runnable action) {
         if (future != null && !future.isDone() && !future.isCancelled()) {
             if (future.getDelay(TimeUnit.MILLISECONDS) >= 0) {
                 return;
@@ -74,7 +80,7 @@ public final class ThrottledExecutor {
      * Stops the current action if it is running, unschedules it if it is scheduled, and starts a timeout to prevent
      * excessive interrupts.
      */
-    public synchronized void stop() {
+    public final synchronized void stop() {
         if (future == null) {
             return;
         }
@@ -88,7 +94,7 @@ public final class ThrottledExecutor {
     /**
      * Blocks the current thread until the action has completed.
      */
-    public synchronized void block() {
+    public final synchronized void block() {
         if (future == null) {
             return;
         }
