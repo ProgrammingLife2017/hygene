@@ -130,7 +130,7 @@ class ThrottledRunnableTest {
 
 
     /**
-     * Tests that nothing happens {@link ThrottledRunnable#stop()} is called but {@link ThrottledRunnable#run()} is
+     * Tests that nothing happens when {@link ThrottledRunnable#stop()} is called but {@link ThrottledRunnable#run()} is
      * never called.
      * <p>
      * This method does not contain an assert because it tests that a method returns at all.
