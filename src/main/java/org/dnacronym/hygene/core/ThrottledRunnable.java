@@ -39,7 +39,7 @@ public final class ThrottledRunnable {
      * Constructs a new {@link ThrottledRunnable}.
      *
      * @param action  an action to perform
-     * @param timeout the minimal time between each execution
+     * @param timeout the minimal time between each execution in milliseconds
      */
     public ThrottledRunnable(final Runnable action, final int timeout) {
         if (timeout < 0) {
@@ -72,10 +72,28 @@ public final class ThrottledRunnable {
     }
 
     /**
+     * Stops the current action if it is running, unschedules it if it is scheduled, and starts a timeout to prevent
+     * excessive interrupts.
+     */
+    public synchronized void stop() {
+        if (future == null) {
+            return;
+        }
+        if (!future.isDone() && !future.isCancelled()) {
+            future.cancel(true);
+        }
+
+        waitUntil = Instant.now().plus(timeout, ChronoUnit.MILLIS);
+    }
+
+    /**
      * Blocks the current thread until the action has completed.
      */
     public synchronized void block() {
         if (future == null) {
+            return;
+        }
+        if (future.isDone() || future.isCancelled()) {
             return;
         }
 
