@@ -44,7 +44,7 @@ final class MenuControllerTest extends UITestBase {
 
 
     @Test
-    void testFileOpenerAccept() throws Exception {
+    void testGfaFileOpenerAccept() throws Exception {
         final CompletableFuture<Object> future = new CompletableFuture<>();
 
         interact(() -> {
@@ -56,9 +56,9 @@ final class MenuControllerTest extends UITestBase {
                 // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
                 final Window owner = Hygene.getInstance().getPrimaryStage().getScene().getWindow();
                 when(fileChooser.showOpenDialog(owner)).thenReturn(file);
-                menuController.setFileChooser(fileChooser);
+                menuController.setGfaFileChooser(fileChooser);
                 menuController.setGraphStore(graphStore);
-                menuController.openFileAction(mock(ActionEvent.class));
+                menuController.openGfaFileAction(mock(ActionEvent.class));
 
                 verify(file).getParentFile();
 
@@ -73,22 +73,63 @@ final class MenuControllerTest extends UITestBase {
     }
 
     @Test
-    void testFileOpenerCancel() throws Exception {
+    void testGfaFileOpenerCancel() throws Exception {
         final GraphStore graphStore = mock(GraphStore.class);
         final FileChooser fileChooser = mock(FileChooser.class);
 
-        menuController.setFileChooser(fileChooser);
+        menuController.setGfaFileChooser(fileChooser);
         menuController.setGraphStore(graphStore);
-        menuController.openFileAction(mock(ActionEvent.class));
+        menuController.openGfaFileAction(mock(ActionEvent.class));
 
-        verify(graphStore, never()).load(any(File.class), any(ProgressUpdater.class));
+        verify(graphStore, never()).loadGfaFile(any(File.class), any(ProgressUpdater.class));
+    }
+
+    @Test
+    void testGffFileOpenerAccept() throws Exception {
+        final CompletableFuture<Object> future = new CompletableFuture<>();
+
+        interact(() -> {
+            try {
+                final GraphStore graphStore = mock(GraphStore.class);
+                final FileChooser fileChooser = mock(FileChooser.class);
+                final File file = mock(File.class);
+
+                // Due to the internal structure of JavaFX, the FileChooser only returns the file the second time.
+                final Window owner = Hygene.getInstance().getPrimaryStage().getScene().getWindow();
+                when(fileChooser.showOpenDialog(owner)).thenReturn(file);
+                menuController.setGffFileChooser(fileChooser);
+                menuController.setGraphStore(graphStore);
+                menuController.openGffFileAction(mock(ActionEvent.class));
+
+                verify(file).getParentFile();
+
+                future.complete(null);
+            } catch (final Exception e) {
+                future.complete(null);
+                fail(e.getMessage());
+            }
+        });
+
+        future.get();
+    }
+
+    @Test
+    void testGffFileOpenerCancel() throws Exception {
+        final GraphStore graphStore = mock(GraphStore.class);
+        final FileChooser fileChooser = mock(FileChooser.class);
+
+        menuController.setGffFileChooser(fileChooser);
+        menuController.setGraphStore(graphStore);
+        menuController.openGffFileAction(mock(ActionEvent.class));
+
+        verify(graphStore, never()).loadGffFile(any(File.class));
     }
 
     @Test
     void testInitFileChooser() {
-        menuController.initFileChooser();
+        final FileChooser fileChooser = menuController.initFileChooser("Text", "txt");
 
-        assertThat(menuController.getFileChooser()).isNotNull();
+        assertThat(fileChooser).isNotNull();
     }
 
     @SuppressWarnings("unchecked") // needed for the mocking of ObservableList<MenuItem>

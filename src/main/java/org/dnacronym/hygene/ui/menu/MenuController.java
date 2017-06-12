@@ -33,11 +33,12 @@ import java.util.ResourceBundle;
  * Controller for the menu bar of the application. Handles user interaction with the menu.
  */
 // TODO split up class
-@SuppressWarnings("PMD.ExcessiveImports") // See todo. This will be addressed soon.
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.TooManyMethods"}) // See todo. This will be addressed soon.
 public final class MenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
 
-    private FileChooser fileChooser;
+    private FileChooser gfaFileChooser;
+    private FileChooser gffFileChooser;
     private GraphStore graphStore;
     private Settings settings;
 
@@ -61,7 +62,8 @@ public final class MenuController implements Initializable {
             setSettings(Hygene.getInstance().getSettings());
 
             populateRecentFilesMenu();
-            initFileChooser();
+            setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
+            setGffFileChooser(initFileChooser(GraphStore.GFF_FILE_NAME, GraphStore.GFF_FILE_EXTENSION));
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
             new ErrorDialogue(e).show();
@@ -78,7 +80,7 @@ public final class MenuController implements Initializable {
     }
 
     /**
-     * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
+     * Opens a {@link FileChooser} for opening a GFA file and sets the parent {@link javafx.stage.Window} as
      * {@link Hygene#getPrimaryStage()#getOwner()}.
      *
      * @param event {@link ActionEvent} associated with the event
@@ -86,21 +88,59 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
      */
     @FXML
-    void openFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
-        final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
-
-        fileChooser.setInitialDirectory(RecentDirectory.get());
-
-        final File gfaFile = fileChooser.showOpenDialog(primaryStage.getScene().getWindow());
+    void openGfaFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
+        final File gfaFile = openFileAction(gfaFileChooser, GraphStore.GFA_FILE_NAME);
         if (gfaFile == null) {
             return;
         }
 
-        if (gfaFile.getParentFile() != null) {
-            RecentDirectory.store(gfaFile.getParentFile());
+        loadFile(gfaFile);
+    }
+
+    /**
+     * Opens a {@link FileChooser} for opening a GFF file and sets the parent {@link javafx.stage.Window} as
+     * {@link Hygene#getPrimaryStage()#getOwner()}.
+     *
+     * @param event {@link ActionEvent} associated with the event
+     * @throws IOException               if unable to open or parse the file
+     * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
+     */
+    @FXML
+    void openGffFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
+        final File gffFile = openFileAction(gffFileChooser, GraphStore.GFF_FILE_NAME);
+        if (gffFile == null) {
+            return;
         }
 
-        loadFile(gfaFile);
+        graphStore.loadGffFile(gffFile);
+    }
+
+    /**
+     * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
+     * {@link Hygene#getPrimaryStage()#getOwner()}.
+     *
+     * @param fileChooser the file chooser that needs to be shown to the user
+     * @param type        a descriptive type name of the file that needs to be opened
+     * @return a file object or {@code null} if no file was selected
+     * @throws IOException               if unable to open or parse the file
+     * @throws UIInitialisationException if this method was called before {@link Hygene} was instantiated
+     */
+    private File openFileAction(final FileChooser fileChooser, final String type)
+            throws UIInitialisationException, IOException {
+        final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
+
+        fileChooser.setInitialDirectory(RecentDirectory.get(type));
+
+        final File file = fileChooser.showOpenDialog(primaryStage.getScene().getWindow());
+        if (file == null) {
+            return null;
+        }
+
+        if (file.getParentFile() != null) {
+            RecentDirectory.store(type, file.getParentFile());
+        }
+
+        return file;
     }
 
     /**
@@ -127,13 +167,17 @@ public final class MenuController implements Initializable {
 
     /**
      * Initializes the file chooser dialog.
+     *
+     * @param extensionName a descriptive name for the extension
+     * @param extension     the desired file extension
+     * @return an initialized file chooser with filters set for the given file extension
      */
-    void initFileChooser() {
-        final String chooserTitle = "Open GFA File";
+    FileChooser initFileChooser(final String extensionName, final String extension) {
+        final String chooserTitle = "Open " + extensionName + " File";
         final FileChooser.ExtensionFilter gfaFilter =
                 new FileChooser.ExtensionFilter(
-                        "GFA (*." + GraphStore.GFA_EXTENSION + ")",
-                        "*." + GraphStore.GFA_EXTENSION);
+                        extensionName + " (*." + extension + ")",
+                        "*." + extension);
         final FileChooser.ExtensionFilter noFilter = new FileChooser.ExtensionFilter("All files", "*.*");
 
         final FileChooser chooser = new FileChooser();
@@ -141,7 +185,7 @@ public final class MenuController implements Initializable {
         chooser.getExtensionFilters().add(gfaFilter);
         chooser.getExtensionFilters().add(noFilter);
 
-        setFileChooser(chooser);
+        return chooser;
     }
 
     /**
@@ -194,17 +238,26 @@ public final class MenuController implements Initializable {
      *
      * @return the {@link FileChooser}
      */
-    FileChooser getFileChooser() {
-        return fileChooser;
+    FileChooser getGfaFileChooser() {
+        return gfaFileChooser;
     }
 
     /**
      * Sets the {@link FileChooser} used by the menu.
      *
-     * @param fileChooser the {@link FileChooser}
+     * @param gfaFileChooser the {@link FileChooser}
      */
-    void setFileChooser(final FileChooser fileChooser) {
-        this.fileChooser = fileChooser;
+    void setGfaFileChooser(final FileChooser gfaFileChooser) {
+        this.gfaFileChooser = gfaFileChooser;
+    }
+
+    /**
+     * Sets the {@link FileChooser} for GFF files used by the menu.
+     *
+     * @param gffFileChooser the {@link FileChooser}
+     */
+    void setGffFileChooser(final FileChooser gffFileChooser) {
+        this.gffFileChooser = gffFileChooser;
     }
 
     /**
@@ -242,7 +295,7 @@ public final class MenuController implements Initializable {
             }
 
             try {
-                graphStore.load(file, progressUpdater);
+                graphStore.loadGfaFile(file, progressUpdater);
             } catch (final IOException e) {
                 LOGGER.error("Failed to load: " + file.getName() + ".", e);
             }

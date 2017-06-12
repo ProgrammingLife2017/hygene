@@ -42,7 +42,7 @@ final class GraphStoreTest extends UITestBase {
 
         Platform.runLater(() -> {
             try {
-                graphStore.load(file, ProgressUpdater.DUMMY);
+                graphStore.loadGfaFile(file, ProgressUpdater.DUMMY);
             } catch (final IOException e) {
                 e.printStackTrace();
             }
