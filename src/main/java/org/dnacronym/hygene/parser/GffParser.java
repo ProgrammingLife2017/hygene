@@ -25,10 +25,13 @@ import java.util.List;
  */
 public final class GffParser {
     private static final Logger LOGGER = LogManager.getLogger(GffParser.class);
-    /**
-     * An error message which takes a line number and a message.
-     */
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
+    private static final int PROGRESS_UPDATE_INTERVAL = 1000;
+    /**
+     * Progress is always the same, as we don't know how many lines the file has in advance.
+     */
+    private static final int PROGRESS = 50;
+    private static final int PROGRESS_TOTAL = 100;
     private static final int GFF_COLUMNS = 9;
 
     private static final int SEQ_ID_COLUMN = 0;
@@ -53,15 +56,17 @@ public final class GffParser {
      * {@link FeatureAnnotation}. Only the first encountered seqid is used to construct a {@link FeatureAnnotation}, all
      * subsequent seqid's are ignored and assumed to be correct.
      *
-     * @param gffFile the path of the GFF file to parse
+     * @param gffFile         the path of the GFF file to parse
+     * @param progressUpdater the {@link ProgressUpdater} to update whilst parsing
      * @return a {@link FeatureAnnotation} representing the GFF file
      * @throws ParseException if unable to parse the {@link java.io.File}, which can either be caused by an
      *                        {@link IOException} when opening the file or a semantic error in the GFF file itself
      */
     @SuppressWarnings({"squid:S135", // An object is only instantiated once.
             "squid:S3776", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity",
-            "PMD.StdCyclomaticComplexity"}) // Splitting this method up further decreases readability
-    public FeatureAnnotation parse(final String gffFile) throws ParseException {
+            "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity"})
+    // Splitting this method up further decreases readability
+    public FeatureAnnotation parse(final String gffFile, final ProgressUpdater progressUpdater) throws ParseException {
         @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
         final List<String> fileMetaData = new ArrayList<>();
 
@@ -76,6 +81,10 @@ public final class GffParser {
             }
 
             while ((line = bufferedReader.readLine()) != null) {
+                if (lineNumber % PROGRESS_UPDATE_INTERVAL == 0) {
+                    progressUpdater.updateProgress(PROGRESS, "Reading line " + lineNumber + " of " + gffFile);
+                }
+
                 lineNumber++;
                 if (line.isEmpty() || line.charAt(0) == '#' && line.charAt(1) != '#') {
                     continue;
@@ -114,6 +123,8 @@ public final class GffParser {
             featureAnnotation.addMetaData(metaData);
         }
 
+        progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished read the file.");
+
         return featureAnnotation;
     }
 
@@ -132,7 +143,6 @@ public final class GffParser {
      *
      * @param columns the columns of the line to convert to a feature annotation
      * @return a {@link SubFeatureAnnotation} representing the current row in the file
-     * @throws IllegalArgumentException if an error occurred whilst making a {@link SubFeatureAnnotation}
      */
     private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns) {
         final SubFeatureAnnotation subFeatureAnnotation;
