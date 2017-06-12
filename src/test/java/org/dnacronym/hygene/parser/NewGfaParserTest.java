@@ -73,7 +73,7 @@ final class NewGfaParserTest {
         final String gfa = "S name1 contents\nS name2 contents\nS name3 contents";
         final Graph graph = parse(gfa);
 
-        assertThat(graph.getLineNumber(3)).isEqualTo(3);
+        assertThat(graph.getByteOffset(3)).isEqualTo(3);
         assertThat(graph.getLength(3)).isEqualTo(500);
         assertThat(graph.getColor(3)).isEqualTo(NodeColor.BLACK);
     }

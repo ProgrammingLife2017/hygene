@@ -32,8 +32,8 @@ final class SegmentTest extends NodeTest {
     }
 
     @Test
-    void testGetLineNumber() {
-        assertThat(segment.getLineNumber()).isEqualTo(LINE_NUMBER);
+    void testGetByteOffset() {
+        assertThat(segment.getByteOffset()).isEqualTo(LINE_NUMBER);
     }
 
     @Test

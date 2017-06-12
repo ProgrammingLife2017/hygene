@@ -3,6 +3,7 @@ package org.dnacronym.hygene.models;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.parser.GfaFile;
 
 
@@ -10,7 +11,7 @@ import org.dnacronym.hygene.parser.GfaFile;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeLineNumber, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
+ * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1LineNumber...]]
  */
 public final class Graph {
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
@@ -79,8 +80,8 @@ public final class Graph {
      * @param id the {@link Node}'s id
      * @return the {@link Node}'s line number
      */
-    public int getLineNumber(final int id) {
-        return nodeArrays[id][Node.NODE_LINE_NUMBER_INDEX];
+    public long getByteOffset(final int id) {
+        return UnsignedInteger.toLong(nodeArrays[id][Node.NODE_BYTE_OFFSET_INDEX]);
     }
 
     /**

@@ -138,12 +138,12 @@ public final class NodeMetadataCache {
     @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     private void retrieveMetadataForCachedNodesWithoutMetadata() {
         try {
-            final Map<Integer, Integer> sortedNodesWithoutMetadata = cache.values().stream()
+            final Map<Integer, Long> sortedNodesWithoutMetadata = cache.values().stream()
                     .filter(node -> !node.hasMetadata())
-                    .sorted(Comparator.comparingInt(Node::getLineNumber))
+                    .sorted(Comparator.comparingLong(Node::getByteOffset))
                     .collect(Collectors.toMap(
                             Node::getId,
-                            Node::getLineNumber,
+                            Node::getByteOffset,
                             (oldValue, newValue) -> oldValue,
                             LinkedHashMap::new
                     ));

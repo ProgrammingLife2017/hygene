@@ -3,6 +3,7 @@ package org.dnacronym.hygene.models;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Set;
@@ -13,10 +14,10 @@ import java.util.TreeSet;
  * The {@link Node} class wraps around a node array and provides convenience methods.
  * <p>
  * Node array format:
- * [[nodeLineNumber, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
+ * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
  */
 public final class Node {
-    public static final int NODE_LINE_NUMBER_INDEX = 0;
+    public static final int NODE_BYTE_OFFSET_INDEX = 0;
     public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
     public static final int NODE_COLOR_INDEX = 2;
     public static final int UNSCALED_X_EDGE_COUNT_INDEX = 3;
@@ -88,12 +89,12 @@ public final class Node {
     }
 
     /**
-     * Getter for {@link Node} metadata line number.
+     * Getter for the {@link Node}'s byte offset.
      *
-     * @return the line number
+     * @return the byte offset
      */
-    public int getLineNumber() {
-        return data[NODE_LINE_NUMBER_INDEX];
+    public long getByteOffset() {
+        return UnsignedInteger.toLong(data[NODE_BYTE_OFFSET_INDEX]);
     }
 
     /**

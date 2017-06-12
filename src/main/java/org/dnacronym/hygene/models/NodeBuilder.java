@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.core.UnsignedInteger;
+
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -13,7 +15,7 @@ import java.util.stream.IntStream;
 @SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class NodeBuilder {
     private int nodeId;
-    private int lineNumber;
+    private long byteOffset;
     private int sequenceLength;
     private NodeColor color = NodeColor.BLACK;
     private int unscaledXEdgeCount;
@@ -44,7 +46,7 @@ public final class NodeBuilder {
 
         final NodeBuilder builder = new NodeBuilder();
         builder.nodeId = nodeId;
-        builder.lineNumber = node.getLineNumber();
+        builder.byteOffset = node.getByteOffset();
         builder.sequenceLength = node.getSequenceLength();
         builder.color = node.getColor();
         builder.unscaledXEdgeCount = node.getUnscaledXEdgeCount();
@@ -71,11 +73,11 @@ public final class NodeBuilder {
     /**
      * Sets the line number for the {@link Node} under construction.
      *
-     * @param lineNumber the line number of the GFA file
+     * @param byteOffset the byte offset of the node within the GFA file
      * @return current instance of the builder to provide a fluent interface
      */
-    public NodeBuilder withLineNumber(final int lineNumber) {
-        this.lineNumber = lineNumber;
+    public NodeBuilder withLineNumber(final long byteOffset) {
+        this.byteOffset = byteOffset;
 
         return this;
     }
@@ -173,7 +175,7 @@ public final class NodeBuilder {
      */
     public int[] toArray() {
         final IntStream detailsArray = Arrays.stream(new int[] {
-                lineNumber,
+                UnsignedInteger.fromLong(byteOffset),
                 sequenceLength,
                 color.ordinal(),
                 unscaledXEdgeCount,

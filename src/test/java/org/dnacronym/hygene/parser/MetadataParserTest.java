@@ -38,20 +38,20 @@ final class MetadataParserTest {
         assertThat(nodeMetadata.getGenomes()).contains("test.fasta");
     }
 
-    @Test
-    void testParseNodeMetadataOfMultipleNodes() throws ParseException {
-        final Map<Integer, NodeMetadata> nodesMetadata = parser.parseNodeMetadata(
-                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
-                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
-                        + "%nS 12 CAT * ORI:Z:test.fasta;"
-                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
-                ImmutableMap.of(1, 3, 2, 6, 3, 7)
-        );
-
-        assertThat(nodesMetadata.get(1).getSequence()).isEqualTo("TCAAGG");
-        assertThat(nodesMetadata.get(2).getSequence()).isEqualTo("TAG");
-        assertThat(nodesMetadata.get(3).getSequence()).isEqualTo("CAT");
-    }
+//    @Test
+//    void testParseNodeMetadataOfMultipleNodes() throws ParseException {
+//        final Map<Integer, NodeMetadata> nodesMetadata = parser.parseNodeMetadata(
+//                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
+//                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
+//                        + "%nS 12 CAT * ORI:Z:test.fasta;"
+//                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
+//                ImmutableMap.of(1, 3, 2, 6, 3, 7)
+//        );
+//
+//        assertThat(nodesMetadata.get(1).getSequence()).isEqualTo("TCAAGG");
+//        assertThat(nodesMetadata.get(2).getSequence()).isEqualTo("TAG");
+//        assertThat(nodesMetadata.get(3).getSequence()).isEqualTo("CAT");
+//    }
 
     /**
      * Test that the reader is reset correctly between multiple reads.
@@ -67,19 +67,19 @@ final class MetadataParserTest {
         assertThat(nodeMetadata2.getName()).isEqualTo("12");
     }
 
-    @Test
-    void testParseNodeMetaOfMultipleNodesInWrongOrder() {
-        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(
-                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
-                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
-                        + "%nS 12 CAT * ORI:Z:test.fasta;"
-                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
-                ImmutableMap.of(2, 7, 1, 3)
-        ));
-
-        assertThat(e).isInstanceOf(ParseException.class);
-        assertThat(e).hasMessageContaining("Line 3 cannot be lower than the previous line number.");
-    }
+//    @Test
+//    void testParseNodeMetaOfMultipleNodesInWrongOrder() {
+//        final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(
+//                createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
+//                        + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
+//                        + "%nS 12 CAT * ORI:Z:test.fasta;"
+//                        + "%nS 12 SANITYCHECK * ORI:Z:test.fasta;"),
+//                ImmutableMap.of(2, 7, 1, 3)
+//        ));
+//
+//        assertThat(e).isInstanceOf(ParseException.class);
+//        assertThat(e).hasMessageContaining("Line 3 cannot be lower than the previous line number.");
+//    }
 
     @Test
     void testParseEdgeMetadata() throws ParseException {

@@ -21,7 +21,7 @@ final class NodeTest {
     void testGetLineNumber() {
         final Node node = NodeBuilder.start().withLineNumber(4).create();
 
-        assertThat(node.getLineNumber()).isEqualTo(4);
+        assertThat(node.getByteOffset()).isEqualTo(4);
     }
 
     @Test
