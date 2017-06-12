@@ -108,8 +108,7 @@ class ThrottledDefaultExecutorTest {
      * sees that the second run scheduled a run.
      */
     @Test
-    @SuppressWarnings("squid:S2925")
-    // Thread.sleep() is acceptable here
+    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testScheduled() {
         final int[] number = {0};
         final ThrottledDefaultExecutor runnable = new ThrottledDefaultExecutor(500, () -> {
@@ -148,8 +147,7 @@ class ThrottledDefaultExecutorTest {
      * Tests that a runnable is cancelled after {@link ThrottledDefaultExecutor#stop()} is called.
      */
     @Test
-    @SuppressWarnings("squid:S2925")
-    // Thread.sleep() is acceptable here
+    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testStop() {
         final int[] number = {0};
         final ThrottledDefaultExecutor runnable = new ThrottledDefaultExecutor(59, () -> {
