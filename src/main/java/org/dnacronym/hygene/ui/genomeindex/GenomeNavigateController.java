@@ -19,6 +19,7 @@ import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -69,13 +70,20 @@ public final class GenomeNavigateController implements Initializable {
      * @param gfaFile the new {@link GfaFile} instance
      */
     private void triggerGenomeIndex(final GfaFile gfaFile) {
-        try {
-            genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
-            genomeIndex.populateIndex();
-            populateGenomeComboBox();
-        } catch (final SQLException | IOException | ParseException e) {
-            LOGGER.error("Unable to load genome info from file.", e);
-        }
+        ProgressBarView progressBarView = new ProgressBarView();
+        progressBarView.show();
+
+        progressBarView.monitorTask(progressUpdater -> {
+            new Thread(() -> {
+                try {
+                    genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
+                    genomeIndex.populateIndex(progressUpdater);
+                    populateGenomeComboBox();
+                } catch (final SQLException | IOException | ParseException e) {
+                    LOGGER.error("Unable to load genome info from file.", e);
+                }
+            }).start();
+        });
     }
 
     @Override
@@ -126,14 +134,11 @@ public final class GenomeNavigateController implements Initializable {
                     .orElseThrow(() ->
                             new SQLException("Genome-base combination could not be found in database."));
 
-            if (genomePoint.getNodeId() == -1) {
-                new WarningDialogue("Genome-base combination could not be found in graph.").show();
-                return;
-            }
             graphVisualizer.getSelectedNodeProperty().setValue(
                     graphStore.getGfaFileProperty().get().getGraph().getNode(genomePoint.getNodeId()));
         } catch (SQLException e) {
             LOGGER.error("Error while looking for genome-base index.", e);
+            new WarningDialogue("Genome-base combination could not be found in graph.").show();
         }
     }
 }
