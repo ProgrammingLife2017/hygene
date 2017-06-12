@@ -28,6 +28,7 @@ import java.util.Map;
 /**
  * Represents a GFA file with its contents and metadata.
  */
+@SuppressWarnings("squid:S1192") // No need to define a constant for the string literal "File"
 public final class GfaFile {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
     private static final int PROGRESS_TOTAL = 100;
