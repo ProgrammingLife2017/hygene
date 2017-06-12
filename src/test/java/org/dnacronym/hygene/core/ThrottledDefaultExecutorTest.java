@@ -29,6 +29,7 @@ class ThrottledDefaultExecutorTest extends ThrottledExecutorTest {
     }
 
     @Test
+    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
     void testRunDefaultInterrupt() throws InterruptedException {
         final int[] number = {0};
 
