@@ -28,7 +28,6 @@ public final class GffParser {
     /**
      * An error message which takes a line number and a message.
      */
-    private static final String ERROR_MESSAGE_LINE = "An error occurred whilst parsing line %d: %s.";
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int GFF_COLUMNS = 9;
 
@@ -72,8 +71,8 @@ public final class GffParser {
             bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8);
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
-                throw new ParseException(String.format(ERROR_MESSAGE_LINE, lineNumber, "GFF file does not have the "
-                        + "appropriate header: '" + GFF_VERSION_HEADER + "', it was: '" + line + "'"));
+                throw new ParseException("There was an error at line " + lineNumber + ": The GFF file does not have"
+                        + " the appropriate header: '" + GFF_VERSION_HEADER + "', it was: '" + line + "'.");
             }
 
             while ((line = bufferedReader.readLine()) != null) {
@@ -97,7 +96,7 @@ public final class GffParser {
         } catch (final IOException e) {
             throw new ParseException("An IO error occurred while reading the GFF file.", e);
         } catch (final IllegalArgumentException e) {
-            throw new ParseException(String.format(ERROR_MESSAGE_LINE, lineNumber, "There was an invalid value"), e);
+            throw new ParseException("There was an error at line " + lineNumber + ": There was an invalid value.", e);
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -171,7 +170,7 @@ public final class GffParser {
         final String[] columns = line.split("\\s+");
         if (columns.length != GFF_COLUMNS) {
             throw new IllegalArgumentException("Line did not contain " + GFF_COLUMNS + " columns, it contained "
-                    + columns.length + " columns");
+                    + columns.length + " columns.");
         }
 
         return columns;
