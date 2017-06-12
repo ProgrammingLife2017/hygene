@@ -91,7 +91,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
             node.getOutgoingEdges().removeAll(removeEdgeLater);
         });
 
-        subgraph.addNodes(addNodeLater);
+        subgraph.addAll(addNodeLater);
     }
 
 

@@ -286,7 +286,7 @@ final class FafospLayererTest {
      */
     private void addAtPosition(final NewNode node, final int xPosition) {
         node.setXPosition(xPosition);
-        subgraph.addNode(node);
+        subgraph.add(node);
     }
 
     /**

@@ -8,13 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 /**
- * Test suite for the {@link Subgraph} class.
+ * Unit tests for {@link Subgraph}.
  */
 final class SubgraphTest {
     private static final Random RANDOM = new Random();
@@ -29,25 +31,117 @@ final class SubgraphTest {
 
 
     @Test
-    void testGetNodes() {
+    void testGetNodeEmpty() {
+        assertThat(subgraph.getNode(UUID.randomUUID())).isNull();
+    }
+
+    @Test
+    void testGetNodeNull() {
+        final NewNode node = mock(NewNode.class);
+        when(node.getUuid()).thenReturn(UUID.randomUUID());
+
+        subgraph.add(node);
+
+        assertThat(subgraph.getNode(UUID.randomUUID())).isNull();
+    }
+
+    @Test
+    void testGetNodeEquals() {
+        final UUID uuid = UUID.randomUUID();
+        final NewNode node = mock(NewNode.class);
+        when(node.getUuid()).thenReturn(uuid);
+
+        subgraph.add(node);
+
+        assertThat(subgraph.getNode(uuid)).isEqualTo(node);
+    }
+
+    @Test
+    void testGetNodesEmpty() {
         assertThat(subgraph.getNodes()).isEmpty();
+    }
+
+    @Test
+    void testGetSegmentEmpty() {
+        assertThat(subgraph.getSegment(36)).isNull();
+    }
+
+    @Test
+    void testGetSegmentNull() {
+        final Segment segment = new Segment(95, 42, 80);
+
+        subgraph.add(segment);
+
+        assertThat(subgraph.getSegment(86)).isNull();
+    }
+
+    @Test
+    void testGetSegmentEquals() {
+        final Segment segment = new Segment(37, 60, 44);
+
+        subgraph.add(segment);
+
+        assertThat(subgraph.getSegment(37)).isEqualTo(segment);
+    }
+
+    @Test
+    void testGetSegmentsEmpty() {
+        assertThat(subgraph.getSegments()).isEmpty();
+    }
+
+    @Test
+    void testAddNodeAndContains() {
+        final UUID uuid = UUID.randomUUID();
+        final NewNode node = mock(NewNode.class);
+        when(node.getUuid()).thenReturn(uuid);
+
+        subgraph.add(node);
+
+        assertThat(subgraph.contains(uuid)).isTrue();
+    }
+
+    @Test
+    void testAddNodeAndContainsNode() {
+        final NewNode node = mock(NewNode.class);
+        when(node.getUuid()).thenReturn(UUID.randomUUID());
+
+        subgraph.add(node);
+
+        assertThat(subgraph.containsNode(node)).isTrue();
+    }
+
+    @Test
+    void testAddSegmentAndContains() {
+        final Segment segment = new Segment(98, 36, 35);
+
+        subgraph.add(segment);
+
+        assertThat(subgraph.contains(segment.getUuid())).isTrue();
+    }
+
+    @Test
+    void testAddSegmentAndContainsNode() {
+        final Segment segment = new Segment(98, 36, 35);
+
+        subgraph.add(segment);
+
+        assertThat(subgraph.containsNode(segment)).isTrue();
+    }
+
+    @Test
+    void testAddSegmentAndContainsSegment() {
+        final Segment segment = new Segment(58, 48, 49);
+
+        subgraph.add(segment);
+
+        assertThat(subgraph.containsSegment(58)).isTrue();
     }
 
     @Test
     void testAddNode() {
         final NewNode node = mock(NewNode.class);
-        subgraph.addNode(node);
+        subgraph.add(node);
         assertThat(subgraph.getNodes()).containsExactly(node);
-    }
-
-    @Test
-    void testRemoveNode() {
-        final NewNode node = mock(NewNode.class);
-        subgraph.addNode(node);
-        assertThat(subgraph.getNodes()).containsExactly(node);
-
-        subgraph.removeNode(node);
-        assertThat(subgraph.getNodes()).isEmpty();
     }
 
     @Test
@@ -59,7 +153,7 @@ final class SubgraphTest {
         connectSegments(segment1, segment2);
         connectSegments(segment1, segment3);
 
-        subgraph.addNodes(Arrays.asList(segment1, segment2, segment3));
+        subgraph.addAll(Arrays.asList(segment1, segment2, segment3));
 
         assertThat(subgraph.getNeighbours(segment1, SequenceDirection.RIGHT))
                 .containsExactlyInAnyOrder(segment2, segment3);
@@ -77,7 +171,7 @@ final class SubgraphTest {
         connectSegments(segment2, segment4);
         connectSegments(segment3, segment4);
 
-        subgraph.addNodes(Arrays.asList(segment1, segment2, segment3, segment4));
+        subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
         final List<NewNode> nodes = new ArrayList<>(subgraph.getNodesBFS(SequenceDirection.RIGHT));
 
@@ -87,6 +181,7 @@ final class SubgraphTest {
         assertThat(nodes.indexOf(segment2)).isLessThan(nodes.indexOf(segment4));
         assertThat(nodes.indexOf(segment3)).isLessThan(nodes.indexOf(segment4));
     }
+
 
     /**
      * Connects the two segments with a {@link Link}.
