@@ -48,7 +48,6 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
-    private static final int DEFAULT_COLOR_SCHEME = 3;
     /**
      * Range used when new graph is set, unless graph contains too few nodes.
      */
@@ -105,7 +104,7 @@ public final class GraphVisualizer {
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        NewNode.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(DEFAULT_COLOR_SCHEME).getValue());
+        NewNode.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(0).getValue());
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
