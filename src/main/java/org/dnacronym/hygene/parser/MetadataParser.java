@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.concurrent.RejectedExecutionException;
 
 
 /**
@@ -61,6 +62,10 @@ public final class MetadataParser {
         final RandomAccessFile gfaRandomAccessFile = gfa.getRandomAccessFile();
 
         for (final Map.Entry<Integer, Long> entry : byteOffsets.entrySet()) {
+            if (Thread.interrupted()) {
+                throw new RejectedExecutionException("Node metadata retrieval was interrupted.");
+            }
+
             final long byteOffset = entry.getValue();
 
             final String line = getLine(gfaRandomAccessFile, byteOffset);
