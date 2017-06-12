@@ -108,6 +108,7 @@ class ThrottledRunnableTest {
      * sees that the second run scheduled a run.
      */
     @Test
+    @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable here
     void testScheduled() {
         final int[] number = {0};
         final ThrottledRunnable runnable = new ThrottledRunnable(() -> {
