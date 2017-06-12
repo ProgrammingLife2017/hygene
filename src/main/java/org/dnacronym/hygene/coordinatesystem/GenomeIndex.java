@@ -9,6 +9,7 @@ import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParser;
 import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileGenomeIndex;
 
@@ -61,9 +62,9 @@ public final class GenomeIndex {
      *
      * @throws ParseException in case of errors during parsing of the GFA file
      */
-    public void populateIndex() throws ParseException {
+    public void populateIndex(final ProgressUpdater progressUpdater) throws ParseException {
         loadGenomeList();
-        buildIndex();
+        buildIndex(progressUpdater);
     }
 
     /**
@@ -136,9 +137,15 @@ public final class GenomeIndex {
     /**
      * Iterates through the graph and saves index points at selected base locations.
      */
-    private void buildIndex() {
+    private void buildIndex(final ProgressUpdater progressUpdater) {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
-        graphIterator.visitAll(SequenceDirection.RIGHT, this::evaluateNode);
+
+        graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
+            evaluateNode(nodeId);
+            progressUpdater.updateProgress(
+                    Math.round((100.0f * nodeId) / (gfaFile.getGraph().getNodeArrays().length - 2)),
+                    "Indexing the genomes...");
+        });
     }
 
     /**
