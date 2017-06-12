@@ -17,6 +17,7 @@ import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
+import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.Settings;
 
@@ -50,6 +51,8 @@ public final class Hygene extends Application {
     private SequenceVisualizer sequenceVisualizer;
 
     private Query query;
+
+    private StatusBar statusBar;
 
     private Settings settings;
 
@@ -101,6 +104,7 @@ public final class Hygene extends Application {
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
 
         sequenceVisualizer = new SequenceVisualizer();
+        statusBar = new StatusBar();
 
         simpleBookmarkStore = new SimpleBookmarkStore(
                 graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
@@ -238,6 +242,15 @@ public final class Hygene extends Application {
      */
     public SimpleBookmarkStore getSimpleBookmarkStore() {
         return simpleBookmarkStore;
+    }
+
+    /**
+     * Gets the {@link StatusBar} of the application.
+     *
+     * @return the {@link StatusBar} of the application
+     */
+    public StatusBar getStatusBar() {
+        return statusBar;
     }
 
     /**
