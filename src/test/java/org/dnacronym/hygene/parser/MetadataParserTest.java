@@ -66,8 +66,10 @@ final class MetadataParserTest {
     }
 
     @Test
-    void testParseEdgeMetadata() throws ParseException {
-        final EdgeMetadata edgeMetadata = parser.parseEdgeMetadata(createGfaFile("%nL 12 + 24 - 4M"), 2);
+    void testParseEdgeMetadata() throws ParseException, IOException {
+        final GfaFile gfaFile = createGfaFile("L 12 + 24 - 4M");
+        when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("L 12 + 24 - 4M"));
+        final EdgeMetadata edgeMetadata = parser.parseEdgeMetadata(gfaFile, 2);
 
         assertThat(edgeMetadata.getFromOrient()).isEqualTo("+");
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
@@ -86,25 +88,34 @@ final class MetadataParserTest {
     }
 
     @Test
-    void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC *"), 1));
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws ParseException, IOException {
+        final GfaFile gfaFile = createGfaFile("S 12 AC *");
+        when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12 AC *"));
+
+        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(gfaFile, 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
-    void testParseNodeMetadataWithInvalidLineBecauseTheGenomePrefixIsIncorrect() throws ParseException {
-        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(createGfaFile("S 12 AC * ORY:Z:test.fasta;"), 1));
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomePrefixIsIncorrect() throws ParseException, IOException {
+        final GfaFile gfaFile = createGfaFile("S 12 AC * ORY:Z:test.fasta;");
+        when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12 AC * ORY:Z:test.fasta;"));
+
+        Throwable e = catchThrowable(() -> parser.parseNodeMetadata(gfaFile, 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
     }
 
     @Test
-    void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws ParseException {
-        final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(createGfaFile("L 12 + 24"), 1));
+    void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws ParseException, IOException {
+        final GfaFile gfaFile = createGfaFile("L 12 + 24");
+        when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("L 12 + 24"));
+
+        final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(gfaFile, 1));
 
         assertThat(e).isInstanceOf(ParseException.class);
-        assertThat(e).hasMessageContaining("Not enough parameters for link on line 1");
+        assertThat(e).hasMessageContaining("Not enough parameters for link at position 1");
     }
 
     @Test

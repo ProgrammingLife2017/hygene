@@ -1,11 +1,11 @@
 package org.dnacronym.hygene.parser;
 
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -90,7 +90,6 @@ final class NewGfaParserTest {
     }
 
     @Test
-    @Disabled
     void testEdges() throws ParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M\nL 2 + 1 + 0M";
         final Graph graph = parse(gfa);
@@ -98,14 +97,13 @@ final class NewGfaParserTest {
         final Node firstNode = graph.getNode(1);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 3, null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(12), null));
 
         assertThat(firstNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(firstNode.getIncomingEdges()).contains(new Edge(2, 1, 4, null));
+        assertThat(firstNode.getIncomingEdges()).contains(new Edge(2, 1, UnsignedInteger.fromLong(25), null));
     }
 
     @Test
-    @Disabled
     void testEdgeSpecifiedBeforeNode() throws ParseException {
         final String gfa = "S 1 A\nL 1 + 2 + 0M\nS 2 B";
         final Graph graph = parse(gfa);
@@ -114,14 +112,13 @@ final class NewGfaParserTest {
         final Node secondNode = graph.getNode(2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 2, null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(6), null));
 
         assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, 2, null));
+        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(6), null));
     }
 
     @Test
-    @Disabled
     void testEdgeSpecifiedBeforeAllNodes() throws ParseException {
         final String gfa = "L 100 + 200 + 0M\nS 100 A\nS 200 B";
         final Graph graph = parse(gfa);
@@ -130,10 +127,10 @@ final class NewGfaParserTest {
         final Node secondNode = graph.getNode(2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, 1, null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(0), null));
 
         assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, 1, null));
+        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(0), null));
     }
 
     @Test

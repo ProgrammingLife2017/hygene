@@ -183,10 +183,10 @@ public final class NodeBuilder {
                 unscaledYPosition,
                 outgoingEdges.size()
         });
-        final IntStream outgoingEdgesArray = outgoingEdges.stream()
-                .flatMapToInt(edge -> Arrays.stream(new int[] {edge.getTo(), edge.getLineNumber()}));
-        final IntStream incomingEdgesArray = incomingEdges.stream()
-                .flatMapToInt(edge -> Arrays.stream(new int[] {edge.getFrom(), edge.getLineNumber()}));
+        final IntStream outgoingEdgesArray = outgoingEdges.stream().flatMapToInt(
+                edge -> Arrays.stream(new int[] {edge.getTo(), UnsignedInteger.fromLong(edge.getByteOffset())}));
+        final IntStream incomingEdgesArray = incomingEdges.stream().flatMapToInt(
+                edge -> Arrays.stream(new int[] {edge.getFrom(), UnsignedInteger.fromLong(edge.getByteOffset())}));
 
         return IntStream.concat(detailsArray, IntStream.concat(outgoingEdgesArray, incomingEdgesArray)).toArray();
     }

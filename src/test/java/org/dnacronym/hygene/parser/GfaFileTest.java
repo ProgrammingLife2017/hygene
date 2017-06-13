@@ -119,9 +119,9 @@ final class GfaFileTest {
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
-        final EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(5);
+        final EdgeMetadata edgeMetadata = gfaFile.parseEdgeMetadata(95);
 
-        verify(metadataParser).parseEdgeMetadata(gfaFile, 5);
+        verify(metadataParser).parseEdgeMetadata(gfaFile, 95);
         assertThat(edgeMetadata.getToOrient()).isEqualTo("-");
     }
 
