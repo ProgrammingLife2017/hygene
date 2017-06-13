@@ -73,8 +73,6 @@ class PathCalculatorTest {
         pathCalculator.computePaths(subgraph);
     }
 
-
-
     /**
      * Connects the two segments with a {@link Link}.
      *
