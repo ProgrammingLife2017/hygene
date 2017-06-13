@@ -19,9 +19,9 @@ public final class UnsignedInteger {
 
 
     /**
-     * Converts a normal non negative long to a regularized integer.
+     * Converts a normal non-negative long to a regularized integer.
      *
-     * @param value a non negative long
+     * @param value a non-negative long
      * @return a regularized integer between {@code Integer.MIN_VALUE} and {@code Integer.MAX_VALUE}
      */
     public static int fromLong(final long value) {
@@ -35,10 +35,10 @@ public final class UnsignedInteger {
     }
 
     /**
-     * Converts a regularized integer to a non negative long.
+     * Converts a regularized integer to a non-negative long.
      *
      * @param regularizedInteger a regularized integer between {@code Integer.MIN_VALUE} and {@code Integer.MAX_VALUE}
-     * @return a non negative long
+     * @return a non-negative long
      */
     public static long toLong(final int regularizedInteger) {
         return (long) regularizedInteger - Integer.MIN_VALUE;
