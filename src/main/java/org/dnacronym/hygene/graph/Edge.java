@@ -3,6 +3,7 @@ package org.dnacronym.hygene.graph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -13,6 +14,7 @@ public class Edge {
     private final UUID uuid;
     private final NewNode from;
     private final NewNode to;
+    private Set<String> genomes;
 
 
     /**
@@ -25,6 +27,7 @@ public class Edge {
         this.uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;
+        this.genomes = null;
     }
 
 
@@ -44,6 +47,25 @@ public class Edge {
      */
     public final NewNode getTo() {
         return to;
+    }
+
+    /**
+     * Get the genome set for this {@link Edge}.
+     *
+     * @return the genomes
+     */
+    @Nullable
+    public Set<String> getGenomes() {
+        return genomes;
+    }
+
+    /**
+     * Sets the genome set for this {@link Edge}.
+     *
+     * @param genomes the genomes
+     */
+    public void setGenomes(final Set<String> genomes) {
+        this.genomes = genomes;
     }
 
     @Override
