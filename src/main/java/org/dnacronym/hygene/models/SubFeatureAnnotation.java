@@ -43,7 +43,7 @@ public final class SubFeatureAnnotation {
     public SubFeatureAnnotation(final String source, final String type, final int start, final int end,
                                 final double score, final String strand, final int phase) {
         if (end < start) {
-            throw new IllegalArgumentException("Start (" + start + ") was not before end (" + end + ")");
+            throw new IllegalArgumentException("Start (" + start + ") was not before end (" + end + ").");
         }
         if (phase != -1 && phase < 0 || phase > 2) {
             throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: '" + phase + "'.");

@@ -68,7 +68,7 @@ public final class GffParser {
         int lineNumber = 1;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8)) {
             String line = bufferedReader.readLine();
-            checkValid(line);
+            checkValidHeader(line);
 
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
@@ -106,13 +106,10 @@ public final class GffParser {
 
     /**
      * Check if the given line is equal to {@value GFF_VERSION_HEADER}.
-     * <p>
-     * This verifies that the file is the correct type.
      *
      * @param line the line to check
-     * @throws IllegalArgumentException if the line is not equal to {@value GFF_VERSION_HEADER}
      */
-    private void checkValid(final @Nullable String line) {
+    private void checkValidHeader(final @Nullable String line) {
         if (line == null || !line.equals(GFF_VERSION_HEADER)) {
             throw new IllegalArgumentException("The GFF file does not have the appropriate header: '"
                     + GFF_VERSION_HEADER + "', it was: '" + line + "'.");
@@ -163,7 +160,7 @@ public final class GffParser {
             subFeatureAnnotation = new SubFeatureAnnotation(
                     columns[SOURCE_COLUMN],
                     columns[TYPE_COLUMN],
-                    Integer.parseInt(columns[START_COLUMN]), // start must have a uva
+                    Integer.parseInt(columns[START_COLUMN]), // start must be valid
                     Integer.parseInt(columns[END_COLUMN]), // end must be valid
                     ".".equals(columns[SCORE_COLUMN]) ? -1 : Double.parseDouble(columns[SCORE_COLUMN]),
                     columns[STRAND_COLUMN],

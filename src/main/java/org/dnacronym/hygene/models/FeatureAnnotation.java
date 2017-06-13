@@ -7,9 +7,10 @@ import java.util.Map;
 
 
 /**
- * A {@link FeatureAnnotation} is a single annotation.
+ * A {@link FeatureAnnotation} coincides with a single annotation in the graph.
  * <p>
- * A gene annotation consists of {@link SubFeatureAnnotation}s, which form a graph representing the feature.
+ * A gene annotation consists of {@link SubFeatureAnnotation}s. These {@link SubFeatureAnnotation}s combined represent
+ * the annotation.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
  * @see org.dnacronym.hygene.parser.GffParser
