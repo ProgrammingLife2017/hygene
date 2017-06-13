@@ -162,8 +162,11 @@ public final class GenomeNavigateController implements Initializable {
                     .orElseThrow(() ->
                             new SQLException("Genome-base combination could not be found in database."));
 
-            graphVisualizer.getSelectedNodeProperty().setValue(
-                    graphStore.getGfaFileProperty().get().getGraph().getNode(genomePoint.getNodeId()));
+            hygeneInstance.getGraphDimensionsCalculator().getCenterNodeIdProperty().set(genomePoint.getNodeId());
+            hygeneInstance.getGraphDimensionsCalculator().getRadiusProperty().set(10);
+
+            graphVisualizer.setSelectedNode(genomePoint.getNodeId());
+            hygeneInstance.getSequenceVisualizer().setOffset(genomePoint.getBaseOffsetInNode());
         } catch (SQLException e) {
             LOGGER.error("Error while looking for genome-base index.", e);
             new WarningDialogue("Genome-base combination could not be found in graph.").show();
