@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -73,23 +74,27 @@ public final class GenomeNavigateController implements Initializable {
         ProgressBarView progressBarView = new ProgressBarView();
         progressBarView.show();
 
-        progressBarView.monitorTask(progressUpdater -> {
-            new Thread(() -> {
-                try {
-                    genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
-                    genomeIndex.populateIndex(progressUpdater);
-                    populateGenomeComboBox();
-                } catch (final SQLException | IOException | ParseException e) {
-                    LOGGER.error("Unable to load genome info from file.", e);
-                }
-            }).start();
-        });
+        progressBarView.monitorTask(progressUpdater -> new Thread(() -> {
+            try {
+                genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
+                genomeIndex.populateIndex(progressUpdater);
+                populateGenomeComboBox();
+            } catch (final SQLException | IOException | ParseException e) {
+                LOGGER.error("Unable to load genome info from file.", e);
+            }
+        }).start());
     }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         base.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE));
         base.getValueFactory().setValue(1);
+        // Commit changed values on manual edit of spinner
+        base.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                base.increment(0); // won't change value, but will commit edited value
+            }
+        });
 
         genomeNavigatePane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         genomeNavigatePane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
@@ -99,9 +104,11 @@ public final class GenomeNavigateController implements Initializable {
      * Populates the {@link ComboBox} of genome names.
      */
     private void populateGenomeComboBox() {
-        genome.getItems().clear();
-        genome.getItems().addAll(genomeIndex.getGenomeNames());
-        genome.getSelectionModel().select(0);
+        Platform.runLater(() -> {
+            genome.getItems().clear();
+            genome.getItems().addAll(genomeIndex.getGenomeNames());
+            genome.getSelectionModel().select(0);
+        });
     }
 
     /**
@@ -129,8 +136,17 @@ public final class GenomeNavigateController implements Initializable {
      */
     @FXML
     public void onGoAction(final ActionEvent actionEvent) {
+        final int selectedBase;
+
         try {
-            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), base.getValue())
+            selectedBase = base.getValue();
+        } catch (final NumberFormatException e) {
+            LOGGER.warn("Attempted to enter non-numeric input in base field, aborting.");
+            return;
+        }
+
+        try {
+            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), selectedBase)
                     .orElseThrow(() ->
                             new SQLException("Genome-base combination could not be found in database."));
 
