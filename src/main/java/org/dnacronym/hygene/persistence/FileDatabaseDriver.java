@@ -150,6 +150,27 @@ public final class FileDatabaseDriver implements AutoCloseable {
     }
 
     /**
+     * Queries the database for the value of a single key.
+     *
+     * @param tableName       the name of the table
+     * @param keyColumnName   the name of the key column
+     * @param keyColumnValue  the key to be queried for
+     * @param valueColumnName the name of the column in which the result value lies
+     * @param value           the value to be associated with the given key
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    synchronized void setSingleValue(final String tableName, final String keyColumnName, final String keyColumnValue,
+                                     final String valueColumnName, final String value) throws SQLException {
+        final String sql = "UPDATE " + tableName
+                + " SET " + valueColumnName + "='" + value + "'"
+                + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql);
+        }
+    }
+
+    /**
      * Performs the given action on each row of the given table.
      *
      * @param tableName    the name of the table to query
