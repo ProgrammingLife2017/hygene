@@ -40,7 +40,6 @@ public final class SubFeatureAnnotation {
      * @param strand the strand of the {@link SubFeatureAnnotation}. Must be one of '.', '-' or '+'
      * @param phase  the phase of the {@link SubFeatureAnnotation}. 0, 1 or 2, or -1 to indicate it has no value
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "squid:S3776"}) // There is little use in splitting this constructor
     public SubFeatureAnnotation(final String source, final String type, final int start, final int end,
                                 final double score, final String strand, final int phase) {
         if (end < start) {
@@ -53,9 +52,6 @@ public final class SubFeatureAnnotation {
             throw new IllegalArgumentException("Strand was not '+', '-' or '.', it was: '" + strand + "'.");
         }
 
-        attributes = new HashMap<>();
-        children = new ArrayList<>();
-
         this.source = source;
         this.type = type;
         this.start = start;
@@ -63,6 +59,9 @@ public final class SubFeatureAnnotation {
         this.score = score;
         this.strand = strand;
         this.phase = phase;
+
+        attributes = new HashMap<>();
+        children = new ArrayList<>();
     }
 
 
