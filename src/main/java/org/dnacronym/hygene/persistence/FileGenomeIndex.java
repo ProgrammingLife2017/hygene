@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -60,7 +59,7 @@ public final class FileGenomeIndex {
      * @return {@code true} iff. the genomes in the file have been indexed before
      * @throws SQLException in the case of an error during SQL operations
      */
-    public boolean isIndexed() throws SQLException, IOException {
+    public boolean isIndexed() throws SQLException {
         return fileDatabase.getFileMetadata().isIndexed();
     }
 

@@ -72,15 +72,19 @@ public final class GenomeNavigateController implements Initializable {
      * @param gfaFile the new {@link GfaFile} instance
      */
     private void triggerGenomeIndex(final GfaFile gfaFile) {
-        hygeneInstance.getStatusBar().monitorTask(progressUpdater -> new Thread(() -> {
-            try {
-                genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
-                genomeIndex.populateIndex(progressUpdater);
-                populateGenomeComboBox();
-            } catch (final SQLException | IOException e) {
-                LOGGER.error("Unable to load genome info from file.", e);
-            }
-        }).start());
+        hygeneInstance.getStatusBar().monitorTask(progressUpdater -> {
+            final Thread worker = new Thread(() -> {
+                try {
+                    genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
+                    genomeIndex.populateIndex(progressUpdater);
+                    populateGenomeComboBox();
+                } catch (final SQLException | IOException e) {
+                    LOGGER.error("Unable to load genome info from file.", e);
+                }
+            });
+            worker.setDaemon(true); // Automatically shut down this thread when the main thread exits
+            worker.start();
+        });
     }
 
     @Override

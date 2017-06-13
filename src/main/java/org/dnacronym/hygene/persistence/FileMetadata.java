@@ -146,10 +146,9 @@ final class FileMetadata {
      * Returns {@code true} iff. the genomes in the file have been completely indexed.
      *
      * @return {@code true} iff. the genomes in the file have been completely indexed.
-     * @throws IOException  in the case of an error during IO operations
      * @throws SQLException in the case of an error during SQL operations
      */
-    boolean isIndexed() throws IOException, SQLException {
+    boolean isIndexed() throws SQLException {
         return Boolean.parseBoolean(
                 fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, IS_INDEXED_KEY_NAME, VALUE_COLUMN_NAME)
         );
