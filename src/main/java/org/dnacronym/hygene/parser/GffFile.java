@@ -33,8 +33,8 @@ public final class GffFile {
      * Parses the GFF file into a {@link FeatureAnnotation}.
      *
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
-     * @return a {@link FeatureAnnotation} based on the contents of the GFA file
-     * @throws ParseException if the file content is not GFA-compliant
+     * @return a {@link FeatureAnnotation} based on the contents of the GFF file
+     * @throws ParseException if the file content is not GFF-compliant file
      */
     public FeatureAnnotation parse(final ProgressUpdater progressUpdater) throws ParseException {
         LOGGER.info("Start parsing " + fileName);
@@ -56,9 +56,10 @@ public final class GffFile {
 
     /**
      * Returns the contents of the GFF file.
+     * <p>
+     * May only be called after the file has been parsed.
      *
      * @return the contents of the GFF file
-     * @throws IllegalStateException if the GFF file is not yet parsed to a {@link FeatureAnnotation}
      */
     public FeatureAnnotation getFeatureAnnotation() {
         if (featureAnnotation == null) {

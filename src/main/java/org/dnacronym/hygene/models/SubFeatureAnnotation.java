@@ -32,17 +32,13 @@ public final class SubFeatureAnnotation {
     /**
      * Creates an instance of a {@link SubFeatureAnnotation}.
      *
-     * @param source the source of the {@link SubFeatureAnnotation}
-     * @param type   the type of the {@link SubFeatureAnnotation}
-     * @param start  the start of the {@link SubFeatureAnnotation}
-     * @param end    the end of the {@link SubFeatureAnnotation}. Must be after start, else
-     *               {@link IllegalArgumentException} is thrown
-     * @param score  the score of the {@link SubFeatureAnnotation}. If it has a value, it must be a valid floating point
-     *               number, else {@link IllegalArgumentException} is thrown
-     * @param strand the strand of the {@link SubFeatureAnnotation}. Must be one of '.', '-' or '+', else
-     *               {@link IllegalArgumentException} is thrown
-     * @param phase  the phase of the {@link SubFeatureAnnotation}. If it has a value, it must be one of 0, 1 or 2, else
-     *               {@link IllegalArgumentException} is thrown
+     * @param source the source node
+     * @param type   the type
+     * @param start  the start of the base offset
+     * @param end    the end of the base offset
+     * @param score  the score of the feature
+     * @param strand the strand of the {@link SubFeatureAnnotation}. Must be one of '.', '-' or '+'
+     * @param phase  the phase of the {@link SubFeatureAnnotation}. 0, 1 or 2, or -1 to indicate it has no value
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "squid:S3776"}) // There is little use in splitting this constructor
     public SubFeatureAnnotation(final String source, final String type, final int start, final int end,
