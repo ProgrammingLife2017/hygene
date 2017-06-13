@@ -24,17 +24,29 @@ import java.util.stream.Collectors;
 public final class PathCalculator {
     private static final Logger LOGGER = LogManager.getLogger(PathCalculator.class);
 
+    /**
+     * The {@link Subgraph}
+     */
     private Subgraph subgraph;
+
     private Map<NewNode, Set<String>> genomeStore;
 
 
+    /**
+     * Construct a new {@link PathCalculator}.
+     *
+     * @param subgraph the {@link Subgraph} to compute the paths on
+     */
     public PathCalculator(final Subgraph subgraph) {
         this.subgraph = subgraph;
         this.genomeStore = new HashMap<>();
     }
 
 
-    public void computePaths(final Subgraph subgraph) {
+    /**
+     * The edges compute the path for each {@link Edge}.
+     */
+    public void computePaths() {
         genomeStore.clear();
 
         // Determine start
@@ -68,11 +80,11 @@ public final class PathCalculator {
                     .forEach(toVisit::add);
 
             if (active instanceof Segment) {
-                System.out.println("Visiting segment" + active);
+                LOGGER.info("Visiting segment" + active);
 
                 genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
             } else if (active instanceof DummyNode) {
-                System.out.println("Visiting dummy node " + active);
+                LOGGER.info("Visiting dummy node " + active);
 
                 List<String> genomes = ((DummyNode) active).getDiversionSource().getMetadata().getGenomes();
                 genomeStore.put(active, new HashSet<>(genomes));
@@ -81,16 +93,15 @@ public final class PathCalculator {
             }
         }
 
-        System.out.println(genomeStore);
+        LOGGER.info(genomeStore);
 
         // Generate paths
         Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder);
 
         // Add paths to edges
         addPathsToEdges(paths);
-        System.out.println(paths);
+        LOGGER.info(paths);
     }
-
 
     /**
      * Determines which {@link NewNode}s do not have any incoming edges.
@@ -117,16 +128,14 @@ public final class PathCalculator {
         Map<Edge, Set<String>> paths = new HashMap<>();
 
         // Go over topological order and assign importance
-        topologicalOrder.forEach(node -> {
-            node.getIncomingEdges().forEach(e -> {
-                final Set<String> intersection = new HashSet<>(genomeStore.get(e.getFrom()));
-                intersection.retainAll(genomeStore.get(node));
+        topologicalOrder.forEach(node -> node.getIncomingEdges().forEach(e -> {
+            final Set<String> intersection = new HashSet<>(genomeStore.get(e.getFrom()));
+            intersection.retainAll(genomeStore.get(node));
 
-                paths.put(e, intersection);
+            paths.put(e, intersection);
 
-                genomeStore.get(e.getFrom()).removeAll(intersection);
-            });
-        });
+            genomeStore.get(e.getFrom()).removeAll(intersection);
+        }));
 
         return paths;
     }

@@ -54,7 +54,7 @@ class PathCalculatorTest {
 
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
-        pathCalculator.computePaths(subgraph);
+        pathCalculator.computePaths();
 
         assertThat(e12.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
         assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
@@ -88,7 +88,7 @@ class PathCalculatorTest {
 
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
-        pathCalculator.computePaths(subgraph);
+        pathCalculator.computePaths();
 
         assertThat(e12.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
         assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
