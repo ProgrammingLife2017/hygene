@@ -64,7 +64,6 @@ public final class UnsignedIntegerTest {
     @Test
     void itConvertsTheHighestUnsignedIntegerToALong() {
         final int unsignedInteger = UnsignedInteger.fromLong(UnsignedInteger.MAX_VALUE);
-        System.out.println(unsignedInteger);
 
         assertThat(UnsignedInteger.toLong(unsignedInteger)).isEqualTo(UnsignedInteger.MAX_VALUE);
     }

@@ -8,7 +8,7 @@ public final class UnsignedInteger {
     /**
      * The maximum value of an {@link UnsignedInteger}, 2 * max integer value + 1.
      */
-    public static final long MAX_VALUE = 4294967295L;
+    public static final long MAX_VALUE = 2L * Integer.MAX_VALUE + 1;
 
 
     /**
