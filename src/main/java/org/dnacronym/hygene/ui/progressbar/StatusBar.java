@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * Deals with the on-screen progress bar in the application.
  */
 public final class StatusBar {
-    private static final int PROGRESS_MAX = 100;
+    public static final int PROGRESS_MAX = 100;
 
     private final DoubleProperty progressProperty;
     private final StringProperty statusProperty;

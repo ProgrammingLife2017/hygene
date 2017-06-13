@@ -47,7 +47,7 @@ class GenomeIndexTest {
 
     @Test
     void testGetClosestNode() throws ParseException, SQLException {
-        genomeIndex.populateIndex();
+        genomeIndex.populateIndex(mock(ProgressUpdater.class));
         assertThat(genomeIndex.getGenomePoint("g2.fasta", 5)).hasValueSatisfying(genomePoint -> {
             assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
             assertThat(genomePoint.getNodeId()).isEqualTo(4);
@@ -56,7 +56,7 @@ class GenomeIndexTest {
 
     @Test
     void testGetClosestNodeSingleBaseNode() throws ParseException, SQLException {
-        genomeIndex.populateIndex();
+        genomeIndex.populateIndex(mock(ProgressUpdater.class));
         assertThat(genomeIndex.getGenomePoint("g2.fasta", 3)).hasValueSatisfying(genomePoint -> {
             assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(0);
             assertThat(genomePoint.getNodeId()).isEqualTo(3);
@@ -65,7 +65,7 @@ class GenomeIndexTest {
 
     @Test
     void testGetClosestNodeFirstNode() throws ParseException, SQLException {
-        genomeIndex.populateIndex();
+        genomeIndex.populateIndex(mock(ProgressUpdater.class));
         assertThat(genomeIndex.getGenomePoint("g1.fasta", 1)).hasValueSatisfying(genomePoint -> {
             assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
             assertThat(genomePoint.getNodeId()).isEqualTo(1);

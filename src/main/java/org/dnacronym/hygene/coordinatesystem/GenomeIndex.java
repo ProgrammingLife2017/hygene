@@ -12,6 +12,7 @@ import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileGenomeIndex;
+import org.dnacronym.hygene.ui.progressbar.StatusBar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,21 +61,21 @@ public final class GenomeIndex {
     /**
      * Populate the file index with genome coordinate system index points.
      *
-     * @throws ParseException in case of errors during parsing of the GFA file
+     * @param progressUpdater the instance that should be informed of the progress of this task
      */
     public void populateIndex(final ProgressUpdater progressUpdater) {
         try {
             loadGenomeList();
 
             if (fileGenomeIndex.isIndexed()) {
-                progressUpdater.updateProgress(100, "Genomes already indexed.");
+                progressUpdater.updateProgress(StatusBar.PROGRESS_MAX, "Genomes already indexed.");
                 return;
             }
 
             fileGenomeIndex.cleanIndex();
             buildIndex(progressUpdater);
             fileGenomeIndex.markIndexAsComplete();
-        } catch (final SQLException | IOException | ParseException e) {
+        } catch (final SQLException | ParseException e) {
             LOGGER.error("Unable to load genome info from file.", e);
         }
     }
@@ -148,17 +149,20 @@ public final class GenomeIndex {
 
     /**
      * Iterates through the graph and saves index points at selected base locations.
+     *
+     * @param progressUpdater the instance that should be informed of the progress of this task
      */
     private void buildIndex(final ProgressUpdater progressUpdater) {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
 
-        int currentProgress = -1;
+        final int[] currentProgress = {-1};
         graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
             evaluateNode(nodeId);
 
             final int newProgress = Math.round((100.0f * nodeId) / (gfaFile.getGraph().getNodeArrays().length - 2));
-            if (newProgress > currentProgress) {
+            if (newProgress > currentProgress[0]) {
                 progressUpdater.updateProgress(newProgress, "Indexing the genomes...");
+                currentProgress[0] = newProgress;
             }
         });
     }
