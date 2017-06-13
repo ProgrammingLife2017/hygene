@@ -62,4 +62,13 @@ public class Edge {
     public final int hashCode() {
         return Objects.hash(uuid);
     }
+
+    @Override
+    public final String toString() {
+        return "Edge{" +
+                "uuid=" + uuid +
+                ", from=" + from +
+                ", to=" + to +
+                '}';
+    }
 }
