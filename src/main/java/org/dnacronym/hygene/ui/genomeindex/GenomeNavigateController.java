@@ -39,6 +39,8 @@ public final class GenomeNavigateController implements Initializable {
     private GenomeIndex genomeIndex;
     private Hygene hygeneInstance;
 
+    private boolean indexFinished;
+
     @FXML
     private AnchorPane genomeNavigatePane;
     @FXML
@@ -72,12 +74,15 @@ public final class GenomeNavigateController implements Initializable {
      * @param gfaFile the new {@link GfaFile} instance
      */
     private void triggerGenomeIndex(final GfaFile gfaFile) {
+        indexFinished = false;
+
         hygeneInstance.getStatusBar().monitorTask(progressUpdater -> {
             final Thread worker = new Thread(() -> {
                 try {
                     genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
                     genomeIndex.populateIndex(progressUpdater);
                     populateGenomeComboBox();
+                    indexFinished = true;
                 } catch (final SQLException | IOException e) {
                     LOGGER.error("Unable to load genome info from file.", e);
                 }
@@ -138,6 +143,11 @@ public final class GenomeNavigateController implements Initializable {
      */
     @FXML
     public void onGoAction(final ActionEvent actionEvent) {
+        if (!indexFinished) {
+            new WarningDialogue("Genome indexing process still in progress, unable to navigate.").show();
+            return;
+        }
+
         final int selectedBase;
 
         try {
