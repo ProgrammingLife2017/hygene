@@ -3,11 +3,11 @@ package org.dnacronym.hygene.events;
 import org.dnacronym.hygene.graph.Subgraph;
 
 
-public class NodeMetadataCacheUpdateEvent {
+public final class CalculatorDoneEvent {
     private final Subgraph subgraph;
 
 
-    public NodeMetadataCacheUpdateEvent(final Subgraph subgraph) {
+    public CalculatorDoneEvent(final Subgraph subgraph) {
         this.subgraph = subgraph;
     }
 

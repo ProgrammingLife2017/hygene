@@ -69,7 +69,7 @@ public final class NodeMetadataCache {
             if (Thread.interrupted()) {
                 return;
             }
-            HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent());
+            HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent(event.getSubgraph()));
         });
     }
 

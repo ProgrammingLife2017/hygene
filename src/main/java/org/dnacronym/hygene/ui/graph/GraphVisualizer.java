@@ -319,7 +319,7 @@ public final class GraphVisualizer {
         if (nodeMetadataCache != null) {
             HygeneEventBus.getInstance().unregister(nodeMetadataCache);
         }
-        nodeMetadataCache = new NodeMetadataCache(graph);
+        nodeMetadataCache = new NodeMetadataCache(graph.getGfaFile());
         HygeneEventBus.getInstance().register(nodeMetadataCache);
 
         draw();
