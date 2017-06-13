@@ -36,8 +36,9 @@ public class ThrottledExecutor {
     private final ScheduledExecutorService executor;
     private final int timeout;
 
-    private @MonotonicNonNull ScheduledFuture<?> future;
     private Instant waitUntil;
+    private @MonotonicNonNull Runnable currentAction;
+    private @MonotonicNonNull ScheduledFuture<?> future;
 
 
     /**
@@ -64,7 +65,7 @@ public class ThrottledExecutor {
      */
     public final synchronized void run(final Runnable action) {
         if (future != null && !future.isDone() && !future.isCancelled()) {
-            if (future.getDelay(TimeUnit.MILLISECONDS) >= 0) {
+            if (future.getDelay(TimeUnit.MILLISECONDS) >= 0 && action.equals(currentAction)) {
                 return;
             }
 
@@ -72,8 +73,9 @@ public class ThrottledExecutor {
         }
 
         final long delay = Math.max(0, Duration.between(Instant.now(), waitUntil).toMillis());
-        future = executor.schedule(action, delay, TimeUnit.MILLISECONDS);
         waitUntil = Instant.now().plus(timeout, ChronoUnit.MILLIS);
+        currentAction = action;
+        future = executor.schedule(action, delay, TimeUnit.MILLISECONDS);
     }
 
     /**
