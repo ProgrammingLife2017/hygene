@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,9 +23,11 @@ import java.util.List;
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
  * @see FeatureAnnotation
  */
+@SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class GffParser {
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int PROGRESS_UPDATE_INTERVAL = 1000;
+    private static final String PARSE_EXCEPTION_FORMAT = "There was an error at line %d: %s";
     /**
      * Progress is always the same, as we don't know how many lines the file has in advance.
      */
@@ -68,7 +71,7 @@ public final class GffParser {
         int lineNumber = 1;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8)) {
             String line = bufferedReader.readLine();
-            checkValidHeader(line);
+            checkValidHeader(line, lineNumber);
 
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
@@ -79,12 +82,15 @@ public final class GffParser {
                     continue;
                 }
 
-                final String[] columns = parseLine(line);
+                final String[] columns = parseLine(line, lineNumber);
                 if (featureAnnotation == null) {
+                    checkSequenceId(columns[SEQ_ID_COLUMN], lineNumber);
                     featureAnnotation = createFeatureAnnotation(columns[SEQ_ID_COLUMN]);
                 }
 
-                featureAnnotation.addSubFeatureAnnotation(parseSubFeatureAnnotation(columns));
+                final SubFeatureAnnotation subFeatureAnnotation = parseSubFeatureAnnotation(columns, lineNumber);
+                checkParent(featureAnnotation, subFeatureAnnotation, lineNumber);
+                featureAnnotation.addSubFeatureAnnotation(subFeatureAnnotation);
             }
 
             if (featureAnnotation == null) {
@@ -92,14 +98,10 @@ public final class GffParser {
             }
         } catch (final IOException e) {
             throw new ParseException("An IO error occurred while reading the GFF file.", e);
-        } catch (final IllegalArgumentException e) {
-            throw new ParseException("There was an error at line " + lineNumber + ".", e);
         }
 
         featureAnnotation.addMetadata(fileMetadata);
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished reading the file.");
-
-        progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished read the file.");
 
         return featureAnnotation;
     }
@@ -107,12 +109,15 @@ public final class GffParser {
     /**
      * Check if the given line is equal to {@value GFF_VERSION_HEADER}.
      *
-     * @param line the line to check
+     * @param line       the line to check
+     * @param lineNumber the current line number
+     * @throws ParseException if the header is not equa to {@value GFF_VERSION_HEADER}
      */
-    private void checkValidHeader(final @Nullable String line) {
+    private void checkValidHeader(final @Nullable String line, final int lineNumber) throws ParseException {
         if (line == null || !line.equals(GFF_VERSION_HEADER)) {
-            throw new IllegalArgumentException("The GFF file does not have the appropriate header: '"
-                    + GFF_VERSION_HEADER + "', it was: '" + line + "'.");
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "The GFF file does not have the appropriate header: '" + GFF_VERSION_HEADER + "', it was: '" + line
+                            + "'."));
         }
     }
 
@@ -150,50 +155,180 @@ public final class GffParser {
     /**
      * Creates a {@link SubFeatureAnnotation} annotation representing the current line.
      *
-     * @param columns the columns of the line to convert to a feature annotation
+     * @param columns    the columns of the line to convert to a feature annotation
+     * @param lineNumber the current line number
      * @return a {@link SubFeatureAnnotation} representing the current row in the file
+     * @throws ParseException if unable to create a {@link SubFeatureAnnotation}
      */
-    private SubFeatureAnnotation parseSubFeatureAnnotation(final String[] columns) {
+    private SubFeatureAnnotation parseSubFeatureAnnotation(final String[] columns, final int lineNumber)
+            throws ParseException {
         final SubFeatureAnnotation subFeatureAnnotation;
 
         try {
+            final int start = Integer.parseInt(columns[START_COLUMN]);
+            final int end = Integer.parseInt(columns[END_COLUMN]);
+            final int phase = ".".equals(columns[PHASE_COLUMN]) ? -1 : Integer.parseInt(columns[PHASE_COLUMN]);
+
+            checkStartEndValid(start, end, lineNumber);
+            checkPhaseValid(phase, lineNumber);
+            checkStrandValid(columns[STRAND_COLUMN], lineNumber);
+
             subFeatureAnnotation = new SubFeatureAnnotation(
                     columns[SOURCE_COLUMN],
                     columns[TYPE_COLUMN],
-                    Integer.parseInt(columns[START_COLUMN]), // start must be valid
-                    Integer.parseInt(columns[END_COLUMN]), // end must be valid
+                    start,
+                    end,
                     ".".equals(columns[SCORE_COLUMN]) ? -1 : Double.parseDouble(columns[SCORE_COLUMN]),
                     columns[STRAND_COLUMN],
-                    ".".equals(columns[PHASE_COLUMN]) ? -1 : Integer.parseInt(columns[PHASE_COLUMN]));
+                    phase);
         } catch (final NumberFormatException e) {
-            throw new IllegalArgumentException("A number could not be parsed.", e);
+            throw new ParseException(
+                    String.format(PARSE_EXCEPTION_FORMAT, lineNumber, "A number could not be parsed."), e);
         }
 
         final String[] attributes = columns[ATTRIBUTES_COLUMN].split(";");
         for (final String attribute : attributes) {
             final String[] keyValuePair = attribute.split("=");
             if (keyValuePair.length != 2) {
-                throw new IllegalArgumentException("An attribute contained a key without a value: '" + attribute
-                        + "'.");
+                throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                        "Unable to parse the '" + attribute + "'."));
             }
+            final String key = keyValuePair[0];
 
-            subFeatureAnnotation.setAttribute(keyValuePair[0], keyValuePair[1]);
+            subFeatureAnnotation.setAttribute(
+                    key,
+                    getValues(key, keyValuePair[1], subFeatureAnnotation.getAttributes(), lineNumber));
         }
 
         return subFeatureAnnotation;
     }
 
     /**
+     * Checks that the sequence id is valid.
+     *
+     * @param seqId      the sequence id to check
+     * @param lineNumber the current line number
+     * @throws ParseException if the sequence starts with '>'
+     */
+    private static void checkSequenceId(final String seqId, final int lineNumber) throws ParseException {
+        if (seqId.charAt(0) == '>') {
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "Seqid '" + seqId + "' started with the unescaped character '>'."));
+        }
+    }
+
+    /**
+     * Checks that the start and end values are valid.
+     *
+     * @param start      the start value to check
+     * @param end        the end value to check
+     * @param lineNumber the current line number
+     * @throws ParseException if the end is before the start
+     */
+    private static void checkStartEndValid(final int start, final int end, final int lineNumber) throws ParseException {
+        if (end < start) {
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "Start (" + start + ") was not before end (" + end + ")."));
+        }
+    }
+
+    /**
+     * Checks that the phase is valid.
+     *
+     * @param phase      the phase to check
+     * @param lineNumber the current line number
+     * @throws ParseException if the phase is not -1, and it is not in the range {@code [0, 2]}
+     */
+    private static void checkPhaseValid(final int phase, final int lineNumber) throws ParseException {
+        if (phase != -1 && phase < 0 || phase > 2) {
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "Phase was not 0, 1, or 2, it was: '" + phase + "'."));
+        }
+    }
+
+    /**
+     * Checks that the strand is valid.
+     *
+     * @param strand     the strand to check
+     * @param lineNumber the current line number
+     * @throws ParseException if the strand is not ".", "-" or "+"
+     */
+    private static void checkStrandValid(final String strand, final int lineNumber) throws ParseException {
+        if (!"+".equals(strand) && !"-".equals(strand) && !".".equals(strand)) {
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "Strand was not '+', '-' or '.', it was: '" + strand + "'."));
+        }
+    }
+
+    /**
+     * Checks that if the {@link SubFeatureAnnotation} refers to a parent, the {@link FeatureAnnotation} contains a
+     * {@link SubFeatureAnnotation} with that sequence id.
+     *
+     * @param featureAnnotation    the {@link FeatureAnnotation} to get the {@link SubFeatureAnnotation}s from
+     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} with the possible parent reference
+     * @param lineNumber           the current line number
+     * @throws ParseException if the {@link SubFeatureAnnotation} has an "ID" that refers to a non-existent
+     *                        {@link SubFeatureAnnotation} in the {@link FeatureAnnotation}
+     */
+    private static void checkParent(final FeatureAnnotation featureAnnotation,
+                                    final SubFeatureAnnotation subFeatureAnnotation, final int lineNumber)
+            throws ParseException {
+        final String[] parents = subFeatureAnnotation.getAttributes().get("Parent");
+        if (parents == null) {
+            return;
+        }
+
+        final Map<String, List<SubFeatureAnnotation>> subFeatureAnnotations =
+                featureAnnotation.getSubFeatureAnnotationsMap();
+
+        for (final String parent : parents) {
+            if (!subFeatureAnnotations.containsKey(parent)) {
+                throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                        "Reference made to non-existent parent '" + parent + "'."));
+            }
+        }
+    }
+
+    /**
+     * Returns the list of values of a certain key value pair.
+     *
+     * @param key        the key of the key value pair
+     * @param values     the value of the value pair
+     * @param attributes the map of attributes of the current {@link SubFeatureAnnotation}
+     * @param lineNumber the current line number
+     * @return the {@link String} array of values of this key
+     * @throws ParseException if the key is "ID" and there is more than one value, or if the given attributes map
+     *                        already contains the passed key
+     */
+    private static String[] getValues(final String key, final String values, final Map<String, String[]> attributes,
+                                      final int lineNumber) throws ParseException {
+        if (attributes.containsKey(key)) {
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "Tried to set a key twice: '" + key + "'."));
+        }
+
+        final String[] v = values.split(",");
+        if ("ID".equals(key) && v.length > 1) {
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "The ID tag had more than one id, it had: " + v.length + "."));
+        }
+
+        return v;
+    }
+
+    /**
      * Parses a single line of a GFF file.
      *
-     * @param line the string containing the line contents of the file
+     * @param line       the string containing the line contents of the file
+     * @param lineNumber the current line number
      * @return a {@link String} array representing the columns of a line
+     * @throws ParseException when unable to split the line up into 9 columns
      */
-    private String[] parseLine(final String line) {
+    private String[] parseLine(final String line, final int lineNumber) throws ParseException {
         final String[] columns = line.split("\\s+");
         if (columns.length != GFF_COLUMNS) {
-            throw new IllegalArgumentException("Line did not contain " + GFF_COLUMNS + " columns, it contained "
-                    + columns.length + " columns.");
+            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
+                    "Line did not contain " + GFF_COLUMNS + " columns, it contained " + columns.length + " columns."));
         }
 
         return columns;

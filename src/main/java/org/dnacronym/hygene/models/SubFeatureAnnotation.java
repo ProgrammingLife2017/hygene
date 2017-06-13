@@ -42,16 +42,6 @@ public final class SubFeatureAnnotation {
      */
     public SubFeatureAnnotation(final String source, final String type, final int start, final int end,
                                 final double score, final String strand, final int phase) {
-        if (end < start) {
-            throw new IllegalArgumentException("Start (" + start + ") was not before end (" + end + ").");
-        }
-        if (phase != -1 && phase < 0 || phase > 2) {
-            throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: '" + phase + "'.");
-        }
-        if (!"+".equals(strand) && !"-".equals(strand) && !".".equals(strand)) {
-            throw new IllegalArgumentException("Strand was not '+', '-' or '.', it was: '" + strand + "'.");
-        }
-
         this.source = source;
         this.type = type;
         this.start = start;
@@ -183,17 +173,9 @@ public final class SubFeatureAnnotation {
      * Values must be separated by a comma.
      *
      * @param name  the name of the attribute
-     * @param value the value of the attribute
+     * @param values the value of the attribute
      */
-    public void setAttribute(final String name, final String value) {
-        final String[] values = value.split(",");
-        if ("ID".equals(name) && values.length > 1) {
-            throw new IllegalArgumentException("The ID tag had more than one id, it had: " + values.length + ".");
-        }
-        if ("ID".equals(name) && attributes.containsKey(name)) {
-            throw new IllegalArgumentException("Tried to set a key twice: '" + value + "'.");
-        }
-
+    public void setAttribute(final String name, final String[] values) {
         attributes.put(name, values);
     }
 

@@ -32,10 +32,6 @@ public final class FeatureAnnotation {
      * @param seqId the id of the genome. Cannot start with an unescaped '>' character
      */
     public FeatureAnnotation(final String seqId) {
-        if (seqId.charAt(0) == '>') {
-            throw new IllegalArgumentException("Seqid '" + seqId + "' started with the unescaped character '>'.");
-        }
-
         this.seqId = seqId;
         subFeatureAnnotations = new ArrayList<>();
         subFeatureAnnotationsMap = new HashMap<>();
@@ -87,10 +83,6 @@ public final class FeatureAnnotation {
      */
     public void addSubFeatureAnnotation(final SubFeatureAnnotation subFeatureAnnotation) {
         final String[] ids = subFeatureAnnotation.getAttributes().get("ID");
-        if (ids != null && ids.length != 1) {
-            throw new IllegalArgumentException("The given feature annotation contained more than 1 id, it contained: "
-                    + ids.length + ".");
-        }
 
         if (ids != null) {
             if (!subFeatureAnnotationsMap.containsKey(ids[0])) {
@@ -102,11 +94,11 @@ public final class FeatureAnnotation {
         final String[] parentIds = subFeatureAnnotation.getAttributes().get("Parent");
         if (parentIds != null) {
             for (final String parentId : parentIds) {
-                if (!subFeatureAnnotationsMap.containsKey(parentId)) {
-                    throw new IllegalArgumentException("Reference made to non-existent parent: '" + parentId + "'.");
+                final List<SubFeatureAnnotation> annotations = subFeatureAnnotationsMap.get(parentId);
+                if (annotations == null) {
+                    return;
                 }
 
-                final List<SubFeatureAnnotation> annotations = subFeatureAnnotationsMap.get(parentId);
                 for (final SubFeatureAnnotation annotation : annotations) {
                     annotation.addChild(subFeatureAnnotation);
                 }
@@ -123,5 +115,14 @@ public final class FeatureAnnotation {
      */
     public List<SubFeatureAnnotation> getSubFeatureAnnotations() {
         return subFeatureAnnotations;
+    }
+
+    /**
+     * Returns the {@link Map} of id's and associated {@link SubFeatureAnnotation}.
+     *
+     * @return the {@link Map} of id's and associated {@link SubFeatureAnnotation}
+     */
+    public Map<String, List<SubFeatureAnnotation>> getSubFeatureAnnotationsMap() {
+        return subFeatureAnnotationsMap;
     }
 }
