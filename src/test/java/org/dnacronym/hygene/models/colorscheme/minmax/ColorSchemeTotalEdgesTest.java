@@ -32,12 +32,12 @@ final class ColorSchemeTotalEdgesTest {
         final Set incoming = mock(Set.class);
         when(incoming.size()).thenReturn(4);
         final Set outgoing = mock(Set.class);
-        when(outgoing.size()).thenReturn(2);
+        when(outgoing.size()).thenReturn(16);
         when(node.getIncomingEdges()).thenReturn(incoming);
         when(node.getOutgoingEdges()).thenReturn(outgoing);
 
         assertThat(colorSchemeTotalEdges.calculateColor(node)).isEqualTo(
-                Color.BROWN.interpolate(Color.CORNSILK, 6.0 / 44)
+                Color.BROWN.interpolate(Color.CORNSILK, 20.0 / 44)
         );
     }
 }

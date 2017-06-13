@@ -30,11 +30,11 @@ final class ColorSchemeOutgoingEdgesTest {
     void testOutgoingEdgesColor() {
         final NewNode node = mock(NewNode.class);
         final Set outgoing = mock(Set.class);
-        when(outgoing.size()).thenReturn(5);
+        when(outgoing.size()).thenReturn(16);
         when(node.getOutgoingEdges()).thenReturn(outgoing);
 
         assertThat(colorSchemeOutgoingEdges.calculateColor(node)).isEqualTo(
-                Color.AZURE.interpolate(Color.BURLYWOOD, 5.0 / 32)
+                Color.AZURE.interpolate(Color.BURLYWOOD, 16.0 / 32)
         );
     }
 }

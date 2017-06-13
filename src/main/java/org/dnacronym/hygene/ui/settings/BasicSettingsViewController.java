@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
  */
 public final class BasicSettingsViewController extends AbstractSettingsController {
     public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
+            new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
             new Pair<>("Fixed Color", new FixedColorScheme(Color.CORAL)),
             new Pair<>("Number of Incoming Edges", new ColorSchemeIncomingEdges(5, Color.ALICEBLUE, Color.CORAL)),
             new Pair<>("Number of Outgoing Edges", new ColorSchemeOutgoingEdges(5, Color.ALICEBLUE, Color.CORAL)),
-            new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
             new Pair<>("Length of Sequence", new ColorSchemeSequenceLength(5000, Color.ALICEBLUE, Color.CORAL))
     ));
 
