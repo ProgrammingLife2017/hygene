@@ -146,7 +146,7 @@ public final class CenterPointQuery {
 
             distanceMap.setDistance(nodeId, depth);
 
-            final NewNode node = new Segment(nodeId, graph.getLineNumber(nodeId), graph.getSequenceLength(nodeId));
+            final NewNode node = new Segment(nodeId, graph.getByteOffset(nodeId), graph.getSequenceLength(nodeId));
             node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
             node.setYPosition(graph.getUnscaledYPosition(nodeId));
             nodes.put(nodeId, node.getUuid());

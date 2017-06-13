@@ -40,7 +40,7 @@ public final class NodeMetadata {
         return Optional.ofNullable(node.getGraph())
                 .orElseThrow(() -> new ParseException("Cannot parse metadata for node because graph is unknown"))
                 .getGfaFile()
-                .parseNodeMetadata(node.getLineNumber());
+                .parseNodeMetadata(node.getByteOffset());
     }
 
 

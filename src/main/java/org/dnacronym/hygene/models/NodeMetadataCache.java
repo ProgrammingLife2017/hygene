@@ -10,12 +10,12 @@ import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.parser.ParseException;
 
-import java.io.UncheckedIOException;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 
@@ -138,12 +138,12 @@ public final class NodeMetadataCache {
     @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
     private void retrieveMetadataForCachedNodesWithoutMetadata() {
         try {
-            final Map<Integer, Integer> sortedNodesWithoutMetadata = cache.values().stream()
+            final Map<Integer, Long> sortedNodesWithoutMetadata = cache.values().stream()
                     .filter(node -> !node.hasMetadata())
-                    .sorted(Comparator.comparingInt(Node::getLineNumber))
+                    .sorted(Comparator.comparingLong(Node::getByteOffset))
                     .collect(Collectors.toMap(
                             Node::getId,
-                            Node::getLineNumber,
+                            Node::getByteOffset,
                             (oldValue, newValue) -> oldValue,
                             LinkedHashMap::new
                     ));
@@ -162,7 +162,7 @@ public final class NodeMetadataCache {
             HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent());
         } catch (final ParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
-        } catch (final UncheckedIOException e) {
+        } catch (final RejectedExecutionException e) {
             LOGGER.info("Retrieving metadata of nodes was interrupted.");
         }
     }

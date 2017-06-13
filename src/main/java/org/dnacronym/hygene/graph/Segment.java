@@ -12,7 +12,7 @@ public final class Segment extends NewNode {
     public static final int MIN_SEGMENT_LENGTH = 500;
 
     private final int id;
-    private final int lineNumber;
+    private final long byteOffset;
     private final int sequenceLength;
 
 
@@ -20,12 +20,12 @@ public final class Segment extends NewNode {
      * Constructs a new {@link Segment} instance.
      *
      * @param id             the internal ID of the node
-     * @param lineNumber     the number of the corresponding segment in the GFA file this node was defined in
+     * @param byteOffset     the byte offset of the line of the segment in the GFA file this node was defined in
      * @param sequenceLength the length of the node
      */
-    public Segment(final int id, final int lineNumber, final int sequenceLength) {
+    public Segment(final int id, final long byteOffset, final int sequenceLength) {
         this.id = id;
-        this.lineNumber = lineNumber;
+        this.byteOffset = byteOffset;
         this.sequenceLength = sequenceLength;
     }
 
@@ -40,12 +40,12 @@ public final class Segment extends NewNode {
     }
 
     /**
-     * Returns the line number.
+     * Returns the byte offset.
      *
-     * @return the line number
+     * @return the byte offset
      */
-    public int getLineNumber() {
-        return lineNumber;
+    public long getByteOffset() {
+        return byteOffset;
     }
 
     /**

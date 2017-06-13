@@ -13,7 +13,7 @@ final class GraphTest {
     void testGetLineNumber() {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withLineNumber(3).create().toArray());
 
-        assertThat(graph.getLineNumber(0)).isEqualTo(3);
+        assertThat(graph.getByteOffset(0)).isEqualTo(3);
     }
 
     @Test

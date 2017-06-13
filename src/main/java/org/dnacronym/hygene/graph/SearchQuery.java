@@ -74,7 +74,7 @@ public final class SearchQuery {
         final Set<Integer> nodeIds = new HashSet<>();
 
         for (int batchIndex = 0; batchIndex < numBatches; batchIndex++) {
-            final Map<Integer, Integer> sortedNodeIds = getLineNumbersOfBatch(batchIndex);
+            final Map<Integer, Long> sortedNodeIds = getByteOffsetsBatch(batchIndex);
             final Map<Integer, NodeMetadata> batchMetadata = metadataParser.parseNodeMetadata(gfaFile, sortedNodeIds);
             nodeIds.addAll(batchMetadata.entrySet().stream()
                     .filter(entry -> isInQuery.test(entry.getValue()))
@@ -86,22 +86,22 @@ public final class SearchQuery {
     }
 
     /**
-     * Returns a map of node IDs to line numbers, sorted by line number.
+     * Returns a map of node IDs to byte offsets, sorted by byte offset.
      *
      * @param batchIndex the index of the batch to generate mappings for
      * @return the sorted map of node IDs to line numbers
      */
-    private Map<Integer, Integer> getLineNumbersOfBatch(final int batchIndex) {
+    private Map<Integer, Long> getByteOffsetsBatch(final int batchIndex) {
         final List<Integer> batchNodeIds = IntStream
                 .rangeClosed(batchIndex * BATCH_SIZE + 1,
                         Math.max(batchIndex * (BATCH_SIZE + 1), numberOfNodesInGraph - 2))
                 .boxed().collect(Collectors.toList());
 
         return batchNodeIds.stream()
-                .sorted(Comparator.comparingInt(nodeId -> gfaFile.getGraph().getLineNumber(nodeId)))
+                .sorted(Comparator.comparingLong(nodeId -> gfaFile.getGraph().getByteOffset(nodeId)))
                 .collect(Collectors.toMap(
                         nodeId -> nodeId,
-                        nodeId -> gfaFile.getGraph().getLineNumber(nodeId),
+                        nodeId -> gfaFile.getGraph().getByteOffset(nodeId),
                         (oldValue, newValue) -> oldValue,
                         LinkedHashMap::new
                 ));

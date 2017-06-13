@@ -13,7 +13,11 @@ import org.dnacronym.hygene.persistence.GraphLoader;
 import org.dnacronym.hygene.persistence.UnexpectedDatabaseException;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,9 +28,11 @@ import java.util.Map;
 /**
  * Represents a GFA file with its contents and metadata.
  */
+@SuppressWarnings("squid:S1192") // No need to define a constant for the string literal "File"
 public final class GfaFile {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
     private static final int PROGRESS_TOTAL = 100;
+    private static final String RANDOM_ACCESS_FILE_MODE = "r";
 
     private final String fileName;
     private final NewGfaParser gfaParser;
@@ -92,24 +98,24 @@ public final class GfaFile {
     /**
      * Parses a node's metadata to a {@link NodeMetadata} object.
      *
-     * @param lineNumber  the line numbers where the nodes should be located, sorted from lowest to highest,
-     *                    results will be given the same key as provided in this map
+     * @param byteOffset the byte offset of the node within the GFA file
      * @return a map in the {@code provided key => node metadata} format
      * @throws ParseException if the node metadata cannot be parsed
      */
-    public NodeMetadata parseNodeMetadata(final int lineNumber) throws ParseException {
-        return metadataParser.parseNodeMetadata(this, lineNumber);
+    public NodeMetadata parseNodeMetadata(final long byteOffset) throws ParseException {
+        return metadataParser.parseNodeMetadata(this, byteOffset);
     }
 
     /**
      * Parses a node's metadata to a {@link NodeMetadata} object.
      *
-     * @param lineNumbers line number of the node within the GFA file
+     * @param byteOffsets the byte offsets where the nodes should be located, sorted from lowest to highest,
+     *                    results will be given the same key as provided in this map
      * @return a {@link NodeMetadata} object
      * @throws ParseException if the node metadata cannot be parsed
      */
-    public Map<Integer, NodeMetadata> parseNodeMetadata(final Map<Integer, Integer> lineNumbers) throws ParseException {
-        return metadataParser.parseNodeMetadata(this, lineNumbers);
+    public Map<Integer, NodeMetadata> parseNodeMetadata(final Map<Integer, Long> byteOffsets) throws ParseException {
+        return metadataParser.parseNodeMetadata(this, byteOffsets);
     }
 
     /**
@@ -156,6 +162,34 @@ public final class GfaFile {
             return Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (final IOException e) {
             throw new ParseException("File '" + fileName + "' cannot be read. ", e);
+        }
+    }
+
+    /**
+     * Returns an input stream to read the GFA file.
+     *
+     * @return an input stream to read the GFA file
+     * @throws ParseException if file could not be found
+     */
+    public InputStream getInputStream() throws ParseException {
+        try {
+            return new FileInputStream(fileName);
+        } catch (final FileNotFoundException e) {
+            throw new ParseException("File '" + fileName + "' could not be found. ", e);
+        }
+    }
+
+    /**
+     * Returns a random access file for the GFA file.
+     *
+     * @return a random access file for the GFA file
+     * @throws ParseException if file could not be found
+     */
+    public RandomAccessFile getRandomAccessFile() throws ParseException {
+        try {
+            return new RandomAccessFile(fileName, RANDOM_ACCESS_FILE_MODE);
+        } catch (final FileNotFoundException e) {
+            throw new ParseException("File '" + fileName + "' could not be found. ", e);
         }
     }
 }
