@@ -57,12 +57,12 @@ public final class FeatureAnnotation {
     }
 
     /**
-     * Adds a single item of meta-data to the {@link FeatureAnnotation}.
+     * Adds a list of of meta-data to the {@link FeatureAnnotation}.
      *
      * @param metaData item of meta-data to add
      */
-    public void addMetaData(final String metaData) {
-        this.metaData.add(metaData);
+    public void addMetaData(final List<String> metaData) {
+        this.metaData.addAll(metaData);
     }
 
     /**

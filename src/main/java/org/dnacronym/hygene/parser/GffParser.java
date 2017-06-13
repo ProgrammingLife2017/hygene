@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.parser;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.SubFeatureAnnotation;
@@ -24,7 +22,6 @@ import java.util.List;
  * @see FeatureAnnotation
  */
 public final class GffParser {
-    private static final Logger LOGGER = LogManager.getLogger(GffParser.class);
     private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int PROGRESS_UPDATE_INTERVAL = 1000;
     /**
@@ -62,18 +59,13 @@ public final class GffParser {
      * @throws ParseException if unable to parse the {@link java.io.File}, which can either be caused by an
      *                        {@link IOException} when opening the file or a semantic error in the GFF file itself
      */
-    @SuppressWarnings({"squid:S135", // An object is only instantiated once.
-            "squid:S3776", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity",
-            "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity"})
-    // Splitting this method up further decreases readability
+    @SuppressWarnings("squid:S135") // An object is only created once in the loop.
     public FeatureAnnotation parse(final String gffFile, final ProgressUpdater progressUpdater) throws ParseException {
         @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
-        final List<String> fileMetaData = new ArrayList<>();
+        final List<String> fileMetadata = new ArrayList<>();
 
-        BufferedReader bufferedReader = null;
         int lineNumber = 1;
-        try {
-            bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8);
+        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8)) {
             String line = bufferedReader.readLine();
             if (line == null || !line.equals(GFF_VERSION_HEADER)) {
                 throw new ParseException("There was an error at line " + lineNumber + ": The GFF file does not have"
@@ -81,20 +73,15 @@ public final class GffParser {
             }
 
             while ((line = bufferedReader.readLine()) != null) {
+                lineNumber++;
                 if (lineNumber % PROGRESS_UPDATE_INTERVAL == 0) {
                     progressUpdater.updateProgress(PROGRESS, "Reading line " + lineNumber + " of " + gffFile);
                 }
-
-                lineNumber++;
-                if (line.isEmpty() || line.charAt(0) == '#' && line.charAt(1) != '#') {
-                    continue;
-                } else if (line.startsWith("##")) {
-                    fileMetaData.add(line.substring(2, line.length() - 1));
+                if (!lineIsFeature(line, fileMetadata)) {
                     continue;
                 }
 
                 final String[] columns = parseLine(line);
-
                 final String seqId = columns[SEQ_ID_COLUMN];
                 if (featureAnnotation == null) {
                     featureAnnotation = createFeatureAnnotation(seqId);
@@ -106,26 +93,39 @@ public final class GffParser {
             throw new ParseException("An IO error occurred while reading the GFF file.", e);
         } catch (final IllegalArgumentException e) {
             throw new ParseException("There was an error at line " + lineNumber + ": There was an invalid value.", e);
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (final IOException e) {
-                    LOGGER.error("Unable to close the reader of the GFF file.", e);
-                }
-            }
         }
 
         if (featureAnnotation == null) {
             throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
         }
-        for (final String metaData : fileMetaData) {
-            featureAnnotation.addMetaData(metaData);
-        }
+        featureAnnotation.addMetaData(fileMetadata);
+
+        progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished reading the file.");
 
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished read the file.");
 
         return featureAnnotation;
+    }
+
+    /**
+     * Checks whether the given line is a feature.
+     * <p>
+     * If it is an empty line or a comment, the line is not a feature.<br>
+     * If it start with "##", it is not a feature, but it is metadata and is therefore added to fileMetadata.
+     *
+     * @param line         the line to check
+     * @param fileMetadata the file meta data to append to if line is meta data
+     * @return true if line is an actual feature, false otherwise
+     */
+    private static boolean lineIsFeature(final String line, final List<String> fileMetadata) {
+        if (line.isEmpty() || line.charAt(0) == '#' && line.charAt(1) != '#') {
+            return false;
+        } else if (line.startsWith("##")) {
+            fileMetadata.add(line.substring(2, line.length() - 1));
+            return false;
+        }
+
+        return true;
     }
 
     /**
