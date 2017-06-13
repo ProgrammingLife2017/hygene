@@ -49,6 +49,28 @@ class PathCalculatorTest {
         pathCalculator.computePaths(subgraph);
     }
 
+    @Test
+    void testComputePathsTopo() {
+        final Segment segment1 = new Segment(1, 63, 19);
+        final Segment segment2 = new Segment(2, 90, 32);
+        final Segment segment3 = new Segment(3, 98, 14);
+        final Segment segment4 = new Segment(4, 55, 10);
+
+        connectSegments(segment1, segment2);
+        connectSegments(segment1, segment3);
+        connectSegments(segment1, segment4);
+        connectSegments(segment2, segment4);
+        connectSegments(segment3, segment4);
+
+        subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
+
+        System.out.println(subgraph.getSourceConnectedNodes());
+
+
+        pathCalculator.computePaths(subgraph);
+    }
+
+
 
     /**
      * Connects the two segments with a {@link Link}.
