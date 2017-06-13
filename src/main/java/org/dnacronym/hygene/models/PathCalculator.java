@@ -48,9 +48,11 @@ public class PathCalculator {
         final Queue<Edge> toVisit = new LinkedList<>();
 
         final NewNode origin = new Segment(-1, -1, 0);
+        genomeStore.put(origin, new HashSet<>());
+
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new Edge(origin, sourceConnectedNode));
-//            genomeStore.
+            genomeStore.get(origin).addAll(sourceConnectedNode.getMetadata().getGenomes());
         });
 
         List<NewNode> topologicalOrder = new LinkedList<>();
@@ -84,6 +86,7 @@ public class PathCalculator {
             }
         }
 
+        System.out.println(genomeStore);
 
         // Create edges genome store
         Map<Edge, Set<String>> paths = new HashMap<>();
@@ -91,8 +94,8 @@ public class PathCalculator {
         // Go over topological order and assign importance
         topologicalOrder.forEach(node -> {
             node.getIncomingEdges().forEach(e -> {
-                final Set<String> intersection = genomeStore.get(e.getFrom());
-                intersection.removeAll(genomeStore.get(node));
+                final Set<String> intersection = new HashSet<>(genomeStore.get(e.getFrom()));
+                intersection.retainAll(genomeStore.get(node));
 
                 paths.put(e, intersection);
 
