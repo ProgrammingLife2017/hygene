@@ -142,12 +142,25 @@ final class FileMetadata {
         return DigestUtils.sha512Hex(fileDatabase.getFileName() + attr.lastModifiedTime() + attr.size());
     }
 
+    /**
+     * Returns {@code true} iff. the genomes in the file have been completely indexed.
+     *
+     * @return {@code true} iff. the genomes in the file have been completely indexed.
+     * @throws IOException  in the case of an error during IO operations
+     * @throws SQLException in the case of an error during SQL operations
+     */
     boolean isIndexed() throws IOException, SQLException {
         return Boolean.parseBoolean(
                 fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, IS_INDEXED_KEY_NAME, VALUE_COLUMN_NAME)
         );
     }
 
+    /**
+     * Sets the state of the index persisted in the DB to {@code isIndexed}.
+     *
+     * @param isIndexed the new state of the index to be stored
+     * @throws SQLException in the case of an error during SQL operations
+     */
     void setIndexedState(final boolean isIndexed) throws SQLException {
         fileDatabaseDriver.setSingleValue(TABLE_NAME, KEY_COLUMN_NAME, IS_INDEXED_KEY_NAME, VALUE_COLUMN_NAME,
                 String.valueOf(isIndexed));
