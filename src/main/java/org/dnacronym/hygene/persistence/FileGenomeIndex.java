@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -50,6 +51,37 @@ public final class FileGenomeIndex {
         return globalTable;
     }
 
+
+    /**
+     * Returns {@code true} iff. the genomes in the file have been indexed before.
+     * <p>
+     * For the time being, this check consists of a simple query for the number of rows in the index table.
+     *
+     * @return {@code true} iff. the genomes in the file have been indexed before
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public boolean isIndexed() throws SQLException, IOException {
+        return fileDatabase.getFileMetadata().isIndexed();
+    }
+
+    /**
+     * Permanently deletes all entries of the genome index.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public void cleanIndex() throws SQLException {
+        fileDatabaseDriver.deleteAllFromTable(TABLE_NAME);
+        fileDatabase.getFileMetadata().setIndexedState(false);
+    }
+
+    /**
+     * Marks the index as being complete.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public void markIndexAsComplete() throws SQLException {
+        fileDatabase.getFileMetadata().setIndexedState(true);
+    }
 
     /**
      * Adds a new genome index point with the given data attributes.
