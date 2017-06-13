@@ -1,9 +1,6 @@
 package org.dnacronym.hygene.graph;
 
-import com.google.common.eventbus.Subscribe;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.util.Collection;
@@ -11,7 +8,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -41,7 +37,6 @@ public final class Subgraph {
     public Subgraph() {
         this.segments = Collections.synchronizedMap(new LinkedHashMap<>());
         this.nodes = Collections.synchronizedMap(new LinkedHashMap<>());
-        HygeneEventBus.getInstance().register(this);
     }
 
 
@@ -211,11 +206,6 @@ public final class Subgraph {
         return getNeighbours(node, SequenceDirection.RIGHT).isEmpty();
     }
 
-
-    public List<NewNode> getSourceConnectedNodes() {
-        return nodes.values().stream().filter(this::isSourceNeighbour).collect(Collectors.toList());
-    }
-
     /**
      * Adds a {@link NewNode} without any other side effects.
      * <p>
@@ -231,13 +221,5 @@ public final class Subgraph {
             final Segment segment = (Segment) node;
             segments.put(segment.getId(), segment);
         }
-    }
-
-    @Subscribe
-    public void computePaths(NodeMetadataCacheUpdateEvent nodeMetadataCacheUpdateEvent) {
-        System.out.println("CACHE UPDATE");
-        this.getSegments().stream().forEach(i -> {
-            i.getMetadata();
-        });
     }
 }

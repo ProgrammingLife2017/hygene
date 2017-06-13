@@ -80,16 +80,12 @@ public final class PathCalculator {
                     .forEach(toVisit::add);
 
             if (active instanceof Segment) {
-                LOGGER.info("Visiting segment" + active);
-
                 genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
             } else if (active instanceof DummyNode) {
-                LOGGER.info("Visiting dummy node " + active);
-
                 List<String> genomes = ((DummyNode) active).getDiversionSource().getMetadata().getGenomes();
                 genomeStore.put(active, new HashSet<>(genomes));
             } else {
-                throw new IllegalStateException("Invalid node type");
+                throw new IllegalStateException("Invalid node type.");
             }
         }
 
