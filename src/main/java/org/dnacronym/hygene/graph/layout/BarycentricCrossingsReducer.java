@@ -26,7 +26,8 @@ import java.util.stream.IntStream;
  * Part of the {@link SugiyamaLayout} algorithm, reduces the number of edge crossings in a layout using the
  * barycentric method.
  */
-@SuppressWarnings({"keyfor", "PMD.CyclomaticComplexity"}) // Not possible to add the annotations for this within the lambdas used
+@SuppressWarnings({"keyfor", "PMD.CyclomaticComplexity"})
+// Not possible to add the annotations for this within the lambdas used
 public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReducer {
     private final LengthyNodeFinder lengthyNodeFinder;
 

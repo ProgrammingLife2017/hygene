@@ -23,7 +23,7 @@ class ThrottledExecutorTest {
      * Increments the {@code number} field, and then sleeps for 500 milliseconds.
      */
     @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
-    final Runnable incrementBeforeDelay = () -> {
+    private final Runnable incrementBeforeDelay = () -> {
         try {
             number[0]++;
             Thread.sleep(500);
@@ -35,7 +35,7 @@ class ThrottledExecutorTest {
      * Increments the {@code number} field after sleeping for 500 milliseconds.
      */
     @SuppressWarnings("squid:S2925") // Thread.sleep() is acceptable because it is meant to be interrupted
-    final Runnable incrementAfterDelay = () -> {
+    private final Runnable incrementAfterDelay = () -> {
         try {
             Thread.sleep(500);
             number[0]++;

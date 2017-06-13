@@ -17,7 +17,7 @@ import java.util.Map;
  * This class is intended to be extended.
  */
 abstract class LayerConstructingTestBase {
-    protected HashMap<Integer, NewNode> nodes;
+    private Map<Integer, NewNode> nodes;
 
 
     @BeforeEach
@@ -63,5 +63,9 @@ abstract class LayerConstructingTestBase {
         }
 
         return result;
+    }
+
+    protected NewNode getNode(final int id) {
+        return nodes.get(id);
     }
 }
