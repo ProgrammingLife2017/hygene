@@ -3,6 +3,7 @@ package org.dnacronym.hygene.persistence;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.sqlite.SQLiteConfig;
 
 import java.sql.Connection;
@@ -188,7 +189,8 @@ public final class FileDatabaseDriver implements AutoCloseable {
      * @return the return value of {@code dataCallback}
      * @throws SQLException in the case of an error during SQL operations
      */
-    synchronized Object executeCustomQuery(final String sql, final Function<ResultSet, Object> dataCallback)
+    synchronized @Nullable Object executeCustomQuery(final String sql,
+                                                     final Function<ResultSet, @Nullable Object> dataCallback)
             throws SQLException {
         try (Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery(sql)) {

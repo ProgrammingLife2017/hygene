@@ -1,9 +1,9 @@
 H	VN:Z:1.0
 H	ORI:Z:g1.fasta;g2.fasta;
-S	11	ACCTTA	*	ORI:Z:g1.fasta;g2.fasta
-S	12	ATTTTT	*	ORI:Z:g1.fasta
-S	13	G	*	ORI:Z:g2.fasta
-S	14	TCAAGG	*	ORI:Z:g1.fasta;g2.fasta
+S	11	ACC	*	ORI:Z:g1.fasta;g2.fasta
+S	12	ATT	*	ORI:Z:0
+S	13	G	*	ORI:Z:1
+S	14	TCA	*	ORI:Z:g1.fasta;g2.fasta
 L	11	+	12	+	0M
 L	11	+	13	+	0M
 L	12	+	14	+	0M

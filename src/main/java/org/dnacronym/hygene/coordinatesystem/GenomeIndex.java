@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.coordinatesystem;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 
@@ -24,24 +27,15 @@ import java.util.StringTokenizer;
  * Class responsible for indexing the genome coordinate system of a file.
  */
 public final class GenomeIndex {
-    private static final int DEFAULT_BASE_CACHE_INTERVAL = 1000;
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
     private final GfaFile gfaFile;
     private final FileGenomeIndex fileGenomeIndex;
 
     /**
-     * The minimal base distance between two adjacent index points of the same genome.
-     */
-    private int baseCacheInterval = DEFAULT_BASE_CACHE_INTERVAL;
-    /**
      * The current total base count per genome.
      */
     private final Map<String, Integer> genomeBaseCounts;
-    /**
-     * The base count difference per genome, counted from the last index point of that genome.
-     */
-    private final Map<String, Integer> genomeBaseDiffCounts;
     /**
      * A list of all genome names (used to map names to numeric indices and back).
      */
@@ -58,7 +52,6 @@ public final class GenomeIndex {
         this.gfaFile = gfaFile;
         this.fileGenomeIndex = fileDatabase.getFileGenomeIndex();
         this.genomeBaseCounts = new HashMap<>();
-        this.genomeBaseDiffCounts = new HashMap<>();
         this.genomeNames = new ArrayList<>();
     }
 
@@ -74,17 +67,18 @@ public final class GenomeIndex {
     }
 
     /**
-     * Looks for the node that comes closest to the wanted genome-base point in the coordinate system.
+     * Returns the node that contains the wanted genome-base point in the coordinate system.
      *
      * @param genome the name of the genome to query for
      * @param base   the base to query for
-     * @return the ID of the closest node to the desired point
+     * @return if found, the point of the base in that node
      * @throws SQLException in the case of an error during SQL operations
      */
-    public int getClosestNodeId(final String genome, final int base) throws SQLException {
-        return fileGenomeIndex.getClosestNodeToBase(getGenomeId(genome), base);
-    }
+    public Optional<@Nullable GenomePoint> getGenomePoint(final String genome, final int base) throws SQLException {
+        final int genomeId = genomeNames.indexOf(genome);
 
+        return Optional.of(fileGenomeIndex.getGenomePoint(genomeId, base));
+    }
 
     /**
      * Retrieves the list of genomes in the GFA file from the header.
@@ -130,7 +124,6 @@ public final class GenomeIndex {
 
             if (!nextGenome.isEmpty()) {
                 genomeBaseCounts.put(nextGenome, 0);
-                genomeBaseDiffCounts.put(nextGenome, -baseCacheInterval);
                 genomeNames.add(nextGenome);
             }
         }
@@ -153,6 +146,7 @@ public final class GenomeIndex {
      *
      * @param nodeId the ID of the node
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // The instances created are needed for data transfer
     private void evaluateNode(final int nodeId) {
         if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
             return;
@@ -162,53 +156,29 @@ public final class GenomeIndex {
             final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
 
             for (final String genome : nodeGenomes) {
-                final Integer genomeBaseDiffCount = genomeBaseDiffCounts.get(genome);
-                final Integer genomeBaseCount = genomeBaseCounts.get(genome);
+                final int genomeIndex;
+                final String genomeName;
+                if (StringUtils.isNumeric(genome)) {
+                    genomeIndex = Integer.parseInt(genome);
+                    genomeName = genomeNames.get(genomeIndex);
+                } else {
+                    genomeIndex = genomeNames.indexOf(genome);
+                    genomeName = genome;
+                }
 
-                if (genomeBaseDiffCount == null || genomeBaseCount == null) {
+                final Integer genomeBaseCount = genomeBaseCounts.get(genomeName);
+
+                if (genomeBaseCount == null) {
                     throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
                 }
 
+                fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(genomeIndex, genomeBaseCount, nodeId));
+
                 final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
-                if (genomeBaseDiffCount + nodeBaseCount >= baseCacheInterval) {
-                    final int baseIndexPosition = genomeBaseDiffCount + nodeBaseCount + genomeBaseCount;
-                    fileGenomeIndex.addGenomeIndexPoint(getGenomeId(genome), baseIndexPosition, nodeId);
-                    genomeBaseDiffCounts.put(genome, 0);
-                    genomeBaseCounts.put(genome, baseIndexPosition);
-                } else {
-                    genomeBaseCounts.put(genome, genomeBaseDiffCount + nodeBaseCount);
-                }
+                genomeBaseCounts.put(genomeName, genomeBaseCount + nodeBaseCount);
             }
         } catch (final ParseException | SQLException e) {
             LOGGER.warn("Failed to read metadata of node " + nodeId + ".", e);
         }
-    }
-
-    /**
-     * Gets the genome ID belonging to the given genome name.
-     *
-     * @param genomeName the name of the genome
-     * @return the corresponding internal genome ID
-     */
-    private int getGenomeId(final String genomeName) {
-        return genomeNames.indexOf(genomeName);
-    }
-
-    /**
-     * Returns the base cache interval.
-     *
-     * @return the base cache interval
-     */
-    int getBaseCacheInterval() {
-        return baseCacheInterval;
-    }
-
-    /**
-     * Sets the interval of bases to be cached.
-     *
-     * @param baseCacheInterval the base cache interval
-     */
-    void setBaseCacheInterval(final int baseCacheInterval) {
-        this.baseCacheInterval = baseCacheInterval;
     }
 }

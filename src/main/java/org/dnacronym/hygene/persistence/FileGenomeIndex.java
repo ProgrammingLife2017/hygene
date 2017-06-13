@@ -2,6 +2,8 @@ package org.dnacronym.hygene.persistence;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -50,39 +52,46 @@ public final class FileGenomeIndex {
     /**
      * Adds a new genome index point with the given data attributes.
      *
-     * @param genomeId a numeric ID representing the genome this index belongs to
-     * @param base     the base count at this index point
-     * @param nodeId   the ID of the node that belongs to that index point
+     * @param genomePoint the point to be indexed ({@link GenomePoint#baseOffsetInNode} will be discarded)
      * @throws SQLException in the case of an error during SQL operations
      */
-    public void addGenomeIndexPoint(final int genomeId, final int base, final int nodeId) throws SQLException {
+    public void addGenomeIndexPoint(final GenomePoint genomePoint) throws SQLException {
         fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(
-                String.valueOf(genomeId),
-                String.valueOf(base),
-                String.valueOf(nodeId)
+                String.valueOf(genomePoint.getGenomeId()),
+                String.valueOf(genomePoint.getBase()),
+                String.valueOf(genomePoint.getNodeId())
         ));
     }
 
     /**
-     * Retrieves the ID of the node that is closest to the given base in the given genome.
+     * Retrieves the ID of the node that contains the given base in the given genome.
      *
      * @param genomeId the ID of the genome
      * @param base     the base number
-     * @return the ID of the closest node, or -1 if it could not be found
+     * @return the ID of the node containing that base, or -1 if it could not be found
      * @throws SQLException in the case of an error during SQL operations
      */
-    public int getClosestNodeToBase(final int genomeId, final int base) throws SQLException {
-        final String sql = "SELECT * FROM " + TABLE_NAME
-                + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId
-                + " ORDER BY ABS(" + base + " - " + BASE_COLUMN_NAME + ") ASC"
+    public @Nullable GenomePoint getGenomePoint(final int genomeId, final int base) throws SQLException {
+        final String sql = "SELECT " + BASE_COLUMN_NAME + "," + NODE_ID_COLUMN_NAME + ","
+                + "(" + base + " - " + BASE_COLUMN_NAME + ") AS base_difference"
+                + " FROM " + TABLE_NAME
+                + " WHERE " + GENOME_ID_COLUMN_NAME + "=" + genomeId + " AND base_difference >= 0"
+                + " ORDER BY base_difference ASC"
                 + " LIMIT 1";
 
-        return (Integer) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
+        return (GenomePoint) fileDatabaseDriver.executeCustomQuery(sql, resultSet -> {
             try {
-                return resultSet.getInt(NODE_ID_COLUMN_NAME);
+                if (!resultSet.next()) {
+                    throw new SQLException("No genome index point found in database.");
+                }
+                return new GenomePoint(
+                        genomeId,
+                        base,
+                        resultSet.getInt(NODE_ID_COLUMN_NAME),
+                        resultSet.getInt("base_difference"));
             } catch (final SQLException e) {
-                LOGGER.error("Unable to retrieve closest node to base " + base + " in genome no. " + genomeId + ".", e);
-                return -1;
+                LOGGER.error("Unable to retrieve closest node to base " + base + " in genome " + genomeId + ".", e);
+                return null;
             }
         });
     }

@@ -23,7 +23,6 @@ import static org.mockito.Mockito.mock;
  */
 class GenomeIndexTest {
     private static final String TEST_GFA_FILE_NAME = "src/test/resources/gfa/index.gfa";
-    private static final int TEST_BASE_CACHE_INTERVAL = 1;
 
     private GenomeIndex genomeIndex;
     private FileDatabase fileDatabase;
@@ -37,7 +36,6 @@ class GenomeIndexTest {
         final GfaFile gfaFile = new GfaFile(TEST_GFA_FILE_NAME);
         gfaFile.parse(mock(ProgressUpdater.class));
         genomeIndex = new GenomeIndex(gfaFile, fileDatabase);
-        genomeIndex.setBaseCacheInterval(TEST_BASE_CACHE_INTERVAL);
     }
 
     @AfterEach
@@ -48,14 +46,30 @@ class GenomeIndexTest {
 
 
     @Test
-    void testGetClosestNodeId() throws ParseException, SQLException {
+    void testGetClosestNode() throws ParseException, SQLException {
         genomeIndex.populateIndex();
-        assertThat(genomeIndex.getClosestNodeId("g2.fasta", 6)).isEqualTo(3);
+        assertThat(genomeIndex.getGenomePoint("g2.fasta", 5)).hasValueSatisfying(genomePoint -> {
+            assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
+            assertThat(genomePoint.getNodeId()).isEqualTo(4);
+        });
     }
 
     @Test
-    void testGetBaseCacheInterval() {
-        assertThat(genomeIndex.getBaseCacheInterval()).isEqualTo(TEST_BASE_CACHE_INTERVAL);
+    void testGetClosestNodeSingleBaseNode() throws ParseException, SQLException {
+        genomeIndex.populateIndex();
+        assertThat(genomeIndex.getGenomePoint("g2.fasta", 3)).hasValueSatisfying(genomePoint -> {
+            assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(0);
+            assertThat(genomePoint.getNodeId()).isEqualTo(3);
+        });
+    }
+
+    @Test
+    void testGetClosestNodeFirstNode() throws ParseException, SQLException {
+        genomeIndex.populateIndex();
+        assertThat(genomeIndex.getGenomePoint("g1.fasta", 1)).hasValueSatisfying(genomePoint -> {
+            assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
+            assertThat(genomePoint.getNodeId()).isEqualTo(1);
+        });
     }
 
     private void deleteDatabase() throws IOException {
