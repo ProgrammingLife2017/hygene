@@ -18,7 +18,7 @@ final class EdgeTest {
     }
 
     @Test
-    void testGetLineNumber() {
+    void testGetByteOffset() {
         final Edge edge = new Edge(4, 3, UnsignedInteger.fromLong(12), null);
 
         assertThat(edge.getByteOffset()).isEqualTo(12);
@@ -101,7 +101,7 @@ final class EdgeTest {
     }
 
     @Test
-    void testEqualsDifferentLineNumber() {
+    void testEqualsDifferentByteOffset() {
         final Edge edge1 = new Edge(0, 0, 1, null);
         final Edge edge2 = new Edge(0, 0, 9, null);
 

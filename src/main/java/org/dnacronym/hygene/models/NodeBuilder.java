@@ -146,11 +146,11 @@ public final class NodeBuilder {
      * Adds a new incoming edge to the {@link Node} under construction.
      *
      * @param from       ID of the node where the edge is coming from
-     * @param lineNumber line number of the edge in the GFA file
+     * @param byteOffset line number of the edge in the GFA file
      * @return current instance of the builder to provide a fluent interface
      */
-    public NodeBuilder withIncomingEdge(final int from, final int lineNumber) {
-        incomingEdges.add(new Edge(from, nodeId, lineNumber, null));
+    public NodeBuilder withIncomingEdge(final int from, final int byteOffset) {
+        incomingEdges.add(new Edge(from, nodeId, byteOffset, null));
 
         return this;
     }
@@ -159,11 +159,11 @@ public final class NodeBuilder {
      * Adds a new outgoing edge to the {@link Node} under construction.
      *
      * @param to         ID of the node where the edge is going to
-     * @param lineNumber line number of the edge in the GFA file
+     * @param byteOffset line number of the edge in the GFA file
      * @return current instance of the builder to provide a fluent interface
      */
-    public NodeBuilder withOutgoingEdge(final int to, final int lineNumber) {
-        outgoingEdges.add(new Edge(nodeId, to, lineNumber, null));
+    public NodeBuilder withOutgoingEdge(final int to, final int byteOffset) {
+        outgoingEdges.add(new Edge(nodeId, to, byteOffset, null));
 
         return this;
     }

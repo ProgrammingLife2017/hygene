@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
  * Test suite for the {@link Link} class.
  */
 final class LinkTest extends EdgeTest {
-    private static final int LINE_NUMBER = 29;
+    private static final int BYTE_OFFSET = 29;
 
     private Link link;
 
@@ -22,14 +22,14 @@ final class LinkTest extends EdgeTest {
     void setUp() {
         super.setUp();
 
-        link = new Link(getFrom(), getTo(), LINE_NUMBER);
+        link = new Link(getFrom(), getTo(), BYTE_OFFSET);
         setEdge(link);
     }
 
 
     @Test
-    void testGetLineNumber() {
-        assertThat(link.getLineNumber()).isEqualTo(LINE_NUMBER);
+    void testGetByteOffset() {
+        assertThat(link.getByteOffset()).isEqualTo(BYTE_OFFSET);
     }
 
     @Test
