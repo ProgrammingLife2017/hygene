@@ -71,7 +71,7 @@ public final class GffParser {
         int lineNumber = 1;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8)) {
             String line = bufferedReader.readLine();
-            checkValidHeader(line, lineNumber);
+            validateHeader(line, lineNumber);
 
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
@@ -113,11 +113,11 @@ public final class GffParser {
      * @param lineNumber the current line number
      * @throws ParseException if the header is not equa to {@value GFF_VERSION_HEADER}
      */
-    private void checkValidHeader(final @Nullable String line, final int lineNumber) throws ParseException {
+    private void validateHeader(final @Nullable String line, final int lineNumber) throws ParseException {
         if (line == null || !line.equals(GFF_VERSION_HEADER)) {
             throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
-                    "The GFF file does not have the appropriate header: '" + GFF_VERSION_HEADER + "', it was: '" + line
-                            + "'."));
+                    "The GFF file does not have the appropriate header: '" + GFF_VERSION_HEADER
+                            + "', it was: '" + line + "'."));
         }
     }
 
