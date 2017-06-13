@@ -236,4 +236,13 @@ public final class FileDatabaseDriver implements AutoCloseable {
     public synchronized void close() throws SQLException {
         connection.close();
     }
+
+    /**
+     * Returns the connection.
+     *
+     * @return the connection
+     */
+    Connection getConnection() {
+        return connection;
+    }
 }

@@ -156,15 +156,20 @@ public final class GenomeIndex {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
 
         final int[] currentProgress = {-1};
+        fileGenomeIndex.setAutoCommit(false);
+
         graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
             evaluateNode(nodeId);
 
             final int newProgress = Math.round((100.0f * nodeId) / (gfaFile.getGraph().getNodeArrays().length - 2));
             if (newProgress > currentProgress[0]) {
-                progressUpdater.updateProgress(newProgress, "Indexing the genomes...");
+                progressUpdater.updateProgress(newProgress, "Indexing genomes...");
                 currentProgress[0] = newProgress;
+                fileGenomeIndex.commit();
             }
         });
+
+        fileGenomeIndex.setAutoCommit(true);
     }
 
     /**
