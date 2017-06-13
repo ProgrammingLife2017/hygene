@@ -38,6 +38,7 @@ class PathCalculatorTest {
 
         connectSegments(segment1, segment2);
         connectSegments(segment1, segment3);
+        connectSegments(segment1, segment4);
         connectSegments(segment2, segment4);
         connectSegments(segment3, segment4);
 
@@ -46,7 +47,7 @@ class PathCalculatorTest {
         System.out.println(subgraph.getSourceConnectedNodes());
 
 
-        pathCalculator.computePaths(subgraph);
+//        pathCalculator.computePaths(subgraph);
     }
 
     @Test
@@ -62,10 +63,12 @@ class PathCalculatorTest {
         connectSegments(segment2, segment4);
         connectSegments(segment3, segment4);
 
+        segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("abcd")));
+        segment2.setMetadata(new NodeMetadata("-", "-", Arrays.asList("b")));
+        segment3.setMetadata(new NodeMetadata("-", "-", Arrays.asList("cd")));
+        segment4.setMetadata(new NodeMetadata("-", "-", Arrays.asList("abcd")));
+
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
-
-        System.out.println(subgraph.getSourceConnectedNodes());
-
 
         pathCalculator.computePaths(subgraph);
     }
