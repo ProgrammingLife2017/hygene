@@ -2,7 +2,7 @@ package org.dnacronym.hygene.core;
 
 
 /**
- * Represents an 32 bit unsigned integer, allowing to store numbers between 0 and 2^32.
+ * Represents an 32 bit unsigned integer, allowing to store numbers between 0 and 2^32-1, inclusive.
  */
 public final class UnsignedInteger {
     /**
@@ -22,7 +22,7 @@ public final class UnsignedInteger {
      * Converts a normal non-negative long to a regularized integer.
      *
      * @param value a non-negative long
-     * @return a regularized integer between {@code Integer.MIN_VALUE} and {@code Integer.MAX_VALUE}
+     * @return a regularized integer between {@code Integer.MIN_VALUE} and {@code Integer.MAX_VALUE}, inclusive
      */
     public static int fromLong(final long value) {
         if (value < 0) {
@@ -37,7 +37,8 @@ public final class UnsignedInteger {
     /**
      * Converts a regularized integer to a non-negative long.
      *
-     * @param regularizedInteger a regularized integer between {@code Integer.MIN_VALUE} and {@code Integer.MAX_VALUE}
+     * @param regularizedInteger a regularized integer between {@code Integer.MIN_VALUE} and {@code Integer.MAX_VALUE},
+     *                           inclusive
      * @return a non-negative long
      */
     public static long toLong(final int regularizedInteger) {
