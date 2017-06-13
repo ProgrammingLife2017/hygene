@@ -63,10 +63,10 @@ class PathCalculatorTest {
         connectSegments(segment2, segment4);
         connectSegments(segment3, segment4);
 
-        segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("abcd")));
+        segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
         segment2.setMetadata(new NodeMetadata("-", "-", Arrays.asList("b")));
-        segment3.setMetadata(new NodeMetadata("-", "-", Arrays.asList("cd")));
-        segment4.setMetadata(new NodeMetadata("-", "-", Arrays.asList("abcd")));
+        segment3.setMetadata(new NodeMetadata("-", "-", Arrays.asList("c", "d")));
+        segment4.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
 
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
