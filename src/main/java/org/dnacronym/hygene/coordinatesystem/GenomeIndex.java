@@ -63,16 +63,15 @@ public final class GenomeIndex {
      * @throws ParseException in case of errors during parsing of the GFA file
      */
     public void populateIndex(final ProgressUpdater progressUpdater) throws ParseException, SQLException, IOException {
+        loadGenomeList();
+
         if (fileGenomeIndex.isIndexed()) {
             progressUpdater.updateProgress(100, "Genomes already indexed.");
             return;
         }
 
         fileGenomeIndex.cleanIndex();
-
-        loadGenomeList();
         buildIndex(progressUpdater);
-
         fileGenomeIndex.markIndexAsComplete();
     }
 
