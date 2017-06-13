@@ -2,6 +2,7 @@ package org.dnacronym.hygene.models;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.DummyNode;
 import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
@@ -42,7 +43,7 @@ public class PathCalculator {
 
         // Compute topological ordering
 
-        Map<NewNode, String> genomes = new HashMap<>();
+        Map<NewNode, Set<String>> genomeStore = new HashMap<>();
 
         final Queue<Edge> toVisit = new LinkedList<>();
 
@@ -53,37 +54,48 @@ public class PathCalculator {
 
         List<NewNode> topologicalOrder = new LinkedList<>();
 
-        HashSet<Edge> visited = new HashSet<>();
+        HashSet<Edge> visitedEdges = new HashSet<>();
         HashSet<NewNode> visitedNodes = new HashSet<>();
+
         while (!toVisit.isEmpty()) {
             NewNode active = toVisit.remove().getTo();
             visitedNodes.add(active);
             topologicalOrder.add(active);
 
-            System.out.println("Visiting " + active);
-
-
-            visited.addAll(active.getOutgoingEdges());
+            visitedEdges.addAll(active.getOutgoingEdges());
 
             active.getOutgoingEdges().stream()
                     .filter(e -> !visitedNodes.contains(e.getTo()) && e.getTo().getIncomingEdges().stream()
-                            .filter(out -> !visited.contains(out)).count() == 0)
+                            .filter(out -> !visitedEdges.contains(out)).count() == 0)
                     .forEach(toVisit::add);
 
             if (active instanceof Segment) {
-                System.out.println("visiting a segment");
+                System.out.println("Visiting segment" + active);
 
-                active.getMetadata().getGenomes().forEach(g -> {
+                genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
+            } else if (active instanceof DummyNode) {
+                System.out.println("Visiting dummy node " + active);
 
-                });
-//                genomes.put(active, Collections.copy(active.getMetadata().getGenomes()));
+                List<String> genomes = ((DummyNode) active).getDiversionSource().getMetadata().getGenomes();
+                genomeStore.put(active, new HashSet<>(genomes));
             } else {
-
+                throw new IllegalStateException("Invalid node type");
             }
         }
 
 
-        // Done with that
+        // Create edges genome store
+        Map<Edge, Set<String>> paths = new HashMap<>();
+
+        // Go over topological order and assign importance
+
+
+        topologicalOrder.forEach(node -> {
+            node.getIncomingEdges().forEach(e -> {
+//                NewNode source = e.getFrom();
+
+            });
+        });
 
 
     }
