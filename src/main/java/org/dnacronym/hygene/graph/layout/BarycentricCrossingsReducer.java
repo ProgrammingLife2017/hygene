@@ -2,7 +2,6 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.graph.DummyNode;
 import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.FillNode;
 import org.dnacronym.hygene.graph.NewNode;
@@ -128,13 +127,13 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     /**
      * Puts lengthy nodes in the same position in the results as their parent.
      *
-     * @param layer1 the nodes in layer 1
-     * @param layer2 the nodes in layer 2
+     * @param layer1    the nodes in layer 1
+     * @param layer2    the nodes in layer 2
      * @param newLayer2 the results of the current iteration
      * @return map from position in results to lengthy nodes
      */
     private Map<Integer, NewNode> giveLengthyNodesSamePosition(final NewNode[] layer1, final NewNode[] layer2,
-                                                       final List<@Nullable NewNode> newLayer2) {
+                                                               final List<@Nullable NewNode> newLayer2) {
         final Map<Integer, NewNode> lengthy = new LinkedHashMap<>();
 
         Arrays.stream(layer2).forEach(layer2Node -> {
@@ -213,7 +212,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * Adds dummy nodes between nodes with a large children width and lengthy nodes, in order to move lengthy nodes
      * to the right.
      *
-     * @param newLayer2      the result of the current iteration
+     * @param newLayer2   the result of the current iteration
      * @param layer2Index the index of the second layer
      * @param layers      the layers
      */
@@ -298,7 +297,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
     }
 
     /**
-     * Fixes jumping edges ( e.g. _/\_ ) between dummy nodes.
+     * Fixes jumping and zigzag edges (e.g. _/\_) between nodes.
      *
      * @param layers      the array of layers
      * @param layer2Index the index of layer 2
@@ -313,10 +312,6 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
         for (int i = layer2.length - 1; i >= 0; i--) {
             final NewNode node = layer2[i];
-
-            if (!(node instanceof DummyNode)) {
-                continue;
-            }
 
             final Optional<Edge> possibleLayer1Parent = node.getIncomingEdges().stream().findFirst();
             final Optional<Edge> possibleLayer3Child = node.getOutgoingEdges().stream().findFirst();
@@ -336,12 +331,12 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
                 continue;
             }
 
-            if (positionOfNodeInLayer1 == positionOfNodeInLayer3 && positionOfNodeInLayer1 != positionOfNodeInLayer2) {
+            if (positionOfNodeInLayer1 > positionOfNodeInLayer2) {
                 if (positionOfNodeInLayer1 >= layer2.length) {
                     // Fill
                     layer2 = Arrays.copyOf(layer2, positionOfNodeInLayer1 + 1);
                     for (int j = i; j < positionOfNodeInLayer1; j++) {
-                        layer2[i] = new FillNode();
+                        layer2[j] = new FillNode();
                     }
                     layer2[positionOfNodeInLayer1] = node;
                 } else if (layer2[positionOfNodeInLayer1] instanceof FillNode) {
