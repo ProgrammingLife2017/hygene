@@ -163,7 +163,6 @@ public final class GenomeNavigateController implements Initializable {
                             new SQLException("Genome-base combination could not be found in database."));
 
             hygeneInstance.getGraphDimensionsCalculator().getCenterNodeIdProperty().set(genomePoint.getNodeId());
-            hygeneInstance.getGraphDimensionsCalculator().getRadiusProperty().set(10);
 
             graphVisualizer.setSelectedNode(genomePoint.getNodeId());
             hygeneInstance.getSequenceVisualizer().setOffset(genomePoint.getBaseOffsetInNode());
