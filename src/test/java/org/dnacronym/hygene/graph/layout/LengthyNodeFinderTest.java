@@ -24,12 +24,12 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final NewNode[][] layers = combineLayers(layer1, layer2, layer3, layer4, layer5);
 
-        Map<NewNode, Integer> a = new LengthyNodeFinder().findInLayers(layers);
+        Map<NewNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
-        assertThat(a.get(layer1.get(1))).isEqualTo(3);
-        assertThat(a.get(layer2.get(2))).isEqualTo(3);
-        assertThat(a.get(layer2.get(5))).isEqualTo(0);
-        assertThat(a.get(layer5.get(3))).isEqualTo(0);
+        assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(3);
+        assertThat(lengthyNodes.get(layer2.get(2))).isEqualTo(3);
+        assertThat(lengthyNodes.get(layer2.get(5))).isEqualTo(0);
+        assertThat(lengthyNodes.get(layer5.get(3))).isEqualTo(0);
     }
 
     @Test
@@ -45,13 +45,13 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final NewNode[][] layers = combineLayers(layer1, layer2, layer3, layer4, layer5);
 
-        Map<NewNode, Integer> a = new LengthyNodeFinder().findInLayers(layers);
+        Map<NewNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
-        assertThat(a.get(layer1.get(1))).isEqualTo(5);
-        assertThat(a.get(layer2.get(2))).isEqualTo(3);
-        assertThat(a.get(layer2.get(5))).isEqualTo(2);
-        assertThat(a.get(layer4.get(6))).isEqualTo(0);
-        assertThat(a.get(layer5.get(3))).isEqualTo(0);
+        assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(5);
+        assertThat(lengthyNodes.get(layer2.get(2))).isEqualTo(3);
+        assertThat(lengthyNodes.get(layer2.get(5))).isEqualTo(2);
+        assertThat(lengthyNodes.get(layer4.get(6))).isEqualTo(0);
+        assertThat(lengthyNodes.get(layer5.get(3))).isEqualTo(0);
     }
 
     @Test
@@ -70,13 +70,13 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final NewNode[][] layers = combineLayers(layer1, layer2, layer3, layer4, layer5, layer6, layer7);
 
-        Map<NewNode, Integer> a = new LengthyNodeFinder().findInLayers(layers);
+        Map<NewNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
-        assertThat(a.get(layer1.get(1))).isEqualTo(8);
-        assertThat(a.get(layer4.get(4))).isEqualTo(4);
-        assertThat(a.get(layer5.get(5))).isEqualTo(2);
-        assertThat(a.get(layer5.get(6))).isEqualTo(2);
-        assertThat(a.get(layer7.get(7))).isEqualTo(0);
+        assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(8);
+        assertThat(lengthyNodes.get(layer4.get(4))).isEqualTo(4);
+        assertThat(lengthyNodes.get(layer5.get(5))).isEqualTo(2);
+        assertThat(lengthyNodes.get(layer5.get(6))).isEqualTo(2);
+        assertThat(lengthyNodes.get(layer7.get(7))).isEqualTo(0);
     }
 
     @Test
@@ -88,10 +88,10 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final NewNode[][] layers = combineLayers(layer1, layer2, layer3);
 
-        Map<NewNode, Integer> a = new LengthyNodeFinder().findInLayers(layers);
+        Map<NewNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
-        assertThat(a.get(layer1.get(1))).isEqualTo(2);
-        assertThat(a.get(layer1.get(2))).isEqualTo(2);
+        assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(2);
+        assertThat(lengthyNodes.get(layer1.get(2))).isEqualTo(2);
     }
 
     @Test
@@ -103,8 +103,8 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final NewNode[][] layers = combineLayers(layer1, layer2, layer3);
 
-        Map<NewNode, Integer> a = new LengthyNodeFinder().findInLayers(layers);
+        Map<NewNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
-        assertThat(a.get(layer1.get(1))).isEqualTo(2);
+        assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(2);
     }
 }

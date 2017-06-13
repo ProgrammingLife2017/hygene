@@ -140,7 +140,7 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
             if (nodeIds[i] == -9999) {
                 assertThat(layer[i]).isInstanceOf(FillNode.class);
             } else {
-                assertThat(layer[i]).isEqualTo(nodes.get(nodeIds[i]));
+                assertThat(layer[i]).isEqualTo(getNode(nodeIds[i]));
             }
         }
     }
