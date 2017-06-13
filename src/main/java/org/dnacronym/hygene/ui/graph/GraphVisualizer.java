@@ -4,9 +4,11 @@ import com.google.common.eventbus.Subscribe;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.canvas.Canvas;
@@ -23,7 +25,6 @@ import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadataCache;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
@@ -63,7 +64,7 @@ public final class GraphVisualizer {
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
-    private final ObjectProperty<Node> selectedNodeProperty;
+    private final IntegerProperty selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -100,7 +101,7 @@ public final class GraphVisualizer {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
 
-        selectedNodeProperty = new SimpleObjectProperty<>();
+        selectedNodeProperty = new SimpleIntegerProperty(-1);
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedNodeProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -142,33 +143,27 @@ public final class GraphVisualizer {
             return;
         }
 
-        final int nodeId = ((Segment) node).getId();
+        final Segment segment = (Segment) node;
         final double nodeX = graphDimensionsCalculator.computeXPosition(node);
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+        if (selectedNodeProperty.get() == segment.getId()) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
         if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
         }
-        if (nodeMetadataCache.has(nodeId)
-                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
-            try {
-                final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
-                nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
-            } catch (final ParseException e) {
-                LOGGER.error("An parse exception occurred while attempting"
-                        + " to retrieve node's " + nodeId + " metadata from drawing", e);
-            }
+        if (segment.hasMetadata()) {
+            final String sequence = segment.getMetadata().getSequence();
+            nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
         if (bookmarked) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
-        rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+        rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
     }
 
     /**
@@ -365,11 +360,7 @@ public final class GraphVisualizer {
      * @param nodeId node id of the new selected {@link Node}
      */
     public void setSelectedNode(final int nodeId) {
-        try {
-            selectedNodeProperty.set(nodeMetadataCache.getOrRetrieve(nodeId));
-        } catch (final ParseException e) {
-            LOGGER.info("Metadata of selected node " + nodeId + " could not be parsed.");
-        }
+        selectedNodeProperty.set(nodeId);
     }
 
     /**
@@ -379,7 +370,7 @@ public final class GraphVisualizer {
      *
      * @return Selected {@link Node} by the user, which can be {@code null}
      */
-    public ObjectProperty<Node> getSelectedNodeProperty() {
+    public IntegerProperty getSelectedNodeProperty() {
         return selectedNodeProperty;
     }
 

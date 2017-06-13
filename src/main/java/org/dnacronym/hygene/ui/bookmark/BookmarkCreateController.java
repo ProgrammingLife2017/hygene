@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.bookmark;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -66,7 +66,7 @@ public final class BookmarkCreateController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final ObjectProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+        final IntegerProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
@@ -78,10 +78,10 @@ public final class BookmarkCreateController implements Initializable {
         graphDimensionsCalculator.getRadiusProperty().addListener((observable, oldValue, newValue) ->
                 radius.setText(String.valueOf(newValue)));
 
-        baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-        radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-        description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-        save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
+        baseOffset.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
+        radius.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
+        description.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
+        save.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
 
         bookmarkCreatePane.visibleProperty().bind(simpleBookmarkStore.getBookmarkCreateVisibleProperty()
                 .and(graphDimensionsCalculator.getGraphProperty().isNotNull()));
@@ -151,7 +151,7 @@ public final class BookmarkCreateController implements Initializable {
      */
     @FXML
     void onSaveAction(final ActionEvent actionEvent) {
-        if (graphVisualizer.getSelectedNodeProperty().get() == null) {
+        if (graphVisualizer.getSelectedNodeProperty().get() < 0) {
             return;
         }
 
@@ -159,7 +159,7 @@ public final class BookmarkCreateController implements Initializable {
         final String radiusString = radius.getText().replaceAll("[^\\d]", "");
 
         if (!baseString.isEmpty() && !radiusString.isEmpty()) {
-            final int nodeId = graphVisualizer.getSelectedNodeProperty().get().getId();
+            final int nodeId = graphVisualizer.getSelectedNodeProperty().get();
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
 

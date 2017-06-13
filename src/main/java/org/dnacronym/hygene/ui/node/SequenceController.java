@@ -74,7 +74,8 @@ public final class SequenceController implements Initializable {
             sequenceTextArea.selectPositionCaret(newValue.intValue() + 1);
         });
 
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
+        // TODO re-enable this
+//      graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
         sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
         sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty()

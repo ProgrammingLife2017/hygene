@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.ui.node;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,13 +62,14 @@ public final class NodePropertiesController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final ObjectProperty<Node> selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+        final IntegerProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
 
-        final NeighbourVisualizer neighbourVisualizer
-                = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
-        neighbourVisualizer.setCanvas(neighbourCanvas);
+        // TODO re-enable neighbour visualizer
+//        final NeighbourVisualizer neighbourVisualizer
+//                = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
+//        neighbourVisualizer.setCanvas(neighbourCanvas);
 
-        selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
+//        selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
 
         nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull()
                 .and(graphVisualizer.getNodePropertiesVisibleProperty()));
@@ -141,10 +142,11 @@ public final class NodePropertiesController implements Initializable {
      */
     @FXML
     void onFocusAction(final ActionEvent actionEvent) {
-        final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
-        if (selectedNode != null) {
-            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
-        }
+        // TODO re-enable whatever this does
+//        final Node selectedNode = graphVisualizer.getSelectedNodeProperty().get();
+//        if (selectedNode != null) {
+//            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
+//        }
 
         actionEvent.consume();
     }

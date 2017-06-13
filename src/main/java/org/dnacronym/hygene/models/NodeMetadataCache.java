@@ -79,7 +79,7 @@ public final class NodeMetadataCache {
      */
     private void retrieveMetadata(final GfaFile gfaFile, final Subgraph subgraph) {
         try {
-            final Map<Integer, Integer> sortedSegmentsWithoutMetadata
+            final Map<Integer, Long> sortedSegmentsWithoutMetadata
                     = getSortedSegmentsWithoutMetadata(subgraph.getSegments());
             final Map<Integer, NodeMetadata> metadata
                     = gfaFile.parseNodeMetadata(sortedSegmentsWithoutMetadata);
@@ -97,13 +97,13 @@ public final class NodeMetadataCache {
     }
 
     //
-    private Map<Integer, Integer> getSortedSegmentsWithoutMetadata(final Collection<Segment> segments) {
+    private Map<Integer, Long> getSortedSegmentsWithoutMetadata(final Collection<Segment> segments) {
         return segments.stream()
                 .filter(node -> !node.hasMetadata())
-                .sorted(Comparator.comparingInt(Segment::getLineNumber))
+                .sorted(Comparator.comparingLong(Segment::getByteOffset))
                 .collect(Collectors.toMap(
                         Segment::getId,
-                        Segment::getLineNumber,
+                        Segment::getByteOffset,
                         (oldValue, newValue) -> oldValue,
                         LinkedHashMap::new
                 ));
