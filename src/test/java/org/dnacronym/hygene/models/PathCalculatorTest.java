@@ -1,12 +1,15 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.graph.DummyNode;
 import org.dnacronym.hygene.graph.Link;
+import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -38,11 +41,11 @@ class PathCalculatorTest {
         final Segment segment3 = new Segment(3, 98, 14);
         final Segment segment4 = new Segment(4, 55, 10);
 
-        Link e12 = connectSegments(segment1, segment2);
-        Link e13 = connectSegments(segment1, segment3);
-        Link e14 = connectSegments(segment1, segment4);
-        Link e24 = connectSegments(segment2, segment4);
-        Link e34 = connectSegments(segment3, segment4);
+        Link e12 = connectNodes(segment1, segment2);
+        Link e13 = connectNodes(segment1, segment3);
+        Link e14 = connectNodes(segment1, segment4);
+        Link e24 = connectNodes(segment2, segment4);
+        Link e34 = connectNodes(segment3, segment4);
 
         segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
         segment2.setMetadata(new NodeMetadata("-", "-", Arrays.asList("b")));
@@ -53,25 +56,30 @@ class PathCalculatorTest {
 
         pathCalculator.computePaths(subgraph);
 
-        assertThat(e12.getGenomes()).isEqualTo(Arrays.asList("b"));
-        assertThat(e13.getGenomes()).isEqualTo(Arrays.asList("c", "d"));
-        assertThat(e14.getGenomes()).isEqualTo(Arrays.asList("a"));
-        assertThat(e24.getGenomes()).isEqualTo(Arrays.asList("b"));
-        assertThat(e34.getGenomes()).isEqualTo(Arrays.asList("c", "d"));
+        assertThat(e12.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
+        assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
+        assertThat(e14.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("a")));
+        assertThat(e24.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
+        assertThat(e34.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
     }
 
     @Test
-    void testComputePathsTopo() {
+    void testComputePathsWithDummyNodes() {
         final Segment segment1 = new Segment(1, 63, 19);
         final Segment segment2 = new Segment(2, 90, 32);
         final Segment segment3 = new Segment(3, 98, 14);
         final Segment segment4 = new Segment(4, 55, 10);
+        final DummyNode dummy1 = new DummyNode(segment3, segment4);
+        final DummyNode dummy2 = new DummyNode(segment3, segment4);
 
-        connectSegments(segment1, segment2);
-        connectSegments(segment1, segment3);
-        connectSegments(segment1, segment4);
-        connectSegments(segment2, segment4);
-        connectSegments(segment3, segment4);
+        Link e12 = connectNodes(segment1, segment2);
+        Link e13 = connectNodes(segment1, segment3);
+        Link e14 = connectNodes(segment1, segment4);
+        Link e24 = connectNodes(segment2, segment4);
+        Link e35 = connectNodes(segment3, dummy1);
+        Link e56 = connectNodes(dummy1, dummy2);
+        Link e64 = connectNodes(dummy2, segment4);
+
 
         segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
         segment2.setMetadata(new NodeMetadata("-", "-", Arrays.asList("b")));
@@ -81,19 +89,25 @@ class PathCalculatorTest {
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
         pathCalculator.computePaths(subgraph);
+
+        assertThat(e12.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
+        assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
+        assertThat(e14.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("a")));
+        assertThat(e24.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
+        assertThat(e34.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
     }
 
     /**
-     * Connects the two segments with a {@link Link}.
+     * Connects the two {@link NewNode} with a {@link Link}.
      *
-     * @param leftSegment  the left segment
-     * @param rightSegment the right segment
+     * @param leftNode  the left {@link NewNode}
+     * @param rightNode the right {@link NewNode}
      * @return the {@link Link}
      */
-    private static Link connectSegments(final Segment leftSegment, final Segment rightSegment) {
-        final Link link = new Link(leftSegment, rightSegment, RANDOM.nextInt());
-        leftSegment.getOutgoingEdges().add(link);
-        rightSegment.getIncomingEdges().add(link);
+    private static Link connectNodes(final NewNode leftNode, final NewNode rightNode) {
+        final Link link = new Link(leftNode, rightNode, RANDOM.nextInt());
+        leftNode.getOutgoingEdges().add(link);
+        rightNode.getIncomingEdges().add(link);
         return link;
     }
 }
