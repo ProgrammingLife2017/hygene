@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 /**
- * A {@link FeatureAnnotation} is an object representing a single GFF file.
+ * A {@link FeatureAnnotation} is a single annotation.
  * <p>
  * A gene annotation consists of {@link SubFeatureAnnotation}s, which form a graph representing the feature.
  *
@@ -22,7 +22,7 @@ public final class FeatureAnnotation {
      * Map used for quick access of annotations to build up a hierarchy and quickly retrieve parent nodes.
      */
     private final Map<String, List<SubFeatureAnnotation>> subFeatureAnnotationsMap;
-    private final List<String> metaData;
+    private final List<String> metadata;
 
 
     /**
@@ -39,7 +39,7 @@ public final class FeatureAnnotation {
         this.seqId = seqId;
         subFeatureAnnotations = new ArrayList<>();
         subFeatureAnnotationsMap = new HashMap<>();
-        metaData = new ArrayList<>();
+        metadata = new ArrayList<>();
     }
 
 
@@ -52,17 +52,17 @@ public final class FeatureAnnotation {
      *
      * @return the sequence id of this annotation
      */
-    public String getSeqId() {
+    public String getSequenceId() {
         return seqId;
     }
 
     /**
      * Adds a list of of meta-data to the {@link FeatureAnnotation}.
      *
-     * @param metaData item of meta-data to add
+     * @param metadata item of meta-data to add
      */
-    public void addMetaData(final List<String> metaData) {
-        this.metaData.addAll(metaData);
+    public void addMetadata(final List<String> metadata) {
+        this.metadata.addAll(metadata);
     }
 
     /**
@@ -70,8 +70,8 @@ public final class FeatureAnnotation {
      *
      * @return the list of meta-data of this {@link FeatureAnnotation}
      */
-    public List<String> getMetaData() {
-        return metaData;
+    public List<String> getMetadata() {
+        return metadata;
     }
 
     /**

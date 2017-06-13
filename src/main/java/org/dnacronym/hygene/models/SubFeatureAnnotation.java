@@ -1,17 +1,13 @@
 package org.dnacronym.hygene.models;
 
-import com.google.common.collect.ImmutableSet;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 
 /**
- * sub features of features.
+ * Sub features of features.
  * <p>
  * These features are retrieved from GFF files. Each line of the file corresponds with a single sub feature. Together, a
  * collection of {@link SubFeatureAnnotation}s form a {@link FeatureAnnotation}.
@@ -21,13 +17,6 @@ import java.util.Map;
  * @see FeatureAnnotation
  */
 public final class SubFeatureAnnotation {
-    /**
-     * Set of valid attributes of a single feature annotation.
-     */
-    public static final ImmutableSet<String> VALID_ATTRIBUTES = ImmutableSet.copyOf(new HashSet<>(Arrays.asList(
-            "ID", "Name", "Alias", "Parent", "Target", "Gap", "Derives_from", "Note", "Dbxref", "Ontology_term",
-            "Is_circular")));
-
     private final Map<String, String[]> attributes;
     private final List<SubFeatureAnnotation> children;
 
@@ -61,7 +50,7 @@ public final class SubFeatureAnnotation {
         if (end < start) {
             throw new IllegalArgumentException("Start (" + start + ") was not before end (" + end + ")");
         }
-        if (phase < 0 || phase > 2) {
+        if (phase != -1 && phase < 0 || phase > 2) {
             throw new IllegalArgumentException("Phase was not 0, 1, or 2, it was: '" + phase + "'.");
         }
         if (!"+".equals(strand) && !"-".equals(strand) && !".".equals(strand)) {
@@ -121,7 +110,7 @@ public final class SubFeatureAnnotation {
      * indicated base in the direction of the landmark.
      *
      * @return the start of the {@link SubFeatureAnnotation}
-     * @see FeatureAnnotation#getSeqId()
+     * @see FeatureAnnotation#getSequenceId()
      */
     public int getStart() {
         return start;
@@ -140,7 +129,7 @@ public final class SubFeatureAnnotation {
      * indicated base in the direction of the landmark.
      *
      * @return the end of the {@link SubFeatureAnnotation}
-     * @see FeatureAnnotation#getSeqId()
+     * @see FeatureAnnotation#getSequenceId()
      */
     public int getEnd() {
         return end;
@@ -202,14 +191,12 @@ public final class SubFeatureAnnotation {
      * @param value the value of the attribute
      */
     public void setAttribute(final String name, final String value) {
-        if (!VALID_ATTRIBUTES.contains(name)) {
-            throw new IllegalArgumentException("The tag: " + name + " is not a valid attribute tag. Must be one of: "
-                    + VALID_ATTRIBUTES.toString() + ".");
-        }
-
         final String[] values = value.split(",");
         if ("ID".equals(name) && values.length > 1) {
             throw new IllegalArgumentException("The ID tag had more than one id, it had: " + values.length + ".");
+        }
+        if ("ID".equals(name) && attributes.containsKey(name)) {
+            throw new IllegalArgumentException("Tried to set a key twice: '" + value + "'.");
         }
 
         attributes.put(name, values);

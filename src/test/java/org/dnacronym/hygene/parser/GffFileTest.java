@@ -5,7 +5,6 @@ import org.dnacronym.hygene.models.SubFeatureAnnotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,9 +45,8 @@ final class GffFileTest {
      */
 
     @Test
-    void testGeneChildren() throws IOException, ParseException {
+    void testGeneChildren() throws ParseException {
         featureAnnotation = gffFile.parse(ProgressUpdater.DUMMY);
-
         final SubFeatureAnnotation geneAnnotation = featureAnnotation.getSubFeatureAnnotations().get(0);
 
         assertThat(geneAnnotation.getAttributes().get("ID")[0]).isEqualTo("gene00001");
@@ -61,7 +59,7 @@ final class GffFileTest {
     }
 
     @Test
-    void testTranscripts() throws IOException, ParseException {
+    void testTranscript() throws ParseException {
         featureAnnotation = gffFile.parse(ProgressUpdater.DUMMY);
 
         final SubFeatureAnnotation transcriptedProtean1 = featureAnnotation.getSubFeatureAnnotations().get(10);

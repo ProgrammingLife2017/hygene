@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.SubFeatureAnnotation;
 
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -62,15 +63,12 @@ public final class GffParser {
     @SuppressWarnings("squid:S135") // An object is only created once in the loop.
     public FeatureAnnotation parse(final String gffFile, final ProgressUpdater progressUpdater) throws ParseException {
         @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
-        final List<String> fileMetadata = new ArrayList<>();
+        final List<String> fileMetadata = new LinkedList<>();
 
         int lineNumber = 1;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8)) {
             String line = bufferedReader.readLine();
-            if (line == null || !line.equals(GFF_VERSION_HEADER)) {
-                throw new ParseException("There was an error at line " + lineNumber + ": The GFF file does not have"
-                        + " the appropriate header: '" + GFF_VERSION_HEADER + "', it was: '" + line + "'.");
-            }
+            checkValid(line);
 
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
@@ -82,29 +80,43 @@ public final class GffParser {
                 }
 
                 final String[] columns = parseLine(line);
-                final String seqId = columns[SEQ_ID_COLUMN];
                 if (featureAnnotation == null) {
-                    featureAnnotation = createFeatureAnnotation(seqId);
+                    featureAnnotation = createFeatureAnnotation(columns[SEQ_ID_COLUMN]);
                 }
 
-                featureAnnotation.addSubFeatureAnnotation(makeSubFeatureAnnotation(columns));
+                featureAnnotation.addSubFeatureAnnotation(parseSubFeatureAnnotation(columns));
+            }
+
+            if (featureAnnotation == null) {
+                throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
             }
         } catch (final IOException e) {
             throw new ParseException("An IO error occurred while reading the GFF file.", e);
         } catch (final IllegalArgumentException e) {
-            throw new ParseException("There was an error at line " + lineNumber + ": There was an invalid value.", e);
+            throw new ParseException("There was an error at line " + lineNumber + ".", e);
         }
 
-        if (featureAnnotation == null) {
-            throw new ParseException("An error occurred while reading the GFF file: There was no seqid.");
-        }
-        featureAnnotation.addMetaData(fileMetadata);
-
+        featureAnnotation.addMetadata(fileMetadata);
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished reading the file.");
 
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished read the file.");
 
         return featureAnnotation;
+    }
+
+    /**
+     * Check if the given line is equal to {@value GFF_VERSION_HEADER}.
+     * <p>
+     * This verifies that the file is the correct type.
+     *
+     * @param line the line to check
+     * @throws IllegalArgumentException if the line is not equal to {@value GFF_VERSION_HEADER}
+     */
+    private void checkValid(final @Nullable String line) {
+        if (line == null || !line.equals(GFF_VERSION_HEADER)) {
+            throw new IllegalArgumentException("The GFF file does not have the appropriate header: '"
+                    + GFF_VERSION_HEADER + "', it was: '" + line + "'.");
+        }
     }
 
     /**
@@ -144,18 +156,18 @@ public final class GffParser {
      * @param columns the columns of the line to convert to a feature annotation
      * @return a {@link SubFeatureAnnotation} representing the current row in the file
      */
-    private SubFeatureAnnotation makeSubFeatureAnnotation(final String[] columns) {
+    private SubFeatureAnnotation parseSubFeatureAnnotation(final String[] columns) {
         final SubFeatureAnnotation subFeatureAnnotation;
 
         try {
             subFeatureAnnotation = new SubFeatureAnnotation(
                     columns[SOURCE_COLUMN],
                     columns[TYPE_COLUMN],
-                    Integer.parseInt(columns[START_COLUMN]),
-                    Integer.parseInt(columns[END_COLUMN]),
-                    Double.parseDouble(columns[SCORE_COLUMN]),
+                    Integer.parseInt(columns[START_COLUMN]), // start must have a uva
+                    Integer.parseInt(columns[END_COLUMN]), // end must be valid
+                    ".".equals(columns[SCORE_COLUMN]) ? -1 : Double.parseDouble(columns[SCORE_COLUMN]),
                     columns[STRAND_COLUMN],
-                    Integer.parseInt(columns[PHASE_COLUMN]));
+                    ".".equals(columns[PHASE_COLUMN]) ? -1 : Integer.parseInt(columns[PHASE_COLUMN]));
         } catch (final NumberFormatException e) {
             throw new IllegalArgumentException("A number could not be parsed.", e);
         }
