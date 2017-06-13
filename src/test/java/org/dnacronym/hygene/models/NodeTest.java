@@ -20,7 +20,7 @@ final class NodeTest {
 
     @Test
     void testGetLineNumber() {
-        final Node node = NodeBuilder.start().withLineNumber(4).create();
+        final Node node = NodeBuilder.start().withByteOffset(4).create();
 
         assertThat(node.getByteOffset()).isEqualTo(4);
     }
@@ -64,7 +64,7 @@ final class NodeTest {
     void testToArray() {
         final Node node = NodeBuilder.start()
                 .withNodeId(42)
-                .withLineNumber(1)
+                .withByteOffset(1)
                 .withSequenceLength(5)
                 .withColor(NodeColor.BLACK)
                 .withUnscaledXEdgeCount(6)
