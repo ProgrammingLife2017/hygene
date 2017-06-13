@@ -53,8 +53,6 @@ public final class FileGenomeIndex {
 
     /**
      * Returns {@code true} iff. the genomes in the file have been indexed before.
-     * <p>
-     * For the time being, this check consists of a simple query for the number of rows in the index table.
      *
      * @return {@code true} iff. the genomes in the file have been indexed before
      * @throws SQLException in the case of an error during SQL operations
