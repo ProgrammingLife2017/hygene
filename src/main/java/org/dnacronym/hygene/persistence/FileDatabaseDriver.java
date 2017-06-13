@@ -203,25 +203,6 @@ public final class FileDatabaseDriver implements AutoCloseable {
     }
 
     /**
-     * Counts the number of rows in a table and returns it.
-     *
-     * @param tableName the name of the table
-     * @throws SQLException in the case of an error during SQL operations
-     */
-    synchronized int getNumberOfRows(final String tableName) throws SQLException {
-        final String sql = "SELECT COUNT(*) AS row_count FROM " + tableName;
-
-        try (Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(sql)) {
-                if (!resultSet.next()) {
-                    throw new SQLException("Expected one row containing the count of records - none found.");
-                }
-                return resultSet.getInt("row_count");
-            }
-        }
-    }
-
-    /**
      * Executes a custom SQL query.
      *
      * @param sql          the SQL query to execute
