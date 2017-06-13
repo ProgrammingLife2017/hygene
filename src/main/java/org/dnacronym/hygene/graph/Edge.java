@@ -87,10 +87,8 @@ public class Edge {
 
     @Override
     public final String toString() {
-        return "Edge{" +
-                "uuid=" + uuid +
-                ",\n    from=" + from +
-                ", to=" + to +
-                "}\n";
+        return "Edge{" + "uuid=" + uuid
+                + ",\n    from=" + from
+                + ", to=" + to + "}\n";
     }
 }
