@@ -76,9 +76,9 @@ class PathCalculatorTest {
         Link e13 = connectNodes(segment1, segment3);
         Link e14 = connectNodes(segment1, segment4);
         Link e24 = connectNodes(segment2, segment4);
-        Link e35 = connectNodes(segment3, dummy1);
-        Link e56 = connectNodes(dummy1, dummy2);
-        Link e64 = connectNodes(dummy2, segment4);
+        Link e3d1 = connectNodes(segment3, dummy1);
+        Link d1d2 = connectNodes(dummy1, dummy2);
+        Link d2s4 = connectNodes(dummy2, segment4);
 
 
         segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
@@ -94,7 +94,9 @@ class PathCalculatorTest {
         assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
         assertThat(e14.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("a")));
         assertThat(e24.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
-        assertThat(e34.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
+        assertThat(e3d1.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
+        assertThat(d1d2.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
+        assertThat(d2s4.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
     }
 
     /**
