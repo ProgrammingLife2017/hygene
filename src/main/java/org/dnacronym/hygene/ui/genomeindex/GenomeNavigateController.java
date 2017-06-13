@@ -14,13 +14,11 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -39,6 +37,7 @@ public final class GenomeNavigateController implements Initializable {
     private GraphVisualizer graphVisualizer;
     private GraphStore graphStore;
     private GenomeIndex genomeIndex;
+    private Hygene hygeneInstance;
 
     @FXML
     private AnchorPane genomeNavigatePane;
@@ -53,15 +52,17 @@ public final class GenomeNavigateController implements Initializable {
      */
     public GenomeNavigateController() {
         try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setGraphStore(Hygene.getInstance().getGraphStore());
-
-            graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
-                    triggerGenomeIndex(newValue));
+            hygeneInstance = Hygene.getInstance();
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
             new ErrorDialogue(e).show();
         }
+
+        setGraphVisualizer(hygeneInstance.getGraphVisualizer());
+        setGraphStore(hygeneInstance.getGraphStore());
+
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
+                triggerGenomeIndex(newValue));
     }
 
 
@@ -71,15 +72,12 @@ public final class GenomeNavigateController implements Initializable {
      * @param gfaFile the new {@link GfaFile} instance
      */
     private void triggerGenomeIndex(final GfaFile gfaFile) {
-        ProgressBarView progressBarView = new ProgressBarView();
-        progressBarView.show();
-
-        progressBarView.monitorTask(progressUpdater -> new Thread(() -> {
+        hygeneInstance.getStatusBar().monitorTask(progressUpdater -> new Thread(() -> {
             try {
                 genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
                 genomeIndex.populateIndex(progressUpdater);
                 populateGenomeComboBox();
-            } catch (final SQLException | IOException | ParseException e) {
+            } catch (final SQLException | IOException e) {
                 LOGGER.error("Unable to load genome info from file.", e);
             }
         }).start());

@@ -62,17 +62,21 @@ public final class GenomeIndex {
      *
      * @throws ParseException in case of errors during parsing of the GFA file
      */
-    public void populateIndex(final ProgressUpdater progressUpdater) throws ParseException, SQLException, IOException {
-        loadGenomeList();
+    public void populateIndex(final ProgressUpdater progressUpdater) {
+        try {
+            loadGenomeList();
 
-        if (fileGenomeIndex.isIndexed()) {
-            progressUpdater.updateProgress(100, "Genomes already indexed.");
-            return;
+            if (fileGenomeIndex.isIndexed()) {
+                progressUpdater.updateProgress(100, "Genomes already indexed.");
+                return;
+            }
+
+            fileGenomeIndex.cleanIndex();
+            buildIndex(progressUpdater);
+            fileGenomeIndex.markIndexAsComplete();
+        } catch (final SQLException | IOException | ParseException e) {
+            LOGGER.error("Unable to load genome info from file.", e);
         }
-
-        fileGenomeIndex.cleanIndex();
-        buildIndex(progressUpdater);
-        fileGenomeIndex.markIndexAsComplete();
     }
 
     /**
@@ -148,11 +152,14 @@ public final class GenomeIndex {
     private void buildIndex(final ProgressUpdater progressUpdater) {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
 
+        int currentProgress = -1;
         graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
             evaluateNode(nodeId);
-            progressUpdater.updateProgress(
-                    Math.round((100.0f * nodeId) / (gfaFile.getGraph().getNodeArrays().length - 2)),
-                    "Indexing the genomes...");
+
+            final int newProgress = Math.round((100.0f * nodeId) / (gfaFile.getGraph().getNodeArrays().length - 2));
+            if (newProgress > currentProgress) {
+                progressUpdater.updateProgress(newProgress, "Indexing the genomes...");
+            }
         });
     }
 
