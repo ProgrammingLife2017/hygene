@@ -1,10 +1,13 @@
 package org.dnacronym.hygene.graph;
 
 import javafx.scene.paint.Color;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.models.colorscheme.ColorScheme;
 import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,8 +23,10 @@ public abstract class NewNode {
     private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
+
     private int xPosition;
     private int yPosition;
+    private @MonotonicNonNull NodeMetadata metadata;
 
 
     /**
@@ -31,8 +36,8 @@ public abstract class NewNode {
      */
     protected NewNode() {
         this.uuid = UUID.randomUUID();
-        this.incomingEdges = new LinkedHashSet<>();
-        this.outgoingEdges = new LinkedHashSet<>();
+        this.incomingEdges = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.outgoingEdges = Collections.synchronizedSet(new LinkedHashSet<>());
     }
 
 
@@ -107,6 +112,38 @@ public abstract class NewNode {
     public abstract int getLength();
 
     /**
+     * Returns this {@link NewNode}'s metadata.
+     *
+     * @return this {@link NewNode}'s metadata
+     */
+    public NodeMetadata getMetadata() {
+        if (metadata == null) {
+            throw new IllegalStateException("Cannot access metadata before it is parsed.");
+        }
+
+        return metadata;
+    }
+
+    /**
+     * Sets the metadata for this node.
+     *
+     * @param metadata the metadata for this node
+     */
+    public void setMetadata(final NodeMetadata metadata) {
+        this.metadata = metadata;
+    }
+
+    /**
+     * Returns {@code true} iff. this {@link NewNode} has metadata set.
+     *
+     * @return {@code true} iff. this {@link NewNode} has metadata set
+     */
+    public boolean hasMetadata() {
+        return metadata != null;
+    }
+
+
+    /**
      * Returns the color scheme.
      *
      * @return the color scheme
@@ -132,6 +169,7 @@ public abstract class NewNode {
     public final Color getColor() {
         return colorScheme.calculateColor(this);
     }
+
 
     @Override
     public final boolean equals(final @Nullable Object o) {
