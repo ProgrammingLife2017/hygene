@@ -67,8 +67,8 @@ public class Edge {
     public final String toString() {
         return "Edge{" +
                 "uuid=" + uuid +
-                ", from=" + from +
+                ",\n    from=" + from +
                 ", to=" + to +
-                '}';
+                "}\n";
     }
 }
