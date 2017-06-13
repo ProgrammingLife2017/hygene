@@ -2,12 +2,15 @@ package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.core.ThrottledDefaultExecutor;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.NodeDistanceMap;
+import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 import java.util.HashMap;
@@ -29,12 +32,16 @@ public final class CenterPointQuery {
      * The algorithm to lay out nodes.
      */
     private static final Layout LAYOUT = new SugiyamaLayout();
+
+    /**
+     * The minimum number of milliseconds that must be between recalculating this subgraph's layout.
+     */
+    private static final int LAYOUT_TIMEOUT = 10;
     /**
      * The width of an edge.
      */
     // TODO Move this constant to the layout algorithm.
     private static final int EDGE_WIDTH = 1000;
-
     /**
      * The maximal acceptable difference between the preferred radius and the cached radius.
      */
@@ -66,9 +73,17 @@ public final class CenterPointQuery {
      */
     private final Subgraph subgraph;
     /**
+     * The cache for metadata of nodes.
+     */
+    private final NodeMetadataCache nodeMetadataCache;
+    /**
      * Maps each node id in the cache to the distance from the centre point of the query.
      */
     private final NodeDistanceMap distanceMap;
+    /**
+     * The executor for the layout.
+     */
+    private final ThrottledDefaultExecutor layoutExecutor;
 
     /**
      * The node id of the centre node in the current query.
@@ -94,7 +109,12 @@ public final class CenterPointQuery {
         this.iterator = new GraphIterator(graph);
         this.nodes = new HashMap<>();
         this.subgraph = new Subgraph();
+        this.nodeMetadataCache = new NodeMetadataCache(graph.getGfaFile());
         this.distanceMap = new NodeDistanceMap();
+        this.layoutExecutor = new ThrottledDefaultExecutor(LAYOUT_TIMEOUT, () -> {
+            LAYOUT.layOut(subgraph);
+            HygeneEventBus.getInstance().post(new LayoutDoneEvent(subgraph));
+        });
     }
 
 
@@ -153,7 +173,8 @@ public final class CenterPointQuery {
             subgraph.add(node);
         });
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> addEdges(nodeId));
-        LAYOUT.layOut(subgraph);
+
+        layoutExecutor.run();
 
         postEvent();
     }
@@ -233,7 +254,8 @@ public final class CenterPointQuery {
             iterator.visitDirectNeighbours(nodeId, neighbour -> distanceMap.setDistance(neighbour, cacheRadius));
             addEdges(nodeId);
         });
-        LAYOUT.layOut(subgraph);
+
+        layoutExecutor.run();
     }
 
     /**
