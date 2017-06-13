@@ -128,4 +128,31 @@ public final class FileGenomeIndex {
             }
         });
     }
+
+    /**
+     * Sets the auto-commit property of the file database driver.
+     *
+     * @param autoCommit whether each update should be executed immediately
+     */
+    public void setAutoCommit(final boolean autoCommit) {
+        try {
+            if (!fileDatabaseDriver.getConnection().getAutoCommit()) {
+                fileDatabaseDriver.getConnection().commit();
+            }
+            fileDatabaseDriver.getConnection().setAutoCommit(autoCommit);
+        } catch (final SQLException e) {
+            LOGGER.error("Unable to change database auto-commit setting.", e);
+        }
+    }
+
+    /**
+     * Commits any open transactions to the database.
+     */
+    public void commit() {
+        try {
+            fileDatabaseDriver.getConnection().commit();
+        } catch (final SQLException e) {
+            LOGGER.error("Unable to commit to database.", e);
+        }
+    }
 }
