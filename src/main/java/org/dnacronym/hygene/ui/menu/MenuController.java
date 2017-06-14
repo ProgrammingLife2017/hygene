@@ -36,6 +36,7 @@ import java.util.ResourceBundle;
 @SuppressWarnings({"PMD.ExcessiveImports", "PMD.TooManyMethods"}) // See todo. This will be addressed soon.
 public final class MenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
+    private static final String FAILED_TO_LOAD_FILE = "Failed to load %s.";
 
     private FileChooser gfaFileChooser;
     private FileChooser gffFileChooser;
@@ -116,7 +117,19 @@ public final class MenuController implements Initializable {
             return;
         }
 
-        graphStore.loadGffFile(gffFile);
+        final ProgressBarView progressBarView = new ProgressBarView();
+        progressBarView.monitorTask(progressUpdater -> {
+            if (graphStore == null) {
+                LOGGER.error(String.format(FAILED_TO_LOAD_FILE, gffFile.getName()));
+                return;
+            }
+
+            try {
+                graphStore.loadGffFile(gffFile, progressUpdater);
+            } catch (final IOException e) {
+                LOGGER.error(String.format(FAILED_TO_LOAD_FILE, gffFile.getName()), e);
+            }
+        });
     }
 
     /**
@@ -294,14 +307,14 @@ public final class MenuController implements Initializable {
 
         progressBarView.monitorTask(progressUpdater -> {
             if (graphStore == null) {
-                LOGGER.error("Failed to load: " + file.getName() + ".");
+                LOGGER.error(String.format(FAILED_TO_LOAD_FILE, file.getName()));
                 return;
             }
 
             try {
                 graphStore.loadGfaFile(file, progressUpdater);
             } catch (final IOException e) {
-                LOGGER.error("Failed to load: " + file.getName() + ".", e);
+                LOGGER.error(String.format(FAILED_TO_LOAD_FILE, file.getName()), e);
             }
         });
 
