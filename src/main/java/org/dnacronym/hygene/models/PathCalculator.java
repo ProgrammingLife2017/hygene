@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.models;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.DummyNode;
 import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.NewNode;
@@ -23,11 +21,10 @@ import java.util.stream.Collectors;
  * The class with calculate the genome paths.
  */
 public final class PathCalculator {
-    private static final Logger LOGGER = LogManager.getLogger(PathCalculator.class);
-
-
     /**
      * The edges compute the path for each {@link Edge}.
+     *
+     * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
         Map<NewNode, Set<String>> genomeStore = new HashMap<>();
@@ -66,21 +63,34 @@ public final class PathCalculator {
             if (active instanceof Segment) {
                 genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
             } else if (active instanceof DummyNode) {
-                List<String> genomes = ((DummyNode) active).getDiversionSource().getMetadata().getGenomes();
-                genomeStore.put(active, new HashSet<>(genomes));
+                genomeStore.put(active, getDummyNodeGenomes((DummyNode) active));
             } else {
                 throw new IllegalStateException("Invalid node type.");
             }
         }
-
-        LOGGER.info(genomeStore);
 
         // Generate paths
         Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
 
         // Add paths to edges
         addPathsToEdges(paths);
-        LOGGER.info(paths);
+    }
+
+    /**
+     * Gets the list of genomes for a specific {@link DummyNode}.
+     *
+     * @param dummyNode the {@link DummyNode}
+     * @return list of genomes
+     */
+    public Set<String> getDummyNodeGenomes(DummyNode dummyNode) {
+        List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
+        List<String> diversionDestinationGenomes = dummyNode.getDiversionDestination().getMetadata().getGenomes();
+
+        if (diversionDestinationGenomes.size() > diversionSourceGenomes.size()) {
+            return new HashSet<>(diversionSourceGenomes);
+        }
+
+        return new HashSet<>(diversionDestinationGenomes);
     }
 
     /**
