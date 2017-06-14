@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.query;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +25,8 @@ public final class QueryController implements Initializable {
 
     @FXML
     private TextField sequenceField;
+    @FXML
+    private ProgressIndicator queryProgress;
 
 
     /**
@@ -40,7 +43,7 @@ public final class QueryController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        // Nothing to initialize
+         queryProgress.visibleProperty().bind(query.getQueryingProperty());
     }
 
     /**

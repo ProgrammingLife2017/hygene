@@ -1,9 +1,13 @@
 package org.dnacronym.hygene.ui.query;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.SearchQuery;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -15,6 +19,9 @@ import java.util.Set;
  * Queries are performed here.
  */
 public final class Query {
+    private static final Logger LOGGER = LogManager.getLogger(Query.class);
+
+    private final BooleanProperty queryingProperty;
     private final BooleanProperty visibleProperty;
     private final ObservableList<Integer> queriedNodeIds;
 
@@ -27,7 +34,8 @@ public final class Query {
      * @param graphStore the {@link GraphStore} used to retrieve the most up to date graph
      */
     public Query(final GraphStore graphStore) {
-        this.visibleProperty = new SimpleBooleanProperty(false);
+        visibleProperty = new SimpleBooleanProperty(false);
+        queryingProperty = new SimpleBooleanProperty();
         queriedNodeIds = FXCollections.observableArrayList();
 
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
@@ -56,9 +64,22 @@ public final class Query {
         if (searchQuery == null) {
             return;
         }
+        queryingProperty.set(true);
 
-        final Set<Integer> nodeIds = searchQuery.executeSequenceRegexQuery(sequence);
-        queriedNodeIds.setAll(nodeIds);
+        final Thread thread = new Thread(() -> {
+            try {
+                final Set<Integer> nodeIds = searchQuery.executeSequenceRegexQuery(sequence);
+                Platform.runLater(() -> {
+                    queriedNodeIds.setAll(nodeIds);
+                    queryingProperty.set(false);
+                });
+            } catch (final ParseException e) {
+                LOGGER.error("Unable to execute a query.", e);
+            }
+        });
+
+        thread.setDaemon(false);
+        thread.start();
     }
 
     /**
@@ -68,6 +89,15 @@ public final class Query {
      */
     public BooleanProperty getVisibleProperty() {
         return visibleProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyBooleanProperty} which is true when a query is in progress.
+     *
+     * @return the {@link ReadOnlyBooleanProperty} which is true when a query is in progress
+     */
+    public ReadOnlyBooleanProperty getQueryingProperty() {
+        return queryingProperty;
     }
 
     /**
