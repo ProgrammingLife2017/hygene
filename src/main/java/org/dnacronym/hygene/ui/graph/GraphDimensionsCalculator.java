@@ -288,7 +288,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     double computeWidth(final NewNode node) {
-        return ((long) node.getLength()) / (maxX - minX) * canvasDimension.getWidth();
+        return ((double) node.getLength()) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
