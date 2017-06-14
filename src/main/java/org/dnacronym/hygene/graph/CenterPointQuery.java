@@ -114,6 +114,8 @@ public final class CenterPointQuery {
             LAYOUT.layOut(copy);
             HygeneEventBus.getInstance().post(new LayoutDoneEvent(copy));
         });
+
+        HygeneEventBus.getInstance().register(nodeMetadataCache);
     }
 
 

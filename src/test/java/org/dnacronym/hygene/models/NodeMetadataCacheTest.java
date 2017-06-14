@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
@@ -45,11 +46,14 @@ final class NodeMetadataCacheTest {
         gfaFile = createGraph();
         cache = new NodeMetadataCache(gfaFile);
         captor = ArgumentCaptor.forClass(Map.class);
+
+        HygeneEventBus.getInstance().register(cache);
     }
 
     @AfterEach
     void afterEach() {
         MetadataParserFactory.setInstance(null);
+        HygeneEventBus.getInstance().unregister(cache);
     }
 
 

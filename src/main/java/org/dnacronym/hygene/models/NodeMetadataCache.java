@@ -52,8 +52,6 @@ public final class NodeMetadataCache {
         this.retrievalExecutor = new ThrottledExecutor(RETRIEVE_METADATA_TIMEOUT);
         this.gfaFile = gfaFile;
         this.cache = new HashMap<>();
-
-        HygeneEventBus.getInstance().register(this);
     }
 
 

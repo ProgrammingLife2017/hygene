@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
-import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
@@ -113,8 +112,6 @@ public final class GraphDimensionsCalculator {
 
         graphProperty = new SimpleObjectProperty<>();
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
-
-        HygeneEventBus.getInstance().register(this);
     }
 
 
