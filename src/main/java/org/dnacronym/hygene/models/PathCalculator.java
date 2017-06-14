@@ -82,7 +82,7 @@ public final class PathCalculator {
      * @param dummyNode the {@link DummyNode}
      * @return list of genomes
      */
-    public Set<String> getDummyNodeGenomes(DummyNode dummyNode) {
+    public Set<String> getDummyNodeGenomes(final DummyNode dummyNode) {
         List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
         List<String> diversionDestinationGenomes = dummyNode.getDiversionDestination().getMetadata().getGenomes();
 
@@ -111,6 +111,7 @@ public final class PathCalculator {
      * Uses a topologically ordered set of {@link NewNode}s to compute the edges paths.
      *
      * @param topologicalOrder the topological ordering
+     * @param genomeStore      map containing the genomes from each node
      * @return map contains a set of genomes for each edge
      */
     public Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,

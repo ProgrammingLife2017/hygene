@@ -58,6 +58,7 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
+    private final ObjectProperty<String> selectedPathProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
     private final DoubleProperty nodeHeightProperty;
@@ -90,8 +91,12 @@ public final class GraphVisualizer {
         this.query = query;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
+
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        selectedPathProperty = new SimpleObjectProperty<>();
+        selectedPathProperty.addListener(observable -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -158,22 +163,45 @@ public final class GraphVisualizer {
      * <p>
      * The edge is afterwards added to the {@link RTree}.
      *
-     * @param fromNode edge origin node ID
-     * @param toNode   edge destination node ID
+     * @param edge the edge to be drawn
      */
-    private void drawEdge(final NewNode fromNode, final NewNode toNode) {
+    private void drawEdge(final org.dnacronym.hygene.graph.Edge edge) {
+        final NewNode fromNode = edge.getFrom();
+        final NewNode toNode = edge.getTo();
+
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
 
-        graphicsContext.setStroke(getEdgeColor());
+
+        graphicsContext.setStroke(edgeColorProperty.get());
+
+        if (edge.getGenomes() == null) {
+            graphicsContext.setStroke(Color.rgb(255, 0, 0));
+        }
+
         graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
-        graphicsContext.strokeLine(fromX, fromY, toX, toY);
 
         if (fromNode instanceof Segment && toNode instanceof Segment) {
-            rTree.addEdge(((Segment) fromNode).getId(), ((Segment) toNode).getId(), fromX, fromY, toX, toY);
+            int fromSegmentId = ((Segment) fromNode).getId();
+            int toSegmentId = ((Segment) toNode).getId();
+
+            rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
+
+//            if (nodeMetadataCache.isInPath(selectedPathProperty.get(), fromId, toId)
+//                    && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
+//                graphicsContext.setStroke(getActiveEdgeColor());
+//            }
         }
+        graphicsContext.setLineWidth(computeEdgeThickness(edge));
+
+
+        graphicsContext.strokeLine(fromX, fromY, toX, toY);
+    }
+
+    public double computeEdgeThickness(org.dnacronym.hygene.graph.Edge edge) {
+        return edge.getImportance();
     }
 
 
@@ -240,7 +268,7 @@ public final class GraphVisualizer {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
-            node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
+            node.getOutgoingEdges().forEach(this::drawEdge);
         }
 
         if (displayLaneBordersProperty.get()) {
@@ -372,6 +400,18 @@ public final class GraphVisualizer {
      */
     public ObjectProperty<Edge> getSelectedEdgeProperty() {
         return selectedEdgeProperty;
+    }
+
+
+    /**
+     * The property of the selected path.
+     * <p>
+     * This path is updated every time the user selects a new path for the path menu.
+     *
+     * @return the path
+     */
+    public ObjectProperty<String> getSelectedPathProperty() {
+        return selectedPathProperty;
     }
 
     /**
