@@ -14,7 +14,7 @@ import java.util.TreeSet;
  * The {@link Node} class wraps around a node array and provides convenience methods.
  * <p>
  * Node array format:
- * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1LineNumber...]]
+ * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1ByteOffset...]]
  */
 public final class Node {
     public static final int NODE_BYTE_OFFSET_INDEX = 0;
@@ -25,7 +25,7 @@ public final class Node {
     public static final int UNSCALED_Y_POSITION_INDEX = 5;
     public static final int NODE_OUTGOING_EDGES_INDEX = 6;
     public static final int NODE_EDGE_DATA_OFFSET = 7;
-    public static final int EDGE_LINE_NUMBER_OFFSET = 1;
+    public static final int EDGE_BYTE_OFFSET_OFFSET = 1;
     public static final int EDGE_DATA_SIZE = 2;
 
     private final int id;
@@ -184,9 +184,9 @@ public final class Node {
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         final int to = data[offset + i * EDGE_DATA_SIZE];
-                        final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
+                        final int byteOffset = data[offset + i * EDGE_DATA_SIZE + EDGE_BYTE_OFFSET_OFFSET];
 
-                        final Edge edge = new Edge(id, to, lineNumber, graph);
+                        final Edge edge = new Edge(id, to, byteOffset, graph);
                         newOutgoingEdges.add(edge);
                     }
                     this.outgoingEdges = newOutgoingEdges;
@@ -213,9 +213,9 @@ public final class Node {
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         final int from = data[offset + i * EDGE_DATA_SIZE];
-                        final int lineNumber = data[offset + i * EDGE_DATA_SIZE + EDGE_LINE_NUMBER_OFFSET];
+                        final int byteOffset = data[offset + i * EDGE_DATA_SIZE + EDGE_BYTE_OFFSET_OFFSET];
 
-                        final Edge edge = new Edge(from, id, lineNumber, graph);
+                        final Edge edge = new Edge(from, id, byteOffset, graph);
                         newIncomingEdges.add(edge);
                     }
 

@@ -15,6 +15,7 @@ import javafx.scene.paint.Paint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
@@ -252,6 +253,16 @@ public final class GraphVisualizer {
                     graphDimensionsCalculator.getLaneCountProperty().get(),
                     graphDimensionsCalculator.getLaneHeightProperty().get());
         }
+    }
+
+    /**
+     * Listens for {@link SnapshotButtonWasPressed} events.
+     *
+     * @param event the {@link SnapshotButtonWasPressed} event
+     */
+    @Subscribe
+    public void onScreenshotButtonWasPressed(final SnapshotButtonWasPressed event) {
+        Snapshot.forGfaFile(graph.getGfaFile()).take(canvas);
     }
 
     /**

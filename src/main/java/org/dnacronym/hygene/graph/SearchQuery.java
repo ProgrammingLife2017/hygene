@@ -89,7 +89,7 @@ public final class SearchQuery {
      * Returns a map of node IDs to byte offsets, sorted by byte offset.
      *
      * @param batchIndex the index of the batch to generate mappings for
-     * @return the sorted map of node IDs to line numbers
+     * @return the sorted map of node IDs to byte offsets
      */
     private Map<Integer, Long> getByteOffsetsBatch(final int batchIndex) {
         final List<Integer> batchNodeIds = IntStream

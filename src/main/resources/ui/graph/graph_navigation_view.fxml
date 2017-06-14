@@ -7,8 +7,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <StackPane fx:id="graphNavigationButtons" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.dnacronym.hygene.ui.graph.GraphNavigationController">
+           fx:controller="org.dnacronym.hygene.ui.graph.GraphNavigationController"
+           stylesheets="@../css/graph_navigation_style.css">
     <children>
+        <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="50.0" spacing="10.0"
+              StackPane.alignment="CENTER_LEFT">
+            <children>
+                <Button fx:id="takeSnapshot" mnemonicParsing="false" onAction="#takeSnapshotAction"
+                        styleClass="square_button">
+                    <tooltip>
+                        <Tooltip text="Take a snapshot."/>
+                    </tooltip>
+                </Button>
+                <Separator orientation="VERTICAL" prefHeight="200.0"/>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
         <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="50" spacing="10.0" StackPane.alignment="CENTER">
             <children>
                 <Separator orientation="VERTICAL"/>
