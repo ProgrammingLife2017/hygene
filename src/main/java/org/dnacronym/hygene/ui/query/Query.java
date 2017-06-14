@@ -54,6 +54,8 @@ public final class Query {
 
     /**
      * Performs a query by looking at the sequences of nodes and returning the nodes which contain the passed sequence.
+     * <p>
+     * Also clears the current list of queried node id's to avoid confusion.
      *
      * @param sequence the sequence to search for inside the sequences of nodes
      * @throws ParseException if unable to execute a regex query
@@ -65,6 +67,8 @@ public final class Query {
             return;
         }
         queryingProperty.set(true);
+        queriedNodeIds.clear();
+        LOGGER.info("Started querying: '" + sequence + "'.");
 
         final Thread thread = new Thread(() -> {
             try {
@@ -76,6 +80,8 @@ public final class Query {
             } catch (final ParseException e) {
                 LOGGER.error("Unable to execute a query.", e);
             }
+
+            LOGGER.info("Finished querying: '" + sequence + "'.");
         });
 
         thread.setDaemon(false);
