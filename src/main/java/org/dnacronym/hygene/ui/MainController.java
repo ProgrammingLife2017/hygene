@@ -51,7 +51,9 @@ public final class MainController implements Initializable {
         leftPane.managedProperty().bind(toggleLeftPane.selectedProperty()
                 .and(graphStore.getGfaFileProperty().isNotNull()));
 
-        rightPane.visibleProperty().bind(toggleRightPane.selectedProperty());
-        rightPane.managedProperty().bind(toggleRightPane.selectedProperty());
+        rightPane.visibleProperty().bind(toggleRightPane.selectedProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
+        rightPane.managedProperty().bind(toggleRightPane.selectedProperty()
+                .and(graphStore.getGfaFileProperty().isNotNull()));
     }
 }
