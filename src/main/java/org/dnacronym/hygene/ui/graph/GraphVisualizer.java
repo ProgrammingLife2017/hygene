@@ -21,7 +21,6 @@ import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
@@ -66,7 +65,6 @@ public final class GraphVisualizer {
     private final BooleanProperty displayLaneBordersProperty;
 
     private Graph graph;
-    private NodeMetadataCache nodeMetadataCache;
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -303,12 +301,6 @@ public final class GraphVisualizer {
      */
     void setGraph(final Graph graph) {
         this.graph = graph;
-
-        if (nodeMetadataCache != null) {
-            HygeneEventBus.getInstance().unregister(nodeMetadataCache);
-        }
-        nodeMetadataCache = new NodeMetadataCache(graph.getGfaFile());
-        HygeneEventBus.getInstance().register(nodeMetadataCache);
 
         draw();
     }
