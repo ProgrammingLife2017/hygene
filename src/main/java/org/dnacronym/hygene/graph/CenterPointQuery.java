@@ -67,7 +67,7 @@ public final class CenterPointQuery {
      * The cache for metadata of nodes.
      */
     @SuppressWarnings({"PMD.SingularField", "PMD.UnusedPrivateField", "squid:S1068"})
-    // Unused, but needs to be declared somewhere
+    // Receives layout events, so must be declared somewhere to prevent garbage collection
     private final NodeMetadataCache nodeMetadataCache;
     /**
      * Maps each node id in the cache to the distance from the centre point of the query.
