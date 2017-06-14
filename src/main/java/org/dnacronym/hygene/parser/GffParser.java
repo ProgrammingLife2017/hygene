@@ -221,7 +221,7 @@ public final class GffParser {
      * @throws ParseException if the phase is not -1, and it is not in the range {@code [0, 2]}
      */
     private static void checkPhaseValid(final int phase, final int lineNumber) throws ParseException {
-        if (phase != -1 && phase < 0 || phase > 2) {
+        if (phase != -1 && (phase < 0 || phase > 2)) {
             throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
                     "Phase was not 0, 1, or 2, it was: '" + phase + "'."));
         }

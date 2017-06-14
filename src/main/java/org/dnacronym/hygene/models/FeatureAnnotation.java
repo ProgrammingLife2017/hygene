@@ -51,7 +51,7 @@ public final class FeatureAnnotation {
     }
 
     /**
-     * Adds a list of of meta-data to the {@link FeatureAnnotation}.
+     * Adds a list of of metadata to the {@link FeatureAnnotation}.
      *
      * @param metadata item of meta-data to add
      */
