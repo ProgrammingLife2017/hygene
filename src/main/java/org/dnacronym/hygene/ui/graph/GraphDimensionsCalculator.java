@@ -214,8 +214,6 @@ public final class GraphDimensionsCalculator {
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
         radiusProperty.set(DEFAULT_RADIUS);
-
-//        calculate(); // Force a recalculation
     }
 
     /**
