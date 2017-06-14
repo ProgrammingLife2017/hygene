@@ -38,7 +38,7 @@ final class GffParserTest {
     @Test
     void testMetaDataSize() throws ParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
-        assertThat(featureAnnotation.getMetadata()).hasSize(1);
+        assertThat(featureAnnotation.getMetadata()).hasSize(2);
     }
 
     @Test
@@ -85,14 +85,6 @@ final class GffParserTest {
     @Test
     void testOpenNonExistentFile() {
         final Throwable throwable = catchThrowable(() -> gffParser.parse("asdf.gff", ProgressUpdater.DUMMY));
-
-        assertThat(throwable).isInstanceOf(ParseException.class);
-    }
-
-    @Test
-    void testNoHeader() {
-        final Throwable throwable = catchThrowable(() ->
-                gffParser.parse("src/test/resources/gff/no_header.gff", ProgressUpdater.DUMMY));
 
         assertThat(throwable).isInstanceOf(ParseException.class);
     }

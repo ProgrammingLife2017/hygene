@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.SubFeatureAnnotation;
 
@@ -25,7 +24,6 @@ import java.util.Map;
  */
 @SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class GffParser {
-    private static final String GFF_VERSION_HEADER = "##gff-version 3.2.1";
     private static final int PROGRESS_UPDATE_INTERVAL = 1000;
     private static final String PARSE_EXCEPTION_FORMAT = "There was an error at line %d: %s";
     /**
@@ -70,9 +68,7 @@ public final class GffParser {
 
         int lineNumber = 1;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(gffFile), StandardCharsets.UTF_8)) {
-            String line = bufferedReader.readLine();
-            validateHeader(line, lineNumber);
-
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
                 lineNumber++;
                 if (lineNumber % PROGRESS_UPDATE_INTERVAL == 0) {
@@ -104,21 +100,6 @@ public final class GffParser {
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished reading the file.");
 
         return featureAnnotation;
-    }
-
-    /**
-     * Check if the given line is equal to {@value GFF_VERSION_HEADER}.
-     *
-     * @param line       the line to check
-     * @param lineNumber the current line number
-     * @throws ParseException if the header is not equa to {@value GFF_VERSION_HEADER}
-     */
-    private void validateHeader(final @Nullable String line, final int lineNumber) throws ParseException {
-        if (line == null || !line.equals(GFF_VERSION_HEADER)) {
-            throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
-                    "The GFF file does not have the appropriate header: '" + GFF_VERSION_HEADER
-                            + "', it was: '" + line + "'."));
-        }
     }
 
     /**
