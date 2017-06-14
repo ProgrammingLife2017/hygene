@@ -43,6 +43,8 @@ public final class NodeMetadataCache {
 
     /**
      * Constructs and initializes {@link NodeMetadataCache}.
+     *
+     * @param gfaFile the {@link GfaFile} that provides the parsing functionality
      */
     public NodeMetadataCache(final GfaFile gfaFile) {
         this.retrievalExecutor = new ThrottledExecutor(RETRIEVE_METADATA_TIMEOUT);
@@ -52,11 +54,21 @@ public final class NodeMetadataCache {
     }
 
 
+    /**
+     * Updates the current radius when a {@link org.dnacronym.hygene.graph.CenterPointQuery} changes.
+     *
+     * @param event a {@link CenterPointQueryChangeEvent}
+     */
     @Subscribe
     public void centerPointQueryChanged(final CenterPointQueryChangeEvent event) {
         this.currentRadius = event.getRadius();
     }
 
+    /**
+     * Retrieves metadata as soon as the layout is done.
+     *
+     * @param event a {@link LayoutDoneEvent}
+     */
     @Subscribe
     public void layoutDone(final LayoutDoneEvent event) {
         if (currentRadius >= RADIUS_THRESHOLD) {
@@ -96,7 +108,13 @@ public final class NodeMetadataCache {
         }
     }
 
-    //
+    /**
+     * Removes {@link Segment} that already have metadata, sorts them by ascending byte offset, and maps the
+     * {@link Segment}s ids to their byte offsets.
+     *
+     * @param segments a {@link Collection} of {@link Segment}s
+     * @return a map from {@link Segment} ids to their byte offsets
+     */
     private Map<Integer, Long> getSortedSegmentsWithoutMetadata(final Collection<Segment> segments) {
         return segments.stream()
                 .filter(node -> !node.hasMetadata())

@@ -61,7 +61,7 @@ public final class NodePropertiesController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final ObjectProperty<Segment> selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+        final ObjectProperty<Segment> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
         final NeighbourVisualizer neighbourVisualizer
                 = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
@@ -140,7 +140,7 @@ public final class NodePropertiesController implements Initializable {
      */
     @FXML
     void onFocusAction(final ActionEvent actionEvent) {
-        final Segment selectedNode = graphVisualizer.getSelectedNodeProperty().get();
+        final Segment selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
         if (selectedNode != null) {
             graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
         }

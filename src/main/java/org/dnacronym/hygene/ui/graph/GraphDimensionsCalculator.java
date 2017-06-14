@@ -118,16 +118,20 @@ public final class GraphDimensionsCalculator {
     }
 
 
-
+    /**
+     * Recalculates (and thereby redraws) the graph when the layout is done calculating.
+     *
+     * @param event a {@link LayoutDoneEvent}
+     */
     @Subscribe
     public void onLayoutDoneEvent(final LayoutDoneEvent event) {
         Platform.runLater(() -> calculate(event.getSubgraph()));
     }
 
     /**
-     * Will listen for {@link NodeMetadataCacheUpdateEvent}, if so we redraw the graph to reflect the changes.
+     * Recalculates (and thereby redraws) the graph when the metadata has been gathered.
      *
-     * @param event the {@link NodeMetadataCacheUpdateEvent}
+     * @param event a {@link NodeMetadataCacheUpdateEvent}
      */
     @Subscribe
     public void onNodeMetadataCacheUpdate(final NodeMetadataCacheUpdateEvent event) {
@@ -146,6 +150,8 @@ public final class GraphDimensionsCalculator {
      * <li>On screen node count property
      * </ul>
      * <p>If the graph or canvas has not been set, this method does nothing.
+     *
+     * @param subgraph the {@link Subgraph} to recalculate dimensions for
      */
     private void calculate(final Subgraph subgraph) {
         final Graph graph = graphProperty.get();

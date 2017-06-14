@@ -76,7 +76,7 @@ public final class ConsoleController implements Initializable {
      * When a user clicks on a node in the graph the base pairs of that node will be displayed.
      */
     private void logSelectedSequence() {
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
+        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldNode, newNode) ->
                 Optional.ofNullable(newNode).ifPresent(nodeId ->
                         appendLogItem(new ConsoleMessage("Selected node " + nodeId + "\n"))));
     }

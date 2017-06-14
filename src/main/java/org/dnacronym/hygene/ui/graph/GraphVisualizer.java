@@ -19,7 +19,6 @@ import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
@@ -32,8 +31,8 @@ import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 /**
  * A simple canvas that allows drawing of primitive shapes.
  * <p>
- * It observes the {@link Graph} in {@link GraphDimensionsCalculator}. When the list of nodes qeuried nodes changes
- * in {@link GraphDimensionsCalculator}, then it will clear the {@link Canvas} and draw the new {@link Node}s on the
+ * It observes the {@link Graph} in {@link GraphDimensionsCalculator}. When the list of nodes queried nodes changes
+ * in {@link GraphDimensionsCalculator}, then it will clear the {@link Canvas} and draw the new {@link Segment}s on the
  * {@link Canvas} using a {@link GraphicsContext}.
  *
  * @see Canvas
@@ -56,7 +55,7 @@ public final class GraphVisualizer {
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
-    private final ObjectProperty<Segment> selectedNodeProperty;
+    private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -93,9 +92,9 @@ public final class GraphVisualizer {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
 
-        selectedNodeProperty = new SimpleObjectProperty<>();
+        selectedSegmentProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
-        selectedNodeProperty.addListener((observable, oldValue, newValue) -> draw());
+        selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -141,7 +140,7 @@ public final class GraphVisualizer {
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedNodeProperty.get().equals(segment)) {
+        if (selectedSegmentProperty.get().equals(segment)) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
         if (queried) {
@@ -317,11 +316,11 @@ public final class GraphVisualizer {
                 return;
             }
 
-            selectedNodeProperty.setValue(null);
+            selectedSegmentProperty.setValue(null);
             selectedEdgeProperty.setValue(null);
 
             rTree.find(event.getX(), event.getY(),
-                    this::setSelectedNode,
+                    this::setSelectedSegment,
                     (fromNodeId, toNodeId) -> graph.getNode(fromNodeId).getOutgoingEdges().stream()
                             .filter(edge -> edge.getTo() == toNodeId)
                             .findFirst()
@@ -337,11 +336,11 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Update the selected {@link Node} to the node with the given id.
+     * Updates the selected {@link Segment} to the node with the given id.
      *
-     * @param nodeId node id of the new selected {@link Node}
+     * @param nodeId node the id of the newly selected {@link Segment}
      */
-    public void setSelectedNode(final int nodeId) {
+    public void setSelectedSegment(final int nodeId) {
         final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
                 .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
 
@@ -350,7 +349,7 @@ public final class GraphVisualizer {
             return;
         }
 
-        selectedNodeProperty.set((Segment) segment.get(0));
+        selectedSegmentProperty.set((Segment) segment.get(0));
     }
 
     /**
@@ -358,10 +357,10 @@ public final class GraphVisualizer {
      * <p>
      * This node is updated every time the user clicks on a node in the canvas.
      *
-     * @return Selected {@link Node} by the user, which can be {@code null}
+     * @return the selected {@link Segment} by the user, which can be {@code null}
      */
-    public ObjectProperty<Segment> getSelectedNodeProperty() {
-        return selectedNodeProperty;
+    public ObjectProperty<Segment> getSelectedSegmentProperty() {
+        return selectedSegmentProperty;
     }
 
     /**

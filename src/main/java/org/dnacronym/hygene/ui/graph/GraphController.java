@@ -74,8 +74,8 @@ public final class GraphController implements Initializable {
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
 
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, node) -> {
-            if (node == null || node.intValue() < 0) {
+        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldNode, node) -> {
+            if (node == null || node.getId() < 0) {
                 return;
             }
 

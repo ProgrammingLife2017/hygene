@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.bookmark;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
@@ -66,7 +67,7 @@ public final class BookmarkCreateController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final IntegerProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+        final ObjectProperty<Segment> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
@@ -78,10 +79,10 @@ public final class BookmarkCreateController implements Initializable {
         graphDimensionsCalculator.getRadiusProperty().addListener((observable, oldValue, newValue) ->
                 radius.setText(String.valueOf(newValue)));
 
-        baseOffset.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
-        radius.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
-        description.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
-        save.visibleProperty().bind(Bindings.greaterThanOrEqual(selectedNodeProperty, 0));
+        baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
+        radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
+        description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
+        save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
 
         bookmarkCreatePane.visibleProperty().bind(simpleBookmarkStore.getBookmarkCreateVisibleProperty()
                 .and(graphDimensionsCalculator.getGraphProperty().isNotNull()));
@@ -151,7 +152,7 @@ public final class BookmarkCreateController implements Initializable {
      */
     @FXML
     void onSaveAction(final ActionEvent actionEvent) {
-        if (graphVisualizer.getSelectedNodeProperty().get() < 0) {
+        if (graphVisualizer.getSelectedSegmentProperty().isNull().get()) {
             return;
         }
 
@@ -159,11 +160,12 @@ public final class BookmarkCreateController implements Initializable {
         final String radiusString = radius.getText().replaceAll("[^\\d]", "");
 
         if (!baseString.isEmpty() && !radiusString.isEmpty()) {
-            final int nodeId = graphVisualizer.getSelectedNodeProperty().get();
+            final Segment segment = graphVisualizer.getSelectedSegmentProperty().get();
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
 
-            simpleBookmarkStore.addBookmark(new Bookmark(nodeId, baseOffsetValue, radiusValue, description.getText()));
+            simpleBookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
+                    description.getText()));
             description.clear();
         }
 

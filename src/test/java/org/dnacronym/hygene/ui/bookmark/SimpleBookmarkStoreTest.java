@@ -79,7 +79,7 @@ final class SimpleBookmarkStoreTest {
         final SimpleBookmark simpleBookmark = simpleBookmarkStore.getSimpleBookmarks().get(0);
         simpleBookmark.getOnClick().run();
 
-        verify(graphVisualizer).setSelectedNode(0);
+        verify(graphVisualizer).setSelectedSegment(0);
         assertThat(centerNodeIdProperty.get()).isEqualTo(0);
         assertThat(radiusProperty.get()).isEqualTo(32);
         verify(sequenceVisualizer).setOffset(5);

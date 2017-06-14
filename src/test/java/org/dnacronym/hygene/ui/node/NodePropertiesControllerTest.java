@@ -33,7 +33,7 @@ final class NodePropertiesControllerTest extends UITestBase {
         node = mock(Node.class);
         when(node.getId()).thenReturn(20);
         final ObjectProperty<Node> selectedNodeProperty = new SimpleObjectProperty<>(node);
-        when(graphVisualizer.getSelectedNodeProperty()).thenReturn(selectedNodeProperty);
+        when(graphVisualizer.getSelectedSegmentProperty()).thenReturn(selectedNodeProperty);
 
         nodePropertiesController = new NodePropertiesController();
         nodePropertiesController.setGraphDimensionsCalculator(graphDimensionsCalculator);
