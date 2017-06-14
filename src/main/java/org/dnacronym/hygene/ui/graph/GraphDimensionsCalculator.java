@@ -26,6 +26,7 @@ import org.dnacronym.hygene.models.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -46,7 +47,6 @@ public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
      */
-    private static final int DEFAULT_EDGE_WIDTH = 1000;
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
 
@@ -156,13 +156,14 @@ public final class GraphDimensionsCalculator {
             return;
         }
 
-        final int centerNodeId = centerNodeIdProperty.get();
-        final long unscaledCenterX = (long) graph.getUnscaledXPosition(centerNodeId) * DEFAULT_EDGE_WIDTH;
+        final Segment centerNode = Optional.ofNullable(subgraph.getSegment(centerNodeIdProperty.get()))
+                .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
+        final long unscaledCenterX = centerNode.getXPosition();
 
         final long[] tempMinX = {unscaledCenterX};
         final long[] tempMaxX = {unscaledCenterX};
-        final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
-        final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
+        final int[] tempMinY = {centerNode.getYPosition()};
+        final int[] tempMaxY = {centerNode.getYPosition()};
 
         final List<NewNode> neighbours = new LinkedList<>();
         subgraph.getNodes().forEach(node -> {
