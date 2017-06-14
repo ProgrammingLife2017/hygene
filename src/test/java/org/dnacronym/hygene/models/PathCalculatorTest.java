@@ -99,6 +99,37 @@ class PathCalculatorTest {
         assertThat(d2s4.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
     }
 
+
+    @Test
+    void testComputePathsWithDummyNodes2() {
+        final Segment segment1 = new Segment(1, 63, 19);
+        final Segment segment2 = new Segment(2, 90, 32);
+        final Segment segment3 = new Segment(3, 98, 14);
+        final DummyNode dummy1 = new DummyNode(segment1, segment2);
+        final DummyNode dummy2 = new DummyNode(segment2, segment3);
+
+        Link e13 = connectNodes(segment1, segment3);
+        Link s1d1 = connectNodes(segment1, dummy1);
+        Link d1s2 = connectNodes(dummy1, segment2);
+        Link s2d2 = connectNodes(segment2, dummy2);
+        Link d2s3 = connectNodes(dummy2, segment3);
+
+
+        segment1.setMetadata(new NodeMetadata("1", "-", Arrays.asList("a", "b", "c")));
+        segment2.setMetadata(new NodeMetadata("2", "-", Arrays.asList("b", "c")));
+        segment3.setMetadata(new NodeMetadata("3", "-", Arrays.asList("a", "b", "c")));
+
+        subgraph.addAll(Arrays.asList(segment1, segment2, segment3, dummy1, dummy2));
+
+        pathCalculator.computePaths(subgraph);
+
+        assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("a")));
+        assertThat(s1d1.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b", "c")));
+        assertThat(d1s2.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b", "c")));
+        assertThat(s2d2.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b", "c")));
+        assertThat(d2s3.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b", "c")));
+    }
+
     /**
      * Connects the two {@link NewNode} with a {@link Link}.
      *
