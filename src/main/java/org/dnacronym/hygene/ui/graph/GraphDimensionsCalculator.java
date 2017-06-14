@@ -67,7 +67,6 @@ public final class GraphDimensionsCalculator {
      */
     private final ObjectProperty<Graph> graphProperty;
     private CenterPointQuery centerPointQuery;
-    private Subgraph subgraph;
 
     private int minX;
     private int maxX;
@@ -95,14 +94,12 @@ public final class GraphDimensionsCalculator {
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-//            calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-//            calculate();
         });
 
         nodeCountProperty = new SimpleIntegerProperty(1);
@@ -210,7 +207,6 @@ public final class GraphDimensionsCalculator {
     void setGraph(final Graph graph) {
         graphProperty.set(graph);
         centerPointQuery = new CenterPointQuery(graph);
-        subgraph = centerPointQuery.getCache();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
@@ -240,7 +236,6 @@ public final class GraphDimensionsCalculator {
      */
     void setCanvasSize(final double canvasWidth, final double canvasHeight) {
         canvasDimension = new Dimension2D(canvasWidth, canvasHeight);
-//        calculate();
     }
 
     /**

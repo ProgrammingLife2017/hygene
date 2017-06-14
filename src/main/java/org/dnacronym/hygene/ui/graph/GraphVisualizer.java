@@ -47,10 +47,6 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
-    /**
-     * Range used when new graph is set, unless graph contains too few nodes.
-     */
-    private static final int MAX_GRAPH_RADIUS_NODE_TEXT = 100;
 
     private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;

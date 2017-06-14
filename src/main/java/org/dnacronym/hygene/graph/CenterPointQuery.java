@@ -66,6 +66,7 @@ public final class CenterPointQuery {
     /**
      * The cache for metadata of nodes.
      */
+    @SuppressWarnings("squid:S1068") // Unused, but needs to be declared somewhere
     private final NodeMetadataCache nodeMetadataCache;
     /**
      * Maps each node id in the cache to the distance from the centre point of the query.
