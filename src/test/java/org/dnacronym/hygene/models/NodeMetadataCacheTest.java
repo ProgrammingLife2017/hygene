@@ -113,7 +113,7 @@ final class NodeMetadataCacheTest {
     @Test
     void testSingleSegmentHasMetadata() {
         final Subgraph subgraph = new Subgraph();
-        final Segment segment = new Segment(2, 69, 6);
+        final Segment segment = new Segment(2, 66, 6);
         subgraph.add(segment);
 
         cache.layoutDone(new LayoutDoneEvent(subgraph));
@@ -142,7 +142,7 @@ final class NodeMetadataCacheTest {
     @Test
     void testRetrieveTwice() throws ParseException {
         final Subgraph subgraph = new Subgraph();
-        final Segment segment = new Segment(1, 40, 5);
+        final Segment segment = new Segment(1, 38, 5);
         subgraph.add(segment);
 
         cache.layoutDone(new LayoutDoneEvent(subgraph));
