@@ -49,7 +49,7 @@ public final class GffParser {
      * <p>
      * Firstly checks that the files starts with the '{@value GFF_VERSION_HEADER}'.<br>
      * Afterwards, starts parsing the file. Blank lines and lines starting with '#' are ignored. Lines starting with
-     * '##' are added as file meta-data to the {@link FeatureAnnotation}.
+     * '##' are added as file metadata to the {@link FeatureAnnotation}.
      * <p>
      * All other lines are parsed and converted to {@link SubFeatureAnnotation}s to be stored in the
      * {@link FeatureAnnotation}. Only the first encountered seqid is used to construct a {@link FeatureAnnotation}, all

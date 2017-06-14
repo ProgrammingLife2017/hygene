@@ -53,16 +53,16 @@ public final class FeatureAnnotation {
     /**
      * Adds a list of of metadata to the {@link FeatureAnnotation}.
      *
-     * @param metadata item of meta-data to add
+     * @param metadata item of metadata to add
      */
     public void addMetadata(final List<String> metadata) {
         this.metadata.addAll(metadata);
     }
 
     /**
-     * Returns the list of meta-data of this {@link FeatureAnnotation}.
+     * Returns the list of metadata of this {@link FeatureAnnotation}.
      *
-     * @return the list of meta-data of this {@link FeatureAnnotation}
+     * @return the list of metadata of this {@link FeatureAnnotation}
      */
     public List<String> getMetadata() {
         return metadata;

@@ -36,7 +36,7 @@ final class GffParserTest {
     }
 
     @Test
-    void testMetaDataSize() throws ParseException {
+    void testMetadataSize() throws ParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
         assertThat(featureAnnotation.getMetadata()).hasSize(2);
     }
