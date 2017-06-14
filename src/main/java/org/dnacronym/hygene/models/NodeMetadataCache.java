@@ -105,7 +105,12 @@ public final class NodeMetadataCache {
     private void retrieveMetadata(final GfaFile gfaFile, final Subgraph subgraph) {
         subgraph.getSegments().stream()
                 .filter(segment -> !segment.hasMetadata() && cache.containsKey(segment.getId()))
-                .forEach(segment -> segment.setMetadata(cache.getOrDefault(segment.getId(), null)));
+                .forEach(segment -> {
+                    final NodeMetadata metadata = cache.get(segment.getId());
+                    if (metadata != null) {
+                        segment.setMetadata(metadata);
+                    }
+                });
 
         try {
             final Map<Integer, Long> sortedSegmentsWithoutMetadata
