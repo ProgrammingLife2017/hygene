@@ -30,7 +30,7 @@ class PathCalculatorTest {
     void setUp() {
         subgraph = new Subgraph();
 
-        pathCalculator = new PathCalculator(subgraph);
+        pathCalculator = new PathCalculator();
     }
 
 
@@ -54,7 +54,7 @@ class PathCalculatorTest {
 
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
-        pathCalculator.computePaths();
+        pathCalculator.computePaths(subgraph);
 
         assertThat(e12.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
         assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));
@@ -86,9 +86,9 @@ class PathCalculatorTest {
         segment3.setMetadata(new NodeMetadata("-", "-", Arrays.asList("c", "d")));
         segment4.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
 
-        subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
+        subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4, dummy1, dummy2));
 
-        pathCalculator.computePaths();
+        pathCalculator.computePaths(subgraph);
 
         assertThat(e12.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b")));
         assertThat(e13.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("c", "d")));

@@ -24,30 +24,12 @@ import java.util.stream.Collectors;
 public final class PathCalculator {
     private static final Logger LOGGER = LogManager.getLogger(PathCalculator.class);
 
-    /**
-     * The {@link Subgraph}
-     */
-    private Subgraph subgraph;
-
-    private Map<NewNode, Set<String>> genomeStore;
-
-
-    /**
-     * Construct a new {@link PathCalculator}.
-     *
-     * @param subgraph the {@link Subgraph} to compute the paths on
-     */
-    public PathCalculator(final Subgraph subgraph) {
-        this.subgraph = subgraph;
-        this.genomeStore = new HashMap<>();
-    }
-
 
     /**
      * The edges compute the path for each {@link Edge}.
      */
-    public void computePaths() {
-        genomeStore.clear();
+    public void computePaths(final Subgraph subgraph) {
+        Map<NewNode, Set<String>> genomeStore = new HashMap<>();
 
         // Determine start
         List<NewNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
@@ -92,7 +74,7 @@ public final class PathCalculator {
         LOGGER.info(genomeStore);
 
         // Generate paths
-        Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder);
+        Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
 
         // Add paths to edges
         addPathsToEdges(paths);
@@ -119,7 +101,8 @@ public final class PathCalculator {
      * @param topologicalOrder the topological ordering
      * @return map contains a set of genomes for each edge
      */
-    public Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder) {
+    public Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,
+                                                            final Map<NewNode, Set<String>> genomeStore) {
         // Create edges genome store
         Map<Edge, Set<String>> paths = new HashMap<>();
 
