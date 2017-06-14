@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8"
+            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8.0.102"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.MainController">
     <top>
         <fx:include source="menu/menu_view.fxml"/>
@@ -16,8 +16,10 @@
 
     <left>
         <HBox>
-            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="35" HBox.hgrow="NEVER"
-                          styleClass="side_button"/>
+            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="35" styleClass="side_button"
+                          HBox.hgrow="NEVER"/>
+            <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
+                       prefWidth="0"/>
             <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
                         minWidth="0">
                 <VBox>
@@ -44,8 +46,10 @@
                     </TitledPane>
                 </VBox>
             </ScrollPane>
-            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="35" HBox.hgrow="NEVER"
-                          styleClass="side_button"/>
+            <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
+                       prefWidth="0.0"/>
+            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="35" styleClass="side_button"
+                          HBox.hgrow="NEVER"/>
         </HBox>
     </right>
 
