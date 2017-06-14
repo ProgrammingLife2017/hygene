@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.MainController">
     <top>
         <fx:include source="menu/menu_view.fxml"/>
     </top>
 
     <left>
-        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
-            <content>
-                <VBox>
-                    <children>
-                        <fx:include source="node/node_properties_view.fxml"/>
-                        <fx:include source="bookmark/bookmark_create_view.fxml"/>
-                    </children>
-                </VBox>
-            </content>
-            <BorderPane.margin>
-                <Insets/>
-            </BorderPane.margin>
-        </ScrollPane>
+        <HBox>
+            <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
+                        minWidth="0">
+                <content>
+                    <VBox>
+                        <children>
+                            <fx:include source="node/node_properties_view.fxml"/>
+                            <fx:include source="bookmark/bookmark_create_view.fxml"/>
+                        </children>
+                    </VBox>
+                </content>
+            </ScrollPane>
+            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
+        </HBox>
     </left>
 
     <right>
-        <ScrollPane hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
-            <VBox>
-                <fx:include source="bookmark/bookmarks_table_view.fxml"/>
-                <fx:include source="query/query.fxml"/>
-            </VBox>
-        </ScrollPane>
+        <HBox>
+            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
+            <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
+                <VBox>
+                    <fx:include source="bookmark/bookmarks_table_view.fxml"/>
+                    <fx:include source="query/query.fxml"/>
+                </VBox>
+            </ScrollPane>
+        </HBox>
     </right>
 
     <center>
