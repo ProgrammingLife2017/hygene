@@ -148,7 +148,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
         forEachLayer(edge, layer -> {
             final DummyNode dummy = new DummyNode(edge.getFrom(), edge.getTo());
-            dummy.setXPosition(layer * LAYER_WIDTH);
+            dummy.setXPosition((long) layer * LAYER_WIDTH);
 
             dummyNodes.add(dummy);
             addToLayerSomewhere(layers[layer], dummy);
