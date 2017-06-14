@@ -85,6 +85,15 @@ public final class NodeMetadataCache {
         });
     }
 
+    /**
+     * Returns the {@link ThrottledExecutor} used to retrieve metadata.
+     *
+     * @return the {@link ThrottledExecutor} used to retrieve metadata
+     */
+    ThrottledExecutor getRetrievalExecutor() {
+        return retrievalExecutor;
+    }
+
 
     /**
      * Retrieves metadata for cached nodes that have no metadata yet.
