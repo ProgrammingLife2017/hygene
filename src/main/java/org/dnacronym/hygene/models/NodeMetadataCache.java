@@ -88,6 +88,9 @@ public final class NodeMetadataCache {
 
     /**
      * Retrieves metadata for cached nodes that have no metadata yet.
+     *
+     * @param gfaFile  the {@link GfaFile} that provides the parsing functionality
+     * @param subgraph a {@link Subgraph} with metadata
      */
     private void retrieveMetadata(final GfaFile gfaFile, final Subgraph subgraph) {
         try {
