@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +42,8 @@ public final class PathCalculator {
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new Edge(origin, sourceConnectedNode));
-            genomeStore.get(origin).addAll(sourceConnectedNode.getMetadata().getGenomes());
+            Optional.ofNullable(genomeStore.get(origin)).ifPresent(g ->
+                    g.addAll(sourceConnectedNode.getMetadata().getGenomes()));
         });
 
         List<NewNode> topologicalOrder = new LinkedList<>();
@@ -108,12 +110,19 @@ public final class PathCalculator {
 
         // Go over topological order and assign importance
         topologicalOrder.forEach(node -> node.getIncomingEdges().forEach(e -> {
-            final Set<String> intersection = new HashSet<>(genomeStore.get(e.getFrom()));
-            intersection.retainAll(genomeStore.get(node));
+            final Set<String> nodeGenomes = genomeStore.get(node);
+            final Set<String> originGenomes = genomeStore.get(e.getFrom());
 
-            paths.put(e, intersection);
+            if (originGenomes != null && nodeGenomes != null) {
+                final Set<String> intersection = new HashSet<>(originGenomes);
+                intersection.retainAll(nodeGenomes);
 
-            genomeStore.get(e.getFrom()).removeAll(intersection);
+                paths.put(e, intersection);
+
+                originGenomes.removeAll(intersection);
+            } else {
+                throw new IllegalStateException("Missing genome data");
+            }
         }));
 
         return paths;

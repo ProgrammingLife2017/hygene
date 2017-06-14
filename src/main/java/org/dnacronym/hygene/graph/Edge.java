@@ -14,7 +14,7 @@ public class Edge {
     private final UUID uuid;
     private final NewNode from;
     private final NewNode to;
-    private Set<String> genomes;
+    @Nullable private Set<String> genomes;
 
 
     /**
