@@ -14,7 +14,8 @@ public class Edge {
     private final UUID uuid;
     private final NewNode from;
     private final NewNode to;
-    @Nullable private Set<String> genomes;
+    @Nullable
+    private Set<String> genomes;
 
 
     /**
@@ -66,6 +67,30 @@ public class Edge {
      */
     public void setGenomes(final Set<String> genomes) {
         this.genomes = genomes;
+    }
+
+    /**
+     * Get the edges importance.
+     * <p>
+     * The edge importance is defined as the number of genome paths that run through this {@link Edge}.
+     *
+     * @return the {@link Edge} importance
+     */
+    public int getImportance() {
+        if (genomes != null && !genomes.isEmpty()) {
+            return genomes.size();
+        }
+        return 1;
+    }
+
+    /**
+     * Checks whether this edge is part of specific genome.
+     *
+     * @param genome the path
+     * @return true if edge is part of the genome
+     */
+    public boolean inGenome(final String genome) {
+        return genomes != null && genomes.contains(genome);
     }
 
     @Override
