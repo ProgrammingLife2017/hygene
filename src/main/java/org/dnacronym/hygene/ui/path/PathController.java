@@ -29,6 +29,7 @@ public final class PathController implements Initializable {
 
     private GraphVisualizer graphVisualizer;
 
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {

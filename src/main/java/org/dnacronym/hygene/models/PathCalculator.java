@@ -5,6 +5,7 @@ import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,6 +72,11 @@ public final class PathCalculator {
 
         // Generate paths
         Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
+
+        // Todo remove this after path mapping has been implemented
+        Set<String> uniquePaths = new HashSet<>();
+        paths.values().forEach(uniquePaths::addAll);
+        GraphVisualizer.uniquePaths = uniquePaths.size();
 
         // Add paths to edges
         addPathsToEdges(paths);

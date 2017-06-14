@@ -47,10 +47,10 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
 
-    private static final double DEFAULT_EDGE_WIDTH = 1;
+    private static final double DEFAULT_EDGE_THICKNESS = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
-    private static final int EDGE_OPACITY_OFFSET = 80;
-    private static final double EDGE_OPACITY_ALPHA = 1.08;
+    private static final int EDGE_OPACITY_OFFSET = 20;
+    private static final double EDGE_OPACITY_ALPHA = 1.5;
     private static final double EDGE_OPACITY_BETA = 4.25;
 
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
@@ -75,6 +75,9 @@ public final class GraphVisualizer {
     private final NodeDrawingToolkit nodeDrawingToolkit;
 
     private RTree rTree;
+
+    // TODO should be replace with path mapping (which is yet to be created).
+    public static int uniquePaths = 1;
 
 
     /**
@@ -205,7 +208,8 @@ public final class GraphVisualizer {
      * @return the edge thickness
      */
     public double computeEdgeThickness(final org.dnacronym.hygene.graph.Edge edge) {
-        return edge.getImportance();
+        return Math.max(DEFAULT_EDGE_THICKNESS,
+                1.0 / 2.0 * ((double) edge.getImportance()) / uniquePaths * nodeHeightProperty.get());
     }
 
     /**
@@ -277,11 +281,15 @@ public final class GraphVisualizer {
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+
+        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
+            node.getOutgoingEdges().forEach(this::drawEdge);
+        }
+
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
-            node.getOutgoingEdges().forEach(this::drawEdge);
         }
 
         if (displayLaneBordersProperty.get()) {
