@@ -1,8 +1,10 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -28,7 +30,9 @@ public final class GraphStore {
     public static final String GFF_FILE_NAME = "GFF";
 
     private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<GffFile> gffFileProperty = new SimpleObjectProperty<>();
+
+    private final ListProperty<GffFile> gffFiles = new SimpleListProperty<>();
+    private final ReadOnlyListWrapper<GffFile> readOnlyGffFiles = new ReadOnlyListWrapper<>(gffFiles);
 
 
     /**
@@ -53,7 +57,7 @@ public final class GraphStore {
     }
 
     /**
-     * Loads a GFF file into memory.
+     * Loads a {@link org.dnacronym.hygene.models.FeatureAnnotation} file into memory.
      *
      * @param file {@link File} to load. This should be a {@value GFF_FILE_EXTENSION} file
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
@@ -64,27 +68,27 @@ public final class GraphStore {
             final GffFile gffFile = new GffFile(file.getAbsolutePath());
             gffFile.parse(progressUpdater);
 
-            Platform.runLater(() -> gffFileProperty.set(gffFile));
+            Platform.runLater(() -> gffFiles.add(gffFile));
         } catch (final ParseException e) {
             throw new IOException(e);
         }
     }
 
     /**
-     * Gets the {@link ReadOnlyObjectProperty} that stores the {@link GfaFile}.
+     * Gets the {@link ObjectProperty} that stores the {@link GfaFile}.
      *
-     * @return the {@link ReadOnlyObjectProperty} that stores the {@link GfaFile}
+     * @return the {@link ObjectProperty} that stores the {@link GfaFile}
      */
-    public ReadOnlyObjectProperty<GfaFile> getGfaFileProperty() {
+    public ObjectProperty<GfaFile> getGfaFileProperty() {
         return gfaFileProperty;
     }
 
     /**
-     * Gets the {@link ReadOnlyObjectProperty} that stores the {@link GffFile}.
+     * Gets the {@link ReadOnlyListWrapper} that stores all the {@link GffFile}s loaded into memory.
      *
-     * @return the {@link ReadOnlyObjectProperty} that stores the {@link GffFile}
+     * @return the {@link ReadOnlyListWrapper} that stores all the {@link GffFile}s loaded into memory
      */
-    public ReadOnlyObjectProperty<GffFile> getGffFileProperty() {
-        return gffFileProperty;
+    public ReadOnlyListWrapper<GffFile> getGffFiles() {
+        return readOnlyGffFiles;
     }
 }
