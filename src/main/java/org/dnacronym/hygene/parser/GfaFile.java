@@ -74,9 +74,6 @@ public final class GfaFile {
                 LOGGER.info("Start fafosp x");
                 graph.fafosp().horizontal();
 
-                LOGGER.info("Start fafosp y");
-                graph.fafosp().vertical();
-
                 LOGGER.info("GfaFile parse finished");
 
                 progressUpdater.updateProgress(PROGRESS_TOTAL - 1, "Caching data for faster load next time...");
