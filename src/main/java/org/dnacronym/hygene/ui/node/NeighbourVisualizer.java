@@ -4,7 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.Segment;
 
 
 /**
@@ -28,7 +28,7 @@ final class NeighbourVisualizer {
      * @param nodeProperty      property which determines what node should actually be visualised
      */
     NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty,
-                        final ObjectProperty<Node> nodeProperty) {
+                        final ObjectProperty<Segment> nodeProperty) {
         nodeProperty.addListener((observable, oldNode, newNode) -> draw(newNode, edgeColorProperty.get()));
         edgeColorProperty.addListener((observable, oldColor, newColor) -> draw(nodeProperty.get(), newColor));
     }
@@ -54,16 +54,16 @@ final class NeighbourVisualizer {
     /**
      * Draw the node and outgoing edges.
      *
-     * @param node      {@link Node} to draw
-     * @param edgeColor {@link Color} of edges
+     * @param segment   the {@link Segment} to draw
+     * @param edgeColor the {@link Color} of edges
      */
-    private void draw(final Node node, final Color edgeColor) {
+    private void draw(final Segment segment, final Color edgeColor) {
         clear();
 
-        if (node != null) {
-            final int leftNeighbours = node.getNumberOfIncomingEdges();
-            final int rightNeighbours = node.getNumberOfOutgoingEdges();
-            final Color nodeColor = node.getColor().getFXColor();
+        if (segment != null) {
+            final int leftNeighbours = segment.getIncomingEdges().size();
+            final int rightNeighbours = segment.getOutgoingEdges().size();
+            final Color nodeColor = segment.getColor();
 
             final double topLeftX = canvas.getWidth() / 2 - canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
             final double topLeftY = canvas.getHeight() / 2 - canvas.getHeight() * NODE_WIDTH_PORTION_OF_CANVAS / 2;

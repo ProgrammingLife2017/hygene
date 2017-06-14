@@ -12,8 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -74,8 +74,7 @@ public final class SequenceController implements Initializable {
             sequenceTextArea.selectPositionCaret(newValue.intValue() + 1);
         });
 
-        // TODO re-enable this
-//      graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
+        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
         sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
         sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty()
@@ -118,7 +117,7 @@ public final class SequenceController implements Initializable {
      *
      * @param node the {@link Node} whose sequence properties should be displayed
      */
-    void updateFields(final Node node) {
+    void updateFields(final Segment node) {
         if (node == null) {
             lengthField.clear();
             sequenceTextArea.clear();
@@ -129,12 +128,10 @@ public final class SequenceController implements Initializable {
         lengthField.setText(String.valueOf(node.getSequenceLength()));
         setOffset.setPromptText("0 - " + (node.getSequenceLength() - 1));
 
-        try {
-            final String sequence = node.retrieveMetadata().getSequence();
+        if (node.hasMetadata()) {
+            final String sequence = node.getMetadata().getSequence();
             sequenceVisualizer.getSequenceProperty().set(sequence);
             sequenceTextArea.setText(sequence);
-        } catch (final ParseException e) {
-            LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", node, e);
         }
     }
 

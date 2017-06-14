@@ -2,13 +2,12 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -57,7 +56,7 @@ public final class GraphVisualizer {
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
-    private final IntegerProperty selectedNodeProperty;
+    private final ObjectProperty<Segment> selectedNodeProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -94,7 +93,7 @@ public final class GraphVisualizer {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
 
-        selectedNodeProperty = new SimpleIntegerProperty(-1);
+        selectedNodeProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedNodeProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -142,7 +141,7 @@ public final class GraphVisualizer {
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedNodeProperty.get() == segment.getId()) {
+        if (selectedNodeProperty.get().equals(segment)) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
         if (queried) {
@@ -343,7 +342,15 @@ public final class GraphVisualizer {
      * @param nodeId node id of the new selected {@link Node}
      */
     public void setSelectedNode(final int nodeId) {
-        selectedNodeProperty.set(nodeId);
+        final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
+                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+
+        if (segment.isEmpty()) {
+            LOGGER.error("Cannot select node that is not in subgraph.");
+            return;
+        }
+
+        selectedNodeProperty.set((Segment) segment.get(0));
     }
 
     /**
@@ -353,7 +360,7 @@ public final class GraphVisualizer {
      *
      * @return Selected {@link Node} by the user, which can be {@code null}
      */
-    public IntegerProperty getSelectedNodeProperty() {
+    public ObjectProperty<Segment> getSelectedNodeProperty() {
         return selectedNodeProperty;
     }
 
