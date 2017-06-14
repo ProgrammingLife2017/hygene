@@ -16,7 +16,8 @@
 
     <left>
         <HBox>
-            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
+            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="35" HBox.hgrow="NEVER"
+                          styleClass="side_button"/>
             <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
                         minWidth="0">
                 <VBox>
@@ -43,7 +44,8 @@
                     </TitledPane>
                 </VBox>
             </ScrollPane>
-            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
+            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="35" HBox.hgrow="NEVER"
+                          styleClass="side_button"/>
         </HBox>
     </right>
 

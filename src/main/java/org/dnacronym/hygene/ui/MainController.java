@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
@@ -50,10 +51,16 @@ public final class MainController implements Initializable {
                 .and(graphStore.getGfaFileProperty().isNotNull()));
         leftPane.managedProperty().bind(toggleLeftPane.selectedProperty()
                 .and(graphStore.getGfaFileProperty().isNotNull()));
+        toggleLeftPane.textProperty().bind(Bindings.when(toggleLeftPane.selectedProperty())
+                .then("<")
+                .otherwise(">"));
 
         rightPane.visibleProperty().bind(toggleRightPane.selectedProperty()
                 .and(graphStore.getGfaFileProperty().isNotNull()));
         rightPane.managedProperty().bind(toggleRightPane.selectedProperty()
                 .and(graphStore.getGfaFileProperty().isNotNull()));
+        toggleRightPane.textProperty().bind(Bindings.when(toggleRightPane.selectedProperty())
+                .then(">")
+                .otherwise("<"));
     }
 }
