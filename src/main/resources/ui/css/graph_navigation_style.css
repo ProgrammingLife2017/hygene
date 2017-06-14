@@ -1,0 +1,6 @@
+#takeSnapshot {
+    -fx-background-image: url("../../icons/camera.png");
+    -fx-background-size: 28 28;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}

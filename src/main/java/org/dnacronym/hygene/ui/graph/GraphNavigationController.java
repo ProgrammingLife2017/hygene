@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -130,5 +132,15 @@ public final class GraphNavigationController implements Initializable {
                 graphDimensionsCalculator.getRadiusProperty().get() + ZOOM_AMOUNT
         );
         actionEvent.consume();
+    }
+
+    /**
+     * When the user clicks the snapshot button.
+     *
+     * @param actionEvent the {@link ActionEvent}
+     */
+    @FXML
+    void takeSnapshotAction(final ActionEvent actionEvent) {
+        HygeneEventBus.getInstance().post(new SnapshotButtonWasPressed());
     }
 }
