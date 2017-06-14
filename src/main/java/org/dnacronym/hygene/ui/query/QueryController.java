@@ -4,11 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.parser.ParseException;
-import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -22,11 +20,8 @@ import java.util.ResourceBundle;
 public final class QueryController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(QueryController.class);
 
-    private GraphStore graphStore;
     private Query query;
 
-    @FXML
-    private TitledPane queryPane;
     @FXML
     private TextField sequenceField;
 
@@ -36,7 +31,6 @@ public final class QueryController implements Initializable {
      */
     public QueryController() {
         try {
-            setGraphStore(Hygene.getInstance().getGraphStore());
             setQuery(Hygene.getInstance().getQuery());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Unable to instantiate " + getClass().getSimpleName() + ".", e);
@@ -46,19 +40,7 @@ public final class QueryController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        queryPane.managedProperty().bind(graphStore.getGfaFileProperty().isNotNull()
-                .and(query.getVisibleProperty()));
-        queryPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull()
-                .and(query.getVisibleProperty()));
-    }
-
-    /**
-     * Sets the {@link GraphStore} for use by the controller.
-     *
-     * @param graphStore the {@link GraphStore} for use by the controller
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
+        // Nothing to initialize
     }
 
     /**

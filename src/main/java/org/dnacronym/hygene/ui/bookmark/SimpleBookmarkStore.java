@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.ui.bookmark;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -36,9 +34,6 @@ public final class SimpleBookmarkStore {
 
     private final List<SimpleBookmark> simpleBookmarks;
     private final ObservableList<SimpleBookmark> observableSimpleBookmarks;
-
-    private final BooleanProperty tableVisibleProperty;
-    private final BooleanProperty bookmarkCreateVisibleProperty;
 
     private FileBookmarks fileBookmarks;
 
@@ -79,9 +74,6 @@ public final class SimpleBookmarkStore {
                 LOGGER.error("Unable to load bookmarks from file.", e);
             }
         });
-
-        tableVisibleProperty = new SimpleBooleanProperty();
-        bookmarkCreateVisibleProperty = new SimpleBooleanProperty();
     }
 
 
@@ -156,29 +148,11 @@ public final class SimpleBookmarkStore {
     }
 
     /**
-     * Gets the {@link BooleanProperty} which decides the visibility of the table.
-     *
-     * @return {@link BooleanProperty} which decides the visibility of the table
-     */
-    public BooleanProperty getTableVisibleProperty() {
-        return tableVisibleProperty;
-    }
-
-    /**
      * Gets an {@link ObservableList} of {@link SimpleBookmark}s.
      *
      * @return {@link ObservableList} of {@link SimpleBookmark}s
      */
     public ObservableList<SimpleBookmark> getSimpleBookmarks() {
         return observableSimpleBookmarks;
-    }
-
-    /**
-     * The {@link BooleanProperty} which decides the visibility of the bookmark create pane.
-     *
-     * @return {@link BooleanProperty} which decides the visibility of the bookmark create pane
-     */
-    public BooleanProperty getBookmarkCreateVisibleProperty() {
-        return bookmarkCreateVisibleProperty;
     }
 }

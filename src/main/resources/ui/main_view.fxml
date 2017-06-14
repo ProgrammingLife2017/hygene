@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,41 +16,43 @@
 
     <left>
         <HBox>
+            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
             <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
                         minWidth="0">
-                <content>
-                    <VBox>
-                        <children>
-                            <fx:include source="node/node_properties_view.fxml"/>
-                            <fx:include source="bookmark/bookmark_create_view.fxml"/>
-                        </children>
-                    </VBox>
-                </content>
+                <VBox>
+                    <TitledPane animated="false" text="Node Properties">
+                        <fx:include source="node/node_properties_view.fxml"/>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Create Bookmark">
+                        <fx:include source="bookmark/bookmark_create_view.fxml"/>
+                    </TitledPane>
+                </VBox>
             </ScrollPane>
-            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
         </HBox>
     </left>
 
     <right>
         <HBox>
-            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
             <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
                 <VBox>
-                    <fx:include source="bookmark/bookmarks_table_view.fxml"/>
-                    <fx:include source="query/query.fxml"/>
+                    <TitledPane animated="false" text="All Bookmarks">
+                        <fx:include source="bookmark/bookmarks_table_view.fxml"/>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Query">
+                        <fx:include source="query/query.fxml"/>
+                    </TitledPane>
                 </VBox>
             </ScrollPane>
+            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="5" HBox.hgrow="NEVER"/>
         </HBox>
     </right>
 
     <center>
         <VBox BorderPane.alignment="BOTTOM_LEFT">
-            <children>
-                <fx:include source="graph/graph_view.fxml" VBox.vgrow="SOMETIMES"/>
-                <Separator maxWidth="Infinity"/>
-                <fx:include source="graph/graph_navigation_view.fxml" VBox.vgrow="NEVER"/>
-                <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
-            </children>
+            <fx:include source="graph/graph_view.fxml" VBox.vgrow="SOMETIMES"/>
+            <Separator maxWidth="Infinity"/>
+            <fx:include source="graph/graph_navigation_view.fxml" VBox.vgrow="NEVER"/>
+            <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
         </VBox>
     </center>
 
