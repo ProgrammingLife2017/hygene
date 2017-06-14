@@ -3,6 +3,10 @@ package org.dnacronym.hygene.graph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -14,12 +18,14 @@ abstract class EdgeTest {
     private Edge edge;
     private NewNode from;
     private NewNode to;
+    private Set<String> genomes;
 
 
     @BeforeEach
     void setUp() {
         from = mock(NewNode.class);
         to = mock(NewNode.class);
+        genomes = new HashSet<>(Arrays.asList("a", "b", "c"));
     }
 
 
@@ -31,6 +37,30 @@ abstract class EdgeTest {
     @Test
     final void testGetTo() {
         assertThat(edge.getTo()).isEqualTo(to);
+    }
+
+    @Test
+    void testGetSetGenomes() {
+        edge.setGenomes(genomes);
+        assertThat(edge.getGenomes()).isEqualTo(genomes);
+    }
+
+    @Test
+    void testGetImportance() {
+        edge.setGenomes(genomes);
+        assertThat(edge.getImportance()).isEqualTo(genomes.size());
+    }
+
+    @Test
+    void testGetImportantNullCase() {
+        edge.setGenomes(null);
+        assertThat(edge.getImportance()).isEqualTo(1);
+    }
+
+    @Test
+    void testGetImportantEmptyCase() {
+        edge.setGenomes(new HashSet<>());
+        assertThat(edge.getImportance()).isEqualTo(1);
     }
 
 
