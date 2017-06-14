@@ -70,7 +70,8 @@ public final class Fafosp {
      * Calculates the optimal horizontal position relative to its left neighbours for the node with the given
      * identifier.
      *
-     * @param id the node's identifier
+     * @param id         the node's identifier
+     * @param xPositions array of {@code long}s indicating x positions of nodes, indexed by node id
      */
     private void horizontal(final long[] xPositions, final int id) {
         final long[] width = {-1}; // Edge count, sequence length
