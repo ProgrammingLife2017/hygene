@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
+import com.google.common.eventbus.Subscribe;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,6 +16,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.events.LayoutDoneEvent;
+import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
@@ -90,14 +95,14 @@ public final class GraphDimensionsCalculator {
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-            calculate();
+//            calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-            calculate();
+//            calculate();
         });
 
         nodeCountProperty = new SimpleIntegerProperty(1);
@@ -111,8 +116,26 @@ public final class GraphDimensionsCalculator {
 
         graphProperty = new SimpleObjectProperty<>();
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
+
+        HygeneEventBus.getInstance().register(this);
     }
 
+
+
+    @Subscribe
+    public void onLayoutDoneEvent(final LayoutDoneEvent event) {
+        Platform.runLater(() -> calculate(event.getSubgraph()));
+    }
+
+    /**
+     * Will listen for {@link NodeMetadataCacheUpdateEvent}, if so we redraw the graph to reflect the changes.
+     *
+     * @param event the {@link NodeMetadataCacheUpdateEvent}
+     */
+    @Subscribe
+    public void onNodeMetadataCacheUpdate(final NodeMetadataCacheUpdateEvent event) {
+        Platform.runLater(() -> calculate(event.getSubgraph()));
+    }
 
     /**
      * Calculates the following values.
@@ -127,7 +150,7 @@ public final class GraphDimensionsCalculator {
      * </ul>
      * <p>If the graph or canvas has not been set, this method does nothing.
      */
-    private void calculate() {
+    private void calculate(final Subgraph subgraph) {
         final Graph graph = graphProperty.get();
         if (graph == null || canvasDimension == null) {
             return;
@@ -193,7 +216,7 @@ public final class GraphDimensionsCalculator {
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
         radiusProperty.set(DEFAULT_RADIUS);
 
-        calculate(); // Force a recalculation
+//        calculate(); // Force a recalculation
     }
 
     /**
@@ -217,7 +240,7 @@ public final class GraphDimensionsCalculator {
      */
     void setCanvasSize(final double canvasWidth, final double canvasHeight) {
         canvasDimension = new Dimension2D(canvasWidth, canvasHeight);
-        calculate();
+//        calculate();
     }
 
     /**

@@ -1,7 +1,5 @@
 package org.dnacronym.hygene.ui.graph;
 
-import com.google.common.eventbus.Subscribe;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -18,7 +16,6 @@ import javafx.scene.paint.Paint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
@@ -261,16 +258,6 @@ public final class GraphVisualizer {
                     graphDimensionsCalculator.getLaneCountProperty().get(),
                     graphDimensionsCalculator.getLaneHeightProperty().get());
         }
-    }
-
-    /**
-     * Will listen for {@link NodeMetadataCacheUpdateEvent}, if so we redraw the graph to reflect the changes.
-     *
-     * @param event the {@link NodeMetadataCacheUpdateEvent}
-     */
-    @Subscribe
-    public void onNodeMetadataCacheUpdate(final NodeMetadataCacheUpdateEvent event) {
-        Platform.runLater(this::draw);
     }
 
     /**
