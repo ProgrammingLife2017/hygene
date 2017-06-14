@@ -53,6 +53,8 @@ public final class GraphVisualizer {
     private static final double EDGE_OPACITY_ALPHA = 1.08;
     private static final double EDGE_OPACITY_BETA = 4.25;
 
+    private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
+
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
@@ -61,6 +63,7 @@ public final class GraphVisualizer {
     private final ObjectProperty<String> selectedPathProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
+
     private final DoubleProperty nodeHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
@@ -174,36 +177,36 @@ public final class GraphVisualizer {
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
 
+        graphicsContext.setStroke(getEdgeColor());
+        graphicsContext.setLineWidth(computeEdgeThickness(edge));
 
-        graphicsContext.setStroke(edgeColorProperty.get());
-
-        if (edge.getGenomes() == null) {
-            graphicsContext.setStroke(Color.rgb(255, 0, 0));
+        if (edge.inGenome(selectedPathProperty.get())
+                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
+            graphicsContext.setStroke(correctColorForEdgeOpacity(Color.BLUE));
         }
-
-        graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
 
         if (fromNode instanceof Segment && toNode instanceof Segment) {
             int fromSegmentId = ((Segment) fromNode).getId();
             int toSegmentId = ((Segment) toNode).getId();
 
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
-
-//            if (nodeMetadataCache.isInPath(selectedPathProperty.get(), fromId, toId)
-//                    && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
-//                graphicsContext.setStroke(getActiveEdgeColor());
-//            }
         }
-        graphicsContext.setLineWidth(computeEdgeThickness(edge));
-
 
         graphicsContext.strokeLine(fromX, fromY, toX, toY);
     }
 
-    public double computeEdgeThickness(org.dnacronym.hygene.graph.Edge edge) {
+    /**
+     * Computers the thickness of an edge based on the {@link org.dnacronym.hygene.graph.Edge} importance.
+     * <p>
+     * The thickness is computed as the number unique genomes that run through this path divided by the total
+     * number of unique paths.
+     *
+     * @param edge the edge
+     * @return the edge thickness
+     */
+    public double computeEdgeThickness(final org.dnacronym.hygene.graph.Edge edge) {
         return edge.getImportance();
     }
-
 
     /**
      * Computes the opacity based on the graph radius, which is an approximation of the current zoom level.
@@ -223,6 +226,16 @@ public final class GraphVisualizer {
         return 1.0 - 1.0 / (1.0 + Math.exp(-(EDGE_OPACITY_ALPHA
                 * Math.log(Math.max(1, graphDimensionsCalculator.getRadiusProperty().get() - EDGE_OPACITY_OFFSET))
                 - EDGE_OPACITY_BETA)));
+    }
+
+    /**
+     * Correct a {@link Color} for the current edge opacity.
+     *
+     * @param color the {@link Color}
+     * @return the {@link Color} corrected for edge opacity
+     */
+    private Color correctColorForEdgeOpacity(final Color color) {
+        return color.deriveColor(1, 1, 1, computeEdgeOpacity());
     }
 
     /**
@@ -401,7 +414,6 @@ public final class GraphVisualizer {
     public ObjectProperty<Edge> getSelectedEdgeProperty() {
         return selectedEdgeProperty;
     }
-
 
     /**
      * The property of the selected path.
