@@ -100,7 +100,7 @@ final class GfaFileTest {
     }
 
     @Test
-    void testParseNodeMetaData() throws IOException, ParseException {
+    void testParseNodeMetadata() throws IOException, ParseException {
         final MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
