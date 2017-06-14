@@ -140,7 +140,7 @@ public final class GraphVisualizer {
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedSegmentProperty.get().equals(segment)) {
+        if (selectedSegmentProperty.isNotNull().get() && selectedSegmentProperty.get().equals(segment)) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
         if (queried) {
