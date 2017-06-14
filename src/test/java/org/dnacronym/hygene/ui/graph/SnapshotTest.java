@@ -11,11 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+
 /**
  * Unit tests for {@link Snapshot}.
  */
 final class SnapshotTest extends UITestBase {
     static final String GFA_FILE_NAME = "src/test/resources/gfa/simple.gfa";
+
 
     @Test
     void testSnapshot() {

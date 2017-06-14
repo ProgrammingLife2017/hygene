@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.events;
 
+
 /**
  * Represents a click on the snapshot button.
  */

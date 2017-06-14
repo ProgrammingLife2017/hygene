@@ -10,7 +10,7 @@ import javafx.scene.control.Alert;
  */
 public final class InformationDialogue extends Dialogue {
     /**
-     * Construct a new {@link InformationDialogue}.
+     * Constructs a new {@link InformationDialogue}.
      *
      * @param header the header text of the {@link Alert}
      * @param message the message to display in the {@link InformationDialogue}

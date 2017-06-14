@@ -11,23 +11,23 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit tests for {@link WarningDialogue}.
  */
 final class InformationDialogueTest extends UITestBase {
-    private Dialogue errorDialogue;
+    private Dialogue informationDialogue;
 
 
     @Override
     public void beforeEach() {
-        interact(() -> errorDialogue = new InformationDialogue("header.", "message."));
+        interact(() -> informationDialogue = new InformationDialogue("header.", "message."));
     }
 
 
     @Test
     void testErrorType() {
-        assertThat(errorDialogue.getAlert().getAlertType()).isEqualTo(Alert.AlertType.INFORMATION);
+        assertThat(informationDialogue.getAlert().getAlertType()).isEqualTo(Alert.AlertType.INFORMATION);
     }
 
     @Test
     void testTitleHeaderText() {
-        final Alert alert = errorDialogue.getAlert();
+        final Alert alert = informationDialogue.getAlert();
 
         assertThat(alert.getTitle()).isEqualTo("header.");
         assertThat(alert.getHeaderText()).isEqualTo("message.");
