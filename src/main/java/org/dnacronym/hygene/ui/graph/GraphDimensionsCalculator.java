@@ -153,7 +153,7 @@ public final class GraphDimensionsCalculator {
      *
      * @param subgraph the {@link Subgraph} to recalculate dimensions for
      */
-    private void calculate(final Subgraph subgraph) {
+    void calculate(final Subgraph subgraph) {
         final Graph graph = graphProperty.get();
         if (graph == null || canvasDimension == null) {
             return;
