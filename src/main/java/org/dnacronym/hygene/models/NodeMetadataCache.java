@@ -15,6 +15,7 @@ import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public final class NodeMetadataCache {
 
     private final ThrottledExecutor retrievalExecutor;
     private final GfaFile gfaFile;
+    private final Map<Integer, NodeMetadata> cache;
 
     private int currentRadius;
 
@@ -49,6 +51,7 @@ public final class NodeMetadataCache {
     public NodeMetadataCache(final GfaFile gfaFile) {
         this.retrievalExecutor = new ThrottledExecutor(RETRIEVE_METADATA_TIMEOUT);
         this.gfaFile = gfaFile;
+        this.cache = new HashMap<>();
 
         HygeneEventBus.getInstance().register(this);
     }
@@ -102,6 +105,10 @@ public final class NodeMetadataCache {
      * @param subgraph a {@link Subgraph} with metadata
      */
     private void retrieveMetadata(final GfaFile gfaFile, final Subgraph subgraph) {
+        subgraph.getSegments().stream()
+                .filter(segment -> !segment.hasMetadata() && cache.containsKey(segment.getId()))
+                .forEach(segment -> segment.setMetadata(cache.getOrDefault(segment.getId(), null)));
+
         try {
             final Map<Integer, Long> sortedSegmentsWithoutMetadata
                     = getSortedSegmentsWithoutMetadata(subgraph.getSegments());

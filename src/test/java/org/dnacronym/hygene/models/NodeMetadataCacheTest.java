@@ -20,6 +20,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -127,6 +128,27 @@ final class NodeMetadataCacheTest {
         cache.getRetrievalExecutor().block();
 
         assertThat(segment.hasMetadata()).isFalse();
+    }
+
+    /**
+     * Tests that metadata is not retrieved twice if its metadata is put in the cache.
+     *
+     * @throws ParseException if the metadata could not be parser
+     */
+    @Test
+    void testRetrieveTwice() throws ParseException {
+        final Subgraph subgraph = new Subgraph();
+        final Segment segment = new Segment(1, 40, 5);
+        subgraph.add(segment);
+
+        cache.layoutDone(new LayoutDoneEvent(subgraph));
+        cache.getRetrievalExecutor().block();
+        reset(parser);
+        cache.layoutDone(new LayoutDoneEvent(subgraph));
+        cache.getRetrievalExecutor().block();
+
+        verify(parser).parseNodeMetadata(eq(gfaFile), captor.capture());
+        assertThat(captor.getValue()).isEmpty();
     }
 
 
