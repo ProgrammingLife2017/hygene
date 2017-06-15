@@ -71,6 +71,7 @@ public final class GraphDimensionsCalculator {
      */
     private final ObjectProperty<Graph> graphProperty;
     private CenterPointQuery centerPointQuery;
+    private Subgraph subgraph;
 
     private long minX;
     private long maxX;
@@ -87,11 +88,14 @@ public final class GraphDimensionsCalculator {
      * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
     public GraphDimensionsCalculator(final GraphStore graphStore) {
+        observableQueryNodes = FXCollections.observableArrayList();
+        readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
+
         minXNodeIdProperty = new SimpleIntegerProperty(1);
         maxXNodeIdProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty = new SimpleIntegerProperty(1);
-        radiusProperty = new SimpleIntegerProperty(1);
+        radiusProperty = new SimpleIntegerProperty(DEFAULT_RADIUS);
 
         nodeCountProperty = new SimpleIntegerProperty(1);
 
@@ -102,7 +106,7 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
-            if (centerPointQuery == null) {
+            if (centerPointQuery == null || oldValue.intValue() == newValue.intValue()) {
                 return;
             }
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
@@ -114,6 +118,7 @@ public final class GraphDimensionsCalculator {
                     || newValue.intValue() > SugiyamaLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
                 return;
             }
+            calculate(subgraph);
             radiusProperty.set(((newValue.intValue() + SugiyamaLayerer.LAYER_WIDTH - 1)
                     / SugiyamaLayerer.LAYER_WIDTH) / 2);
         });
@@ -121,9 +126,6 @@ public final class GraphDimensionsCalculator {
         nodeHeightProperty = new SimpleDoubleProperty(1);
         laneHeightProperty = new SimpleDoubleProperty(1);
         laneCountProperty = new SimpleIntegerProperty(1);
-
-        observableQueryNodes = FXCollections.observableArrayList();
-        readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
 
         graphProperty = new SimpleObjectProperty<>();
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
@@ -137,7 +139,7 @@ public final class GraphDimensionsCalculator {
      */
     @Subscribe
     public void onLayoutDoneEvent(final LayoutDoneEvent event) {
-        Platform.runLater(() -> calculate(event.getSubgraph()));
+        subgraph = event.getSubgraph();
     }
 
     /**
