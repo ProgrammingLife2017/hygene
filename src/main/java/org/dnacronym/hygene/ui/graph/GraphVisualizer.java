@@ -76,9 +76,6 @@ public final class GraphVisualizer {
 
     private RTree rTree;
 
-    // TODO should be replace with path mapping (which is yet to be created).
-    public static int uniquePaths = 1;
-
 
     /**
      * Create a new {@link GraphVisualizer} instance.
@@ -209,7 +206,8 @@ public final class GraphVisualizer {
      */
     public double computeEdgeThickness(final org.dnacronym.hygene.graph.Edge edge) {
         return Math.max(DEFAULT_EDGE_THICKNESS,
-                1.0 / 2.0 * ((double) edge.getImportance()) / uniquePaths * nodeHeightProperty.get());
+                1.0 / 2.0 * ((double) edge.getImportance()) /
+                        graph.getGenomeMapping().size() * nodeHeightProperty.get());
     }
 
     /**
@@ -441,6 +439,15 @@ public final class GraphVisualizer {
      */
     public ObjectProperty<Color> getEdgeColorProperty() {
         return edgeColorProperty;
+    }
+
+    /**
+     * Gets the {@link Graph}.
+     *
+     * @return the graph
+     */
+    public Graph getGraph() {
+        return graph;
     }
 
     /**

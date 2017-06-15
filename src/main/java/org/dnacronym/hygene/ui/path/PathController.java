@@ -12,7 +12,9 @@ import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 /**
@@ -50,7 +52,9 @@ public final class PathController implements Initializable {
             if (newValue != null && newValue.hasMetadata()) {
                 pathList.getItems().clear();
 
-                pathList.getItems().addAll(newValue.getMetadata().getGenomes());
+                pathList.getItems().addAll(newValue.getMetadata().getGenomes().stream()
+                        .map(g -> Optional.ofNullable(graphVisualizer.getGraph().getGenomeMapping().get(g)).orElse(g))
+                        .collect(Collectors.toList()));
             }
         });
     }
