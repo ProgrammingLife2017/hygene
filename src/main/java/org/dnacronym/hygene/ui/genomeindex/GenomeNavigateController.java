@@ -35,7 +35,7 @@ public final class GenomeNavigateController implements Initializable {
 
     private GraphVisualizer graphVisualizer;
     private GraphStore graphStore;
-    private GenomeNavigation genomeNavigation;
+    private final GenomeNavigation genomeNavigation;
     private Hygene hygeneInstance;
 
     @FXML
