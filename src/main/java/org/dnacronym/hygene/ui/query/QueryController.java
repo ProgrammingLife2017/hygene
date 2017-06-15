@@ -46,7 +46,7 @@ public final class QueryController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-         queryProgress.visibleProperty().bind(query.getQueryingProperty());
+        queryProgress.visibleProperty().bind(query.getQueryingProperty());
         queryButton.disableProperty().bind(query.getQueryingProperty());
     }
 

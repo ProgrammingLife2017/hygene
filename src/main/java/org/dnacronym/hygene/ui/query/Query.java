@@ -55,7 +55,7 @@ public final class Query {
     /**
      * Performs a query by looking at the sequences of nodes and returning the nodes which contain the passed sequence.
      * <p>
-     * Also clears the current list of queried node id's to avoid confusion.
+     * Also clears the current list of queried node ids to avoid confusion.
      *
      * @param sequence the sequence to search for inside the sequences of nodes
      * @throws ParseException if unable to execute a regex query
