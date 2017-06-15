@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -108,9 +107,6 @@ public final class GenomeNavigateController implements Initializable {
             genome.getItems().clear();
             base.getValueFactory().setValue(1);
         });
-
-        genomeNavigatePane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
-        genomeNavigatePane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
 
     /**
