@@ -114,7 +114,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 .map(node -> node.getXPosition() + node.getLength())
                 .max(Long::compare)
                 .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
-        return positionToLayer(data, maxPosition);
+        return data.positionToLayer(maxPosition);
     }
 
     /**
@@ -149,7 +149,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
         forEachLayer(data, edge, layer -> {
             final DummyNode dummy = new DummyNode(edge.getFrom(), edge.getTo());
-            dummy.setXPosition((long) layer * LAYER_WIDTH);
+            dummy.setXPosition((long) (layer + data.minLayer) * LAYER_WIDTH);
 
             dummyNodes.add(dummy);
             addToLayerSomewhere(layers[layer], dummy);
@@ -195,25 +195,14 @@ public final class FafospLayerer implements SugiyamaLayerer {
      */
 
     /**
-     * Returns the number of the layer the given position would be in.
-     *
-     * @param position a position
-     * @return the number of the layer the given position would be in
-     */
-    private int positionToLayer(final LayererData data, final long position) {
-        assert position >= 0;
-        return (int) ((position + LAYER_WIDTH - 1) / LAYER_WIDTH);
-    }
-
-    /**
      * Returns the number of layers the given {@link Edge} traverses.
      *
      * @param edge an {@link Edge}
      * @return the number of layers the given {@link Edge} traverses
      */
     private int layerSize(final LayererData data, final Edge edge) {
-        final int startLayer = positionToLayer(data, edge.getFrom().getXPosition() + edge.getFrom().getLength());
-        final int endLayer = positionToLayer(data, edge.getTo().getXPosition()) - 1;
+        final int startLayer = data.positionToLayer(edge.getFrom().getXPosition() + edge.getFrom().getLength());
+        final int endLayer = data.positionToLayer(edge.getTo().getXPosition()) - 1;
 
         return endLayer - startLayer;
     }
@@ -225,8 +214,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param action a {@link Consumer} for layer indices
      */
     private void forEachLayer(final LayererData data, final NewNode node, final Consumer<Integer> action) {
-        final int startLayer = positionToLayer(data, node.getXPosition());
-        final int endLayer = positionToLayer(data, node.getXPosition() + node.getLength()) - 1;
+        final int startLayer = data.positionToLayer(node.getXPosition());
+        final int endLayer = data.positionToLayer(node.getXPosition() + node.getLength()) - 1;
 
         for (int layer = startLayer; layer <= endLayer; layer++) {
             action.accept(layer);
@@ -240,8 +229,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param action a {@link Consumer} for layer indices
      */
     private void forEachLayer(final LayererData data, final Edge edge, final Consumer<Integer> action) {
-        final int startLayer = positionToLayer(data, edge.getFrom().getXPosition() + edge.getFrom().getLength());
-        final int endLayer = positionToLayer(data, edge.getTo().getXPosition()) - 1;
+        final int startLayer = data.positionToLayer(edge.getFrom().getXPosition() + edge.getFrom().getLength());
+        final int endLayer = data.positionToLayer(edge.getTo().getXPosition()) - 1;
 
         for (int layer = startLayer; layer <= endLayer; layer++) {
             action.accept(layer);
@@ -269,9 +258,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Class for easily passing data on the data to be laid out.
      */
-    private class LayererData {
+    private static class LayererData {
         private final Subgraph subgraph;
         private final Collection<NewNode> nodes;
+        private final int minLayer;
 
 
         /**
@@ -282,6 +272,24 @@ public final class FafospLayerer implements SugiyamaLayerer {
         LayererData(final Subgraph subgraph) {
             this.subgraph = subgraph;
             this.nodes = subgraph.getNodes();
+
+            final Long minPosition = nodes.stream()
+                    .map(node -> node.getXPosition())
+                    .min(Long::compare)
+                    .orElseThrow(() -> new IllegalStateException());
+            this.minLayer = (int) ((minPosition + LAYER_WIDTH - 1) / LAYER_WIDTH);
+        }
+
+
+        /**
+         * Returns the number of the layer the given position would be in.
+         *
+         * @param position a position
+         * @return the number of the layer the given position would be in
+         */
+        int positionToLayer(final long position) {
+            assert position >= 0;
+            return (int) ((position + LAYER_WIDTH - 1) / LAYER_WIDTH) - minLayer;
         }
     }
 }
