@@ -22,7 +22,7 @@ import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
-import org.dnacronym.hygene.graph.layout.SugiyamaLayerer;
+import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.models.Graph;
 
 import java.util.LinkedList;
@@ -114,13 +114,13 @@ public final class GraphDimensionsCalculator {
 
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() < SugiyamaLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
-                    || newValue.intValue() > SugiyamaLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
+            if (newValue.intValue() < FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
+                    || newValue.intValue() > FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
                 return;
             }
             calculate(subgraph);
-            radiusProperty.set(((newValue.intValue() + SugiyamaLayerer.LAYER_WIDTH - 1)
-                    / SugiyamaLayerer.LAYER_WIDTH) / 2);
+            radiusProperty.set(((newValue.intValue() + FafospLayerer.LAYER_WIDTH - 1)
+                    / FafospLayerer.LAYER_WIDTH) / 2);
         });
 
         nodeHeightProperty = new SimpleDoubleProperty(1);
@@ -216,7 +216,7 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
-        viewRadiusProperty.set(DEFAULT_RADIUS * SugiyamaLayerer.LAYER_WIDTH);
+        viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
     }
 
     /**
