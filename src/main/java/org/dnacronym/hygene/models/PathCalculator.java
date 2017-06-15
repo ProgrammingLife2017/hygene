@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 
 
 /**
- * The class with calculate the genome paths.
+ * Calculates genome paths and edge thickness.
  */
 public final class PathCalculator {
     /**
-     * The edges compute the path for each {@link Edge}.
+     * Computes the genomes in which each {@link Edge} in the given {@link Subgraph} is.
      *
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
@@ -37,11 +37,11 @@ public final class PathCalculator {
     }
 
     /**
-     * Computes a topological ordering for iteration the {@link Subgraph}.
+     * Computes a topological ordering for iterating the given {@link Subgraph}.
      *
      * @param subgraph    the {@link Subgraph}
      * @param genomeStore the genome store
-     * @return list containing a topological ordering
+     * @return a topologically sorted list of the {@link NewNode}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<NewNode> computeTopologicalOrder(final Subgraph subgraph, final Map<NewNode, Set<String>> genomeStore) {
@@ -88,10 +88,10 @@ public final class PathCalculator {
     }
 
     /**
-     * Gets the list of genomes for a specific {@link DummyNode}.
+     * Returns the list of genomes for the given {@link DummyNode}.
      *
-     * @param dummyNode the {@link DummyNode}
-     * @return list of genomes
+     * @param dummyNode a {@link DummyNode}
+     * @return the list of genomes for the given {@link DummyNode}
      */
     Set<String> getDummyNodeGenomes(final DummyNode dummyNode) {
         final List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
@@ -107,23 +107,23 @@ public final class PathCalculator {
     /**
      * Determines which {@link NewNode}s do not have any incoming edges.
      * <p>
-     * These {@link NewNode}s are considered to be connected the theoretical source node of the Graph.
+     * These {@link NewNode}s are considered to be connected to the theoretical source node of the {@link Graph}.
      *
      * @param subgraph the subgraph
-     * @return list of nodes with no incoming edges.
+     * @return a list of nodes with no incoming edges
      */
     List<NewNode> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
         return subgraph.getNodes().stream()
-                .filter(n -> subgraph.getNeighbours(n, SequenceDirection.LEFT).isEmpty())
+                .filter(node -> subgraph.getNeighbours(node, SequenceDirection.LEFT).isEmpty())
                 .collect(Collectors.toList());
     }
 
     /**
-     * Uses a topologically ordered set of {@link NewNode}s to compute the edges paths.
+     * Uses a topologically ordered set of {@link NewNode}s to compute the edges' paths.
      *
-     * @param topologicalOrder the topological ordering
-     * @param genomeStore      map containing the genomes from each node
-     * @return map contains a set of genomes for each edge
+     * @param topologicalOrder a topologically ordered list of {@link NewNode}s
+     * @param genomeStore      a map mapping each {@link NewNode} to the genomes it is in
+     * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
     Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,
                                                      final Map<NewNode, Set<String>> genomeStore) {
