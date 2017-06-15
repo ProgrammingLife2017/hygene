@@ -26,7 +26,7 @@ abstract class LayerConstructingTestBase {
     }
 
 
-    protected Map<Integer, NewNode> createLayer(final int... nodeIds) {
+    protected final Map<Integer, NewNode> createLayer(final int... nodeIds) {
         final Map<Integer, NewNode> layer = new HashMap<>();
 
         Arrays.stream(nodeIds).forEach(nodeId -> {
@@ -42,8 +42,8 @@ abstract class LayerConstructingTestBase {
         return layer;
     }
 
-    protected void createEdges(final int[][] edges,
-                               final Map<Integer, NewNode> layer1, final Map<Integer, NewNode> layer2) {
+    protected final void createEdges(final int[][] edges,
+                                     final Map<Integer, NewNode> layer1, final Map<Integer, NewNode> layer2) {
         Arrays.stream(edges).forEach(edgeArray -> {
                     final NewNode source = layer1.get(edgeArray[0]);
                     final NewNode destination = layer2.get(edgeArray[1]);
@@ -55,7 +55,8 @@ abstract class LayerConstructingTestBase {
         );
     }
 
-    protected NewNode[][] combineLayers(final Map<Integer, NewNode>... layers) {
+    @SafeVarargs
+    protected final NewNode[][] combineLayers(final Map<Integer, NewNode>... layers) {
         final NewNode[][] result = new NewNode[layers.length][];
 
         for (int i = 0; i < layers.length; i++) {
