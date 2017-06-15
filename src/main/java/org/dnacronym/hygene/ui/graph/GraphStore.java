@@ -1,11 +1,11 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GffFile;
@@ -31,7 +31,7 @@ public final class GraphStore {
 
     private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
 
-    private final ListProperty<GffFile> gffFiles = new SimpleListProperty<>();
+    private final ObservableList<GffFile> gffFiles = FXCollections.observableArrayList();
     private final ReadOnlyListWrapper<GffFile> readOnlyGffFiles = new ReadOnlyListWrapper<>(gffFiles);
 
 

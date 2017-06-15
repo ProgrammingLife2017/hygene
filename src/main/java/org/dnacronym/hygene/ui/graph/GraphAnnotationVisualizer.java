@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
@@ -11,7 +12,6 @@ import java.util.List;
 /**
  *
  */
-@SuppressWarnings("PMD")
 public final class GraphAnnotationVisualizer {
     private static final int ANNOTATION_MARKER_HEIGHT = 10;
 
@@ -44,9 +44,21 @@ public final class GraphAnnotationVisualizer {
     }
 
     /**
-     * @param genomePoints
+     * Draws a marker at the top of the graph denoting the start end of a
+     * {@link org.dnacronym.hygene.models.FeatureAnnotation}.
+     * <p>
+     * If the {@link GenomePoint}s list is smaller than 2, nothing is drawn, as there are no clear indicators for start
+     * and end nodes.
+     *
+     * @param genomePoints the list of {@link GenomePoint}s which denote the start and end of a
+     *                     {@link org.dnacronym.hygene.models.FeatureAnnotation}
+     * @param nodes        the list of current onscreen {@link NewNode}s
      */
     public void draw(final List<GenomePoint> genomePoints, final List<NewNode> nodes) {
+        if (genomePoints.size() < 2) {
+            return;
+        }
+
         final int startNodeId = genomePoints.get(0).getNodeId();
         final int startOffset = genomePoints.get(0).getBaseOffsetInNode();
         final int endNodeId = genomePoints.get(1).getNodeId();
@@ -69,6 +81,7 @@ public final class GraphAnnotationVisualizer {
             endX = canvasWidth;
         }
 
+        graphicsContext.setFill(Color.LIGHTBLUE);
         graphicsContext.fillRect(startX, 0, endX - startX, ANNOTATION_MARKER_HEIGHT);
     }
 }
