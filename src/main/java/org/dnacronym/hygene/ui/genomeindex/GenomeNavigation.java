@@ -2,14 +2,14 @@ package org.dnacronym.hygene.ui.genomeindex;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
@@ -35,8 +35,8 @@ public class GenomeNavigation {
     private final BooleanProperty indexFinishedProperty;
     private final ObjectProperty<GenomeIndex> genomeIndexProperty = new SimpleObjectProperty<>();
 
-    private final ListProperty<String> genomeNamesProperty = new SimpleListProperty<>();
-    private final ReadOnlyListWrapper<String> readOnlyGenomeNames = new ReadOnlyListWrapper<>(genomeNamesProperty);
+    private final ObservableList<String> genomeNamesList = FXCollections.observableArrayList();
+    private final ReadOnlyListWrapper<String> readOnlyGenomeNames = new ReadOnlyListWrapper<>(genomeNamesList);
 
 
     /**
@@ -73,7 +73,7 @@ public class GenomeNavigation {
                         genomeIndexProperty.set(genomeIndex);
                         indexFinishedProperty.set(true);
 
-                        genomeNamesProperty.setAll(genomeIndex.getGenomeNames());
+                        genomeNamesList.setAll(genomeIndex.getGenomeNames());
                     });
                 } catch (final SQLException | IOException e) {
                     LOGGER.error("Unable to load genome info from file.", e);
