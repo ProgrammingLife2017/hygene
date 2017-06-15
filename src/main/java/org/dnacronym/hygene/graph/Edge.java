@@ -14,8 +14,7 @@ public class Edge {
     private final UUID uuid;
     private final NewNode from;
     private final NewNode to;
-    @Nullable
-    private Set<String> genomes;
+    private @Nullable Set<String> genomes;
 
 
     /**
@@ -51,12 +50,11 @@ public class Edge {
     }
 
     /**
-     * Get the genome set for this {@link Edge}.
+     * Returns the genome this {@link Edge} is in, or {@code null} if metadata has not been parsed yet.
      *
-     * @return the genomes
+     * @return the genome this {@link Edge} is in, or {@code null} if metadata has not been parsed yet
      */
-    @Nullable
-    public final Set<String> getGenomes() {
+    public final @Nullable Set<String> getGenomes() {
         return genomes;
     }
 
@@ -70,7 +68,7 @@ public class Edge {
     }
 
     /**
-     * Get the edges importance.
+     * Returns the edges importance.
      * <p>
      * The edge importance is defined as the number of genome paths that run through this {@link Edge}.
      *
@@ -84,10 +82,10 @@ public class Edge {
     }
 
     /**
-     * Checks whether this edge is part of specific genome.
+     * Returns {@code true} iff. this {@link Edge} is in the given genome.
      *
-     * @param genome the path
-     * @return true if edge is part of the genome
+     * @param genome the name of a genome
+     * @return {@code true} iff. this {@link Edge} is in the given genome
      */
     public final boolean inGenome(final String genome) {
         return genomes != null && genomes.contains(genome);
