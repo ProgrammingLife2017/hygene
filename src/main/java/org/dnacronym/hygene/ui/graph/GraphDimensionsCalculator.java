@@ -26,6 +26,7 @@ import org.dnacronym.hygene.models.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -46,7 +47,6 @@ public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
      */
-    private static final int DEFAULT_EDGE_WIDTH = 1000;
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
 
@@ -67,8 +67,8 @@ public final class GraphDimensionsCalculator {
     private final ObjectProperty<Graph> graphProperty;
     private CenterPointQuery centerPointQuery;
 
-    private int minX;
-    private int maxX;
+    private long minX;
+    private long maxX;
     private int minY;
     private Dimension2D canvasDimension;
 
@@ -156,14 +156,14 @@ public final class GraphDimensionsCalculator {
             return;
         }
 
-        final int centerNodeId = centerNodeIdProperty.get();
-        final int unscaledCenterX = graph.getUnscaledXPosition(centerNodeId)
-                + graph.getUnscaledXEdgeCount(centerNodeId) * DEFAULT_EDGE_WIDTH;
+        final Segment centerNode = Optional.ofNullable(subgraph.getSegment(centerNodeIdProperty.get()))
+                .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
+        final long unscaledCenterX = centerNode.getXPosition();
 
-        final int[] tempMinX = {unscaledCenterX};
-        final int[] tempMaxX = {unscaledCenterX};
-        final int[] tempMinY = {graph.getUnscaledYPosition(centerNodeId)};
-        final int[] tempMaxY = {graph.getUnscaledYPosition(centerNodeId)};
+        final long[] tempMinX = {unscaledCenterX};
+        final long[] tempMaxX = {unscaledCenterX};
+        final int[] tempMinY = {centerNode.getYPosition()};
+        final int[] tempMaxY = {centerNode.getYPosition()};
 
         final List<NewNode> neighbours = new LinkedList<>();
         subgraph.getNodes().forEach(node -> {
@@ -173,13 +173,13 @@ public final class GraphDimensionsCalculator {
                 return;
             }
 
-            final int nodeLeftX = node.getXPosition() - node.getLength();
+            final long nodeLeftX = node.getXPosition();
             if (tempMinX[0] > nodeLeftX) {
                 tempMinX[0] = nodeLeftX;
                 minXNodeIdProperty.setValue(((Segment) node).getId());
             }
 
-            final int nodeRightX = node.getXPosition();
+            final long nodeRightX = node.getXPosition() + node.getLength();
             if (tempMaxX[0] < nodeRightX) {
                 tempMaxX[0] = nodeRightX;
                 maxXNodeIdProperty.setValue(((Segment) node).getId());
@@ -246,7 +246,7 @@ public final class GraphDimensionsCalculator {
      * @return the absolute x position of a node within the current canvas
      */
     double computeXPosition(final NewNode node) {
-        final int xPosition = node.getXPosition();
+        final long xPosition = node.getXPosition();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
 
@@ -289,7 +289,7 @@ public final class GraphDimensionsCalculator {
      * @return the width of a node
      */
     double computeWidth(final NewNode node) {
-        return (double) node.getLength() / (maxX - minX) * canvasDimension.getWidth();
+        return ((double) node.getLength()) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**

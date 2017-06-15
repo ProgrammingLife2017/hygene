@@ -75,7 +75,10 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testComputeAndGetLaneHeight() {
-        graphDimensionsCalculator.calculate(new Subgraph());
+        final Segment segment = new Segment(0, 0, 0);
+        final Subgraph subgraph = new Subgraph();
+        subgraph.add(segment);
+        graphDimensionsCalculator.calculate(subgraph);
 
         assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300 / 10);
     }
