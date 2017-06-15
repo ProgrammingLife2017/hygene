@@ -145,7 +145,7 @@ final class FileMetadata {
     /**
      * Returns {@code true} iff. the genomes in the file have been completely indexed.
      *
-     * @return {@code true} iff. the genomes in the file have been completely indexed.
+     * @return {@code true} iff. the genomes in the file have been completely indexed
      * @throws SQLException in the case of an error during SQL operations
      */
     boolean isIndexed() throws SQLException {
