@@ -111,8 +111,7 @@ public final class GraphDimensionsCalculator {
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() < SugiyamaLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
-                    || newValue.intValue() > SugiyamaLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR) {
-                viewRadiusProperty.setValue(oldValue);
+                    || newValue.intValue() > SugiyamaLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
                 return;
             }
             radiusProperty.set(((newValue.intValue() + SugiyamaLayerer.LAYER_WIDTH - 1)
@@ -176,8 +175,6 @@ public final class GraphDimensionsCalculator {
                 .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
         final long unscaledCenterX = centerNode.getXPosition();
 
-        final long[] tempMinX = {unscaledCenterX};
-        final long[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {centerNode.getYPosition()};
         final int[] tempMaxY = {centerNode.getYPosition()};
 
@@ -189,24 +186,12 @@ public final class GraphDimensionsCalculator {
                 return;
             }
 
-            final long nodeLeftX = node.getXPosition();
-            if (tempMinX[0] > nodeLeftX) {
-                tempMinX[0] = nodeLeftX;
-                minXNodeIdProperty.setValue(((Segment) node).getId());
-            }
-
-            final long nodeRightX = node.getXPosition() + node.getLength();
-            if (tempMaxX[0] < nodeRightX) {
-                tempMaxX[0] = nodeRightX;
-                maxXNodeIdProperty.setValue(((Segment) node).getId());
-            }
-
             tempMinY[0] = Math.min(tempMinY[0], node.getYPosition());
             tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
-        this.minX = tempMinX[0];
-        this.maxX = tempMaxX[0];
+        this.minX = unscaledCenterX - viewRadiusProperty.get() / 2;
+        this.maxX = unscaledCenterX + viewRadiusProperty.get() / 2;
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 

@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleDoubleProperty;
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
-    private static final double DEFAULT_ZOOMING_SENSITIVITY = 5;
+    private static final double DEFAULT_ZOOMING_SENSITIVITY = 10;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
