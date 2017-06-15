@@ -65,7 +65,7 @@ public class Edge {
      *
      * @param genomes the genomes
      */
-    public void setGenomes(final Set<String> genomes) {
+    public void setGenomes(@Nullable final Set<String> genomes) {
         this.genomes = genomes;
     }
 

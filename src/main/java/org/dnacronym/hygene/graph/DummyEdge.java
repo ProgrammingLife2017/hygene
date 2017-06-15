@@ -21,6 +21,7 @@ public final class DummyEdge extends Edge {
 
         assert !(originalEdge instanceof DummyEdge);
         this.originalEdge = originalEdge;
+        setGenomes(originalEdge.getGenomes());
     }
 
 
