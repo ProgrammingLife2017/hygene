@@ -40,13 +40,6 @@ final class NodeTest {
     }
 
     @Test
-    void testGetUnscaledXEdgeCount() {
-        final Node node = NodeBuilder.start().withUnscaledXEdgeCount(17).create();
-
-        assertThat(node.getUnscaledXEdgeCount()).isEqualTo(17);
-    }
-
-    @Test
     void testGetUnscaledXPosition() {
         final Node node = NodeBuilder.start().withUnscaledXPosition(5).create();
 
@@ -67,7 +60,6 @@ final class NodeTest {
                 .withByteOffset(1)
                 .withSequenceLength(5)
                 .withColor(NodeColor.BLACK)
-                .withUnscaledXEdgeCount(6)
                 .withUnscaledXPosition(3)
                 .withUnscaledYPosition(4)
                 .withOutgoingEdge(1, 30)
