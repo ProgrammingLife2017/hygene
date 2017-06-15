@@ -27,7 +27,7 @@ import java.sql.SQLException;
  *
  * @see GenomeIndex
  */
-public class GenomeNavigation {
+public final class GenomeNavigation {
     private static final Logger LOGGER = LogManager.getLogger(GenomeNavigation.class);
 
     private final StatusBar statusBar;
