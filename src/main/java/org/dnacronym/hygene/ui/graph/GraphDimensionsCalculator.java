@@ -169,7 +169,7 @@ public final class GraphDimensionsCalculator {
      */
     void calculate(final Subgraph subgraph) {
         final Graph graph = graphProperty.get();
-        if (graph == null || canvasDimension == null) {
+        if (graph == null || subgraph == null || canvasDimension == null) {
             return;
         }
 
