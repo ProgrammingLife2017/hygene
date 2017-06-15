@@ -44,6 +44,9 @@
                     <TitledPane animated="false" text="Query">
                         <fx:include source="query/query.fxml"/>
                     </TitledPane>
+                    <TitledPane animated="false" text="Genome Navigation">
+                        <fx:include source="genomeindex/genome_navigate_view.fxml"/>
+                    </TitledPane>
                 </VBox>
             </ScrollPane>
             <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"

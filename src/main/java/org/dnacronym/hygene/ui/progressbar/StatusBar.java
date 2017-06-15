@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.progressbar;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
  * Deals with the on-screen progress bar in the application.
  */
 public final class StatusBar {
-    private static final int PROGRESS_MAX = 100;
+    public static final int PROGRESS_MAX = 100;
 
     private final DoubleProperty progressProperty;
     private final StringProperty statusProperty;
@@ -40,10 +41,10 @@ public final class StatusBar {
         final Task<Void> progressTask = new Task<Void>() {
             @Override
             public Void call() throws InterruptedException {
-                task.accept((progress, message) -> {
+                task.accept((progress, message) -> Platform.runLater(() -> {
                     this.updateProgress(progress, PROGRESS_MAX);
                     statusProperty.set(message);
-                });
+                }));
                 return null;
             }
         };

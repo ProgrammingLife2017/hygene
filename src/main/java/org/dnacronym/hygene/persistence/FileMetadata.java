@@ -17,6 +17,7 @@ final class FileMetadata {
     static final String TABLE_NAME = "global";
     static final String VERSION_KEY_NAME = "version";
     static final String DIGEST_KEY_NAME = "digest";
+    static final String IS_INDEXED_KEY_NAME = "is_indexed";
 
     private static final String KEY_COLUMN_NAME = "global_key";
     private static final String VALUE_COLUMN_NAME = "global_value";
@@ -59,6 +60,7 @@ final class FileMetadata {
         fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(VERSION_KEY_NAME, String.valueOf(FileDatabase
                 .DB_VERSION)));
         fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(DIGEST_KEY_NAME, computeFileDigest()));
+        fileDatabaseDriver.insertRow(TABLE_NAME, Arrays.asList(IS_INDEXED_KEY_NAME, "false"));
     }
 
     /**
@@ -138,5 +140,28 @@ final class FileMetadata {
                 Files.readAttributes(Paths.get(fileDatabase.getFileName()), BasicFileAttributes.class);
 
         return DigestUtils.sha512Hex(fileDatabase.getFileName() + attr.lastModifiedTime() + attr.size());
+    }
+
+    /**
+     * Returns {@code true} iff. the genomes in the file have been completely indexed.
+     *
+     * @return {@code true} iff. the genomes in the file have been completely indexed
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    boolean isIndexed() throws SQLException {
+        return Boolean.parseBoolean(
+                fileDatabaseDriver.getSingleValue(TABLE_NAME, KEY_COLUMN_NAME, IS_INDEXED_KEY_NAME, VALUE_COLUMN_NAME)
+        );
+    }
+
+    /**
+     * Sets the state of the index persisted in the DB to {@code isIndexed}.
+     *
+     * @param isIndexed the new state of the index to be stored
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    void setIndexedState(final boolean isIndexed) throws SQLException {
+        fileDatabaseDriver.setSingleValue(TABLE_NAME, KEY_COLUMN_NAME, IS_INDEXED_KEY_NAME, VALUE_COLUMN_NAME,
+                String.valueOf(isIndexed));
     }
 }

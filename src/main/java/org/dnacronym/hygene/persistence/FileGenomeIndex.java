@@ -22,6 +22,7 @@ public final class FileGenomeIndex {
     private static final String NODE_ID_COLUMN_NAME = "node_id";
 
     private final FileDatabaseDriver fileDatabaseDriver;
+    private final FileDatabase fileDatabase;
 
 
     /**
@@ -31,6 +32,7 @@ public final class FileGenomeIndex {
      */
     public FileGenomeIndex(final FileDatabase fileDatabase) {
         this.fileDatabaseDriver = fileDatabase.getFileDatabaseDriver();
+        this.fileDatabase = fileDatabase;
     }
 
 
@@ -48,6 +50,35 @@ public final class FileGenomeIndex {
         return globalTable;
     }
 
+
+    /**
+     * Returns {@code true} iff. the genomes in the file have been indexed before.
+     *
+     * @return {@code true} iff. the genomes in the file have been indexed before
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public boolean isIndexed() throws SQLException {
+        return fileDatabase.getFileMetadata().isIndexed();
+    }
+
+    /**
+     * Permanently deletes all entries of the genome index.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public void cleanIndex() throws SQLException {
+        fileDatabaseDriver.deleteAllFromTable(TABLE_NAME);
+        fileDatabase.getFileMetadata().setIndexedState(false);
+    }
+
+    /**
+     * Marks the index as being complete.
+     *
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public void markIndexAsComplete() throws SQLException {
+        fileDatabase.getFileMetadata().setIndexedState(true);
+    }
 
     /**
      * Adds a new genome index point with the given data attributes.
@@ -94,5 +125,32 @@ public final class FileGenomeIndex {
                 return null;
             }
         });
+    }
+
+    /**
+     * Sets the auto-commit property of the file database driver.
+     *
+     * @param autoCommit whether each update should be executed immediately
+     */
+    public void setAutoCommit(final boolean autoCommit) {
+        try {
+            if (!fileDatabaseDriver.getConnection().getAutoCommit()) {
+                fileDatabaseDriver.getConnection().commit();
+            }
+            fileDatabaseDriver.getConnection().setAutoCommit(autoCommit);
+        } catch (final SQLException e) {
+            LOGGER.error("Unable to change database auto-commit setting.", e);
+        }
+    }
+
+    /**
+     * Commits any open transactions to the database.
+     */
+    public void commit() {
+        try {
+            fileDatabaseDriver.getConnection().commit();
+        } catch (final SQLException e) {
+            LOGGER.error("Unable to commit to database.", e);
+        }
     }
 }
