@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,8 +35,6 @@ public final class BookmarkCreateController implements Initializable {
     private SequenceVisualizer sequenceVisualizer;
     private SimpleBookmarkStore simpleBookmarkStore;
 
-    @FXML
-    private AnchorPane bookmarkCreatePane;
     @FXML
     private TextField baseOffset;
     @FXML
@@ -82,11 +79,6 @@ public final class BookmarkCreateController implements Initializable {
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-
-        bookmarkCreatePane.visibleProperty().bind(simpleBookmarkStore.getBookmarkCreateVisibleProperty()
-                .and(graphDimensionsCalculator.getGraphProperty().isNotNull()));
-        bookmarkCreatePane.managedProperty().bind(simpleBookmarkStore.getBookmarkCreateVisibleProperty()
-                .and(graphDimensionsCalculator.getGraphProperty().isNotNull()));
     }
 
     /**

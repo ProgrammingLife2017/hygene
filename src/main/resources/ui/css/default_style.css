@@ -10,6 +10,18 @@
     -fx-background-radius: 0;
 }
 
+.side_button {
+    -fx-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.side_button:selected {
+    -fx-focus-color: transparent;
+    -fx-background-color: lightgray;
+    -fx-background-opacity: 90%;
+}
+
 .mnemonic-underline {
     -fx-stroke: -fx-text-base-color;
 }

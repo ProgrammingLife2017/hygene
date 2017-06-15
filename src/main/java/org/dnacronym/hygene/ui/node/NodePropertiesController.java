@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.models.Node;
@@ -30,8 +29,6 @@ public final class NodePropertiesController implements Initializable {
     private GraphDimensionsCalculator graphDimensionsCalculator;
     private GraphVisualizer graphVisualizer;
 
-    @FXML
-    private Pane nodePropertiesPane;
     @FXML
     private TextField nodeId;
     @FXML
@@ -69,11 +66,6 @@ public final class NodePropertiesController implements Initializable {
         neighbourVisualizer.setCanvas(neighbourCanvas);
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
-
-        nodePropertiesPane.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull()
-                .and(graphVisualizer.getNodePropertiesVisibleProperty()));
-        nodePropertiesPane.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull()
-                .and(graphVisualizer.getNodePropertiesVisibleProperty()));
     }
 
     /**
