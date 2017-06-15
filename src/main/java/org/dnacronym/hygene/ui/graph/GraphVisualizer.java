@@ -222,8 +222,6 @@ public final class GraphVisualizer {
      * @throws IllegalStateException if the {@link Canvas} has not been set
      */
     public void draw() {
-        System.out.println("DRAW");
-
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }

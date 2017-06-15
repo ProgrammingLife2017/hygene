@@ -216,7 +216,7 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
-        viewRadiusProperty.set(DEFAULT_RADIUS * 1000);
+        viewRadiusProperty.set(DEFAULT_RADIUS * SugiyamaLayerer.LAYER_WIDTH);
     }
 
     /**
@@ -390,6 +390,11 @@ public final class GraphDimensionsCalculator {
         return radiusProperty;
     }
 
+    /**
+     * Returns the view radius property.
+     *
+     * @return the view radius property
+     */
     public IntegerProperty getViewRadiusProperty() {
         return viewRadiusProperty;
     }
