@@ -84,7 +84,7 @@ public final class Query {
             LOGGER.info("Finished querying: '" + sequence + "'.");
         });
 
-        thread.setDaemon(false);
+        thread.setDaemon(true);
         thread.start();
     }
 
