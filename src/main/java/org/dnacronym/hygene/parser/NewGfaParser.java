@@ -205,7 +205,7 @@ public final class NewGfaParser {
      *
      * @param line       the line to parse
      * @param byteOffset the byte offset
-     * @throws ParseException thrown when parsing a header field of the incorrect format.
+     * @throws ParseException thrown if a header field doesn't have the correct format
      */
     private void parseHeader(final String line, final long byteOffset) throws ParseException {
         if (line.startsWith(HEADER_GENOME_NAMES_PREFIX)) {

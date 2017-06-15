@@ -71,14 +71,14 @@ public final class FileGenomeMapping {
         genomeMappings.forEach((n, m) -> {
             try {
                 addMapping(n, m);
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 LOGGER.error("Could not store genome mappings.", e);
             }
         });
     }
 
     /**
-     * Returns a {@link Map} of genome containing genome mappings.
+     * Returns a {@link Map} of genomes containing genome mappings.
      *
      * @return the mappings
      * @throws SQLException in the case of an error during SQL operations
@@ -94,7 +94,7 @@ public final class FileGenomeMapping {
                 if (mapping != null && name != null) {
                     genomeMappings.put(name, mapping);
                 }
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 LOGGER.error("An error occurred while retrieving genome mappings for the database.", e);
             }
         });
