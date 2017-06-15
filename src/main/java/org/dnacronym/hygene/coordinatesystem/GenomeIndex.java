@@ -190,17 +190,17 @@ public final class GenomeIndex {
             final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
 
             for (final String genome : nodeGenomes) {
-                final String extensionlessGenome = genome.lastIndexOf('.') > 0 ?
+                final String noExtensionGenome = genome.lastIndexOf('.') > 0 ?
                         genome.substring(0, genome.lastIndexOf('.')) : genome;
 
                 final int genomeIndex;
                 final String genomeName;
-                if (StringUtils.isNumeric(genome)) {
-                    genomeIndex = Integer.parseInt(extensionlessGenome);
+                if (StringUtils.isNumeric(noExtensionGenome)) {
+                    genomeIndex = Integer.parseInt(noExtensionGenome);
                     genomeName = genomeNames.get(genomeIndex);
                 } else {
-                    genomeIndex = genomeNames.indexOf(extensionlessGenome);
-                    genomeName = extensionlessGenome;
+                    genomeIndex = genomeNames.indexOf(noExtensionGenome);
+                    genomeName = noExtensionGenome;
                 }
 
                 final Integer genomeBaseCount = genomeBaseCounts.get(genomeName);
