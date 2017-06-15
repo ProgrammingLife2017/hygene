@@ -59,7 +59,8 @@ public final class GraphStore {
     /**
      * Loads a {@link org.dnacronym.hygene.models.FeatureAnnotation} file into memory.
      *
-     * @param file {@link File} to load. This should be a {@value GFF_FILE_EXTENSION} file
+     * @param file            {@link File} to load. This should be a {@value GFF_FILE_EXTENSION} file
+     * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
      * @see GfaFile#parse(ProgressUpdater)
      */

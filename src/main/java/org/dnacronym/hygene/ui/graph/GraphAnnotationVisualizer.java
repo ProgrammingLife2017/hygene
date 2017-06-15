@@ -10,7 +10,8 @@ import java.util.List;
 
 
 /**
- *
+ * Visualizes all {@link org.dnacronym.hygene.models.FeatureAnnotation}s stored in {@link GraphAnnotation} in the graph
+ * view.
  */
 public final class GraphAnnotationVisualizer {
     private static final int ANNOTATION_MARKER_HEIGHT = 10;
@@ -22,7 +23,10 @@ public final class GraphAnnotationVisualizer {
 
 
     /**
-     * @param graphDimensionsCalculator
+     * Creates an instance of {@link GraphAnnotationVisualizer}.
+     *
+     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} used to calculate the position of the
+     *                                  annotations onscreen
      */
     public GraphAnnotationVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
@@ -30,14 +34,18 @@ public final class GraphAnnotationVisualizer {
 
 
     /**
-     * @param graphicsContext
+     * Sets the {@link GraphicsContext} used for drawing.
+     *
+     * @param graphicsContext the {@link GraphicsContext} used for drawing
      */
     public void setGraphicsContext(final GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
     }
 
     /**
-     * @param canvasWidth
+     * Sets the canvas width.
+     *
+     * @param canvasWidth the canvas width
      */
     public void setCanvasWidth(final double canvasWidth) {
         this.canvasWidth = canvasWidth;
