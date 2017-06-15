@@ -106,7 +106,7 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
-            if (centerPointQuery == null || oldValue.intValue() == newValue.intValue()) {
+            if (centerPointQuery == null) {
                 return;
             }
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
