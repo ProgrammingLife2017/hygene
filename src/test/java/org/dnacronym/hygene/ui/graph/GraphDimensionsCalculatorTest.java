@@ -95,12 +95,6 @@ final class GraphDimensionsCalculatorTest {
         assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
     }
 
-    @Test
-    void testUpperBoundRadius() {
-        graphDimensionsCalculator.getRadiusProperty().set(1000);
-        assertThat(graphDimensionsCalculator.getRadiusProperty().get()).isEqualTo(1);
-    }
-
 
     private Graph createGraph() {
         return new Graph(new int[][] {
