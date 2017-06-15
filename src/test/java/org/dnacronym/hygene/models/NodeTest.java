@@ -68,7 +68,7 @@ final class NodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[] {
-                UnsignedInteger.fromLong(1), 5, 4, 6, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                UnsignedInteger.fromLong(1), 5, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
         });
     }
 
