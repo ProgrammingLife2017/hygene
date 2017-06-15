@@ -92,7 +92,7 @@ public final class FileGenomeMapping {
                 final String name = row.getString(GENOME_NAME_COLUMN_NAME);
 
                 if (mapping != null && name != null) {
-                    genomeMappings.put(mapping, name);
+                    genomeMappings.put(name, mapping);
                 }
             } catch (SQLException e) {
                 LOGGER.error("An error occurred while retrieving genome mappings for the database.", e);

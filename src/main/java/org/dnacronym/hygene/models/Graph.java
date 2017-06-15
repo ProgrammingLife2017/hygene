@@ -6,6 +6,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.parser.GfaFile;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -41,6 +42,16 @@ public final class Graph {
         this.nodeArrays = nodeArrays;
         this.gfaFile = gfaFile;
         this.genomeMapping = genomeMapping;
+    }
+
+    /**
+     * Constructs a graph from array based data structure.
+     *
+     * @param nodeArrays nested array containing the graphs data
+     * @param gfaFile    a reference to the GFA file from which the graph is created
+     */
+    public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
+        this(nodeArrays, new HashMap<>(), gfaFile);
     }
 
 
