@@ -8,7 +8,6 @@ import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.FeatureAnnotation;
-import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.persistence.FileDatabase;
 
@@ -34,7 +33,6 @@ public final class GraphAnnotationVisualizer {
 
 
     /**
-     *
      * @param graphStore
      * @param graphDimensionsCalculator
      */
@@ -43,14 +41,13 @@ public final class GraphAnnotationVisualizer {
         this.graphStore = graphStore;
         this.graphDimensionsCalculator = graphDimensionsCalculator;
 
-        final GfaFile gfaFile = graphStore.getGfaFileProperty().get();
-        try {
-            genomeIndex = new GenomeIndex(gfaFile, new FileDatabase(gfaFile.getFileName()));
-        } catch (final SQLException e) {
-            LOGGER.error(e);
-        } catch (final IOException e) {
-            LOGGER.error(e);
-        }
+        graphStore.getGfaFileProperty().addListener((observable, oldGfaFile, newGfaFile) -> {
+            try {
+                genomeIndex = new GenomeIndex(newGfaFile, new FileDatabase(newGfaFile.getFileName()));
+            } catch (final SQLException | IOException e) {
+                LOGGER.error(e);
+            }
+        });
     }
 
 
