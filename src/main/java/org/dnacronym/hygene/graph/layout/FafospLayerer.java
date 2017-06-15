@@ -32,9 +32,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
             return new NewNode[0][];
         }
 
-        final NewNode[][] layers = createLayers(subgraph);
+        final LayererData data = new LayererData(subgraph);
+        final NewNode[][] layers = createLayers(data);
 
-        addToLayers(subgraph, layers);
+        addToLayers(data, layers);
 
         return layers;
     }
@@ -42,12 +43,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Allocates and returns an array of layers into which the given nodes can be placed.
      *
-     * @param subgraph a {@link Subgraph}
+     * @param data a {@link Subgraph}
      * @return an array of layers
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
-    private NewNode[][] createLayers(final Subgraph subgraph) {
-        final int[] layerHeights = calculateHeights(subgraph.getNodes());
+    private NewNode[][] createLayers(final LayererData data) {
+        final int[] layerHeights = calculateHeights(data);
         final NewNode[][] layers = new NewNode[layerHeights.length][];
 
         for (int i = 0; i < layers.length; i++) {
@@ -60,27 +61,27 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Places the given nodes into the proper layers.
      *
-     * @param subgraph a {@link Subgraph}
+     * @param data   a {@link Subgraph}
      * @param layers an array of layers
      */
-    private void addToLayers(final Subgraph subgraph, final NewNode[][] layers) {
+    private void addToLayers(final LayererData data, final NewNode[][] layers) {
         final Set<NewNode> addNodeLater = new HashSet<>();
 
-        subgraph.getNodes().forEach(node -> {
-            forEachLayer(node, layer -> addToLayerSomewhere(layers[layer], node));
+        data.nodes.forEach(node -> {
+            forEachLayer(data, node, layer -> addToLayerSomewhere(layers[layer], node));
 
             final Set<Edge> addEdgeLater = new HashSet<>();
             final Set<Edge> removeEdgeLater = new HashSet<>();
 
             node.getOutgoingEdges().forEach(edge -> {
-                if (layerSize(edge) < 0) {
+                if (layerSize(data, edge) < 0) {
                     return;
                 }
 
                 edge.getTo().getIncomingEdges().remove(edge);
                 removeEdgeLater.add(edge);
 
-                final List<DummyNode> dummyNodes = createDummyNodes(layers, edge);
+                final List<DummyNode> dummyNodes = createDummyNodes(data, layers, edge);
                 addNodeLater.addAll(dummyNodes);
 
                 final Edge firstEdge = connectDummies(edge, dummyNodes);
@@ -91,7 +92,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
             node.getOutgoingEdges().removeAll(removeEdgeLater);
         });
 
-        subgraph.addAll(addNodeLater);
+        data.subgraph.addAll(addNodeLater);
     }
 
 
@@ -102,34 +103,34 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Calculates the number of layers necessary for the given nodes.
      *
-     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @param data a {@link Collection} of {@link NewNode}s
      * @return the number of layers necessary for the given nodes
      */
     @SuppressWarnings("squid:S3346") // False positive; assert doesn't have side effects
-    private int calculateLayerCount(final Collection<NewNode> nodes) {
-        assert !nodes.isEmpty();
+    private int calculateLayerCount(final LayererData data) {
+        assert !data.nodes.isEmpty();
 
-        final long maxPosition = nodes.stream()
+        final long maxPosition = data.nodes.stream()
                 .map(node -> node.getXPosition() + node.getLength())
                 .max(Long::compare)
                 .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
-        return positionToLayer(maxPosition);
+        return positionToLayer(data, maxPosition);
     }
 
     /**
      * Calculates the number of {@link NewNode}s per layer.
      *
-     * @param nodes a {@link Collection} of {@link NewNode}s
+     * @param data a {@link Collection} of {@link NewNode}s
      * @return the number of {@link NewNode}s per layer
      */
-    private int[] calculateHeights(final Collection<NewNode> nodes) {
-        final int layerCount = calculateLayerCount(nodes);
+    private int[] calculateHeights(final LayererData data) {
+        final int layerCount = calculateLayerCount(data);
         final int[] heights = new int[layerCount];
 
-        nodes.forEach(node -> {
-            forEachLayer(node, layer -> heights[layer]++);
+        data.nodes.forEach(node -> {
+            forEachLayer(data, node, layer -> heights[layer]++);
 
-            node.getOutgoingEdges().forEach(edge -> forEachLayer(edge, layer -> heights[layer]++));
+            node.getOutgoingEdges().forEach(edge -> forEachLayer(data, edge, layer -> heights[layer]++));
         });
 
         return heights;
@@ -143,10 +144,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param edge   the {@link Edge} to replace with {@link DummyNode}s
      * @return a collection of unconnected {@link DummyNode}s
      */
-    private List<DummyNode> createDummyNodes(final NewNode[][] layers, final Edge edge) {
+    private List<DummyNode> createDummyNodes(final LayererData data, final NewNode[][] layers, final Edge edge) {
         final List<DummyNode> dummyNodes = new ArrayList<>();
 
-        forEachLayer(edge, layer -> {
+        forEachLayer(data, edge, layer -> {
             final DummyNode dummy = new DummyNode(edge.getFrom(), edge.getTo());
             dummy.setXPosition((long) layer * LAYER_WIDTH);
 
@@ -199,7 +200,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param position a position
      * @return the number of the layer the given position would be in
      */
-    private int positionToLayer(final long position) {
+    private int positionToLayer(final LayererData data, final long position) {
         assert position >= 0;
         return (int) ((position + LAYER_WIDTH - 1) / LAYER_WIDTH);
     }
@@ -210,9 +211,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param edge an {@link Edge}
      * @return the number of layers the given {@link Edge} traverses
      */
-    private int layerSize(final Edge edge) {
-        final int startLayer = positionToLayer(edge.getFrom().getXPosition() + edge.getFrom().getLength());
-        final int endLayer = positionToLayer(edge.getTo().getXPosition()) - 1;
+    private int layerSize(final LayererData data, final Edge edge) {
+        final int startLayer = positionToLayer(data, edge.getFrom().getXPosition() + edge.getFrom().getLength());
+        final int endLayer = positionToLayer(data, edge.getTo().getXPosition()) - 1;
 
         return endLayer - startLayer;
     }
@@ -223,9 +224,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param node   a {@link NewNode}
      * @param action a {@link Consumer} for layer indices
      */
-    private void forEachLayer(final NewNode node, final Consumer<Integer> action) {
-        final int startLayer = positionToLayer(node.getXPosition());
-        final int endLayer = positionToLayer(node.getXPosition() + node.getLength()) - 1;
+    private void forEachLayer(final LayererData data, final NewNode node, final Consumer<Integer> action) {
+        final int startLayer = positionToLayer(data, node.getXPosition());
+        final int endLayer = positionToLayer(data, node.getXPosition() + node.getLength()) - 1;
 
         for (int layer = startLayer; layer <= endLayer; layer++) {
             action.accept(layer);
@@ -238,9 +239,9 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param edge   an {@link Edge}
      * @param action a {@link Consumer} for layer indices
      */
-    private void forEachLayer(final Edge edge, final Consumer<Integer> action) {
-        final int startLayer = positionToLayer(edge.getFrom().getXPosition() + edge.getFrom().getLength());
-        final int endLayer = positionToLayer(edge.getTo().getXPosition()) - 1;
+    private void forEachLayer(final LayererData data, final Edge edge, final Consumer<Integer> action) {
+        final int startLayer = positionToLayer(data, edge.getFrom().getXPosition() + edge.getFrom().getLength());
+        final int endLayer = positionToLayer(data, edge.getTo().getXPosition()) - 1;
 
         for (int layer = startLayer; layer <= endLayer; layer++) {
             action.accept(layer);
@@ -262,5 +263,25 @@ public final class FafospLayerer implements SugiyamaLayerer {
         }
 
         throw new IllegalStateException("Layer is full, calculateHeights method is erroneous.");
+    }
+
+
+    /**
+     * Class for easily passing data on the data to be laid out.
+     */
+    private class LayererData {
+        private final Subgraph subgraph;
+        private final Collection<NewNode> nodes;
+
+
+        /**
+         * Constructs a new {@link LayererData}.
+         *
+         * @param subgraph a {@link Subgraph}
+         */
+        LayererData(final Subgraph subgraph) {
+            this.subgraph = subgraph;
+            this.nodes = subgraph.getNodes();
+        }
     }
 }
