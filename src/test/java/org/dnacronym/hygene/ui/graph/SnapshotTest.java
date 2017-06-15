@@ -3,9 +3,12 @@ package org.dnacronym.hygene.ui.graph;
 import javafx.scene.canvas.Canvas;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.ui.UITestBase;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -17,6 +20,14 @@ import static org.mockito.Mockito.when;
  */
 final class SnapshotTest extends UITestBase {
     static final String GFA_FILE_NAME = "src/test/resources/gfa/simple.gfa";
+
+
+    @AfterEach
+    void tearDown() throws IOException {
+        Arrays.stream(new File(GFA_FILE_NAME).getParentFile().listFiles())
+                .filter(file -> file.getName().endsWith(".png"))
+                .forEach(File::delete);
+    }
 
 
     @Test
