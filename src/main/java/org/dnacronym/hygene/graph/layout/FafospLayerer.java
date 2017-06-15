@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 public final class FafospLayerer implements SugiyamaLayerer {
     public static final int LAYER_WIDTH = 1000;
 
+
     @Override
     public NewNode[][] layer(final Subgraph subgraph) {
         if (subgraph.getNodes().isEmpty()) {
