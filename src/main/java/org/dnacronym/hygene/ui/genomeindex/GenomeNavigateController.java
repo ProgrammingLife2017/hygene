@@ -9,7 +9,6 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -22,9 +21,9 @@ import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -36,11 +35,11 @@ public final class GenomeNavigateController implements Initializable {
 
     private GraphVisualizer graphVisualizer;
     private GraphStore graphStore;
-    private GenomeIndex genomeIndex;
+    private GenomeNavigation genomeNavigation;
     private Hygene hygeneInstance;
 
-    private boolean indexFinished;
-
+    @FXML
+    private AnchorPane genomeNavigatePane;
     @FXML
     private ComboBox<String> genome;
     @FXML
@@ -60,11 +59,7 @@ public final class GenomeNavigateController implements Initializable {
 
         setGraphVisualizer(hygeneInstance.getGraphVisualizer());
         setGraphStore(hygeneInstance.getGraphStore());
-
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
-                triggerGenomeIndex(newValue));
     }
-
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -86,11 +81,14 @@ public final class GenomeNavigateController implements Initializable {
 
     /**
      * Populates the {@link ComboBox} of genome names.
+     *
+     * @param genomeNames the {@link List} of genome names of the current
+     *                    {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}
      */
-    private void populateGenomeComboBox() {
+    private void populateGenomeComboBox(final List<String> genomeNames) {
         Platform.runLater(() -> {
             genome.getItems().clear();
-            genome.getItems().addAll(genomeIndex.getGenomeNames());
+            genome.getItems().addAll(genomeNames);
             genome.getSelectionModel().select(0);
         });
     }
@@ -120,17 +118,24 @@ public final class GenomeNavigateController implements Initializable {
      */
     @FXML
     public void onGoAction(final ActionEvent actionEvent) {
-        if (!indexFinished) {
-            new WarningDialogue("Genome indexing process still in progress, unable to navigate.").show();
-            return;
-        }
+//        if (!indexFinished) {
+//            new WarningDialogue("Genome indexing process still in progress, unable to navigate.").show();
+//            return;
+//        }
 
         final int selectedBase;
 
         try {
-            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), base.getValue())
-                    .orElseThrow(() ->
-                            new SQLException("Genome-base combination could not be found in database."));
+            selectedBase = base.getValue();
+        } catch (final NumberFormatException e) {
+            LOGGER.warn("Attempted to enter non-numeric input in base field, aborting.");
+            return;
+        }
+
+        try {
+//            final GenomePoint genomePoint = genomeIndex.getGenomePoint(genome.getValue(), selectedBase)
+//                    .orElseThrow(() ->
+//                            new SQLException("Genome-base combination could not be found in database."));
 
             if (genomePoint.getNodeId() == -1) {
                 new WarningDialogue("Genome-base combination could not be found in graph.").show();

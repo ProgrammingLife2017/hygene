@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
@@ -52,6 +53,8 @@ public final class Hygene extends Application {
     private SequenceVisualizer sequenceVisualizer;
 
     private Query query;
+
+    private GenomeIndex genomeIndex;
 
     private StatusBar statusBar;
 
@@ -226,6 +229,15 @@ public final class Hygene extends Application {
      */
     public GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;
+    }
+
+    /**
+     * Gets the {@link GenomeIndex} of the application.
+     *
+     * @return the {@link GenomeIndex} of the application
+     */
+    public GenomeIndex genomeIndex() {
+        return genomeIndex;
     }
 
     /**
