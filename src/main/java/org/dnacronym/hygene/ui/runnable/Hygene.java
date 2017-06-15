@@ -108,7 +108,6 @@ public final class Hygene extends Application {
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
         HygeneEventBus.getInstance().register(graphDimensionsCalculator);
 
-
         sequenceVisualizer = new SequenceVisualizer();
         statusBar = new StatusBar();
 
