@@ -3,9 +3,6 @@ package org.dnacronym.hygene.core;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
-import java.time.Instant;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -97,23 +94,6 @@ class ThrottledExecutorTest {
         executor.block();
 
         assertThat(number[0]).isEqualTo(2);
-    }
-
-    /**
-     * Tests that the second run has to wait for some time after the first run.
-     */
-    @Test
-    void testRunsTwiceDelay() {
-        executor = createExecutor(500);
-
-        executor.run(() -> number[0]++);
-        executor.block();
-        final Instant then = Instant.now();
-        executor.run(() -> number[0]++);
-        executor.block();
-        final long time = Duration.between(then, Instant.now()).toMillis();
-
-        assertThat(time).isGreaterThan(250);
     }
 
     /**
