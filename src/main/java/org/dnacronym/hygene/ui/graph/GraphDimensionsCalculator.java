@@ -22,6 +22,7 @@ import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.layout.SugiyamaLayerer;
 import org.dnacronym.hygene.models.Graph;
 
 import java.util.LinkedList;
@@ -50,12 +51,16 @@ public final class GraphDimensionsCalculator {
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
 
+    private static final int MIN_ZOOM_FACTOR = 4;
+    private static final int MAX_ZOOM_FACTOR = 300;
+
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
     private final IntegerProperty nodeCountProperty;
+    private final IntegerProperty viewRadiusProperty;
 
     private final DoubleProperty nodeHeightProperty;
     private final DoubleProperty laneHeightProperty;
@@ -88,6 +93,8 @@ public final class GraphDimensionsCalculator {
         centerNodeIdProperty = new SimpleIntegerProperty(1);
         radiusProperty = new SimpleIntegerProperty(1);
 
+        nodeCountProperty = new SimpleIntegerProperty(1);
+
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
             centerNodeIdProperty.set(Math.max(
                     0,
@@ -95,13 +102,22 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
-            radiusProperty.set(Math.max(
-                    1,
-                    Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
+            if (centerPointQuery == null) {
+                return;
+            }
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
-        nodeCountProperty = new SimpleIntegerProperty(1);
+        viewRadiusProperty = new SimpleIntegerProperty(1);
+        viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() < SugiyamaLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
+                    || newValue.intValue() > SugiyamaLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR) {
+                viewRadiusProperty.setValue(oldValue);
+                return;
+            }
+            radiusProperty.set(((newValue.intValue() + SugiyamaLayerer.LAYER_WIDTH - 1)
+                    / SugiyamaLayerer.LAYER_WIDTH) / 2);
+        });
 
         nodeHeightProperty = new SimpleDoubleProperty(1);
         laneHeightProperty = new SimpleDoubleProperty(1);
@@ -213,7 +229,7 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
-        radiusProperty.set(DEFAULT_RADIUS);
+        viewRadiusProperty.set(DEFAULT_RADIUS * 1000);
     }
 
     /**
@@ -385,5 +401,9 @@ public final class GraphDimensionsCalculator {
      */
     public IntegerProperty getRadiusProperty() {
         return radiusProperty;
+    }
+
+    public IntegerProperty getViewRadiusProperty() {
+        return viewRadiusProperty;
     }
 }

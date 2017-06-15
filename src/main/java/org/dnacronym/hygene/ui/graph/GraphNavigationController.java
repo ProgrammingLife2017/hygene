@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public final class GraphNavigationController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphNavigationController.class);
     private static final int JUMP_AMOUNT = 100;
-    private static final int ZOOM_AMOUNT = 10;
+    private static final int ZOOM_AMOUNT = 2000;
 
     private GraphDimensionsCalculator graphDimensionsCalculator;
 
@@ -115,8 +115,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomInAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getRadiusProperty().set(
-                graphDimensionsCalculator.getRadiusProperty().get() - ZOOM_AMOUNT
+        graphDimensionsCalculator.getViewRadiusProperty().set(
+                graphDimensionsCalculator.getViewRadiusProperty().get() - ZOOM_AMOUNT
         );
         actionEvent.consume();
     }
@@ -128,8 +128,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomOutAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getRadiusProperty().set(
-                graphDimensionsCalculator.getRadiusProperty().get() + ZOOM_AMOUNT
+        graphDimensionsCalculator.getViewRadiusProperty().set(
+                graphDimensionsCalculator.getViewRadiusProperty().get() + ZOOM_AMOUNT
         );
         actionEvent.consume();
     }

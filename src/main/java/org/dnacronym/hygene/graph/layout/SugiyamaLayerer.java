@@ -9,6 +9,9 @@ import org.dnacronym.hygene.graph.Subgraph;
  */
 @SuppressWarnings("squid:S1609") // Not a function
 public interface SugiyamaLayerer {
+    int LAYER_WIDTH = 1000;
+
+
     /**
      * Layers the given {@link Subgraph} into a number of layers.
      *
