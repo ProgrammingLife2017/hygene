@@ -38,6 +38,7 @@ public final class GfaFile {
     private final NewGfaParser gfaParser;
     private final MetadataParser metadataParser;
     private @MonotonicNonNull Graph graph;
+    private @MonotonicNonNull RandomAccessFile randomAccessFile;
 
 
     /**
@@ -184,7 +185,10 @@ public final class GfaFile {
      */
     public RandomAccessFile getRandomAccessFile() throws ParseException {
         try {
-            return new RandomAccessFile(fileName, RANDOM_ACCESS_FILE_MODE);
+            if (randomAccessFile == null) {
+                randomAccessFile = new RandomAccessFile(fileName, RANDOM_ACCESS_FILE_MODE);
+            }
+            return randomAccessFile;
         } catch (final FileNotFoundException e) {
             throw new ParseException("File '" + fileName + "' could not be found. ", e);
         }
