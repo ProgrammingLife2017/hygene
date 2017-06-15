@@ -113,7 +113,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
         final long maxPosition = data.nodes.stream()
                 .map(node -> node.getXPosition() + node.getLength())
                 .max(Long::compare)
-                .orElseThrow(() -> new IllegalStateException("Non-empty collection has non maximum."));
+                .orElseThrow(() -> new IllegalStateException("Non-empty collection has no maximum."));
         return data.positionToLayer(maxPosition);
     }
 
@@ -280,7 +280,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
             final Long minPosition = nodes.stream()
                     .map(node -> node.getXPosition())
                     .min(Long::compare)
-                    .orElseThrow(() -> new IllegalStateException());
+                    .orElseThrow(() -> new IllegalStateException("Non-empty collection has no minimum."));
             this.minLayer = (int) ((minPosition + LAYER_WIDTH - 1) / LAYER_WIDTH);
         }
 
