@@ -14,6 +14,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
+import org.dnacronym.hygene.ui.graph.GraphAnnotationVisualizer;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -54,6 +55,7 @@ public final class Hygene extends Application {
 
     private Query query;
 
+    private GraphAnnotationVisualizer graphAnnotationVisualizer;
     private GenomeNavigation genomeNavigation;
 
     private StatusBar statusBar;
@@ -102,9 +104,7 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         settings = new Settings(graphStore);
         query = new Query(graphStore);
-
         graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
-        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, query);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
         HygeneEventBus.getInstance().register(graphDimensionsCalculator);
 
@@ -112,6 +112,9 @@ public final class Hygene extends Application {
         statusBar = new StatusBar();
 
         genomeNavigation = new GenomeNavigation(graphStore, statusBar);
+        graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphStore, graphDimensionsCalculator,
+                genomeNavigation);
+        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, graphAnnotationVisualizer, query);
 
         simpleBookmarkStore = new SimpleBookmarkStore(
                 graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
@@ -231,6 +234,15 @@ public final class Hygene extends Application {
      */
     public GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;
+    }
+
+    /**
+     * Gets the {@link GraphAnnotationVisualizer} of the application.
+     *
+     * @return the {@link GraphAnnotationVisualizer} of the application
+     */
+    public GraphAnnotationVisualizer getGraphAnnotationVisualizer() {
+        return graphAnnotationVisualizer;
     }
 
     /**

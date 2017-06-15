@@ -10,6 +10,7 @@ import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.persistence.FileDatabase;
+import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,6 +27,8 @@ public final class GraphAnnotationVisualizer {
 
     private final GraphStore graphStore;
     private final GraphDimensionsCalculator graphDimensionsCalculator;
+    private final GenomeNavigation genomeNavigation;
+
     private GenomeIndex genomeIndex;
 
     private GraphicsContext graphicsContext;
@@ -35,11 +38,14 @@ public final class GraphAnnotationVisualizer {
     /**
      * @param graphStore
      * @param graphDimensionsCalculator
+     * @param genomeNavigation
      */
     public GraphAnnotationVisualizer(final GraphStore graphStore,
-                                     final GraphDimensionsCalculator graphDimensionsCalculator) {
+                                     final GraphDimensionsCalculator graphDimensionsCalculator,
+                                     final GenomeNavigation genomeNavigation) {
         this.graphStore = graphStore;
         this.graphDimensionsCalculator = graphDimensionsCalculator;
+        this.genomeNavigation = genomeNavigation;
 
         graphStore.getGfaFileProperty().addListener((observable, oldGfaFile, newGfaFile) -> {
             try {
