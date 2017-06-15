@@ -245,15 +245,6 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link GenomeNavigation} of the application.
-     *
-     * @return the {@link GenomeNavigation} of the application
-     */
-    public GenomeNavigation getGenomeNavigation() {
-        return genomeNavigation;
-    }
-
-    /**
      * Gets the {@link Query} of the application.
      *
      * @return the {@link Query} of the application

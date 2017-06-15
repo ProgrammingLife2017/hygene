@@ -14,7 +14,7 @@ import java.util.List;
  * view.
  */
 public final class GraphAnnotationVisualizer {
-    private static final int ANNOTATION_MARKER_HEIGHT = 10;
+    private static final int ANNOTATION_MARKER_HEIGHT = 15;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
@@ -73,20 +73,34 @@ public final class GraphAnnotationVisualizer {
         final int endOffset = genomePoints.get(1).getBaseOffsetInNode();
 
         double startX = 0;
-        double endX = 0;
+        double endX = canvasWidth;
+
+        int minOnscreenId = Integer.MAX_VALUE;
+        int maxOnscreenId = 0;
+        boolean endpointFound = false;
+
         for (final NewNode newNode : nodes) {
-            if (newNode instanceof Segment && ((Segment) newNode).getId() == startNodeId) {
+            if (!(newNode instanceof Segment)) {
+                continue;
+            }
+            final Segment segment = (Segment) newNode;
+
+            maxOnscreenId = Math.max(maxOnscreenId, segment.getId());
+            minOnscreenId = Math.min(minOnscreenId, segment.getId());
+
+            if (segment.getId() == startNodeId) {
                 startX = graphDimensionsCalculator.computeXPosition(newNode)
                         + (double) startOffset / newNode.getLength() * graphDimensionsCalculator.computeWidth(newNode);
             }
-            if (newNode instanceof Segment && ((Segment) newNode).getId() == endNodeId) {
+            if (segment.getId() == endNodeId) {
                 endX = graphDimensionsCalculator.computeXPosition(newNode)
                         + (double) endOffset / newNode.getLength() * graphDimensionsCalculator.computeWidth(newNode);
+                endpointFound = true;
             }
         }
 
-        if (endX < startX) { // no end node found
-            endX = canvasWidth;
+        if (!endpointFound && endNodeId < minOnscreenId) {
+            endX = 0;
         }
 
         graphicsContext.setFill(Color.LIGHTBLUE);

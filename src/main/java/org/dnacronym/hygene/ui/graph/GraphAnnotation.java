@@ -76,6 +76,7 @@ public final class GraphAnnotation {
             genomeIndex.getGenomePoint(genomeName, endOffset).ifPresent(genomePoints::add);
 
             genomeIndexMap.put(featureAnnotation, genomePoints);
+            featureAnnotations.add(featureAnnotation);
         } catch (final SQLException e) {
             LOGGER.error("Unable to add an annotation.", e);
         }
