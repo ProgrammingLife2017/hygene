@@ -163,7 +163,7 @@ public final class GenomeNavigateController implements Initializable {
 
             hygeneInstance.getGraphDimensionsCalculator().getCenterNodeIdProperty().set(genomePoint.getNodeId());
 
-            graphVisualizer.setSelectedNode(genomePoint.getNodeId());
+            graphVisualizer.setSelectedSegment(genomePoint.getNodeId());
             hygeneInstance.getSequenceVisualizer().setOffset(genomePoint.getBaseOffsetInNode());
         } catch (SQLException e) {
             LOGGER.error("Error while looking for genome-base index.", e);
