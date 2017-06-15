@@ -18,11 +18,12 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Unit test for {@link FileGenomeMapping}
+ * Unit tests for {@link FileGenomeMapping}
  */
 class FileGenomeMappingTest extends FileDatabaseTestBase {
     private FileDatabase fileDatabase;
     private FileGenomeMapping fileGenomeMapping;
+
 
     @BeforeEach
     void setUp() throws IOException, SQLException {
@@ -31,11 +32,13 @@ class FileGenomeMappingTest extends FileDatabaseTestBase {
         fileGenomeMapping = new FileGenomeMapping(fileDatabase);
     }
 
+
     @AfterEach
     void tearDown() throws IOException, SQLException {
         fileDatabase.close();
         super.tearDown();
     }
+
 
     @Test
     void testGetMappings() throws SQLException {

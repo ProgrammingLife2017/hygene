@@ -10,7 +10,8 @@ import java.util.Map;
 
 
 /**
- * Class responsible for storing and retrieving genome coordinate system index points.
+ * Class responsible for store a mapping from each genome to a string that represent that genome usually
+ * used for indexing.
  */
 public final class FileGenomeMapping {
     private static final Logger LOGGER = LogManager.getLogger(FileGenomeMapping.class);

@@ -20,6 +20,9 @@ public final class Graph {
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
 
     private final int[][] nodeArrays;
+    /**
+     * Contains a list of genomes which are mapped to their respective index.
+     */
     private final Map<String, String> genomeMapping;
     private final GfaFile gfaFile;
 
