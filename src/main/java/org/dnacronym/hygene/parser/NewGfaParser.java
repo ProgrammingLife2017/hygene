@@ -200,12 +200,14 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a header line in the GFA file format. If the type of header field has not been implemented or is not
+     * Parses a header line in the GFA file format.
+     * <p>
+     * If the type of header field has not been implemented or is not
      * recognized no failure will occur.
      *
      * @param line       the line to parse
      * @param byteOffset the byte offset
-     * @throws ParseException thrown if a header field doesn't have the correct format
+     * @throws ParseException if a header field doesn't have the correct format
      */
     private void parseHeader(final String line, final long byteOffset) throws ParseException {
         if (line.startsWith(HEADER_GENOME_NAMES_PREFIX)) {
@@ -214,8 +216,9 @@ public final class NewGfaParser {
     }
 
     /**
-     * Parses a GFA header field that contains genome names. The genomes names are added to
-     * {@link NewGfaParser#genomeMapping} using a 1-indexing.
+     * Parses a GFA header field that contains genome names.
+     * <p>
+     * The genomes names are added to {@link NewGfaParser#genomeMapping} using a 1-indexing.
      *
      * @param line       the line to parse
      * @param byteOffset the byte offset

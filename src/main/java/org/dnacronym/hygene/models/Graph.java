@@ -21,7 +21,7 @@ public final class Graph {
 
     private final int[][] nodeArrays;
     /**
-     * Contains a list of genomes which are mapped to their respective index.
+     * Maps genome names to their respective indices.
      */
     private final Map<String, String> genomeMapping;
     private final GfaFile gfaFile;
@@ -50,7 +50,7 @@ public final class Graph {
     /**
      * Constructs a graph from array based data structure.
      *
-     * @param nodeArrays nested array containing the graphs data
+     * @param nodeArrays nested array containing the graph's data
      * @param gfaFile    a reference to the GFA file from which the graph is created
      */
     public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {

@@ -24,7 +24,6 @@ class FileGenomeMappingTest extends FileDatabaseTestBase {
     private FileDatabase fileDatabase;
     private FileGenomeMapping fileGenomeMapping;
 
-
     @BeforeEach
     void setUp() throws IOException, SQLException {
         super.setUp();
@@ -32,13 +31,11 @@ class FileGenomeMappingTest extends FileDatabaseTestBase {
         fileGenomeMapping = new FileGenomeMapping(fileDatabase);
     }
 
-
     @AfterEach
     void tearDown() throws IOException, SQLException {
         fileDatabase.close();
         super.tearDown();
     }
-
 
     @Test
     void testGetMappings() throws SQLException {
