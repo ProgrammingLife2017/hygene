@@ -63,6 +63,17 @@ abstract class EdgeTest {
         assertThat(edge.getImportance()).isEqualTo(1);
     }
 
+    @Test
+    void testGetInGenome() {
+        edge.setGenomes(genomes);
+        assertThat(edge.inGenome("a")).isTrue();
+    }
+
+    @Test
+    void testGetInGenomeNullCase() {
+        edge.setGenomes(null);
+        assertThat(edge.inGenome("a")).isFalse();
+    }
 
     /**
      * Returns the source node.

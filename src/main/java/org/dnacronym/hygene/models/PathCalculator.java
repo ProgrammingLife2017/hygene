@@ -26,7 +26,6 @@ public final class PathCalculator {
      *
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
-    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S2696"})
     public void computePaths(final Subgraph subgraph) {
         final Map<NewNode, Set<String>> genomeStore = new HashMap<>();
 
@@ -44,6 +43,7 @@ public final class PathCalculator {
      * @param genomeStore the genome store
      * @return list containing a topological ordering
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<NewNode> computeTopologicalOrder(final Subgraph subgraph, final Map<NewNode, Set<String>> genomeStore) {
         final Queue<Edge> toVisit = new LinkedList<>();
 

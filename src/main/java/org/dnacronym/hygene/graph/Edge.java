@@ -56,7 +56,7 @@ public class Edge {
      * @return the genomes
      */
     @Nullable
-    public Set<String> getGenomes() {
+    public final Set<String> getGenomes() {
         return genomes;
     }
 
@@ -65,7 +65,7 @@ public class Edge {
      *
      * @param genomes the genomes
      */
-    public void setGenomes(@Nullable final Set<String> genomes) {
+    public final void setGenomes(@Nullable final Set<String> genomes) {
         this.genomes = genomes;
     }
 
@@ -76,7 +76,7 @@ public class Edge {
      *
      * @return the {@link Edge} importance
      */
-    public int getImportance() {
+    public final int getImportance() {
         if (genomes != null && !genomes.isEmpty()) {
             return genomes.size();
         }
@@ -89,7 +89,7 @@ public class Edge {
      * @param genome the path
      * @return true if edge is part of the genome
      */
-    public boolean inGenome(final String genome) {
+    public final boolean inGenome(final String genome) {
         return genomes != null && genomes.contains(genome);
     }
 

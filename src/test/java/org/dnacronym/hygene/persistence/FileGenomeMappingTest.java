@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Unit tests for {@link FileGenomeMapping}
+ * Unit tests for {@link FileGenomeMapping}.
  */
 class FileGenomeMappingTest extends FileDatabaseTestBase {
     private FileDatabase fileDatabase;

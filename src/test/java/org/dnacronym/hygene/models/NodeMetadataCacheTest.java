@@ -161,7 +161,7 @@ final class NodeMetadataCacheTest {
 
 
     /**
-     * Creates a new {@link GfaFile}
+     * Creates a new {@link GfaFile}.
      *
      * @return
      * @throws ParseException
