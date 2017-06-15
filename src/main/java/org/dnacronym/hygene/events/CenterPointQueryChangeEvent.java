@@ -1,10 +1,6 @@
 package org.dnacronym.hygene.events;
 
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.graph.Segment;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 /**
@@ -31,18 +27,6 @@ public final class CenterPointQueryChangeEvent {
      */
     public CenterPointQuery getCenterPointQuery() {
         return centerPointQuery;
-    }
-
-    /**
-     * Returns node IDs that should be present in the graph visualization after the center point query change.
-     *
-     * @return a set of node IDs
-     */
-    public Set<Integer> getNodeIds() {
-        return centerPointQuery.getCache().getNodes().stream()
-                .filter(node -> node instanceof Segment)
-                .map(node -> ((Segment) node).getId())
-                .collect(Collectors.toSet());
     }
 
     /**

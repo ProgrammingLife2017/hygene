@@ -118,7 +118,7 @@ public final class SimpleBookmarkStore {
                 graphDimensionsCalculator.getCenterNodeIdProperty().set(bookmark.getNodeId());
                 graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());
 
-                graphVisualizer.setSelectedNode(bookmark.getNodeId());
+                graphVisualizer.setSelectedSegment(bookmark.getNodeId());
                 sequenceVisualizer.setOffset(bookmark.getBaseOffset());
             }));
         } catch (final ParseException e) {

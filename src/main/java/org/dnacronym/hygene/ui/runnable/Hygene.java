@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
+import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
@@ -102,6 +103,7 @@ public final class Hygene extends Application {
         graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
         graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, query);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
+        HygeneEventBus.getInstance().register(graphDimensionsCalculator);
 
         sequenceVisualizer = new SequenceVisualizer();
         statusBar = new StatusBar();

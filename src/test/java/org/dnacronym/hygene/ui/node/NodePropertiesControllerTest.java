@@ -5,7 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
-import org.dnacronym.hygene.models.Node;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 final class NodePropertiesControllerTest extends UITestBase {
     private NodePropertiesController nodePropertiesController;
     private GraphVisualizer graphVisualizer;
-    private Node node;
+    private Segment node;
     private GraphDimensionsCalculator graphDimensionsCalculator;
 
 
@@ -30,10 +30,10 @@ final class NodePropertiesControllerTest extends UITestBase {
     public void beforeEach() {
         graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
         graphVisualizer = mock(GraphVisualizer.class);
-        node = mock(Node.class);
+        node = mock(Segment.class);
         when(node.getId()).thenReturn(20);
-        final ObjectProperty<Node> selectedNodeProperty = new SimpleObjectProperty<>(node);
-        when(graphVisualizer.getSelectedNodeProperty()).thenReturn(selectedNodeProperty);
+        final ObjectProperty<Segment> selectedNodeProperty = new SimpleObjectProperty<>(node);
+        when(graphVisualizer.getSelectedSegmentProperty()).thenReturn(selectedNodeProperty);
 
         nodePropertiesController = new NodePropertiesController();
         nodePropertiesController.setGraphDimensionsCalculator(graphDimensionsCalculator);

@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -9,6 +8,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -16,15 +16,11 @@ import javafx.scene.paint.Paint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.models.NodeMetadataCache;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
@@ -36,8 +32,8 @@ import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 /**
  * A simple canvas that allows drawing of primitive shapes.
  * <p>
- * It observes the {@link Graph} in {@link GraphDimensionsCalculator}. When the list of nodes qeuried nodes changes
- * in {@link GraphDimensionsCalculator}, then it will clear the {@link Canvas} and draw the new {@link Node}s on the
+ * It observes the {@link Graph} in {@link GraphDimensionsCalculator}. When the list of nodes queried nodes changes
+ * in {@link GraphDimensionsCalculator}, then it will clear the {@link Canvas} and draw the new {@link Segment}s on the
  * {@link Canvas} using a {@link GraphicsContext}.
  *
  * @see Canvas
@@ -50,10 +46,6 @@ public final class GraphVisualizer {
 
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
-    /**
-     * Range used when new graph is set, unless graph contains too few nodes.
-     */
-    private static final int MAX_GRAPH_RADIUS_NODE_TEXT = 100;
 
     private static final double DEFAULT_EDGE_WIDTH = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
@@ -64,7 +56,7 @@ public final class GraphVisualizer {
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
-    private final ObjectProperty<Node> selectedNodeProperty;
+    private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -73,7 +65,6 @@ public final class GraphVisualizer {
     private final BooleanProperty displayLaneBordersProperty;
 
     private Graph graph;
-    private NodeMetadataCache nodeMetadataCache;
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -98,9 +89,9 @@ public final class GraphVisualizer {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
 
-        selectedNodeProperty = new SimpleObjectProperty<>();
+        selectedSegmentProperty = new SimpleObjectProperty<>();
         selectedEdgeProperty = new SimpleObjectProperty<>();
-        selectedNodeProperty.addListener((observable, oldValue, newValue) -> draw());
+        selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -139,33 +130,27 @@ public final class GraphVisualizer {
             return;
         }
 
-        final int nodeId = ((Segment) node).getId();
+        final Segment segment = (Segment) node;
         final double nodeX = graphDimensionsCalculator.computeXPosition(node);
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedNodeProperty.get() != null && selectedNodeProperty.get().getId() == nodeId) {
+        if (selectedSegmentProperty.isNotNull().get() && selectedSegmentProperty.get().equals(segment)) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         }
         if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
         }
-        if (nodeMetadataCache.has(nodeId)
-                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_GRAPH_RADIUS_NODE_TEXT) {
-            try {
-                final String sequence = nodeMetadataCache.getOrRetrieve(nodeId).retrieveMetadata().getSequence();
-                nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
-            } catch (final ParseException e) {
-                LOGGER.error("An parse exception occurred while attempting"
-                        + " to retrieve node's " + nodeId + " metadata from drawing", e);
-            }
+        if (segment.hasMetadata()) {
+            final String sequence = segment.getMetadata().getSequence();
+            nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
         if (bookmarked) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
-        rTree.addNode(nodeId, nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+        rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
     }
 
     /**
@@ -266,16 +251,6 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Listens for {@link NodeMetadataCacheUpdateEvent}, if so we redraw the graph to reflect the changes.
-     *
-     * @param event the {@link NodeMetadataCacheUpdateEvent}
-     */
-    @Subscribe
-    public void onNodeMetadataCacheUpdate(final NodeMetadataCacheUpdateEvent event) {
-        Platform.runLater(this::draw);
-    }
-
-    /**
      * Listens for {@link SnapshotButtonWasPressed} events.
      *
      * @param event the {@link SnapshotButtonWasPressed} event
@@ -323,12 +298,6 @@ public final class GraphVisualizer {
     void setGraph(final Graph graph) {
         this.graph = graph;
 
-        if (nodeMetadataCache != null) {
-            HygeneEventBus.getInstance().unregister(nodeMetadataCache);
-        }
-        nodeMetadataCache = new NodeMetadataCache(graph);
-        HygeneEventBus.getInstance().register(nodeMetadataCache);
-
         draw();
     }
 
@@ -347,11 +316,11 @@ public final class GraphVisualizer {
                 return;
             }
 
-            selectedNodeProperty.setValue(null);
+            selectedSegmentProperty.setValue(null);
             selectedEdgeProperty.setValue(null);
 
             rTree.find(event.getX(), event.getY(),
-                    this::setSelectedNode,
+                    this::setSelectedSegment,
                     (fromNodeId, toNodeId) -> graph.getNode(fromNodeId).getOutgoingEdges().stream()
                             .filter(edge -> edge.getTo() == toNodeId)
                             .findFirst()
@@ -367,16 +336,20 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Update the selected {@link Node} to the node with the given id.
+     * Updates the selected {@link Segment} to the node with the given id.
      *
-     * @param nodeId node id of the new selected {@link Node}
+     * @param nodeId node the id of the newly selected {@link Segment}
      */
-    public void setSelectedNode(final int nodeId) {
-        try {
-            selectedNodeProperty.set(nodeMetadataCache.getOrRetrieve(nodeId));
-        } catch (final ParseException e) {
-            LOGGER.info("Metadata of selected node " + nodeId + " could not be parsed.");
+    public void setSelectedSegment(final int nodeId) {
+        final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
+                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+
+        if (segment.isEmpty()) {
+            LOGGER.error("Cannot select node that is not in subgraph.");
+            return;
         }
+
+        selectedSegmentProperty.set((Segment) segment.get(0));
     }
 
     /**
@@ -384,10 +357,10 @@ public final class GraphVisualizer {
      * <p>
      * This node is updated every time the user clicks on a node in the canvas.
      *
-     * @return Selected {@link Node} by the user, which can be {@code null}
+     * @return the selected {@link Segment} by the user, which can be {@code null}
      */
-    public ObjectProperty<Node> getSelectedNodeProperty() {
-        return selectedNodeProperty;
+    public ObjectProperty<Segment> getSelectedSegmentProperty() {
+        return selectedSegmentProperty;
     }
 
     /**

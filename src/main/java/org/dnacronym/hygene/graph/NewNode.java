@@ -5,6 +5,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.models.colorscheme.ColorScheme;
 import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +21,7 @@ public abstract class NewNode {
     private final UUID uuid;
     private final Set<Edge> incomingEdges;
     private final Set<Edge> outgoingEdges;
+
     private int xPosition;
     private int yPosition;
 
@@ -31,8 +33,8 @@ public abstract class NewNode {
      */
     protected NewNode() {
         this.uuid = UUID.randomUUID();
-        this.incomingEdges = new LinkedHashSet<>();
-        this.outgoingEdges = new LinkedHashSet<>();
+        this.incomingEdges = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.outgoingEdges = Collections.synchronizedSet(new LinkedHashSet<>());
     }
 
 
@@ -106,6 +108,7 @@ public abstract class NewNode {
      */
     public abstract int getLength();
 
+
     /**
      * Returns the color scheme.
      *
@@ -132,6 +135,7 @@ public abstract class NewNode {
     public final Color getColor() {
         return colorScheme.calculateColor(this);
     }
+
 
     @Override
     public final boolean equals(final @Nullable Object o) {

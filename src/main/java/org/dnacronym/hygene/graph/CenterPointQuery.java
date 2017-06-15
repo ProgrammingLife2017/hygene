@@ -1,18 +1,16 @@
 package org.dnacronym.hygene.graph;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.core.ThrottledDefaultExecutor;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphIterator;
 import org.dnacronym.hygene.models.NodeDistanceMap;
+import org.dnacronym.hygene.models.NodeMetadataCache;
 import org.dnacronym.hygene.models.SequenceDirection;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 
 /**
@@ -29,12 +27,16 @@ public final class CenterPointQuery {
      * The algorithm to lay out nodes.
      */
     private static final Layout LAYOUT = new SugiyamaLayout();
+
+    /**
+     * The minimum number of milliseconds that must be between recalculating this subgraph's layout.
+     */
+    private static final int LAYOUT_TIMEOUT = 10;
     /**
      * The width of an edge.
      */
     // TODO Move this constant to the layout algorithm.
     private static final int EDGE_WIDTH = 1000;
-
     /**
      * The maximal acceptable difference between the preferred radius and the cached radius.
      */
@@ -58,17 +60,23 @@ public final class CenterPointQuery {
      */
     private final GraphIterator iterator;
     /**
-     * Maps {@link Graph} node ids to {@link NewNode} {@link UUID}s.
-     */
-    private final Map<Integer, UUID> nodes;
-    /**
      * The backing cache.
      */
     private final Subgraph subgraph;
     /**
+     * The cache for metadata of nodes.
+     */
+    @SuppressWarnings({"PMD.SingularField", "PMD.UnusedPrivateField", "squid:S1068"})
+    // Receives layout events, so must be declared somewhere to prevent garbage collection
+    private final NodeMetadataCache nodeMetadataCache;
+    /**
      * Maps each node id in the cache to the distance from the centre point of the query.
      */
     private final NodeDistanceMap distanceMap;
+    /**
+     * The executor for the layout.
+     */
+    private final ThrottledDefaultExecutor layoutExecutor;
 
     /**
      * The node id of the centre node in the current query.
@@ -92,9 +100,22 @@ public final class CenterPointQuery {
     public CenterPointQuery(final Graph graph) {
         this.graph = graph;
         this.iterator = new GraphIterator(graph);
-        this.nodes = new HashMap<>();
         this.subgraph = new Subgraph();
+        this.nodeMetadataCache = new NodeMetadataCache(graph.getGfaFile());
         this.distanceMap = new NodeDistanceMap();
+        this.layoutExecutor = new ThrottledDefaultExecutor(LAYOUT_TIMEOUT, () -> {
+            if (this.subgraph == null) {
+                return;
+            }
+
+            final Subgraph copy = new Subgraph();
+            this.subgraph.getNodes().forEach(copy::add);
+
+            LAYOUT.layOut(copy);
+            HygeneEventBus.getInstance().post(new LayoutDoneEvent(copy));
+        });
+
+        HygeneEventBus.getInstance().register(nodeMetadataCache);
     }
 
 
@@ -149,11 +170,11 @@ public final class CenterPointQuery {
             final NewNode node = new Segment(nodeId, graph.getByteOffset(nodeId), graph.getSequenceLength(nodeId));
             node.setXPosition(graph.getUnscaledXPosition(nodeId) + graph.getUnscaledXEdgeCount(nodeId) * EDGE_WIDTH);
             node.setYPosition(graph.getUnscaledYPosition(nodeId));
-            nodes.put(nodeId, node.getUuid());
             subgraph.add(node);
         });
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> addEdges(nodeId));
-        LAYOUT.layOut(subgraph);
+
+        layoutExecutor.run();
 
         postEvent();
     }
@@ -233,7 +254,8 @@ public final class CenterPointQuery {
             iterator.visitDirectNeighbours(nodeId, neighbour -> distanceMap.setDistance(neighbour, cacheRadius));
             addEdges(nodeId);
         });
-        LAYOUT.layOut(subgraph);
+
+        layoutExecutor.run();
     }
 
     /**
@@ -293,24 +315,8 @@ public final class CenterPointQuery {
      * Empties the {@link CenterPointQuery}.
      */
     private void clear() {
-        nodes.clear();
         subgraph.clear();
         distanceMap.clear();
-    }
-
-    /**
-     * Returns the {@link NewNode} with the given id, or {@code null} if there is no such node in the cache.
-     *
-     * @param nodeId a node id, as given by the {@link Graph}
-     * @return the {@link NewNode} with the given id, or {@code null} if there is no such node in the cache.
-     */
-    private @Nullable NewNode getNode(final int nodeId) {
-        final UUID uuid = nodes.get(nodeId);
-        if (uuid == null) {
-            return null;
-        }
-
-        return subgraph.getNode(uuid);
     }
 
     /**
@@ -320,13 +326,13 @@ public final class CenterPointQuery {
      * @param nodeId a node id, as given by the {@link Graph}
      */
     private void addEdges(final int nodeId) {
-        final NewNode node = getNode(nodeId);
+        final NewNode node = subgraph.getSegment(nodeId);
         if (node == null) {
             return;
         }
 
         iterator.visitDirectNeighbours(nodeId, SequenceDirection.RIGHT, neighbourId -> {
-            final NewNode neighbour = getNode(neighbourId);
+            final NewNode neighbour = subgraph.getSegment(neighbourId);
             if (node == null || neighbour == null) {
                 return;
             }

@@ -12,6 +12,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Bookmark;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
@@ -63,7 +64,7 @@ public final class BookmarkCreateController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final ObjectProperty selectedNodeProperty = graphVisualizer.getSelectedNodeProperty();
+        final ObjectProperty<Segment> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
@@ -143,7 +144,7 @@ public final class BookmarkCreateController implements Initializable {
      */
     @FXML
     void onSaveAction(final ActionEvent actionEvent) {
-        if (graphVisualizer.getSelectedNodeProperty().get() == null) {
+        if (graphVisualizer.getSelectedSegmentProperty().isNull().get()) {
             return;
         }
 
@@ -151,11 +152,12 @@ public final class BookmarkCreateController implements Initializable {
         final String radiusString = radius.getText().replaceAll("[^\\d]", "");
 
         if (!baseString.isEmpty() && !radiusString.isEmpty()) {
-            final int nodeId = graphVisualizer.getSelectedNodeProperty().get().getId();
+            final Segment segment = graphVisualizer.getSelectedSegmentProperty().get();
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
 
-            simpleBookmarkStore.addBookmark(new Bookmark(nodeId, baseOffsetValue, radiusValue, description.getText()));
+            simpleBookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
+                    description.getText()));
             description.clear();
         }
 

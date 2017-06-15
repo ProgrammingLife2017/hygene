@@ -28,6 +28,9 @@ public final class SugiyamaLayout implements Layout {
     public void layOut(final Subgraph subgraph) {
         final NewNode[][] layers = layerer.layer(subgraph);
         crossingsReducer.reduceCrossings(layers);
+        if (Thread.interrupted()) {
+            return;
+        }
 
         for (final NewNode[] layer : layers) {
             for (int i = 0; i < layer.length; i++) {

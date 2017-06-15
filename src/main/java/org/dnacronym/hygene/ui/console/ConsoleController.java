@@ -18,7 +18,6 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -76,9 +75,11 @@ public final class ConsoleController implements Initializable {
      * When a user clicks on a node in the graph the base pairs of that node will be displayed.
      */
     private void logSelectedSequence() {
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, newNode) ->
-                Optional.ofNullable(newNode).ifPresent(node ->
-                        appendLogItem(new ConsoleMessage("Sequence: " + node.getSequenceLength() + "\n"))));
+        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldSegment, newSegment) -> {
+            if (newSegment != null) {
+                appendLogItem(new ConsoleMessage("Selected node " + newSegment.getId() + "\n"));
+            }
+        });
     }
 
     /**

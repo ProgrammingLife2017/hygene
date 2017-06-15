@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
+import com.google.common.eventbus.Subscribe;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,6 +16,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
+import org.dnacronym.hygene.events.LayoutDoneEvent;
+import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
@@ -62,7 +66,6 @@ public final class GraphDimensionsCalculator {
      */
     private final ObjectProperty<Graph> graphProperty;
     private CenterPointQuery centerPointQuery;
-    private Subgraph subgraph;
 
     private int minX;
     private int maxX;
@@ -90,14 +93,12 @@ public final class GraphDimensionsCalculator {
                     0,
                     Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-            calculate();
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
             radiusProperty.set(Math.max(
                     1,
                     Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
-            calculate();
         });
 
         nodeCountProperty = new SimpleIntegerProperty(1);
@@ -115,6 +116,26 @@ public final class GraphDimensionsCalculator {
 
 
     /**
+     * Recalculates (and thereby redraws) the graph when the layout is done calculating.
+     *
+     * @param event a {@link LayoutDoneEvent}
+     */
+    @Subscribe
+    public void onLayoutDoneEvent(final LayoutDoneEvent event) {
+        Platform.runLater(() -> calculate(event.getSubgraph()));
+    }
+
+    /**
+     * Recalculates (and thereby redraws) the graph when the metadata has been gathered.
+     *
+     * @param event a {@link NodeMetadataCacheUpdateEvent}
+     */
+    @Subscribe
+    public void onNodeMetadataCacheUpdate(final NodeMetadataCacheUpdateEvent event) {
+        Platform.runLater(() -> calculate(event.getSubgraph()));
+    }
+
+    /**
      * Calculates the following values.
      * <p><ul>
      * <li>Neighbours list
@@ -126,8 +147,10 @@ public final class GraphDimensionsCalculator {
      * <li>On screen node count property
      * </ul>
      * <p>If the graph or canvas has not been set, this method does nothing.
+     *
+     * @param subgraph the {@link Subgraph} to recalculate dimensions for
      */
-    private void calculate() {
+    void calculate(final Subgraph subgraph) {
         final Graph graph = graphProperty.get();
         if (graph == null || canvasDimension == null) {
             return;
@@ -187,13 +210,10 @@ public final class GraphDimensionsCalculator {
     void setGraph(final Graph graph) {
         graphProperty.set(graph);
         centerPointQuery = new CenterPointQuery(graph);
-        subgraph = centerPointQuery.getCache();
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
         radiusProperty.set(DEFAULT_RADIUS);
-
-        calculate(); // Force a recalculation
     }
 
     /**
@@ -217,7 +237,6 @@ public final class GraphDimensionsCalculator {
      */
     void setCanvasSize(final double canvasWidth, final double canvasHeight) {
         canvasDimension = new Dimension2D(canvasWidth, canvasHeight);
-        calculate();
     }
 
     /**

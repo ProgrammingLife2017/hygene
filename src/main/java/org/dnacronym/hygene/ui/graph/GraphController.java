@@ -74,17 +74,12 @@ public final class GraphController implements Initializable {
     void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
 
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldNode, node) -> {
-            if (node == null) {
+        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldSegment, newSegment) -> {
+            if (newSegment == null || newSegment.getId() < 0) {
                 return;
             }
 
-            try {
-                LOGGER.info("Selected node id: " + node.getId() + "\n"
-                        + "Sequence: " + node.retrieveMetadata().getSequence() + "\n");
-            } catch (final ParseException e) {
-                LOGGER.error("Metadata of node " + node.getId() + " could not be loaded");
-            }
+            LOGGER.info("Selected node id: " + newSegment.getId() + "\n");
         });
 
         graphVisualizer.getSelectedEdgeProperty().addListener((observable, oldEdge, edge) -> {

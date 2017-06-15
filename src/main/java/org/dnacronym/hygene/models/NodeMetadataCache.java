@@ -3,19 +3,21 @@ package org.dnacronym.hygene.models;
 import com.google.common.eventbus.Subscribe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.core.ThrottledExecutor;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
+import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 
@@ -28,158 +30,122 @@ public final class NodeMetadataCache {
     /**
      * Defines the maximum radius for which nodes will be cached.
      */
-    private static final int CACHE_RADIUS_THRESHOLD = 150;
+    private static final int RADIUS_THRESHOLD = 150;
+    /**
+     * The minimum number of milliseconds that must be between each retrieval operation.
+     */
+    private static final int RETRIEVE_METADATA_TIMEOUT = 10;
 
-    private final ConcurrentHashMap<Integer, Node> cache;
-    private final Graph graph;
+    private final ThrottledExecutor retrievalExecutor;
+    private final GfaFile gfaFile;
+    private final Map<Integer, NodeMetadata> cache;
 
-    private @MonotonicNonNull Thread thread;
-
-    private int previousCenterPoint = -1;
-    private int previousRadius = -1;
+    private int currentRadius;
 
 
     /**
      * Constructs and initializes {@link NodeMetadataCache}.
      *
-     * @param graph the currently loaded graph which the nodes are located on
+     * @param gfaFile the {@link GfaFile} that provides the parsing functionality
      */
-    public NodeMetadataCache(final Graph graph) {
-        this.graph = graph;
-        cache = new ConcurrentHashMap<>();
+    public NodeMetadataCache(final GfaFile gfaFile) {
+        this.retrievalExecutor = new ThrottledExecutor(RETRIEVE_METADATA_TIMEOUT);
+        this.gfaFile = gfaFile;
+        this.cache = new HashMap<>();
     }
 
 
     /**
-     * Returns true if the cache has metadata of the given node id stored.
+     * Updates the current radius when a {@link org.dnacronym.hygene.graph.CenterPointQuery} changes.
      *
-     * @param nodeId ID of the node
-     * @return true if the cache has metadata of the given node id stored
-     */
-    public boolean has(final int nodeId) {
-        final Node node = cache.get(nodeId);
-        return node != null && node.hasMetadata();
-    }
-
-    /**
-     * Returns {@link Node} with loaded metadata of the given node id.
-     * <p>
-     * If the node is not in the cache (yet) it will be retrieved on demand.
-     *
-     * @param nodeId ID of the node
-     * @return {@link Node} with loaded metadata of the given node id
-     * @throws ParseException if the node is not in memory yet and parsing fails
-     */
-    public Node getOrRetrieve(final int nodeId) throws ParseException {
-        final Node cachedNode = cache.get(nodeId);
-
-        if (cachedNode != null) {
-            return cachedNode;
-        }
-
-        return retrieve(nodeId);
-    }
-
-    /**
-     * Handles the {@link CenterPointQueryChangeEvent} by adding new items to the cache.
-     * <p>
-     * The process of retrieving items is done in a background thread to not influence the performance
-     * of the application.
-     *
-     * @param event the event describing the change in the center point query
+     * @param event a {@link CenterPointQueryChangeEvent}
      */
     @Subscribe
     public void centerPointQueryChanged(final CenterPointQueryChangeEvent event) {
-        if (event.getRadius() > CACHE_RADIUS_THRESHOLD
-                || event.getCenterPoint() == previousCenterPoint && event.getRadius() == previousRadius) {
+        this.currentRadius = event.getRadius();
+    }
+
+    /**
+     * Retrieves metadata as soon as the layout is done.
+     *
+     * @param event a {@link LayoutDoneEvent}
+     */
+    @Subscribe
+    public void layoutDone(final LayoutDoneEvent event) {
+        if (currentRadius >= RADIUS_THRESHOLD) {
+            retrievalExecutor.stop();
             return;
         }
 
-        previousCenterPoint = event.getCenterPoint();
-        previousRadius = event.getRadius();
-
-        cache.keySet().retainAll(event.getNodeIds());
-
-        if (thread != null) {
-            thread.interrupt();
-        }
-
-        thread = new Thread(() -> addNewItemsToCache(event.getNodeIds()));
-
-        thread.start();
+        retrievalExecutor.run(() -> {
+            retrieveMetadata(gfaFile, event.getSubgraph());
+            if (Thread.interrupted()) {
+                return;
+            }
+            HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent(event.getSubgraph()));
+        });
     }
 
     /**
-     * Returns the background thread.
+     * Returns the {@link ThrottledExecutor} used to retrieve metadata.
      *
-     * @return the background thread
+     * @return the {@link ThrottledExecutor} used to retrieve metadata
      */
-    @RequiresNonNull("thread")
-    Thread getThread() {
-        return thread;
+    ThrottledExecutor getRetrievalExecutor() {
+        return retrievalExecutor;
     }
 
+
     /**
-     * Adds new items to the cache if they are not present yet.
-     * <p>
-     * If the thread is interrupted, the process is stopped.
+     * Retrieves metadata for cached nodes that have no metadata yet.
      *
-     * @param nodeIds set of node ids that should be in the cache after executing this method
+     * @param gfaFile  the {@link GfaFile} that provides the parsing functionality
+     * @param subgraph a {@link Subgraph} with metadata
      */
-    private void addNewItemsToCache(final Set<Integer> nodeIds) {
-        nodeIds.stream().forEach(nodeId -> cache.put(nodeId, graph.getNode(nodeId)));
+    private void retrieveMetadata(final GfaFile gfaFile, final Subgraph subgraph) {
+        subgraph.getSegments().stream()
+                .filter(segment -> !segment.hasMetadata() && cache.containsKey(segment.getId()))
+                .forEach(segment -> {
+                    final NodeMetadata metadata = cache.get(segment.getId());
+                    if (metadata != null) {
+                        segment.setMetadata(metadata);
+                    }
+                });
 
-        retrieveMetadataForCachedNodesWithoutMetadata();
-    }
-
-    /**
-     * Retrieves metadata for cached nodes that have no metadata set yet.
-     */
-    @SuppressWarnings("squid:S1166") // No need to log the exception itself, a message is enough.
-    private void retrieveMetadataForCachedNodesWithoutMetadata() {
         try {
-            final Map<Integer, Long> sortedNodesWithoutMetadata = cache.values().stream()
-                    .filter(node -> !node.hasMetadata())
-                    .sorted(Comparator.comparingLong(Node::getByteOffset))
-                    .collect(Collectors.toMap(
-                            Node::getId,
-                            Node::getByteOffset,
-                            (oldValue, newValue) -> oldValue,
-                            LinkedHashMap::new
-                    ));
+            final Map<Integer, Long> sortedSegmentsWithoutMetadata
+                    = getSortedSegmentsWithoutMetadata(subgraph.getSegments());
+            final Map<Integer, NodeMetadata> metadata
+                    = gfaFile.parseNodeMetadata(sortedSegmentsWithoutMetadata);
 
-            final Map<Integer, NodeMetadata> metadata = graph.getGfaFile().parseNodeMetadata(
-                    sortedNodesWithoutMetadata
-            );
-
-            metadata.entrySet().stream().forEach(entry -> {
-                final Node node = cache.get(entry.getKey());
-                if (node != null) {
-                    node.setMetadata(entry.getValue());
+            metadata.entrySet().forEach(entry -> {
+                final Segment segment = subgraph.getSegment(entry.getKey());
+                if (segment != null) {
+                    segment.setMetadata(entry.getValue());
                 }
             });
-
-            HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent());
         } catch (final ParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
-        } catch (final RejectedExecutionException e) {
-            LOGGER.info("Retrieving metadata of nodes was interrupted.");
+            return;
         }
     }
 
     /**
-     * Creates {@link Node} object, retrieves its metadata and stores the {@link Node} in the cache.
+     * Removes {@link Segment} that already have metadata, sorts them by ascending byte offset, and maps the
+     * {@link Segment}s ids to their byte offsets.
      *
-     * @param nodeId ID of the node
-     * @return {@link Node} with loaded metadata of the given node id
-     * @throws ParseException if parsing the metadata fails
+     * @param segments a {@link Collection} of {@link Segment}s
+     * @return a map from {@link Segment} ids to their byte offsets
      */
-    private Node retrieve(final int nodeId) throws ParseException {
-        final Node node = graph.getNode(nodeId);
-        node.retrieveMetadata();
-
-        cache.put(nodeId, node);
-
-        return node;
+    private Map<Integer, Long> getSortedSegmentsWithoutMetadata(final Collection<Segment> segments) {
+        return segments.stream()
+                .filter(node -> !node.hasMetadata())
+                .sorted(Comparator.comparingLong(Segment::getByteOffset))
+                .collect(Collectors.toMap(
+                        Segment::getId,
+                        Segment::getByteOffset,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
     }
 }

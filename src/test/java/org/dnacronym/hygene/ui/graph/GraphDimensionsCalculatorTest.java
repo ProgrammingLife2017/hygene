@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.graph;
 import javafx.scene.canvas.Canvas;
 import org.assertj.core.data.Offset;
 import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -48,8 +49,12 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testComputeYPosition() {
+        final Subgraph subgraph = new Subgraph();
         final Segment segment = new Segment(0, 0, 0);
         segment.setYPosition(30);
+        subgraph.add(segment);
+
+        graphDimensionsCalculator.calculate(subgraph);
 
         assertThat(graphDimensionsCalculator.computeYPosition(segment))
                 .isEqualTo(CANVAS_HEIGHT / 2 / 10, Offset.offset(1.0));
@@ -57,8 +62,12 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testComputeMiddleYPosition() {
+        final Subgraph subgraph = new Subgraph();
         final Segment segment = new Segment(0, 0, 0);
         segment.setYPosition(30);
+        subgraph.add(segment);
+
+        graphDimensionsCalculator.calculate(subgraph);
 
         assertThat(graphDimensionsCalculator.computeMiddleYPosition(segment))
                 .isEqualTo(CANVAS_HEIGHT / 2 / 10, Offset.offset(1.0));
@@ -66,6 +75,8 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testComputeAndGetLaneHeight() {
+        graphDimensionsCalculator.calculate(new Subgraph());
+
         assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300 / 10);
     }
 

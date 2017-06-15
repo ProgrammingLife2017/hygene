@@ -1,5 +1,8 @@
 package org.dnacronym.hygene.graph;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.models.NodeMetadata;
+
 
 /**
  * Class representing a single, non-dummy segment node.
@@ -14,6 +17,8 @@ public final class Segment extends NewNode {
     private final int id;
     private final long byteOffset;
     private final int sequenceLength;
+
+    private @MonotonicNonNull NodeMetadata metadata;
 
 
     /**
@@ -60,6 +65,37 @@ public final class Segment extends NewNode {
     @Override
     public int getLength() {
         return Math.max(MIN_SEGMENT_LENGTH, sequenceLength);
+    }
+
+    /**
+     * Returns this {@link NewNode}'s metadata.
+     *
+     * @return this {@link NewNode}'s metadata
+     */
+    public NodeMetadata getMetadata() {
+        if (metadata == null) {
+            throw new IllegalStateException("Cannot access metadata before it is parsed.");
+        }
+
+        return metadata;
+    }
+
+    /**
+     * Sets the metadata for this node.
+     *
+     * @param metadata the metadata for this node
+     */
+    public void setMetadata(final NodeMetadata metadata) {
+        this.metadata = metadata;
+    }
+
+    /**
+     * Returns {@code true} iff. this {@link NewNode} has metadata set.
+     *
+     * @return {@code true} iff. this {@link NewNode} has metadata set
+     */
+    public boolean hasMetadata() {
+        return metadata != null;
     }
 
     @Override

@@ -12,8 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.models.Node;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -74,7 +73,8 @@ public final class SequenceController implements Initializable {
             sequenceTextArea.selectPositionCaret(newValue.intValue() + 1);
         });
 
-        graphVisualizer.getSelectedNodeProperty().addListener((observable, oldValue, newNode) -> updateFields(newNode));
+        graphVisualizer.getSelectedSegmentProperty()
+                .addListener((observable, oldValue, newNode) -> updateFields(newNode));
         sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
         sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty()
@@ -111,29 +111,27 @@ public final class SequenceController implements Initializable {
     }
 
     /**
-     * Updates the fields that describe the sequence of the {@link Node}.
+     * Updates the fields that describe the sequence of the {@link Segment}.
      * <p>
-     * If this {@link Node} is {@code null}, the fields are simply cleared.
+     * If this {@link Segment} is {@code null}, the fields are simply cleared.
      *
-     * @param node the {@link Node} whose sequence properties should be displayed
+     * @param segment the {@link Segment} whose sequence properties should be displayed
      */
-    void updateFields(final Node node) {
-        if (node == null) {
+    void updateFields(final Segment segment) {
+        if (segment == null) {
             lengthField.clear();
             sequenceTextArea.clear();
             sequenceVisualizer.getSequenceProperty().set(null);
             return;
         }
 
-        lengthField.setText(String.valueOf(node.getSequenceLength()));
-        setOffset.setPromptText("0 - " + (node.getSequenceLength() - 1));
+        lengthField.setText(String.valueOf(segment.getSequenceLength()));
+        setOffset.setPromptText("0 - " + (segment.getSequenceLength() - 1));
 
-        try {
-            final String sequence = node.retrieveMetadata().getSequence();
+        if (segment.hasMetadata()) {
+            final String sequence = segment.getMetadata().getSequence();
             sequenceVisualizer.getSequenceProperty().set(sequence);
             sequenceTextArea.setText(sequence);
-        } catch (final ParseException e) {
-            LOGGER.error("Unable to parse metadata of node %s for sequence visualisation.", node, e);
         }
     }
 
@@ -197,7 +195,7 @@ public final class SequenceController implements Initializable {
     }
 
     /**
-     * When the user wants to set the offset to the selected base in the textarea.
+     * When the user wants to set the offset to the selected base in the text area.
      * <p>
      * The offset is based on the caret position.
      *
