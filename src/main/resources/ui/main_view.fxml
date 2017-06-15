@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1">
+            prefWidth="600.0" stylesheets="@css/default_style.css" xmlns="http://javafx.com/javafx/8.0.102"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.MainController">
     <top>
         <fx:include source="menu/menu_view.fxml"/>
     </top>
 
     <left>
-        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
-            <content>
+        <HBox>
+            <ToggleButton fx:id="toggleLeftPane" maxHeight="Infinity" prefWidth="35" styleClass="side_button"
+                          HBox.hgrow="NEVER"/>
+            <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
+                       prefWidth="0"/>
+            <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
+                        minWidth="0">
                 <VBox>
-                    <children>
+                    <TitledPane animated="false" text="Node Properties">
                         <fx:include source="node/node_properties_view.fxml"/>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Create Bookmark">
                         <fx:include source="bookmark/bookmark_create_view.fxml"/>
-                    </children>
+                    </TitledPane>
                 </VBox>
-            </content>
-            <BorderPane.margin>
-                <Insets/>
-            </BorderPane.margin>
-        </ScrollPane>
+            </ScrollPane>
+        </HBox>
     </left>
 
     <right>
-        <ScrollPane hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
-            <VBox>
-                <fx:include source="bookmark/bookmarks_table_view.fxml"/>
-                <fx:include source="query/query.fxml"/>
-                <fx:include source="genomeindex/genome_navigate_view.fxml"/>
-            </VBox>
-        </ScrollPane>
+        <HBox>
+            <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
+                <VBox>
+                    <TitledPane animated="false" text="All Bookmarks">
+                        <fx:include source="bookmark/bookmarks_table_view.fxml"/>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Query">
+                        <fx:include source="query/query.fxml"/>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Genome Navigation">
+                        <fx:include source="genomeindex/genome_navigate_view.fxml"/>
+                    </TitledPane>
+                </VBox>
+            </ScrollPane>
+            <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
+                       prefWidth="0.0"/>
+            <ToggleButton fx:id="toggleRightPane" maxHeight="Infinity" prefWidth="35" styleClass="side_button"
+                          HBox.hgrow="NEVER"/>
+        </HBox>
     </right>
 
     <center>
         <VBox BorderPane.alignment="BOTTOM_LEFT">
-            <children>
-                <fx:include source="graph/graph_view.fxml" VBox.vgrow="SOMETIMES"/>
-                <Separator maxWidth="Infinity"/>
-                <fx:include source="graph/graph_navigation_view.fxml" VBox.vgrow="NEVER"/>
-                <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
-            </children>
+            <fx:include source="graph/graph_view.fxml" VBox.vgrow="SOMETIMES"/>
+            <Separator maxWidth="Infinity"/>
+            <fx:include source="graph/graph_navigation_view.fxml" VBox.vgrow="NEVER"/>
+            <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
         </VBox>
     </center>
 
