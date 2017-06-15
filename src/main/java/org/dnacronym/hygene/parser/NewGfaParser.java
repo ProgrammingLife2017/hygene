@@ -38,7 +38,7 @@ public final class NewGfaParser {
     private static final long PROGRESS_PARSE_LINE_TOTAL = 80;
     private static final String SOURCE_NAME = "<source>";
     private static final String SINK_NAME = "<sink>";
-    private static final String HEADER_GENOME_NAMES_PREFIX = "ORI:Z:";
+    private static final String HEADER_GENOME_NAMES_PREFIX = "H\tORI:Z:";
 
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
@@ -53,6 +53,7 @@ public final class NewGfaParser {
     public NewGfaParser() {
         this.nodeIds = new ConcurrentHashMap<>();
         this.nodeArrays = new int[0][];
+        this.genomeMapping = new HashMap<>();
     }
 
 
@@ -223,7 +224,7 @@ public final class NewGfaParser {
     private void parseHeaderGenomeNames(final String line, final long byteOffset) throws ParseException {
         final int indexOfGenomeNames = line.indexOf(HEADER_GENOME_NAMES_PREFIX);
         if (indexOfGenomeNames > -1) {
-            String[] names = line.substring(indexOfGenomeNames + HEADER_GENOME_NAMES_PREFIX.length()).split(";");
+            final String[] names = line.substring(indexOfGenomeNames + HEADER_GENOME_NAMES_PREFIX.length()).split(";");
             for (int i = 0; i < names.length; i++) {
                 genomeMapping.put(Integer.toString(i + 1), names[i]);
             }
