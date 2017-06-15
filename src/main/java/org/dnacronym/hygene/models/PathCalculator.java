@@ -27,11 +27,12 @@ public final class PathCalculator {
      *
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
+    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S2696"})
     public void computePaths(final Subgraph subgraph) {
-        Map<NewNode, Set<String>> genomeStore = new HashMap<>();
+        final Map<NewNode, Set<String>> genomeStore = new HashMap<>();
 
         // Determine start
-        List<NewNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
+        final List<NewNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
 
         final Queue<Edge> toVisit = new LinkedList<>();
 
@@ -44,13 +45,13 @@ public final class PathCalculator {
                     g.addAll(sourceConnectedNode.getMetadata().getGenomes()));
         });
 
-        List<NewNode> topologicalOrder = new LinkedList<>();
+        final List<NewNode> topologicalOrder = new LinkedList<>();
 
-        HashSet<Edge> visitedEdges = new HashSet<>();
-        HashSet<NewNode> visitedNodes = new HashSet<>();
+        final HashSet<Edge> visitedEdges = new HashSet<>();
+        final HashSet<NewNode> visitedNodes = new HashSet<>();
 
         while (!toVisit.isEmpty()) {
-            NewNode active = toVisit.remove().getTo();
+            final NewNode active = toVisit.remove().getTo();
             visitedNodes.add(active);
             topologicalOrder.add(active);
 
@@ -71,10 +72,10 @@ public final class PathCalculator {
         }
 
         // Generate paths
-        Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
+        final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
 
         // Todo remove this after path mapping has been implemented
-        Set<String> uniquePaths = new HashSet<>();
+        final Set<String> uniquePaths = new HashSet<>();
         paths.values().forEach(uniquePaths::addAll);
         GraphVisualizer.uniquePaths = uniquePaths.size();
 
@@ -89,8 +90,8 @@ public final class PathCalculator {
      * @return list of genomes
      */
     public Set<String> getDummyNodeGenomes(final DummyNode dummyNode) {
-        List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
-        List<String> diversionDestinationGenomes = dummyNode.getDiversionDestination().getMetadata().getGenomes();
+        final List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
+        final List<String> diversionDestinationGenomes = dummyNode.getDiversionDestination().getMetadata().getGenomes();
 
         if (diversionDestinationGenomes.size() > diversionSourceGenomes.size()) {
             return new HashSet<>(diversionSourceGenomes);
@@ -123,23 +124,23 @@ public final class PathCalculator {
     public Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,
                                                             final Map<NewNode, Set<String>> genomeStore) {
         // Create edges genome store
-        Map<Edge, Set<String>> paths = new HashMap<>();
+        final Map<Edge, Set<String>> paths = new HashMap<>();
 
         // Go over topological order and assign importance
         topologicalOrder.forEach(node -> node.getIncomingEdges().forEach(e -> {
             final Set<String> nodeGenomes = genomeStore.get(node);
             final Set<String> originGenomes = genomeStore.get(e.getFrom());
 
-            if (originGenomes != null && nodeGenomes != null) {
-                final Set<String> intersection = new HashSet<>(originGenomes);
-                intersection.retainAll(nodeGenomes);
-
-                paths.put(e, intersection);
-
-                originGenomes.removeAll(intersection);
-            } else {
+            if (originGenomes == null || nodeGenomes == null) {
                 throw new IllegalStateException("Missing genome data");
             }
+
+            final Set<String> intersection = new HashSet<>(originGenomes);
+            intersection.retainAll(nodeGenomes);
+
+            paths.put(e, intersection);
+
+            originGenomes.removeAll(intersection);
         }));
 
         return paths;

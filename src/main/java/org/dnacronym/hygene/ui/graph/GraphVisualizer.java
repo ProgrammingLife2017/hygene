@@ -189,8 +189,8 @@ public final class GraphVisualizer {
         }
 
         if (fromNode instanceof Segment && toNode instanceof Segment) {
-            int fromSegmentId = ((Segment) fromNode).getId();
-            int toSegmentId = ((Segment) toNode).getId();
+            final int fromSegmentId = ((Segment) fromNode).getId();
+            final int toSegmentId = ((Segment) toNode).getId();
 
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
