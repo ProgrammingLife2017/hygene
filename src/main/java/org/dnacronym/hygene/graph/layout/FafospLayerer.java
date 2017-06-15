@@ -43,7 +43,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Allocates and returns an array of layers into which the given nodes can be placed.
      *
-     * @param data a {@link Subgraph}
+     * @param data the {@link LayererData}
      * @return an array of layers
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
@@ -61,7 +61,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Places the given nodes into the proper layers.
      *
-     * @param data   a {@link Subgraph}
+     * @param data   the {@link LayererData}
      * @param layers an array of layers
      */
     private void addToLayers(final LayererData data, final NewNode[][] layers) {
@@ -103,7 +103,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Calculates the number of layers necessary for the given nodes.
      *
-     * @param data a {@link Collection} of {@link NewNode}s
+     * @param data the {@link LayererData}
      * @return the number of layers necessary for the given nodes
      */
     @SuppressWarnings("squid:S3346") // False positive; assert doesn't have side effects
@@ -120,7 +120,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Calculates the number of {@link NewNode}s per layer.
      *
-     * @param data a {@link Collection} of {@link NewNode}s
+     * @param data the {@link LayererData}
      * @return the number of {@link NewNode}s per layer
      */
     private int[] calculateHeights(final LayererData data) {
@@ -140,6 +140,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * Creates a collection of unconnected {@link DummyNode}s, adds them to the correct layer, and sets their
      * horizontal position.
      *
+     * @param data   the {@link LayererData}
      * @param layers an array of layers
      * @param edge   the {@link Edge} to replace with {@link DummyNode}s
      * @return a collection of unconnected {@link DummyNode}s
@@ -197,6 +198,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Returns the number of layers the given {@link Edge} traverses.
      *
+     * @param data the {@link LayererData}
      * @param edge an {@link Edge}
      * @return the number of layers the given {@link Edge} traverses
      */
@@ -210,6 +212,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Executes the given {@link Consumer} for each layer in which the given {@link NewNode} is.
      *
+     * @param data   the {@link LayererData}
      * @param node   a {@link NewNode}
      * @param action a {@link Consumer} for layer indices
      */
@@ -225,6 +228,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Executes the given {@link Consumer} for each layer the given {@link Edge} traverses.
      *
+     * @param data   the {@link LayererData}
      * @param edge   an {@link Edge}
      * @param action a {@link Consumer} for layer indices
      */
