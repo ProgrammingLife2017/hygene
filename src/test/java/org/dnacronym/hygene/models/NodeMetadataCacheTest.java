@@ -15,6 +15,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Map;
 
@@ -37,15 +39,17 @@ final class NodeMetadataCacheTest {
     private MetadataParser parser;
     private GfaFile gfaFile;
     private NodeMetadataCache cache;
+    @Captor
     private ArgumentCaptor<Map<Integer, Long>> captor;
 
 
     @BeforeEach
     void beforeEach() throws ParseException {
+        MockitoAnnotations.initMocks(this);
+
         parser = spyMetadataParser();
         gfaFile = createGraph();
         cache = new NodeMetadataCache(gfaFile);
-        captor = ArgumentCaptor.forClass(Map.class);
 
         HygeneEventBus.getInstance().register(cache);
     }
