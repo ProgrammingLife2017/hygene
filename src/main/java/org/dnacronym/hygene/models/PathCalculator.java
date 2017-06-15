@@ -30,13 +30,27 @@ public final class PathCalculator {
     public void computePaths(final Subgraph subgraph) {
         final Map<NewNode, Set<String>> genomeStore = new HashMap<>();
 
-        // Determine start
-        final List<NewNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
+        final List<NewNode> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore);
 
+        final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
+
+        addPathsToEdges(paths);
+    }
+
+    /**
+     * Computes a topological ordering for iteration the {@link Subgraph}.
+     *
+     * @param subgraph    the {@link Subgraph}
+     * @param genomeStore the genome store
+     * @return list containing a topological ordering
+     */
+    public List<NewNode> computeTopologicalOrder(final Subgraph subgraph, final Map<NewNode, Set<String>> genomeStore) {
         final Queue<Edge> toVisit = new LinkedList<>();
 
         final NewNode origin = new Segment(-1, -1, 0);
         genomeStore.put(origin, new HashSet<>());
+
+        final List<NewNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new Edge(origin, sourceConnectedNode));
@@ -70,11 +84,7 @@ public final class PathCalculator {
             }
         }
 
-        // Generate paths
-        final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
-
-        // Add paths to edges
-        addPathsToEdges(paths);
+        return topologicalOrder;
     }
 
     /**
@@ -83,7 +93,7 @@ public final class PathCalculator {
      * @param dummyNode the {@link DummyNode}
      * @return list of genomes
      */
-    public Set<String> getDummyNodeGenomes(final DummyNode dummyNode) {
+    Set<String> getDummyNodeGenomes(final DummyNode dummyNode) {
         final List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
         final List<String> diversionDestinationGenomes = dummyNode.getDiversionDestination().getMetadata().getGenomes();
 
@@ -102,7 +112,7 @@ public final class PathCalculator {
      * @param subgraph the subgraph
      * @return list of nodes with no incoming edges.
      */
-    public List<NewNode> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
+    List<NewNode> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
         return subgraph.getNodes().stream()
                 .filter(n -> subgraph.getNeighbours(n, SequenceDirection.LEFT).isEmpty())
                 .collect(Collectors.toList());
@@ -115,8 +125,8 @@ public final class PathCalculator {
      * @param genomeStore      map containing the genomes from each node
      * @return map contains a set of genomes for each edge
      */
-    public Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,
-                                                            final Map<NewNode, Set<String>> genomeStore) {
+    Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,
+                                                     final Map<NewNode, Set<String>> genomeStore) {
         // Create edges genome store
         final Map<Edge, Set<String>> paths = new HashMap<>();
 
@@ -141,11 +151,11 @@ public final class PathCalculator {
     }
 
     /**
-     * Will add a set of computed path to its corresponding {@link Edge}.
+     * Adds a set of computed path to its corresponding {@link Edge}.
      *
      * @param paths the paths
      */
-    public void addPathsToEdges(final Map<Edge, Set<String>> paths) {
+    void addPathsToEdges(final Map<Edge, Set<String>> paths) {
         paths.forEach(Edge::setGenomes);
     }
 }

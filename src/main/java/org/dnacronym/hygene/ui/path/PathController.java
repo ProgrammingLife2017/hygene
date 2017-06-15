@@ -60,7 +60,7 @@ public final class PathController implements Initializable {
     }
 
     /**
-     * Will cause the selected path to be cleared.
+     * Causes the selected path to be cleared.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -71,7 +71,7 @@ public final class PathController implements Initializable {
     }
 
     /**
-     * Will cause the currently selected genome, in the {@link ListView}, to be set as the selected path
+     * Causes the currently selected genome, in the {@link ListView}, to be set as the selected path
      * in the {@link GraphVisualizer}.
      *
      * @param mouseEvent the {@link ActionEvent}

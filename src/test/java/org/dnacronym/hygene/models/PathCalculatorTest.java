@@ -16,7 +16,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 
 /**
- * Created by Niels on 13/06/2017.
+ * Unit test for {@link PathCalculator}.
  */
 class PathCalculatorTest {
     private static final Random RANDOM = new Random();
