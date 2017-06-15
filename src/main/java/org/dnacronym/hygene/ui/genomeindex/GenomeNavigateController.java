@@ -103,6 +103,12 @@ public final class GenomeNavigateController implements Initializable {
             }
         });
 
+        genome.setOnAction(actionEvent -> base.getValueFactory().setValue(1));
+        graphStore.getGfaFileProperty().addListener(gfaFile -> {
+            genome.getItems().clear();
+            base.getValueFactory().setValue(1);
+        });
+
         genomeNavigatePane.visibleProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
         genomeNavigatePane.managedProperty().bind(Bindings.isNotNull(graphStore.getGfaFileProperty()));
     }
