@@ -10,10 +10,10 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -54,7 +54,7 @@ public final class Hygene extends Application {
 
     private Query query;
 
-    private GenomeIndex genomeIndex;
+    private GenomeNavigation genomeNavigation;
 
     private StatusBar statusBar;
 
@@ -108,8 +108,11 @@ public final class Hygene extends Application {
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
         HygeneEventBus.getInstance().register(graphDimensionsCalculator);
 
+
         sequenceVisualizer = new SequenceVisualizer();
         statusBar = new StatusBar();
+
+        genomeNavigation = new GenomeNavigation(graphStore, statusBar);
 
         simpleBookmarkStore = new SimpleBookmarkStore(
                 graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
@@ -232,12 +235,12 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link GenomeIndex} of the application.
+     * Gets the {@link GenomeNavigation} of the application.
      *
-     * @return the {@link GenomeIndex} of the application
+     * @return the {@link GenomeNavigation} of the application
      */
-    public GenomeIndex genomeIndex() {
-        return genomeIndex;
+    public GenomeNavigation getGenomeNavigation() {
+        return genomeNavigation;
     }
 
     /**

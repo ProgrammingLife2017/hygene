@@ -4,7 +4,9 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,6 +22,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 
+/**
+ * Stores a single instance of a {@link GenomeIndex} used for navigation of genomes.
+ *
+ * @see GenomeIndex
+ */
 public class GenomeNavigation {
     private static final Logger LOGGER = LogManager.getLogger(GenomeNavigation.class);
 
@@ -27,9 +34,17 @@ public class GenomeNavigation {
 
     private final BooleanProperty indexFinishedProperty;
     private final ObjectProperty<GenomeIndex> genomeIndexProperty = new SimpleObjectProperty<>();
-    private final ListProperty<String> genomeNamesProperty = new SimpleListProperty<>();
-    private final ReadOnlyListWrapper<String> readOnlyGenomeNames = new ReadOnlyListWrapper<>();
 
+    private final ListProperty<String> genomeNamesProperty = new SimpleListProperty<>();
+    private final ReadOnlyListWrapper<String> readOnlyGenomeNames = new ReadOnlyListWrapper<>(genomeNamesProperty);
+
+
+    /**
+     * Creates an instance of {@link GenomeNavigation}.
+     *
+     * @param graphStore the {@link GraphStore} whose {@link GfaFile} is observed
+     * @param statusBar  the {@link StatusBar} which is used to show genome indexing progress
+     */
     public GenomeNavigation(final GraphStore graphStore, final StatusBar statusBar) {
         this.statusBar = statusBar;
 
@@ -57,6 +72,7 @@ public class GenomeNavigation {
                     Platform.runLater(() -> {
                         genomeIndexProperty.set(genomeIndex);
                         indexFinishedProperty.set(true);
+
                         genomeNamesProperty.setAll(genomeIndex.getGenomeNames());
                     });
                 } catch (final SQLException | IOException e) {
@@ -67,5 +83,32 @@ public class GenomeNavigation {
             worker.setDaemon(true); // Automatically shut down this thread when the main thread exits
             worker.start();
         });
+    }
+
+    /**
+     * Returns the {@link ReadOnlyBooleanProperty} which indicated whether the {@link GenomeIndex} is indexing.
+     *
+     * @return the {@link ReadOnlyBooleanProperty} which indicated whether the {@link GenomeIndex} is indexing
+     */
+    public ReadOnlyBooleanProperty getIndexedFinishedProperty() {
+        return indexFinishedProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyObjectProperty} of the {@link GenomeIndex}.
+     *
+     * @return the {@link ReadOnlyObjectProperty} of the {@link GenomeIndex}
+     */
+    public ReadOnlyObjectProperty<GenomeIndex> getGenomeIndexProperty() {
+        return genomeIndexProperty;
+    }
+
+    /**
+     * Returns the {@link ReadOnlyListWrapper} of list of current genome names of the current Graph.
+     *
+     * @return the {@link ReadOnlyListWrapper} of list of current genome names of the current Graph
+     */
+    public ReadOnlyListWrapper<String> getGenomeNames() {
+        return readOnlyGenomeNames;
     }
 }
