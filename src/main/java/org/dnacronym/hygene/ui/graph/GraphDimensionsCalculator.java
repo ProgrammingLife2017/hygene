@@ -52,7 +52,7 @@ public final class GraphDimensionsCalculator {
     private static final int DEFAULT_LANE_COUNT = 10;
 
     private static final int MIN_ZOOM_FACTOR = 4;
-    private static final int MAX_ZOOM_FACTOR = 300;
+    private static final int MAX_ZOOM_FACTOR = 1000;
 
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
