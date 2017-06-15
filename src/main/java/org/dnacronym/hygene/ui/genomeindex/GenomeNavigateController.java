@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
@@ -40,8 +39,6 @@ public final class GenomeNavigateController implements Initializable {
 
     private boolean indexFinished;
 
-    @FXML
-    private AnchorPane genomeNavigatePane;
     @FXML
     private ComboBox<String> genome;
     @FXML
