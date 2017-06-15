@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -52,6 +53,8 @@ public final class Hygene extends Application {
     private SequenceVisualizer sequenceVisualizer;
 
     private Query query;
+
+    private GenomeNavigation genomeNavigation;
 
     private StatusBar statusBar;
 
@@ -107,6 +110,8 @@ public final class Hygene extends Application {
 
         sequenceVisualizer = new SequenceVisualizer();
         statusBar = new StatusBar();
+
+        genomeNavigation = new GenomeNavigation(graphStore, statusBar);
 
         simpleBookmarkStore = new SimpleBookmarkStore(
                 graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
@@ -226,6 +231,15 @@ public final class Hygene extends Application {
      */
     public GraphDimensionsCalculator getGraphDimensionsCalculator() {
         return graphDimensionsCalculator;
+    }
+
+    /**
+     * Gets the {@link GenomeNavigation} of the application.
+     *
+     * @return the {@link GenomeNavigation} of the application
+     */
+    public GenomeNavigation getGenomeNavigation() {
+        return genomeNavigation;
     }
 
     /**
