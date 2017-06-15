@@ -118,26 +118,6 @@ public final class Graph {
     }
 
     /**
-     * Returns the number of edges that make up the horizontal position.
-     *
-     * @param id the {@link Node}'s id
-     * @return the number of edges that make up the horizontal position
-     */
-    public int getUnscaledXEdgeCount(final int id) {
-        return nodeArrays[id][Node.UNSCALED_X_EDGE_COUNT_INDEX];
-    }
-
-    /**
-     * Sets the number of edges that make up the horizontal position.
-     *
-     * @param id                 the {@link Node}'s id
-     * @param unscaledXEdgeCount the number of edges that make up the horizontal position
-     */
-    void setUnscaledXEdgeCount(final int id, final int unscaledXEdgeCount) {
-        nodeArrays[id][Node.UNSCALED_X_EDGE_COUNT_INDEX] = unscaledXEdgeCount;
-    }
-
-    /**
      * Getter for the unscaled x position.
      *
      * @param id the {@link Node}'s id

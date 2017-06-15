@@ -18,7 +18,6 @@ public final class NodeBuilder {
     private long byteOffset;
     private int sequenceLength;
     private NodeColor color = NodeColor.BLACK;
-    private int unscaledXEdgeCount;
     private int unscaledXPosition = -1;
     private int unscaledYPosition = -1;
     private Set<Edge> incomingEdges = new TreeSet<>();
@@ -49,7 +48,6 @@ public final class NodeBuilder {
         builder.byteOffset = node.getByteOffset();
         builder.sequenceLength = node.getSequenceLength();
         builder.color = node.getColor();
-        builder.unscaledXEdgeCount = node.getUnscaledXEdgeCount();
         builder.unscaledXPosition = node.getUnscaledXPosition();
         builder.unscaledYPosition = node.getUnscaledYPosition();
         builder.incomingEdges = node.getIncomingEdges();
@@ -102,18 +100,6 @@ public final class NodeBuilder {
      */
     public NodeBuilder withColor(final NodeColor color) {
         this.color = color;
-
-        return this;
-    }
-
-    /**
-     * Sets the unscaled x edge count of the {@link Node} under construction.
-     *
-     * @param unscaledXEdgeCount the unscaled x edge count of the node
-     * @return current instance of the builder to provide a fluent interface
-     */
-    public NodeBuilder withUnscaledXEdgeCount(final int unscaledXEdgeCount) {
-        this.unscaledXEdgeCount = unscaledXEdgeCount;
 
         return this;
     }
@@ -178,7 +164,6 @@ public final class NodeBuilder {
                 UnsignedInteger.fromLong(byteOffset),
                 sequenceLength,
                 color.ordinal(),
-                unscaledXEdgeCount,
                 unscaledXPosition,
                 unscaledYPosition,
                 outgoingEdges.size()

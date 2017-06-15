@@ -20,11 +20,10 @@ public final class Node {
     public static final int NODE_BYTE_OFFSET_INDEX = 0;
     public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
     public static final int NODE_COLOR_INDEX = 2;
-    public static final int UNSCALED_X_EDGE_COUNT_INDEX = 3;
-    public static final int UNSCALED_X_POSITION_INDEX = 4;
-    public static final int UNSCALED_Y_POSITION_INDEX = 5;
-    public static final int NODE_OUTGOING_EDGES_INDEX = 6;
-    public static final int NODE_EDGE_DATA_OFFSET = 7;
+    public static final int UNSCALED_X_POSITION_INDEX = 3;
+    public static final int UNSCALED_Y_POSITION_INDEX = 4;
+    public static final int NODE_OUTGOING_EDGES_INDEX = 5;
+    public static final int NODE_EDGE_DATA_OFFSET = 6;
     public static final int EDGE_BYTE_OFFSET_OFFSET = 1;
     public static final int EDGE_DATA_SIZE = 2;
 
@@ -61,7 +60,7 @@ public final class Node {
      * @return an empty node array
      */
     public static int[] createEmptyNodeArray() {
-        return new int[] {0, 0, 0, 0, -1, -1, 0};
+        return new int[] {0, 0, 0, -1, -1, 0};
     }
 
 
@@ -113,15 +112,6 @@ public final class Node {
      */
     public NodeColor getColor() {
         return NodeColor.values()[data[NODE_COLOR_INDEX]];
-    }
-
-    /**
-     * Returns the number of edges that make up the horizontal position.
-     *
-     * @return the number of edges that make up the horizontal position
-     */
-    public int getUnscaledXEdgeCount() {
-        return data[UNSCALED_X_EDGE_COUNT_INDEX];
     }
 
     /**
