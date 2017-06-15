@@ -34,7 +34,7 @@ public final class Query {
      * @param graphStore the {@link GraphStore} used to retrieve the most up to date graph
      */
     public Query(final GraphStore graphStore) {
-        visibleProperty = new SimpleBooleanProperty(false);
+        visibleProperty = new SimpleBooleanProperty();
         queryingProperty = new SimpleBooleanProperty();
         queriedNodeIds = FXCollections.observableArrayList();
 
