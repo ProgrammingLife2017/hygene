@@ -44,7 +44,7 @@ public final class NewGfaParser {
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeArrays;
     private int lineCount;
-    private Map<Integer, String> genomeMapping;
+    private Map<String, String> genomeMapping;
 
 
     /**
@@ -84,7 +84,7 @@ public final class NewGfaParser {
             throw new ParseException("An error while reading the GFA file.", e);
         }
 
-        final Graph graph = new Graph(nodeArrays, gfaFile);
+        final Graph graph = new Graph(nodeArrays, genomeMapping, gfaFile);
 
         addEdgesToSentinelNodes(graph);
 
@@ -225,7 +225,7 @@ public final class NewGfaParser {
         if (indexOfGenomeNames > -1) {
             String[] names = line.substring(indexOfGenomeNames + HEADER_GENOME_NAMES_PREFIX.length()).split(";");
             for (int i = 0; i < names.length; i++) {
-                genomeMapping.put(i + 1, names[i]);
+                genomeMapping.put(Integer.toString(i + 1), names[i]);
             }
         } else {
             throw new ParseException("Not an header containing genome names at position " + byteOffset + ".");

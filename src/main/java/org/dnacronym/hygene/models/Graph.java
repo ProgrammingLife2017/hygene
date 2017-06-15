@@ -6,6 +6,8 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.parser.GfaFile;
 
+import java.util.Map;
+
 
 /**
  * Class wraps around the graph data represented as a nested array and provides utility methods.
@@ -17,6 +19,7 @@ public final class Graph {
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
 
     private final int[][] nodeArrays;
+    private final Map<String, String> genomeMapping;
     private final GfaFile gfaFile;
 
     private @MonotonicNonNull GraphIterator graphIterator;
@@ -25,17 +28,19 @@ public final class Graph {
     /**
      * Constructs a graph from array based data structure.
      *
-     * @param nodeArrays nested array containing the graphs data
-     * @param gfaFile    a reference to the GFA file from which the graph is created
+     * @param nodeArrays    nested array containing the graphs data
+     * @param genomeMapping maps genomes to their full name
+     * @param gfaFile       a reference to the GFA file from which the graph is created
      */
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
             justification = "For performance reasons, we don't want to create a copy here"
     )
     @SuppressWarnings("PMD.ArrayIsStoredDirectly") // Performance
-    public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
+    public Graph(final int[][] nodeArrays, final Map<String, String> genomeMapping, final GfaFile gfaFile) {
         this.nodeArrays = nodeArrays;
         this.gfaFile = gfaFile;
+        this.genomeMapping = genomeMapping;
     }
 
 
@@ -72,6 +77,15 @@ public final class Graph {
     @SuppressWarnings("PMD.MethodReturnsInternalArray") // Performance
     public int[][] getNodeArrays() {
         return nodeArrays;
+    }
+
+    /**
+     * Gets the genome mapping.
+     *
+     * @return the genome mapping
+     */
+    public Map<String, String> getGenomeMapping() {
+        return genomeMapping;
     }
 
     /**
