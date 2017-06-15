@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -24,20 +24,9 @@ final class SnapshotTest extends UITestBase {
 
     @AfterEach
     void tearDown() throws IOException {
-        final File parentDirectory = new File(GFA_FILE_NAME).getParentFile();
-        if (parentDirectory == null) {
-            return;
-        }
-        final File[] filesInDirectory = parentDirectory.listFiles();
-        if (filesInDirectory == null) {
-            return;
-        }
-
-        for (final File f : filesInDirectory) {
-            if (f.getName().endsWith(".png")) {
-                Files.deleteIfExists(f.toPath());
-            }
-        }
+        Arrays.stream(new File(GFA_FILE_NAME).getParentFile().listFiles())
+                .filter(file -> file.getName().endsWith(".png"))
+                .forEach(File::delete);
     }
 
 
