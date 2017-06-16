@@ -62,7 +62,7 @@ public final class GraphAnnotationVisualizer {
      *                     {@link org.dnacronym.hygene.models.FeatureAnnotation}
      * @param nodes        the list of current onscreen {@link NewNode}s
      */
-    public void draw(final List<GenomePoint> genomePoints, final List<NewNode> nodes) {
+    public void draw(final String seqId, final List<GenomePoint> genomePoints, final List<NewNode> nodes) {
         if (genomePoints.size() < 2) {
             return;
         }
@@ -105,5 +105,7 @@ public final class GraphAnnotationVisualizer {
 
         graphicsContext.setFill(Color.LIGHTBLUE);
         graphicsContext.fillRect(startX, 0, endX - startX, ANNOTATION_MARKER_HEIGHT);
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillText(seqId, startX, ANNOTATION_MARKER_HEIGHT);
     }
 }
