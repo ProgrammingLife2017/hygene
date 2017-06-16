@@ -66,7 +66,8 @@ public final class GfaFile {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
             if (graphLoader.hasGraph()) {
-                graph = new Graph(graphLoader.restoreGraph(progressUpdater, fileName), this);
+                final Map<String, String> genomeMapping = fileDatabase.getFileGenomeMapping().getMappings();
+                graph = new Graph(graphLoader.restoreGraph(progressUpdater, fileName), genomeMapping, this);
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
@@ -81,6 +82,7 @@ public final class GfaFile {
 
                 LOGGER.info("Start dumping the graph to the database");
                 graphLoader.dumpGraph(graph.getNodeArrays(), fileName);
+                fileDatabase.getFileGenomeMapping().addMapping(graph.getGenomeMapping());
                 LOGGER.info("Finished dumping the graph to the database");
             }
         } catch (final UnexpectedDatabaseException | IOException | SQLException e) {

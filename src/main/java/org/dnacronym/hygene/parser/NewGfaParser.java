@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,11 +38,13 @@ public final class NewGfaParser {
     private static final long PROGRESS_PARSE_LINE_TOTAL = 80;
     private static final String SOURCE_NAME = "<source>";
     private static final String SINK_NAME = "<sink>";
+    private static final String HEADER_GENOME_NAMES_PREFIX = "H\tORI:Z:";
 
     private final Map<String, Integer> nodeIds; // node id string => nodeArrays index (internal node id)
     private final AtomicInteger nodeVectorPosition = new AtomicInteger(0);
     private int[][] nodeArrays;
     private int lineCount;
+    private Map<String, String> genomeMapping;
 
 
     /**
@@ -50,6 +53,7 @@ public final class NewGfaParser {
     public NewGfaParser() {
         this.nodeIds = new ConcurrentHashMap<>();
         this.nodeArrays = new int[0][];
+        this.genomeMapping = new HashMap<>();
     }
 
 
@@ -72,6 +76,8 @@ public final class NewGfaParser {
             nodeArrays = new int[nodeIds.size()][];
             Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
 
+            genomeMapping = new HashMap<>();
+
             LOGGER.info("Start parsing lines");
             parseLines(gfaFile.getInputStream(), progressUpdater);
             LOGGER.info("Finished parsing lines");
@@ -79,7 +85,7 @@ public final class NewGfaParser {
             throw new ParseException("An error while reading the GFA file.", e);
         }
 
-        final Graph graph = new Graph(nodeArrays, gfaFile);
+        final Graph graph = new Graph(nodeArrays, genomeMapping, gfaFile);
 
         addEdgesToSentinelNodes(graph);
 
@@ -173,6 +179,9 @@ public final class NewGfaParser {
 
         switch (line.charAt(0)) {
             case 'H':
+                parseHeader(line, byteOffset);
+                break;
+
             case 'C':
             case 'P':
                 break;
@@ -187,6 +196,43 @@ public final class NewGfaParser {
 
             default:
                 throw new ParseException("Unknown record type `" + line.charAt(0) + "` at position " + byteOffset);
+        }
+    }
+
+    /**
+     * Parses a header line in the GFA file format.
+     * <p>
+     * If the type of header field has not been implemented or is not
+     * recognized no failure will occur.
+     *
+     * @param line       the line to parse
+     * @param byteOffset the byte offset
+     * @throws ParseException if a header field doesn't have the correct format
+     */
+    private void parseHeader(final String line, final long byteOffset) throws ParseException {
+        if (line.startsWith(HEADER_GENOME_NAMES_PREFIX)) {
+            parseHeaderGenomeNames(line, byteOffset);
+        }
+    }
+
+    /**
+     * Parses a GFA header field that contains genome names.
+     * <p>
+     * The genomes names are added to {@link NewGfaParser#genomeMapping} using a 1-indexing.
+     *
+     * @param line       the line to parse
+     * @param byteOffset the byte offset
+     * @throws ParseException when this is not a header field containing genome names
+     */
+    private void parseHeaderGenomeNames(final String line, final long byteOffset) throws ParseException {
+        final int indexOfGenomeNames = line.indexOf(HEADER_GENOME_NAMES_PREFIX);
+        if (indexOfGenomeNames > -1) {
+            final String[] names = line.substring(indexOfGenomeNames + HEADER_GENOME_NAMES_PREFIX.length()).split(";");
+            for (int i = 0; i < names.length; i++) {
+                genomeMapping.put(Integer.toString(i + 1), names[i]);
+            }
+        } else {
+            throw new ParseException("Not an header containing genome names at position " + byteOffset + ".");
         }
     }
 

@@ -24,6 +24,7 @@ public final class FileDatabase implements AutoCloseable {
     private FileMetadata fileMetadata;
     private FileBookmarks fileBookmarks;
     private FileGenomeIndex fileGenomeIndex;
+    private FileGenomeMapping fileGenomeMapping;
 
 
     /**
@@ -68,6 +69,7 @@ public final class FileDatabase implements AutoCloseable {
 
         fileBookmarks = new FileBookmarks(this);
         fileGenomeIndex = new FileGenomeIndex(this);
+        fileGenomeMapping = new FileGenomeMapping(this);
     }
 
 
@@ -83,6 +85,7 @@ public final class FileDatabase implements AutoCloseable {
 
         fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
         fileDatabaseDriver.setUpTable(fileGenomeIndex.getTable());
+        fileDatabaseDriver.setUpTable(fileGenomeMapping.getTable());
     }
 
     /**
@@ -128,6 +131,15 @@ public final class FileDatabase implements AutoCloseable {
      */
     public FileGenomeIndex getFileGenomeIndex() {
         return fileGenomeIndex;
+    }
+
+    /**
+     * Returns file genome mapping.
+     *
+     * @return the file genome mapping
+     */
+    public FileGenomeMapping getFileGenomeMapping() {
+        return fileGenomeMapping;
     }
 
     @Override
