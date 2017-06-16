@@ -19,7 +19,7 @@ public final class FileGenomeMapping {
     static final String TABLE_NAME = "genome_mappings";
 
     private static final String GENOME_NAME_COLUMN_NAME = "genome_name";
-    private static final String GENOME_MAPPING_COLUMN_NAME = "genome_mapping";
+    private static final String GENOME_INDEX_COLUMN_NAME = "genome_mapping";
 
     private final FileDatabaseDriver fileDatabaseDriver;
 
@@ -42,7 +42,7 @@ public final class FileGenomeMapping {
     FileDatabaseTable getTable() {
         final FileDatabaseTable globalTable = new FileDatabaseTable(TABLE_NAME);
         globalTable.addColumn(GENOME_NAME_COLUMN_NAME, ColumnType.TEXT);
-        globalTable.addColumn(GENOME_MAPPING_COLUMN_NAME, ColumnType.TEXT);
+        globalTable.addColumn(GENOME_INDEX_COLUMN_NAME, ColumnType.TEXT);
 
         return globalTable;
     }
@@ -68,7 +68,7 @@ public final class FileGenomeMapping {
      * @param genomeMappings the genome mappings
      * @throws SQLException the sql exception
      */
-    public void addMapping(final Map<String, String> genomeMappings) throws SQLException {
+    public void addMapping(final Map<String, String> genomeMappings) {
         genomeMappings.forEach((n, m) -> {
             try {
                 addMapping(n, m);
@@ -89,7 +89,7 @@ public final class FileGenomeMapping {
 
         fileDatabaseDriver.forEachRow(TABLE_NAME, row -> {
             try {
-                final String mapping = row.getString(GENOME_MAPPING_COLUMN_NAME);
+                final String mapping = row.getString(GENOME_INDEX_COLUMN_NAME);
                 final String name = row.getString(GENOME_NAME_COLUMN_NAME);
 
                 if (mapping != null && name != null) {
