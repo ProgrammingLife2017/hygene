@@ -130,7 +130,9 @@ public final class GffParser {
      * @return a {@link FeatureAnnotation} representing the current file
      */
     private FeatureAnnotation createFeatureAnnotation(final String seqId) {
-        return new FeatureAnnotation(seqId);
+        final String noExtensionSeqId = seqId.lastIndexOf('.') > 0
+                ? seqId.substring(0, seqId.lastIndexOf('.')) : seqId;
+        return new FeatureAnnotation(noExtensionSeqId);
     }
 
     /**
@@ -306,7 +308,7 @@ public final class GffParser {
      * @throws ParseException when unable to split the line up into 9 columns
      */
     private String[] parseLine(final String line, final int lineNumber) throws ParseException {
-        final String[] columns = line.split("\\s+");
+        final String[] columns = line.split("\\t+");
         if (columns.length != GFF_COLUMNS) {
             throw new ParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
                     "Line did not contain " + GFF_COLUMNS + " columns, it contained " + columns.length + " columns."));
