@@ -19,7 +19,7 @@ public final class DiscardNewestPolicy implements RejectedExecutionHandler {
             return;
         }
 
-        final @Nullable Runnable lastTask = getLastElement(executor.getQueue());
+        final Runnable lastTask = getLastElement(executor.getQueue());
         if (lastTask == null) {
             throw new IllegalStateException("ThreadPoolExecutor should not be full while queue is empty.");
         }
