@@ -281,7 +281,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
                     .map(NewNode::getXPosition)
                     .min(Long::compare)
                     .orElseThrow(() -> new IllegalStateException("Non-empty collection has no minimum."));
-            this.minLayer = (int) ((minPosition + LAYER_WIDTH - 1) / LAYER_WIDTH);
+            this.minLayer = (int) ((minPosition + LAYER_WIDTH - 1) / LAYER_WIDTH) - 1;
         }
 
 
