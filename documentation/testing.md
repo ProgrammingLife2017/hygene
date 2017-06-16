@@ -59,3 +59,8 @@ This week we tested the new code we added to the project. There are not many com
 Due to time constraints we did add some thing that *could* have been tested better, but we will make sure to improve the tests where necessary over the coming weeks.
 
 Our coverage of this week increased to 80% (CodeCov 77%).
+
+## Sprint 7
+During this sprint we worked a lot on adding new features at a high pace. Unfortunately, this was not really good for our code quality and test coverage. During the next sprints we will work hard on increasing this again.
+
+Our coverage of this week decreased to 79% (CodeCov 76%).
