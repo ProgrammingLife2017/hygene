@@ -41,11 +41,11 @@ class PathCalculatorTest {
         final Segment segment3 = new Segment(3, 98, 14);
         final Segment segment4 = new Segment(4, 55, 10);
 
-        Link e12 = connectNodes(segment1, segment2);
-        Link e13 = connectNodes(segment1, segment3);
-        Link e14 = connectNodes(segment1, segment4);
-        Link e24 = connectNodes(segment2, segment4);
-        Link e34 = connectNodes(segment3, segment4);
+        final Link e12 = connectNodes(segment1, segment2);
+        final Link e13 = connectNodes(segment1, segment3);
+        final Link e14 = connectNodes(segment1, segment4);
+        final Link e24 = connectNodes(segment2, segment4);
+        final Link e34 = connectNodes(segment3, segment4);
 
         segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
         segment2.setMetadata(new NodeMetadata("-", "-", Arrays.asList("b")));
@@ -72,13 +72,13 @@ class PathCalculatorTest {
         final DummyNode dummy1 = new DummyNode(segment3, segment4);
         final DummyNode dummy2 = new DummyNode(segment3, segment4);
 
-        Link e12 = connectNodes(segment1, segment2);
-        Link e13 = connectNodes(segment1, segment3);
-        Link e14 = connectNodes(segment1, segment4);
-        Link e24 = connectNodes(segment2, segment4);
-        Link e3d1 = connectNodes(segment3, dummy1);
-        Link d1d2 = connectNodes(dummy1, dummy2);
-        Link d2s4 = connectNodes(dummy2, segment4);
+        final Link e12 = connectNodes(segment1, segment2);
+        final Link e13 = connectNodes(segment1, segment3);
+        final Link e14 = connectNodes(segment1, segment4);
+        final Link e24 = connectNodes(segment2, segment4);
+        final Link e3d1 = connectNodes(segment3, dummy1);
+        final Link d1d2 = connectNodes(dummy1, dummy2);
+        final Link d2s4 = connectNodes(dummy2, segment4);
 
 
         segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
@@ -108,11 +108,11 @@ class PathCalculatorTest {
         final DummyNode dummy1 = new DummyNode(segment1, segment2);
         final DummyNode dummy2 = new DummyNode(segment2, segment3);
 
-        Link e13 = connectNodes(segment1, segment3);
-        Link s1d1 = connectNodes(segment1, dummy1);
-        Link d1s2 = connectNodes(dummy1, segment2);
-        Link s2d2 = connectNodes(segment2, dummy2);
-        Link d2s3 = connectNodes(dummy2, segment3);
+        final Link e13 = connectNodes(segment1, segment3);
+        final Link s1d1 = connectNodes(segment1, dummy1);
+        final Link d1s2 = connectNodes(dummy1, segment2);
+        final Link s2d2 = connectNodes(segment2, dummy2);
+        final Link d2s3 = connectNodes(dummy2, segment3);
 
 
         segment1.setMetadata(new NodeMetadata("1", "-", Arrays.asList("a", "b", "c")));
