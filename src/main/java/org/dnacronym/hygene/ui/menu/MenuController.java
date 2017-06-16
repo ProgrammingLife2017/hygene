@@ -13,6 +13,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
+import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
@@ -107,6 +108,11 @@ public final class MenuController implements Initializable {
      */
     @FXML
     void openGffFileAction(final ActionEvent event) throws IOException, UIInitialisationException {
+        if (!Hygene.getInstance().getGenomeNavigation().getIndexedFinishedProperty().get()) {
+            new WarningDialogue("Cannot open GFF file while genome index is still in progress.").show();
+            return;
+        }
+
         final File gffFile = openFileAction(gffFileChooser, GraphStore.GFF_FILE_NAME);
         if (gffFile == null) {
             return;
