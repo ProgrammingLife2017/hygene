@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("PMD.TooManyMethods") // Unfeasible to refactor to multiple classes
 public final class FafospLayerer implements SugiyamaLayerer {
-    private static final int LAYER_WIDTH = 1000;
+    public static final int LAYER_WIDTH = 1000;
 
 
     @Override

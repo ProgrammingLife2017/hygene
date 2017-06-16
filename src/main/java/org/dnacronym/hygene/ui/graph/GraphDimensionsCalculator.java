@@ -22,6 +22,7 @@ import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.models.Graph;
 
 import java.util.LinkedList;
@@ -50,12 +51,16 @@ public final class GraphDimensionsCalculator {
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
 
+    private static final int MIN_ZOOM_FACTOR = 4;
+    private static final int MAX_ZOOM_FACTOR = 1000;
+
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
     private final IntegerProperty nodeCountProperty;
+    private final IntegerProperty viewRadiusProperty;
 
     private final DoubleProperty nodeHeightProperty;
     private final DoubleProperty laneHeightProperty;
@@ -66,6 +71,7 @@ public final class GraphDimensionsCalculator {
      */
     private final ObjectProperty<Graph> graphProperty;
     private CenterPointQuery centerPointQuery;
+    private Subgraph subgraph;
 
     private long minX;
     private long maxX;
@@ -82,11 +88,16 @@ public final class GraphDimensionsCalculator {
      * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
     public GraphDimensionsCalculator(final GraphStore graphStore) {
+        observableQueryNodes = FXCollections.observableArrayList();
+        readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
+
         minXNodeIdProperty = new SimpleIntegerProperty(1);
         maxXNodeIdProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty = new SimpleIntegerProperty(1);
-        radiusProperty = new SimpleIntegerProperty(1);
+        radiusProperty = new SimpleIntegerProperty(DEFAULT_RADIUS);
+
+        nodeCountProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
             centerNodeIdProperty.set(Math.max(
@@ -95,20 +106,26 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
-            radiusProperty.set(Math.max(
-                    1,
-                    Math.min(newValue.intValue(), getNodeCountProperty().divide(2).get())));
+            if (centerPointQuery == null) {
+                return;
+            }
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
-        nodeCountProperty = new SimpleIntegerProperty(1);
+        viewRadiusProperty = new SimpleIntegerProperty(1);
+        viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() < FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
+                    || newValue.intValue() > FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
+                return;
+            }
+            calculate(subgraph);
+            radiusProperty.set(((newValue.intValue() + FafospLayerer.LAYER_WIDTH - 1)
+                    / FafospLayerer.LAYER_WIDTH) / 2);
+        });
 
         nodeHeightProperty = new SimpleDoubleProperty(1);
         laneHeightProperty = new SimpleDoubleProperty(1);
         laneCountProperty = new SimpleIntegerProperty(1);
-
-        observableQueryNodes = FXCollections.observableArrayList();
-        readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
 
         graphProperty = new SimpleObjectProperty<>();
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
@@ -122,7 +139,7 @@ public final class GraphDimensionsCalculator {
      */
     @Subscribe
     public void onLayoutDoneEvent(final LayoutDoneEvent event) {
-        Platform.runLater(() -> calculate(event.getSubgraph()));
+        subgraph = event.getSubgraph();
     }
 
     /**
@@ -152,7 +169,7 @@ public final class GraphDimensionsCalculator {
      */
     void calculate(final Subgraph subgraph) {
         final Graph graph = graphProperty.get();
-        if (graph == null || canvasDimension == null) {
+        if (graph == null || subgraph == null || canvasDimension == null) {
             return;
         }
 
@@ -160,8 +177,6 @@ public final class GraphDimensionsCalculator {
                 .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
         final long unscaledCenterX = centerNode.getXPosition();
 
-        final long[] tempMinX = {unscaledCenterX};
-        final long[] tempMaxX = {unscaledCenterX};
         final int[] tempMinY = {centerNode.getYPosition()};
         final int[] tempMaxY = {centerNode.getYPosition()};
 
@@ -173,24 +188,12 @@ public final class GraphDimensionsCalculator {
                 return;
             }
 
-            final long nodeLeftX = node.getXPosition();
-            if (tempMinX[0] > nodeLeftX) {
-                tempMinX[0] = nodeLeftX;
-                minXNodeIdProperty.setValue(((Segment) node).getId());
-            }
-
-            final long nodeRightX = node.getXPosition() + node.getLength();
-            if (tempMaxX[0] < nodeRightX) {
-                tempMaxX[0] = nodeRightX;
-                maxXNodeIdProperty.setValue(((Segment) node).getId());
-            }
-
             tempMinY[0] = Math.min(tempMinY[0], node.getYPosition());
             tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
-        this.minX = tempMinX[0];
-        this.maxX = tempMaxX[0];
+        this.minX = unscaledCenterX - viewRadiusProperty.get() / 2;
+        this.maxX = unscaledCenterX + viewRadiusProperty.get() / 2;
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
@@ -213,7 +216,7 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
-        radiusProperty.set(DEFAULT_RADIUS);
+        viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
     }
 
     /**
@@ -385,5 +388,14 @@ public final class GraphDimensionsCalculator {
      */
     public IntegerProperty getRadiusProperty() {
         return radiusProperty;
+    }
+
+    /**
+     * Returns the view radius property.
+     *
+     * @return the view radius property
+     */
+    public IntegerProperty getViewRadiusProperty() {
+        return viewRadiusProperty;
     }
 }

@@ -51,11 +51,4 @@ final class GraphMovementCalculatorTest {
 
         assertThat(centerNodeIdProperty.get()).isEqualTo(-100);
     }
-
-    @Test
-    void testScroll() {
-        graphMovementCalculator.onScroll(10);
-
-        assertThat(radiusProperty.get()).isEqualTo(10);
-    }
 }

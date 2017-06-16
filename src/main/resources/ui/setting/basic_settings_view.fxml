@@ -62,7 +62,7 @@
                     </tooltip>
                 </Slider>
                 <Label text="Zooming Sensitivity" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                <Slider fx:id="zoomingSensitivity" majorTickUnit="0.01" max="0.1" min="0.05"
+                <Slider fx:id="zoomingSensitivity" majorTickUnit="2" max="20" min="4"
                         onMouseReleased="#zoomingSensitivitySliderDone" showTickLabels="true" showTickMarks="true"
                         snapToTicks="true" GridPane.columnIndex="2" GridPane.rowIndex="5">
                     <tooltip>

@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleDoubleProperty;
  */
 public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
-    private static final double DEFAULT_ZOOMING_SENSITIVITY = 0.05;
+    private static final double DEFAULT_ZOOMING_SENSITIVITY = 10;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
@@ -99,8 +99,8 @@ public final class GraphMovementCalculator {
      */
     public void onScroll(final double deltaY) {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
-        graphDimensionsCalculator.getRadiusProperty().set(
-                graphDimensionsCalculator.getRadiusProperty().get() + deltaRange
+        graphDimensionsCalculator.getViewRadiusProperty().set(
+                graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange
         );
     }
 
