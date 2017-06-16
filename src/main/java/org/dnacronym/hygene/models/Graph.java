@@ -32,7 +32,7 @@ public final class Graph {
     /**
      * Constructs a graph from array based data structure.
      *
-     * @param nodeArrays    nested array containing the graphs data
+     * @param nodeArrays    nested array containing the graph's data
      * @param genomeMapping maps genomes to their full name
      * @param gfaFile       a reference to the GFA file from which the graph is created
      */
