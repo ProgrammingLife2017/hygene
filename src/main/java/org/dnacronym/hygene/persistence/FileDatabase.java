@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public final class FileDatabase implements AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger(FileDatabase.class);
 
-    static final int DB_VERSION = 11;
+    static final int DB_VERSION = 10;
 
     private final String fileName;
     private FileDatabaseDriver fileDatabaseDriver;
