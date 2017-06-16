@@ -89,7 +89,7 @@ public final class GenomeIndex {
      * @throws SQLException in the case of an error during SQL operations
      */
     public Optional<@Nullable GenomePoint> getGenomePoint(final String genome, final int base) throws SQLException {
-        final int genomeId = genomeNames.indexOf(genome);
+        final int genomeId = genomeNames.indexOf(genome) + 1;
 
         return Optional.of(fileGenomeIndex.getGenomePoint(genomeId, base));
     }
@@ -199,7 +199,7 @@ public final class GenomeIndex {
                     genomeIndex = Integer.parseInt(noExtensionGenome);
                     genomeName = genomeNames.get(genomeIndex);
                 } else {
-                    genomeIndex = genomeNames.indexOf(noExtensionGenome);
+                    genomeIndex = genomeNames.indexOf(noExtensionGenome) + 1;
                     genomeName = noExtensionGenome;
                 }
 
