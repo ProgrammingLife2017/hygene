@@ -47,19 +47,23 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
 
-    private static final double DEFAULT_EDGE_WIDTH = 1;
+    private static final double DEFAULT_EDGE_THICKNESS = 1;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
-    private static final int EDGE_OPACITY_OFFSET = 80;
-    private static final double EDGE_OPACITY_ALPHA = 1.08;
+    private static final int EDGE_OPACITY_OFFSET = 20;
+    private static final double EDGE_OPACITY_ALPHA = 1.5;
     private static final double EDGE_OPACITY_BETA = 4.25;
+
+    private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
+    private final ObjectProperty<String> selectedPathProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
+
     private final DoubleProperty nodeHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
@@ -90,8 +94,12 @@ public final class GraphVisualizer {
         this.query = query;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
+
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
+
+        selectedPathProperty = new SimpleObjectProperty<>();
+        selectedPathProperty.addListener(observable -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -158,24 +166,49 @@ public final class GraphVisualizer {
      * <p>
      * The edge is afterwards added to the {@link RTree}.
      *
-     * @param fromNode edge origin node ID
-     * @param toNode   edge destination node ID
+     * @param edge the edge to be drawn
      */
-    private void drawEdge(final NewNode fromNode, final NewNode toNode) {
+    private void drawEdge(final org.dnacronym.hygene.graph.Edge edge) {
+        final NewNode fromNode = edge.getFrom();
+        final NewNode toNode = edge.getTo();
+
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
 
         graphicsContext.setStroke(getEdgeColor());
-        graphicsContext.setLineWidth(DEFAULT_EDGE_WIDTH);
-        graphicsContext.strokeLine(fromX, fromY, toX, toY);
+        graphicsContext.setLineWidth(computeEdgeThickness(edge));
+
+        if (edge.inGenome(selectedPathProperty.get())
+                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
+            graphicsContext.setStroke(correctColorForEdgeOpacity(Color.BLUE));
+        }
 
         if (fromNode instanceof Segment && toNode instanceof Segment) {
-            rTree.addEdge(((Segment) fromNode).getId(), ((Segment) toNode).getId(), fromX, fromY, toX, toY);
+            final int fromSegmentId = ((Segment) fromNode).getId();
+            final int toSegmentId = ((Segment) toNode).getId();
+
+            rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
+
+        graphicsContext.strokeLine(fromX, fromY, toX, toY);
     }
 
+    /**
+     * Computes the thickness of an edge based on the {@link org.dnacronym.hygene.graph.Edge} importance.
+     * <p>
+     * The thickness is computed as the number unique genomes that run through this path divided by the total
+     * number of unique paths.
+     *
+     * @param edge the edge
+     * @return the edge thickness
+     */
+    @SuppressWarnings("MagicNumber")
+    public double computeEdgeThickness(final org.dnacronym.hygene.graph.Edge edge) {
+        return Math.max(DEFAULT_EDGE_THICKNESS,
+                0.5 * ((double) edge.getImportance()) / graph.getGenomeMapping().size() * nodeHeightProperty.get());
+    }
 
     /**
      * Computes the opacity based on the graph radius, which is an approximation of the current zoom level.
@@ -195,6 +228,16 @@ public final class GraphVisualizer {
         return 1.0 - 1.0 / (1.0 + Math.exp(-(EDGE_OPACITY_ALPHA
                 * Math.log(Math.max(1, graphDimensionsCalculator.getRadiusProperty().get() - EDGE_OPACITY_OFFSET))
                 - EDGE_OPACITY_BETA)));
+    }
+
+    /**
+     * Correct a {@link Color} for the current edge opacity.
+     *
+     * @param color the {@link Color}
+     * @return the {@link Color} corrected for edge opacity
+     */
+    private Color correctColorForEdgeOpacity(final Color color) {
+        return color.deriveColor(1, 1, 1, computeEdgeOpacity());
     }
 
     /**
@@ -236,11 +279,15 @@ public final class GraphVisualizer {
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+
+        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
+            node.getOutgoingEdges().forEach(this::drawEdge);
+        }
+
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
-            node.getOutgoingEdges().forEach(edge -> drawEdge(node, edge.getTo()));
         }
 
         if (displayLaneBordersProperty.get()) {
@@ -375,12 +422,32 @@ public final class GraphVisualizer {
     }
 
     /**
+     * The property of the selected path.
+     * <p>
+     * This path is updated every time the user selects a new path for the path menu.
+     *
+     * @return the path
+     */
+    public ObjectProperty<String> getSelectedPathProperty() {
+        return selectedPathProperty;
+    }
+
+    /**
      * The property of onscreen edge {@link Color}s.
      *
      * @return property which decides the {@link Color} of edges
      */
     public ObjectProperty<Color> getEdgeColorProperty() {
         return edgeColorProperty;
+    }
+
+    /**
+     * Gets the {@link Graph}.
+     *
+     * @return the graph
+     */
+    public Graph getGraph() {
+        return graph;
     }
 
     /**

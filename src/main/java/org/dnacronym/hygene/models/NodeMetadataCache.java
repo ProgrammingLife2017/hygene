@@ -39,6 +39,7 @@ public final class NodeMetadataCache {
     private final ThrottledExecutor retrievalExecutor;
     private final GfaFile gfaFile;
     private final Map<Integer, NodeMetadata> cache;
+    private final PathCalculator pathCalculator;
 
     private int currentRadius;
 
@@ -52,6 +53,7 @@ public final class NodeMetadataCache {
         this.retrievalExecutor = new ThrottledExecutor(RETRIEVE_METADATA_TIMEOUT);
         this.gfaFile = gfaFile;
         this.cache = new HashMap<>();
+        this.pathCalculator = new PathCalculator();
     }
 
 
@@ -82,6 +84,7 @@ public final class NodeMetadataCache {
             if (Thread.interrupted()) {
                 return;
             }
+            pathCalculator.computePaths(event.getSubgraph());
             HygeneEventBus.getInstance().post(new NodeMetadataCacheUpdateEvent(event.getSubgraph()));
         });
     }
@@ -126,7 +129,6 @@ public final class NodeMetadataCache {
             });
         } catch (final ParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
-            return;
         }
     }
 

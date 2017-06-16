@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph;
 
+import org.dnacronym.hygene.models.NodeMetadata;
+
 
 /**
  * Class representing a dummy node, to be used for graph layout.
@@ -60,5 +62,20 @@ public final class DummyNode extends NewNode {
     @Override
     public int getLength() {
         return 0;
+    }
+
+    @Override
+    public NodeMetadata getMetadata() {
+        throw new UnsupportedOperationException("DummyNode cannot have metadata.");
+    }
+
+    @Override
+    public void setMetadata(final NodeMetadata metadata) {
+        throw new UnsupportedOperationException("DummyNode cannot have metadata.");
+    }
+
+    @Override
+    public boolean hasMetadata() {
+        return false;
     }
 }
