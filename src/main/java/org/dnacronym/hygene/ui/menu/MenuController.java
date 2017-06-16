@@ -44,6 +44,8 @@ public final class MenuController implements Initializable {
 
     @FXML
     private MenuBar menuBar;
+    @FXML
+    private MenuItem gffFileOpen;
 
     @FXML
     private Menu recentFilesMenu;
@@ -60,6 +62,8 @@ public final class MenuController implements Initializable {
         try {
             setGraphStore(Hygene.getInstance().getGraphStore());
             setSettings(Hygene.getInstance().getSettings());
+            gffFileOpen.disableProperty().bind(Hygene.getInstance().getGenomeNavigation().getIndexedFinishedProperty()
+                    .not());
 
             populateRecentFilesMenu();
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));

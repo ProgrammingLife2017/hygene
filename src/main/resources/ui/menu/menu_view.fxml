@@ -21,7 +21,8 @@
                     </items>
                 </Menu>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem fx:id="gffFileOpen" mnemonicParsing="true" onAction="#openGffFileAction" text="Open GFF file">
+                <MenuItem fx:id="gffFileOpen" mnemonicParsing="true" onAction="#openGffFileAction" text="Open GFF file"
+                          disable="true">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="G" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
                     </accelerator>
