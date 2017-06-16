@@ -4,13 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
@@ -32,13 +30,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThrottledExecutor {
     private static final Logger LOGGER = LogManager.getLogger(ThrottledExecutor.class);
+    private static final int THREAD_COUNT = 1;
 
-    private final ScheduledExecutorService executor;
-    private final int timeout;
+    private final ExecutorService executor;
 
-    private Instant waitUntil;
     private @MonotonicNonNull Runnable currentAction;
-    private @MonotonicNonNull ScheduledFuture<?> future;
+    private @MonotonicNonNull Future<?> future;
 
 
     /**
@@ -51,10 +48,10 @@ public class ThrottledExecutor {
             throw new IllegalArgumentException("The timeout must be a positive integer.");
         }
 
-        this.executor = Executors.newSingleThreadScheduledExecutor();
-        this.timeout = timeout;
-
-        this.waitUntil = Instant.now();
+        this.executor = new ThreadPoolExecutor(
+                THREAD_COUNT, THREAD_COUNT, 0L, TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<>(2, true),
+                new DiscardNewestPolicy());
     }
 
 
@@ -65,17 +62,15 @@ public class ThrottledExecutor {
      */
     public final synchronized void run(final Runnable action) {
         if (future != null && !future.isDone() && !future.isCancelled()) {
-            if (future.getDelay(TimeUnit.MILLISECONDS) >= 0 && action.equals(currentAction)) {
+            if (action.equals(currentAction)) {
                 return;
             }
 
             future.cancel(true);
         }
 
-        final long delay = Math.max(0, Duration.between(Instant.now(), waitUntil).toMillis());
-        waitUntil = Instant.now().plus(timeout, ChronoUnit.MILLIS);
         currentAction = action;
-        future = executor.schedule(action, delay, TimeUnit.MILLISECONDS);
+        future = executor.submit(action);
     }
 
     /**
@@ -89,8 +84,6 @@ public class ThrottledExecutor {
         if (!future.isDone() && !future.isCancelled()) {
             future.cancel(true);
         }
-
-        waitUntil = Instant.now().plus(timeout, ChronoUnit.MILLIS);
     }
 
     /**
