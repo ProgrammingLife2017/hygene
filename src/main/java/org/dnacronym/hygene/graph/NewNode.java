@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph;
 
 import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.models.colorscheme.ColorScheme;
 import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
 
@@ -107,6 +108,27 @@ public abstract class NewNode {
      * @return the length of the node when visualized
      */
     public abstract int getLength();
+
+    /**
+     * Returns this {@link NewNode}'s metadata.
+     *
+     * @return this {@link NewNode}'s metadata
+     */
+    public abstract NodeMetadata getMetadata();
+
+    /**
+     * Sets the metadata for this node.
+     *
+     * @param metadata the metadata for this node
+     */
+    public abstract void setMetadata(NodeMetadata metadata);
+
+    /**
+     * Returns {@code true} iff. this {@link NewNode} has metadata set.
+     *
+     * @return {@code true} iff. this {@link NewNode} has metadata set
+     */
+    public abstract boolean hasMetadata();
 
 
     /**

@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.graph;
 
 
+import org.dnacronym.hygene.models.NodeMetadata;
+
 /**
  * Class representing a fill node, to be used for graph layout.
  * <p>
@@ -20,5 +22,20 @@ public final class FillNode extends NewNode {
     @Override
     public int getLength() {
         return 0;
+    }
+
+    @Override
+    public NodeMetadata getMetadata() {
+        throw new UnsupportedOperationException("FillNodes cannot have metadata.");
+    }
+
+    @Override
+    public void setMetadata(final NodeMetadata metadata) {
+        throw new UnsupportedOperationException("FillNodes cannot have metadata.");
+    }
+
+    @Override
+    public boolean hasMetadata() {
+        return false;
     }
 }
