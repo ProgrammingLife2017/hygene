@@ -50,8 +50,9 @@ final class FafospLayererTest {
 
         final NewNode[][] layout = layerer.layer(subgraph);
 
-        assertThat(layout).hasSize(1);
-        assertThat(layout[0]).containsExactlyInAnyOrder(node);
+        assertThat(layout).hasSize(2);
+        assertThat(layout[0]).isEmpty();
+        assertThat(layout[1]).containsExactlyInAnyOrder(node);
     }
 
     /**
@@ -66,8 +67,9 @@ final class FafospLayererTest {
 
         final NewNode[][] layout = layerer.layer(subgraph);
 
-        assertThat(layout).hasSize(1);
-        assertThat(layout[0]).containsExactlyInAnyOrder(nodeA, nodeB);
+        assertThat(layout).hasSize(2);
+        assertThat(layout[0]).isEmpty();
+        assertThat(layout[1]).containsExactlyInAnyOrder(nodeA, nodeB);
     }
 
     /**
@@ -80,8 +82,9 @@ final class FafospLayererTest {
 
         final NewNode[][] layout = layerer.layer(subgraph);
 
-        assertThat(layout).hasSize(1);
-        assertThat(layout[0]).containsExactlyInAnyOrder(node);
+        assertThat(layout).hasSize(2);
+        assertThat(layout[0]).isEmpty();
+        assertThat(layout[1]).containsExactlyInAnyOrder(node);
     }
 
     /**
@@ -96,8 +99,9 @@ final class FafospLayererTest {
 
         final NewNode[][] layout = layerer.layer(subgraph);
 
-        assertThat(layout).hasSize(1);
-        assertThat(layout[0]).containsExactlyInAnyOrder(nodeA, nodeB);
+        assertThat(layout).hasSize(2);
+        assertThat(layout[0]).isEmpty();
+        assertThat(layout[1]).containsExactlyInAnyOrder(nodeA, nodeB);
     }
 
     /**
@@ -114,9 +118,10 @@ final class FafospLayererTest {
 
         final NewNode[][] layout = layerer.layer(subgraph);
 
-        assertThat(layout).hasSize(2);
-        assertThat(layout[0]).containsExactlyInAnyOrder(nodeA, nodeB);
-        assertThat(layout[1]).containsExactlyInAnyOrder(nodeC);
+        assertThat(layout).hasSize(3);
+        assertThat(layout[0]).isEmpty();
+        assertThat(layout[1]).containsExactlyInAnyOrder(nodeA, nodeB);
+        assertThat(layout[2]).containsExactlyInAnyOrder(nodeC);
     }
 
     /**
@@ -129,9 +134,10 @@ final class FafospLayererTest {
 
         final NewNode[][] layout = layerer.layer(subgraph);
 
-        assertThat(layout).hasSize(2);
-        assertThat(layout[0]).containsExactlyInAnyOrder(node);
+        assertThat(layout).hasSize(3);
+        assertThat(layout[0]).isEmpty();
         assertThat(layout[1]).containsExactlyInAnyOrder(node);
+        assertThat(layout[2]).containsExactlyInAnyOrder(node);
     }
 
 
