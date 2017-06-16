@@ -197,7 +197,7 @@ public final class GenomeIndex {
                 final String genomeName;
                 if (StringUtils.isNumeric(noExtensionGenome)) {
                     genomeIndex = Integer.parseInt(noExtensionGenome);
-                    genomeName = genomeNames.get(genomeIndex);
+                    genomeName = genomeNames.get(genomeIndex - 1);
                 } else {
                     genomeIndex = genomeNames.indexOf(noExtensionGenome) + 1;
                     genomeName = noExtensionGenome;
