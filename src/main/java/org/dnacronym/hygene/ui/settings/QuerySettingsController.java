@@ -51,8 +51,6 @@ public final class QuerySettingsController extends AbstractSettingsController {
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
             getGraphDimensionsCalculator().getCenterNodeIdProperty().set(newValue);
         });
-
-        keyEvent.consume();
     }
 
     /**
@@ -67,7 +65,5 @@ public final class QuerySettingsController extends AbstractSettingsController {
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
             getGraphDimensionsCalculator().getRadiusProperty().set(newValue);
         });
-
-        keyEvent.consume();
     }
 }
