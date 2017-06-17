@@ -1,11 +1,10 @@
-package org.dnacronym.hygene.model;
+package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Link;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.Subgraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

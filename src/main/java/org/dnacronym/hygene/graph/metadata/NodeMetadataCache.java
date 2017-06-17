@@ -10,7 +10,7 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
-import org.dnacronym.hygene.model.PathCalculator;
+import org.dnacronym.hygene.graph.PathCalculator;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 
