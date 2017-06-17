@@ -1,9 +1,10 @@
 package org.dnacronym.hygene.models;
 
-import org.dnacronym.hygene.graph.DummyNode;
-import org.dnacronym.hygene.graph.Link;
-import org.dnacronym.hygene.graph.NewNode;
-import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
+import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.edge.Link;
+import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 
 /**
