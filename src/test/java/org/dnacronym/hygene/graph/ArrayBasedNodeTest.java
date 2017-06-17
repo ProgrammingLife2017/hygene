@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for {@link ArrayBasedNode}.
  */
-final class NodeTest {
+final class ArrayBasedNodeTest {
     @Test
     void testGetId() {
         final ArrayBasedNode node = NodeBuilder.start().withNodeId(5).create();
