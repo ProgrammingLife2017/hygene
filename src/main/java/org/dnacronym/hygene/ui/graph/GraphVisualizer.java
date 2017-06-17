@@ -191,7 +191,7 @@ public final class GraphVisualizer {
      * @param edge the edge to be drawn
      */
     @SuppressWarnings("PMD.CyclomaticComplexity") // Some application logic should be moved to Edge class
-    private void drawEdge(final org.dnacronym.hygene.graph.Edge edge) {
+    private void drawEdge(final Edge edge) {
         final NewNode fromNode = edge.getFrom();
         final NewNode toNode = edge.getTo();
 
@@ -225,7 +225,7 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Computes the thickness of an edge based on the {@link org.dnacronym.hygene.graph.Edge} importance.
+     * Computes the thickness of an edge based on the {@link Edge} importance.
      * <p>
      * The thickness is computed as the number unique genomes that run through this path divided by the total
      * number of unique paths.
@@ -234,7 +234,7 @@ public final class GraphVisualizer {
      * @return the edge thickness
      */
     @SuppressWarnings("MagicNumber")
-    public double computeEdgeThickness(final org.dnacronym.hygene.graph.Edge edge) {
+    public double computeEdgeThickness(final Edge edge) {
         return Math.max(DEFAULT_EDGE_THICKNESS,
                 0.5 * ((double) edge.getImportance()) / graph.getGenomeMapping().size() * nodeHeightProperty.get());
     }
