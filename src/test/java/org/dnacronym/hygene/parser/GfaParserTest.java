@@ -22,13 +22,13 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link GfaParser}.
  */
-final class NewGfaParserTest {
-    private NewGfaParser parser;
+final class GfaParserTest {
+    private GfaParser parser;
 
 
     @BeforeEach
     void beforeEach() {
-        parser = new NewGfaParser();
+        parser = new GfaParser();
     }
 
 

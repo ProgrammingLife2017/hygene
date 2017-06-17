@@ -30,8 +30,8 @@ import java.util.stream.IntStream;
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */
 @SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
-public final class NewGfaParser {
-    private static final Logger LOGGER = LogManager.getLogger(NewGfaParser.class);
+public final class GfaParser {
+    private static final Logger LOGGER = LogManager.getLogger(GfaParser.class);
     private static final int PROGRESS_UPDATE_INTERVAL = 1000;
     private static final int PROGRESS_ALLOCATE_HEURISTIC = 1750000;
     private static final long PROGRESS_ALLOCATE_TOTAL = 20;
@@ -48,9 +48,9 @@ public final class NewGfaParser {
 
 
     /**
-     * Constructs and initializes a new instance of {@link NewGfaParser}.
+     * Constructs and initializes a new instance of {@link GfaParser}.
      */
-    public NewGfaParser() {
+    public GfaParser() {
         this.nodeIds = new ConcurrentHashMap<>();
         this.nodeArrays = new int[0][];
         this.genomeMapping = new HashMap<>();
@@ -218,7 +218,7 @@ public final class NewGfaParser {
     /**
      * Parses a GFA header field that contains genome names.
      * <p>
-     * The genomes names are added to {@link NewGfaParser#genomeMapping} using a 1-indexing.
+     * The genomes names are added to {@link GfaParser#genomeMapping} using a 1-indexing.
      *
      * @param line       the line to parse
      * @param byteOffset the byte offset

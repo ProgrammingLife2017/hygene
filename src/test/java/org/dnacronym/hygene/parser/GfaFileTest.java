@@ -3,7 +3,7 @@ package org.dnacronym.hygene.parser;
 import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
-import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
+import org.dnacronym.hygene.parser.factories.GfaParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -39,7 +39,7 @@ final class GfaFileTest {
 
     @AfterEach
     void afterEach() throws IOException {
-        NewGfaParserFactory.setInstance(null);
+        GfaParserFactory.setInstance(null);
         MetadataParserFactory.setInstance(null);
         if (currentFileName != null) {
             Files.deleteIfExists(Paths.get(currentFileName + FileDatabaseDriver.DB_FILE_EXTENSION));
@@ -49,7 +49,7 @@ final class GfaFileTest {
 
     @AfterAll
     static void resetFactories() {
-        NewGfaParserFactory.setInstance(null);
+        GfaParserFactory.setInstance(null);
         MetadataParserFactory.setInstance(null);
     }
 
@@ -88,8 +88,8 @@ final class GfaFileTest {
 
     @Test
     void testParseFile() throws IOException, ParseException {
-        final NewGfaParser gfaParser = spy(NewGfaParser.class);
-        NewGfaParserFactory.setInstance(gfaParser);
+        final GfaParser gfaParser = spy(GfaParser.class);
+        GfaParserFactory.setInstance(gfaParser);
 
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
