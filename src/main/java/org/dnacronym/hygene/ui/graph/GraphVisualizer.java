@@ -21,6 +21,7 @@ import org.dnacronym.hygene.graph.DummyEdge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
+import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
@@ -58,6 +59,7 @@ public final class GraphVisualizer {
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
+    private final GraphAnnotation graphAnnotation;
     private final Query query;
 
     private final ObjectProperty<Segment> selectedSegmentProperty;
@@ -76,6 +78,7 @@ public final class GraphVisualizer {
     private Canvas canvas;
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
+    private final GraphAnnotationVisualizer graphAnnotationVisualizer;
 
     private RTree rTree;
 
@@ -89,11 +92,14 @@ public final class GraphVisualizer {
      * {@code null}.
      *
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
+     * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
      */
-    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator, final Query query) {
+    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
+                           final GraphAnnotation graphAnnotation, final Query query) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
+        this.graphAnnotation = graphAnnotation;
         this.query = query;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
@@ -126,6 +132,7 @@ public final class GraphVisualizer {
         query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
         nodeDrawingToolkit = new NodeDrawingToolkit();
+        graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
     }
 
 
@@ -302,6 +309,7 @@ public final class GraphVisualizer {
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
@@ -309,6 +317,13 @@ public final class GraphVisualizer {
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
 
             node.getOutgoingEdges().forEach(this::drawEdge);
+        }
+
+        for (final FeatureAnnotation featureAnnotation : graphAnnotation.getFeatureAnnotations()) {
+            graphAnnotationVisualizer.draw(
+                    featureAnnotation.getSequenceId(),
+                    graphAnnotation.getGenomeIndexMap().get(featureAnnotation),
+                    graphDimensionsCalculator.getObservableQueryNodes());
         }
 
         if (displayLaneBordersProperty.get()) {
@@ -334,6 +349,7 @@ public final class GraphVisualizer {
      * @param laneCount  amount of bands onscreen
      * @param laneHeight height of each lane
      */
+
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
         final double originalLineWidth = graphicsContext.getLineWidth();
@@ -378,6 +394,7 @@ public final class GraphVisualizer {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {
             if (rTree == null) {
