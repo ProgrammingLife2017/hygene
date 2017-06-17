@@ -7,7 +7,7 @@ import org.dnacronym.hygene.graph.node.Node;
 /**
  * The color is determined by the number of incoming edges of a node.
  */
-public final class ColorSchemeIncomingEdges extends AbstractColorSchemeMinMax {
+public final class ColorSchemeIncomingEdges extends ColorSchemeMinMax {
     /**
      * Creates an instance of {@link ColorSchemeIncomingEdges}.
      *

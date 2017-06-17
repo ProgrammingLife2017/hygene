@@ -7,7 +7,7 @@ import org.dnacronym.hygene.graph.node.Node;
 /**
  * The color is determined by the sequence length.
  */
-public final class ColorSchemeSequenceLength extends AbstractColorSchemeMinMax {
+public final class ColorSchemeSequenceLength extends ColorSchemeMinMax {
     /**
      * Creates an instance of {@link ColorSchemeSequenceLength}.
      *
