@@ -6,13 +6,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Test suite for the {@link NewNode} class.
+ * Test suite for the {@link Node} class.
  */
 abstract class NodeTest {
     static final int X_POSITION = 31;
     static final int Y_POSITION = 64;
 
-    private NewNode node;
+    private Node node;
 
 
     @Test
@@ -41,11 +41,11 @@ abstract class NodeTest {
 
 
     /**
-     * Sets the {@link NewNode} instance to be tested.
+     * Sets the {@link Node} instance to be tested.
      *
-     * @param node the {@link NewNode} instance
+     * @param node the {@link Node} instance
      */
-    final void setNode(final NewNode node) {
+    final void setNode(final Node node) {
         this.node = node;
     }
 }

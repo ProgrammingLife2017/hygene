@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.graph.edge.Link;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ final class SubgraphTest {
 
     @Test
     void testGetNodeNull() {
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         when(node.getUuid()).thenReturn(UUID.randomUUID());
 
         subgraph.add(node);
@@ -50,7 +50,7 @@ final class SubgraphTest {
     @Test
     void testGetNodeEquals() {
         final UUID uuid = UUID.randomUUID();
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         when(node.getUuid()).thenReturn(uuid);
 
         subgraph.add(node);
@@ -94,7 +94,7 @@ final class SubgraphTest {
     @Test
     void testAddNodeAndContains() {
         final UUID uuid = UUID.randomUUID();
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         when(node.getUuid()).thenReturn(uuid);
 
         subgraph.add(node);
@@ -104,7 +104,7 @@ final class SubgraphTest {
 
     @Test
     void testAddNodeAndContainsNode() {
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         when(node.getUuid()).thenReturn(UUID.randomUUID());
 
         subgraph.add(node);
@@ -141,7 +141,7 @@ final class SubgraphTest {
 
     @Test
     void testAddNode() {
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         subgraph.add(node);
         assertThat(subgraph.getNodes()).containsExactly(node);
     }
@@ -175,7 +175,7 @@ final class SubgraphTest {
 
         subgraph.addAll(Arrays.asList(segment1, segment2, segment3, segment4));
 
-        final List<NewNode> nodes = new ArrayList<>(subgraph.getNodesBFS(SequenceDirection.RIGHT));
+        final List<Node> nodes = new ArrayList<>(subgraph.getNodesBFS(SequenceDirection.RIGHT));
 
         assertThat(nodes).doesNotHaveDuplicates();
         assertThat(nodes.indexOf(segment1)).isLessThan(nodes.indexOf(segment2));

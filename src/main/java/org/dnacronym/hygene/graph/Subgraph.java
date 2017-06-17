@@ -2,7 +2,7 @@ package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.Collection;
@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
  */
 public final class Subgraph {
     /**
-     * A mapping from {@link UUID}s to their respective {@link NewNode}s.
+     * A mapping from {@link UUID}s to their respective {@link Node}s.
      */
-    private final Map<UUID, NewNode> nodes;
+    private final Map<UUID, Node> nodes;
     /**
      * A mapping from ids to their respective {@link Segment}s.
      */
@@ -43,12 +43,12 @@ public final class Subgraph {
 
 
     /**
-     * Returns the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists.
+     * Returns the {@link Node} with the given {@link UUID}, or {code null} if no such node exists.
      *
      * @param nodeUuid a {@link UUID}
-     * @return the {@link NewNode} with the given {@link UUID}, or {code null} if no such node exists
+     * @return the {@link Node} with the given {@link UUID}, or {code null} if no such node exists
      */
-    public @Nullable NewNode getNode(final UUID nodeUuid) {
+    public @Nullable Node getNode(final UUID nodeUuid) {
         return nodes.get(nodeUuid);
     }
 
@@ -57,7 +57,7 @@ public final class Subgraph {
      *
      * @return the nodes
      */
-    public Collection<NewNode> getNodes() {
+    public Collection<Node> getNodes() {
         return nodes.values();
     }
 
@@ -81,22 +81,22 @@ public final class Subgraph {
     }
 
     /**
-     * Returns a {@link Collection} of all the {@link NewNode}s in this {@link Subgraph} in breadth-first order.
+     * Returns a {@link Collection} of all the {@link Node}s in this {@link Subgraph} in breadth-first order.
      *
      * @param direction the direction to traverse in
-     * @return a {@link Collection} of all the {@link NewNode}s in this {@link Subgraph} in breadth-first order
+     * @return a {@link Collection} of all the {@link Node}s in this {@link Subgraph} in breadth-first order
      */
-    public Collection<NewNode> getNodesBFS(final SequenceDirection direction) {
-        final Queue<NewNode> queue = new LinkedList<>();
+    public Collection<Node> getNodesBFS(final SequenceDirection direction) {
+        final Queue<Node> queue = new LinkedList<>();
         nodes.values().forEach(node -> {
             if (direction.ternary(isSinkNeighbour(node), isSourceNeighbour(node))) {
                 queue.add(node);
             }
         });
 
-        final Set<NewNode> visited = new LinkedHashSet<>();
+        final Set<Node> visited = new LinkedHashSet<>();
         while (!queue.isEmpty()) {
-            final NewNode head = queue.remove();
+            final Node head = queue.remove();
             if (visited.contains(head)) {
                 continue;
             }
@@ -116,15 +116,15 @@ public final class Subgraph {
     /**
      * Returns a {@link Set} of the given node's neighbours.
      *
-     * @param node      a {@link NewNode}
+     * @param node      a {@link Node}
      * @param direction the direction of the neighbours
      * @return a {@link Set} of the given node's neighbours.
      */
-    public Collection<NewNode> getNeighbours(final NewNode node, final SequenceDirection direction) {
+    public Collection<Node> getNeighbours(final Node node, final SequenceDirection direction) {
         final Predicate<Edge> filter = direction.ternary(
                 edge -> nodes.containsValue(edge.getFrom()),
                 edge -> nodes.containsValue(edge.getTo()));
-        final Function<Edge, NewNode> mapper = direction.ternary(Edge::getFrom, Edge::getTo);
+        final Function<Edge, Node> mapper = direction.ternary(Edge::getFrom, Edge::getTo);
         return direction.ternary(node.getIncomingEdges(), node.getOutgoingEdges()).stream()
                 .filter(filter)
                 .map(mapper)
@@ -136,7 +136,7 @@ public final class Subgraph {
      *
      * @param node the node to be added
      */
-    public void add(final NewNode node) {
+    public void add(final Node node) {
         idempotentAdd(node);
     }
 
@@ -145,27 +145,27 @@ public final class Subgraph {
      *
      * @param nodes the nodes to be added
      */
-    public void addAll(final Collection<NewNode> nodes) {
+    public void addAll(final Collection<Node> nodes) {
         nodes.forEach(this::idempotentAdd);
     }
 
     /**
-     * Returns {@code true} iff. this subgraph contains a {@link NewNode} with the given {@link UUID}.
+     * Returns {@code true} iff. this subgraph contains a {@link Node} with the given {@link UUID}.
      *
      * @param uuid a {@link UUID}
-     * @return {@code true} iff. this subgraph contains a {@link NewNode} with the given {@link UUID}
+     * @return {@code true} iff. this subgraph contains a {@link Node} with the given {@link UUID}
      */
     public boolean contains(final UUID uuid) {
         return nodes.containsKey(uuid);
     }
 
     /**
-     * Returns {@code true} iff. this subgraph contains the given {@link NewNode}.
+     * Returns {@code true} iff. this subgraph contains the given {@link Node}.
      *
-     * @param node a {@link NewNode}
-     * @return {@code true} iff. this subgraph contains the given {@link NewNode}
+     * @param node a {@link Node}
+     * @return {@code true} iff. this subgraph contains the given {@link Node}
      */
-    public boolean containsNode(final NewNode node) {
+    public boolean containsNode(final Node node) {
         return nodes.containsKey(node.getUuid());
     }
 
@@ -194,7 +194,7 @@ public final class Subgraph {
      * @param node the node to be checked
      * @return {@code true} iff. the node is a neighbour of the subgraph source
      */
-    private boolean isSourceNeighbour(final NewNode node) {
+    private boolean isSourceNeighbour(final Node node) {
         return getNeighbours(node, SequenceDirection.LEFT).isEmpty();
     }
 
@@ -204,19 +204,19 @@ public final class Subgraph {
      * @param node the node to be checked
      * @return {@code true} iff. the node is a neighbour of the subgraph sink
      */
-    private boolean isSinkNeighbour(final NewNode node) {
+    private boolean isSinkNeighbour(final Node node) {
         return getNeighbours(node, SequenceDirection.RIGHT).isEmpty();
     }
 
     /**
-     * Adds a {@link NewNode} without any other side effects.
+     * Adds a {@link Node} without any other side effects.
      * <p>
-     * Calling this method twice with the same {@link NewNode} will result in no side effects whatsoever, thus
+     * Calling this method twice with the same {@link Node} will result in no side effects whatsoever, thus
      * promising idempotence.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      */
-    private void idempotentAdd(final NewNode node) {
+    private void idempotentAdd(final Node node) {
         nodes.put(node.getUuid(), node);
 
         if (node instanceof Segment) {

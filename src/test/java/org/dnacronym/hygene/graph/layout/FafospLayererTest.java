@@ -4,7 +4,7 @@ import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.edge.Link;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ final class FafospLayererTest {
 
     @Test
     void testEmptySubgraph() {
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).isEmpty();
     }
@@ -45,10 +45,10 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeOneWithOneNode() {
-        final NewNode node = new Segment(84, 34, 36);
+        final Node node = new Segment(84, 34, 36);
         addAtPosition(node, 0);
 
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -60,12 +60,12 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeOneWithMultipleNodes() {
-        final NewNode nodeA = new Segment(100, 2, 37);
-        final NewNode nodeB = new Segment(23, 10, 30);
+        final Node nodeA = new Segment(100, 2, 37);
+        final Node nodeB = new Segment(23, 10, 30);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 0);
 
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -77,10 +77,10 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeTwoWithOneNode() {
-        final NewNode node = new Segment(95, 44, 1065);
+        final Node node = new Segment(95, 44, 1065);
         addAtPosition(node, 69);
 
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -92,12 +92,12 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeTwoWithMultipleNodes() {
-        final NewNode nodeA = new Segment(30, 62, 1089);
-        final NewNode nodeB = new Segment(96, 61, 1077);
+        final Node nodeA = new Segment(30, 62, 1089);
+        final Node nodeB = new Segment(96, 61, 1077);
         addAtPosition(nodeA, 76);
         addAtPosition(nodeB, 57);
 
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -109,14 +109,14 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeTwoWithMultipleDifferentNodes() {
-        final NewNode nodeA = new Segment(41, 26, 90);
-        final NewNode nodeB = new Segment(70, 71, 58);
-        final NewNode nodeC = new Segment(90, 90, 1056);
+        final Node nodeA = new Segment(41, 26, 90);
+        final Node nodeB = new Segment(70, 71, 58);
+        final Node nodeC = new Segment(90, 90, 1056);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 0);
         addAtPosition(nodeC, 72);
 
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(3);
         assertThat(layout[0]).isEmpty();
@@ -129,10 +129,10 @@ final class FafospLayererTest {
      */
     @Test
     void testSizeNodeSpan() {
-        final NewNode node = new Segment(39, 76, 1599);
+        final Node node = new Segment(39, 76, 1599);
         addAtPosition(node, 0);
 
-        final NewNode[][] layout = layerer.layer(subgraph);
+        final Node[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(3);
         assertThat(layout[0]).isEmpty();
@@ -150,14 +150,14 @@ final class FafospLayererTest {
      */
     @Test
     void testSimpleDummyEdge() {
-        final NewNode nodeA = new Segment(66, 72, 32);
-        final NewNode nodeB = new Segment(2, 97, 93);
+        final Node nodeA = new Segment(66, 72, 32);
+        final Node nodeB = new Segment(2, 97, 93);
         addEdge(nodeA, nodeB);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 2000);
 
         layerer.layer(subgraph);
-        final NewNode dummy = getNextDummy(nodeA);
+        final Node dummy = getNextDummy(nodeA);
 
         assertThat(nodeA.getOutgoingEdges()).hasSize(1);
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
@@ -171,17 +171,17 @@ final class FafospLayererTest {
      */
     @Test
     void testLongDummyEdge() {
-        final NewNode nodeA = new Segment(29, 75, 27);
-        final NewNode nodeB = new Segment(23, 52, 4);
+        final Node nodeA = new Segment(29, 75, 27);
+        final Node nodeB = new Segment(23, 52, 4);
         addEdge(nodeA, nodeB);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 5000);
 
         layerer.layer(subgraph);
-        final NewNode dummyA = getNextDummy(nodeA);
-        final NewNode dummyB = getNextDummy(dummyA);
-        final NewNode dummyC = getNextDummy(dummyB);
-        final NewNode dummyD = getNextDummy(dummyC);
+        final Node dummyA = getNextDummy(nodeA);
+        final Node dummyB = getNextDummy(dummyA);
+        final Node dummyC = getNextDummy(dummyB);
+        final Node dummyD = getNextDummy(dummyC);
 
         assertThat(nodeA.getOutgoingEdges()).hasSize(1);
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
@@ -195,10 +195,10 @@ final class FafospLayererTest {
 
     @Test
     void testMultipleDummyEdge() {
-        final NewNode nodeA = new Segment(78, 46, 46);
-        final NewNode nodeB = new Segment(66, 28, 14);
-        final NewNode nodeC = new Segment(50, 87, 2);
-        final NewNode nodeD = new Segment(45, 20, 48);
+        final Node nodeA = new Segment(78, 46, 46);
+        final Node nodeB = new Segment(66, 28, 14);
+        final Node nodeC = new Segment(50, 87, 2);
+        final Node nodeD = new Segment(45, 20, 48);
         addEdge(nodeA, nodeB);
         addEdge(nodeA, nodeC);
         addEdge(nodeA, nodeD);
@@ -208,11 +208,11 @@ final class FafospLayererTest {
         addAtPosition(nodeD, 3000);
 
         layerer.layer(subgraph);
-        final NewNode dummyB1 = getPreviousDummy(nodeB);
-        final NewNode dummyB2 = getPreviousDummy(dummyB1);
-        final NewNode dummyC1 = getPreviousDummy(nodeC);
-        final NewNode dummyD1 = getPreviousDummy(nodeD);
-        final NewNode dummyD2 = getPreviousDummy(dummyD1);
+        final Node dummyB1 = getPreviousDummy(nodeB);
+        final Node dummyB2 = getPreviousDummy(dummyB1);
+        final Node dummyC1 = getPreviousDummy(nodeC);
+        final Node dummyD1 = getPreviousDummy(nodeD);
+        final Node dummyD2 = getPreviousDummy(dummyD1);
 
         assertThat(nodeA.getOutgoingEdges()).hasSize(3);
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
@@ -233,10 +233,10 @@ final class FafospLayererTest {
 
     @Test
     void testSubstitutionDummyEdge() {
-        final NewNode nodeA = new Segment(71, 5, 68);
-        final NewNode nodeB = new Segment(18, 99, 54);
-        final NewNode nodeC = new Segment(35, 76, 40);
-        final NewNode nodeD = new Segment(63, 32, 36);
+        final Node nodeA = new Segment(71, 5, 68);
+        final Node nodeB = new Segment(18, 99, 54);
+        final Node nodeC = new Segment(35, 76, 40);
+        final Node nodeD = new Segment(63, 32, 36);
         addEdge(nodeA, nodeB);
         addEdge(nodeA, nodeC);
         addEdge(nodeB, nodeD);
@@ -247,12 +247,12 @@ final class FafospLayererTest {
         addAtPosition(nodeD, 5000);
 
         layerer.layer(subgraph);
-        final NewNode dummyAB1 = getPreviousDummy(nodeB);
-        final NewNode dummyAB2 = getPreviousDummy(dummyAB1);
-        final NewNode dummyAC = getPreviousDummy(nodeC);
-        final NewNode dummyBD = getNextDummy(nodeB);
-        final NewNode dummyCD1 = getNextDummy(nodeC);
-        final NewNode dummyCD2 = getNextDummy(dummyCD1);
+        final Node dummyAB1 = getPreviousDummy(nodeB);
+        final Node dummyAB2 = getPreviousDummy(dummyAB1);
+        final Node dummyAC = getPreviousDummy(nodeC);
+        final Node dummyBD = getNextDummy(nodeB);
+        final Node dummyCD1 = getNextDummy(nodeC);
+        final Node dummyCD2 = getNextDummy(dummyCD1);
 
         assertThat(nodeA.getOutgoingEdges()).hasSize(2);
         assertThat(nodeB.getIncomingEdges()).hasSize(1);
@@ -283,47 +283,47 @@ final class FafospLayererTest {
      */
 
     /**
-     * Adds the given {@link NewNode} to the {@link Subgraph} and sets the given horizontal position.
+     * Adds the given {@link Node} to the {@link Subgraph} and sets the given horizontal position.
      *
-     * @param node      a {@link NewNode}
-     * @param xPosition the new horizontal position for the {@link NewNode}
+     * @param node      a {@link Node}
+     * @param xPosition the new horizontal position for the {@link Node}
      */
-    private void addAtPosition(final NewNode node, final int xPosition) {
+    private void addAtPosition(final Node node, final int xPosition) {
         node.setXPosition(xPosition);
         subgraph.add(node);
     }
 
     /**
-     * Adds an edge between the given {@link NewNode}s.
+     * Adds an edge between the given {@link Node}s.
      *
-     * @param from the {@link NewNode} the edge leaves from
-     * @param to   the {@link NewNode} the edge arrives at
+     * @param from the {@link Node} the edge leaves from
+     * @param to   the {@link Node} the edge arrives at
      */
-    private void addEdge(final NewNode from, final NewNode to) {
+    private void addEdge(final Node from, final Node to) {
         final Edge edge = new Link(from, to, 17);
         from.getOutgoingEdges().add(edge);
         to.getIncomingEdges().add(edge);
     }
 
     /**
-     * Returns the first outgoing neighbour of the given {@link NewNode}.
+     * Returns the first outgoing neighbour of the given {@link Node}.
      *
-     * @param node a {@link NewNode}
-     * @return the first outgoing neighbour of the given {@link NewNode}
+     * @param node a {@link Node}
+     * @return the first outgoing neighbour of the given {@link Node}
      */
-    private NewNode getNextDummy(final NewNode node) {
+    private Node getNextDummy(final Node node) {
         assert node.getOutgoingEdges().size() == 1;
 
         return node.getOutgoingEdges().iterator().next().getTo();
     }
 
     /**
-     * Returns the first incoming neighbour of the given {@link NewNode}.
+     * Returns the first incoming neighbour of the given {@link Node}.
      *
-     * @param node a {@link NewNode}
-     * @return the first incoming neighbour of the given {@link NewNode}
+     * @param node a {@link Node}
+     * @return the first incoming neighbour of the given {@link Node}
      */
-    private NewNode getPreviousDummy(final NewNode node) {
+    private Node getPreviousDummy(final Node node) {
         assert node.getIncomingEdges().size() == 1;
 
         return node.getIncomingEdges().iterator().next().getFrom();
@@ -332,9 +332,9 @@ final class FafospLayererTest {
     /**
      * Asserts the invariants that apply to dummy nodes.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      */
-    private void assertThatNodeIsDummy(final NewNode node) {
+    private void assertThatNodeIsDummy(final Node node) {
         assertThat(node).isExactlyInstanceOf(DummyNode.class);
         assertThat(node.getIncomingEdges()).hasSize(1);
         assertThat(node.getOutgoingEdges()).hasSize(1);

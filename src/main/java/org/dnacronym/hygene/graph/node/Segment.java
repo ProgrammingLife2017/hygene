@@ -8,7 +8,7 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadata;
  * Class representing a single, non-dummy segment node.
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
-public final class Segment extends NewNode {
+public final class Segment extends Node {
     /**
      * The minimal length of a segment.
      */
@@ -68,9 +68,9 @@ public final class Segment extends NewNode {
     }
 
     /**
-     * Returns this {@link NewNode}'s metadata.
+     * Returns this {@link Node}'s metadata.
      *
-     * @return this {@link NewNode}'s metadata
+     * @return this {@link Node}'s metadata
      */
     public NodeMetadata getMetadata() {
         if (metadata == null) {
@@ -90,9 +90,9 @@ public final class Segment extends NewNode {
     }
 
     /**
-     * Returns {@code true} iff. this {@link NewNode} has metadata set.
+     * Returns {@code true} iff. this {@link Node} has metadata set.
      *
-     * @return {@code true} iff. this {@link NewNode} has metadata set
+     * @return {@code true} iff. this {@link Node} has metadata set
      */
     public boolean hasMetadata() {
         return metadata != null;

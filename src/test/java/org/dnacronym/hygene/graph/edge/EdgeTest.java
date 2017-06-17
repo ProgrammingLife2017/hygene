@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.graph.edge;
 
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,15 +17,15 @@ import static org.mockito.Mockito.mock;
  */
 abstract class EdgeTest {
     private Edge edge;
-    private NewNode from;
-    private NewNode to;
+    private Node from;
+    private Node to;
     private Set<String> genomes;
 
 
     @BeforeEach
     void setUp() {
-        from = mock(NewNode.class);
-        to = mock(NewNode.class);
+        from = mock(Node.class);
+        to = mock(Node.class);
         genomes = new HashSet<>(Arrays.asList("a", "b", "c"));
     }
 
@@ -81,7 +81,7 @@ abstract class EdgeTest {
      *
      * @return the source node
      */
-    final NewNode getFrom() {
+    final Node getFrom() {
         return from;
     }
 
@@ -90,7 +90,7 @@ abstract class EdgeTest {
      *
      * @return the destination node
      */
-    final NewNode getTo() {
+    final Node getTo() {
         return to;
     }
 

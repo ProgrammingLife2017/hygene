@@ -7,7 +7,7 @@ import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
 
@@ -166,7 +166,7 @@ public final class CenterPointQuery {
 
             distanceMap.setDistance(nodeId, depth);
 
-            final NewNode node = new Segment(nodeId, graph.getByteOffset(nodeId), graph.getSequenceLength(nodeId));
+            final Node node = new Segment(nodeId, graph.getByteOffset(nodeId), graph.getSequenceLength(nodeId));
             node.setXPosition((long) graph.getUnscaledXPosition(nodeId) * EDGE_WIDTH);
             node.setYPosition(graph.getUnscaledYPosition(nodeId));
             subgraph.add(node);
@@ -319,19 +319,19 @@ public final class CenterPointQuery {
     }
 
     /**
-     * Adds all edges from the specified node to the corresponding {@link NewNode} if both ends of the edge are in the
+     * Adds all edges from the specified node to the corresponding {@link Node} if both ends of the edge are in the
      * cache.
      *
      * @param nodeId a node id, as given by the {@link Graph}
      */
     private void addEdges(final int nodeId) {
-        final NewNode node = subgraph.getSegment(nodeId);
+        final Node node = subgraph.getSegment(nodeId);
         if (node == null) {
             return;
         }
 
         iterator.visitDirectNeighbours(nodeId, SequenceDirection.RIGHT, neighbourId -> {
-            final NewNode neighbour = subgraph.getSegment(neighbourId);
+            final Node neighbour = subgraph.getSegment(neighbourId);
             if (node == null || neighbour == null) {
                 return;
             }

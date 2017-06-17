@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ final class ColorSchemeIncomingEdgesTest {
     @Test
     @SuppressWarnings("unchecked")
     void testIncomingEdgesColor() {
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         final Set incoming = mock(Set.class);
         when(incoming.size()).thenReturn(3);
         when(node.getIncomingEdges()).thenReturn(incoming);

@@ -3,7 +3,7 @@ package org.dnacronym.hygene.graph.edge;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.dnacronym.hygene.graph.node.DummyNode;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,9 +38,9 @@ final class LinkTest extends EdgeTest {
     void testEquals() {
         EqualsVerifier.forClass(Link.class)
                 .withRedefinedSuperclass()
-                .withPrefabValues(NewNode.class,
-                        new DummyNode(mock(NewNode.class), mock(NewNode.class)),
-                        new DummyNode(mock(NewNode.class), mock(NewNode.class)))
+                .withPrefabValues(Node.class,
+                        new DummyNode(mock(Node.class), mock(Node.class)),
+                        new DummyNode(mock(Node.class), mock(Node.class)))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }

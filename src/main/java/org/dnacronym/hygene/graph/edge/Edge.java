@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph.edge;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.Objects;
 import java.util.Set;
@@ -13,8 +13,8 @@ import java.util.UUID;
  */
 public class Edge {
     private final UUID uuid;
-    private final NewNode from;
-    private final NewNode to;
+    private final Node from;
+    private final Node to;
     private @Nullable Set<String> genomes;
 
 
@@ -24,7 +24,7 @@ public class Edge {
      * @param from the source of the edge
      * @param to   the destination of the edge
      */
-    public Edge(final NewNode from, final NewNode to) {
+    public Edge(final Node from, final Node to) {
         this.uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;
@@ -37,7 +37,7 @@ public class Edge {
      *
      * @return the source node
      */
-    public final NewNode getFrom() {
+    public final Node getFrom() {
         return from;
     }
 
@@ -46,7 +46,7 @@ public class Edge {
      *
      * @return the destination node
      */
-    public final NewNode getTo() {
+    public final Node getTo() {
         return to;
     }
 
