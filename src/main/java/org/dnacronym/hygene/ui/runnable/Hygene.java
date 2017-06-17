@@ -14,6 +14,7 @@ import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
+import org.dnacronym.hygene.ui.graph.GraphAnnotation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -54,6 +55,7 @@ public final class Hygene extends Application {
 
     private Query query;
 
+    private GraphAnnotation graphAnnotation;
     private GenomeNavigation genomeNavigation;
 
     private StatusBar statusBar;
@@ -102,9 +104,7 @@ public final class Hygene extends Application {
         graphStore = new GraphStore();
         settings = new Settings(graphStore);
         query = new Query(graphStore);
-
         graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
-        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, query);
         graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
         HygeneEventBus.getInstance().register(graphDimensionsCalculator);
 
@@ -112,6 +112,8 @@ public final class Hygene extends Application {
         statusBar = new StatusBar();
 
         genomeNavigation = new GenomeNavigation(graphStore, statusBar);
+        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
+        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, graphAnnotation, query);
 
         simpleBookmarkStore = new SimpleBookmarkStore(
                 graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
@@ -234,12 +236,21 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link GenomeNavigation} of the application.
+     * Returns the {@link GenomeNavigation} of the application.
      *
      * @return the {@link GenomeNavigation} of the application
      */
     public GenomeNavigation getGenomeNavigation() {
         return genomeNavigation;
+    }
+
+    /**
+     * Gets the {@link GraphAnnotation} of the application.
+     *
+     * @return the {@link GraphAnnotation} of the application
+     */
+    public GraphAnnotation getGraphAnnotation() {
+        return graphAnnotation;
     }
 
     /**

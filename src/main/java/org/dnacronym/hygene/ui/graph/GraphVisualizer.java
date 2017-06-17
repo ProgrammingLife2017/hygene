@@ -17,9 +17,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.graph.DummyEdge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
+import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
@@ -40,7 +42,7 @@ import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings("PMD.ExcessiveImports") // This will be fixed at a later date
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields"}) // This will be fixed at a later date.
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
@@ -56,11 +58,13 @@ public final class GraphVisualizer {
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
+    private final GraphAnnotation graphAnnotation;
     private final Query query;
 
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
+    private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
 
@@ -73,6 +77,7 @@ public final class GraphVisualizer {
     private Canvas canvas;
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
+    private final GraphAnnotationVisualizer graphAnnotationVisualizer;
 
     private RTree rTree;
 
@@ -86,17 +91,22 @@ public final class GraphVisualizer {
      * {@code null}.
      *
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
+     * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
      */
-    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator, final Query query) {
+    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
+                           final GraphAnnotation graphAnnotation, final Query query) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
+        this.graphAnnotation = graphAnnotation;
         this.query = query;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
+        hoveredSegmentProperty = new SimpleObjectProperty<>();
+        hoveredSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
@@ -121,11 +131,21 @@ public final class GraphVisualizer {
         query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
         nodeDrawingToolkit = new NodeDrawingToolkit();
+        graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
     }
 
 
     /**
      * Draw a node on the canvas.
+     * <p>
+     * Node outlines are also drawn when one of the following conditions are met:
+     * If selected, it is {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not selected, and highlighted, it is
+     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not highlighted, and queried, it is
+     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#QUERIED}.<br>
+     * If it is not queried, and bookmarked, is it
+     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#BOOKMARKED}.
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
@@ -144,18 +164,20 @@ public final class GraphVisualizer {
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedSegmentProperty.isNotNull().get() && selectedSegmentProperty.get().equals(segment)) {
+
+        if (segment.equals(selectedSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
-        }
-        if (queried) {
+        } else if (segment.equals(hoveredSegmentProperty.get())) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
+        } else if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
+        } else if (bookmarked) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
+
         if (segment.hasMetadata()) {
             final String sequence = segment.getMetadata().getSequence();
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
-        }
-        if (bookmarked) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
         rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
@@ -168,6 +190,7 @@ public final class GraphVisualizer {
      *
      * @param edge the edge to be drawn
      */
+    @SuppressWarnings("PMD.CyclomaticComplexity") // Some application logic should be moved to Edge class
     private void drawEdge(final org.dnacronym.hygene.graph.Edge edge) {
         final NewNode fromNode = edge.getFrom();
         final NewNode toNode = edge.getTo();
@@ -180,7 +203,13 @@ public final class GraphVisualizer {
         graphicsContext.setStroke(getEdgeColor());
         graphicsContext.setLineWidth(computeEdgeThickness(edge));
 
-        if (edge.inGenome(selectedPathProperty.get())
+        if (edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get())) {
+            graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+        } else if (edge instanceof DummyEdge
+                && (((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
+                || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get()))) {
+            graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+        } else if (edge.inGenome(selectedPathProperty.get())
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
             graphicsContext.setStroke(correctColorForEdgeOpacity(Color.BLUE));
         }
@@ -279,15 +308,21 @@ public final class GraphVisualizer {
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
-
-        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            node.getOutgoingEdges().forEach(this::drawEdge);
-        }
+        graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
+
+            node.getOutgoingEdges().forEach(this::drawEdge);
+        }
+
+        for (final FeatureAnnotation featureAnnotation : graphAnnotation.getFeatureAnnotations()) {
+            graphAnnotationVisualizer.draw(
+                    featureAnnotation.getSequenceId(),
+                    graphAnnotation.getGenomeIndexMap().get(featureAnnotation),
+                    graphDimensionsCalculator.getObservableQueryNodes());
         }
 
         if (displayLaneBordersProperty.get()) {
@@ -313,6 +348,7 @@ public final class GraphVisualizer {
      * @param laneCount  amount of bands onscreen
      * @param laneHeight height of each lane
      */
+
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
         final double originalLineWidth = graphicsContext.getLineWidth();
@@ -357,6 +393,7 @@ public final class GraphVisualizer {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {
             if (rTree == null) {
@@ -374,6 +411,14 @@ public final class GraphVisualizer {
                             .ifPresent(selectedEdgeProperty::setValue)
             );
         });
+        canvas.setOnMouseMoved(event -> {
+            if (rTree == null) {
+                return;
+            }
+            hoveredSegmentProperty.set(null);
+            rTree.find(event.getX(), event.getY(), this::setHoveredSegmentProperty);
+        });
+        canvas.setOnMouseExited(event -> hoveredSegmentProperty.set(null));
 
         graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), canvas.getHeight());
         canvas.widthProperty().addListener((observable, oldValue, newValue) ->
@@ -397,6 +442,23 @@ public final class GraphVisualizer {
         }
 
         selectedSegmentProperty.set((Segment) segment.get(0));
+    }
+
+    /**
+     * Updates the hovered {@link Segment} to the node with the given id.
+     *
+     * @param nodeId node the id of the newly hovered {@link Segment}
+     */
+    public void setHoveredSegmentProperty(final int nodeId) {
+        final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
+                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+
+        if (segment.isEmpty()) {
+            LOGGER.error("Cannot select node that is not in subgraph.");
+            return;
+        }
+
+        hoveredSegmentProperty.set((Segment) segment.get(0));
     }
 
     /**

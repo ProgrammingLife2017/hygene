@@ -122,7 +122,7 @@ final class MenuControllerTest extends UITestBase {
         menuController.setGraphStore(graphStore);
         menuController.openGffFileAction(mock(ActionEvent.class));
 
-        verify(graphStore, never()).loadGffFile(any(File.class));
+        verify(graphStore, never()).loadGffFile(any(File.class), any(ProgressUpdater.class));
     }
 
     @Test

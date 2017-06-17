@@ -148,6 +148,7 @@ public final class NodeDrawingToolkit {
     public enum HighlightType {
         SELECTED(Color.rgb(0, 255, 46)),
         BOOKMARKED(Color.RED),
+        HIGHLIGHTED(Color.BLACK),
         QUERIED(Color.PURPLE);
 
         private Color color;
@@ -160,6 +161,16 @@ public final class NodeDrawingToolkit {
          */
         HighlightType(final Color color) {
             this.color = color;
+        }
+
+
+        /**
+         * Returns the {@link Color} of this highlight type.
+         *
+         * @return the {@link Color} of this highlight type
+         */
+        public Color getColor() {
+            return color;
         }
     }
 }
