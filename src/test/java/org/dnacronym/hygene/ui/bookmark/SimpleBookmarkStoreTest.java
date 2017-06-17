@@ -2,7 +2,7 @@ package org.dnacronym.hygene.ui.bookmark;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import org.dnacronym.hygene.model.Bookmark;
+import org.dnacronym.hygene.graph.bookmark.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
