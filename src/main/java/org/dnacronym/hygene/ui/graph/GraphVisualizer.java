@@ -16,7 +16,7 @@ import javafx.scene.paint.Paint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;

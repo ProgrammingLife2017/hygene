@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.graph.metadata;
 
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
-import org.dnacronym.hygene.events.LayoutDoneEvent;
+import org.dnacronym.hygene.event.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;

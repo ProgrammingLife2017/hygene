@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.ConsoleMessageEvent;
+import org.dnacronym.hygene.event.ConsoleMessageEvent;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;

@@ -5,4 +5,4 @@
  * in order to be updated about events in different parts of the application, without needing tight coupling
  * with those parts.
  */
-package org.dnacronym.hygene.events;
+package org.dnacronym.hygene.event;

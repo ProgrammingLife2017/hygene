@@ -7,7 +7,7 @@ import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
