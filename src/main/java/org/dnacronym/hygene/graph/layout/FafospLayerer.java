@@ -3,8 +3,9 @@ package org.dnacronym.hygene.graph.layout;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,13 +28,13 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
 
     @Override
-    public Node[][] layer(final Subgraph subgraph) {
+    public LayoutableNode[][] layer(final Subgraph subgraph) {
         if (subgraph.getNodes().isEmpty()) {
-            return new Node[0][];
+            return new LayoutableNode[0][];
         }
 
         final LayererData data = new LayererData(subgraph);
-        final Node[][] layers = createLayers(data);
+        final LayoutableNode[][] layers = createLayers(data);
 
         addToLayers(data, layers);
 
@@ -47,12 +48,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @return an array of layers
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
-    private Node[][] createLayers(final LayererData data) {
+    private LayoutableNode[][] createLayers(final LayererData data) {
         final int[] layerHeights = calculateHeights(data);
-        final Node[][] layers = new Node[layerHeights.length][];
+        final LayoutableNode[][] layers = new LayoutableNode[layerHeights.length][];
 
         for (int i = 0; i < layers.length; i++) {
-            layers[i] = new Node[layerHeights[i]];
+            layers[i] = new LayoutableNode[layerHeights[i]];
         }
 
         return layers;
@@ -64,8 +65,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param data   the {@link LayererData}
      * @param layers an array of layers
      */
-    private void addToLayers(final LayererData data, final Node[][] layers) {
-        final Set<Node> addNodeLater = new HashSet<>();
+    private void addToLayers(final LayererData data, final LayoutableNode[][] layers) {
+        final Set<Node> addLayoutableNodeLater = new HashSet<>();
 
         data.nodes.forEach(node -> {
             forEachLayer(data, node, layer -> addToLayerSomewhere(layers[layer], node));
@@ -81,10 +82,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
                 edge.getTo().getIncomingEdges().remove(edge);
                 removeEdgeLater.add(edge);
 
-                final List<DummyNode> dummyNodes = createDummyNodes(data, layers, edge);
-                addNodeLater.addAll(dummyNodes);
+                final List<DummyNode> dummyLayoutableNodes = createDummyNodes(data, layers, edge);
+                addLayoutableNodeLater.addAll(dummyLayoutableNodes);
 
-                final Edge firstEdge = connectDummies(edge, dummyNodes);
+                final Edge firstEdge = connectDummies(edge, dummyLayoutableNodes);
                 addEdgeLater.add(firstEdge);
             });
 
@@ -92,7 +93,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
             node.getOutgoingEdges().removeAll(removeEdgeLater);
         });
 
-        data.subgraph.addAll(addNodeLater);
+        data.subgraph.addAll(addLayoutableNodeLater);
     }
 
 
@@ -118,10 +119,10 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
     /**
-     * Calculates the number of {@link Node}s per layer.
+     * Calculates the number of {@link LayoutableNode}s per layer.
      *
      * @param data the {@link LayererData}
-     * @return the number of {@link Node}s per layer
+     * @return the number of {@link LayoutableNode}s per layer
      */
     private int[] calculateHeights(final LayererData data) {
         final int layerCount = calculateLayerCount(data);
@@ -145,46 +146,46 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param edge   the {@link Edge} to replace with {@link DummyNode}s
      * @return a collection of unconnected {@link DummyNode}s
      */
-    private List<DummyNode> createDummyNodes(final LayererData data, final Node[][] layers, final Edge edge) {
-        final List<DummyNode> dummyNodes = new ArrayList<>();
+    private List<DummyNode> createDummyNodes(final LayererData data, final LayoutableNode[][] layers, final Edge edge) {
+        final List<DummyNode> dummyLayoutableNodes = new ArrayList<>();
 
         forEachLayer(data, edge, layer -> {
             final DummyNode dummy = new DummyNode(edge.getFrom(), edge.getTo());
             dummy.setXPosition((long) (layer + data.minLayer) * LAYER_WIDTH);
 
-            dummyNodes.add(dummy);
+            dummyLayoutableNodes.add(dummy);
             addToLayerSomewhere(layers[layer], dummy);
         });
 
-        return dummyNodes;
+        return dummyLayoutableNodes;
     }
 
     /**
      * Connects the given {@link DummyNode}s with {@link DummyEdge}s and returns the first edge.
      * <p>
-     * The returned {@link DummyEdge} is not added to the {@link Node} from which it departs, because this might
+     * The returned {@link DummyEdge} is not added to the {@link LayoutableNode} from which it departs, because this might
      * result in a {@link java.util.ConcurrentModificationException}.
      *
      * @param edge       the original {@link Edge} that was replaced with {@link DummyNode}s
-     * @param dummyNodes the {@link DummyNode}s that replaced the given {@link Edge}
+     * @param dummyLayoutableNodes the {@link DummyNode}s that replaced the given {@link Edge}
      * @return the first of the added {@link DummyEdge}s
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Cannot be avoided
-    private Edge connectDummies(final Edge edge, final List<DummyNode> dummyNodes) {
-        final Edge firstEdge = new DummyEdge(edge.getFrom(), dummyNodes.get(0), edge);
+    private Edge connectDummies(final Edge edge, final List<DummyNode> dummyLayoutableNodes) {
+        final Edge firstEdge = new DummyEdge(edge.getFrom(), dummyLayoutableNodes.get(0), edge);
         // `firstEdge` should be added to `edge.getFrom()` by caller to prevent concurrent modification
-        dummyNodes.get(0).getIncomingEdges().add(firstEdge);
+        dummyLayoutableNodes.get(0).getIncomingEdges().add(firstEdge);
 
-        final Node lastNode = dummyNodes.get(dummyNodes.size() - 1);
-        final Edge lastEdge = new DummyEdge(lastNode, edge.getTo(), edge);
-        lastNode.getOutgoingEdges().add(lastEdge);
+        final LayoutableNode lastLayoutableNode = dummyLayoutableNodes.get(dummyLayoutableNodes.size() - 1);
+        final Edge lastEdge = new DummyEdge((Node) lastLayoutableNode, edge.getTo(), edge);
+        lastLayoutableNode.getOutgoingEdges().add(lastEdge);
         edge.getTo().getIncomingEdges().add(lastEdge);
 
-        for (int i = 0; i < dummyNodes.size() - 1; i++) {
-            final Edge middleEdge = new DummyEdge(dummyNodes.get(i), dummyNodes.get(i + 1), edge);
+        for (int i = 0; i < dummyLayoutableNodes.size() - 1; i++) {
+            final Edge middleEdge = new DummyEdge(dummyLayoutableNodes.get(i), dummyLayoutableNodes.get(i + 1), edge);
 
-            dummyNodes.get(i).getOutgoingEdges().add(middleEdge);
-            dummyNodes.get(i + 1).getIncomingEdges().add(middleEdge);
+            dummyLayoutableNodes.get(i).getOutgoingEdges().add(middleEdge);
+            dummyLayoutableNodes.get(i + 1).getIncomingEdges().add(middleEdge);
         }
 
         return firstEdge;
@@ -210,13 +211,13 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
     /**
-     * Executes the given {@link Consumer} for each layer in which the given {@link Node} is.
+     * Executes the given {@link Consumer} for each layer in which the given {@link LayoutableNode} is.
      *
      * @param data   the {@link LayererData}
-     * @param node   a {@link Node}
+     * @param node   a {@link LayoutableNode}
      * @param action a {@link Consumer} for layer indices
      */
-    private void forEachLayer(final LayererData data, final Node node, final Consumer<Integer> action) {
+    private void forEachLayer(final LayererData data, final LayoutableNode node, final Consumer<Integer> action) {
         final int startLayer = data.positionToLayer(node.getXPosition());
         final int endLayer = data.positionToLayer(node.getXPosition() + node.getLength()) - 1;
 
@@ -242,12 +243,12 @@ public final class FafospLayerer implements SugiyamaLayerer {
     }
 
     /**
-     * Adds the given {@link Node} somewhere in the given layer.
+     * Adds the given {@link LayoutableNode} somewhere in the given layer.
      *
      * @param layer a layer
-     * @param node  a {@link Node}
+     * @param node  a {@link LayoutableNode}
      */
-    private void addToLayerSomewhere(final Node[] layer, final Node node) {
+    private void addToLayerSomewhere(final LayoutableNode[] layer, final LayoutableNode node) {
         for (int i = 0; i < layer.length; i++) {
             if (layer[i] == null) {
                 layer[i] = node;
@@ -264,7 +265,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      */
     private static class LayererData {
         private final Subgraph subgraph;
-        private final Collection<Node> nodes;
+        private final Collection<? extends LayoutableNode> nodes;
         private final int minLayer;
 
 
@@ -278,7 +279,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
             this.nodes = subgraph.getNodes();
 
             final Long minPosition = nodes.stream()
-                    .map(Node::getXPosition)
+                    .map(LayoutableNode::getXPosition)
                     .min(Long::compare)
                     .orElseThrow(() -> new IllegalStateException("Non-empty collection has no minimum."));
             this.minLayer = (int) ((minPosition + LAYER_WIDTH - 1) / LAYER_WIDTH) - 1;
