@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.graph.DummyEdge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
 import org.dnacronym.hygene.models.Edge;
@@ -40,7 +41,8 @@ import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings("PMD.ExcessiveImports") // This will be fixed at a later date
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass"}) // This will be fixed at a later date.
+// Node drawing will be moved to a separate class at a later date
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
@@ -182,6 +184,7 @@ public final class GraphVisualizer {
      *
      * @param edge the edge to be drawn
      */
+    @SuppressWarnings("PMD.CyclomaticComplexity") // Some application logic should be moved to Edge class
     private void drawEdge(final org.dnacronym.hygene.graph.Edge edge) {
         final NewNode fromNode = edge.getFrom();
         final NewNode toNode = edge.getTo();
@@ -195,6 +198,10 @@ public final class GraphVisualizer {
         graphicsContext.setLineWidth(computeEdgeThickness(edge));
 
         if (edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get())) {
+            graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+        } else if (edge instanceof DummyEdge
+                && (((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
+                || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get()))) {
             graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
         } else if (edge.inGenome(selectedPathProperty.get())
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
