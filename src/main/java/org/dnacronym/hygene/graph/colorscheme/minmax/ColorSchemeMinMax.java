@@ -2,14 +2,13 @@ package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
-import org.dnacronym.hygene.graph.node.Node;
 
 
 /**
  * Classes that extend from this class use a certain value of a node to calculate the color.
  * <p>
  * The color is determined as an interpolation of the minimum and maximum color, with the interpolation of the minimum
- * and maximum color being determined by said value of the {@link Node} and its
+ * and maximum color being determined by said value of the {@link org.dnacronym.hygene.graph.node.Node} and its
  * position in the scale of {@code [0, max value]}.
  */
 public abstract class ColorSchemeMinMax implements ColorScheme {
