@@ -60,13 +60,6 @@ final class GraphTest {
     }
 
     @Test
-    void testGetUnscaledYPosition() {
-        final Graph graph = createGraphWithNodes(NodeBuilder.start().withUnscaledYPosition(44).create().toArray());
-
-        assertThat(graph.getUnscaledYPosition(0)).isEqualTo(44);
-    }
-
-    @Test
     void testGetNodeArray() {
         final int[] nodeArray = NodeBuilder.start().withUnscaledXPosition(33).create().toArray();
         final Graph graph = createGraphWithNodes(nodeArray);

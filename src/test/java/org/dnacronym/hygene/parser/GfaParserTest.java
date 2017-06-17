@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -96,6 +97,7 @@ final class GfaParserTest {
 
         final ArrayBasedNode firstNode = ArrayBasedNode.fromGraph(graph, 1);
 
+        System.out.println(Arrays.toString(firstNode.toArray()));
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(12), null));
 
@@ -139,7 +141,7 @@ final class GfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getNodeArrays()).hasSize(4);
-        assertThat(ArrayBasedNode.fromGraph(graph, 0).toArray()).containsSequence(0, 0, -1, -1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 0).toArray()).containsSequence(0, 0, -1);
         assertThat(ArrayBasedNode.fromGraph(graph, 0).getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(ArrayBasedNode.fromGraph(graph, 0).getNumberOfIncomingEdges()).isEqualTo(0);
     }
@@ -150,7 +152,7 @@ final class GfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getNodeArrays()).hasSize(4);
-        assertThat(ArrayBasedNode.fromGraph(graph, 3).toArray()).containsSequence(0, 0, -1, -1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 3).toArray()).containsSequence(0, 0, -1);
         assertThat(ArrayBasedNode.fromGraph(graph, 3).getNumberOfOutgoingEdges()).isEqualTo(0);
         assertThat(ArrayBasedNode.fromGraph(graph, 3).getNumberOfIncomingEdges()).isEqualTo(1);
     }

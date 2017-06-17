@@ -168,7 +168,6 @@ public final class CenterPointQuery {
 
             final Node node = new Segment(nodeId, graph.getByteOffset(nodeId), graph.getSequenceLength(nodeId));
             node.setXPosition((long) graph.getUnscaledXPosition(nodeId) * EDGE_WIDTH);
-            node.setYPosition(graph.getUnscaledYPosition(nodeId));
             subgraph.add(node);
         });
         iterator.visitIndirectNeighboursWithinRange(centre, radius, (depth, nodeId) -> addEdges(nodeId));
