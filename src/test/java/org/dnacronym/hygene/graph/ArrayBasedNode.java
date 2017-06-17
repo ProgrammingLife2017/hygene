@@ -4,7 +4,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.model.NodeColor;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,7 +13,7 @@ import java.util.TreeSet;
  * The {@link ArrayBasedNode} class wraps around a node array and provides convenience methods.
  * <p>
  * ArrayBasedNode array format:
- * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, outgoingEdges, edge1, edge1ByteOffset...]]
+ * [[nodeByteOffset, sequenceLength, xPosition, outgoingEdges, edge1, edge1ByteOffset...]]
  */
 public final class ArrayBasedNode {
     private final int id;
@@ -93,15 +92,6 @@ public final class ArrayBasedNode {
      */
     public int getSequenceLength() {
         return data[Graph.NODE_SEQUENCE_LENGTH_INDEX];
-    }
-
-    /**
-     * Getter for {@link ArrayBasedNode} color.
-     *
-     * @return the node color
-     */
-    public NodeColor getColor() {
-        return NodeColor.values()[data[Graph.NODE_COLOR_INDEX]];
     }
 
     /**
