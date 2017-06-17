@@ -2,7 +2,6 @@ package org.dnacronym.hygene.models;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Objects;
 
