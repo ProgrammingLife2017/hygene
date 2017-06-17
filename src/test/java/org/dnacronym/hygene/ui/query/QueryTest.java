@@ -5,7 +5,6 @@ import org.dnacronym.hygene.graph.SearchQuery;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
