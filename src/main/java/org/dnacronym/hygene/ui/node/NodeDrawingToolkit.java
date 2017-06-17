@@ -162,5 +162,15 @@ public final class NodeDrawingToolkit {
         HighlightType(final Color color) {
             this.color = color;
         }
+
+
+        /**
+         * Returns the {@link Color} of this highlight type.
+         *
+         * @return the {@link Color} of this highlight type
+         */
+        public Color getColor() {
+            return color;
+        }
     }
 }

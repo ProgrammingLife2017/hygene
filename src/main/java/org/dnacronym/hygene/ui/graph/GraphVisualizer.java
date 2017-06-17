@@ -3,11 +3,9 @@ package org.dnacronym.hygene.ui.graph;
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
@@ -63,7 +61,7 @@ public final class GraphVisualizer {
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
-    private final IntegerProperty hoverNodeProperty;
+    private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
 
@@ -100,7 +98,8 @@ public final class GraphVisualizer {
 
         selectedEdgeProperty = new SimpleObjectProperty<>();
         selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
-        hoverNodeProperty = new SimpleIntegerProperty(-1);
+        hoveredSegmentProperty = new SimpleObjectProperty<>();
+        hoveredSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
@@ -131,6 +130,15 @@ public final class GraphVisualizer {
     /**
      * Draw a node on the canvas.
      * <p>
+     * Node outlines are also drawn when one of the following conditions are met:
+     * If selected, it is {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not selected, and highlighted, it is
+     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not highlighted, and queried, it is
+     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#QUERIED}.<br>
+     * If it is not queried, and bookmarked, is it
+     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#BOOKMARKED}.
+     * <p>
      * The node is afterwards added to the {@link RTree}.
      *
      * @param node       the node to draw
@@ -148,18 +156,20 @@ public final class GraphVisualizer {
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
-        if (selectedSegmentProperty.isNotNull().get() && selectedSegmentProperty.get().equals(segment)) {
+
+        if (segment.equals(selectedSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
-        }
-        if (queried) {
+        } else if (segment.equals(hoveredSegmentProperty.get())) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
+        } else if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
+        } else if (bookmarked) {
+            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
+
         if (segment.hasMetadata()) {
             final String sequence = segment.getMetadata().getSequence();
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
-        }
-        if (bookmarked) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
         rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
@@ -184,7 +194,9 @@ public final class GraphVisualizer {
         graphicsContext.setStroke(getEdgeColor());
         graphicsContext.setLineWidth(computeEdgeThickness(edge));
 
-        if (edge.inGenome(selectedPathProperty.get())
+        if (edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get())) {
+            graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+        } else if (edge.inGenome(selectedPathProperty.get())
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
             graphicsContext.setStroke(correctColorForEdgeOpacity(Color.BLUE));
         }
@@ -285,13 +297,11 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
 
         for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            node.getOutgoingEdges().forEach(this::drawEdge);
-        }
-
-        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
+
+            node.getOutgoingEdges().forEach(this::drawEdge);
         }
 
         if (displayLaneBordersProperty.get()) {
@@ -382,10 +392,10 @@ public final class GraphVisualizer {
             if (rTree == null) {
                 return;
             }
-            hoverNodeProperty.set(-1);
-            rTree.find(event.getX(), event.getY(), hoverNodeProperty::set);
+            hoveredSegmentProperty.set(null);
+            rTree.find(event.getX(), event.getY(), this::setHoveredSegmentProperty);
         });
-        canvas.setOnMouseExited(event -> hoverNodeIdProperty.set(-1));
+        canvas.setOnMouseExited(event -> hoveredSegmentProperty.set(null));
 
         graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), canvas.getHeight());
         canvas.widthProperty().addListener((observable, oldValue, newValue) ->
@@ -409,6 +419,23 @@ public final class GraphVisualizer {
         }
 
         selectedSegmentProperty.set((Segment) segment.get(0));
+    }
+
+    /**
+     * Updates the hovered {@link Segment} to the node with the given id.
+     *
+     * @param nodeId node the id of the newly hovered {@link Segment}
+     */
+    public void setHoveredSegmentProperty(final int nodeId) {
+        final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
+                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+
+        if (segment.isEmpty()) {
+            LOGGER.error("Cannot select node that is not in subgraph.");
+            return;
+        }
+
+        hoveredSegmentProperty.set((Segment) segment.get(0));
     }
 
     /**
