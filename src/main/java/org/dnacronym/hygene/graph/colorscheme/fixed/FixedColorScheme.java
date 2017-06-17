@@ -1,8 +1,8 @@
-package org.dnacronym.hygene.models.colorscheme.fixed;
+package org.dnacronym.hygene.graph.colorscheme.fixed;
 
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.NewNode;
-import org.dnacronym.hygene.models.colorscheme.ColorScheme;
+import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 
 
 /**

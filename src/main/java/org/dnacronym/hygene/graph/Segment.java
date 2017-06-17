@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.models.NodeMetadata;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 
 /**

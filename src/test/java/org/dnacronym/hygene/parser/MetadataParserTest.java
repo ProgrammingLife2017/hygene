@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.parser;
 
 import com.google.common.collect.ImmutableMap;
-import org.dnacronym.hygene.models.EdgeMetadata;
-import org.dnacronym.hygene.models.NodeMetadata;
+import org.dnacronym.hygene.graph.metadata.EdgeMetadata;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

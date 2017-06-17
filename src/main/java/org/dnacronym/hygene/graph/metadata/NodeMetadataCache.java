@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph.metadata;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.logging.log4j.LogManager;

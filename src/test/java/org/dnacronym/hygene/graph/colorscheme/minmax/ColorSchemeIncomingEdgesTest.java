@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models.colorscheme.minmax;
+package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.NewNode;

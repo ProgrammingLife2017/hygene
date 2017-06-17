@@ -2,9 +2,9 @@ package org.dnacronym.hygene.graph;
 
 import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.models.NodeMetadata;
-import org.dnacronym.hygene.models.colorscheme.ColorScheme;
-import org.dnacronym.hygene.models.colorscheme.fixed.FixedColorScheme;
+import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
+import org.dnacronym.hygene.graph.colorscheme.fixed.FixedColorScheme;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;

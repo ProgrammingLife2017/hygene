@@ -8,7 +8,7 @@ import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.GraphIterator;
-import org.dnacronym.hygene.models.NodeMetadataCache;
+import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
 import org.dnacronym.hygene.models.SequenceDirection;
 
 

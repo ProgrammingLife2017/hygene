@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models.colorscheme.minmax;
+package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.NewNode;
@@ -13,31 +13,28 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Unit tests of {@link ColorSchemeTotalEdges}.
+ * Unit tests of {@link ColorSchemeOutgoingEdges}.
  */
-final class ColorSchemeTotalEdgesTest {
-    private ColorSchemeTotalEdges colorSchemeTotalEdges;
+final class ColorSchemeOutgoingEdgesTest {
+    private ColorSchemeOutgoingEdges colorSchemeOutgoingEdges;
 
 
     @BeforeEach
     void beforeEach() {
-        colorSchemeTotalEdges = new ColorSchemeTotalEdges(44, Color.BROWN, Color.CORNSILK);
+        colorSchemeOutgoingEdges = new ColorSchemeOutgoingEdges(32, Color.AZURE, Color.BURLYWOOD);
     }
 
 
     @Test
     @SuppressWarnings("unchecked")
-    void testCalculateColorTotalEdges() {
+    void testOutgoingEdgesColor() {
         final NewNode node = mock(NewNode.class);
-        final Set incoming = mock(Set.class);
-        when(incoming.size()).thenReturn(4);
         final Set outgoing = mock(Set.class);
         when(outgoing.size()).thenReturn(16);
-        when(node.getIncomingEdges()).thenReturn(incoming);
         when(node.getOutgoingEdges()).thenReturn(outgoing);
 
-        assertThat(colorSchemeTotalEdges.calculateColor(node)).isEqualTo(
-                Color.BROWN.interpolate(Color.CORNSILK, 20.0 / 44)
+        assertThat(colorSchemeOutgoingEdges.calculateColor(node)).isEqualTo(
+                Color.AZURE.interpolate(Color.BURLYWOOD, 16.0 / 32)
         );
     }
 }
