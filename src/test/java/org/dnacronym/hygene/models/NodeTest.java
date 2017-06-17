@@ -7,54 +7,54 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Unit tests for {@link Node}.
+ * Unit tests for {@link ArrayBasedNode}.
  */
 final class NodeTest {
     @Test
     void testGetId() {
-        final Node node = NodeBuilder.start().withNodeId(5).create();
+        final ArrayBasedNode node = NodeBuilder.start().withNodeId(5).create();
 
         assertThat(node.getId()).isEqualTo(5);
     }
 
     @Test
     void testGetByteOffset() {
-        final Node node = NodeBuilder.start().withByteOffset(4).create();
+        final ArrayBasedNode node = NodeBuilder.start().withByteOffset(4).create();
 
         assertThat(node.getByteOffset()).isEqualTo(4);
     }
 
     @Test
     void testGetSequenceLength() {
-        final Node node = NodeBuilder.start().withSequenceLength(3).create();
+        final ArrayBasedNode node = NodeBuilder.start().withSequenceLength(3).create();
 
         assertThat(node.getSequenceLength()).isEqualTo(3);
     }
 
     @Test
     void testGetColor() {
-        final Node node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
+        final ArrayBasedNode node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
 
         assertThat(node.getColor()).isEqualTo(NodeColor.GREEN);
     }
 
     @Test
     void testGetUnscaledXPosition() {
-        final Node node = NodeBuilder.start().withUnscaledXPosition(5).create();
+        final ArrayBasedNode node = NodeBuilder.start().withUnscaledXPosition(5).create();
 
         assertThat(node.getUnscaledXPosition()).isEqualTo(5);
     }
 
     @Test
     void testGetUnscaledYPosition() {
-        final Node node = NodeBuilder.start().withUnscaledYPosition(6).create();
+        final ArrayBasedNode node = NodeBuilder.start().withUnscaledYPosition(6).create();
 
         assertThat(node.getUnscaledYPosition()).isEqualTo(6);
     }
 
     @Test
     void testToArray() {
-        final Node node = NodeBuilder.start()
+        final ArrayBasedNode node = NodeBuilder.start()
                 .withNodeId(42)
                 .withByteOffset(1)
                 .withSequenceLength(5)
@@ -73,14 +73,14 @@ final class NodeTest {
 
     @Test
     void testGetNumberOfOutgoingEdges() {
-        final Node node = NodeBuilder.start().withOutgoingEdge(1, 30).create();
+        final ArrayBasedNode node = NodeBuilder.start().withOutgoingEdge(1, 30).create();
 
         assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(1);
     }
 
     @Test
     void testGetNumberOfIncomingEdges() {
-        final Node node = NodeBuilder.start().withIncomingEdge(1, 30).withIncomingEdge(2, 40).create();
+        final ArrayBasedNode node = NodeBuilder.start().withIncomingEdge(1, 30).withIncomingEdge(2, 40).create();
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(2);
     }
@@ -92,7 +92,7 @@ final class NodeTest {
      */
     @Test
     void testGetOutgoingEdges() {
-        final Node node = NodeBuilder.start()
+        final ArrayBasedNode node = NodeBuilder.start()
                 .withNodeId(10)
                 .withOutgoingEdge(20, 3)
                 .withOutgoingEdge(30, 4)
@@ -112,7 +112,7 @@ final class NodeTest {
      */
     @Test
     void testGetIncomingEdges() {
-        final Node node = NodeBuilder.start()
+        final ArrayBasedNode node = NodeBuilder.start()
                 .withNodeId(10)
                 .withIncomingEdge(20, 3)
                 .withIncomingEdge(30, 4)

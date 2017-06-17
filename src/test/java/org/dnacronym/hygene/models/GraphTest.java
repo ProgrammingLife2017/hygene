@@ -83,10 +83,10 @@ final class GraphTest {
 
     @Test
     void testGetNode() {
-        final Node node = NodeBuilder.start().create();
+        final ArrayBasedNode node = NodeBuilder.start().create();
         final Graph graph = createGraphWithNodes(node.toArray());
 
-        assertThat(graph.getNode(0).toArray()).isEqualTo(node.toArray());
+        assertThat(ArrayBasedNode.fromGraph(graph, 0).toArray()).isEqualTo(node.toArray());
     }
 
     @Test

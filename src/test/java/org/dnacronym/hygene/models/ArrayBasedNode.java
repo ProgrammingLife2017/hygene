@@ -10,12 +10,12 @@ import java.util.TreeSet;
 
 
 /**
- * The {@link Node} class wraps around a node array and provides convenience methods.
+ * The {@link ArrayBasedNode} class wraps around a node array and provides convenience methods.
  * <p>
- * Node array format:
+ * ArrayBasedNode array format:
  * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1ByteOffset...]]
  */
-public final class Node {
+public final class ArrayBasedNode {
     private final int id;
     private final int[] data;
     private final @Nullable Graph graph;
@@ -25,7 +25,7 @@ public final class Node {
 
 
     /**
-     * Constructor for {@link Node}.
+     * Constructor for {@link ArrayBasedNode}.
      *
      * @param id    the node's id
      * @param data  the node array representing the node's data
@@ -34,10 +34,22 @@ public final class Node {
      */
     @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     // Performance
-    Node(final int id, final int[] data, final @Nullable Graph graph) {
+    ArrayBasedNode(final int id, final int[] data, final @Nullable Graph graph) {
         this.id = id;
         this.data = data;
         this.graph = graph;
+    }
+
+
+    /**
+     * Creates a new {@link ArrayBasedNode} from a given graph for a give node id.
+     *
+     * @param graph the graph
+     * @param id    the node id
+     * @return a new {@link ArrayBasedNode} from a given graph for a give node id
+     */
+    public static ArrayBasedNode fromGraph(final Graph graph, final int id) {
+        return new ArrayBasedNode(id, graph.getNodeArray(id), graph);
     }
 
 
@@ -56,7 +68,7 @@ public final class Node {
     }
 
     /**
-     * Getter for {@link Node} id.
+     * Getter for {@link ArrayBasedNode} id.
      *
      * @return the id
      */
@@ -65,7 +77,7 @@ public final class Node {
     }
 
     /**
-     * Getter for the {@link Node}'s byte offset.
+     * Getter for the {@link ArrayBasedNode}'s byte offset.
      *
      * @return the byte offset
      */
@@ -74,16 +86,16 @@ public final class Node {
     }
 
     /**
-     * Getter for the {@link Node}'s sequence length.
+     * Getter for the {@link ArrayBasedNode}'s sequence length.
      *
-     * @return the sequence length of the {@link Node}
+     * @return the sequence length of the {@link ArrayBasedNode}
      */
     public int getSequenceLength() {
         return data[Graph.NODE_SEQUENCE_LENGTH_INDEX];
     }
 
     /**
-     * Getter for {@link Node} color.
+     * Getter for {@link ArrayBasedNode} color.
      *
      * @return the node color
      */
@@ -135,16 +147,16 @@ public final class Node {
     }
 
     /**
-     * Creates a set containing the outgoing edges of the {@link Node}.
+     * Creates a set containing the outgoing edges of the {@link ArrayBasedNode}.
      * <p>
      * Warning: This method creates of copy of the edges data and should be used with caution.
      *
-     * @return set containing the outgoing edges of the {@link Node}
+     * @return set containing the outgoing edges of the {@link ArrayBasedNode}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public Set<Edge> getOutgoingEdges() {
         if (outgoingEdges == null) {
-            synchronized (Node.class) {
+            synchronized (ArrayBasedNode.class) {
                 if (outgoingEdges == null) {
                     final Set<Edge> newOutgoingEdges = new TreeSet<>();
                     final int offset = Graph.NODE_EDGE_DATA_OFFSET;
@@ -164,16 +176,16 @@ public final class Node {
     }
 
     /**
-     * Creates a set containing the incoming edges of the {@link Node}.
+     * Creates a set containing the incoming edges of the {@link ArrayBasedNode}.
      * <p>
      * Warning: This method creates of copy of the edges data and should be used with caution.
      *
-     * @return set containing the incoming edges of the {@link Node}
+     * @return set containing the incoming edges of the {@link ArrayBasedNode}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
     public Set<Edge> getIncomingEdges() {
         if (incomingEdges == null) {
-            synchronized (Node.class) {
+            synchronized (ArrayBasedNode.class) {
                 if (incomingEdges == null) {
                     final Set<Edge> newIncomingEdges = new TreeSet<>();
                     final int offset = Graph.NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * Graph.EDGE_DATA_SIZE;

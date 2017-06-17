@@ -1,12 +1,7 @@
 package org.dnacronym.hygene.models;
 
-import org.dnacronym.hygene.parser.ParseException;
-
-import java.util.Optional;
-
-
 /**
- * Represents the metadata of an {@link Edge}.
+ * Represents the metadata of an edge.
  */
 public final class EdgeMetadata {
     private final String fromOrient;
@@ -15,7 +10,7 @@ public final class EdgeMetadata {
 
 
     /**
-     * Constructs and initializes an {@link Edge} object.
+     * Constructs and initializes an {@link EdgeMetadata} object.
      *
      * @param fromOrient the orient of the from node
      * @param toOrient   the orient of the to node
@@ -25,21 +20,6 @@ public final class EdgeMetadata {
         this.fromOrient = fromOrient;
         this.toOrient = toOrient;
         this.overlap = overlap;
-    }
-
-
-    /**
-     * Retrieves metadata of the given {@link Edge}.
-     *
-     * @param edge the edge to retrieve metadata of
-     * @return metadata of the edge
-     * @throws ParseException if the edge metadata cannot be parsed
-     */
-    public static EdgeMetadata retrieveFor(final Edge edge) throws ParseException {
-        return Optional.ofNullable(edge.getGraph())
-                .orElseThrow(() -> new ParseException("Cannot parse metadata for edge because graph is unknown"))
-                .getGfaFile()
-                .parseEdgeMetadata(edge.getByteOffset());
     }
 
 

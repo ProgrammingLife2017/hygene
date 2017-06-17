@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.parser;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
+import org.dnacronym.hygene.models.ArrayBasedNode;
 import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,8 +85,8 @@ final class GfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getNodeArrays()).hasSize(4);
-        assertThat(graph.getNode(1).getOutgoingEdges()).hasSize(1);
-        assertThat(graph.getNode(2).getIncomingEdges()).hasSize(1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 1).getOutgoingEdges()).hasSize(1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 2).getIncomingEdges()).hasSize(1);
     }
 
     @Test
@@ -94,7 +94,7 @@ final class GfaParserTest {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M\nL 2 + 1 + 0M";
         final Graph graph = parse(gfa);
 
-        final Node firstNode = graph.getNode(1);
+        final ArrayBasedNode firstNode = ArrayBasedNode.fromGraph(graph, 1);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(12), null));
@@ -108,8 +108,8 @@ final class GfaParserTest {
         final String gfa = "S 1 A\nL 1 + 2 + 0M\nS 2 B";
         final Graph graph = parse(gfa);
 
-        final Node firstNode = graph.getNode(1);
-        final Node secondNode = graph.getNode(2);
+        final ArrayBasedNode firstNode = ArrayBasedNode.fromGraph(graph, 1);
+        final ArrayBasedNode secondNode = ArrayBasedNode.fromGraph(graph, 2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(6), null));
@@ -123,8 +123,8 @@ final class GfaParserTest {
         final String gfa = "L 100 + 200 + 0M\nS 100 A\nS 200 B";
         final Graph graph = parse(gfa);
 
-        final Node firstNode = graph.getNode(1);
-        final Node secondNode = graph.getNode(2);
+        final ArrayBasedNode firstNode = ArrayBasedNode.fromGraph(graph, 1);
+        final ArrayBasedNode secondNode = ArrayBasedNode.fromGraph(graph, 2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(0), null));
@@ -139,9 +139,9 @@ final class GfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getNodeArrays()).hasSize(4);
-        assertThat(graph.getNode(0).toArray()).containsSequence(0, 0, -1, -1);
-        assertThat(graph.getNode(0).getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(graph.getNode(0).getNumberOfIncomingEdges()).isEqualTo(0);
+        assertThat(ArrayBasedNode.fromGraph(graph, 0).toArray()).containsSequence(0, 0, -1, -1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 0).getNumberOfOutgoingEdges()).isEqualTo(1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 0).getNumberOfIncomingEdges()).isEqualTo(0);
     }
 
     @Test
@@ -150,9 +150,9 @@ final class GfaParserTest {
         final Graph graph = parse(gfa);
 
         assertThat(graph.getNodeArrays()).hasSize(4);
-        assertThat(graph.getNode(3).toArray()).containsSequence(0, 0, -1, -1);
-        assertThat(graph.getNode(3).getNumberOfOutgoingEdges()).isEqualTo(0);
-        assertThat(graph.getNode(3).getNumberOfIncomingEdges()).isEqualTo(1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 3).toArray()).containsSequence(0, 0, -1, -1);
+        assertThat(ArrayBasedNode.fromGraph(graph, 3).getNumberOfOutgoingEdges()).isEqualTo(0);
+        assertThat(ArrayBasedNode.fromGraph(graph, 3).getNumberOfIncomingEdges()).isEqualTo(1);
     }
 
 

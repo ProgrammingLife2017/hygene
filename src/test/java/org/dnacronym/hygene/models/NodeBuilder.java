@@ -41,7 +41,7 @@ public final class NodeBuilder {
      * @return a new instance of the builder
      */
     public static NodeBuilder fromArray(final int nodeId, final int[] nodeArray) {
-        final Node node = new Node(nodeId, nodeArray, null);
+        final ArrayBasedNode node = new ArrayBasedNode(nodeId, nodeArray, null);
 
         final NodeBuilder builder = new NodeBuilder();
         builder.nodeId = nodeId;
@@ -57,7 +57,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the node id for the {@link Node} under construction.
+     * Sets the node id for the {@link ArrayBasedNode} under construction.
      *
      * @param nodeId the id of the node
      * @return current instance of the builder to provide a fluent interface
@@ -69,7 +69,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the byte offset for the {@link Node} under construction.
+     * Sets the byte offset for the {@link ArrayBasedNode} under construction.
      *
      * @param byteOffset the byte offset of the node within the GFA file
      * @return current instance of the builder to provide a fluent interface
@@ -81,7 +81,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the sequence length for the {@link Node} under construction.
+     * Sets the sequence length for the {@link ArrayBasedNode} under construction.
      *
      * @param sequenceLength the length of the sequence belonging to the node
      * @return current instance of the builder to provide a fluent interface
@@ -93,7 +93,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the color of the {@link Node} under construction.
+     * Sets the color of the {@link ArrayBasedNode} under construction.
      *
      * @param color the color of the node
      * @return current instance of the builder to provide a fluent interface
@@ -105,7 +105,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the unscaled x position of the {@link Node} under construction.
+     * Sets the unscaled x position of the {@link ArrayBasedNode} under construction.
      *
      * @param unscaledXPosition the unscaled x position of the node
      * @return current instance of the builder to provide a fluent interface
@@ -117,7 +117,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the unscaled y position of the {@link Node} under construction.
+     * Sets the unscaled y position of the {@link ArrayBasedNode} under construction.
      *
      * @param unscaledYPosition the unscaled y position of the node
      * @return current instance of the builder to provide a fluent interface
@@ -129,7 +129,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Adds a new incoming edge to the {@link Node} under construction.
+     * Adds a new incoming edge to the {@link ArrayBasedNode} under construction.
      *
      * @param from       ID of the node where the edge is coming from
      * @param byteOffset line number of the edge in the GFA file
@@ -142,7 +142,7 @@ public final class NodeBuilder {
     }
 
     /**
-     * Adds a new outgoing edge to the {@link Node} under construction.
+     * Adds a new outgoing edge to the {@link ArrayBasedNode} under construction.
      *
      * @param to         ID of the node where the edge is going to
      * @param byteOffset line number of the edge in the GFA file
@@ -181,7 +181,7 @@ public final class NodeBuilder {
      *
      * @return the node instance based on the given parameters
      */
-    public Node create() {
-        return new Node(nodeId, toArray(), null);
+    public ArrayBasedNode create() {
+        return new ArrayBasedNode(nodeId, toArray(), null);
     }
 }

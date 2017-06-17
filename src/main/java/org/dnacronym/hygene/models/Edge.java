@@ -71,16 +71,6 @@ public final class Edge implements Comparable<Edge> {
     }
 
     /**
-     * Retrieves metadata of the edge.
-     *
-     * @return metadata of the edge
-     * @throws ParseException if the edge metadata cannot be parsed
-     */
-    public EdgeMetadata retrieveMetadata() throws ParseException {
-        return EdgeMetadata.retrieveFor(this);
-    }
-
-    /**
      * Compares this edge to another {@link Edge}.
      * <p>
      * First the destination 'to' is compared. If {@code to == other.to}, the source 'from' will be used for comparison.
