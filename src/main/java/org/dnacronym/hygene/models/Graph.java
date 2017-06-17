@@ -66,6 +66,7 @@ public final class Graph {
         this(nodeArrays, new HashMap<>(), gfaFile);
     }
 
+
     /**
      * Creates an empty node array without edge details used to initialize a new node.
      *
@@ -75,16 +76,6 @@ public final class Graph {
         return new int[] {0, 0, 0, -1, -1, 0};
     }
 
-
-//    /**
-//     * Creates a new {@link Node} object containing a reference to the array of that node inside the graph array.
-//     *
-//     * @param id the id of the node
-//     * @return the created {@link Node} object
-//     */
-//    public Node getNode(final int id) {
-//        return new Node(id, nodeArrays[id], this);
-//    }
 
     /**
      * Getter for the array representing a {@link Node}'s metadata.
