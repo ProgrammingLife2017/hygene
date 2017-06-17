@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 /**
  * Settings controller for the current query.
  */
-public final class QuerySettingsController extends AbstractSettingsController {
+public final class QuerySettingsController extends SettingsController {
     @FXML
     private Label currentNodeId;
     @FXML

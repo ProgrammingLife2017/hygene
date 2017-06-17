@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Settings controller for the basic settings.
  */
-public final class BasicSettingsViewController extends AbstractSettingsController {
+public final class BasicSettingsViewController extends SettingsController {
     public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
             new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
             new Pair<>("Fixed Color", new FixedColorScheme(Color.CORAL)),
