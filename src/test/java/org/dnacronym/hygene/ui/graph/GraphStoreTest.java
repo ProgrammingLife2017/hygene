@@ -57,4 +57,28 @@ final class GraphStoreTest extends UITestBase {
 
         Files.deleteIfExists(Paths.get(file.getPath() + FileDatabaseDriver.DB_FILE_EXTENSION));
     }
+
+    @Test
+    void testOpenGffFile()  throws IOException, ExecutionException, InterruptedException {
+        final File file = new File("src/test/resources/gff/simple.gff");
+
+        final CompletableFuture<Object> future = new CompletableFuture<>();
+
+        Platform.runLater(() -> {
+            try {
+                graphStore.loadGffFile(file, ProgressUpdater.DUMMY);
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+
+            Platform.runLater(() -> {
+                assertThat(graphStore.getGffFiles().get()).isNotEmpty();
+                future.complete(null);
+            });
+        });
+
+        assertThat(future.get()).isNull();
+
+        Files.deleteIfExists(Paths.get(file.getPath() + FileDatabaseDriver.DB_FILE_EXTENSION));
+    }
 }

@@ -42,8 +42,7 @@ import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass"}) // This will be fixed at a later date.
-// Node drawing will be moved to a separate class at a later date
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields"}) // This will be fixed at a later date.
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 

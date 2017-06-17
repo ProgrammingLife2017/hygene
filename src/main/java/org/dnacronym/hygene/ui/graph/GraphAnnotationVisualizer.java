@@ -58,6 +58,7 @@ public final class GraphAnnotationVisualizer {
      * If the {@link GenomePoint}s list is smaller than 2, nothing is drawn, as there are no clear indicators for start
      * and end nodes.
      *
+     * @param seqId        the sequence id of the current annotation
      * @param genomePoints the list of {@link GenomePoint}s which denote the start and end of a
      *                     {@link org.dnacronym.hygene.models.FeatureAnnotation}
      * @param nodes        the list of current onscreen {@link NewNode}s

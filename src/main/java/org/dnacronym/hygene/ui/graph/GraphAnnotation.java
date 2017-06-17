@@ -39,6 +39,7 @@ public final class GraphAnnotation {
      *                         {@link FeatureAnnotation}s
      */
     public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
+        genomeIndex = genomeNavigation.getGenomeIndexProperty().get();
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
             genomeIndex = newValue;
             genomeIndexMap.clear();
