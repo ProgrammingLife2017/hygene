@@ -231,7 +231,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Sets the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.models.Node}s will be drawn.
+     * Sets the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.model.Node}s will be drawn.
      * <p>
      * This will perform another calculation.
      *
@@ -366,12 +366,12 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Gets the {@link IntegerProperty} which determines the current center
-     * {@link org.dnacronym.hygene.models.Node} id.
+     * {@link org.dnacronym.hygene.model.Node} id.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a range check to make sure the
      * value remains in the range {@code [0, node count - 1]}.
      *
-     * @return property which decides the current center {@link org.dnacronym.hygene.models.Node} id
+     * @return property which decides the current center {@link org.dnacronym.hygene.model.Node} id
      */
     public IntegerProperty getCenterNodeIdProperty() {
         return centerNodeIdProperty;
@@ -379,7 +379,7 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Gets the {@link IntegerProperty} which determines the range to draw around the center
-     * {@link org.dnacronym.hygene.models.Node}.
+     * {@link org.dnacronym.hygene.model.Node}.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a check to make sure that the
      * range remains in the range {@code [1, node count / 2]}.

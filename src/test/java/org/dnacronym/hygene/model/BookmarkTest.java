@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

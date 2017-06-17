@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.model;
 
 import javafx.scene.paint.Color;
 

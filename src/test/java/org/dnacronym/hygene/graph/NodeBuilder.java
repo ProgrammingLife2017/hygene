@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 
 import java.util.Arrays;
 import java.util.Set;

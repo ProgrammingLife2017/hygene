@@ -10,7 +10,7 @@ import java.util.List;
 
 
 /**
- * Visualizes all {@link org.dnacronym.hygene.models.FeatureAnnotation}s stored in {@link GraphAnnotation} in the graph
+ * Visualizes all {@link org.dnacronym.hygene.model.FeatureAnnotation}s stored in {@link GraphAnnotation} in the graph
  * view.
  */
 public final class GraphAnnotationVisualizer {
@@ -53,14 +53,14 @@ public final class GraphAnnotationVisualizer {
 
     /**
      * Draws a marker at the top of the graph denoting the start end of a
-     * {@link org.dnacronym.hygene.models.FeatureAnnotation}.
+     * {@link org.dnacronym.hygene.model.FeatureAnnotation}.
      * <p>
      * If the {@link GenomePoint}s list is smaller than 2, nothing is drawn, as there are no clear indicators for start
      * and end nodes.
      *
      * @param seqId        the sequence id of the current annotation
      * @param genomePoints the list of {@link GenomePoint}s which denote the start and end of a
-     *                     {@link org.dnacronym.hygene.models.FeatureAnnotation}
+     *                     {@link org.dnacronym.hygene.model.FeatureAnnotation}
      * @param nodes        the list of current onscreen {@link Node}s
      */
     public void draw(final String seqId, final List<GenomePoint> genomePoints, final List<Node> nodes) {

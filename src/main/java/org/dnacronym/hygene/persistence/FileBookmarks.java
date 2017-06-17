@@ -2,7 +2,7 @@ package org.dnacronym.hygene.persistence;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.models.Bookmark;
+import org.dnacronym.hygene.model.Bookmark;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

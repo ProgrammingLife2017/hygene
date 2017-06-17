@@ -4,7 +4,7 @@ import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.graph.ArrayBasedNode;
 import org.dnacronym.hygene.graph.ArrayBasedEdge;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

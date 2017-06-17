@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.ui.bookmark;
 
-import org.dnacronym.hygene.models.Bookmark;
+import org.dnacronym.hygene.model.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -5,7 +5,7 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.graph.layout.Fafosp;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 import org.dnacronym.hygene.parser.GfaFile;
 
 import java.util.HashMap;

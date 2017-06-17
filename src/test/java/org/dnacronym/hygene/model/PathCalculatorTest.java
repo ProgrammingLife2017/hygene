@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.model;
 
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.graph.node.DummyNode;

@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.persistence;
 
-import org.dnacronym.hygene.models.Bookmark;
+import org.dnacronym.hygene.model.Bookmark;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

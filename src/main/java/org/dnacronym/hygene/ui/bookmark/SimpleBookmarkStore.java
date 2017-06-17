@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.models.Bookmark;
+import org.dnacronym.hygene.model.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileBookmarks;
 import org.dnacronym.hygene.persistence.FileDatabase;
