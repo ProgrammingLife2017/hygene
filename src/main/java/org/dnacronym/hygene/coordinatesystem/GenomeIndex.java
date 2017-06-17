@@ -137,8 +137,8 @@ public final class GenomeIndex {
             final String nextGenome = bodyTokenizer.nextToken();
 
             if (!nextGenome.isEmpty()) {
-                final String name = nextGenome.lastIndexOf('.') > 0 ?
-                        nextGenome.substring(0, nextGenome.lastIndexOf('.')) : nextGenome;
+                final String name = nextGenome.lastIndexOf('.') > 0
+                        ? nextGenome.substring(0, nextGenome.lastIndexOf('.')) : nextGenome;
 
                 genomeBaseCounts.put(name, 0);
                 genomeNames.add(name);
@@ -187,11 +187,12 @@ public final class GenomeIndex {
         }
 
         try {
-            final List<String> nodeGenomes = gfaFile.getGraph().getNode(nodeId).retrieveMetadata().getGenomes();
+            final List<String> nodeGenomes =
+                    gfaFile.parseNodeMetadata(gfaFile.getGraph().getByteOffset(nodeId)).getGenomes();
 
             for (final String genome : nodeGenomes) {
-                final String noExtensionGenome = genome.lastIndexOf('.') > 0 ?
-                        genome.substring(0, genome.lastIndexOf('.')) : genome;
+                final String noExtensionGenome = genome.lastIndexOf('.') > 0
+                        ? genome.substring(0, genome.lastIndexOf('.')) : genome;
 
                 final int genomeIndex;
                 final String genomeName;

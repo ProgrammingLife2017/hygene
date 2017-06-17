@@ -4,7 +4,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,8 +32,6 @@ public final class Node {
 
     private volatile @MonotonicNonNull Set<Edge> incomingEdges;
     private volatile @MonotonicNonNull Set<Edge> outgoingEdges;
-
-    private @MonotonicNonNull NodeMetadata metadata;
 
 
     /**
@@ -214,45 +211,5 @@ public final class Node {
             }
         }
         return incomingEdges;
-    }
-
-    /**
-     * Getter for the {@link Graph} reference.
-     *
-     * @return a reference to the {@link Graph} the edge belongs to
-     */
-    public @Nullable Graph getGraph() {
-        return graph;
-    }
-
-    /**
-     * Retrieves metadata of the node.
-     *
-     * @return metadata of the bode
-     * @throws ParseException if the edge metadata cannot be parsed
-     */
-    public NodeMetadata retrieveMetadata() throws ParseException {
-        if (metadata == null) {
-            metadata = NodeMetadata.retrieveFor(this);
-        }
-        return metadata;
-    }
-
-    /**
-     * Returns true if the metadata has already been retrieved.
-     *
-     * @return true if the metadata has already been retrieved
-     */
-    boolean hasMetadata() {
-        return metadata != null;
-    }
-
-    /**
-     * Manually sets the metadata of the node.
-     *
-     * @param metadata a {@link NodeMetadata} object
-     */
-    void setMetadata(final NodeMetadata metadata) {
-        this.metadata = metadata;
     }
 }
