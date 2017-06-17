@@ -17,6 +17,15 @@ import java.util.Map;
  * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1ByteOffset...]]
  */
 public final class Graph {
+    public static final int NODE_BYTE_OFFSET_INDEX = 0;
+    public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
+    public static final int NODE_COLOR_INDEX = 2;
+    public static final int UNSCALED_X_POSITION_INDEX = 3;
+    public static final int UNSCALED_Y_POSITION_INDEX = 4;
+    public static final int NODE_OUTGOING_EDGES_INDEX = 5;
+    public static final int NODE_EDGE_DATA_OFFSET = 6;
+    public static final int EDGE_BYTE_OFFSET_OFFSET = 1;
+    public static final int EDGE_DATA_SIZE = 2;
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
 
     private final int[][] nodeArrays;
@@ -57,16 +66,25 @@ public final class Graph {
         this(nodeArrays, new HashMap<>(), gfaFile);
     }
 
-
     /**
-     * Creates a new {@link Node} object containing a reference to the array of that node inside the graph array.
+     * Creates an empty node array without edge details used to initialize a new node.
      *
-     * @param id the id of the node
-     * @return the created {@link Node} object
+     * @return an empty node array
      */
-    public Node getNode(final int id) {
-        return new Node(id, nodeArrays[id], this);
+    public static int[] createEmptyNodeArray() {
+        return new int[] {0, 0, 0, -1, -1, 0};
     }
+
+
+//    /**
+//     * Creates a new {@link Node} object containing a reference to the array of that node inside the graph array.
+//     *
+//     * @param id the id of the node
+//     * @return the created {@link Node} object
+//     */
+//    public Node getNode(final int id) {
+//        return new Node(id, nodeArrays[id], this);
+//    }
 
     /**
      * Getter for the array representing a {@link Node}'s metadata.
@@ -109,7 +127,7 @@ public final class Graph {
      * @return the {@link Node}'s byte offset
      */
     public long getByteOffset(final int id) {
-        return UnsignedInteger.toLong(nodeArrays[id][Node.NODE_BYTE_OFFSET_INDEX]);
+        return UnsignedInteger.toLong(nodeArrays[id][NODE_BYTE_OFFSET_INDEX]);
     }
 
     /**
@@ -119,10 +137,10 @@ public final class Graph {
      * @return the {@link Node}'s (capped) sequence length
      */
     public int getLength(final int id) {
-        if (nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] < MINIMUM_SEQUENCE_LENGTH) {
+        if (nodeArrays[id][NODE_SEQUENCE_LENGTH_INDEX] < MINIMUM_SEQUENCE_LENGTH) {
             return MINIMUM_SEQUENCE_LENGTH;
         }
-        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
+        return nodeArrays[id][NODE_SEQUENCE_LENGTH_INDEX];
     }
 
     /**
@@ -132,7 +150,7 @@ public final class Graph {
      * @return the {@link Node}'s sequence length
      */
     public int getSequenceLength(final int id) {
-        return nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX];
+        return nodeArrays[id][NODE_SEQUENCE_LENGTH_INDEX];
     }
 
     /**
@@ -142,7 +160,7 @@ public final class Graph {
      * @return the {@link Node}'s color
      */
     public NodeColor getColor(final int id) {
-        return NodeColor.values()[nodeArrays[id][Node.NODE_COLOR_INDEX]];
+        return NodeColor.values()[nodeArrays[id][NODE_COLOR_INDEX]];
     }
 
     /**
@@ -152,7 +170,7 @@ public final class Graph {
      * @return the unscaled x position
      */
     public int getUnscaledXPosition(final int id) {
-        return nodeArrays[id][Node.UNSCALED_X_POSITION_INDEX];
+        return nodeArrays[id][UNSCALED_X_POSITION_INDEX];
     }
 
     /**
@@ -162,7 +180,7 @@ public final class Graph {
      * @param unscaledXPosition the unscaled x position
      */
     void setUnscaledXPosition(final int id, final int unscaledXPosition) {
-        nodeArrays[id][Node.UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
+        nodeArrays[id][UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
     }
 
     /**
@@ -172,7 +190,7 @@ public final class Graph {
      * @return the unscaled y position
      */
     public int getUnscaledYPosition(final int id) {
-        return nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX];
+        return nodeArrays[id][UNSCALED_Y_POSITION_INDEX];
     }
 
     /**
@@ -182,7 +200,7 @@ public final class Graph {
      * @param unscaledYPosition the unscaled y position
      */
     void setUnscaledYPosition(final int id, final int unscaledYPosition) {
-        nodeArrays[id][Node.UNSCALED_Y_POSITION_INDEX] = unscaledYPosition;
+        nodeArrays[id][UNSCALED_Y_POSITION_INDEX] = unscaledYPosition;
     }
 
     /**
@@ -195,10 +213,10 @@ public final class Graph {
     public int getNeighbourCount(final int id, final SequenceDirection direction) {
         return direction.ternary(
                 (nodeArrays[id].length
-                        - nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE
-                        - (Node.NODE_OUTGOING_EDGES_INDEX + 1)
-                ) / Node.EDGE_DATA_SIZE,
-                nodeArrays[id][Node.NODE_OUTGOING_EDGES_INDEX]
+                        - nodeArrays[id][NODE_OUTGOING_EDGES_INDEX] * EDGE_DATA_SIZE
+                        - (NODE_OUTGOING_EDGES_INDEX + 1)
+                ) / EDGE_DATA_SIZE,
+                nodeArrays[id][NODE_OUTGOING_EDGES_INDEX]
         );
     }
 

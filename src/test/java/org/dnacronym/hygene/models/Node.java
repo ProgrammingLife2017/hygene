@@ -16,16 +16,6 @@ import java.util.TreeSet;
  * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1ByteOffset...]]
  */
 public final class Node {
-    public static final int NODE_BYTE_OFFSET_INDEX = 0;
-    public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
-    public static final int NODE_COLOR_INDEX = 2;
-    public static final int UNSCALED_X_POSITION_INDEX = 3;
-    public static final int UNSCALED_Y_POSITION_INDEX = 4;
-    public static final int NODE_OUTGOING_EDGES_INDEX = 5;
-    public static final int NODE_EDGE_DATA_OFFSET = 6;
-    public static final int EDGE_BYTE_OFFSET_OFFSET = 1;
-    public static final int EDGE_DATA_SIZE = 2;
-
     private final int id;
     private final int[] data;
     private final @Nullable Graph graph;
@@ -48,16 +38,6 @@ public final class Node {
         this.id = id;
         this.data = data;
         this.graph = graph;
-    }
-
-
-    /**
-     * Creates an empty node array without edge details used to initialize a new node.
-     *
-     * @return an empty node array
-     */
-    public static int[] createEmptyNodeArray() {
-        return new int[] {0, 0, 0, -1, -1, 0};
     }
 
 
@@ -90,7 +70,7 @@ public final class Node {
      * @return the byte offset
      */
     public long getByteOffset() {
-        return UnsignedInteger.toLong(data[NODE_BYTE_OFFSET_INDEX]);
+        return UnsignedInteger.toLong(data[Graph.NODE_BYTE_OFFSET_INDEX]);
     }
 
     /**
@@ -99,7 +79,7 @@ public final class Node {
      * @return the sequence length of the {@link Node}
      */
     public int getSequenceLength() {
-        return data[NODE_SEQUENCE_LENGTH_INDEX];
+        return data[Graph.NODE_SEQUENCE_LENGTH_INDEX];
     }
 
     /**
@@ -108,7 +88,7 @@ public final class Node {
      * @return the node color
      */
     public NodeColor getColor() {
-        return NodeColor.values()[data[NODE_COLOR_INDEX]];
+        return NodeColor.values()[data[Graph.NODE_COLOR_INDEX]];
     }
 
     /**
@@ -117,7 +97,7 @@ public final class Node {
      * @return the computed unscaled X position
      */
     public int getUnscaledXPosition() {
-        return data[UNSCALED_X_POSITION_INDEX];
+        return data[Graph.UNSCALED_X_POSITION_INDEX];
     }
 
     /**
@@ -126,7 +106,7 @@ public final class Node {
      * @return the computed unscaled Y position
      */
     public int getUnscaledYPosition() {
-        return data[UNSCALED_Y_POSITION_INDEX];
+        return data[Graph.UNSCALED_Y_POSITION_INDEX];
     }
 
     /**
@@ -135,7 +115,7 @@ public final class Node {
      * @return the number of outgoing edges
      */
     public int getNumberOfOutgoingEdges() {
-        return data[NODE_OUTGOING_EDGES_INDEX];
+        return data[Graph.NODE_OUTGOING_EDGES_INDEX];
     }
 
     /**
@@ -148,10 +128,10 @@ public final class Node {
      * @return the number of incoming edges
      */
     public int getNumberOfIncomingEdges() {
-        final int metadataLength = NODE_EDGE_DATA_OFFSET - 1;
-        final int outgoingEdgesLength = data[NODE_OUTGOING_EDGES_INDEX] * EDGE_DATA_SIZE;
+        final int metadataLength = Graph.NODE_EDGE_DATA_OFFSET - 1;
+        final int outgoingEdgesLength = data[Graph.NODE_OUTGOING_EDGES_INDEX] * Graph.EDGE_DATA_SIZE;
 
-        return (data.length - metadataLength - outgoingEdgesLength) / EDGE_DATA_SIZE;
+        return (data.length - metadataLength - outgoingEdgesLength) / Graph.EDGE_DATA_SIZE;
     }
 
     /**
@@ -167,11 +147,11 @@ public final class Node {
             synchronized (Node.class) {
                 if (outgoingEdges == null) {
                     final Set<Edge> newOutgoingEdges = new TreeSet<>();
-                    final int offset = NODE_EDGE_DATA_OFFSET;
+                    final int offset = Graph.NODE_EDGE_DATA_OFFSET;
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
-                        final int to = data[offset + i * EDGE_DATA_SIZE];
-                        final int byteOffset = data[offset + i * EDGE_DATA_SIZE + EDGE_BYTE_OFFSET_OFFSET];
+                        final int to = data[offset + i * Graph.EDGE_DATA_SIZE];
+                        final int byteOffset = data[offset + i * Graph.EDGE_DATA_SIZE + Graph.EDGE_BYTE_OFFSET_OFFSET];
 
                         final Edge edge = new Edge(id, to, byteOffset, graph);
                         newOutgoingEdges.add(edge);
@@ -196,11 +176,11 @@ public final class Node {
             synchronized (Node.class) {
                 if (incomingEdges == null) {
                     final Set<Edge> newIncomingEdges = new TreeSet<>();
-                    final int offset = NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * EDGE_DATA_SIZE;
+                    final int offset = Graph.NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * Graph.EDGE_DATA_SIZE;
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
-                        final int from = data[offset + i * EDGE_DATA_SIZE];
-                        final int byteOffset = data[offset + i * EDGE_DATA_SIZE + EDGE_BYTE_OFFSET_OFFSET];
+                        final int from = data[offset + i * Graph.EDGE_DATA_SIZE];
+                        final int byteOffset = data[offset + i * Graph.EDGE_DATA_SIZE + Graph.EDGE_BYTE_OFFSET_OFFSET];
 
                         final Edge edge = new Edge(from, id, byteOffset, graph);
                         newIncomingEdges.add(edge);

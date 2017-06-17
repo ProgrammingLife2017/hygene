@@ -17,10 +17,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.DummyEdge;
 import org.dnacronym.hygene.graph.NewNode;
 import org.dnacronym.hygene.graph.Segment;
-import org.dnacronym.hygene.models.Edge;
 import org.dnacronym.hygene.models.FeatureAnnotation;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
@@ -348,7 +348,6 @@ public final class GraphVisualizer {
      * @param laneCount  amount of bands onscreen
      * @param laneHeight height of each lane
      */
-
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
         final double originalLineWidth = graphicsContext.getLineWidth();
@@ -405,10 +404,16 @@ public final class GraphVisualizer {
 
             rTree.find(event.getX(), event.getY(),
                     this::setSelectedSegment,
-                    (fromNodeId, toNodeId) -> graph.getNode(fromNodeId).getOutgoingEdges().stream()
-                            .filter(edge -> edge.getTo() == toNodeId)
-                            .findFirst()
-                            .ifPresent(selectedEdgeProperty::setValue)
+                    (fromNodeId, toNodeId) -> graphDimensionsCalculator.getObservableQueryNodes().stream()
+                                .filter(node -> node instanceof Segment)
+                                .filter(node -> ((Segment) node).getId() == fromNodeId)
+                                .findFirst()
+                                .ifPresent(node -> node.getOutgoingEdges().stream()
+                                        .filter(edge -> edge.getTo() instanceof Segment
+                                                && ((Segment) edge.getTo()).getId() == toNodeId)
+                                        .findFirst()
+                                        .ifPresent(selectedEdgeProperty::setValue)
+                                )
             );
         });
         canvas.setOnMouseMoved(event -> {

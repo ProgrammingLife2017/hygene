@@ -6,7 +6,6 @@ import org.biojava.nbio.core.sequence.io.BufferedReaderBytesRead;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
 import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.models.SequenceDirection;
 
@@ -74,7 +73,7 @@ public final class GfaParser {
             LOGGER.info("Finished allocating nodes");
 
             nodeArrays = new int[nodeIds.size()][];
-            Arrays.setAll(nodeArrays, i -> Node.createEmptyNodeArray());
+            Arrays.setAll(nodeArrays, i -> Graph.createEmptyNodeArray());
 
             genomeMapping = new HashMap<>();
 
@@ -255,9 +254,9 @@ public final class GfaParser {
 
             final int nodeId = getNodeId(name);
 
-            nodeArrays[nodeId][Node.NODE_BYTE_OFFSET_INDEX] = UnsignedInteger.fromLong(byteOffset);
-            nodeArrays[nodeId][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
-            nodeArrays[nodeId][Node.NODE_COLOR_INDEX] = NodeColor.sequenceToColor(sequence).ordinal();
+            nodeArrays[nodeId][Graph.NODE_BYTE_OFFSET_INDEX] = UnsignedInteger.fromLong(byteOffset);
+            nodeArrays[nodeId][Graph.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
+            nodeArrays[nodeId][Graph.NODE_COLOR_INDEX] = NodeColor.sequenceToColor(sequence).ordinal();
 
         } catch (final StringIndexOutOfBoundsException e) {
             throw new ParseException("Not enough parameters for segment at position " + byteOffset, e);
@@ -319,7 +318,7 @@ public final class GfaParser {
      * @param byteOffset the byte offset of the current line
      */
     private void addIncomingEdge(final int fromId, final int toId, final long byteOffset) {
-        nodeArrays[toId] = Arrays.copyOf(nodeArrays[toId], nodeArrays[toId].length + Node.EDGE_DATA_SIZE);
+        nodeArrays[toId] = Arrays.copyOf(nodeArrays[toId], nodeArrays[toId].length + Graph.EDGE_DATA_SIZE);
 
         nodeArrays[toId][nodeArrays[toId].length - 2] = fromId;
         nodeArrays[toId][nodeArrays[toId].length - 1] = UnsignedInteger.fromLong(byteOffset);
@@ -333,8 +332,8 @@ public final class GfaParser {
      * @param byteOffset the byte offset of the current line
      */
     private void addOutgoingEdge(final int fromId, final int toId, final long byteOffset) {
-        final int lastOutgoingEdgePosition = Node.NODE_EDGE_DATA_OFFSET
-                + nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX] * Node.EDGE_DATA_SIZE;
+        final int lastOutgoingEdgePosition = Graph.NODE_EDGE_DATA_OFFSET
+                + nodeArrays[fromId][Graph.NODE_OUTGOING_EDGES_INDEX] * Graph.EDGE_DATA_SIZE;
 
         nodeArrays[fromId] = insertAtPosition(
                 nodeArrays[fromId],
@@ -342,7 +341,7 @@ public final class GfaParser {
                 toId,
                 UnsignedInteger.fromLong(byteOffset)
         );
-        nodeArrays[fromId][Node.NODE_OUTGOING_EDGES_INDEX]++;
+        nodeArrays[fromId][Graph.NODE_OUTGOING_EDGES_INDEX]++;
     }
 
     /**

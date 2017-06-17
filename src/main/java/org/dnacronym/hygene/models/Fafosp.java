@@ -126,8 +126,8 @@ public final class Fafosp {
         if (neighbourSize == 0) {
             height[0] = 2;
         } else if (neighbourSize == 1) {
-            final int neighbour = nodeArrays[node][Node.NODE_EDGE_DATA_OFFSET + direction.ternary(
-                    graph.getNeighbourCount(node, SequenceDirection.RIGHT) * Node.EDGE_DATA_SIZE,
+            final int neighbour = nodeArrays[node][Graph.NODE_EDGE_DATA_OFFSET + direction.ternary(
+                    graph.getNeighbourCount(node, SequenceDirection.RIGHT) * Graph.EDGE_DATA_SIZE,
                     0
             )];
 
@@ -186,7 +186,7 @@ public final class Fafosp {
         }
 
         if (graph.getNeighbourCount(node, SequenceDirection.RIGHT) == 1) {
-            final int neighbour = graph.getNodeArrays()[node][Node.NODE_EDGE_DATA_OFFSET];
+            final int neighbour = graph.getNodeArrays()[node][Graph.NODE_EDGE_DATA_OFFSET];
             verticalCalculateNeighbour(meta, node, neighbour);
         } else {
             verticalCalculateNeighbours(meta, node);

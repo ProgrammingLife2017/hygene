@@ -117,7 +117,7 @@ abstract class GraphTestBase {
             assert (sequenceLength.length == 2);
 
             final int id = sequenceLength[0];
-            nodeArrays[id][Node.NODE_SEQUENCE_LENGTH_INDEX] = sequenceLength[1];
+            nodeArrays[id][Graph.NODE_SEQUENCE_LENGTH_INDEX] = sequenceLength[1];
         }
     }
 

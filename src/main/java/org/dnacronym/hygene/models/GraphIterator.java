@@ -53,7 +53,7 @@ public final class GraphIterator {
         final int neighbourOffset = getNeighbourOffset(id, direction);
 
         for (int i = 0; i < graph.getNeighbourCount(id, direction); i++) {
-            final int neighbourIndex = neighbourOffset + Node.EDGE_DATA_SIZE * i;
+            final int neighbourIndex = neighbourOffset + Graph.EDGE_DATA_SIZE * i;
             action.accept(nodeArrays[id][neighbourIndex]);
         }
     }
@@ -93,7 +93,7 @@ public final class GraphIterator {
         final int neighbourOffset = getNeighbourOffset(id, direction);
 
         for (int i = 0; i < graph.getNeighbourCount(id, direction); i++) {
-            final int neighbour = nodeArrays[id][neighbourOffset + Node.EDGE_DATA_SIZE * i];
+            final int neighbour = nodeArrays[id][neighbourOffset + Graph.EDGE_DATA_SIZE * i];
 
             if (!condition.test(neighbour)) {
                 catchAction.accept(neighbour);
@@ -234,7 +234,7 @@ public final class GraphIterator {
      * @return the offset within a node array where the neighbours in the given direction begin
      */
     private int getNeighbourOffset(final int id, final SequenceDirection direction) {
-        return 1 + Node.NODE_OUTGOING_EDGES_INDEX + direction.ternary(
-                graph.getNeighbourCount(id, direction.opposite()) * Node.EDGE_DATA_SIZE, 0);
+        return 1 + Graph.NODE_OUTGOING_EDGES_INDEX + direction.ternary(
+                graph.getNeighbourCount(id, direction.opposite()) * Graph.EDGE_DATA_SIZE, 0);
     }
 }

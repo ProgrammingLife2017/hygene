@@ -4,7 +4,6 @@ import com.google.common.eventbus.Subscribe;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.Node;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Integrations tests for the event bus workflow.
  */
 public final class EventBusIntegrationTest {
-    private static final int[][] DUMMY_GRAPH = new int[][] {Node.createEmptyNodeArray()};
+    private static final int[][] DUMMY_GRAPH = new int[][] {Graph.createEmptyNodeArray()};
 
 
     @Test
