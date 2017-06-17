@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.models;
 
+import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.NewNode;

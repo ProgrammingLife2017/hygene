@@ -1,5 +1,6 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.GraphTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;

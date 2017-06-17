@@ -1,4 +1,8 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph.layout;
+
+import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.GraphIterator;
+import org.dnacronym.hygene.graph.SequenceDirection;
 
 import java.util.Arrays;
 import java.util.LinkedList;

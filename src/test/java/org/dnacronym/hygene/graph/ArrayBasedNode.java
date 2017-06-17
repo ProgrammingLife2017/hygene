@@ -1,9 +1,10 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.UnsignedInteger;
+import org.dnacronym.hygene.models.NodeColor;
 
 import java.util.Set;
 import java.util.TreeSet;

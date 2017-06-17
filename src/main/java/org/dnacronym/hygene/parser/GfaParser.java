@@ -5,9 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.biojava.nbio.core.sequence.io.BufferedReaderBytesRead;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.models.NodeColor;
-import org.dnacronym.hygene.models.SequenceDirection;
+import org.dnacronym.hygene.graph.SequenceDirection;
 
 import java.io.BufferedReader;
 import java.io.IOException;

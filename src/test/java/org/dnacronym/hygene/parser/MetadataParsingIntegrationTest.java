@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.Edge;
+import org.dnacronym.hygene.graph.Edge;
 import org.dnacronym.hygene.graph.metadata.EdgeMetadata;
-import org.dnacronym.hygene.models.ArrayBasedNode;
+import org.dnacronym.hygene.graph.ArrayBasedNode;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.junit.jupiter.api.Test;
 

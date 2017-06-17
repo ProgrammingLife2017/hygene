@@ -1,5 +1,6 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
+import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

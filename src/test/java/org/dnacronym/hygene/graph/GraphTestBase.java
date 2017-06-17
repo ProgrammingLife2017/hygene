@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
 import org.junit.jupiter.api.AfterEach;
 
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * This class is intended to be extended.
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod") // Must be abstract because it contains no tests
-abstract class GraphTestBase {
+public abstract class GraphTestBase {
     private Graph graph;
     private int[][] nodeArrays;
 
@@ -22,7 +22,7 @@ abstract class GraphTestBase {
      * Resets this {@link GraphTestBase}'s fields.
      */
     @AfterEach
-    void afterEach() {
+    protected void afterEach() {
         graph = null;
         nodeArrays = null;
     }
@@ -33,7 +33,7 @@ abstract class GraphTestBase {
      *
      * @param size the size of the {@link Graph} to create
      */
-    final void createGraph(final int size) {
+    protected final void createGraph(final int size) {
         nodeArrays = new int[size][];
         for (int i = 0; i < size; i++) {
             nodeArrays[i] = NodeBuilder.start().toArray();
@@ -47,7 +47,7 @@ abstract class GraphTestBase {
      *
      * @return the current {@link Graph}
      */
-    final Graph getGraph() {
+    protected final Graph getGraph() {
         return graph;
     }
 
@@ -59,7 +59,7 @@ abstract class GraphTestBase {
      *
      * @param edges the edges to add
      */
-    final void addEdges(final int[][] edges) {
+    protected final void addEdges(final int[][] edges) {
         addOutgoingEdges(edges);
         addIncomingEdges(edges);
     }
@@ -73,7 +73,7 @@ abstract class GraphTestBase {
      *
      * @param edges the edges to add
      */
-    final void addOutgoingEdges(final int[][] edges) {
+    protected final void addOutgoingEdges(final int[][] edges) {
         for (final int[] edge : edges) {
             assert (edge.length == 2);
 
@@ -94,7 +94,7 @@ abstract class GraphTestBase {
      *
      * @param edges the edges to add
      */
-    final void addIncomingEdges(final int[][] edges) {
+    protected final void addIncomingEdges(final int[][] edges) {
         for (final int[] edge : edges) {
             assert (edge.length == 2);
 
@@ -112,7 +112,7 @@ abstract class GraphTestBase {
      * Each given array has a length of two, where the first integer is the node's identifier and the second integer
      * is the new sequence length for that node.
      */
-    final void setSequenceLengths(final int[][] sequenceLengths) {
+    protected final void setSequenceLengths(final int[][] sequenceLengths) {
         for (final int[] sequenceLength : sequenceLengths) {
             assert (sequenceLength.length == 2);
 
@@ -128,7 +128,7 @@ abstract class GraphTestBase {
      * @param expected the expected values
      * @param actual   the {@link Function} to apply to each identifier
      */
-    final void assertForEachNode(final int[] expected, final Function<Integer, Integer> actual) {
+     protected final void assertForEachNode(final int[] expected, final Function<Integer, Integer> actual) {
         assert (expected.length == nodeArrays.length);
 
         for (int i = 0; i < expected.length; i++) {

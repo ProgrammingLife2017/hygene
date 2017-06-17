@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
 import java.util.LinkedList;
 import java.util.Queue;

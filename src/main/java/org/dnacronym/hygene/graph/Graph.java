@@ -1,9 +1,11 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
+import org.dnacronym.hygene.graph.layout.Fafosp;
+import org.dnacronym.hygene.models.NodeColor;
 import org.dnacronym.hygene.parser.GfaFile;
 
 import java.util.HashMap;
@@ -170,7 +172,7 @@ public final class Graph {
      * @param id                the {@link Node}'s id
      * @param unscaledXPosition the unscaled x position
      */
-    void setUnscaledXPosition(final int id, final int unscaledXPosition) {
+    public void setUnscaledXPosition(final int id, final int unscaledXPosition) {
         nodeArrays[id][UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
     }
 
@@ -190,7 +192,7 @@ public final class Graph {
      * @param id                the node's id
      * @param unscaledYPosition the unscaled y position
      */
-    void setUnscaledYPosition(final int id, final int unscaledYPosition) {
+    public void setUnscaledYPosition(final int id, final int unscaledYPosition) {
         nodeArrays[id][UNSCALED_Y_POSITION_INDEX] = unscaledYPosition;
     }
 

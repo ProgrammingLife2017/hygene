@@ -3,7 +3,7 @@ package org.dnacronym.hygene.core;
 import com.google.common.eventbus.Subscribe;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.graph.Graph;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

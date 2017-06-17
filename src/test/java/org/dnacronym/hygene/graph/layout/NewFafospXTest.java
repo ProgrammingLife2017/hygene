@@ -1,5 +1,7 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.GraphTestBase;
+import org.dnacronym.hygene.graph.layout.Fafosp;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

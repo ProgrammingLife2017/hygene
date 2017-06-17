@@ -3,7 +3,6 @@ package org.dnacronym.hygene.graph;
 import org.dnacronym.hygene.graph.edge.Link;
 import org.dnacronym.hygene.graph.node.NewNode;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.models.SequenceDirection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

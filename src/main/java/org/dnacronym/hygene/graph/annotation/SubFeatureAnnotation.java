@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph.annotation;
 
 import java.util.ArrayList;
 import java.util.HashMap;

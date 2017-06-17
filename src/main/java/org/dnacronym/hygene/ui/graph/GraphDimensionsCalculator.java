@@ -23,7 +23,7 @@ import org.dnacronym.hygene.graph.node.NewNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
-import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.graph.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
