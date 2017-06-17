@@ -3,7 +3,7 @@ package org.dnacronym.hygene.ui.bookmark;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -34,7 +34,7 @@ final class SimpleBookmarkStoreTest {
 
 
     @BeforeEach
-    void beforeEach() throws ParseException {
+    void beforeEach() throws GfaParseException {
         bookmark = new Bookmark(0, 5, 32, "1234");
 
         final GraphStore graphStore = new GraphStore();
@@ -63,7 +63,7 @@ final class SimpleBookmarkStoreTest {
     }
 
     @Test
-    void testSetBookmarks() throws ParseException {
+    void testSetBookmarks() throws GfaParseException {
         final Bookmark bookmark2 = new Bookmark(1, 20, 20, "asdf");
         simpleBookmarkStore.addBookmarks(Arrays.asList(bookmark, bookmark2));
 

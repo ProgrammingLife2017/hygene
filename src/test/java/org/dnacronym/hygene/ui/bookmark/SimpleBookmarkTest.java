@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.ui.bookmark;
 
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ final class SimpleBookmarkTest {
 
 
     @BeforeEach
-    void beforeEach() throws ParseException {
+    void beforeEach() throws GfaParseException {
         bookmark = new Bookmark(10, 1, 500, "1234");
 
         onClick = mock(Runnable.class);

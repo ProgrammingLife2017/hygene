@@ -7,8 +7,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.MetadataParser;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileGenomeIndex;
@@ -75,7 +76,7 @@ public final class GenomeIndex {
             fileGenomeIndex.cleanIndex();
             buildIndex(progressUpdater);
             fileGenomeIndex.markIndexAsComplete();
-        } catch (final SQLException | ParseException e) {
+        } catch (final SQLException | GenomeParseException e) {
             LOGGER.error("Unable to load genome info from file.", e);
         }
     }
@@ -97,12 +98,12 @@ public final class GenomeIndex {
     /**
      * Retrieves the list of genomes in the GFA file from the header.
      *
-     * @throws ParseException in case of errors during parsing of the GFA file
+     * @throws GenomeParseException in case of errors during parsing of the GFA file
      */
-    private void loadGenomeList() throws ParseException {
-        final BufferedReader bufferedReader = gfaFile.readFile();
-
+    private void loadGenomeList() throws GenomeParseException {
         try {
+            final BufferedReader bufferedReader = gfaFile.readFile();
+
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.startsWith("H\t" + MetadataParser.GENOME_LIST_HEADER_PREFIX)) {
@@ -110,8 +111,8 @@ public final class GenomeIndex {
                     return;
                 }
             }
-        } catch (final IOException e) {
-            throw new ParseException("An error while reading the GFA file.", e);
+        } catch (final GfaParseException | IOException e) {
+            throw new GenomeParseException("An error while reading the GFA file.", e);
         }
     }
 
@@ -119,9 +120,9 @@ public final class GenomeIndex {
      * Parses one header line and checks for genome metadata.
      *
      * @param line the line to parse
-     * @throws ParseException in case of errors during parsing of the header line
+     * @throws GfaParseException in case of errors during parsing of the header line
      */
-    private void parseHeaderLine(final String line) throws ParseException {
+    private void parseHeaderLine(final String line) throws GfaParseException {
         final StringTokenizer stringTokenizer = new StringTokenizer(line, "\t");
 
         stringTokenizer.nextToken(); // Ignore "H" token
@@ -146,7 +147,7 @@ public final class GenomeIndex {
         }
 
         if (genomeBaseCounts.isEmpty()) {
-            throw new ParseException("Expected at least one genome to be present in GFA file.");
+            throw new GfaParseException("Expected at least one genome to be present in GFA file.");
         }
     }
 
@@ -207,7 +208,7 @@ public final class GenomeIndex {
                 final Integer genomeBaseCount = genomeBaseCounts.get(genomeName);
 
                 if (genomeBaseCount == null) {
-                    throw new ParseException("Unrecognized genome found at node " + nodeId + ".");
+                    throw new GenomeParseException("Unrecognized genome found at node " + nodeId + ".");
                 }
 
                 fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(genomeIndex, genomeBaseCount, nodeId));
@@ -215,7 +216,7 @@ public final class GenomeIndex {
                 final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
                 genomeBaseCounts.put(genomeName, genomeBaseCount + nodeBaseCount);
             }
-        } catch (final ParseException | SQLException e) {
+        } catch (final MetadataParseException | GenomeParseException | SQLException e) {
             LOGGER.warn("Failed to read metadata of node " + nodeId + ".", e);
         }
     }

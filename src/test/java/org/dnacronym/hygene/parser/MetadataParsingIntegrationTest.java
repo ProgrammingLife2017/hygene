@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 final class MetadataParsingIntegrationTest {
     @Test
-    void testGetNodeMetadata() throws ParseException {
+    void testGetNodeMetadata() throws MetadataParseException, GfaParseException {
         final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse(ProgressUpdater.DUMMY);
 
@@ -27,7 +27,7 @@ final class MetadataParsingIntegrationTest {
     }
 
     @Test
-    void testGetEdgeMetadata() throws ParseException {
+    void testGetEdgeMetadata() throws MetadataParseException, GfaParseException {
         final GfaFile gfaFile = new GfaFile("src/test/resources/gfa/simple.gfa");
         gfaFile.parse(ProgressUpdater.DUMMY);
 

@@ -8,7 +8,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -66,11 +65,7 @@ public final class QueryController implements Initializable {
      */
     @FXML
     void queryAction(final ActionEvent actionEvent) {
-        try {
-            query.query(sequenceField.getText());
-        } catch (final ParseException e) {
-            LOGGER.error("Unable to parse graph for querying.", e);
-        }
+        query.query(sequenceField.getText());
 
         actionEvent.consume();
     }

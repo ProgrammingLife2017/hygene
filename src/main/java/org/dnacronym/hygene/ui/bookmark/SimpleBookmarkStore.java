@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.persistence.FileBookmarks;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
@@ -121,7 +121,7 @@ public final class SimpleBookmarkStore {
                 graphVisualizer.setSelectedSegment(bookmark.getNodeId());
                 sequenceVisualizer.setOffset(bookmark.getBaseOffset());
             }));
-        } catch (final ParseException e) {
+        } catch (final GfaParseException e) {
             LOGGER.error("Unable to create bookmark %s.", bookmark, e);
         }
     }

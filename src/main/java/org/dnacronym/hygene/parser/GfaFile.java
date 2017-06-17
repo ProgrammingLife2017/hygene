@@ -59,9 +59,9 @@ public final class GfaFile {
      *
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return a {@link Graph} based on the contents of the GFA file
-     * @throws ParseException if the file content is not GFA-compliant
+     * @throws GfaParseException if the file content is not GFA-compliant
      */
-    public Graph parse(final ProgressUpdater progressUpdater) throws ParseException {
+    public Graph parse(final ProgressUpdater progressUpdater) throws GfaParseException {
         try (FileDatabase fileDatabase = new FileDatabase(fileName)) {
             final GraphLoader graphLoader = new GraphLoader(fileDatabase);
 
@@ -87,7 +87,7 @@ public final class GfaFile {
             }
         } catch (final UnexpectedDatabaseException | IOException | SQLException e) {
             LOGGER.error("Could not open file database to restore graph.", e);
-            throw new ParseException("Could not open file database to restore graph.", e);
+            throw new GfaParseException("Could not open file database to restore graph.", e);
         }
 
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Loading file completed");
@@ -100,9 +100,9 @@ public final class GfaFile {
      *
      * @param byteOffset the byte offset of the node within the GFA file
      * @return a map in the {@code provided key => node metadata} format
-     * @throws ParseException if the node metadata cannot be parsed
+     * @throws MetadataParseException if the node metadata cannot be parsed
      */
-    public NodeMetadata parseNodeMetadata(final long byteOffset) throws ParseException {
+    public NodeMetadata parseNodeMetadata(final long byteOffset) throws MetadataParseException {
         return metadataParser.parseNodeMetadata(this, byteOffset);
     }
 
@@ -112,9 +112,10 @@ public final class GfaFile {
      * @param byteOffsets the byte offsets where the nodes should be located, sorted from lowest to highest,
      *                    results will be given the same key as provided in this map
      * @return a {@link NodeMetadata} object
-     * @throws ParseException if the node metadata cannot be parsed
+     * @throws MetadataParseException if the node metadata cannot be parsed
      */
-    public Map<Integer, NodeMetadata> parseNodeMetadata(final Map<Integer, Long> byteOffsets) throws ParseException {
+    public Map<Integer, NodeMetadata> parseNodeMetadata(final Map<Integer, Long> byteOffsets)
+            throws MetadataParseException {
         return metadataParser.parseNodeMetadata(this, byteOffsets);
     }
 
@@ -123,9 +124,9 @@ public final class GfaFile {
      *
      * @param byteOffset byte offset of the edge within the GFA file
      * @return a {@link EdgeMetadata} object
-     * @throws ParseException if the edge metadata cannot be parsed
+     * @throws MetadataParseException if the edge metadata cannot be parsed
      */
-    public EdgeMetadata parseEdgeMetadata(final long byteOffset) throws ParseException {
+    public EdgeMetadata parseEdgeMetadata(final long byteOffset) throws MetadataParseException {
         return metadataParser.parseEdgeMetadata(this, byteOffset);
     }
 
@@ -155,13 +156,13 @@ public final class GfaFile {
      * Reads a GFA file into memory and gives its contents as a {@link String}.
      *
      * @return contents of the GFA file
-     * @throws ParseException if the given file name cannot be read
+     * @throws GfaParseException if the given file name cannot be read
      */
-    public BufferedReader readFile() throws ParseException {
+    public BufferedReader readFile() throws GfaParseException {
         try {
             return Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (final IOException e) {
-            throw new ParseException("File '" + fileName + "' cannot be read. ", e);
+            throw new GfaParseException("File '" + fileName + "' cannot be read. ", e);
         }
     }
 
@@ -169,13 +170,13 @@ public final class GfaFile {
      * Returns an input stream to read the GFA file.
      *
      * @return an input stream to read the GFA file
-     * @throws ParseException if file could not be found
+     * @throws GfaParseException if file could not be found
      */
-    public InputStream getInputStream() throws ParseException {
+    public InputStream getInputStream() throws GfaParseException {
         try {
             return new FileInputStream(fileName);
         } catch (final FileNotFoundException e) {
-            throw new ParseException("File '" + fileName + "' could not be found. ", e);
+            throw new GfaParseException("File '" + fileName + "' could not be found. ", e);
         }
     }
 
@@ -183,16 +184,16 @@ public final class GfaFile {
      * Returns a random access file for the GFA file.
      *
      * @return a random access file for the GFA file
-     * @throws ParseException if file could not be found
+     * @throws MetadataParseException if file could not be found
      */
-    public RandomAccessFile getRandomAccessFile() throws ParseException {
+    public RandomAccessFile getRandomAccessFile() throws MetadataParseException {
         try {
             if (randomAccessFile == null) {
                 randomAccessFile = new RandomAccessFile(fileName, RANDOM_ACCESS_FILE_MODE);
             }
             return randomAccessFile;
         } catch (final FileNotFoundException e) {
-            throw new ParseException("File '" + fileName + "' could not be found. ", e);
+            throw new MetadataParseException("File '" + fileName + "' could not be found. ", e);
         }
     }
 }

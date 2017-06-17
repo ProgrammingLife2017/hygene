@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.coordinatesystem;
 
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;
@@ -29,7 +29,7 @@ class GenomeIndexTest {
 
 
     @BeforeEach
-    void setUp() throws IOException, SQLException, ParseException {
+    void setUp() throws IOException, SQLException, GfaParseException {
         deleteDatabase();
         fileDatabase = new FileDatabase(TEST_GFA_FILE_NAME);
 
@@ -46,7 +46,7 @@ class GenomeIndexTest {
 
 
     @Test
-    void testGetClosestNode() throws ParseException, SQLException {
+    void testGetClosestNode() throws GfaParseException, SQLException {
         genomeIndex.populateIndex(mock(ProgressUpdater.class));
         assertThat(genomeIndex.getGenomePoint("g2", 5)).hasValueSatisfying(genomePoint -> {
             assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
@@ -55,7 +55,7 @@ class GenomeIndexTest {
     }
 
     @Test
-    void testGetClosestNodeSingleBaseNode() throws ParseException, SQLException {
+    void testGetClosestNodeSingleBaseNode() throws GfaParseException, SQLException {
         genomeIndex.populateIndex(mock(ProgressUpdater.class));
         assertThat(genomeIndex.getGenomePoint("g2", 3)).hasValueSatisfying(genomePoint -> {
             assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(0);
@@ -64,7 +64,7 @@ class GenomeIndexTest {
     }
 
     @Test
-    void testGetClosestNodeFirstNode() throws ParseException, SQLException {
+    void testGetClosestNodeFirstNode() throws GfaParseException, SQLException {
         genomeIndex.populateIndex(mock(ProgressUpdater.class));
         assertThat(genomeIndex.getGenomePoint("g1", 1)).hasValueSatisfying(genomePoint -> {
             assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);

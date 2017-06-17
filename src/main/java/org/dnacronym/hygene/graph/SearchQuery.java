@@ -2,8 +2,8 @@ package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.MetadataParser;
-import org.dnacronym.hygene.parser.ParseException;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -43,9 +43,9 @@ public final class SearchQuery {
      *
      * @param regex the regex to test against
      * @return the IDs of nodes with names matching the regex
-     * @throws ParseException if the GFA file is invalid in some form
+     * @throws MetadataParseException if the GFA file is invalid in some form
      */
-    public Set<Integer> executeNameRegexQuery(final String regex) throws ParseException {
+    public Set<Integer> executeNameRegexQuery(final String regex) throws MetadataParseException {
         return executeQuery(nodeMetadata -> Pattern.compile(regex).matcher(nodeMetadata.getName()).matches());
     }
 
@@ -55,9 +55,9 @@ public final class SearchQuery {
      *
      * @param regex the regex to test against
      * @return the IDs of nodes with sequences matching the regex
-     * @throws ParseException if the GFA file is invalid in some form
+     * @throws MetadataParseException if the GFA file is invalid in some form
      */
-    public Set<Integer> executeSequenceRegexQuery(final String regex) throws ParseException {
+    public Set<Integer> executeSequenceRegexQuery(final String regex) throws MetadataParseException {
         return executeQuery(nodeMetadata -> Pattern.compile(regex).matcher(nodeMetadata.getSequence()).matches());
     }
 
@@ -66,9 +66,9 @@ public final class SearchQuery {
      *
      * @param isInQuery predicate indicating whether a node with certain metadata should be in the query results
      * @return the set of node IDs that conform to this predicate
-     * @throws ParseException if the GFA file is invalid in some form
+     * @throws MetadataParseException if the GFA file is invalid in some form
      */
-    public Set<Integer> executeQuery(final Predicate<NodeMetadata> isInQuery) throws ParseException {
+    public Set<Integer> executeQuery(final Predicate<NodeMetadata> isInQuery) throws MetadataParseException {
         final MetadataParser metadataParser = new MetadataParser();
         final int numBatches = numberOfNodesInGraph / BATCH_SIZE + 1;
         final Set<Integer> nodeIds = new HashSet<>();

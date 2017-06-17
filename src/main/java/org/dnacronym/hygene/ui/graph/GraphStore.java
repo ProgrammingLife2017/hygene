@@ -9,7 +9,8 @@ import javafx.collections.ObservableList;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GffFile;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
+import org.dnacronym.hygene.parser.GffParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -51,7 +52,7 @@ public final class GraphStore {
             Platform.runLater(() -> gfaFileProperty.set(gfaFile));
 
             Hygene.getInstance().formatTitle(file.getPath());
-        } catch (final ParseException | UIInitialisationException e) {
+        } catch (final GfaParseException | UIInitialisationException e) {
             throw new IOException(e);
         }
     }
@@ -70,7 +71,7 @@ public final class GraphStore {
             gffFile.parse(progressUpdater);
 
             Platform.runLater(() -> gffFiles.add(gffFile));
-        } catch (final ParseException e) {
+        } catch (final GffParseException e) {
             throw new IOException(e);
         }
     }

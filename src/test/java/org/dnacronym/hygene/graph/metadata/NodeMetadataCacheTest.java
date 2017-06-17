@@ -7,8 +7,9 @@ import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.MetadataParser;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -44,7 +45,7 @@ final class NodeMetadataCacheTest {
 
 
     @BeforeEach
-    void beforeEach() throws ParseException {
+    void beforeEach() throws GfaParseException {
         MockitoAnnotations.initMocks(this);
 
         parser = spyMetadataParser();
@@ -62,7 +63,7 @@ final class NodeMetadataCacheTest {
 
 
     @Test
-    void testEmptySubgraph() throws ParseException {
+    void testEmptySubgraph() throws MetadataParseException, GfaParseException {
         final Subgraph subgraph = new Subgraph();
 
         cache.layoutDone(new LayoutDoneEvent(subgraph));
@@ -73,7 +74,7 @@ final class NodeMetadataCacheTest {
     }
 
     @Test
-    void testSingleSegment() throws ParseException {
+    void testSingleSegment() throws MetadataParseException, GfaParseException {
         final Subgraph subgraph = new Subgraph();
         final Segment segment = new Segment(2, 69, 6);
         subgraph.add(segment);
@@ -87,7 +88,7 @@ final class NodeMetadataCacheTest {
     }
 
     @Test
-    void testTwoSegments() throws ParseException {
+    void testTwoSegments() throws MetadataParseException, GfaParseException {
         final Subgraph subgraph = new Subgraph();
         final Segment segment1 = new Segment(1, 40, 5);
         final Segment segment2 = new Segment(2, 69, 6);
@@ -141,10 +142,10 @@ final class NodeMetadataCacheTest {
     /**
      * Tests that metadata is not retrieved twice if its metadata is put in the cache.
      *
-     * @throws ParseException if the metadata could not be parser
+     * @throws GfaParseException if the metadata could not be parser
      */
     @Test
-    void testRetrieveTwice() throws ParseException {
+    void testRetrieveTwice() throws MetadataParseException, GfaParseException {
         final Subgraph subgraph = new Subgraph();
         final Segment segment = new Segment(1, 38, 5);
         subgraph.add(segment);
@@ -164,9 +165,9 @@ final class NodeMetadataCacheTest {
      * Creates a new {@link GfaFile}.
      *
      * @return
-     * @throws ParseException
+     * @throws GfaParseException
      */
-    private GfaFile createGraph() throws ParseException {
+    private GfaFile createGraph() throws GfaParseException {
         final GfaFile gfaFile = new GfaFile(TEST_GRAPH_FILE);
         gfaFile.parse(ProgressUpdater.DUMMY);
 

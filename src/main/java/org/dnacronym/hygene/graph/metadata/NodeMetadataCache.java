@@ -12,7 +12,7 @@ import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.PathCalculator;
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.MetadataParseException;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -128,7 +128,7 @@ public final class NodeMetadataCache {
                     segment.setMetadata(entry.getValue());
                 }
             });
-        } catch (final ParseException e) {
+        } catch (final MetadataParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
         }
     }

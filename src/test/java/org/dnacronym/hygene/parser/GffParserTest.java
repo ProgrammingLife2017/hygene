@@ -20,7 +20,7 @@ final class GffParserTest {
 
 
     @BeforeEach
-    void beforeEach() throws ParseException {
+    void beforeEach() throws GffParseException {
         gffParser = new GffParser();
     }
 
@@ -30,25 +30,25 @@ final class GffParserTest {
      */
 
     @Test
-    void testSeqId() throws ParseException {
+    void testSeqId() throws GffParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
         assertThat(featureAnnotation.getSequenceId()).isEqualTo("ctg123");
     }
 
     @Test
-    void testMetadataSize() throws ParseException {
+    void testMetadataSize() throws GffParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
         assertThat(featureAnnotation.getMetadata()).hasSize(2);
     }
 
     @Test
-    void testFeaturesSize() throws ParseException {
+    void testFeaturesSize() throws GffParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
         assertThat(featureAnnotation.getSubFeatureAnnotations()).hasSize(23);
     }
 
     @Test
-    void testFirstSubFeatureCorrect() throws ParseException {
+    void testFirstSubFeatureCorrect() throws GffParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
         final SubFeatureAnnotation subFeatureAnnotation = featureAnnotation.getSubFeatureAnnotations().get(0);
 
@@ -64,7 +64,7 @@ final class GffParserTest {
     }
 
     @Test
-    void testSecondSubFeatureCorrect() throws ParseException {
+    void testSecondSubFeatureCorrect() throws GffParseException {
         featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
         final SubFeatureAnnotation subFeatureAnnotation = featureAnnotation.getSubFeatureAnnotations().get(1);
 
@@ -79,14 +79,14 @@ final class GffParserTest {
     }
 
     /**
-     * {@link ParseException}s.
+     * {@link GffParseException}s.
      */
 
     @Test
     void testOpenNonExistentFile() {
         final Throwable throwable = catchThrowable(() -> gffParser.parse("asdf.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -94,7 +94,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/missing_column.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -102,7 +102,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/wrong_attribute_format.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -110,7 +110,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/id_unescaped_greater_than.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -118,7 +118,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/invalid_phase.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -126,7 +126,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/invalid_score.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -134,7 +134,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/invalid_strand.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -142,7 +142,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/too_large_phase.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -150,7 +150,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/invalid_start.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -158,7 +158,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/invalid_end.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -166,7 +166,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/non_existent_parent.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -174,7 +174,7 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/multiple_id_value.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 
     @Test
@@ -182,6 +182,6 @@ final class GffParserTest {
         final Throwable throwable = catchThrowable(() ->
                 gffParser.parse("src/test/resources/gff/multiple_id_key.gff", ProgressUpdater.DUMMY));
 
-        assertThat(throwable).isInstanceOf(ParseException.class);
+        assertThat(throwable).isInstanceOf(GffParseException.class);
     }
 }

@@ -45,7 +45,7 @@ final class GffFileTest {
      */
 
     @Test
-    void testGeneChildren() throws ParseException {
+    void testGeneChildren() throws GffParseException {
         featureAnnotation = gffFile.parse(ProgressUpdater.DUMMY);
         final SubFeatureAnnotation geneAnnotation = featureAnnotation.getSubFeatureAnnotations().get(0);
 
@@ -59,7 +59,7 @@ final class GffFileTest {
     }
 
     @Test
-    void testTranscript() throws ParseException {
+    void testTranscript() throws GffParseException {
         featureAnnotation = gffFile.parse(ProgressUpdater.DUMMY);
 
         final SubFeatureAnnotation transcriptedProtean1 = featureAnnotation.getSubFeatureAnnotations().get(10);
