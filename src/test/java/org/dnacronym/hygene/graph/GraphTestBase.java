@@ -22,7 +22,7 @@ public abstract class GraphTestBase {
      * Resets this {@link GraphTestBase}'s fields.
      */
     @AfterEach
-    protected void afterEach() {
+    final void afterEach() {
         graph = null;
         nodeArrays = null;
     }

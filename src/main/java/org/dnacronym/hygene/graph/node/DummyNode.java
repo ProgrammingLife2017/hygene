@@ -3,16 +3,14 @@ package org.dnacronym.hygene.graph.node;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 
-import org.dnacronym.hygene.graph.edge.DummyEdge;
-import org.dnacronym.hygene.graph.edge.Link;
-
 /**
  * Class representing a dummy node, to be used for graph layout.
  * <p>
  * This is a 'dummy node', used to create space in complex graph scenarios. As a consequence, it is not intended to be
- * drawn and serves as a connector of {@link DummyEdge}s. One or more of these {@link DummyNode}s forms a 'diversion',
- * which is a path starting from one non-dummy node, followed by one or more {@link DummyNode}s (connected by
- * {@link DummyEdge}s). The diversion reaches its end when it connects to the first non-dummy node again.
+ * drawn and serves as a connector of {@link org.dnacronym.hygene.graph.edge.DummyEdge}s. One or more of these
+ * {@link DummyNode}s forms a 'diversion', which is a path starting from one non-dummy node, followed by one or more
+ * {@link DummyNode}s (connected by {@link org.dnacronym.hygene.graph.edge.DummyEdge}s). The diversion reaches its end
+ * when it connects to the first non-dummy node again.
  * <p>
  * An example of such a diversion is illustrated below:
  * <p>
@@ -22,8 +20,9 @@ import org.dnacronym.hygene.graph.edge.Link;
  * X * Y * Z
  * </pre>
  * <i>
- * A and B are {@link Segment}s and the connection between them is an {@link Link}. The diversion in this scenario
- * consists of the 'stars' (representing {@link DummyEdge}s) and the {@link DummyNode}s they connect (X, Y, and Z).
+ * A and B are {@link Segment}s and the connection between them is an {@link org.dnacronym.hygene.graph.edge.Link}. The
+ * diversion in this scenario consists of the 'stars' (representing {@link org.dnacronym.hygene.graph.edge.DummyEdge}s)
+ * and the {@link DummyNode}s they connect (X, Y, and Z).
  * </i>
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
