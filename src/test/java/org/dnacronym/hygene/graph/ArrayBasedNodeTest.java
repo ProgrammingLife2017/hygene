@@ -101,8 +101,8 @@ final class ArrayBasedNodeTest {
 
         assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(2);
         assertThat(node.getOutgoingEdges()).containsOnly(
-                new Edge(10, 20, 3, null),
-                new Edge(10, 30, 4, null)
+                new ArrayBasedEdge(10, 20, 3, null),
+                new ArrayBasedEdge(10, 30, 4, null)
         );
     }
 
@@ -122,9 +122,9 @@ final class ArrayBasedNodeTest {
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(3);
         assertThat(node.getIncomingEdges()).containsOnly(
-                new Edge(20, 10, 3, null),
-                new Edge(30, 10, 4, null),
-                new Edge(40, 10, 5, null)
+                new ArrayBasedEdge(20, 10, 3, null),
+                new ArrayBasedEdge(30, 10, 4, null),
+                new ArrayBasedEdge(40, 10, 5, null)
         );
     }
 }
