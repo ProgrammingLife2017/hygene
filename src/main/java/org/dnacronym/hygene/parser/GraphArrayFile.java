@@ -1,6 +1,4 @@
-package org.dnacronym.hygene.persistence;
-
-import org.dnacronym.hygene.parser.ProgressUpdater;
+package org.dnacronym.hygene.parser;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,13 +9,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.StringTokenizer;
 
 
 /**
  * Represents a file containing a cached graph array representation of a GFA file.
  */
-public final class GraphArrayFile {
+final class GraphArrayFile {
     private static final int PROGRESS_UPDATE_INTERVAL = 50000;
     private static final int PROGRESS_TOTAL = 100;
 
@@ -34,7 +33,7 @@ public final class GraphArrayFile {
      *
      * @param file the cache file
      */
-    public GraphArrayFile(final File file) {
+    GraphArrayFile(final File file) {
         this.file = file;
     }
 
@@ -42,13 +41,13 @@ public final class GraphArrayFile {
     /**
      * Reads a cached graph and parses it to the internal graph array data structure.
      *
-     * @param graphSize       the number of nodes in the graph
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return internal graph array data structure from cache file
      * @throws IOException if the cache file cannot be read
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
-    public int[][] read(final int graphSize, final ProgressUpdater progressUpdater) throws IOException {
+    int[][] read(final ProgressUpdater progressUpdater) throws IOException {
+        final int graphSize = (int) Files.lines(file.toPath()).count();
         final int[][] graph = new int[graphSize][];
 
         try (BufferedReader cache = new BufferedReader(new InputStreamReader(
@@ -85,7 +84,7 @@ public final class GraphArrayFile {
      * @throws IOException if we cannot write to the cache file
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void write(final int[][] graph) throws IOException {
+    void write(final int[][] graph) throws IOException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(file), StandardCharsets.UTF_8), WRITE_BUFFER_SIZE)) {
             for (final int[] node : graph) {
@@ -101,14 +100,5 @@ public final class GraphArrayFile {
 
             bufferedWriter.flush();
         }
-    }
-
-    /**
-     * Gets absolute path of cache file.
-     *
-     * @return absolute path of cache file
-     */
-    public String getAbsolutePath() {
-        return file.getAbsolutePath();
     }
 }
