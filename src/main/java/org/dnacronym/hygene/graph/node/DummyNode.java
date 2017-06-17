@@ -1,7 +1,10 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.node;
 
-import org.dnacronym.hygene.models.NodeMetadata;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
+
+import org.dnacronym.hygene.graph.edge.DummyEdge;
+import org.dnacronym.hygene.graph.edge.Link;
 
 /**
  * Class representing a dummy node, to be used for graph layout.

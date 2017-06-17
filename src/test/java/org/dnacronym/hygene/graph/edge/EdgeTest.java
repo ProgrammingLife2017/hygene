@@ -1,5 +1,7 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.edge;
 
+import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.NewNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

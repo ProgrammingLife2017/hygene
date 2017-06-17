@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.node;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;

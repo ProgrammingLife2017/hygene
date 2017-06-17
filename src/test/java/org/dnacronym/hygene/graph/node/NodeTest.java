@@ -1,5 +1,6 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.node;
 
+import org.dnacronym.hygene.graph.node.NewNode;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,5 +1,7 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.edge;
 
+
+import org.dnacronym.hygene.graph.node.NewNode;
 
 /**
  * Class representing a single, non-dummy edge.

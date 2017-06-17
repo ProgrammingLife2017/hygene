@@ -4,7 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.node.Segment;
 
 
 /**

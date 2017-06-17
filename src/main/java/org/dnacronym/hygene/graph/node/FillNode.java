@@ -1,7 +1,7 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.node;
 
 
-import org.dnacronym.hygene.models.NodeMetadata;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 /**
  * Class representing a fill node, to be used for graph layout.

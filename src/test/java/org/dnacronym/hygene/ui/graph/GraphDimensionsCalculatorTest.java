@@ -2,7 +2,7 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.scene.canvas.Canvas;
 import org.assertj.core.data.Offset;
-import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeBuilder;

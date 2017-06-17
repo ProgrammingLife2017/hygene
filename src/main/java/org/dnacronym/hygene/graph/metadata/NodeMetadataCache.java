@@ -8,8 +8,9 @@ import org.dnacronym.hygene.core.ThrottledExecutor;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.events.LayoutDoneEvent;
 import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
-import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.models.PathCalculator;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 

@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.node;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;

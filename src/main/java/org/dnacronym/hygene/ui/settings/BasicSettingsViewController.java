@@ -11,7 +11,7 @@ import javafx.util.Pair;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.node.NewNode;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 import org.dnacronym.hygene.graph.colorscheme.fixed.FixedColorScheme;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeIncomingEdges;

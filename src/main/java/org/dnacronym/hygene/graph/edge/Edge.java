@@ -1,6 +1,7 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.edge;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.node.NewNode;
 
 import java.util.Objects;
 import java.util.Set;

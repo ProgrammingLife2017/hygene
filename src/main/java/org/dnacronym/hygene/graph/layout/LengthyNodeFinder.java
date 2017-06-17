@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.dnacronym.hygene.graph.Edge;
-import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.NewNode;
 
 import java.util.Deque;
 import java.util.HashMap;

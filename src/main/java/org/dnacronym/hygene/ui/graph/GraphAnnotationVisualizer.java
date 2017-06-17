@@ -3,8 +3,8 @@ package org.dnacronym.hygene.ui.graph;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
-import org.dnacronym.hygene.graph.NewNode;
-import org.dnacronym.hygene.graph.Segment;
+import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.List;
 

@@ -1,10 +1,11 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.node;
 
 import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 import org.dnacronym.hygene.graph.colorscheme.fixed.FixedColorScheme;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
+import org.dnacronym.hygene.graph.edge.Edge;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;

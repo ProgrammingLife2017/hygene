@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.node.NewNode;
 
 
 /**

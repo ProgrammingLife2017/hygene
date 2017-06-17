@@ -1,7 +1,9 @@
-package org.dnacronym.hygene.graph;
+package org.dnacronym.hygene.graph.edge;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.node.NewNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,31 +12,31 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Test suite for the {@link Link} class.
+ * Test suite for the {@link DummyEdge} class.
  */
-final class LinkTest extends EdgeTest {
-    private static final int BYTE_OFFSET = 29;
-
-    private Link link;
+final class DummyEdgeTest extends EdgeTest {
+    private DummyEdge dummyEdge;
+    private Edge originalEdge;
 
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
-        link = new Link(getFrom(), getTo(), BYTE_OFFSET);
-        setEdge(link);
+        originalEdge = mock(Edge.class);
+        dummyEdge = new DummyEdge(getFrom(), getTo(), originalEdge);
+        setEdge(dummyEdge);
     }
 
 
     @Test
-    void testGetByteOffset() {
-        assertThat(link.getByteOffset()).isEqualTo(BYTE_OFFSET);
+    void testGetOriginalEdge() {
+        assertThat(dummyEdge.getOriginalEdge()).isEqualTo(originalEdge);
     }
 
     @Test
     void testEquals() {
-        EqualsVerifier.forClass(Link.class)
+        EqualsVerifier.forClass(DummyEdge.class)
                 .withRedefinedSuperclass()
                 .withPrefabValues(NewNode.class,
                         new DummyNode(mock(NewNode.class), mock(NewNode.class)),
