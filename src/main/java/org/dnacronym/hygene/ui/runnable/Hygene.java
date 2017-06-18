@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.runnable;
 
+import com.gluonhq.ignite.guice.GuiceContext;
+import javax.inject.Inject;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphAnnotation;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -39,26 +41,42 @@ public final class Hygene extends Application {
     private static final Logger LOGGER = LogManager.getLogger(Hygene.class);
     private static Hygene hygeneApplication;
 
+    private final GuiceContext context = new GuiceContext(this, () -> Arrays.asList(new GuiceModule()));
+
+    @Inject
+    private FXMLLoader fxmlLoader;
+
     static final String TITLE = "Hygene";
     private static final String APPLICATION_VIEW = "/ui/main_view.fxml";
     private static final String APPLICATION_ICON = "/icons/hygene_logo_small.png";
 
+    @Inject
     private GraphStore graphStore;
+    @Inject
     private SimpleBookmarkStore simpleBookmarkStore;
 
+    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
     private GraphMovementCalculator graphMovementCalculator;
+    @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
 
+    @Inject
     private SequenceVisualizer sequenceVisualizer;
 
+    @Inject
     private Query query;
 
+    @Inject
     private GraphAnnotation graphAnnotation;
+    @Inject
     private GenomeNavigation genomeNavigation;
 
+    @Inject
     private StatusBar statusBar;
 
+    @Inject
     private Settings settings;
 
     private Stage primaryStage;
@@ -99,35 +117,19 @@ public final class Hygene extends Application {
     }
 
     @Override
-    public void init() throws IOException, SQLException {
-        graphStore = new GraphStore();
-        settings = new Settings(graphStore);
-        query = new Query(graphStore);
-        graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
-        graphMovementCalculator = new GraphMovementCalculator(graphDimensionsCalculator);
-        HygeneEventBus.getInstance().register(graphDimensionsCalculator);
+    public void start(final Stage primaryStage) throws IOException, UIInitialisationException, SQLException {
+        context.init();
 
-        sequenceVisualizer = new SequenceVisualizer();
-        statusBar = new StatusBar();
-
-        genomeNavigation = new GenomeNavigation(graphStore, statusBar);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-        graphVisualizer = new GraphVisualizer(graphDimensionsCalculator, graphAnnotation, query);
-
-        simpleBookmarkStore = new SimpleBookmarkStore(
-                graphStore, graphVisualizer, graphDimensionsCalculator, sequenceVisualizer);
-    }
-
-    @Override
-    public void start(final Stage primaryStage) throws IOException, UIInitialisationException {
         this.primaryStage = primaryStage;
         setInstance(this);
+
+        final URL resource = getClass().getResource(APPLICATION_VIEW);
+        fxmlLoader.setLocation(resource);
+        final Parent parent = fxmlLoader.load();
 
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final URL resource = getClass().getResource(APPLICATION_VIEW);
-        final Parent parent = FXMLLoader.load(resource);
 
         primaryStage.setOnCloseRequest(e -> {
             simpleBookmarkStore.writeBookmarksToFile();

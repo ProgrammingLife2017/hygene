@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.settings;
 
+import javax.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -20,6 +21,7 @@ public final class Settings {
      *
      * @param graphStore {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GfaFile} will be observed
      */
+    @Inject
     public Settings(final GraphStore graphStore) {
         this.graphStore = graphStore;
 

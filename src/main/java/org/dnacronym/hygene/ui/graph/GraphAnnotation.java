@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
+import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
@@ -38,6 +39,7 @@ public final class GraphAnnotation {
      * @param graphStore       the {@link GraphStore} who's {@link GffFile}s are used to update the
      *                         {@link FeatureAnnotation}s
      */
+    @Inject
     public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
         genomeIndex = genomeNavigation.getGenomeIndexProperty().get();
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {

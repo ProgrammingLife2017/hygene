@@ -16,6 +16,7 @@ import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public final class SimpleBookmarkStore {
      * @param sequenceVisualizer        the {@link SequenceVisualizer} to be used by this class
      * @see SimpleBookmark
      */
+    @Inject
     public SimpleBookmarkStore(final GraphStore graphStore, final GraphVisualizer graphVisualizer,
                                final GraphDimensionsCalculator graphDimensionsCalculator,
                                final SequenceVisualizer sequenceVisualizer) {

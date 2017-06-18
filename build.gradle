@@ -37,6 +37,12 @@ configurations {
 }
 
 dependencies {
+    // Guice
+    compile("com.google.inject:guice:${guiceVersion}")
+
+    // Gluon Ignite for Guice
+    compile("com.gluonhq:ignite-guice:${gluonIgniteVersion}")
+
     // Biojava
     compile("org.biojava:biojava-core:${biojavaVersion}")
 

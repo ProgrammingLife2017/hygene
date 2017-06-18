@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
+import javax.inject.Inject;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -16,6 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
+import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
@@ -87,6 +89,7 @@ public final class GraphDimensionsCalculator {
      *
      * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
+    @Inject
     public GraphDimensionsCalculator(final GraphStore graphStore) {
         observableQueryNodes = FXCollections.observableArrayList();
         readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
@@ -129,6 +132,8 @@ public final class GraphDimensionsCalculator {
 
         graphProperty = new SimpleObjectProperty<>();
         graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> setGraph(newValue.getGraph()));
+
+        HygeneEventBus.getInstance().register(this);
     }
 
 
