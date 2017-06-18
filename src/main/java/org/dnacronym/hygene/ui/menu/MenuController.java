@@ -22,6 +22,7 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.settings.Settings;
 import org.dnacronym.hygene.ui.settings.SettingsView;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -40,7 +41,10 @@ public final class MenuController implements Initializable {
 
     private FileChooser gfaFileChooser;
     private FileChooser gffFileChooser;
+
+    @Inject
     private GraphStore graphStore;
+    @Inject
     private Settings settings;
 
     @FXML
@@ -61,8 +65,6 @@ public final class MenuController implements Initializable {
         }
 
         try {
-            setGraphStore(Hygene.getInstance().getGraphStore());
-            setSettings(Hygene.getInstance().getSettings());
             gffFileOpen.disableProperty().bind(Hygene.getInstance().getGenomeNavigation().getIndexedFinishedProperty()
                     .not());
 
@@ -248,15 +250,6 @@ public final class MenuController implements Initializable {
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
-    }
-
-    /**
-     * Returns the {@link FileChooser} used by the menu.
-     *
-     * @return the {@link FileChooser}
-     */
-    FileChooser getGfaFileChooser() {
-        return gfaFileChooser;
     }
 
     /**

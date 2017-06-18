@@ -5,13 +5,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,26 +17,13 @@ import java.util.ResourceBundle;
  * Controller for the view menu.
  */
 public final class ViewMenuController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(ViewMenuController.class);
-
+    @Inject
     private SequenceVisualizer sequenceVisualizer;
+    @Inject
     private GraphStore graphStore;
 
     @FXML
     private MenuItem toggleSequenceVisualizer;
-
-
-    /**
-     * Creates an instance of {@link ViewMenuController}.
-     */
-    public ViewMenuController() {
-        try {
-            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
-            setGraphStore(Hygene.getInstance().getGraphStore());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-        }
-    }
 
 
     @Override
@@ -58,15 +42,6 @@ public final class ViewMenuController implements Initializable {
      */
     void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
         this.sequenceVisualizer = sequenceVisualizer;
-    }
-
-    /**
-     * Sets the {@link GraphStore} for use by the controller.
-     *
-     * @param graphStore the {@link GraphStore} for use by the controller
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
     }
 
     /**
