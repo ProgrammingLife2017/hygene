@@ -1,42 +1,25 @@
 package org.dnacronym.hygene.ui.settings;
 
 import javafx.fxml.Initializable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+
+import javax.inject.Inject;
 
 
 /**
  * Abstract Settings Controller.
  */
 public abstract class SettingsController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(SettingsController.class);
-
+    @Inject
     private Settings settings;
+    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
     private GraphMovementCalculator graphMovementCalculator;
+    @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
-
-
-    /**
-     * Initializes a new instance of {@link SettingsController}.
-     */
-    SettingsController() {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setSettings(Hygene.getInstance().getSettings());
-            setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
-            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-            new ErrorDialogue(e).show();
-        }
-    }
 
 
     /**
