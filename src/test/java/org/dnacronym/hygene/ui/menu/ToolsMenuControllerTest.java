@@ -24,6 +24,7 @@ final class ToolsMenuControllerTest extends UITestBase {
     @Override
     public void beforeEach() {
         toolsMenuController = new ToolsMenuController();
+        injectMembers(toolsMenuController);
     }
 
 

@@ -157,4 +157,13 @@ public final class Hygene extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
+
+    /**
+     * Returns the Guice context.
+     *
+     * @return the Guice context
+     */
+    public GuiceContext getContext() {
+        return context;
+    }
 }

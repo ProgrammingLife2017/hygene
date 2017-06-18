@@ -9,4 +9,6 @@
     <suppress files=".*(Test|TestBase)\.java" checks="JavadocPackage"/>
     <!-- Acceptable in tests -->
     <suppress files=".*(Test|TestBase)\.java" checks="MagicNumber|JavadocType|JavadocMethod"/>
+    <!-- Third party code -->
+    <suppress files="com[\\/]gluonhq[\\/]ignite[\\/]guice" checks="."/>
 </suppressions>

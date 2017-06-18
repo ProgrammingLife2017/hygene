@@ -29,7 +29,8 @@ public final class SettingsView {
     /**
      * Create a new instance of a {@link SettingsView}.
      *
-     * @param settings {@link Settings} of the application
+     * @param settings   {@link Settings} of the application
+     * @param fxmlLoader a {@link FXMLLoader} instance for instantiating the new window
      */
     @Inject
     public SettingsView(final Settings settings, final FXMLLoader fxmlLoader) {

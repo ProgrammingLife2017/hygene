@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.settings;
 
 
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ final class SettingsViewTest extends UITestBase {
         stage = mock(Stage.class);
 
         interact(() -> {
-            settingsView = new SettingsView(settings);
+            settingsView = new SettingsView(settings, createInstance(FXMLLoader.class));
             settingsView.setStage(stage);
         });
     }

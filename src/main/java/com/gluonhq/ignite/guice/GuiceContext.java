@@ -21,6 +21,7 @@ import java.util.function.Supplier;
  * {@code provideFxmlLoader} (line 75). This change has already been included in the code base of
  * the authors of the library, but unfortunately it has not been released yet.
  */
+@SuppressWarnings({"PMD", "nullness", "squid:S1186", "squid:S1161"}) // No need to fix third party code
 public class GuiceContext implements DIContext {
     private final Object contextRoot;
     protected Injector injector;

@@ -20,7 +20,6 @@ import org.dnacronym.hygene.ui.recent.RecentDirectory;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.settings.Settings;
 import org.dnacronym.hygene.ui.settings.SettingsView;
 
 import javax.inject.Inject;
@@ -45,8 +44,6 @@ public final class MenuController implements Initializable {
 
     @Inject
     private GraphStore graphStore;
-    @Inject
-    private Settings settings;
     @Inject
     private GenomeNavigation genomeNavigation;
 
@@ -78,15 +75,6 @@ public final class MenuController implements Initializable {
             LOGGER.error("Failed to initialize MenuController.", e);
             new ErrorDialogue(e).show();
         }
-    }
-
-    /**
-     * Set the {@link Settings} for use by the controller.
-     *
-     * @param settings {@link Settings} for use by the controller
-     */
-    void setSettings(final Settings settings) {
-        this.settings = settings;
     }
 
     /**

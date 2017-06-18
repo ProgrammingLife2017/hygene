@@ -12,7 +12,6 @@ import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.settings.Settings;
 import org.dnacronym.hygene.ui.settings.SettingsView;
 import org.junit.jupiter.api.Test;
 
@@ -36,10 +35,10 @@ import static org.mockito.Mockito.when;
 final class MenuControllerTest extends UITestBase {
     private MenuController menuController;
 
-
     @Override
     public void beforeEach() {
         menuController = new MenuController();
+        injectMembers(menuController);
     }
 
 
@@ -155,12 +154,9 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testOpenSettingsWindowInit() throws Exception {
-        final GraphStore graphStore = mock(GraphStore.class);
-
         final CompletableFuture<SettingsView> future = new CompletableFuture<>();
 
         interact(() -> {
-            menuController.setSettings(new Settings(graphStore));
             menuController.settingsAction();
             future.complete(menuController.getSettingsView());
         });
@@ -170,12 +166,9 @@ final class MenuControllerTest extends UITestBase {
 
     @Test
     void testOpenSettingsWindowState() throws Exception {
-        final GraphStore graphStore = mock(GraphStore.class);
-
         final CompletableFuture<SettingsView> future = new CompletableFuture<>();
 
         interact(() -> {
-            menuController.setSettings(new Settings(graphStore));
             menuController.settingsAction();
             future.complete(menuController.getSettingsView());
         });
