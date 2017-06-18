@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 
 
 /**
@@ -30,9 +30,9 @@ public final class SimpleBookmark {
      *
      * @param bookmark bookmark associated with this {@link SimpleBookmark}
      * @param onClick  {@link Runnable} that can be retrieved by calling {@link #getOnClick()}
-     * @throws ParseException if unable to get the sequence of the node in the bookmark
+     * @throws GfaParseException if unable to get the sequence of the node in the bookmark
      */
-    public SimpleBookmark(final Bookmark bookmark, final Runnable onClick) throws ParseException {
+    public SimpleBookmark(final Bookmark bookmark, final Runnable onClick) throws GfaParseException {
         this.bookmark = bookmark;
         this.onClick = onClick;
 

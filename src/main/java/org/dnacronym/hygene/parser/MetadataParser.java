@@ -31,13 +31,13 @@ public final class MetadataParser {
      * @param gfa        a reference to the current {@link GfaFile}
      * @param byteOffset the byte offset where the node should be located
      * @return a {@link NodeMetadata} object containing a segment's metadata
-     * @throws ParseException if the GFA file or given line is invalid
+     * @throws MetadataParseException if the GFA file or given line is invalid
      */
-    public NodeMetadata parseNodeMetadata(final GfaFile gfa, final long byteOffset) throws ParseException {
+    public NodeMetadata parseNodeMetadata(final GfaFile gfa, final long byteOffset) throws MetadataParseException {
         final NodeMetadata metadata = parseNodeMetadata(gfa, ImmutableMap.of(0, byteOffset)).get(0);
 
         return Optional.ofNullable(metadata).orElseThrow(
-                () -> new ParseException("The node at position " + byteOffset + " could not be found")
+                () -> new MetadataParseException("The node at position " + byteOffset + " could not be found")
         );
     }
 
@@ -48,11 +48,11 @@ public final class MetadataParser {
      * @param byteOffsets the byte offsets where the nodes should be located, sorted from lowest to highest, results
      *                    will be given the same key as provided in this map
      * @return a map in the {@code provided key => node metadata} format
-     * @throws ParseException if the GFA file or given line is invalid
+     * @throws MetadataParseException if the GFA file or given line is invalid
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // The whole purpose of the loop is to instantiate objects
     public Map<Integer, NodeMetadata> parseNodeMetadata(final GfaFile gfa, final Map<Integer, Long> byteOffsets)
-            throws ParseException {
+            throws MetadataParseException {
 
         final Map<Integer, NodeMetadata> result = new HashMap<>(byteOffsets.size());
 
@@ -80,7 +80,9 @@ public final class MetadataParser {
 
                 result.put(entry.getKey(), new NodeMetadata(name, sequence, genomes));
             } catch (final NoSuchElementException e) {
-                throw new ParseException("Not enough parameters for segment at position " + byteOffset + ".", e);
+                throw new MetadataParseException(
+                        "Not enough parameters for segment at position " + byteOffset + ".", e
+                );
             }
         }
 
@@ -93,9 +95,9 @@ public final class MetadataParser {
      * @param gfa        string containing the contents of the GFA file
      * @param byteOffset the byte offset where the edge should be located
      * @return an {@link EdgeMetadata} object containing a link's metadata
-     * @throws ParseException if the GFA file or given line is invalid
+     * @throws MetadataParseException if the GFA file or given line is invalid
      */
-    public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final long byteOffset) throws ParseException {
+    public EdgeMetadata parseEdgeMetadata(final GfaFile gfa, final long byteOffset) throws MetadataParseException {
         final String line = getLine(gfa.getRandomAccessFile(), byteOffset);
 
         validateLine(line, "L", byteOffset);
@@ -112,7 +114,7 @@ public final class MetadataParser {
 
             return new EdgeMetadata(fromOrient, toOrient, overlap);
         } catch (final NoSuchElementException e) {
-            throw new ParseException("Not enough parameters for link at position " + byteOffset, e);
+            throw new MetadataParseException("Not enough parameters for link at position " + byteOffset, e);
         }
     }
 
@@ -122,20 +124,20 @@ public final class MetadataParser {
      * @param gfa        string containing the contents of the GFA file
      * @param byteOffset the byte offset where the node or edge should be located
      * @return the line of the file belonging to the node or edge
-     * @throws ParseException if the byte offset is out of bounds
+     * @throws MetadataParseException if the byte offset is out of bounds
      */
-    private String getLine(final RandomAccessFile gfa, final long byteOffset) throws ParseException {
+    private String getLine(final RandomAccessFile gfa, final long byteOffset) throws MetadataParseException {
         if (byteOffset < 0) {
-            throw new ParseException("Byte offset " + byteOffset + " is not a valid byte offset.");
+            throw new MetadataParseException("Byte offset " + byteOffset + " is not a valid byte offset.");
         }
 
         try {
             gfa.seek(byteOffset);
 
             return Optional.ofNullable(gfa.readLine())
-                    .orElseThrow(() -> new ParseException("Line was null and could not be read."));
+                    .orElseThrow(() -> new MetadataParseException("Line was null and could not be read."));
         } catch (final IOException e) {
-            throw new ParseException("Line could not be read.", e);
+            throw new MetadataParseException("Line could not be read.", e);
         }
     }
 
@@ -145,12 +147,14 @@ public final class MetadataParser {
      * @param line           a line of the GFA file that 'might' belong to a node or an edge
      * @param expectedPrefix the expected prefix of the line
      * @param byteOffset     the byte offset where the node or edge is located
-     * @throws ParseException if the line does not start with the prefix
+     * @throws MetadataParseException if the line does not start with the prefix
      */
     private void validateLine(final String line, final String expectedPrefix,
-                              final long byteOffset) throws ParseException {
+                              final long byteOffset) throws MetadataParseException {
         if (!line.startsWith(expectedPrefix)) {
-            throw new ParseException("Expected line at position " + byteOffset + " to start with " + expectedPrefix);
+            throw new MetadataParseException(
+                    "Expected line at position " + byteOffset + " to start with " + expectedPrefix
+            );
         }
     }
 
@@ -160,12 +164,13 @@ public final class MetadataParser {
      * @param line       the line of the GFA file belonging to a node or an edge
      * @param byteOffset the byte offset where the node or edge is located
      * @return an initialized {@link StringTokenizer} object
-     * @throws ParseException if the given line does not contain any tabs
+     * @throws MetadataParseException if the given line does not contain any tabs
      */
-    private StringTokenizer initializeStringTokenizer(final String line, final long byteOffset) throws ParseException {
+    private StringTokenizer initializeStringTokenizer(final String line, final long byteOffset)
+            throws MetadataParseException {
         final StringTokenizer st = new StringTokenizer(line, "\t");
         if (!st.hasMoreTokens()) {
-            throw new ParseException("Line at position " + byteOffset + " is not valid");
+            throw new MetadataParseException("Line at position " + byteOffset + " is not valid");
         }
         return st;
     }
@@ -178,11 +183,11 @@ public final class MetadataParser {
      * @param headerField the header field (including the prefix) to parse
      * @param byteOffset  the byte offset of the current line
      * @return the list of genomes in that file
-     * @throws ParseException if the GFA file or given line is invalid
+     * @throws MetadataParseException if the GFA file or given line is invalid
      */
-    private List<String> parseGenomes(final String headerField, final long byteOffset) throws ParseException {
+    private List<String> parseGenomes(final String headerField, final long byteOffset) throws MetadataParseException {
         if (!headerField.startsWith(GENOME_LIST_HEADER_PREFIX)) {
-            throw new ParseException("Expected genome header at position " + byteOffset + ".");
+            throw new MetadataParseException("Expected genome header at position " + byteOffset + ".");
         }
 
         final String genomeListString = headerField.substring(GENOME_LIST_HEADER_PREFIX.length());

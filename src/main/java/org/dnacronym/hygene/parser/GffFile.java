@@ -34,9 +34,9 @@ public final class GffFile {
      *
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return a {@link FeatureAnnotation} based on the contents of the GFF file
-     * @throws ParseException if the file content is not GFF-compliant file
+     * @throws GffParseException if the file content is not GFF-compliant file
      */
-    public FeatureAnnotation parse(final ProgressUpdater progressUpdater) throws ParseException {
+    public FeatureAnnotation parse(final ProgressUpdater progressUpdater) throws GffParseException {
         LOGGER.info("Start parsing " + fileName);
         final FeatureAnnotation annotation = gffParser.parse(fileName, progressUpdater);
         LOGGER.info("Finished parsing " + fileName);

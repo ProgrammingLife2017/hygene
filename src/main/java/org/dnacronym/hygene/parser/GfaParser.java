@@ -61,10 +61,10 @@ public final class GfaParser {
      * @param gfaFile         an instance of {@link GfaFile}
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @return a {@link Graph}
-     * @throws ParseException if the given {@link String} is not GFA-compliant
+     * @throws GfaParseException if the given {@link String} is not GFA-compliant
      */
     @EnsuresNonNull("nodeArrays")
-    public Graph parse(final GfaFile gfaFile, final ProgressUpdater progressUpdater) throws ParseException {
+    public Graph parse(final GfaFile gfaFile, final ProgressUpdater progressUpdater) throws GfaParseException {
         try {
             LOGGER.info("Start allocating nodes");
             final BufferedReader nodeAllocationReader = gfaFile.readFile();
@@ -80,7 +80,7 @@ public final class GfaParser {
             parseLines(gfaFile.getInputStream(), progressUpdater);
             LOGGER.info("Finished parsing lines");
         } catch (final IOException e) {
-            throw new ParseException("An error while reading the GFA file.", e);
+            throw new GfaParseException("An error while reading the GFA file.", e);
         }
 
         final Graph graph = new Graph(nodeArrays, genomeMapping, gfaFile);
@@ -99,10 +99,10 @@ public final class GfaParser {
      * @param gfa             a buffered reader of a GFA file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException    if the given GFA file is not valid
-     * @throws ParseException if a line does not have enough tokens
+     * @throws GfaParseException if a line does not have enough tokens
      */
     private void allocateNodes(final BufferedReader gfa, final ProgressUpdater progressUpdater)
-            throws IOException, ParseException {
+            throws IOException, GfaParseException {
         addNodeId(SOURCE_NAME);
         String line;
         while ((line = gfa.readLine()) != null) {
@@ -137,10 +137,10 @@ public final class GfaParser {
      * @param inputStream     input stream of the gfa file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
      * @throws IOException    if the gfa file could not be read
-     * @throws ParseException if the gfa file could not be parsed
+     * @throws GfaParseException if the gfa file could not be parsed
      */
     private void parseLines(final InputStream inputStream, final ProgressUpdater progressUpdater)
-            throws IOException, ParseException {
+            throws IOException, GfaParseException {
         try (BufferedReaderBytesRead lineParsingReader = new BufferedReaderBytesRead(
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
@@ -168,9 +168,9 @@ public final class GfaParser {
      *
      * @param line       a line of a GFA-compliant {@link String}
      * @param byteOffset the byte offset of the current line
-     * @throws ParseException if the given {@link String}s are not GFA-compliant
+     * @throws GfaParseException if the given {@link String}s are not GFA-compliant
      */
-    private void parseLine(final String line, final long byteOffset) throws ParseException {
+    private void parseLine(final String line, final long byteOffset) throws GfaParseException {
         if (line.indexOf('\t') < 0) {
             return;
         }
@@ -193,7 +193,7 @@ public final class GfaParser {
                 break;
 
             default:
-                throw new ParseException("Unknown record type `" + line.charAt(0) + "` at position " + byteOffset);
+                throw new GfaParseException("Unknown record type `" + line.charAt(0) + "` at position " + byteOffset);
         }
     }
 
@@ -205,9 +205,9 @@ public final class GfaParser {
      *
      * @param line       the line to parse
      * @param byteOffset the byte offset
-     * @throws ParseException if a header field doesn't have the correct format
+     * @throws GfaParseException if a header field doesn't have the correct format
      */
-    private void parseHeader(final String line, final long byteOffset) throws ParseException {
+    private void parseHeader(final String line, final long byteOffset) throws GfaParseException {
         if (line.startsWith(HEADER_GENOME_NAMES_PREFIX)) {
             parseHeaderGenomeNames(line, byteOffset);
         }
@@ -220,9 +220,9 @@ public final class GfaParser {
      *
      * @param line       the line to parse
      * @param byteOffset the byte offset
-     * @throws ParseException when this is not a header field containing genome names
+     * @throws GfaParseException when this is not a header field containing genome names
      */
-    private void parseHeaderGenomeNames(final String line, final long byteOffset) throws ParseException {
+    private void parseHeaderGenomeNames(final String line, final long byteOffset) throws GfaParseException {
         final int indexOfGenomeNames = line.indexOf(HEADER_GENOME_NAMES_PREFIX);
         if (indexOfGenomeNames > -1) {
             final String[] names = line.substring(indexOfGenomeNames + HEADER_GENOME_NAMES_PREFIX.length()).split(";");
@@ -230,7 +230,7 @@ public final class GfaParser {
                 genomeMapping.put(Integer.toString(i + 1), names[i]);
             }
         } else {
-            throw new ParseException("Not an header containing genome names at position " + byteOffset + ".");
+            throw new GfaParseException("Not an header containing genome names at position " + byteOffset + ".");
         }
     }
 
@@ -240,9 +240,9 @@ public final class GfaParser {
      * @param line       a line
      * @param lineOffset the offset in the line to start parsing the segment at
      * @param byteOffset the byte offset of the current line
-     * @throws ParseException if the line does not have enough tokens
+     * @throws GfaParseException if the line does not have enough tokens
      */
-    private void parseSegment(final String line, final int lineOffset, final long byteOffset) throws ParseException {
+    private void parseSegment(final String line, final int lineOffset, final long byteOffset) throws GfaParseException {
         try {
             final int nameEnd = line.indexOf('\t', lineOffset);
             final String name = line.substring(lineOffset, nameEnd);
@@ -257,7 +257,7 @@ public final class GfaParser {
             nodeArrays[nodeId][Graph.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
 
         } catch (final StringIndexOutOfBoundsException e) {
-            throw new ParseException("Not enough parameters for segment at position " + byteOffset, e);
+            throw new GfaParseException("Not enough parameters for segment at position " + byteOffset, e);
         }
     }
 
@@ -267,10 +267,10 @@ public final class GfaParser {
      * @param line       a line
      * @param lineOffset the offset in the line to start parsing the link at
      * @param byteOffset the byte offset of the current line
-     * @throws ParseException if the line does not have enough tokens
+     * @throws GfaParseException if the line does not have enough tokens
      */
     private void parseLink(final String line, final int lineOffset, final long byteOffset)
-            throws ParseException {
+            throws GfaParseException {
         try {
             final int fromEnd = line.indexOf('\t', lineOffset);
             final String from = line.substring(lineOffset, fromEnd);
@@ -286,7 +286,7 @@ public final class GfaParser {
             addIncomingEdge(fromId, toId, byteOffset);
             addOutgoingEdge(fromId, toId, byteOffset);
         } catch (final StringIndexOutOfBoundsException e) {
-            throw new ParseException("Not enough parameters for link at position " + byteOffset, e);
+            throw new GfaParseException("Not enough parameters for link at position " + byteOffset, e);
         }
     }
 
@@ -295,16 +295,16 @@ public final class GfaParser {
      *
      * @param line a GFA file line
      * @return the name of the node (the node id)
-     * @throws ParseException if a line does not have enough tokens
+     * @throws GfaParseException if a line does not have enough tokens
      */
-    private String parseNodeName(final String line) throws ParseException {
+    private String parseNodeName(final String line) throws GfaParseException {
         try {
             final int startIndex = line.indexOf('\t');
             final int endIndex = line.indexOf('\t', startIndex + 1);
 
             return line.substring(startIndex + 1, endIndex);
         } catch (final StringIndexOutOfBoundsException e) {
-            throw new ParseException("Invalid segment line.", e);
+            throw new GfaParseException("Invalid segment line.", e);
         }
     }
 
@@ -368,11 +368,11 @@ public final class GfaParser {
      * Add edges for nodes without incoming or outgoing edges to the source or sink.
      *
      * @param graph the graph data structure including the source and sink
-     * @throws ParseException if the graph has an invalid number of nodes
+     * @throws GfaParseException if the graph has an invalid number of nodes
      */
-    private void addEdgesToSentinelNodes(final Graph graph) throws ParseException {
+    private void addEdgesToSentinelNodes(final Graph graph) throws GfaParseException {
         if (nodeArrays.length == 2) {
-            throw new ParseException("The GFA file should contain at least one segment.");
+            throw new GfaParseException("The GFA file should contain at least one segment.");
         }
 
         final int source = getNodeId(SOURCE_NAME);
@@ -396,11 +396,11 @@ public final class GfaParser {
      *
      * @param nodeName name of the node as specified in the GFA file
      * @return node id belonging to a node name
-     * @throws ParseException if the node name does not exist
+     * @throws GfaParseException if the node name does not exist
      */
-    private int getNodeId(final String nodeName) throws ParseException {
+    private int getNodeId(final String nodeName) throws GfaParseException {
         return Optional.ofNullable(nodeIds.get(nodeName)).orElseThrow(
-                () -> new ParseException("Link has reference to non existing node " + nodeName)
+                () -> new GfaParseException("Link has reference to non existing node " + nodeName)
         );
     }
 }

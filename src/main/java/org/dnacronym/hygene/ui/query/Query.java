@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.SearchQuery;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 
 import java.util.Set;
@@ -58,11 +58,10 @@ public final class Query {
      * Also clears the current list of queried node ids to avoid confusion.
      *
      * @param sequence the sequence to search for inside the sequences of nodes
-     * @throws ParseException if unable to execute a regex query
      * @see SearchQuery
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // this is temporary
-    public void query(final String sequence) throws ParseException {
+    public void query(final String sequence) {
         if (searchQuery == null) {
             return;
         }
@@ -77,7 +76,7 @@ public final class Query {
                     queriedNodeIds.setAll(nodeIds);
                     queryingProperty.set(false);
                 });
-            } catch (final ParseException e) {
+            } catch (final MetadataParseException e) {
                 LOGGER.error("Unable to execute a query.", e);
             }
 

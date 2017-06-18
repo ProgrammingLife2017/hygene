@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -33,9 +32,9 @@ final class GfaParserTest {
 
 
     @Test
-    void testParseEmpty() throws ParseException {
+    void testParseEmpty() throws GfaParseException {
         final Throwable e = catchThrowable(() -> parse(""));
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(GfaParseException.class);
         assertThat(e).hasMessageContaining("The GFA file should contain at least one segment.");
     }
 
@@ -44,11 +43,11 @@ final class GfaParserTest {
         final String gfa = "ç 4 + 2 + 1M";
 
         final Throwable e = catchThrowable(() -> parse(gfa));
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(GfaParseException.class);
     }
 
     @Test
-    void testIgnoredRecordTypes() throws ParseException {
+    void testIgnoredRecordTypes() throws GfaParseException {
         final String gfa = "H header\nC containment\nP path\nS name content";
         assertThat(parse(gfa)).isNotNull();
     }
@@ -58,11 +57,11 @@ final class GfaParserTest {
         final String gfa = "L 1 +";
 
         final Throwable e = catchThrowable(() -> parse(gfa));
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(GfaParseException.class);
     }
 
     @Test
-    void testSegmentProperties() throws ParseException {
+    void testSegmentProperties() throws GfaParseException {
         final String gfa = "S name1 contents\nS name2 contents\nS name3 contents";
         final Graph graph = parse(gfa);
 
@@ -71,7 +70,7 @@ final class GfaParserTest {
     }
 
     @Test
-    void testSizes() throws ParseException {
+    void testSizes() throws GfaParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
         final Graph graph = parse(gfa);
 
@@ -81,7 +80,7 @@ final class GfaParserTest {
     }
 
     @Test
-    void testEdges() throws ParseException {
+    void testEdges() throws GfaParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M\nL 2 + 1 + 0M";
         final Graph graph = parse(gfa);
 
@@ -95,7 +94,7 @@ final class GfaParserTest {
     }
 
     @Test
-    void testEdgeSpecifiedBeforeNode() throws ParseException {
+    void testEdgeSpecifiedBeforeNode() throws GfaParseException {
         final String gfa = "S 1 A\nL 1 + 2 + 0M\nS 2 B";
         final Graph graph = parse(gfa);
 
@@ -110,7 +109,7 @@ final class GfaParserTest {
     }
 
     @Test
-    void testEdgeSpecifiedBeforeAllNodes() throws ParseException {
+    void testEdgeSpecifiedBeforeAllNodes() throws GfaParseException {
         final String gfa = "L 100 + 200 + 0M\nS 100 A\nS 200 B";
         final Graph graph = parse(gfa);
 
@@ -125,7 +124,7 @@ final class GfaParserTest {
     }
 
     @Test
-    void testSourceNodesAreAdded() throws ParseException {
+    void testSourceNodesAreAdded() throws GfaParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
         final Graph graph = parse(gfa);
 
@@ -136,7 +135,7 @@ final class GfaParserTest {
     }
 
     @Test
-    void testSinkNodesAreAdded() throws ParseException {
+    void testSinkNodesAreAdded() throws GfaParseException {
         final String gfa = "S 1 A\nS 2 B\nL 1 + 2 + 0M";
         final Graph graph = parse(gfa);
 
@@ -151,7 +150,7 @@ final class GfaParserTest {
         return string.replaceAll(" ", "\t");
     }
 
-    private Graph parse(final String gfa) throws ParseException {
+    private Graph parse(final String gfa) throws GfaParseException {
         final byte[] gfaBytes = replaceSpacesWithTabs(gfa).getBytes(StandardCharsets.UTF_8);
         final GfaFile gfaFile = mock(GfaFile.class);
         when(gfaFile.readFile()).thenAnswer(invocationOnMock ->

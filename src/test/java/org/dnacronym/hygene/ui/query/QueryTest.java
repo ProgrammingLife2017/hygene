@@ -2,7 +2,7 @@ package org.dnacronym.hygene.ui.query;
 
 import javafx.beans.property.SimpleObjectProperty;
 import org.dnacronym.hygene.graph.SearchQuery;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ final class QueryTest extends UITestBase {
 
 
     @Test
-    void testSearch() throws ParseException {
+    void testSearch() {
         final String query = ".*A.*";
 
         interact(() -> {
@@ -40,7 +40,7 @@ final class QueryTest extends UITestBase {
                 this.query.query(query);
 
                 verify(searchQuery, timeout(0)).executeSequenceRegexQuery(query);
-            } catch (ParseException e) {
+            } catch (final MetadataParseException e) {
                 e.printStackTrace();
             }
         });

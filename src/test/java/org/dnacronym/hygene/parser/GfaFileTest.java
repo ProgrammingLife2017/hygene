@@ -67,7 +67,7 @@ final class GfaFileTest {
         currentFileName = "random-file-name";
         final Throwable e = catchThrowable(() -> new GfaFile(currentFileName).parse(ProgressUpdater.DUMMY));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(GfaParseException.class);
     }
 
     @Test
@@ -79,7 +79,7 @@ final class GfaFileTest {
     }
 
     @Test
-    void testReadFile() throws ParseException {
+    void testReadFile() throws GfaParseException {
         currentFileName = GFA_TEST_FILE;
         final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
 
@@ -87,7 +87,7 @@ final class GfaFileTest {
     }
 
     @Test
-    void testParseFile() throws IOException, ParseException {
+    void testParseFile() throws IOException, GfaParseException {
         final GfaParser gfaParser = spy(GfaParser.class);
         GfaParserFactory.setInstance(gfaParser);
 
@@ -100,7 +100,7 @@ final class GfaFileTest {
     }
 
     @Test
-    void testParseNodeMetadata() throws IOException, ParseException {
+    void testParseNodeMetadata() throws IOException, GfaParseException, MetadataParseException {
         final MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 
@@ -113,7 +113,7 @@ final class GfaFileTest {
     }
 
     @Test
-    void testParseEdgeMetadata() throws IOException, ParseException {
+    void testParseEdgeMetadata() throws IOException, GfaParseException, MetadataParseException {
         final MetadataParser metadataParser = spy(MetadataParser.class);
         MetadataParserFactory.setInstance(metadataParser);
 

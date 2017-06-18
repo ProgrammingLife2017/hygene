@@ -1,7 +1,8 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +26,7 @@ class SearchQueryTest {
 
 
     @BeforeEach
-    void setUp() throws ParseException {
+    void setUp() throws GfaParseException {
         GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
         gfaFile.parse(ProgressUpdater.DUMMY);
         searchQuery = new SearchQuery(gfaFile);
@@ -39,7 +40,7 @@ class SearchQueryTest {
 
 
     @Test
-    void executeNameRegexQuery() throws ParseException {
+    void executeNameRegexQuery() throws MetadataParseException {
         assertThat(searchQuery.executeNameRegexQuery("1[1-2]")).containsExactlyInAnyOrder(1, 2);
     }
 }

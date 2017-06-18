@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.persistence;
 
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.ParseException;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ class FileGenomeMappingTest extends FileDatabaseTestBase {
     }
 
     @Test
-    void testRestoreGraph() throws SQLException, ParseException {
+    void testRestoreGraph() throws SQLException, GfaParseException {
         new GfaFile(GFA_FILE_NAME).parse(mock(ProgressUpdater.class));
         assertThat(fileGenomeMapping.getMappings().size()).isEqualTo(2);
     }

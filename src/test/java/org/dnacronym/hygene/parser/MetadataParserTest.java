@@ -32,7 +32,7 @@ final class MetadataParserTest {
 
 
     @Test
-    void testParseNodeMetadata() throws ParseException, IOException {
+    void testParseNodeMetadata() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12 TCAAGG * ORI:Z:test.fasta;"));
 
@@ -44,7 +44,7 @@ final class MetadataParserTest {
     }
 
     @Test
-    void testParseNodeMetadataOfMultipleNodes() throws ParseException, IOException {
+    void testParseNodeMetadataOfMultipleNodes() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("%n%nS 12 TCAAGG * ORI:Z:test.fasta;"
                 + "%n%n%nS 12 TAG * ORI:Z:test.fasta;"
                 + "%nS 12 CAT * ORI:Z:test.fasta;"
@@ -66,7 +66,7 @@ final class MetadataParserTest {
     }
 
     @Test
-    void testParseEdgeMetadata() throws ParseException, IOException {
+    void testParseEdgeMetadata() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("L 12 + 24 - 4M");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("L 12 + 24 - 4M"));
         final EdgeMetadata edgeMetadata = parser.parseEdgeMetadata(gfaFile, 2);
@@ -77,76 +77,81 @@ final class MetadataParserTest {
     }
 
     @Test
-    void testParseNodeMetadataWithInvalidLineBecauseTheSequenceIsMissing() throws ParseException, IOException {
+    void testParseNodeMetadataWithInvalidLineBecauseTheSequenceIsMissing() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("S 12");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12"));
 
         final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(gfaFile, 1));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(MetadataParseException.class);
         assertThat(e).hasMessageContaining("Not enough parameters for segment at position 1");
     }
 
     @Test
-    void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws ParseException, IOException {
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomeIsMissing() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("S 12 AC *");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12 AC *"));
 
         Throwable e = catchThrowable(() -> parser.parseNodeMetadata(gfaFile, 1));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(MetadataParseException.class);
     }
 
     @Test
-    void testParseNodeMetadataWithInvalidLineBecauseTheGenomePrefixIsIncorrect() throws ParseException, IOException {
+    void testParseNodeMetadataWithInvalidLineBecauseTheGenomePrefixIsIncorrect()
+            throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("S 12 AC * ORY:Z:test.fasta;");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12 AC * ORY:Z:test.fasta;"));
 
         Throwable e = catchThrowable(() -> parser.parseNodeMetadata(gfaFile, 1));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(MetadataParseException.class);
     }
 
     @Test
-    void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws ParseException, IOException {
+    void testParseEdgeMetadataWithInvalidLineBecauseTheOrientIsMissing() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("L 12 + 24");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("L 12 + 24"));
 
         final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(gfaFile, 1));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(MetadataParseException.class);
         assertThat(e).hasMessageContaining("Not enough parameters for link at position 1");
     }
 
     @Test
-    void testParseNodeMetadataWithAnEdgeLine() throws ParseException, IOException {
+    void testParseNodeMetadataWithAnEdgeLine() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("L 12 + 24 - 4M");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("L 12 + 24 - 4M"));
 
         final Throwable e = catchThrowable(() -> parser.parseNodeMetadata(gfaFile, 1));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(MetadataParseException.class);
         assertThat(e).hasMessageContaining("Expected line at position 1 to start with S");
     }
 
     @Test
-    void testParseEdgeMetadataWithANodeLine() throws ParseException, IOException {
+    void testParseEdgeMetadataWithANodeLine() throws MetadataParseException, IOException {
         final GfaFile gfaFile = createGfaFile("S 12 ACTG");
         when(randomAccessFile.readLine()).thenReturn(replaceSpacesWithTabs("S 12 ACTG"));
 
         final Throwable e = catchThrowable(() -> parser.parseEdgeMetadata(gfaFile, 1));
 
-        assertThat(e).isInstanceOf(ParseException.class);
+        assertThat(e).isInstanceOf(MetadataParseException.class);
         assertThat(e).hasMessageContaining("Expected line at position 1 to start with L");
     }
 
 
-    private GfaFile createGfaFile(final String gfa) throws ParseException {
+    private GfaFile createGfaFile(final String gfa) throws MetadataParseException {
         final byte[] gfaBytes = replaceSpacesWithTabs(gfa).getBytes(StandardCharsets.UTF_8);
         final GfaFile gfaFile = mock(GfaFile.class);
-        when(gfaFile.readFile()).thenAnswer(invocationOnMock ->
-                new BufferedReader(new InputStreamReader(new ByteArrayInputStream(gfaBytes)))
-        );
+        try {
+            when(gfaFile.readFile()).thenAnswer(invocationOnMock ->
+                    new BufferedReader(new InputStreamReader(new ByteArrayInputStream(gfaBytes)))
+            );
+        } catch (final GfaParseException e) {
+            e.printStackTrace();
+        }
         randomAccessFile = mock(RandomAccessFile.class);
         when(gfaFile.getRandomAccessFile()).thenReturn(randomAccessFile);
         return gfaFile;
