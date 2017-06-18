@@ -6,7 +6,7 @@ import java.util.Set;
 
 
 /**
- * Represents a node that has the ability to be layouted by the layouting algorithms.
+ * Represents a node that can be laid out by a layout algorithm.
  */
 public interface LayoutableNode {
     /**
