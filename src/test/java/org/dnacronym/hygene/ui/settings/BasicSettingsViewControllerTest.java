@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.settings;
 
+import com.google.inject.testing.fieldbinder.Bind;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,8 +28,11 @@ import static org.mockito.Mockito.when;
  */
 final class BasicSettingsViewControllerTest extends UITestBase {
     private BasicSettingsViewController basicSettingsViewController;
+    @Bind
     private GraphVisualizer graphVisualizer;
+    @Bind
     private GraphMovementCalculator graphMovementCalculator;
+    @Bind
     private Settings settings;
     private MouseEvent mouseEvent;
     private ActionEvent actionEvent;
@@ -39,14 +43,18 @@ final class BasicSettingsViewControllerTest extends UITestBase {
 
     @Override
     public void beforeEach() {
-        basicSettingsViewController = new BasicSettingsViewController();
-
         graphVisualizer = mock(GraphVisualizer.class);
+        graphMovementCalculator = mock(GraphMovementCalculator.class);
+        settings = mock(Settings.class);
+        createContextOfTest();
+
+        basicSettingsViewController = new BasicSettingsViewController();
+        injectMembers(basicSettingsViewController);
+
         final SimpleDoubleProperty height = new SimpleDoubleProperty();
         height.setValue(20);
         when(graphVisualizer.getNodeHeightProperty()).thenReturn(height);
 
-        graphMovementCalculator = mock(GraphMovementCalculator.class);
 
         final SimpleDoubleProperty panning = new SimpleDoubleProperty(21);
         when(graphMovementCalculator.getPanningSensitivityProperty()).thenReturn(panning);
@@ -56,11 +64,6 @@ final class BasicSettingsViewControllerTest extends UITestBase {
 
         final ObjectProperty<Color> color = new SimpleObjectProperty<>(Color.RED);
         when(graphVisualizer.getEdgeColorProperty()).thenReturn(color);
-
-        settings = mock(Settings.class);
-        basicSettingsViewController.setGraphVisualizer(graphVisualizer);
-        basicSettingsViewController.setGraphMovementCalculator(graphMovementCalculator);
-        basicSettingsViewController.setSettings(settings);
 
         colorPicker = mock(ColorPicker.class);
         when(colorPicker.getValue()).thenReturn(Color.YELLOW);

@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.runnable;
 
 import com.gluonhq.ignite.guice.GuiceContext;
 import javax.inject.Inject;
+
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;

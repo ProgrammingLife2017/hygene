@@ -1,12 +1,15 @@
 package org.dnacronym.hygene.ui.settings;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
 import javafx.util.converter.NumberStringConverter;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -14,7 +17,12 @@ import java.util.ResourceBundle;
 /**
  * Settings controller for the current query.
  */
-public final class QuerySettingsController extends SettingsController {
+public final class QuerySettingsController implements Initializable {
+    @Inject
+    private Settings settings;
+    @Inject
+    private GraphDimensionsCalculator graphDimensionsCalculator;
+
     @FXML
     private Label currentNodeId;
     @FXML
@@ -30,12 +38,12 @@ public final class QuerySettingsController extends SettingsController {
         nodeId.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
         radius.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
-        currentNodeId.textProperty().bind(getGraphDimensionsCalculator().getCenterNodeIdProperty().asString());
-        currentRadius.textProperty().bind(getGraphDimensionsCalculator().getRadiusProperty().asString());
+        currentNodeId.textProperty().bind(graphDimensionsCalculator.getCenterNodeIdProperty().asString());
+        currentRadius.textProperty().bind(graphDimensionsCalculator.getRadiusProperty().asString());
 
-        getGraphDimensionsCalculator().getCenterNodeIdProperty().addListener(
+        graphDimensionsCalculator.getCenterNodeIdProperty().addListener(
                 (observable, oldValue, newValue) -> nodeId.setText(String.valueOf(newValue)));
-        getGraphDimensionsCalculator().getRadiusProperty().addListener(
+        graphDimensionsCalculator.getRadiusProperty().addListener(
                 (observable, oldValue, newValue) -> radius.setText(String.valueOf(newValue)));
     }
 
@@ -46,10 +54,10 @@ public final class QuerySettingsController extends SettingsController {
      */
     @FXML
     void setNodeId(final KeyEvent keyEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            getGraphDimensionsCalculator().getCenterNodeIdProperty().set(newValue);
+            graphDimensionsCalculator.getCenterNodeIdProperty().set(newValue);
         });
     }
 
@@ -60,10 +68,10 @@ public final class QuerySettingsController extends SettingsController {
      */
     @FXML
     void setRadius(final KeyEvent keyEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            getGraphDimensionsCalculator().getRadiusProperty().set(newValue);
+            graphDimensionsCalculator.getRadiusProperty().set(newValue);
         });
     }
 }

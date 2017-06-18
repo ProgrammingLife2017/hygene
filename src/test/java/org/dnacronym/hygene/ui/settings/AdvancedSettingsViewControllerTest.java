@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.settings;
 
 
+import com.google.inject.testing.fieldbinder.Bind;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckBox;
@@ -8,6 +9,7 @@ import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,24 +24,25 @@ import static org.mockito.Mockito.when;
  */
 final class AdvancedSettingsViewControllerTest extends UITestBase {
     private AdvancedSettingsViewController advancedSettingsViewController;
+    @Bind
     private GraphVisualizer graphVisualizer;
+    @Bind
     private Settings settings;
     private CheckBox checkBox;
     private ActionEvent mouseEvent;
 
-
     @Override
     public void beforeEach() {
-        advancedSettingsViewController = new AdvancedSettingsViewController();
-
         graphVisualizer = mock(GraphVisualizer.class);
+        settings = mock(Settings.class);
+        createContextOfTest();
+
+        advancedSettingsViewController = new AdvancedSettingsViewController();
+        injectMembers(advancedSettingsViewController);
+
         final SimpleBooleanProperty displayLaneBorder = new SimpleBooleanProperty();
         displayLaneBorder.setValue(false);
         when(graphVisualizer.getDisplayBordersProperty()).thenReturn(displayLaneBorder);
-
-        settings = mock(Settings.class);
-        advancedSettingsViewController.setGraphVisualizer(graphVisualizer);
-        advancedSettingsViewController.setSettings(settings);
 
         checkBox = new CheckBox();
         checkBox.setSelected(true);

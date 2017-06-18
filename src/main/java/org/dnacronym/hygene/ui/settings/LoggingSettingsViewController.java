@@ -2,12 +2,14 @@ package org.dnacronym.hygene.ui.settings;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -18,13 +20,16 @@ import java.util.stream.Collectors;
 /**
  * Settings controller for the logger.
  */
-public final class LoggingSettingsViewController extends SettingsController {
+public final class LoggingSettingsViewController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);
     private static final List<String> LOG_LEVELS =
             Arrays.stream(Level.values()).map(Level::name).collect(Collectors.toList());
 
     @FXML
     private ChoiceBox<String> choiceBox;
+
+    @Inject
+    private Settings settings;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -41,7 +46,7 @@ public final class LoggingSettingsViewController extends SettingsController {
      */
     @FXML
     public void onLogLevelChanged(final ActionEvent event) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final String logLevel = choiceBox.getSelectionModel().getSelectedItem();
 
             final Logger logger = LogManager.getRootLogger();
