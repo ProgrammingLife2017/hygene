@@ -35,4 +35,11 @@ public interface LayoutableNode {
      * @return the length of the node when visualized
      */
     int getLength();
+
+    /**
+     * Sets the Y position.
+     *
+     * @param yPosition the Y position
+     */
+    void setYPosition(final int yPosition);
 }
