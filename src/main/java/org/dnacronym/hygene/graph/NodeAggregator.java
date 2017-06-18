@@ -1,6 +1,9 @@
 package org.dnacronym.hygene.graph;
 
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateNode;
 import org.dnacronym.hygene.graph.node.Node;
@@ -16,8 +19,9 @@ import java.util.stream.Collectors;
  * Aggregator of nodes to achieve semantic zooming.
  */
 public final class NodeAggregator {
-    private final Node node;
+    private final Node startNode;
     private final List<Node> neighbours;
+    private @MonotonicNonNull Node endNode;
 
 
     /**
@@ -26,7 +30,7 @@ public final class NodeAggregator {
      * @param node the {@link Node} to aggregate
      */
     private NodeAggregator(final Node node) {
-        this.node = node;
+        this.startNode = node;
         this.neighbours = node.getOutgoingEdges().stream()
                 .map(Edge::getTo)
                 .collect(Collectors.toList());
@@ -34,13 +38,13 @@ public final class NodeAggregator {
 
 
     /**
-     * Aggregates the given node and its neighbours into a single node, if possible.
+     * Aggregates the given node's neighbours, if possible.
      * <p>
-     * Nodes are only aggregated if they have exactly two neighbours, these neighbours have a sequence length of
-     * {@code 1}, and these neighbours have exactly one neighbour which is shared between them.
+     * Aggregation only happens when the given node has exactly two neighbours, these neighbours have a sequence length
+     * of {@code 1}, and these neighbours have exactly one neighbour which is shared between them.
      *
      * @param node a node
-     * @return the {@link AggregateNode} the given node is now part of, or {@code null} if it could not be aggregated
+     * @return the {@link AggregateNode} th neighbours are now part of, or {@code null} if no aggregation occurred
      */
     public static @Nullable AggregateNode aggregate(final Node node) {
         final NodeAggregator aggregator = new NodeAggregator(node);
@@ -68,19 +72,27 @@ public final class NodeAggregator {
     }
 
     /**
-     * Aggregates the node, its two neighbours, and their shared neighbour into an {@link AggregateNode}.
+     * Aggregates the node's neighbours into an {@link AggregateNode}, and rewires the edges from and to that node.
      *
      * @return an {@link AggregateNode}
      */
     private AggregateNode aggregate() {
         final Collection<Node> aggregatedNodes = new ArrayList<>();
-
-        aggregatedNodes.add(node);
         aggregatedNodes.add(neighbours.get(0));
         aggregatedNodes.add(neighbours.get(1));
-        aggregatedNodes.add(neighbours.get(0).getOutgoingEdges().iterator().next().getTo());
+        final AggregateNode aggregateNode = new AggregateNode(aggregatedNodes);
 
-        return new AggregateNode(aggregatedNodes);
+        final Edge toAggregateNode = new AggregateEdge(startNode, aggregateNode, startNode.getOutgoingEdges());
+        startNode.getOutgoingEdges().clear();
+        startNode.getOutgoingEdges().add(toAggregateNode);
+        aggregateNode.getIncomingEdges().add(toAggregateNode);
+
+        final Edge fromAggregateNode = new AggregateEdge(aggregateNode, getEndNode(), getEndNode().getIncomingEdges());
+        getEndNode().getIncomingEdges().clear();
+        getEndNode().getIncomingEdges().add(fromAggregateNode);
+        aggregateNode.getOutgoingEdges().add(fromAggregateNode);
+
+        return aggregateNode;
     }
 
 
@@ -147,8 +159,20 @@ public final class NodeAggregator {
      * @return {@code true} iff. the neighbours are the only neighbours of their shared neighbours
      */
     private boolean neighboursAreOnlyNeighboursOfTheirNeighbour() {
-        final Node neighbourNeighbour = neighbours.get(0).getOutgoingEdges().iterator().next().getTo();
+        return getEndNode().getIncomingEdges().size() == 2;
+    }
 
-        return neighbourNeighbour.getIncomingEdges().size() == 2;
+    /**
+     * Returns the node's first neighbour's first neighbour.
+     *
+     * @return the node's first neighbour's first neighbour
+     */
+    @EnsuresNonNull("endNode")
+    private Node getEndNode() {
+        if (endNode == null) {
+            endNode = neighbours.get(0).getOutgoingEdges().iterator().next().getTo();
+        }
+
+        return endNode;
     }
 }

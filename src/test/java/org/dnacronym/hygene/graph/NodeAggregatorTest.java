@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph;
 
+import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateNode;
 import org.dnacronym.hygene.graph.node.FillNode;
@@ -170,10 +171,10 @@ class NodeAggregatorTest {
     }
 
     /**
-     * Tests that aggregation can also succeed.
+     * Tests that an aggregated node contains the correct nodes.
      */
     @Test
-    void testAggregateSuccess() {
+    void testAggregateSuccessContainment() {
         final Node nodeA = new Segment(4, 13, 24);
         final Node nodeB = new Segment(43, 97, 1);
         final Node nodeC = new Segment(58, 44, 1);
@@ -185,7 +186,37 @@ class NodeAggregatorTest {
 
         final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA);
         assertThat(aggregateNode).isNotNull();
-        assertThat(aggregateNode.getNodes()).containsExactly(nodeA, nodeB, nodeC, nodeD);
+        assertThat(aggregateNode.getNodes()).containsExactly(nodeB, nodeC);
+    }
+
+    /**
+     * Tests that an aggregated node is correctly linked to the other nodes.
+     */
+    @Test
+    void testAggregateSuccessEdges() {
+        final Node nodeA = new Segment(93, 16, 46);
+        final Node nodeB = new Segment(47, 94, 1);
+        final Node nodeC = new Segment(60, 80, 1);
+        final Node nodeD = new Segment(63, 59, 64);
+        linkNodes(nodeA, nodeB);
+        linkNodes(nodeA, nodeC);
+        linkNodes(nodeB, nodeD);
+        linkNodes(nodeC, nodeD);
+
+        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA);
+        final AggregateEdge toAggregateNode = (AggregateEdge) aggregateNode.getIncomingEdges().iterator().next();
+        final AggregateEdge fromAggregateNode = (AggregateEdge) aggregateNode.getOutgoingEdges().iterator().next();
+
+        assertThat(nodeA.getOutgoingEdges()).containsExactly(toAggregateNode);
+        assertThat(toAggregateNode.getEdges()).containsExactly(
+                nodeB.getIncomingEdges().iterator().next(),
+                nodeC.getIncomingEdges().iterator().next()
+        );
+        assertThat(fromAggregateNode.getEdges()).containsExactly(
+                nodeB.getOutgoingEdges().iterator().next(),
+                nodeC.getOutgoingEdges().iterator().next()
+        );
+        assertThat(nodeD.getIncomingEdges()).containsExactly(fromAggregateNode);
     }
 
 
