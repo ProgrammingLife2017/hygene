@@ -1,14 +1,8 @@
 package org.dnacronym.hygene.graph;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.graph.layout.Fafosp;
 import org.dnacronym.hygene.parser.GfaFile;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -28,10 +22,6 @@ public final class Graph {
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
 
     private final int[][] nodeArrays;
-    /**
-     * Maps genome names to their respective indices.
-     */
-    private final Map<String, String> genomeMapping;
     private final GfaFile gfaFile;
 
 
@@ -39,7 +29,6 @@ public final class Graph {
      * Constructs a graph from array based data structure.
      *
      * @param nodeArrays    nested array containing the graph's data
-     * @param genomeMapping maps genomes to their full name
      * @param gfaFile       a reference to the GFA file from which the graph is created
      */
     @SuppressFBWarnings(
@@ -47,20 +36,9 @@ public final class Graph {
             justification = "For performance reasons, we don't want to create a copy here"
     )
     @SuppressWarnings("PMD.ArrayIsStoredDirectly") // Performance
-    public Graph(final int[][] nodeArrays, final Map<String, String> genomeMapping, final GfaFile gfaFile) {
+    public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
         this.nodeArrays = nodeArrays;
         this.gfaFile = gfaFile;
-        this.genomeMapping = genomeMapping;
-    }
-
-    /**
-     * Constructs a graph from array based data structure.
-     *
-     * @param nodeArrays nested array containing the graph's data
-     * @param gfaFile    a reference to the GFA file from which the graph is created
-     */
-    public Graph(final int[][] nodeArrays, final GfaFile gfaFile) {
-        this(nodeArrays, new HashMap<>(), gfaFile);
     }
 
 
@@ -97,15 +75,6 @@ public final class Graph {
     @SuppressWarnings("PMD.MethodReturnsInternalArray") // Performance
     public int[][] getNodeArrays() {
         return nodeArrays;
-    }
-
-    /**
-     * Gets the genome mapping.
-     *
-     * @return the genome mapping
-     */
-    public Map<String, String> getGenomeMapping() {
-        return genomeMapping;
     }
 
     /**
