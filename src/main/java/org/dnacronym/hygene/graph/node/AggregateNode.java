@@ -28,7 +28,7 @@ public final class AggregateNode extends Node {
         this.length = nodes.stream()
                 .map(Node::getLength)
                 .max(Integer::compare)
-                .get();
+                .orElseThrow(() -> new IllegalStateException("Collection is non-empty and has no maximum."));
     }
 
 
