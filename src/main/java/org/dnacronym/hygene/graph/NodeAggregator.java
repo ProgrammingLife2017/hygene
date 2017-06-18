@@ -44,7 +44,7 @@ public final class NodeAggregator {
     public static @Nullable AggregateNode aggregate(final Node node) {
         final NodeAggregator aggregator = new NodeAggregator(node);
 
-        if (!aggregator.hasValidNumberOfNeighbours()) {
+        if (!aggregator.nodeHasValidNumberOfNeighbours()) {
             return null;
         }
         if (!aggregator.neighboursAreSegments()) {
@@ -88,7 +88,7 @@ public final class NodeAggregator {
      *
      * @return {@code true} iff. the node has exactly two neighbours to its right
      */
-    private boolean hasValidNumberOfNeighbours() {
+    private boolean nodeHasValidNumberOfNeighbours() {
         return neighbours.size() == 2;
     }
 
