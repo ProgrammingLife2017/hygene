@@ -21,6 +21,7 @@ import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -31,9 +32,13 @@ import java.util.ResourceBundle;
 public final class BookmarkCreateController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
 
+    @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
     private SequenceVisualizer sequenceVisualizer;
+    @Inject
     private SimpleBookmarkStore simpleBookmarkStore;
 
     @FXML
@@ -44,22 +49,6 @@ public final class BookmarkCreateController implements Initializable {
     private TextArea description;
     @FXML
     private Button save;
-
-
-    /**
-     * Create instance of {@link BookmarkCreateController}.
-     */
-    public BookmarkCreateController() {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
-            setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
-            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-            new ErrorDialogue(e).show();
-        }
-    }
 
 
     @Override
@@ -80,42 +69,6 @@ public final class BookmarkCreateController implements Initializable {
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-    }
-
-    /**
-     * Sets the {@link GraphVisualizer} for use by the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
-     */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
-     * Sets the {@link SequenceVisualizer} for use by the controller.
-     *
-     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller.
-     */
-    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
-        this.sequenceVisualizer = sequenceVisualizer;
-    }
-
-    /**
-     * Set the {@link GraphDimensionsCalculator} in the controller.
-     *
-     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
-     */
-    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
-        this.graphDimensionsCalculator = graphDimensionsCalculator;
-    }
-
-    /**
-     * Sets the {@link SimpleBookmarkStore} for use by the controller.
-     *
-     * @param simpleBookmarkStore {@link SimpleBookmarkStore} for use by the controller
-     */
-    void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
-        this.simpleBookmarkStore = simpleBookmarkStore;
     }
 
     /**
