@@ -27,8 +27,6 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 
@@ -79,6 +77,7 @@ public final class GraphVisualizer {
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
     private final GraphAnnotationVisualizer graphAnnotationVisualizer;
+    private final SimpleBookmarkStore simpleBookmarkStore;
 
     private RTree rTree;
 
@@ -97,11 +96,14 @@ public final class GraphVisualizer {
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
-                           final GraphAnnotation graphAnnotation, final Query query) {
+                           final GraphAnnotation graphAnnotation,
+                           final Query query,
+                           final SimpleBookmarkStore simpleBookmarkStore) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.graphAnnotation = graphAnnotation;
         this.query = query;
+        this.simpleBookmarkStore = simpleBookmarkStore;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
@@ -298,13 +300,6 @@ public final class GraphVisualizer {
     public void draw() {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
-        }
-
-        SimpleBookmarkStore simpleBookmarkStore = null;
-        try {
-            simpleBookmarkStore = Hygene.getInstance().getSimpleBookmarkStore();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to retrieve bookmarks.", e);
         }
 
         clear();

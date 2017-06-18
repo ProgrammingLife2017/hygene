@@ -18,9 +18,11 @@ import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeIncomingEdges;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeOutgoingEdges;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeSequenceLength;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeTotalEdges;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,6 +55,9 @@ public final class BasicSettingsViewController extends SettingsController {
     private Slider panningSensitivity;
     @FXML
     private Slider zoomingSensitivity;
+
+    @Inject
+    private GraphVisualizer graphVisualizer;
 
 
     @Override
@@ -152,11 +157,7 @@ public final class BasicSettingsViewController extends SettingsController {
         getSettings().addRunnable(() -> {
             Node.setColorScheme(nodeColorScheme.getValue().getValue());
             LOGGER.info("Node color scheme has been set to " + nodeColorScheme.getValue().getKey() + ".");
-            try {
-                Hygene.getInstance().getGraphVisualizer().draw();
-            } catch (final UIInitialisationException e) {
-                LOGGER.error("UI was expected to be initialized on redraw, but was uninitialized.", e);
-            }
+            graphVisualizer.draw();
         });
     }
 }

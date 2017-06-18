@@ -7,6 +7,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -31,17 +32,15 @@ public final class PathController implements Initializable {
 
     @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
+    private GraphStore graphStore;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        try {
-            addListeners();
+        addListeners();
 
-            pathPane.visibleProperty().bind(Hygene.getInstance().getGraphStore().getGfaFileProperty().isNotNull());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error(e);
-        }
+        pathPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
     }
 
     /**

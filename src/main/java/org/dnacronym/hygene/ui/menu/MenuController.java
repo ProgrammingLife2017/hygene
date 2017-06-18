@@ -13,6 +13,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
+import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
@@ -46,6 +47,8 @@ public final class MenuController implements Initializable {
     private GraphStore graphStore;
     @Inject
     private Settings settings;
+    @Inject
+    private GenomeNavigation genomeNavigation;
 
     @FXML
     private MenuBar menuBar;
@@ -65,8 +68,7 @@ public final class MenuController implements Initializable {
         }
 
         try {
-            gffFileOpen.disableProperty().bind(Hygene.getInstance().getGenomeNavigation().getIndexedFinishedProperty()
-                    .not());
+            gffFileOpen.disableProperty().bind(genomeNavigation.getIndexedFinishedProperty().not());
 
             populateRecentFilesMenu();
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
