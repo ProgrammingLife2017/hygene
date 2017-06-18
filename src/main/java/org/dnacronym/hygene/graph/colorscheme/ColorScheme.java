@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph.colorscheme;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.node.Node;
 
 
@@ -15,5 +16,5 @@ public interface ColorScheme {
      * @param node the node which has to be colored
      * @return the {@link Color} of the node
      */
-    Color calculateColor(Node node);
+    Color calculateColor(LayoutableNode node);
 }

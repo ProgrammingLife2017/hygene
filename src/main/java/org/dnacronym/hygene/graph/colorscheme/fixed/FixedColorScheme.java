@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph.colorscheme.fixed;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 
@@ -23,7 +24,7 @@ public final class FixedColorScheme implements ColorScheme {
 
 
     @Override
-    public Color calculateColor(final Node node) {
+    public Color calculateColor(final LayoutableNode node) {
         return color;
     }
 }
