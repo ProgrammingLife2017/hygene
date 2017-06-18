@@ -13,13 +13,10 @@ import java.nio.file.Paths;
 
 /**
  * Provides access to the application data on the local filesystem.
- * <p>
- * This class is a thread-safe singleton.
  */
 public final class AppData {
     private static final Charset FILE_ENCODING = StandardCharsets.UTF_8;
     private static final String APPLICATION_FOLDER_NAME = "hygene";
-    private static AppData instance = new AppData();
 
 
     /**
@@ -30,15 +27,6 @@ public final class AppData {
 
 
     /**
-     * Gets the instance of {@link AppData}.
-     *
-     * @return the instance of {@link AppData}
-     */
-    public static AppData getInstance() {
-        return instance;
-    }
-
-    /**
      * Returns the contents of the given application data file.
      * <p>
      * Returns an empty string if no file with the given name is found.
@@ -47,7 +35,7 @@ public final class AppData {
      * @return the contents of that file
      * @throws IOException if an exception occurs during file IO
      */
-    public String read(final String fileName) throws IOException {
+    public static String read(final String fileName) throws IOException {
         final File file = getFile(fileName);
         return readFile(file);
     }
@@ -61,7 +49,7 @@ public final class AppData {
      * @param content  the new content to be written
      * @throws IOException if an exception occurs during file IO
      */
-    public void put(final String fileName, final String content) throws IOException {
+    public static void put(final String fileName, final String content) throws IOException {
         final File file = getFile(fileName);
         final File parent = file.getParentFile();
 
@@ -80,7 +68,7 @@ public final class AppData {
      * @param fileName the file name
      * @return the application data {@link File} object
      */
-    public File getFile(final String fileName) {
+    public static File getFile(final String fileName) {
         String baseDirectory = System.getProperty("user.home");
 
         // Use the AppData directory if on Windows
@@ -98,7 +86,7 @@ public final class AppData {
      * @return a {@link String}s, representing the contents of the file
      * @throws IOException if an exception occurs during file IO
      */
-    private String readFile(final File file) throws IOException {
+    private static String readFile(final File file) throws IOException {
         final byte[] rawContents = Files.readAllBytes(Paths.get(file.getPath()));
         return new String(rawContents, FILE_ENCODING);
     }

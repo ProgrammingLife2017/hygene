@@ -47,7 +47,6 @@ final class RecentDirectoryTest {
      * @throws IOException if an exception occurs during file IO
      */
     private void deleteDataFile() throws IOException {
-        Files.deleteIfExists(AppData.getInstance()
-                .getFile("type" + RecentDirectory.DATA_FILE_NAME_SUFFIX).toPath());
+        Files.deleteIfExists(AppData.getFile("type" + RecentDirectory.DATA_FILE_NAME_SUFFIX).toPath());
     }
 }

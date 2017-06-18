@@ -24,7 +24,7 @@ final class RecentFilesTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        final File file = AppData.getInstance().getFile(RecentFiles.DATA_FILE_NAME);
+        final File file = AppData.getFile(RecentFiles.DATA_FILE_NAME);
 
         java.nio.file.Files.deleteIfExists(file.toPath());
     }
@@ -118,6 +118,6 @@ final class RecentFilesTest {
      * @return the data file
      */
     private File getDataFile() {
-        return AppData.getInstance().getFile(RecentFiles.DATA_FILE_NAME);
+        return AppData.getFile(RecentFiles.DATA_FILE_NAME);
     }
 }

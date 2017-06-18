@@ -30,11 +30,11 @@ public final class RecentDirectory {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized File get(final String type) throws IOException {
-        if (!AppData.getInstance().getFile(type + DATA_FILE_NAME_SUFFIX).exists()) {
+        if (!AppData.getFile(type + DATA_FILE_NAME_SUFFIX).exists()) {
             return new File(System.getProperty("user.home"));
         }
 
-        final String content = AppData.getInstance().read(type + DATA_FILE_NAME_SUFFIX);
+        final String content = AppData.read(type + DATA_FILE_NAME_SUFFIX);
 
         return new File(content.trim());
     }
@@ -47,6 +47,6 @@ public final class RecentDirectory {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized void store(final String type, final File directory) throws IOException {
-        AppData.getInstance().put(type + DATA_FILE_NAME_SUFFIX, directory.getAbsolutePath());
+        AppData.put(type + DATA_FILE_NAME_SUFFIX, directory.getAbsolutePath());
     }
 }
