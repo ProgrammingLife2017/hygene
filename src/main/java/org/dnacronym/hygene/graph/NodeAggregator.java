@@ -44,7 +44,7 @@ public final class NodeAggregator {
      * of {@code 1}, and these neighbours have exactly one neighbour which is shared between them.
      *
      * @param node a node
-     * @return the {@link AggregateNode} th neighbours are now part of, or {@code null} if no aggregation occurred
+     * @return the {@link AggregateNode} the neighbours are now part of, or {@code null} if no aggregation occurred
      */
     public static @Nullable AggregateNode aggregate(final Node node) {
         final NodeAggregator aggregator = new NodeAggregator(node);
