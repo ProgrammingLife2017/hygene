@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +45,6 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     @Inject
     private BookmarkStore bookmarkStore;
-    @Inject
-    private GraphVisualizer graphVisualizer;
 
     private Stage primaryStage;
 
@@ -150,15 +147,6 @@ public final class Hygene extends Application {
      */
     public void formatTitle(final String filePath) {
         primaryStage.setTitle(TITLE + " - [" + filePath + "]");
-    }
-
-    /**
-     * Gets the {@link GraphVisualizer} of the application.
-     *
-     * @return {@link GraphVisualizer} of the application
-     */
-    public GraphVisualizer getGraphVisualizer() {
-        return graphVisualizer;
     }
 
     /**
