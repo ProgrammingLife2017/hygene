@@ -19,8 +19,6 @@ import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeOutgoingEdges;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeSequenceLength;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeTotalEdges;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
 import java.net.URL;

@@ -7,11 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -22,7 +17,6 @@ import java.util.ResourceBundle;
  * Controller for showing of {@link SimpleBookmark}s.
  */
 public final class BookmarkTableController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(BookmarkTableController.class);
     private static final int DESCRIPTION_TEXT_PADDING = 10;
 
     @Inject

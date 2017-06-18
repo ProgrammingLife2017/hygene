@@ -10,16 +10,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -30,8 +25,6 @@ import java.util.ResourceBundle;
  * Controller for creating bookmarks.
  */
 public final class BookmarkCreateController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
-
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
     @Inject

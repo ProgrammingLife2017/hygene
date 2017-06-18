@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
+
 import javax.inject.Inject;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -93,6 +95,7 @@ public final class GraphVisualizer {
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
+     * @param simpleBookmarkStore       the {@link SimpleBookmarkStore} used to draw bookmark indications
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
@@ -402,15 +405,15 @@ public final class GraphVisualizer {
             rTree.find(event.getX(), event.getY(),
                     this::setSelectedSegment,
                     (fromNodeId, toNodeId) -> graphDimensionsCalculator.getObservableQueryNodes().stream()
-                                .filter(node -> node instanceof Segment)
-                                .filter(node -> ((Segment) node).getId() == fromNodeId)
-                                .findFirst()
-                                .ifPresent(node -> node.getOutgoingEdges().stream()
-                                        .filter(edge -> edge.getTo() instanceof Segment
-                                                && ((Segment) edge.getTo()).getId() == toNodeId)
-                                        .findFirst()
-                                        .ifPresent(selectedEdgeProperty::setValue)
-                                )
+                            .filter(node -> node instanceof Segment)
+                            .filter(node -> ((Segment) node).getId() == fromNodeId)
+                            .findFirst()
+                            .ifPresent(node -> node.getOutgoingEdges().stream()
+                                    .filter(edge -> edge.getTo() instanceof Segment
+                                            && ((Segment) edge.getTo()).getId() == toNodeId)
+                                    .findFirst()
+                                    .ifPresent(selectedEdgeProperty::setValue)
+                            )
             );
         });
         canvas.setOnMouseMoved(event -> {
