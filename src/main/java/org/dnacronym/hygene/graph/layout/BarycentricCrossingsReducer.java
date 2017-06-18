@@ -73,8 +73,9 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * @return the nodes from layer 2 sorted by the computed ordinal position
      */
     @SuppressWarnings("nullness") // False positive
-    private LayoutableNode[] reduceCrossingsBetweenLayers(final LayoutableNode[][] layers, final int layer2Index,
-                                                final Map<LayoutableNode, Integer> lengthyNodes) {
+    private LayoutableNode[] reduceCrossingsBetweenLayers(final LayoutableNode[][] layers,
+                                                          final int layer2Index,
+                                                          final Map<LayoutableNode, Integer> lengthyNodes) {
         final LayoutableNode[] layer1 = layers[layer2Index - 1];
         final LayoutableNode[] layer2 = layers[layer2Index];
 
