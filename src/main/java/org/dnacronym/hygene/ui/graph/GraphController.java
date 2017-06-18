@@ -10,7 +10,6 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -87,13 +86,7 @@ public final class GraphController implements Initializable {
                 return;
             }
 
-            try {
-                LOGGER.info("Selected edge from node id: " + edge.getFrom() + " to node id: " + edge.getTo() + "\n"
-                        + "Overlap: " + edge.retrieveMetadata().getOverlap() + "\n");
-            } catch (final ParseException e) {
-                LOGGER.error("Metadata of edge from node id: " + edge.getFrom()
-                        + " to node id: " + edge.getTo() + " could not be loaded");
-            }
+            LOGGER.info("Selected edge from node id: " + edge.getFrom() + " to node id: " + edge.getTo() + "\n");
         });
     }
 

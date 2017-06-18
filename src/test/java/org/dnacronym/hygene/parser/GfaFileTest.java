@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.EdgeMetadata;
-import org.dnacronym.hygene.models.NodeMetadata;
+import org.dnacronym.hygene.graph.metadata.EdgeMetadata;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.GfaParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabaseDriver;

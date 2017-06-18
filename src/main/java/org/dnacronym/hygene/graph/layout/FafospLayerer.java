@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.DummyEdge;
-import org.dnacronym.hygene.graph.DummyNode;
-import org.dnacronym.hygene.graph.Edge;
-import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.edge.DummyEdge;
+import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.NewNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
 import java.util.ArrayList;

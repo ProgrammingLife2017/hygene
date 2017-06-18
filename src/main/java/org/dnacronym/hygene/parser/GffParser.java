@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.models.FeatureAnnotation;
-import org.dnacronym.hygene.models.SubFeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.SubFeatureAnnotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;

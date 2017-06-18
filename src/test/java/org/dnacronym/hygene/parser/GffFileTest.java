@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.models.FeatureAnnotation;
-import org.dnacronym.hygene.models.SubFeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.SubFeatureAnnotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

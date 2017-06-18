@@ -2,9 +2,9 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.graph.Edge;
-import org.dnacronym.hygene.graph.FillNode;
-import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.FillNode;
+import org.dnacronym.hygene.graph.node.NewNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;

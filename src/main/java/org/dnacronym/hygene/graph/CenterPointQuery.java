@@ -4,12 +4,12 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.core.ThrottledDefaultExecutor;
 import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.events.LayoutDoneEvent;
+import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
-import org.dnacronym.hygene.models.Graph;
-import org.dnacronym.hygene.models.GraphIterator;
-import org.dnacronym.hygene.models.NodeMetadataCache;
-import org.dnacronym.hygene.models.SequenceDirection;
+import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
 
 
 /**

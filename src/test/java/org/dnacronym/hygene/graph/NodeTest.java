@@ -1,51 +1,130 @@
 package org.dnacronym.hygene.graph;
 
+import org.dnacronym.hygene.core.UnsignedInteger;
+import org.dnacronym.hygene.models.NodeColor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
- * Test suite for the {@link NewNode} class.
+ * Unit tests for {@link ArrayBasedNode}.
  */
-abstract class NodeTest {
-    static final int X_POSITION = 31;
-    static final int Y_POSITION = 64;
-
-    private NewNode node;
-
-
+final class NodeTest {
     @Test
-    final void testGetXPosition() {
-        node.setXPosition(X_POSITION);
+    void testGetId() {
+        final ArrayBasedNode node = NodeBuilder.start().withNodeId(5).create();
 
-        assertThat(node.getXPosition()).isEqualTo(X_POSITION);
+        assertThat(node.getId()).isEqualTo(5);
     }
 
     @Test
-    final void testGetYPosition() {
-        node.setYPosition(Y_POSITION);
+    void testGetByteOffset() {
+        final ArrayBasedNode node = NodeBuilder.start().withByteOffset(4).create();
 
-        assertThat(node.getYPosition()).isEqualTo(Y_POSITION);
+        assertThat(node.getByteOffset()).isEqualTo(4);
     }
 
     @Test
-    final void testGetIncomingEdges() {
-        assertThat(node.getIncomingEdges()).isEmpty();
+    void testGetSequenceLength() {
+        final ArrayBasedNode node = NodeBuilder.start().withSequenceLength(3).create();
+
+        assertThat(node.getSequenceLength()).isEqualTo(3);
     }
 
     @Test
-    final void testGetOutgoingEdges() {
-        assertThat(node.getOutgoingEdges()).isEmpty();
+    void testGetColor() {
+        final ArrayBasedNode node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
+
+        assertThat(node.getColor()).isEqualTo(NodeColor.GREEN);
     }
 
+    @Test
+    void testGetUnscaledXPosition() {
+        final ArrayBasedNode node = NodeBuilder.start().withUnscaledXPosition(5).create();
+
+        assertThat(node.getUnscaledXPosition()).isEqualTo(5);
+    }
+
+    @Test
+    void testGetUnscaledYPosition() {
+        final ArrayBasedNode node = NodeBuilder.start().withUnscaledYPosition(6).create();
+
+        assertThat(node.getUnscaledYPosition()).isEqualTo(6);
+    }
+
+    @Test
+    void testToArray() {
+        final ArrayBasedNode node = NodeBuilder.start()
+                .withNodeId(42)
+                .withByteOffset(1)
+                .withSequenceLength(5)
+                .withColor(NodeColor.BLACK)
+                .withUnscaledXPosition(3)
+                .withUnscaledYPosition(4)
+                .withOutgoingEdge(1, 30)
+                .withOutgoingEdge(2, 40)
+                .withIncomingEdge(1, 30)
+                .create();
+
+        assertThat(node.toArray()).isEqualTo(new int[] {
+                UnsignedInteger.fromLong(1), 5, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
+        });
+    }
+
+    @Test
+    void testGetNumberOfOutgoingEdges() {
+        final ArrayBasedNode node = NodeBuilder.start().withOutgoingEdge(1, 30).create();
+
+        assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(1);
+    }
+
+    @Test
+    void testGetNumberOfIncomingEdges() {
+        final ArrayBasedNode node = NodeBuilder.start().withIncomingEdge(1, 30).withIncomingEdge(2, 40).create();
+
+        assertThat(node.getNumberOfIncomingEdges()).isEqualTo(2);
+    }
 
     /**
-     * Sets the {@link NewNode} instance to be tested.
-     *
-     * @param node the {@link NewNode} instance
+     * Create a node with two outgoing edges, verify that the number of outgoing edges is computed
+     * correctly (done without using the edge data structure, but based on the node array) and
+     * that the set of outgoing edges contains the newly constructed edges.
      */
-    final void setNode(final NewNode node) {
-        this.node = node;
+    @Test
+    void testGetOutgoingEdges() {
+        final ArrayBasedNode node = NodeBuilder.start()
+                .withNodeId(10)
+                .withOutgoingEdge(20, 3)
+                .withOutgoingEdge(30, 4)
+                .create();
+
+        assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(2);
+        assertThat(node.getOutgoingEdges()).containsOnly(
+                new Edge(10, 20, 3, null),
+                new Edge(10, 30, 4, null)
+        );
+    }
+
+    /**
+     * Create a node with three incoming edges, verify that the number of incoming edges is computed
+     * correctly (done without using the edge data structure, but based on the node array) and
+     * that the set of incoming edges contains the newly constructed edges.
+     */
+    @Test
+    void testGetIncomingEdges() {
+        final ArrayBasedNode node = NodeBuilder.start()
+                .withNodeId(10)
+                .withIncomingEdge(20, 3)
+                .withIncomingEdge(30, 4)
+                .withIncomingEdge(40, 5)
+                .create();
+
+        assertThat(node.getNumberOfIncomingEdges()).isEqualTo(3);
+        assertThat(node.getIncomingEdges()).containsOnly(
+                new Edge(20, 10, 3, null),
+                new Edge(30, 10, 4, null),
+                new Edge(40, 10, 5, null)
+        );
     }
 }

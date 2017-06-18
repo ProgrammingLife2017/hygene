@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.models.SequenceDirection;
+import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.Collection;
 import java.util.Collections;

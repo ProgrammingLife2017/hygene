@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.FillNode;
-import org.dnacronym.hygene.graph.NewNode;
+import org.dnacronym.hygene.graph.node.FillNode;
+import org.dnacronym.hygene.graph.node.NewNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

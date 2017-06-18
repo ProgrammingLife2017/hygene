@@ -1,104 +1,117 @@
 package org.dnacronym.hygene.graph;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.dnacronym.hygene.core.UnsignedInteger;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 
 /**
- * Test suite for the {@link Edge} class.
+ * Unit tests for {@link Edge}.
  */
-abstract class EdgeTest {
-    private Edge edge;
-    private NewNode from;
-    private NewNode to;
-    private Set<String> genomes;
-
-
-    @BeforeEach
-    void setUp() {
-        from = mock(NewNode.class);
-        to = mock(NewNode.class);
-        genomes = new HashSet<>(Arrays.asList("a", "b", "c"));
-    }
-
-
+final class EdgeTest {
     @Test
-    final void testGetFrom() {
-        assertThat(edge.getFrom()).isEqualTo(from);
+    void testGetTo() {
+        final Edge edge = new Edge(1, 2, 42, null);
+
+        assertThat(edge.getTo()).isEqualTo(2);
     }
 
     @Test
-    final void testGetTo() {
-        assertThat(edge.getTo()).isEqualTo(to);
+    void testGetByteOffset() {
+        final Edge edge = new Edge(4, 3, UnsignedInteger.fromLong(12), null);
+
+        assertThat(edge.getByteOffset()).isEqualTo(12);
     }
 
     @Test
-    void testGetSetGenomes() {
-        edge.setGenomes(genomes);
-        assertThat(edge.getGenomes()).isEqualTo(genomes);
+    void testGetFrom() {
+        final Edge edge = new Edge(2, 5, 56, null);
+
+        assertThat(edge.getFrom()).isEqualTo(2);
     }
 
     @Test
-    void testGetImportance() {
-        edge.setGenomes(genomes);
-        assertThat(edge.getImportance()).isEqualTo(genomes.size());
+    void testCompareToFirstIsLarger() {
+        final Edge edge1 = new Edge(4, 5, 16, null);
+        final Edge edge2 = new Edge(3, 5, 56, null);
+
+        assertThat(edge1.compareTo(edge2)).isPositive();
     }
 
     @Test
-    void testGetImportantNullCase() {
-        edge.setGenomes(null);
-        assertThat(edge.getImportance()).isEqualTo(1);
+    void testCompareToFirstIsSmaller() {
+        final Edge edge1 = new Edge(3, 5, 16, null);
+        final Edge edge2 = new Edge(4, 5, 56, null);
+
+        assertThat(edge1.compareTo(edge2)).isNegative();
     }
 
     @Test
-    void testGetImportantEmptyCase() {
-        edge.setGenomes(new HashSet<>());
-        assertThat(edge.getImportance()).isEqualTo(1);
+    void testCompareToEqual() {
+        final Edge edge1 = new Edge(1, 10, 1, null);
+        final Edge edge2 = new Edge(1, 10, 2, null);
+
+        assertThat(edge1.compareTo(edge2)).isZero();
     }
 
     @Test
-    void testGetInGenome() {
-        edge.setGenomes(genomes);
-        assertThat(edge.inGenome("a")).isTrue();
+    void testEqualsSameInstance() {
+        final Edge edge = new Edge(4, 5, 10, null);
+
+        assertThat(edge).isEqualTo(edge);
     }
 
     @Test
-    void testGetInGenomeNullCase() {
-        edge.setGenomes(null);
-        assertThat(edge.inGenome("a")).isFalse();
+    void testEqualsDifferentInstancesSameValues() {
+        final Edge edge1 = new Edge(6, 12, 2, null);
+        final Edge edge2 = new Edge(6, 12, 2, null);
+
+        assertThat(edge1).isEqualTo(edge2);
     }
 
-    /**
-     * Returns the source node.
-     *
-     * @return the source node
-     */
-    final NewNode getFrom() {
-        return from;
+    @Test
+    void testInstanceNotEqualsNull() {
+        final Edge edge = new Edge(6, 12, 2, null);
+
+        assertThat(edge).isNotEqualTo(null);
     }
 
-    /**
-     * Returns the destination node.
-     *
-     * @return the destination node
-     */
-    final NewNode getTo() {
-        return to;
+    @Test
+    void testInstanceNotEqualToInstanceOfOtherClass() {
+        final Edge edge = new Edge(6, 12, 2, null);
+
+        assertThat(edge).isNotEqualTo("instance-of-other-class");
     }
 
-    /**
-     * Sets the {@link Edge} instance to be tested.
-     *
-     * @param edge the {@link Edge} instance
-     */
-    final void setEdge(final Edge edge) {
-        this.edge = edge;
+    @Test
+    void testEqualsDifferentFromNode() {
+        final Edge edge1 = new Edge(1, 0, 0, null);
+        final Edge edge2 = new Edge(9, 0, 0, null);
+
+        assertThat(edge1).isNotEqualTo(edge2);
+    }
+
+    @Test
+    void testEqualsDifferentToNode() {
+        final Edge edge1 = new Edge(0, 1, 0, null);
+        final Edge edge2 = new Edge(0, 9, 0, null);
+
+        assertThat(edge1).isNotEqualTo(edge2);
+    }
+
+    @Test
+    void testEqualsDifferentByteOffset() {
+        final Edge edge1 = new Edge(0, 0, 1, null);
+        final Edge edge2 = new Edge(0, 0, 9, null);
+
+        assertThat(edge1).isNotEqualTo(edge2);
+    }
+
+    @Test
+    void testHashCode() {
+        final Edge edge = new Edge(1, 2, 3, null);
+
+        assertThat(edge.hashCode()).isEqualTo(31747);
     }
 }

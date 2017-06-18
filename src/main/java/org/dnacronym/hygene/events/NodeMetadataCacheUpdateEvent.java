@@ -4,7 +4,7 @@ import org.dnacronym.hygene.graph.Subgraph;
 
 
 /**
- * Indicates that the metadata for all {@link org.dnacronym.hygene.graph.Segment}s has been retrieved.
+ * Indicates that the metadata for all {@link org.dnacronym.hygene.graph.node.Segment}s has been retrieved.
  */
 public final class NodeMetadataCacheUpdateEvent {
     private final Subgraph subgraph;
@@ -13,7 +13,7 @@ public final class NodeMetadataCacheUpdateEvent {
     /**
      * Constructs a new {@link NodeMetadataCacheUpdateEvent}.
      *
-     * @param subgraph the {@link Subgraph} for which all {@link org.dnacronym.hygene.graph.Segment}s have metadata
+     * @param subgraph the {@link Subgraph} for which all {@link org.dnacronym.hygene.graph.node.Segment}s have metadata
      */
     public NodeMetadataCacheUpdateEvent(final Subgraph subgraph) {
         this.subgraph = subgraph;

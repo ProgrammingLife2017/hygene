@@ -17,12 +17,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
-import org.dnacronym.hygene.graph.DummyEdge;
-import org.dnacronym.hygene.graph.NewNode;
-import org.dnacronym.hygene.graph.Segment;
-import org.dnacronym.hygene.models.Edge;
-import org.dnacronym.hygene.models.FeatureAnnotation;
-import org.dnacronym.hygene.models.Graph;
+import org.dnacronym.hygene.graph.edge.DummyEdge;
+import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
@@ -191,7 +191,7 @@ public final class GraphVisualizer {
      * @param edge the edge to be drawn
      */
     @SuppressWarnings("PMD.CyclomaticComplexity") // Some application logic should be moved to Edge class
-    private void drawEdge(final org.dnacronym.hygene.graph.Edge edge) {
+    private void drawEdge(final Edge edge) {
         final NewNode fromNode = edge.getFrom();
         final NewNode toNode = edge.getTo();
 
@@ -225,7 +225,7 @@ public final class GraphVisualizer {
     }
 
     /**
-     * Computes the thickness of an edge based on the {@link org.dnacronym.hygene.graph.Edge} importance.
+     * Computes the thickness of an edge based on the {@link Edge} importance.
      * <p>
      * The thickness is computed as the number unique genomes that run through this path divided by the total
      * number of unique paths.
@@ -234,7 +234,7 @@ public final class GraphVisualizer {
      * @return the edge thickness
      */
     @SuppressWarnings("MagicNumber")
-    public double computeEdgeThickness(final org.dnacronym.hygene.graph.Edge edge) {
+    public double computeEdgeThickness(final Edge edge) {
         return Math.max(DEFAULT_EDGE_THICKNESS,
                 0.5 * ((double) edge.getImportance()) / graph.getGenomeMapping().size() * nodeHeightProperty.get());
     }
@@ -348,7 +348,6 @@ public final class GraphVisualizer {
      * @param laneCount  amount of bands onscreen
      * @param laneHeight height of each lane
      */
-
     private void drawLaneBorders(final int laneCount, final double laneHeight) {
         final Paint originalStroke = graphicsContext.getStroke();
         final double originalLineWidth = graphicsContext.getLineWidth();
@@ -405,10 +404,16 @@ public final class GraphVisualizer {
 
             rTree.find(event.getX(), event.getY(),
                     this::setSelectedSegment,
-                    (fromNodeId, toNodeId) -> graph.getNode(fromNodeId).getOutgoingEdges().stream()
-                            .filter(edge -> edge.getTo() == toNodeId)
-                            .findFirst()
-                            .ifPresent(selectedEdgeProperty::setValue)
+                    (fromNodeId, toNodeId) -> graphDimensionsCalculator.getObservableQueryNodes().stream()
+                                .filter(node -> node instanceof Segment)
+                                .filter(node -> ((Segment) node).getId() == fromNodeId)
+                                .findFirst()
+                                .ifPresent(node -> node.getOutgoingEdges().stream()
+                                        .filter(edge -> edge.getTo() instanceof Segment
+                                                && ((Segment) edge.getTo()).getId() == toNodeId)
+                                        .findFirst()
+                                        .ifPresent(selectedEdgeProperty::setValue)
+                                )
             );
         });
         canvas.setOnMouseMoved(event -> {
