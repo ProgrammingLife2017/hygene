@@ -194,17 +194,6 @@ public final class Graph {
     }
 
     /**
-     * Returns a new {@link Fafosp} for invoking FAFOSP-related methods.
-     * <p>
-     * FAFOSP is the Felix Algorithm For Optimal Segment Positioning.
-     *
-     * @return a new {@link Fafosp}
-     */
-    public Fafosp fafosp() {
-        return new Fafosp(this);
-    }
-
-    /**
      * Getter for the {@link GfaFile} instance where the graph belongs to.
      *
      * @return the {@link GfaFile} instance where the graph belongs to

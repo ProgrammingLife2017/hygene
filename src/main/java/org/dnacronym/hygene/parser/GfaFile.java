@@ -3,6 +3,7 @@ package org.dnacronym.hygene.parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.graph.layout.Fafosp;
 import org.dnacronym.hygene.graph.metadata.EdgeMetadata;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
@@ -73,7 +74,7 @@ public final class GfaFile {
                 LOGGER.info("Finished parsing");
 
                 LOGGER.info("Start fafosp x");
-                graph.fafosp().horizontal();
+                new Fafosp(graph).horizontal();
 
                 LOGGER.info("GfaFile parse finished");
 
