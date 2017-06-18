@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.graph;
 
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.TreeMultimap;

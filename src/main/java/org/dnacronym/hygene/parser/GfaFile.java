@@ -7,7 +7,7 @@ import org.dnacronym.hygene.models.EdgeMetadata;
 import org.dnacronym.hygene.models.Graph;
 import org.dnacronym.hygene.models.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
-import org.dnacronym.hygene.parser.factories.NewGfaParserFactory;
+import org.dnacronym.hygene.parser.factories.GfaParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.GraphLoader;
 import org.dnacronym.hygene.persistence.UnexpectedDatabaseException;
@@ -35,7 +35,7 @@ public final class GfaFile {
     private static final String RANDOM_ACCESS_FILE_MODE = "r";
 
     private final String fileName;
-    private final NewGfaParser gfaParser;
+    private final GfaParser gfaParser;
     private final MetadataParser metadataParser;
     private @MonotonicNonNull Graph graph;
     private @MonotonicNonNull RandomAccessFile randomAccessFile;
@@ -49,7 +49,7 @@ public final class GfaFile {
     public GfaFile(final String fileName) {
         this.fileName = fileName;
 
-        gfaParser = NewGfaParserFactory.createInstance();
+        gfaParser = GfaParserFactory.createInstance();
         metadataParser = MetadataParserFactory.createInstance();
     }
 
