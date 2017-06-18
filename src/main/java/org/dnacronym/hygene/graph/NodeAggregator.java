@@ -67,7 +67,7 @@ public final class NodeAggregator {
     }
 
     /**
-     * Aggregates the node and its two neighbours into an {@link AggregateNode}.
+     * Aggregates the node, its two neighbours, and their shared neighbour into an {@link AggregateNode}.
      *
      * @return an {@link AggregateNode}
      */
