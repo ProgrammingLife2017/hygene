@@ -26,6 +26,7 @@ import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
@@ -79,7 +80,7 @@ public final class GraphVisualizer {
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
     private final GraphAnnotationVisualizer graphAnnotationVisualizer;
-    private final SimpleBookmarkStore simpleBookmarkStore;
+    private final BookmarkStore bookmarkStore;
 
     private RTree rTree;
 
@@ -95,18 +96,18 @@ public final class GraphVisualizer {
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
-     * @param simpleBookmarkStore       the {@link SimpleBookmarkStore} used to draw bookmark indications
+     * @param bookmarkStore       the {@link SimpleBookmarkStore} used to draw bookmark indications
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
                            final GraphAnnotation graphAnnotation,
                            final Query query,
-                           final SimpleBookmarkStore simpleBookmarkStore) {
+                           final BookmarkStore bookmarkStore) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.graphAnnotation = graphAnnotation;
         this.query = query;
-        this.simpleBookmarkStore = simpleBookmarkStore;
+        this.bookmarkStore = bookmarkStore;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
@@ -312,7 +313,7 @@ public final class GraphVisualizer {
 
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
-                    simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
+                    bookmarkStore != null && bookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
 
             node.getOutgoingEdges().forEach(this::drawEdge);

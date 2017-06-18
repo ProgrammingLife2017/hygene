@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -45,7 +45,7 @@ public final class Hygene extends Application {
     @Inject
     private GraphStore graphStore;
     @Inject
-    private SimpleBookmarkStore simpleBookmarkStore;
+    private BookmarkStore bookmarkStore;
     @Inject
     private GraphVisualizer graphVisualizer;
 
@@ -102,7 +102,7 @@ public final class Hygene extends Application {
 
 
         primaryStage.setOnCloseRequest(e -> {
-            simpleBookmarkStore.writeBookmarksToFile();
+            bookmarkStore.writeBookmarksToFile();
             Platform.exit();
         });
 

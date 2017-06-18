@@ -32,7 +32,7 @@ public final class BookmarkCreateController implements Initializable {
     @Inject
     private SequenceVisualizer sequenceVisualizer;
     @Inject
-    private SimpleBookmarkStore simpleBookmarkStore;
+    private BookmarkStore bookmarkStore;
 
     @FXML
     private TextField baseOffset;
@@ -102,7 +102,7 @@ public final class BookmarkCreateController implements Initializable {
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
 
-            simpleBookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
+            bookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
                     description.getText()));
             description.clear();
         }

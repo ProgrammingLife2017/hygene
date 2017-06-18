@@ -20,7 +20,7 @@ public final class BookmarkTableController implements Initializable {
     private static final int DESCRIPTION_TEXT_PADDING = 10;
 
     @Inject
-    private SimpleBookmarkStore simpleBookmarkStore;
+    private BookmarkStore bookmarkStore;
 
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
@@ -74,6 +74,6 @@ public final class BookmarkTableController implements Initializable {
             return simpleBookmarkTableRow;
         });
 
-        bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
+        bookmarksTable.setItems(bookmarkStore.getSimpleBookmarks());
     }
 }
