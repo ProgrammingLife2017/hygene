@@ -27,7 +27,6 @@ import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
@@ -96,7 +95,7 @@ public final class GraphVisualizer {
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
-     * @param bookmarkStore       the {@link SimpleBookmarkStore} used to draw bookmark indications
+     * @param bookmarkStore             the {@link BookmarkStore} used to draw bookmark indications
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
