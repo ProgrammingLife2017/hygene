@@ -3,14 +3,14 @@ package org.dnacronym.hygene.ui.graph;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.List;
 
 
 /**
- * Visualizes all {@link org.dnacronym.hygene.models.FeatureAnnotation}s stored in {@link GraphAnnotation} in the graph
+ * Visualizes all {@link org.dnacronym.hygene.model.FeatureAnnotation}s stored in {@link GraphAnnotation} in the graph
  * view.
  */
 public final class GraphAnnotationVisualizer {
@@ -53,17 +53,17 @@ public final class GraphAnnotationVisualizer {
 
     /**
      * Draws a marker at the top of the graph denoting the start end of a
-     * {@link org.dnacronym.hygene.models.FeatureAnnotation}.
+     * {@link org.dnacronym.hygene.model.FeatureAnnotation}.
      * <p>
      * If the {@link GenomePoint}s list is smaller than 2, nothing is drawn, as there are no clear indicators for start
      * and end nodes.
      *
      * @param seqId        the sequence id of the current annotation
      * @param genomePoints the list of {@link GenomePoint}s which denote the start and end of a
-     *                     {@link org.dnacronym.hygene.models.FeatureAnnotation}
-     * @param nodes        the list of current onscreen {@link NewNode}s
+     *                     {@link org.dnacronym.hygene.model.FeatureAnnotation}
+     * @param nodes        the list of current onscreen {@link Node}s
      */
-    public void draw(final String seqId, final List<GenomePoint> genomePoints, final List<NewNode> nodes) {
+    public void draw(final String seqId, final List<GenomePoint> genomePoints, final List<Node> nodes) {
         if (genomePoints.size() < 2) {
             return;
         }
@@ -80,22 +80,22 @@ public final class GraphAnnotationVisualizer {
         int maxOnscreenId = 0;
         boolean endpointFound = false;
 
-        for (final NewNode newNode : nodes) {
-            if (!(newNode instanceof Segment)) {
+        for (final Node node : nodes) {
+            if (!(node instanceof Segment)) {
                 continue;
             }
-            final Segment segment = (Segment) newNode;
+            final Segment segment = (Segment) node;
 
             maxOnscreenId = Math.max(maxOnscreenId, segment.getId());
             minOnscreenId = Math.min(minOnscreenId, segment.getId());
 
             if (segment.getId() == startNodeId) {
-                startX = graphDimensionsCalculator.computeXPosition(newNode)
-                        + (double) startOffset / newNode.getLength() * graphDimensionsCalculator.computeWidth(newNode);
+                startX = graphDimensionsCalculator.computeXPosition(node)
+                        + (double) startOffset / node.getLength() * graphDimensionsCalculator.computeWidth(node);
             }
             if (segment.getId() == endNodeId) {
-                endX = graphDimensionsCalculator.computeXPosition(newNode)
-                        + (double) endOffset / newNode.getLength() * graphDimensionsCalculator.computeWidth(newNode);
+                endX = graphDimensionsCalculator.computeXPosition(node)
+                        + (double) endOffset / node.getLength() * graphDimensionsCalculator.computeWidth(node);
                 endpointFound = true;
             }
         }

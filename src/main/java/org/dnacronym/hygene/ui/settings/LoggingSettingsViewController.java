@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Settings controller for the logger.
  */
-public final class LoggingSettingsViewController extends AbstractSettingsController {
+public final class LoggingSettingsViewController extends SettingsController {
     private static final Logger LOGGER = LogManager.getLogger(LoggingSettingsViewController.class);
     private static final List<String> LOG_LEVELS =
             Arrays.stream(Level.values()).map(Level::name).collect(Collectors.toList());

@@ -11,7 +11,7 @@ import javafx.util.Pair;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 import org.dnacronym.hygene.graph.colorscheme.fixed.FixedColorScheme;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeIncomingEdges;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Settings controller for the basic settings.
  */
-public final class BasicSettingsViewController extends AbstractSettingsController {
+public final class BasicSettingsViewController extends SettingsController {
     public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
             new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
             new Pair<>("Fixed Color", new FixedColorScheme(Color.CORAL)),
@@ -150,7 +150,7 @@ public final class BasicSettingsViewController extends AbstractSettingsControlle
     @FXML
     void onNodeColorSchemeChanged(final ActionEvent actionEvent) {
         getSettings().addRunnable(() -> {
-            NewNode.setColorScheme(nodeColorScheme.getValue().getValue());
+            Node.setColorScheme(nodeColorScheme.getValue().getValue());
             LOGGER.info("Node color scheme has been set to " + nodeColorScheme.getValue().getKey() + ".");
             try {
                 Hygene.getInstance().getGraphVisualizer().draw();

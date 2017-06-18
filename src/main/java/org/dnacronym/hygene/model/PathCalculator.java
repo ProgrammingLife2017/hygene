@@ -1,9 +1,9 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.model;
 
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 
@@ -28,9 +28,9 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
-        final Map<NewNode, Set<String>> genomeStore = new HashMap<>();
+        final Map<Node, Set<String>> genomeStore = new HashMap<>();
 
-        final List<NewNode> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore);
+        final List<Node> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore);
 
         final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
 
@@ -42,16 +42,16 @@ public final class PathCalculator {
      *
      * @param subgraph    the {@link Subgraph}
      * @param genomeStore the genome store
-     * @return a topologically sorted list of the {@link NewNode}s in the given {@link Subgraph}
+     * @return a topologically sorted list of the {@link Node}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public List<NewNode> computeTopologicalOrder(final Subgraph subgraph, final Map<NewNode, Set<String>> genomeStore) {
+    public List<Node> computeTopologicalOrder(final Subgraph subgraph, final Map<Node, Set<String>> genomeStore) {
         final Queue<Edge> toVisit = new LinkedList<>();
 
-        final NewNode origin = new Segment(-1, -1, 0);
+        final Node origin = new Segment(-1, -1, 0);
         genomeStore.put(origin, new HashSet<>());
 
-        final List<NewNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
+        final List<Node> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new Edge(origin, sourceConnectedNode));
@@ -59,13 +59,13 @@ public final class PathCalculator {
                     g.addAll(sourceConnectedNode.getMetadata().getGenomes()));
         });
 
-        final List<NewNode> topologicalOrder = new LinkedList<>();
+        final List<Node> topologicalOrder = new LinkedList<>();
 
         final HashSet<Edge> visitedEdges = new HashSet<>();
-        final HashSet<NewNode> visitedNodes = new HashSet<>();
+        final HashSet<Node> visitedNodes = new HashSet<>();
 
         while (!toVisit.isEmpty()) {
-            final NewNode active = toVisit.remove().getTo();
+            final Node active = toVisit.remove().getTo();
             visitedNodes.add(active);
             topologicalOrder.add(active);
 
@@ -106,28 +106,28 @@ public final class PathCalculator {
     }
 
     /**
-     * Determines which {@link NewNode}s do not have any incoming edges.
+     * Determines which {@link Node}s do not have any incoming edges.
      * <p>
-     * These {@link NewNode}s are considered to be connected to the theoretical source node of the {@link Graph}.
+     * These {@link Node}s are considered to be connected to the theoretical source node of the {@link Graph}.
      *
      * @param subgraph the subgraph
      * @return a list of nodes with no incoming edges
      */
-    List<NewNode> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
+    List<Node> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
         return subgraph.getNodes().stream()
                 .filter(node -> subgraph.getNeighbours(node, SequenceDirection.LEFT).isEmpty())
                 .collect(Collectors.toList());
     }
 
     /**
-     * Uses a topologically ordered set of {@link NewNode}s to compute the edges' paths.
+     * Uses a topologically ordered set of {@link Node}s to compute the edges' paths.
      *
-     * @param topologicalOrder a topologically ordered list of {@link NewNode}s
-     * @param genomeStore      a map mapping each {@link NewNode} to the genomes it is in
+     * @param topologicalOrder a topologically ordered list of {@link Node}s
+     * @param genomeStore      a map mapping each {@link Node} to the genomes it is in
      * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
-    Map<Edge, Set<String>> topologicalPathGeneration(final List<NewNode> topologicalOrder,
-                                                     final Map<NewNode, Set<String>> genomeStore) {
+    Map<Edge, Set<String>> topologicalPathGeneration(final List<Node> topologicalOrder,
+                                                     final Map<Node, Set<String>> genomeStore) {
         // Create edges genome store
         final Map<Edge, Set<String>> paths = new HashMap<>();
 

@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ final class ColorSchemeSequenceLengthTest {
 
     @Test
     void testSequenceLengthCap() {
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         when(node.getLength()).thenReturn(200);
 
         assertThat(colorSchemeSequenceLength.calculateColor(node)).isEqualTo(
@@ -35,7 +35,7 @@ final class ColorSchemeSequenceLengthTest {
 
     @Test
     void testSequenceLengthColor() {
-        final NewNode node = mock(NewNode.class);
+        final Node node = mock(Node.class);
         when(node.getLength()).thenReturn(78);
 
         assertThat(colorSchemeSequenceLength.calculateColor(node)).isEqualTo(

@@ -2,9 +2,9 @@ package org.dnacronym.hygene.parser;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.graph.ArrayBasedNode;
-import org.dnacronym.hygene.graph.Edge;
+import org.dnacronym.hygene.graph.ArrayBasedEdge;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -97,10 +97,10 @@ final class GfaParserTest {
         final ArrayBasedNode firstNode = ArrayBasedNode.fromGraph(graph, 1);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(12), null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(12), null));
 
         assertThat(firstNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(firstNode.getIncomingEdges()).contains(new Edge(2, 1, UnsignedInteger.fromLong(25), null));
+        assertThat(firstNode.getIncomingEdges()).contains(new ArrayBasedEdge(2, 1, UnsignedInteger.fromLong(25), null));
     }
 
     @Test
@@ -112,10 +112,10 @@ final class GfaParserTest {
         final ArrayBasedNode secondNode = ArrayBasedNode.fromGraph(graph, 2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(6), null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(6), null));
 
         assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(6), null));
+        assertThat(secondNode.getIncomingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(6), null));
     }
 
     @Test
@@ -127,10 +127,10 @@ final class GfaParserTest {
         final ArrayBasedNode secondNode = ArrayBasedNode.fromGraph(graph, 2);
 
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
-        assertThat(firstNode.getOutgoingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(0), null));
+        assertThat(firstNode.getOutgoingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(0), null));
 
         assertThat(secondNode.getNumberOfIncomingEdges()).isEqualTo(1);
-        assertThat(secondNode.getIncomingEdges()).contains(new Edge(1, 2, UnsignedInteger.fromLong(0), null));
+        assertThat(secondNode.getIncomingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(0), null));
     }
 
     @Test

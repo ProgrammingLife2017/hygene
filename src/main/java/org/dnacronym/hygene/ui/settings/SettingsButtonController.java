@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the three buttons of the settings window.
  */
-public final class SettingsButtonController extends AbstractSettingsController {
+public final class SettingsButtonController extends SettingsController {
     @FXML
     private Button apply;
 

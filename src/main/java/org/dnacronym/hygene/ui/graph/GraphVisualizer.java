@@ -16,10 +16,10 @@ import javafx.scene.paint.Paint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.events.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
 import org.dnacronym.hygene.graph.Graph;
@@ -118,7 +118,7 @@ public final class GraphVisualizer {
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        NewNode.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(0).getValue());
+        Node.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(0).getValue());
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
@@ -126,7 +126,7 @@ public final class GraphVisualizer {
         graphDimensionsCalculator.getGraphProperty()
                 .addListener((observable, oldValue, newValue) -> setGraph(newValue));
         graphDimensionsCalculator.getObservableQueryNodes()
-                .addListener((ListChangeListener<NewNode>) change -> draw());
+                .addListener((ListChangeListener<Node>) change -> draw());
 
         query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
@@ -153,7 +153,7 @@ public final class GraphVisualizer {
      * @param bookmarked the boolean indicating whether this node is bookmarked
      * @param queried    the boolean indicating whether this node has been queried
      */
-    private void drawNode(final NewNode node, final boolean bookmarked, final boolean queried) {
+    private void drawNode(final Node node, final boolean bookmarked, final boolean queried) {
         if (!(node instanceof Segment)) {
             return;
         }
@@ -192,8 +192,8 @@ public final class GraphVisualizer {
      */
     @SuppressWarnings("PMD.CyclomaticComplexity") // Some application logic should be moved to Edge class
     private void drawEdge(final Edge edge) {
-        final NewNode fromNode = edge.getFrom();
-        final NewNode toNode = edge.getTo();
+        final Node fromNode = edge.getFrom();
+        final Node toNode = edge.getTo();
 
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
@@ -310,7 +310,7 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
-        for (final NewNode node : graphDimensionsCalculator.getObservableQueryNodes()) {
+        for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
@@ -438,7 +438,7 @@ public final class GraphVisualizer {
      * @param nodeId node the id of the newly selected {@link Segment}
      */
     public void setSelectedSegment(final int nodeId) {
-        final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
+        final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
                 .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
 
         if (segment.isEmpty()) {
@@ -455,7 +455,7 @@ public final class GraphVisualizer {
      * @param nodeId node the id of the newly hovered {@link Segment}
      */
     public void setHoveredSegmentProperty(final int nodeId) {
-        final FilteredList<NewNode> segment = graphDimensionsCalculator.getObservableQueryNodes()
+        final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
                 .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
 
         if (segment.isEmpty()) {

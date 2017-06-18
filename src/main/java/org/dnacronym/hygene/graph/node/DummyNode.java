@@ -26,9 +26,9 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadata;
  * </i>
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
-public final class DummyNode extends NewNode {
-    private final NewNode diversionSource;
-    private final NewNode diversionDestination;
+public final class DummyNode extends Node {
+    private final Node diversionSource;
+    private final Node diversionDestination;
 
 
     /**
@@ -37,7 +37,7 @@ public final class DummyNode extends NewNode {
      * @param diversionSource      the original source node this dummy node is (indirectly) connected to
      * @param diversionDestination the original destination node this dummy node is (indirectly) connected to
      */
-    public DummyNode(final NewNode diversionSource, final NewNode diversionDestination) {
+    public DummyNode(final Node diversionSource, final Node diversionDestination) {
         this.diversionSource = diversionSource;
         this.diversionDestination = diversionDestination;
     }
@@ -48,7 +48,7 @@ public final class DummyNode extends NewNode {
      *
      * @return the diversion source node
      */
-    public NewNode getDiversionSource() {
+    public Node getDiversionSource() {
         return diversionSource;
     }
 
@@ -57,7 +57,7 @@ public final class DummyNode extends NewNode {
      *
      * @return the diversion destination node
      */
-    public NewNode getDiversionDestination() {
+    public Node getDiversionDestination() {
         return diversionDestination;
     }
 

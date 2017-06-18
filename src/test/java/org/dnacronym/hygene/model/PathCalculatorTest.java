@@ -1,9 +1,9 @@
-package org.dnacronym.hygene.models;
+package org.dnacronym.hygene.model;
 
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Link;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,13 +133,13 @@ class PathCalculatorTest {
     }
 
     /**
-     * Connects the two {@link NewNode} with a {@link Link}.
+     * Connects the two {@link Node} with a {@link Link}.
      *
-     * @param leftNode  the left {@link NewNode}
-     * @param rightNode the right {@link NewNode}
+     * @param leftNode  the left {@link Node}
+     * @param rightNode the right {@link Node}
      * @return the {@link Link}
      */
-    private static Link connectNodes(final NewNode leftNode, final NewNode rightNode) {
+    private static Link connectNodes(final Node leftNode, final Node rightNode) {
         final Link link = new Link(leftNode, rightNode, RANDOM.nextInt());
         leftNode.getOutgoingEdges().add(link);
         rightNode.getIncomingEdges().add(link);

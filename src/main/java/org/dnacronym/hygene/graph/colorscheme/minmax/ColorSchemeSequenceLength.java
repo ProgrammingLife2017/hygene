@@ -1,13 +1,13 @@
 package org.dnacronym.hygene.graph.colorscheme.minmax;
 
 import javafx.scene.paint.Color;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 
 
 /**
  * The color is determined by the sequence length.
  */
-public final class ColorSchemeSequenceLength extends AbstractColorSchemeMinMax {
+public final class ColorSchemeSequenceLength extends ColorSchemeMinMax {
     /**
      * Creates an instance of {@link ColorSchemeSequenceLength}.
      *
@@ -21,7 +21,7 @@ public final class ColorSchemeSequenceLength extends AbstractColorSchemeMinMax {
 
 
     @Override
-    public Color calculateColor(final NewNode node) {
+    public Color calculateColor(final Node node) {
         return calculateColor(node.getLength());
     }
 }

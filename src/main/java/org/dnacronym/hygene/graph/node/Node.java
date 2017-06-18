@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Class representing a generic node.
  */
-public abstract class NewNode {
+public abstract class Node {
     private static ColorScheme colorScheme = new FixedColorScheme(Color.BLACK);
 
     private final UUID uuid;
@@ -29,11 +29,11 @@ public abstract class NewNode {
 
 
     /**
-     * Constructs a new {@link NewNode} instance without any edges.
+     * Constructs a new {@link Node} instance without any edges.
      * <p>
      * This class should not be instantiated for regular use, please use {@link Segment} instead.
      */
-    protected NewNode() {
+    protected Node() {
         this.uuid = UUID.randomUUID();
         this.incomingEdges = Collections.synchronizedSet(new LinkedHashSet<>());
         this.outgoingEdges = Collections.synchronizedSet(new LinkedHashSet<>());
@@ -41,9 +41,9 @@ public abstract class NewNode {
 
 
     /**
-     * Returns this {@link NewNode}'s {@link UUID}.
+     * Returns this {@link Node}'s {@link UUID}.
      *
-     * @return this {@link NewNode}'s {@link UUID}
+     * @return this {@link Node}'s {@link UUID}
      */
     public final UUID getUuid() {
         return uuid;
@@ -111,9 +111,9 @@ public abstract class NewNode {
     public abstract int getLength();
 
     /**
-     * Returns this {@link NewNode}'s metadata.
+     * Returns this {@link Node}'s metadata.
      *
-     * @return this {@link NewNode}'s metadata
+     * @return this {@link Node}'s metadata
      */
     public abstract NodeMetadata getMetadata();
 
@@ -125,9 +125,9 @@ public abstract class NewNode {
     public abstract void setMetadata(NodeMetadata metadata);
 
     /**
-     * Returns {@code true} iff. this {@link NewNode} has metadata set.
+     * Returns {@code true} iff. this {@link Node} has metadata set.
      *
-     * @return {@code true} iff. this {@link NewNode} has metadata set
+     * @return {@code true} iff. this {@link Node} has metadata set
      */
     public abstract boolean hasMetadata();
 
@@ -147,7 +147,7 @@ public abstract class NewNode {
      * @param colorScheme the color scheme
      */
     public static void setColorScheme(final ColorScheme colorScheme) {
-        NewNode.colorScheme = colorScheme;
+        Node.colorScheme = colorScheme;
     }
 
     /**
@@ -168,7 +168,7 @@ public abstract class NewNode {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final NewNode node = (NewNode) o;
+        final Node node = (Node) o;
         return Objects.equals(uuid, node.uuid);
     }
 

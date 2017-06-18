@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph.edge;
 
 
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 
 /**
  * Class representing a single, non-dummy edge.
@@ -18,7 +18,7 @@ public final class Link extends Edge {
      * @param to         the destination of the edge
      * @param byteOffset the byte offset of the corresponding link in the GFA file this edge was defined in
      */
-    public Link(final NewNode from, final NewNode to, final int byteOffset) {
+    public Link(final Node from, final Node to, final int byteOffset) {
         super(from, to);
         this.byteOffset = byteOffset;
     }

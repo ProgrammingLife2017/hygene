@@ -5,9 +5,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.models.Bookmark;
+import org.dnacronym.hygene.model.Bookmark;
 import org.dnacronym.hygene.parser.ParseException;
 import org.dnacronym.hygene.persistence.FileBookmarks;
 import org.dnacronym.hygene.persistence.FileDatabase;
@@ -127,12 +127,12 @@ public final class SimpleBookmarkStore {
     }
 
     /**
-     * Checks whether this {@link NewNode} is bookmarked.
+     * Checks whether this {@link Node} is bookmarked.
      *
-     * @param node the {@link NewNode} which may or may not be bookmarked
-     * @return true if {@link NewNode} has been bookmarked
+     * @param node the {@link Node} which may or may not be bookmarked
+     * @return true if {@link Node} has been bookmarked
      */
-    public boolean containsBookmark(final NewNode node) {
+    public boolean containsBookmark(final Node node) {
         if (!(node instanceof Segment)) {
             return false;
         }

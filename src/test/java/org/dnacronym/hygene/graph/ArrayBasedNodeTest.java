@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Unit tests for {@link ArrayBasedNode}.
  */
-final class NodeTest {
+final class ArrayBasedNodeTest {
     @Test
     void testGetId() {
         final ArrayBasedNode node = NodeBuilder.start().withNodeId(5).create();
@@ -101,8 +101,8 @@ final class NodeTest {
 
         assertThat(node.getNumberOfOutgoingEdges()).isEqualTo(2);
         assertThat(node.getOutgoingEdges()).containsOnly(
-                new Edge(10, 20, 3, null),
-                new Edge(10, 30, 4, null)
+                new ArrayBasedEdge(10, 20, 3, null),
+                new ArrayBasedEdge(10, 30, 4, null)
         );
     }
 
@@ -122,9 +122,9 @@ final class NodeTest {
 
         assertThat(node.getNumberOfIncomingEdges()).isEqualTo(3);
         assertThat(node.getIncomingEdges()).containsOnly(
-                new Edge(20, 10, 3, null),
-                new Edge(30, 10, 4, null),
-                new Edge(40, 10, 5, null)
+                new ArrayBasedEdge(20, 10, 3, null),
+                new ArrayBasedEdge(30, 10, 4, null),
+                new ArrayBasedEdge(40, 10, 5, null)
         );
     }
 }

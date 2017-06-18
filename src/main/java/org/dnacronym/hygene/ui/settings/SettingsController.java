@@ -14,8 +14,8 @@ import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 /**
  * Abstract Settings Controller.
  */
-public abstract class AbstractSettingsController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(AbstractSettingsController.class);
+public abstract class SettingsController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(SettingsController.class);
 
     private Settings settings;
     private GraphVisualizer graphVisualizer;
@@ -24,9 +24,9 @@ public abstract class AbstractSettingsController implements Initializable {
 
 
     /**
-     * Initializes a new instance of {@link AbstractSettingsController}.
+     * Initializes a new instance of {@link SettingsController}.
      */
-    AbstractSettingsController() {
+    SettingsController() {
         try {
             setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
             setSettings(Hygene.getInstance().getSettings());

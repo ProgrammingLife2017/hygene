@@ -5,12 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.core.ThrottledExecutor;
-import org.dnacronym.hygene.events.CenterPointQueryChangeEvent;
-import org.dnacronym.hygene.events.LayoutDoneEvent;
-import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
+import org.dnacronym.hygene.event.CenterPointQueryChangeEvent;
+import org.dnacronym.hygene.event.LayoutDoneEvent;
+import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
-import org.dnacronym.hygene.models.PathCalculator;
+import org.dnacronym.hygene.model.PathCalculator;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.ParseException;
 

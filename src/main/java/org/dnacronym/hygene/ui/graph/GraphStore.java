@@ -57,7 +57,7 @@ public final class GraphStore {
     }
 
     /**
-     * Loads a {@link org.dnacronym.hygene.models.FeatureAnnotation} file into memory.
+     * Loads a {@link org.dnacronym.hygene.model.FeatureAnnotation} file into memory.
      *
      * @param file            {@link File} to load. This should be a {@value GFF_FILE_EXTENSION} file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates

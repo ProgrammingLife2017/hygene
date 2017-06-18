@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 /**
  * Settings controller for more advanced features.
  */
-public final class AdvancedSettingsViewController extends AbstractSettingsController {
+public final class AdvancedSettingsViewController extends SettingsController {
     private static final Logger LOGGER = LogManager.getLogger(AdvancedSettingsViewController.class);
 
     @FXML

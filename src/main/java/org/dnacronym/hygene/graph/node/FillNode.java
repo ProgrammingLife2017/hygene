@@ -10,7 +10,7 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadata;
  * diversion sources or destinations.
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
-public final class FillNode extends NewNode {
+public final class FillNode extends Node {
     /**
      * Constructs a new {@link FillNode} instance.
      */

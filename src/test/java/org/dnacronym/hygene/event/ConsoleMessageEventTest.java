@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.events;
+package org.dnacronym.hygene.event;
 
 import org.dnacronym.hygene.ui.console.ConsoleMessage;
 import org.junit.jupiter.api.Test;

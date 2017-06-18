@@ -14,14 +14,14 @@ import static org.mockito.Mockito.mock;
  */
 final class DummyNodeTest extends NodeTest {
     private DummyNode dummyNode;
-    private NewNode diversionSource;
-    private NewNode diversionDestination;
+    private Node diversionSource;
+    private Node diversionDestination;
 
 
     @BeforeEach
     void setUp() {
-        diversionSource = mock(NewNode.class);
-        diversionDestination = mock(NewNode.class);
+        diversionSource = mock(Node.class);
+        diversionDestination = mock(Node.class);
         dummyNode = new DummyNode(diversionSource, diversionDestination);
         setNode(dummyNode);
     }
@@ -41,9 +41,9 @@ final class DummyNodeTest extends NodeTest {
     void testEquals() {
         EqualsVerifier.forClass(DummyNode.class)
                 .withRedefinedSuperclass()
-                .withPrefabValues(NewNode.class,
-                        new DummyNode(mock(NewNode.class), mock(NewNode.class)),
-                        new DummyNode(mock(NewNode.class), mock(NewNode.class)))
+                .withPrefabValues(Node.class,
+                        new DummyNode(mock(Node.class), mock(Node.class)),
+                        new DummyNode(mock(Node.class), mock(Node.class)))
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
     }

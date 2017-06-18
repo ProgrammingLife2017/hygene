@@ -16,10 +16,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
-import org.dnacronym.hygene.events.LayoutDoneEvent;
-import org.dnacronym.hygene.events.NodeMetadataCacheUpdateEvent;
+import org.dnacronym.hygene.event.LayoutDoneEvent;
+import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.graph.node.NewNode;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
@@ -78,8 +78,8 @@ public final class GraphDimensionsCalculator {
     private int minY;
     private Dimension2D canvasDimension;
 
-    private final ObservableList<NewNode> observableQueryNodes;
-    private final ReadOnlyListWrapper<NewNode> readOnlyObservableNodes;
+    private final ObservableList<Node> observableQueryNodes;
+    private final ReadOnlyListWrapper<Node> readOnlyObservableNodes;
 
 
     /**
@@ -180,7 +180,7 @@ public final class GraphDimensionsCalculator {
         final int[] tempMinY = {centerNode.getYPosition()};
         final int[] tempMaxY = {centerNode.getYPosition()};
 
-        final List<NewNode> neighbours = new LinkedList<>();
+        final List<Node> neighbours = new LinkedList<>();
         subgraph.getNodes().forEach(node -> {
             neighbours.add(node);
 
@@ -231,7 +231,7 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Sets the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.models.Node}s will be drawn.
+     * Sets the size of the canvas on which the {@link Graph} {@link org.dnacronym.hygene.model.Node}s will be drawn.
      * <p>
      * This will perform another calculation.
      *
@@ -245,10 +245,10 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute x position of a node within the current canvas.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      * @return the absolute x position of a node within the current canvas
      */
-    double computeXPosition(final NewNode node) {
+    double computeXPosition(final Node node) {
         final long xPosition = node.getXPosition();
         return (double) (xPosition - minX) / (maxX - minX) * canvasDimension.getWidth();
     }
@@ -256,20 +256,20 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute right x position of a node in pixels within the set canvas dimensions.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      * @return the absolute right x position of a node within the current canvas
      */
-    double computeRightXPosition(final NewNode node) {
+    double computeRightXPosition(final Node node) {
         return computeXPosition(node) + computeWidth(node);
     }
 
     /**
      * Computes the absolute y position of a node in pixels within the set canvas dimensions.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      * @return the absolute y position of a node within the current canvas
      */
-    double computeYPosition(final NewNode node) {
+    double computeYPosition(final Node node) {
         final int yPosition = node.getYPosition();
         return (yPosition - minY) * laneHeightProperty.get() + laneHeightProperty.get() / 2
                 - nodeHeightProperty.get() / 2;
@@ -278,38 +278,38 @@ public final class GraphDimensionsCalculator {
     /**
      * Computes the absolute middle y position of a node in pixels within the set canvas dimensions.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      * @return the absolute middle y position of a node within the current canvas
      */
-    double computeMiddleYPosition(final NewNode node) {
+    double computeMiddleYPosition(final Node node) {
         return computeYPosition(node) + nodeHeightProperty.get() / 2;
     }
 
     /**
      * Computes the width of a node in pixels within the set canvas dimensions.
      *
-     * @param node a {@link NewNode}
+     * @param node a {@link Node}
      * @return the width of a node
      */
-    double computeWidth(final NewNode node) {
+    double computeWidth(final Node node) {
         return ((double) node.getLength()) / (maxX - minX) * canvasDimension.getWidth();
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link NewNode} in the current query with the
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link Node} in the current query with the
      * smallest (leftmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the {@link NewNode} with the smallest x position
+     * @return the {@link ReadOnlyIntegerProperty} describing the {@link Node} with the smallest x position
      */
     public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
         return minXNodeIdProperty;
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link NewNode} in the current query with the
+     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link Node} in the current query with the
      * largest (rightmost) x position.
      *
-     * @return the {@link ReadOnlyIntegerProperty} describing the {@link NewNode} with the largest x position
+     * @return the {@link ReadOnlyIntegerProperty} describing the {@link Node} with the largest x position
      */
     public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
         return maxXNodeIdProperty;
@@ -349,9 +349,9 @@ public final class GraphDimensionsCalculator {
      * should be drawn. This list is updated every time a new calculation is performed, which happens every time the
      * center node id or radius is changed to a new value, new canvas dimensions are set, or if the graph is updated.
      *
-     * @return a {@link ReadOnlyListProperty} of the {@link NewNode} in the cache
+     * @return a {@link ReadOnlyListProperty} of the {@link Node} in the cache
      */
-    public ReadOnlyListProperty<NewNode> getObservableQueryNodes() {
+    public ReadOnlyListProperty<Node> getObservableQueryNodes() {
         return readOnlyObservableNodes;
     }
 
@@ -366,12 +366,12 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Gets the {@link IntegerProperty} which determines the current center
-     * {@link org.dnacronym.hygene.models.Node} id.
+     * {@link org.dnacronym.hygene.model.Node} id.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a range check to make sure the
      * value remains in the range {@code [0, node count - 1]}.
      *
-     * @return property which decides the current center {@link org.dnacronym.hygene.models.Node} id
+     * @return property which decides the current center {@link org.dnacronym.hygene.model.Node} id
      */
     public IntegerProperty getCenterNodeIdProperty() {
         return centerNodeIdProperty;
@@ -379,7 +379,7 @@ public final class GraphDimensionsCalculator {
 
     /**
      * Gets the {@link IntegerProperty} which determines the range to draw around the center
-     * {@link org.dnacronym.hygene.models.Node}.
+     * {@link org.dnacronym.hygene.model.Node}.
      * <p>
      * Every time this value is changed, a calculation is done. When updated, it does a check to make sure that the
      * range remains in the range {@code [1, node count / 2]}.

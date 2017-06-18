@@ -4,7 +4,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,8 +21,8 @@ public final class ArrayBasedNode {
     private final int[] data;
     private final @Nullable Graph graph;
 
-    private volatile @MonotonicNonNull Set<Edge> incomingEdges;
-    private volatile @MonotonicNonNull Set<Edge> outgoingEdges;
+    private volatile @MonotonicNonNull Set<ArrayBasedEdge> incomingEdges;
+    private volatile @MonotonicNonNull Set<ArrayBasedEdge> outgoingEdges;
 
 
     /**
@@ -155,18 +155,18 @@ public final class ArrayBasedNode {
      * @return set containing the outgoing edges of the {@link ArrayBasedNode}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
-    public Set<Edge> getOutgoingEdges() {
+    public Set<ArrayBasedEdge> getOutgoingEdges() {
         if (outgoingEdges == null) {
             synchronized (ArrayBasedNode.class) {
                 if (outgoingEdges == null) {
-                    final Set<Edge> newOutgoingEdges = new TreeSet<>();
+                    final Set<ArrayBasedEdge> newOutgoingEdges = new TreeSet<>();
                     final int offset = Graph.NODE_EDGE_DATA_OFFSET;
 
                     for (int i = 0; i < getNumberOfOutgoingEdges(); i++) {
                         final int to = data[offset + i * Graph.EDGE_DATA_SIZE];
                         final int byteOffset = data[offset + i * Graph.EDGE_DATA_SIZE + Graph.EDGE_BYTE_OFFSET_OFFSET];
 
-                        final Edge edge = new Edge(id, to, byteOffset, graph);
+                        final ArrayBasedEdge edge = new ArrayBasedEdge(id, to, byteOffset, graph);
                         newOutgoingEdges.add(edge);
                     }
                     this.outgoingEdges = newOutgoingEdges;
@@ -184,18 +184,18 @@ public final class ArrayBasedNode {
      * @return set containing the incoming edges of the {@link ArrayBasedNode}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // Unique instance per iteration
-    public Set<Edge> getIncomingEdges() {
+    public Set<ArrayBasedEdge> getIncomingEdges() {
         if (incomingEdges == null) {
             synchronized (ArrayBasedNode.class) {
                 if (incomingEdges == null) {
-                    final Set<Edge> newIncomingEdges = new TreeSet<>();
+                    final Set<ArrayBasedEdge> newIncomingEdges = new TreeSet<>();
                     final int offset = Graph.NODE_EDGE_DATA_OFFSET + getNumberOfOutgoingEdges() * Graph.EDGE_DATA_SIZE;
 
                     for (int i = 0; i < getNumberOfIncomingEdges(); i++) {
                         final int from = data[offset + i * Graph.EDGE_DATA_SIZE];
                         final int byteOffset = data[offset + i * Graph.EDGE_DATA_SIZE + Graph.EDGE_BYTE_OFFSET_OFFSET];
 
-                        final Edge edge = new Edge(from, id, byteOffset, graph);
+                        final ArrayBasedEdge edge = new ArrayBasedEdge(from, id, byteOffset, graph);
                         newIncomingEdges.add(edge);
                     }
 

@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.models.NodeColor;
+import org.dnacronym.hygene.model.NodeColor;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -21,8 +21,8 @@ public final class NodeBuilder {
     private NodeColor color = NodeColor.BLACK;
     private int unscaledXPosition = -1;
     private int unscaledYPosition = -1;
-    private Set<Edge> incomingEdges = new TreeSet<>();
-    private Set<Edge> outgoingEdges = new TreeSet<>();
+    private Set<ArrayBasedEdge> incomingEdges = new TreeSet<>();
+    private Set<ArrayBasedEdge> outgoingEdges = new TreeSet<>();
 
 
     /**
@@ -137,7 +137,7 @@ public final class NodeBuilder {
      * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withIncomingEdge(final int from, final int byteOffset) {
-        incomingEdges.add(new Edge(from, nodeId, byteOffset, null));
+        incomingEdges.add(new ArrayBasedEdge(from, nodeId, byteOffset, null));
 
         return this;
     }
@@ -150,7 +150,7 @@ public final class NodeBuilder {
      * @return current instance of the builder to provide a fluent interface
      */
     public NodeBuilder withOutgoingEdge(final int to, final int byteOffset) {
-        outgoingEdges.add(new Edge(nodeId, to, byteOffset, null));
+        outgoingEdges.add(new ArrayBasedEdge(nodeId, to, byteOffset, null));
 
         return this;
     }

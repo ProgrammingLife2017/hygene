@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.events;
+package org.dnacronym.hygene.event;
 
 import org.dnacronym.hygene.graph.CenterPointQuery;
 
