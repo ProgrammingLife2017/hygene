@@ -39,7 +39,7 @@ final class QueryTest extends UITestBase {
             try {
                 this.query.query(query);
 
-                verify(searchQuery, timeout(0)).executeSequenceRegexQuery(query);
+                verify(searchQuery, timeout(1000)).executeSequenceRegexQuery(query);
             } catch (final MetadataParseException e) {
                 e.printStackTrace();
             }
