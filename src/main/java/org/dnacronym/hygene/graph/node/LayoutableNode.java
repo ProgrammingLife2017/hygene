@@ -4,6 +4,7 @@ import org.dnacronym.hygene.graph.edge.Edge;
 
 import java.util.Set;
 
+
 /**
  * Represents a node that has the ability to be layouted by the layouting algorithms.
  */
