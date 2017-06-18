@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
@@ -127,7 +126,7 @@ public final class Hygene extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setMaximized(true);
 
-        final URL resource = Files.getInstance().getResourceUrl(APPLICATION_VIEW);
+        final URL resource = getClass().getResource(APPLICATION_VIEW);
         final Parent parent = FXMLLoader.load(resource);
 
         primaryStage.setOnCloseRequest(e -> {
@@ -138,7 +137,7 @@ public final class Hygene extends Application {
         final Scene rootScene = new Scene(parent);
         primaryStage.setScene(rootScene);
 
-        final Image hygeneIcon = new Image(String.valueOf(Files.getInstance().getResourceUrl(APPLICATION_ICON)));
+        final Image hygeneIcon = new Image(String.valueOf(getClass().getResource(APPLICATION_ICON)));
         primaryStage.getIcons().add(hygeneIcon);
 
         primaryStage.show();

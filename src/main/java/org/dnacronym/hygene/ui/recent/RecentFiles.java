@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.ui.recent;
 
-import org.dnacronym.hygene.core.Files;
+import org.dnacronym.hygene.core.AppData;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,12 +38,12 @@ public final class RecentFiles {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized List<File> getAll() throws IOException {
-        if (!Files.getInstance().getAppDataFile(DATA_FILE_NAME).exists()) {
+        if (!AppData.getInstance().getFile(DATA_FILE_NAME).exists()) {
             reset();
             return new ArrayList<>();
         }
 
-        final String content = Files.getInstance().getAppData(DATA_FILE_NAME);
+        final String content = AppData.getInstance().read(DATA_FILE_NAME);
         final LinkedHashSet<String> lines = new LinkedHashSet<>(Arrays.asList(content.split("\n")));
 
         // Remove any empty lines from the list of lines
@@ -64,7 +64,7 @@ public final class RecentFiles {
      * @throws IOException if an exception occurs during file IO
      */
     public static synchronized void reset() throws IOException {
-        Files.getInstance().putAppData(DATA_FILE_NAME, "");
+        AppData.getInstance().put(DATA_FILE_NAME, "");
     }
 
     /**
@@ -85,7 +85,7 @@ public final class RecentFiles {
 
         final List<String> lines = truncate(files).stream().map(File::getPath).collect(Collectors.toList());
         final String fileContents = String.join("\n", lines);
-        Files.getInstance().putAppData(DATA_FILE_NAME, fileContents);
+        AppData.getInstance().put(DATA_FILE_NAME, fileContents);
     }
 
 

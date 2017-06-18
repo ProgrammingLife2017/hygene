@@ -7,7 +7,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -37,7 +36,7 @@ public final class SettingsView {
             newStage.setResizable(false);
             newStage.setTitle(TITLE);
 
-            final URL resource = Files.getInstance().getResourceUrl(SETTINGS_VIEW);
+            final URL resource = getClass().getResource(SETTINGS_VIEW);
             final Parent parent = FXMLLoader.load(resource);
             if (parent == null) {
                 throw new UIInitialisationException("Root of Settings could not be found.");

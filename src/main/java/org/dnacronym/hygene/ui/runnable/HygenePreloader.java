@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.dnacronym.hygene.core.Files;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +35,7 @@ public final class HygenePreloader extends Preloader {
 
         progress = new ProgressBar();
 
-        final URL resource = Files.getInstance().getResourceUrl(PRELOADER_VIEW);
+        final URL resource = getClass().getResource(PRELOADER_VIEW);
         final Parent root = FXMLLoader.load(resource);
         if (root == null) {
             throw new UIInitialisationException("Root of Preloader could not be found.");

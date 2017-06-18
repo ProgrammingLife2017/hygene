@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.io.IOException;
@@ -33,7 +32,7 @@ public final class ConsoleView {
 
         stage.setTitle(TITLE);
 
-        final URL resource = Files.getInstance().getResourceUrl(CONSOLE_VIEW);
+        final URL resource = getClass().getResource(CONSOLE_VIEW);
         final Parent parent = FXMLLoader.load(resource);
         final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);

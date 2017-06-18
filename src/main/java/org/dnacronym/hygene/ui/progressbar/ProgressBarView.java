@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -42,7 +41,7 @@ public final class ProgressBarView {
             final Stage newStage = new Stage();
             newStage.setResizable(false);
 
-            final URL resource = Files.getInstance().getResourceUrl(PROGRESS_BAR_VIEW);
+            final URL resource = getClass().getResource(PROGRESS_BAR_VIEW);
             fxmlLoader = new FXMLLoader(resource);
 
             final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
@@ -61,7 +60,7 @@ public final class ProgressBarView {
             });
 
             setStage(newStage);
-        } catch (final IOException | UIInitialisationException e) {
+        } catch (final UIInitialisationException e) {
             LOGGER.error("Progress bar view could not be loaded.", e);
         }
     }

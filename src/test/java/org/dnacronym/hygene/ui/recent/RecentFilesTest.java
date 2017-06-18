@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.ui.recent;
 
-import org.dnacronym.hygene.core.Files;
+import org.dnacronym.hygene.core.AppData;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ final class RecentFilesTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        final File file = Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME);
+        final File file = AppData.getInstance().getFile(RecentFiles.DATA_FILE_NAME);
 
         java.nio.file.Files.deleteIfExists(file.toPath());
     }
@@ -118,6 +118,6 @@ final class RecentFilesTest {
      * @return the data file
      */
     private File getDataFile() {
-        return Files.getInstance().getAppDataFile(RecentFiles.DATA_FILE_NAME);
+        return AppData.getInstance().getFile(RecentFiles.DATA_FILE_NAME);
     }
 }
