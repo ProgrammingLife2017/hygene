@@ -29,7 +29,7 @@ public final class Fafosp {
     public Fafosp(final Graph graph) {
         this.graph = graph;
         this.nodeArrays = graph.getNodeArrays();
-        this.iterator = graph.iterator();
+        this.iterator = new GraphIterator(graph);
     }
 
 

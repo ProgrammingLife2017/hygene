@@ -34,8 +34,6 @@ public final class Graph {
     private final Map<String, String> genomeMapping;
     private final GfaFile gfaFile;
 
-    private @MonotonicNonNull GraphIterator graphIterator;
-
 
     /**
      * Constructs a graph from array based data structure.
@@ -178,19 +176,6 @@ public final class Graph {
                 ) / EDGE_DATA_SIZE,
                 nodeArrays[id][NODE_OUTGOING_EDGES_INDEX]
         );
-    }
-
-    /**
-     * Returns the {@link GraphIterator} for this {@link Graph} for iterating over its node.
-     *
-     * @return the {@link GraphIterator} for this {@link Graph} for iterating over its node
-     */
-    @EnsuresNonNull("graphIterator")
-    public GraphIterator iterator() {
-        if (graphIterator == null) {
-            graphIterator = new GraphIterator(this);
-        }
-        return graphIterator;
     }
 
     /**
