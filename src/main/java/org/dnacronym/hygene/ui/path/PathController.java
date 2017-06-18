@@ -11,6 +11,7 @@ import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -25,17 +26,16 @@ public final class PathController implements Initializable {
 
     @FXML
     private TitledPane pathPane;
-
     @FXML
     private ListView<String> pathList;
 
+    @Inject
     private GraphVisualizer graphVisualizer;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            graphVisualizer = Hygene.getInstance().getGraphVisualizer();
             addListeners();
 
             pathPane.visibleProperty().bind(Hygene.getInstance().getGraphStore().getGfaFileProperty().isNotNull());
