@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Class representing a generic node.
  */
-public abstract class Node {
+public abstract class Node implements LayoutableNode {
     private static ColorScheme colorScheme = new FixedColorScheme(Color.BLACK);
 
     private final UUID uuid;

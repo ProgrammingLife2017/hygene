@@ -4,6 +4,7 @@ import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.edge.Link;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
@@ -30,7 +31,7 @@ final class FafospLayererTest {
 
     @Test
     void testEmptySubgraph() {
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).isEmpty();
     }
@@ -48,7 +49,7 @@ final class FafospLayererTest {
         final Node node = new Segment(84, 34, 36);
         addAtPosition(node, 0);
 
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -65,7 +66,7 @@ final class FafospLayererTest {
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 0);
 
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -80,7 +81,7 @@ final class FafospLayererTest {
         final Node node = new Segment(95, 44, 1065);
         addAtPosition(node, 69);
 
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -97,7 +98,7 @@ final class FafospLayererTest {
         addAtPosition(nodeA, 76);
         addAtPosition(nodeB, 57);
 
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(2);
         assertThat(layout[0]).isEmpty();
@@ -116,7 +117,7 @@ final class FafospLayererTest {
         addAtPosition(nodeB, 0);
         addAtPosition(nodeC, 72);
 
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(3);
         assertThat(layout[0]).isEmpty();
@@ -132,7 +133,7 @@ final class FafospLayererTest {
         final Node node = new Segment(39, 76, 1599);
         addAtPosition(node, 0);
 
-        final Node[][] layout = layerer.layer(subgraph);
+        final LayoutableNode[][] layout = layerer.layer(subgraph);
 
         assertThat(layout).hasSize(3);
         assertThat(layout[0]).isEmpty();

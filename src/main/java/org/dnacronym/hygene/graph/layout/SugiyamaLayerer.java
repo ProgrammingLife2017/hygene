@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.Subgraph;
 
 
@@ -15,5 +15,5 @@ public interface SugiyamaLayerer {
      * @param subgraph a {@link Subgraph}
      * @return an array of layers
      */
-    Node[][] layer(Subgraph subgraph);
+    LayoutableNode[][] layer(Subgraph subgraph);
 }

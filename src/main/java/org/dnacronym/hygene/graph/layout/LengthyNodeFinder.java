@@ -2,7 +2,7 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 
 import java.util.Deque;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import java.util.Set;
  * Finds lengthy nodes and indicates how many lengthy children a node has.
  */
 public final class LengthyNodeFinder {
-    private final Map<Node, Integer> lengthyNodes;
-    private final Map<Node, Node> parentOf;
+    private final Map<LayoutableNode, Integer> lengthyNodes;
+    private final Map<LayoutableNode, LayoutableNode> parentOf;
 
 
     /**
@@ -40,11 +40,11 @@ public final class LengthyNodeFinder {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     // New instances of stack elements can only be created during the loop
-    public Map<Node, Integer> findInLayers(final Node[][] layers) {
+    public Map<LayoutableNode, Integer> findInLayers(final LayoutableNode[][] layers) {
         for (int i = 0; i < layers[0].length; i++) {
-            final Node rootNode = layers[0][i];
+            final LayoutableNode rootNode = layers[0][i];
 
-            final Set<Node> visited = new HashSet<>();
+            final Set<LayoutableNode> visited = new HashSet<>();
             final Deque<StackElement> stack = new LinkedList<>();
 
             stack.add(new StackElement(rootNode, 0));
@@ -83,7 +83,7 @@ public final class LengthyNodeFinder {
      * @param layers the array of all layers
      * @return true if a node is lengthy
      */
-    public boolean isLengthy(final Node node, final int layer, final Node[][] layers) {
+    public boolean isLengthy(final LayoutableNode node, final int layer, final LayoutableNode[][] layers) {
         if (layers.length <= layer + 1) {
             return false;
         }
@@ -99,7 +99,7 @@ public final class LengthyNodeFinder {
      * @param layers the array of layers
      * @return 0 if node is not lengthy, otherwise the number of layers that the node uses
      */
-    private int computeNodeLength(final Node node, final int layer, final Node[][] layers) {
+    private int computeNodeLength(final LayoutableNode node, final int layer, final LayoutableNode[][] layers) {
         int lengthyLayer = layer;
         int length = 0;
         while (isLengthy(node, lengthyLayer, layers)) {
@@ -120,8 +120,8 @@ public final class LengthyNodeFinder {
      * @param node   the node for which the parents need to be updated
      * @param length the length of the node
      */
-    private void updateParents(final Node node, final int length) {
-        Node parent = parentOf.get(node);
+    private void updateParents(final LayoutableNode node, final int length) {
+        LayoutableNode parent = parentOf.get(node);
         while (parent != null) {
             final Integer parentLengthyNodeLength = lengthyNodes.get(parent);
             if (parentLengthyNodeLength != null) {
@@ -136,7 +136,7 @@ public final class LengthyNodeFinder {
      * Represents an element of the stack used in the DFS.
      */
     private static class StackElement {
-        private final Node node;
+        private final LayoutableNode node;
         private final int layer;
 
         /**
@@ -145,7 +145,7 @@ public final class LengthyNodeFinder {
          * @param node  a node
          * @param layer the layer number of the given node
          */
-        StackElement(final Node node, final int layer) {
+        StackElement(final LayoutableNode node, final int layer) {
             this.node = node;
             this.layer = layer;
         }

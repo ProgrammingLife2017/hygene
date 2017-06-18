@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 
 
 /**
@@ -13,5 +13,5 @@ public interface SugiyamaCrossingsReducer {
      *
      * @param layers an array of layers
      */
-    void reduceCrossings(Node[][] layers);
+    void reduceCrossings(LayoutableNode[][] layers);
 }
