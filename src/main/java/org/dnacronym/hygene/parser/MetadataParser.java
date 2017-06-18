@@ -17,7 +17,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 
 /**
- * This class handles parsing of metadata of nodes and edges contained in GFA Files.
+ * This class handles parsing of metadata of nodes and edges contained in GFA AppData.
  *
  * @see <a href="https://github.com/GFA-spec/GFA-spec/">GFA v1 specification</a>
  */

@@ -8,7 +8,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.Files;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,7 +54,7 @@ public final class HelpMenuController implements Initializable {
     Button generateSidebarButton(final HelpArticle article) {
         Button button;
         try {
-            final URL resource = Files.getInstance().getResourceUrl(LEFT_MENU_BTN);
+            final URL resource = getClass().getResource(LEFT_MENU_BTN);
             button = FXMLLoader.load(resource);
         } catch (final IOException e) {
             button = new Button();

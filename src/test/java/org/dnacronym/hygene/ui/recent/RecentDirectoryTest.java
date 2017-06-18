@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.recent;
 
+import org.dnacronym.hygene.core.AppData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,6 @@ final class RecentDirectoryTest {
      * @throws IOException if an exception occurs during file IO
      */
     private void deleteDataFile() throws IOException {
-        Files.deleteIfExists(org.dnacronym.hygene.core.Files.getInstance()
-                .getAppDataFile("type" + RecentDirectory.DATA_FILE_NAME_SUFFIX).toPath());
+        Files.deleteIfExists(AppData.getFile("type" + RecentDirectory.DATA_FILE_NAME_SUFFIX).toPath());
     }
 }

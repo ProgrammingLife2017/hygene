@@ -1,9 +1,9 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.core.Files;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -21,7 +21,7 @@ final class GraphLoaderTest {
 
     @BeforeEach
     void setUp() throws IOException, SQLException {
-        temporaryPath = Files.getInstance().getTemporaryFile("test").getAbsolutePath();
+        temporaryPath = File.createTempFile("test", ".tmp").getAbsolutePath();
 
         graphLoader = new GraphLoader(temporaryPath);
 

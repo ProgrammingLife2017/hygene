@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.dnacronym.hygene.core.Files;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class HelpMenuView {
 
         stage.setTitle(TITLE);
 
-        final URL resource = Files.getInstance().getResourceUrl(HELP_MENU_VIEW);
+        final URL resource = getClass().getResource(HELP_MENU_VIEW);
         final Parent parent = FXMLLoader.load(resource);
 
         if (parent == null) {

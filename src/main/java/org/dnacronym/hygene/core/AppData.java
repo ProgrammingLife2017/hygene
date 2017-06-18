@@ -1,55 +1,30 @@
 package org.dnacronym.hygene.core;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 
 /**
- * Provides access to and helper methods for the local filesystem.
- * <p>
- * This class is a thread-safe singleton.
+ * Provides access to the application data on the local filesystem.
  */
-public final class Files {
+public final class AppData {
     private static final Charset FILE_ENCODING = StandardCharsets.UTF_8;
     private static final String APPLICATION_FOLDER_NAME = "hygene";
-    private static Files instance = new Files();
 
 
     /**
      * Makes class non instantiable.
      */
-    private Files() {
+    private AppData() {
     }
 
-
-    /**
-     * Gets the instance of {@link Files}.
-     *
-     * @return the instance of {@link Files}
-     */
-    public static Files getInstance() {
-        return instance;
-    }
-
-    /**
-     * Gets the resource url (in file:// format) of application resources.
-     *
-     * @param fileName name of the file
-     * @return resource url (in file:// format) to file
-     * @throws FileNotFoundException if the given file name does not exist
-     */
-    public URL getResourceUrl(final String fileName) throws FileNotFoundException {
-        return Optional.ofNullable(getClass().getResource(fileName)).orElseThrow(
-                () -> new FileNotFoundException("File " + fileName + " not found in resources folder")
-        );
-    }
 
     /**
      * Returns the contents of the given application data file.
@@ -60,8 +35,8 @@ public final class Files {
      * @return the contents of that file
      * @throws IOException if an exception occurs during file IO
      */
-    public String getAppData(final String fileName) throws IOException {
-        final File file = getAppDataFile(fileName);
+    public static String read(final String fileName) throws IOException {
+        final File file = getFile(fileName);
         return readFile(file);
     }
 
@@ -74,8 +49,8 @@ public final class Files {
      * @param content  the new content to be written
      * @throws IOException if an exception occurs during file IO
      */
-    public void putAppData(final String fileName, final String content) throws IOException {
-        final File file = getAppDataFile(fileName);
+    public static void put(final String fileName, final String content) throws IOException {
+        final File file = getFile(fileName);
         final File parent = file.getParentFile();
 
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
@@ -93,28 +68,15 @@ public final class Files {
      * @param fileName the file name
      * @return the application data {@link File} object
      */
-    public File getAppDataFile(final String fileName) {
-        final String operatingSystemName = System.getProperty("os.name").toUpperCase();
-
+    public static File getFile(final String fileName) {
         String baseDirectory = System.getProperty("user.home");
 
         // Use the AppData directory if on Windows
-        if (operatingSystemName.contains("WIN")) {
+        if (SystemUtils.IS_OS_WINDOWS) {
             baseDirectory = System.getenv("AppData");
         }
 
         return new File(String.format("%s/%s", baseDirectory, APPLICATION_FOLDER_NAME), fileName);
-    }
-
-    /**
-     * Returns a {@link File} instance for the given data file name.
-     *
-     * @param prefix the prefix of the temporary filename
-     * @return the application data {@link File} object
-     * @throws IOException if the temporary file cannot be created
-     */
-    public File getTemporaryFile(final String prefix) throws IOException {
-        return File.createTempFile(prefix, ".tmp");
     }
 
     /**
@@ -124,8 +86,8 @@ public final class Files {
      * @return a {@link String}s, representing the contents of the file
      * @throws IOException if an exception occurs during file IO
      */
-    private String readFile(final File file) throws IOException {
-        final byte[] rawContents = java.nio.file.Files.readAllBytes(Paths.get(file.getPath()));
+    private static String readFile(final File file) throws IOException {
+        final byte[] rawContents = Files.readAllBytes(Paths.get(file.getPath()));
         return new String(rawContents, FILE_ENCODING);
     }
 }
