@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
+import javax.inject.Inject;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -45,6 +46,7 @@ public final class GenomeNavigation {
      * @param graphStore the {@link GraphStore} whose {@link GfaFile} is observed
      * @param statusBar  the {@link StatusBar} which is used to show genome indexing progress
      */
+    @Inject
     public GenomeNavigation(final GraphStore graphStore, final StatusBar statusBar) {
         this.statusBar = statusBar;
 

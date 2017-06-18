@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
+import javax.inject.Inject;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
@@ -38,6 +39,7 @@ public final class GraphMovementCalculator {
      *
      * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} used to query
      */
+    @Inject
     public GraphMovementCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.panningSensitivityProperty = new SimpleDoubleProperty(DEFAULT_PANNING_SENSITIVITY);

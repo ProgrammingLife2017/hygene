@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.query;
 
+import javax.inject.Inject;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -33,6 +34,7 @@ public final class Query {
      *
      * @param graphStore the {@link GraphStore} used to retrieve the most up to date graph
      */
+    @Inject
     public Query(final GraphStore graphStore) {
         visibleProperty = new SimpleBooleanProperty();
         queryingProperty = new SimpleBooleanProperty();

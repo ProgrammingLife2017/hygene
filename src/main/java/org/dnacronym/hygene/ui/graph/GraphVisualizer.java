@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
+import javax.inject.Inject;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -94,6 +95,7 @@ public final class GraphVisualizer {
      * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
      */
+    @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
                            final GraphAnnotation graphAnnotation, final Query query) {
         HygeneEventBus.getInstance().register(this);
