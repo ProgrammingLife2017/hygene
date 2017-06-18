@@ -14,7 +14,7 @@ import java.util.TreeSet;
  * The {@link ArrayBasedNode} class wraps around a node array and provides convenience methods.
  * <p>
  * ArrayBasedNode array format:
- * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, yPosition, outgoingEdges, edge1, edge1ByteOffset...]]
+ * [[nodeByteOffset, sequenceLength, nodeColor, xPosition, outgoingEdges, edge1, edge1ByteOffset...]]
  */
 public final class ArrayBasedNode {
     private final int id;
@@ -111,15 +111,6 @@ public final class ArrayBasedNode {
      */
     public int getUnscaledXPosition() {
         return data[Graph.UNSCALED_X_POSITION_INDEX];
-    }
-
-    /**
-     * Getter for the computed unscaled Y position.
-     *
-     * @return the computed unscaled Y position
-     */
-    public int getUnscaledYPosition() {
-        return data[Graph.UNSCALED_Y_POSITION_INDEX];
     }
 
     /**

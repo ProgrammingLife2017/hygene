@@ -101,7 +101,6 @@ final class GraphDimensionsCalculatorTest {
                 NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
-                        .withUnscaledYPosition(30)
                         .toArray()
         }, null);
     }
@@ -111,12 +110,10 @@ final class GraphDimensionsCalculatorTest {
                 NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
-                        .withUnscaledYPosition(30)
                         .toArray(),
                 NodeBuilder.start()
                         .withSequenceLength(300)
                         .withUnscaledXPosition(400)
-                        .withUnscaledYPosition(15)
                         .toArray()
         }, null);
     }

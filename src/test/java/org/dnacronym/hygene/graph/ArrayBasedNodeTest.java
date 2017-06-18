@@ -47,13 +47,6 @@ final class ArrayBasedNodeTest {
     }
 
     @Test
-    void testGetUnscaledYPosition() {
-        final ArrayBasedNode node = NodeBuilder.start().withUnscaledYPosition(6).create();
-
-        assertThat(node.getUnscaledYPosition()).isEqualTo(6);
-    }
-
-    @Test
     void testToArray() {
         final ArrayBasedNode node = NodeBuilder.start()
                 .withNodeId(42)
@@ -61,14 +54,13 @@ final class ArrayBasedNodeTest {
                 .withSequenceLength(5)
                 .withColor(NodeColor.BLACK)
                 .withUnscaledXPosition(3)
-                .withUnscaledYPosition(4)
                 .withOutgoingEdge(1, 30)
                 .withOutgoingEdge(2, 40)
                 .withIncomingEdge(1, 30)
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[] {
-                UnsignedInteger.fromLong(1), 5, 4, 3, 4, 2, 1, 30, 2, 40, 1, 30
+                UnsignedInteger.fromLong(1), 5, 4, 3, 2, 1, 30, 2, 40, 1, 30
         });
     }
 

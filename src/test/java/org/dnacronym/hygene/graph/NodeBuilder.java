@@ -20,7 +20,6 @@ public final class NodeBuilder {
     private int sequenceLength;
     private NodeColor color = NodeColor.BLACK;
     private int unscaledXPosition = -1;
-    private int unscaledYPosition = -1;
     private Set<ArrayBasedEdge> incomingEdges = new TreeSet<>();
     private Set<ArrayBasedEdge> outgoingEdges = new TreeSet<>();
 
@@ -50,7 +49,6 @@ public final class NodeBuilder {
         builder.sequenceLength = node.getSequenceLength();
         builder.color = node.getColor();
         builder.unscaledXPosition = node.getUnscaledXPosition();
-        builder.unscaledYPosition = node.getUnscaledYPosition();
         builder.incomingEdges = node.getIncomingEdges();
         builder.outgoingEdges = node.getOutgoingEdges();
 
@@ -118,18 +116,6 @@ public final class NodeBuilder {
     }
 
     /**
-     * Sets the unscaled y position of the {@link ArrayBasedNode} under construction.
-     *
-     * @param unscaledYPosition the unscaled y position of the node
-     * @return current instance of the builder to provide a fluent interface
-     */
-    public NodeBuilder withUnscaledYPosition(final int unscaledYPosition) {
-        this.unscaledYPosition = unscaledYPosition;
-
-        return this;
-    }
-
-    /**
      * Adds a new incoming edge to the {@link ArrayBasedNode} under construction.
      *
      * @param from       ID of the node where the edge is coming from
@@ -166,7 +152,6 @@ public final class NodeBuilder {
                 sequenceLength,
                 color.ordinal(),
                 unscaledXPosition,
-                unscaledYPosition,
                 outgoingEdges.size()
         });
         final IntStream outgoingEdgesArray = outgoingEdges.stream().flatMapToInt(

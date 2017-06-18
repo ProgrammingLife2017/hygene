@@ -16,16 +16,15 @@ import java.util.Map;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, yPosition, edge1, edge1ByteOffset...]]
+ * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, edge1, edge1ByteOffset...]]
  */
 public final class Graph {
     public static final int NODE_BYTE_OFFSET_INDEX = 0;
     public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
     public static final int NODE_COLOR_INDEX = 2;
     public static final int UNSCALED_X_POSITION_INDEX = 3;
-    public static final int UNSCALED_Y_POSITION_INDEX = 4;
-    public static final int NODE_OUTGOING_EDGES_INDEX = 5;
-    public static final int NODE_EDGE_DATA_OFFSET = 6;
+    public static final int NODE_OUTGOING_EDGES_INDEX = 4;
+    public static final int NODE_EDGE_DATA_OFFSET = 5;
     public static final int EDGE_BYTE_OFFSET_OFFSET = 1;
     public static final int EDGE_DATA_SIZE = 2;
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
@@ -75,7 +74,7 @@ public final class Graph {
      * @return an empty node array
      */
     public static int[] createEmptyNodeArray() {
-        return new int[] {0, 0, 0, -1, -1, 0};
+        return new int[] {0, 0, 0, -1, 0};
     }
 
 
@@ -174,26 +173,6 @@ public final class Graph {
      */
     public void setUnscaledXPosition(final int id, final int unscaledXPosition) {
         nodeArrays[id][UNSCALED_X_POSITION_INDEX] = unscaledXPosition;
-    }
-
-    /**
-     * Getter for the unscaled y position.
-     *
-     * @param id the {@link Node}'s id
-     * @return the unscaled y position
-     */
-    public int getUnscaledYPosition(final int id) {
-        return nodeArrays[id][UNSCALED_Y_POSITION_INDEX];
-    }
-
-    /**
-     * Sets the unscaled y position.
-     *
-     * @param id                the node's id
-     * @param unscaledYPosition the unscaled y position
-     */
-    public void setUnscaledYPosition(final int id, final int unscaledYPosition) {
-        nodeArrays[id][UNSCALED_Y_POSITION_INDEX] = unscaledYPosition;
     }
 
     /**
