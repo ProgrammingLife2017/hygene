@@ -14,6 +14,7 @@ import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.Settings;
 
+
 /**
  * A module contributes configuration information, typically interface bindings, which will be used to create an
  * {@link com.google.inject.Injector}.
