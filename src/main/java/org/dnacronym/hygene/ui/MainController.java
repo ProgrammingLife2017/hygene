@@ -5,12 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -19,8 +16,7 @@ import java.util.ResourceBundle;
  * The controller of the main application.
  */
 public final class MainController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(MainController.class);
-
+    @Inject
     private GraphStore graphStore;
 
     @FXML
@@ -31,18 +27,6 @@ public final class MainController implements Initializable {
     private ToggleButton toggleRightPane;
     @FXML
     private ScrollPane rightPane;
-
-
-    /**
-     * Creates an instance of {@link MainController}.
-     */
-    public MainController() {
-        try {
-            graphStore = Hygene.getInstance().getGraphStore();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-        }
-    }
 
 
     @Override
