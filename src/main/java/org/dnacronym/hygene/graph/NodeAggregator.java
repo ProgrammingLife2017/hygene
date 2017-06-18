@@ -40,8 +40,8 @@ public final class NodeAggregator {
     /**
      * Aggregates the given node's neighbours, if possible.
      * <p>
-     * Aggregation only happens when the given node has exactly two neighbours, these neighbours have a sequence length
-     * of {@code 1}, and these neighbours have exactly one neighbour which is shared between them.
+     * Aggregation only happens when the given node has exactly two right neighbours, these neighbours have a sequence
+     * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
      *
      * @param node a node
      * @return the {@link AggregateNode} the neighbours are now part of, or {@code null} if no aggregation occurred
