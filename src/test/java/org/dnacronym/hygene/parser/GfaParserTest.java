@@ -4,7 +4,6 @@ import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.graph.ArrayBasedNode;
 import org.dnacronym.hygene.graph.ArrayBasedEdge;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.model.NodeColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,14 +54,6 @@ final class GfaParserTest {
     }
 
     @Test
-    void testSegmentWithMissingSequence() {
-        final String gfa = "S name ";
-
-        final Throwable e = catchThrowable(() -> parse(gfa));
-        assertThat(e).isInstanceOf(ParseException.class);
-    }
-
-    @Test
     void testLinkWithMissingNode() {
         final String gfa = "L 1 +";
 
@@ -77,7 +68,6 @@ final class GfaParserTest {
 
         assertThat(graph.getByteOffset(3)).isEqualTo(34);
         assertThat(graph.getLength(3)).isEqualTo(500);
-        assertThat(graph.getColor(3)).isEqualTo(NodeColor.BLACK);
     }
 
     @Test
@@ -97,7 +87,6 @@ final class GfaParserTest {
 
         final ArrayBasedNode firstNode = ArrayBasedNode.fromGraph(graph, 1);
 
-        System.out.println(Arrays.toString(firstNode.toArray()));
         assertThat(firstNode.getNumberOfOutgoingEdges()).isEqualTo(1);
         assertThat(firstNode.getOutgoingEdges()).contains(new ArrayBasedEdge(1, 2, UnsignedInteger.fromLong(12), null));
 

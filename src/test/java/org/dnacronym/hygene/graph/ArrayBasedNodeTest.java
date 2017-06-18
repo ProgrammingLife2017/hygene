@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.model.NodeColor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,13 +32,6 @@ final class ArrayBasedNodeTest {
     }
 
     @Test
-    void testGetColor() {
-        final ArrayBasedNode node = NodeBuilder.start().withColor(NodeColor.GREEN).create();
-
-        assertThat(node.getColor()).isEqualTo(NodeColor.GREEN);
-    }
-
-    @Test
     void testGetUnscaledXPosition() {
         final ArrayBasedNode node = NodeBuilder.start().withUnscaledXPosition(5).create();
 
@@ -52,7 +44,6 @@ final class ArrayBasedNodeTest {
                 .withNodeId(42)
                 .withByteOffset(1)
                 .withSequenceLength(5)
-                .withColor(NodeColor.BLACK)
                 .withUnscaledXPosition(3)
                 .withOutgoingEdge(1, 30)
                 .withOutgoingEdge(2, 40)
@@ -60,7 +51,7 @@ final class ArrayBasedNodeTest {
                 .create();
 
         assertThat(node.toArray()).isEqualTo(new int[] {
-                UnsignedInteger.fromLong(1), 5, 4, 3, 2, 1, 30, 2, 40, 1, 30
+                UnsignedInteger.fromLong(1), 5, 3, 2, 1, 30, 2, 40, 1, 30
         });
     }
 

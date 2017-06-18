@@ -6,7 +6,6 @@ import org.biojava.nbio.core.sequence.io.BufferedReaderBytesRead;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.model.NodeColor;
 import org.dnacronym.hygene.graph.SequenceDirection;
 
 import java.io.BufferedReader;
@@ -256,7 +255,6 @@ public final class GfaParser {
 
             nodeArrays[nodeId][Graph.NODE_BYTE_OFFSET_INDEX] = UnsignedInteger.fromLong(byteOffset);
             nodeArrays[nodeId][Graph.NODE_SEQUENCE_LENGTH_INDEX] = sequence.length();
-            nodeArrays[nodeId][Graph.NODE_COLOR_INDEX] = NodeColor.sequenceToColor(sequence).ordinal();
 
         } catch (final StringIndexOutOfBoundsException e) {
             throw new ParseException("Not enough parameters for segment at position " + byteOffset, e);

@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.graph;
 
-import org.dnacronym.hygene.model.NodeColor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,13 +42,6 @@ final class GraphTest {
         final Graph graph = createGraphWithNodes(NodeBuilder.start().withSequenceLength(500).create().toArray());
 
         assertThat(graph.getSequenceLength(0)).isEqualTo(500);
-    }
-
-    @Test
-    void testGetNodeColor() {
-        final Graph graph = createGraphWithNodes(NodeBuilder.start().withColor(NodeColor.BLACK).create().toArray());
-
-        assertThat(graph.getColor(0)).isEqualTo(NodeColor.BLACK);
     }
 
     @Test

@@ -5,7 +5,6 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.graph.layout.Fafosp;
-import org.dnacronym.hygene.model.NodeColor;
 import org.dnacronym.hygene.parser.GfaFile;
 
 import java.util.HashMap;
@@ -16,15 +15,14 @@ import java.util.Map;
  * Class wraps around the graph data represented as a nested array and provides utility methods.
  * <p>
  * Node array format:
- * [[nodeByteOffset, sequenceLength, nodeColor, outgoingEdges, xPosition, edge1, edge1ByteOffset...]]
+ * [[nodeByteOffset, sequenceLength, outgoingEdges, xPosition, edge1, edge1ByteOffset...]]
  */
 public final class Graph {
     public static final int NODE_BYTE_OFFSET_INDEX = 0;
     public static final int NODE_SEQUENCE_LENGTH_INDEX = 1;
-    public static final int NODE_COLOR_INDEX = 2;
-    public static final int UNSCALED_X_POSITION_INDEX = 3;
-    public static final int NODE_OUTGOING_EDGES_INDEX = 4;
-    public static final int NODE_EDGE_DATA_OFFSET = 5;
+    public static final int UNSCALED_X_POSITION_INDEX = 2;
+    public static final int NODE_OUTGOING_EDGES_INDEX = 3;
+    public static final int NODE_EDGE_DATA_OFFSET = 4;
     public static final int EDGE_BYTE_OFFSET_OFFSET = 1;
     public static final int EDGE_DATA_SIZE = 2;
     static final int MINIMUM_SEQUENCE_LENGTH = 500;
@@ -74,7 +72,7 @@ public final class Graph {
      * @return an empty node array
      */
     public static int[] createEmptyNodeArray() {
-        return new int[] {0, 0, 0, -1, 0};
+        return new int[] {0, 0, -1, 0};
     }
 
 
@@ -143,16 +141,6 @@ public final class Graph {
      */
     public int getSequenceLength(final int id) {
         return nodeArrays[id][NODE_SEQUENCE_LENGTH_INDEX];
-    }
-
-    /**
-     * Getter for the color of a {@link Node}.
-     *
-     * @param id the {@link Node}'s id
-     * @return the {@link Node}'s color
-     */
-    public NodeColor getColor(final int id) {
-        return NodeColor.values()[nodeArrays[id][NODE_COLOR_INDEX]];
     }
 
     /**

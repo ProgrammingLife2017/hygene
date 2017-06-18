@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.core.UnsignedInteger;
-import org.dnacronym.hygene.model.NodeColor;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -18,7 +17,6 @@ public final class NodeBuilder {
     private int nodeId;
     private long byteOffset;
     private int sequenceLength;
-    private NodeColor color = NodeColor.BLACK;
     private int unscaledXPosition = -1;
     private Set<ArrayBasedEdge> incomingEdges = new TreeSet<>();
     private Set<ArrayBasedEdge> outgoingEdges = new TreeSet<>();
@@ -47,7 +45,6 @@ public final class NodeBuilder {
         builder.nodeId = nodeId;
         builder.byteOffset = node.getByteOffset();
         builder.sequenceLength = node.getSequenceLength();
-        builder.color = node.getColor();
         builder.unscaledXPosition = node.getUnscaledXPosition();
         builder.incomingEdges = node.getIncomingEdges();
         builder.outgoingEdges = node.getOutgoingEdges();
@@ -87,18 +84,6 @@ public final class NodeBuilder {
      */
     public NodeBuilder withSequenceLength(final int sequenceLength) {
         this.sequenceLength = sequenceLength;
-
-        return this;
-    }
-
-    /**
-     * Sets the color of the {@link ArrayBasedNode} under construction.
-     *
-     * @param color the color of the node
-     * @return current instance of the builder to provide a fluent interface
-     */
-    public NodeBuilder withColor(final NodeColor color) {
-        this.color = color;
 
         return this;
     }
@@ -150,7 +135,6 @@ public final class NodeBuilder {
         final IntStream detailsArray = Arrays.stream(new int[] {
                 UnsignedInteger.fromLong(byteOffset),
                 sequenceLength,
-                color.ordinal(),
                 unscaledXPosition,
                 outgoingEdges.size()
         });
