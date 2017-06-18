@@ -9,7 +9,6 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.GfaParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabase;
-import org.dnacronym.hygene.persistence.GraphLoader;
 import org.dnacronym.hygene.persistence.UnexpectedDatabaseException;
 
 import java.io.BufferedReader;
@@ -63,11 +62,11 @@ public final class GfaFile {
      */
     public Graph parse(final ProgressUpdater progressUpdater) throws GfaParseException {
         try (FileDatabase fileDatabase = new FileDatabase(fileName)) {
-            final GraphLoader graphLoader = new GraphLoader(fileDatabase);
+            final GraphLoader graphLoader = new GraphLoader(fileName);
 
             if (graphLoader.hasGraph()) {
                 final Map<String, String> genomeMapping = fileDatabase.getFileGenomeMapping().getMappings();
-                graph = new Graph(graphLoader.restoreGraph(progressUpdater, fileName), genomeMapping, this);
+                graph = new Graph(graphLoader.restoreGraph(progressUpdater), genomeMapping, this);
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
@@ -81,7 +80,7 @@ public final class GfaFile {
                 progressUpdater.updateProgress(PROGRESS_TOTAL - 1, "Caching data for faster load next time...");
 
                 LOGGER.info("Start dumping the graph to the database");
-                graphLoader.dumpGraph(graph.getNodeArrays(), fileName);
+                graphLoader.dumpGraph(graph.getNodeArrays());
                 fileDatabase.getFileGenomeMapping().addMapping(graph.getGenomeMapping());
                 LOGGER.info("Finished dumping the graph to the database");
             }
