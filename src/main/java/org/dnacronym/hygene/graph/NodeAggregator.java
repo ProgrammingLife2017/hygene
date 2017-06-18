@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -27,7 +28,7 @@ public final class NodeAggregator {
     private NodeAggregator(final Node node) {
         this.node = node;
         this.neighbours = node.getOutgoingEdges().stream()
-                .map(edge -> edge.getTo())
+                .map(Edge::getTo)
                 .collect(Collectors.toList());
     }
 

@@ -26,7 +26,7 @@ public final class AggregateNode extends Node {
 
         this.nodes = new LinkedHashSet<>(nodes);
         this.length = nodes.stream()
-                .map(node -> node.getLength())
+                .map(Node::getLength)
                 .max(Integer::compare)
                 .get();
     }
