@@ -41,6 +41,11 @@ public final class AggregateNode extends Node {
         return nodes;
     }
 
+    /**
+     * Returns the largest length of the nodes in this aggregate.
+     *
+     * @return the largest length of the nodes in this aggregate
+     */
     @Override
     public int getLength() {
         return length;
