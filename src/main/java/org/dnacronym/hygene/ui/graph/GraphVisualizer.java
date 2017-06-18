@@ -20,6 +20,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
+import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
@@ -27,6 +29,7 @@ import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
+import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
@@ -312,12 +315,16 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
+
+        // Edges should be drawn before nodes, please don't combine this with node drawing loop.
+        for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
+            node.getOutgoingEdges().forEach(this::drawEdge);
+        }
+
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     bookmarkStore != null && bookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
-
-            node.getOutgoingEdges().forEach(this::drawEdge);
         }
 
         for (final AnnotationCollection annotationCollection : graphAnnotation.getAnnotationCollections()) {
