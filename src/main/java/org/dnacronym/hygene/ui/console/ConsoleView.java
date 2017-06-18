@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,17 +28,17 @@ public final class ConsoleView {
      * @throws IOException               if there was an error locating or reading the FXML
      * @throws UIInitialisationException if there was an error initializing the provided FXML resource
      */
-    public ConsoleView() throws IOException, UIInitialisationException {
+    @Inject
+    public ConsoleView(final FXMLLoader fxmlLoader) throws IOException, UIInitialisationException {
         stage = new Stage();
 
         stage.setTitle(TITLE);
 
         final URL resource = getClass().getResource(CONSOLE_VIEW);
-        final Parent parent = FXMLLoader.load(resource);
+        fxmlLoader.setLocation(resource);
+        final Parent parent = fxmlLoader.load();
         final Scene rootScene = new Scene(parent);
         stage.setScene(rootScene);
-
-        Platform.runLater(stage::show);
     }
 
 
