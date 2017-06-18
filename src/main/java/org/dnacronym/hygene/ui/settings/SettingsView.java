@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 
@@ -30,14 +31,16 @@ public final class SettingsView {
      *
      * @param settings {@link Settings} of the application
      */
-    public SettingsView(final Settings settings) {
+    @Inject
+    public SettingsView(final Settings settings, final FXMLLoader fxmlLoader) {
         try {
             final Stage newStage = new Stage();
             newStage.setResizable(false);
             newStage.setTitle(TITLE);
 
             final URL resource = getClass().getResource(SETTINGS_VIEW);
-            final Parent parent = FXMLLoader.load(resource);
+            fxmlLoader.setLocation(resource);
+            final Parent parent = fxmlLoader.load();
             if (parent == null) {
                 throw new UIInitialisationException("Root of Settings could not be found.");
             }

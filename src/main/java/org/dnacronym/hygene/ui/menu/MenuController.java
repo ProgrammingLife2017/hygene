@@ -58,6 +58,7 @@ public final class MenuController implements Initializable {
     @FXML
     private Menu recentFilesMenu;
 
+    @Inject
     private SettingsView settingsView;
 
 
@@ -169,7 +170,6 @@ public final class MenuController implements Initializable {
      */
     @FXML
     void settingsAction() {
-        settingsView = new SettingsView(settings);
         settingsView.show();
     }
 
