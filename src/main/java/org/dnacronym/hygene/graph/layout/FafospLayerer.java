@@ -163,8 +163,8 @@ public final class FafospLayerer implements SugiyamaLayerer {
     /**
      * Connects the given {@link DummyNode}s with {@link DummyEdge}s and returns the first edge.
      * <p>
-     * The returned {@link DummyEdge} is not added to the {@link LayoutableNode} from which it departs, because this might
-     * result in a {@link java.util.ConcurrentModificationException}.
+     * The returned {@link DummyEdge} is not added to the {@link LayoutableNode} from which it departs, because this
+     * might result in a {@link java.util.ConcurrentModificationException}.
      *
      * @param edge       the original {@link Edge} that was replaced with {@link DummyNode}s
      * @param dummyLayoutableNodes the {@link DummyNode}s that replaced the given {@link Edge}

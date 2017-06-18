@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
 import org.dnacronym.hygene.graph.node.LayoutableNode;
-import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.Subgraph;
 
 

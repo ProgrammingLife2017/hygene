@@ -2,7 +2,6 @@ package org.dnacronym.hygene.graph.colorscheme;
 
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.node.LayoutableNode;
-import org.dnacronym.hygene.graph.node.Node;
 
 
 /**
@@ -11,7 +10,7 @@ import org.dnacronym.hygene.graph.node.Node;
 @SuppressWarnings("squid:S1609") // This isn't a functional interface.
 public interface ColorScheme {
     /**
-     * Calculates the {@link Color} of a {@link Node} based on its attributes and the {@link Color} mode.
+     * Calculates the {@link Color} of a {@link LayoutableNode} based on its attributes and the {@link Color} mode.
      *
      * @param node the node which has to be colored
      * @return the {@link Color} of the node

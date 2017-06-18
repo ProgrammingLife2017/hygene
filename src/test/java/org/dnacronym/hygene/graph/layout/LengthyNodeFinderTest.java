@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final Node[][] layers = combineLayers(layer1, layer2, layer3, layer4, layer5);
 
-        final Map<Node, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
+        final Map<LayoutableNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
         assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(3);
         assertThat(lengthyNodes.get(layer2.get(2))).isEqualTo(3);
@@ -45,7 +46,7 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final Node[][] layers = combineLayers(layer1, layer2, layer3, layer4, layer5);
 
-        final Map<Node, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
+        final Map<LayoutableNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
         assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(5);
         assertThat(lengthyNodes.get(layer2.get(2))).isEqualTo(3);
@@ -70,7 +71,7 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final Node[][] layers = combineLayers(layer1, layer2, layer3, layer4, layer5, layer6, layer7);
 
-        final Map<Node, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
+        final Map<LayoutableNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
         assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(8);
         assertThat(lengthyNodes.get(layer4.get(4))).isEqualTo(4);
@@ -88,7 +89,7 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final Node[][] layers = combineLayers(layer1, layer2, layer3);
 
-        final Map<Node, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
+        final Map<LayoutableNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
         assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(2);
         assertThat(lengthyNodes.get(layer1.get(2))).isEqualTo(2);
@@ -103,7 +104,7 @@ final class LengthyNodeFinderTest extends LayerConstructingTestBase {
 
         final Node[][] layers = combineLayers(layer1, layer2, layer3);
 
-        final Map<Node, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
+        final Map<LayoutableNode, Integer> lengthyNodes = new LengthyNodeFinder().findInLayers(layers);
 
         assertThat(lengthyNodes.get(layer1.get(1))).isEqualTo(2);
     }

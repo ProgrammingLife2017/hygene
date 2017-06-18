@@ -2,12 +2,11 @@ package org.dnacronym.hygene.graph.colorscheme.fixed;
 
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.node.LayoutableNode;
-import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 
 
 /**
- * The {@link Color} is fixed, and not dependent on any specific {@link Node}.
+ * The {@link Color} is fixed, and not dependent on any specific {@link LayoutableNode}.
  */
 public final class FixedColorScheme implements ColorScheme {
     private final Color color;

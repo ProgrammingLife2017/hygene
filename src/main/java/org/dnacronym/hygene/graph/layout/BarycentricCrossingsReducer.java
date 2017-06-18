@@ -104,7 +104,7 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
 
         addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(newLayer2, layer2Index, layers);
 
-        return newLayer2.stream().map(node -> node == null ? new FillNode() : node).toArray(LayoutableNode[]::new);
+        return newLayer2.stream().map(node -> node == null ? new FillNode() : node).toArray(Node[]::new);
     }
 
     /**
@@ -133,8 +133,9 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * @param newLayer2 the results of the current iteration
      * @return map from position in results to lengthy nodes
      */
-    private Map<Integer, LayoutableNode> giveLengthyNodesSamePosition(final LayoutableNode[] layer1, final LayoutableNode[] layer2,
-                                                            final List<@Nullable LayoutableNode> newLayer2) {
+    private Map<Integer, LayoutableNode> giveLengthyNodesSamePosition(final LayoutableNode[] layer1,
+                                                                      final LayoutableNode[] layer2,
+                                                                      final List<@Nullable LayoutableNode> newLayer2) {
         final Map<Integer, LayoutableNode> lengthy = new LinkedHashMap<>();
 
         Arrays.stream(layer2).forEach(layer2Node -> {
@@ -159,7 +160,8 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      * @param lengthyNodes map mapping nodes to the summed length of all its lengthy children
      * @return a comparator
      */
-    private Comparator<Map.Entry<LayoutableNode, Double>> getNodeOrderingComparator(final Map<LayoutableNode, Integer> lengthyNodes) {
+    private Comparator<Map.Entry<LayoutableNode, Double>> getNodeOrderingComparator(
+            final Map<LayoutableNode, Integer> lengthyNodes) {
         return (entry1, entry2) -> {
             final int compare = Double.compare(entry1.getValue(), entry2.getValue());
             if (compare == 0) {
@@ -219,7 +221,8 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
      */
     @SuppressWarnings("squid:ForLoopCounterChangedCheck") // For this specific implementation this is not a problem
     private void addDummyNodesBetweenWideChildrenNodesAndLengthyNodes(final List<@Nullable LayoutableNode> newLayer2,
-                                                                      final int layer2Index, final LayoutableNode[][] layers) {
+                                                                      final int layer2Index,
+                                                                      final LayoutableNode[][] layers) {
         for (int i = 0; i < newLayer2.size() - 1; i++) {
             final LayoutableNode node = newLayer2.get(i);
             final LayoutableNode rightNeighbour = newLayer2.get(i + 1);

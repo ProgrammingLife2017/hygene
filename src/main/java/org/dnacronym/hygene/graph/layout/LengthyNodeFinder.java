@@ -3,7 +3,6 @@ package org.dnacronym.hygene.graph.layout;
 import org.apache.commons.lang3.ArrayUtils;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.LayoutableNode;
-import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.Deque;
 import java.util.HashMap;
