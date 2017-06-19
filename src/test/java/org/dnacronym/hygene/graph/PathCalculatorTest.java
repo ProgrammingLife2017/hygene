@@ -206,7 +206,7 @@ class PathCalculatorTest {
     }
 
     /**
-     * Connect the two {@link Node}s with a {@link DummyEdge}.
+     * Connects the two {@link Node}s with a {@link DummyEdge}.
      *
      * @param leftNode  the left {@link Node}
      * @param rightNode the left {@link Node}

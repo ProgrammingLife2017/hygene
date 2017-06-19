@@ -45,18 +45,19 @@ public final class PathCalculator {
      * Builds a map of {@link Segment}s and their edges in the {@link Subgraph} for either the incoming or
      * outgoing {@link Edge}s.
      * <p>
-     * {@link DummyEdge}s will not be added but their original edge, for which they for a diversion will be added.
+     * {@link DummyEdge}s will not be added but their original edge, for which they are a diversion, will be added.
      *
      * @param subgraph      the {@link Subgraph}
-     * @param edgeDirection the edge type {@link EdgeDirection}
+     * @param edgeDirection the {@link EdgeDirection}
      * @return map of {@link Edge}s for each {@link Segment}
      */
-    Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
+    private Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
         final Multimap<Segment, Edge> edgeMap = HashMultimap.create();
 
         subgraph.getSegments().forEach(segment -> {
-            final Set<Edge> edges =
-                    (edgeDirection == EdgeDirection.INCOMING) ? segment.getIncomingEdges() : segment.getOutgoingEdges();
+            final Set<Edge> edges = edgeDirection == EdgeDirection.INCOMING
+                    ? segment.getIncomingEdges()
+                    : segment.getOutgoingEdges();
 
             edges.forEach(edge -> {
                 if (edge instanceof DummyEdge) {
@@ -80,9 +81,9 @@ public final class PathCalculator {
      * @return a topologically sorted list of the {@link Segment}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
-                                          final Multimap<Segment, Edge> incomingEdges,
-                                          final Multimap<Segment, Edge> outgoingEdges) {
+    private List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
+                                                  final Multimap<Segment, Edge> incomingEdges,
+                                                  final Multimap<Segment, Edge> outgoingEdges) {
 
         final Queue<Edge> toVisit = new LinkedList<>();
 
@@ -128,7 +129,7 @@ public final class PathCalculator {
      * @param subgraph the subgraph
      * @return a list of nodes with no incoming edges
      */
-    List<Segment> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
+    private List<Segment> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
         return subgraph.getSegments().stream()
                 .filter(node -> subgraph.getNeighbours(node, SequenceDirection.LEFT).isEmpty())
                 .collect(Collectors.toList());
@@ -142,9 +143,9 @@ public final class PathCalculator {
      * @param genomeStore      a map mapping each {@link Segment} to the genomes it is in
      * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
-    Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
-                                                     final Multimap<Segment, Edge> incomingEdges,
-                                                     final Map<Segment, Set<String>> genomeStore) {
+    private Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
+                                                             final Multimap<Segment, Edge> incomingEdges,
+                                                             final Map<Segment, Set<String>> genomeStore) {
         final Map<Edge, Set<String>> paths = new HashMap<>();
 
         // Go over topological order and assign genomes
@@ -172,7 +173,7 @@ public final class PathCalculator {
      *
      * @param paths the paths
      */
-    void addPathsToEdges(final Map<Edge, Set<String>> paths) {
+    private void addPathsToEdges(final Map<Edge, Set<String>> paths) {
         paths.forEach(Edge::setGenomes);
     }
 
