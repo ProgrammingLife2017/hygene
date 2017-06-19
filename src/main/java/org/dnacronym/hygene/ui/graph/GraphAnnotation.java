@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 
 /**
- * Stores all {@link AnnotationCollection} of the {@link org.dnacronym.hygene.parser.GffFile}s in memory for quick
- * retrieval.
+ * Stores a {@link AnnotationCollection} from a {@link org.dnacronym.hygene.parser.GffFile} in the context of a
+ * {@link GraphStore}.
  */
 @SuppressWarnings("PMD.ImmutableField") // The values are set via event listeners, so they should not be immutable
 public final class GraphAnnotation {

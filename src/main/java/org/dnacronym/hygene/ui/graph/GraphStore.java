@@ -56,8 +56,8 @@ public final class GraphStore {
      *
      * @param file            {@link File} to load. This should be a {@value GFF_FILE_EXTENSION} file
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
-     * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
-     * @see GfaFile#parse(ProgressUpdater)
+     * @throws IOException if unable to get the GFF file, file is not a gff file, or unable to parse the file
+     * @see GffFile#parse(ProgressUpdater)
      */
     public void loadGffFile(final File file, final ProgressUpdater progressUpdater) throws IOException {
         try {
@@ -80,9 +80,9 @@ public final class GraphStore {
     }
 
     /**
-     * Gets the {@link ObjectProperty} that stores the {@link GffFile}s loaded into memory.
+     * Gets the {@link ObjectProperty} that stores the {@link GffFile}.
      *
-     * @return the {@link ObjectProperty} that stores the {@link GffFile}s loaded into memory
+     * @return the {@link ObjectProperty} that stores the {@link GffFile}.
      */
     public ObjectProperty<GffFile> getGffFileProperty() {
         return gffFileProperty;
