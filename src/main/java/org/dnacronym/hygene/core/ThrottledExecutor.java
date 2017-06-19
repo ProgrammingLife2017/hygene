@@ -11,6 +11,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.util.concurrent.MoreExecutors.getExitingExecutorService;
+
 
 /**
  * A threaded executor of {@code Runnable}s of which the number of calls over time can be throttled.
@@ -48,10 +50,11 @@ public class ThrottledExecutor {
             throw new IllegalArgumentException("The timeout must be a positive integer.");
         }
 
-        this.executor = new ThreadPoolExecutor(
+        final ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 THREAD_COUNT, THREAD_COUNT, 0L, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(2, true),
                 new DiscardNewestPolicy());
+        this.executor = getExitingExecutorService(executor, 0, TimeUnit.MILLISECONDS);
     }
 
 
