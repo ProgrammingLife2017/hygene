@@ -24,6 +24,7 @@ public final class SearchQuery {
     private static final int BATCH_SIZE = 1000;
 
     private final GfaFile gfaFile;
+    private final Graph graph;
     private final int numberOfNodesInGraph;
 
 
@@ -34,7 +35,8 @@ public final class SearchQuery {
      */
     public SearchQuery(final GfaFile gfaFile) {
         this.gfaFile = gfaFile;
-        this.numberOfNodesInGraph = gfaFile.getGraph().getNodeArrays().length;
+        this.graph = gfaFile.getGraph();
+        this.numberOfNodesInGraph = graph.getNodeArrays().length;
     }
 
 
@@ -98,10 +100,10 @@ public final class SearchQuery {
                 .boxed().collect(Collectors.toList());
 
         return batchNodeIds.stream()
-                .sorted(Comparator.comparingLong(nodeId -> gfaFile.getGraph().getByteOffset(nodeId)))
+                .sorted(Comparator.comparingLong(nodeId -> graph.getByteOffset(nodeId)))
                 .collect(Collectors.toMap(
                         nodeId -> nodeId,
-                        nodeId -> gfaFile.getGraph().getByteOffset(nodeId),
+                        nodeId -> graph.getByteOffset(nodeId),
                         (oldValue, newValue) -> oldValue,
                         LinkedHashMap::new
                 ));

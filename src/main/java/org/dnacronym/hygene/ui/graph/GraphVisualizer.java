@@ -242,8 +242,10 @@ public final class GraphVisualizer {
      */
     @SuppressWarnings("MagicNumber")
     public double computeEdgeThickness(final Edge edge) {
+        final int numberOfGenomes = graph.getGfaFile().getGenomeMapping().size();
+
         return Math.max(DEFAULT_EDGE_THICKNESS,
-                0.5 * ((double) edge.getImportance()) / graph.getGenomeMapping().size() * nodeHeightProperty.get());
+                0.5 * ((double) edge.getImportance()) / numberOfGenomes * nodeHeightProperty.get());
     }
 
     /**

@@ -13,9 +13,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
+import static org.assertj.core.api.AssertionsForClassTypes.entry;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -110,6 +113,17 @@ final class GfaFileTest {
 
         verify(metadataParser).parseNodeMetadata(gfaFile, 38);
         assertThat(nodeMetadata.getSequence()).isEqualTo("ACCTT");
+    }
+
+    @Test
+    void testGetGenomeMapping() {
+        final GfaFile gfaFile = new GfaFile(GFA_TEST_FILE);
+
+        final Map<String, String> mapping = new HashMap<>();
+        mapping.put("basta.fasta", "123");
+        gfaFile.setGenomeMapping(mapping);
+        
+        assertThat(gfaFile.getGenomeMapping()).containsExactly(entry("basta.fasta", "123"));
     }
 
     @Test

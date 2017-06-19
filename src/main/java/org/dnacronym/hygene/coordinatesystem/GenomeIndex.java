@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
@@ -33,6 +34,7 @@ public final class GenomeIndex {
     private static final Logger LOGGER = LogManager.getLogger(GfaFile.class);
 
     private final GfaFile gfaFile;
+    private final Graph graph;
     private final FileGenomeIndex fileGenomeIndex;
 
     /**
@@ -53,6 +55,7 @@ public final class GenomeIndex {
      */
     public GenomeIndex(final GfaFile gfaFile, final FileDatabase fileDatabase) {
         this.gfaFile = gfaFile;
+        this.graph = gfaFile.getGraph();
         this.fileGenomeIndex = fileDatabase.getFileGenomeIndex();
         this.genomeBaseCounts = new HashMap<>();
         this.genomeNames = new ArrayList<>();
@@ -157,7 +160,7 @@ public final class GenomeIndex {
      * @param progressUpdater the instance that should be informed of the progress of this task
      */
     private void buildIndex(final ProgressUpdater progressUpdater) {
-        final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
+        final GraphIterator graphIterator = new GraphIterator(graph);
 
         final int[] currentProgress = {-1};
         fileGenomeIndex.setAutoCommit(false);
@@ -165,7 +168,7 @@ public final class GenomeIndex {
         graphIterator.visitAll(SequenceDirection.RIGHT, nodeId -> {
             evaluateNode(nodeId);
 
-            final int newProgress = Math.round((100.0f * nodeId) / (gfaFile.getGraph().getNodeArrays().length - 2));
+            final int newProgress = Math.round((100.0f * nodeId) / (graph.getNodeArrays().length - 2));
             if (newProgress > currentProgress[0]) {
                 progressUpdater.updateProgress(newProgress, "Indexing genomes...");
                 currentProgress[0] = newProgress;
@@ -183,13 +186,12 @@ public final class GenomeIndex {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // The instances created are needed for data transfer
     private void evaluateNode(final int nodeId) {
-        if (nodeId == 0 || nodeId == gfaFile.getGraph().getNodeArrays().length - 1) {
+        if (nodeId == 0 || nodeId == graph.getNodeArrays().length - 1) {
             return;
         }
 
         try {
-            final List<String> nodeGenomes =
-                    gfaFile.parseNodeMetadata(gfaFile.getGraph().getByteOffset(nodeId)).getGenomes();
+            final List<String> nodeGenomes = gfaFile.parseNodeMetadata(graph.getByteOffset(nodeId)).getGenomes();
 
             for (final String genome : nodeGenomes) {
                 final String noExtensionGenome = genome.lastIndexOf('.') > 0
@@ -213,7 +215,7 @@ public final class GenomeIndex {
 
                 fileGenomeIndex.addGenomeIndexPoint(new GenomePoint(genomeIndex, genomeBaseCount, nodeId));
 
-                final int nodeBaseCount = gfaFile.getGraph().getSequenceLength(nodeId);
+                final int nodeBaseCount = graph.getSequenceLength(nodeId);
                 genomeBaseCounts.put(genomeName, genomeBaseCount + nodeBaseCount);
             }
         } catch (final MetadataParseException | GenomeParseException | SQLException e) {

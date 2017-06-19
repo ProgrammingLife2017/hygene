@@ -26,7 +26,7 @@ final class GraphIteratorTest extends GraphTestBase {
         createGraph(1);
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighbours(0, neighbours::add);
+        new GraphIterator(getGraph()).visitDirectNeighbours(0, neighbours::add);
 
         assertThat(neighbours).isEmpty();
     }
@@ -38,7 +38,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addIncomingEdges(new int[][] {{4, 0}, {5, 0}, {6, 0}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighbours(0, neighbours::add);
+        new GraphIterator(getGraph()).visitDirectNeighbours(0, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6);
     }
@@ -49,7 +49,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 22}, {0, 29}, {0, 18}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighbours(0, SequenceDirection.LEFT, neighbours::add);
+        new GraphIterator(getGraph()).visitDirectNeighbours(0, SequenceDirection.LEFT, neighbours::add);
 
         assertThat(neighbours).isEmpty();
     }
@@ -61,7 +61,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 73}, {0, 86}, {0, 20}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighbours(0, SequenceDirection.LEFT, neighbours::add);
+        new GraphIterator(getGraph()).visitDirectNeighbours(0, SequenceDirection.LEFT, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(15, 67, 10, 77, 60);
     }
@@ -72,7 +72,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addIncomingEdges(new int[][] {{60, 0}, {44, 0}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, neighbours::add);
+        new GraphIterator(getGraph()).visitDirectNeighbours(0, SequenceDirection.RIGHT, neighbours::add);
 
         assertThat(neighbours).isEmpty();
     }
@@ -84,7 +84,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 69}, {0, 99}, {0, 72}, {0, 54}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighbours(0, SequenceDirection.RIGHT, neighbours::add);
+        new GraphIterator(getGraph()).visitDirectNeighbours(0, SequenceDirection.RIGHT, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(69, 99, 72, 54);
     }
@@ -101,7 +101,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 92}, {0, 69}, {0, 30}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.LEFT, ignored -> true,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.LEFT, ignored -> true,
                 neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(25, 39, 58);
@@ -114,7 +114,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 56}, {0, 87}, {0, 72}, {0, 60}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.LEFT, ignored -> false,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.LEFT, ignored -> false,
                 neighbours::add);
 
         assertThat(neighbours).isEmpty();
@@ -130,7 +130,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 53}, {0, 83}, {0, 73}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.LEFT,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.LEFT,
                 ignored -> neighbours.size() < 3, neighbours::add);
 
         assertThat(neighbours).hasSize(3);
@@ -146,7 +146,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 94}, {0, 57}});
 
         final int[] exitNeighbour = new int[1];
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.LEFT,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.LEFT,
                 neighbour -> neighbour != 22,
                 neighbour -> exitNeighbour[0] = neighbour,
                 dummyConsumer
@@ -162,7 +162,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 67}, {0, 98}, {0, 29}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.RIGHT, ignored -> true,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.RIGHT, ignored -> true,
                 neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(67, 98, 29);
@@ -175,7 +175,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 53}, {0, 45}, {0, 65}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.RIGHT, ignored -> false,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.RIGHT, ignored -> false,
                 neighbours::add);
 
         assertThat(neighbours).isEmpty();
@@ -191,7 +191,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 95}, {0, 12}, {0, 22}, {0, 43}, {0, 100}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.RIGHT,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.RIGHT,
                 ignored -> neighbours.size() < 3, neighbours::add);
 
         assertThat(neighbours).hasSize(3);
@@ -207,7 +207,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addOutgoingEdges(new int[][] {{0, 30}, {0, 70}, {0, 57}});
 
         final int[] exitNeighbour = {-1};
-        getGraph().iterator().visitDirectNeighboursWhile(0, SequenceDirection.RIGHT,
+        new GraphIterator(getGraph()).visitDirectNeighboursWhile(0, SequenceDirection.RIGHT,
                 neighbour -> neighbour != 57,
                 neighbour -> exitNeighbour[0] = neighbour,
                 dummyConsumer
@@ -227,7 +227,8 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{4, 3}, {4, 2}, {4, 1}, {3, 0}, {2, 0}, {1, 0}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighbours(0, SequenceDirection.LEFT, node -> false, neighbours::add);
+        new GraphIterator(getGraph())
+                .visitIndirectNeighbours(0, SequenceDirection.LEFT, node -> false, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 3, 4, 4, 4);
     }
@@ -238,7 +239,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{8, 7}, {8, 6}, {7, 5}, {6, 5}, {5, 4}, {5, 3}, {4, 2}, {3, 2}, {2, 1}, {2, 0}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighbours(2, SequenceDirection.LEFT, neighbours::add);
+        new GraphIterator(getGraph()).visitIndirectNeighbours(2, SequenceDirection.LEFT, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(2, 3, 4, 5, 6, 7, 8);
     }
@@ -249,7 +250,8 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {1, 4}, {2, 5}, {3, 5}, {4, 6}, {5, 7}, {6, 7}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighbours(1, SequenceDirection.RIGHT, node -> false, neighbours::add);
+        new GraphIterator(getGraph())
+                .visitIndirectNeighbours(1, SequenceDirection.RIGHT, node -> false, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 5, 6, 7, 7, 7);
     }
@@ -260,7 +262,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {3, 5}, {4, 5}, {2, 5}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighbours(2, SequenceDirection.RIGHT, neighbours::add);
+        new GraphIterator(getGraph()).visitIndirectNeighbours(2, SequenceDirection.RIGHT, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(2, 3, 4, 5);
     }
@@ -276,7 +278,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}});
 
         final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighboursWithinRange(1, 1, nodes::add);
+        new GraphIterator(getGraph()).visitIndirectNeighboursWithinRange(1, 1, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(0, 1, 3);
     }
@@ -287,7 +289,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}});
 
         final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighboursWithinRange(1, 2, nodes::add);
+        new GraphIterator(getGraph()).visitIndirectNeighboursWithinRange(1, 2, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(0, 1, 2, 3);
     }
@@ -298,7 +300,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 5}, {2, 6}, {3, 7}, {4, 7}, {5, 7}, {6, 7}});
 
         final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighboursWithinRange(6, 1, nodes::add);
+        new GraphIterator(getGraph()).visitIndirectNeighboursWithinRange(6, 1, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(2, 6, 7);
     }
@@ -309,7 +311,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 5}, {2, 6}, {3, 7}, {4, 7}, {5, 7}, {6, 7}});
 
         final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighboursWithinRange(6, 2, nodes::add);
+        new GraphIterator(getGraph()).visitIndirectNeighboursWithinRange(6, 2, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(0, 2, 3, 4, 5, 6, 7);
     }
@@ -320,7 +322,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 4}, {3, 5}, {4, 6}, {5, 7}, {6, 7}});
 
         final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitIndirectNeighboursWithinRange(6, 2, nodes::add);
+        new GraphIterator(getGraph()).visitIndirectNeighboursWithinRange(6, 2, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(2, 4, 5, 6, 7);
     }
@@ -336,7 +338,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {2, 5}, {3, 5}, {3, 7}, {4, 7}});
 
         final List<Integer> nodes = new ArrayList<>();
-        getGraph().iterator().visitAll(SequenceDirection.LEFT, nodes::add);
+        new GraphIterator(getGraph()).visitAll(SequenceDirection.LEFT, nodes::add);
 
         assertThat(nodes).containsExactlyInAnyOrder(7, 4, 3, 2, 1, 0);
     }
@@ -347,7 +349,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {1, 4}, {2, 4}, {3, 4}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitAll(SequenceDirection.RIGHT, neighbours::add);
+        new GraphIterator(getGraph()).visitAll(SequenceDirection.RIGHT, neighbours::add);
 
         assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 3, 4);
     }
@@ -363,7 +365,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 5}, {4, 6}, {5, 6}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.LEFT, 2,
+        new GraphIterator(getGraph()).visitAllWithinRange(SequenceDirection.LEFT, 2,
                 (depth, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(6, 5, 4, 3, 1);
@@ -375,7 +377,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {3, 6}, {4, 6}, {5, 6}});
 
         final List<Integer> neighbours = new ArrayList<>();
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 2,
+        new GraphIterator(getGraph()).visitAllWithinRange(SequenceDirection.RIGHT, 2,
                 (depth, node) -> neighbours.add(node));
 
         assertThat(neighbours).containsExactlyInAnyOrder(0, 1, 2, 3, 4);
@@ -392,7 +394,7 @@ final class GraphIteratorTest extends GraphTestBase {
                 {4, 5}, {4, 6}, {4, 7}, {5, 6}, {5, 8}, {6, 7}, {6, 8}});
 
         final int[] depths = new int[9];
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 99,
+        new GraphIterator(getGraph()).visitAllWithinRange(SequenceDirection.RIGHT, 99,
                 (depth, node) -> depths[node] = depth);
 
         assertThat(depths).containsExactly(0, 1, 2, 2, 2, 3, 3, 3, 4);
@@ -404,7 +406,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 2}, {1, 2}, {2, 3}, {2, 4}, {3, 6}, {4, 6}, {5, 6}});
 
         final int[] depths = new int[7];
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 99,
+        new GraphIterator(getGraph()).visitAllWithinRange(SequenceDirection.RIGHT, 99,
                 (depth, node) -> depths[node] = depth);
 
         assertThat(depths).containsExactly(0, 2, 1, 2, 2, 4, 3);
@@ -416,7 +418,7 @@ final class GraphIteratorTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}});
 
         final int[] depths = new int[5];
-        getGraph().iterator().visitAllWithinRange(SequenceDirection.RIGHT, 99,
+        new GraphIterator(getGraph()).visitAllWithinRange(SequenceDirection.RIGHT, 99,
                 (depth, node) -> depths[node] = depth);
 
         assertThat(depths).containsExactly(0, 1, 1, 2, 3);

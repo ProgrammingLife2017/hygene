@@ -50,7 +50,10 @@ public final class PathController implements Initializable {
                 pathList.getItems().clear();
 
                 pathList.getItems().addAll(newValue.getMetadata().getGenomes().stream()
-                        .map(g -> Optional.ofNullable(graphVisualizer.getGraph().getGenomeMapping().get(g)).orElse(g))
+                        .map(g ->
+                                Optional.ofNullable(graphVisualizer.getGraph().getGfaFile().getGenomeMapping().get(g))
+                                .orElse(g)
+                        )
                         .collect(Collectors.toList()));
             }
         });

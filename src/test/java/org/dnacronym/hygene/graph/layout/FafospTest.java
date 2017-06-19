@@ -16,7 +16,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}});
         setSequenceLengths(new int[][] {{1, 600}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
     }
@@ -27,7 +27,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}});
         setSequenceLengths(new int[][] {{1, 700}, {2, 400}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(4);
@@ -39,7 +39,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}});
         setSequenceLengths(new int[][] {{1, 300}, {2, 1300}, {3, 400}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(2);
@@ -52,7 +52,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}});
         setSequenceLengths(new int[][] {{1, 900}, {2, 1900}, {3, 500}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(4);
@@ -68,7 +68,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 4}, {3, 4}, {4, 5}});
         setSequenceLengths(new int[][] {{1, 700}, {2, 500}, {3, 1400}, {4, 1200}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(4);
@@ -85,7 +85,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 3}, {3, 4}});
         setSequenceLengths(new int[][] {{1, 1400}, {2, 1500}, {3, 800}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(5);
@@ -98,7 +98,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}, {1, 2}, {1, 3}, {2, 4}, {3, 2}});
         setSequenceLengths(new int[][] {{1, 300}, {2, 500}, {3, 700}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2);
         assertThat(getGraph().getUnscaledXPosition(2)).isEqualTo(6);
@@ -111,7 +111,7 @@ final class FafospTest extends GraphTestBase {
         addEdges(new int[][] {{0, 1}});
         setSequenceLengths(new int[][] {{0, Integer.MAX_VALUE}, {1, 100}});
 
-        getGraph().fafosp().horizontal();
+        new Fafosp(getGraph()).horizontal();
 
         assertThat(getGraph().getUnscaledXPosition(0)).isEqualTo(0);
         assertThat(getGraph().getUnscaledXPosition(1)).isEqualTo(2147485);

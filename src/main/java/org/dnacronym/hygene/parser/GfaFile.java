@@ -3,6 +3,7 @@ package org.dnacronym.hygene.parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.graph.layout.Fafosp;
 import org.dnacronym.hygene.graph.metadata.EdgeMetadata;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -36,6 +38,10 @@ public final class GfaFile {
     private final String fileName;
     private final GfaParser gfaParser;
     private final MetadataParser metadataParser;
+    /**
+     * Maps genome names to their respective indices.
+     */
+    private Map<String, String> genomeMapping;
     private @MonotonicNonNull Graph graph;
     private @MonotonicNonNull RandomAccessFile randomAccessFile;
 
@@ -50,6 +56,8 @@ public final class GfaFile {
 
         gfaParser = GfaParserFactory.createInstance();
         metadataParser = MetadataParserFactory.createInstance();
+
+        genomeMapping = new HashMap<>();
     }
 
 
@@ -65,15 +73,15 @@ public final class GfaFile {
             final GraphLoader graphLoader = new GraphLoader(fileName);
 
             if (graphLoader.hasGraph()) {
-                final Map<String, String> genomeMapping = fileDatabase.getFileGenomeMapping().getMappings();
-                graph = new Graph(graphLoader.restoreGraph(progressUpdater), genomeMapping, this);
+                genomeMapping = fileDatabase.getFileGenomeMapping().getMappings();
+                graph = new Graph(graphLoader.restoreGraph(progressUpdater), this);
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
                 LOGGER.info("Finished parsing");
 
                 LOGGER.info("Start fafosp x");
-                graph.fafosp().horizontal();
+                new Fafosp(graph).horizontal();
 
                 LOGGER.info("GfaFile parse finished");
 
@@ -81,7 +89,9 @@ public final class GfaFile {
 
                 LOGGER.info("Start dumping the graph to the database");
                 graphLoader.dumpGraph(graph.getNodeArrays());
-                fileDatabase.getFileGenomeMapping().addMapping(graph.getGenomeMapping());
+                if (genomeMapping != null) {
+                    fileDatabase.getFileGenomeMapping().addMapping(genomeMapping);
+                }
                 LOGGER.info("Finished dumping the graph to the database");
             }
         } catch (final UnexpectedDatabaseException | IOException | SQLException e) {
@@ -149,6 +159,24 @@ public final class GfaFile {
             throw new IllegalStateException("Cannot get the graph before parsing the file");
         }
         return graph;
+    }
+
+    /**
+     * Returns the genome mapping.
+     *
+     * @return the genome mapping
+     */
+    public Map<String, String> getGenomeMapping() {
+        return genomeMapping;
+    }
+
+    /**
+     * Sets the genome mapping.
+     *
+     * @param genomeMapping the genome mapping from names to indices
+     */
+    public void setGenomeMapping(final Map<String, String> genomeMapping) {
+        this.genomeMapping = genomeMapping;
     }
 
     /**

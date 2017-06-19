@@ -83,7 +83,8 @@ public final class GfaParser {
             throw new GfaParseException("An error while reading the GFA file.", e);
         }
 
-        final Graph graph = new Graph(nodeArrays, genomeMapping, gfaFile);
+        final Graph graph = new Graph(nodeArrays, gfaFile);
+        gfaFile.setGenomeMapping(genomeMapping);
 
         addEdgesToSentinelNodes(graph);
 
