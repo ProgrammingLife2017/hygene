@@ -55,7 +55,8 @@ public class Edge {
      *
      * @return the genome this {@link Edge} is in, or {@code null} if metadata has not been parsed yet
      */
-    public final @Nullable Set<String> getGenomes() {
+    @SuppressWarnings("DesignForExtension")
+    public @Nullable Set<String> getGenomes() {
         return genomes;
     }
 
@@ -64,7 +65,8 @@ public class Edge {
      *
      * @param genomes the genomes
      */
-    public final void setGenomes(@Nullable final Set<String> genomes) {
+    @SuppressWarnings("DesignForExtension")
+    public void setGenomes(@Nullable final Set<String> genomes) {
         this.genomes = genomes;
     }
 
@@ -75,7 +77,8 @@ public class Edge {
      *
      * @return the {@link Edge} importance
      */
-    public final int getImportance() {
+    @SuppressWarnings("DesignForExtension")
+    public int getImportance() {
         if (genomes != null && !genomes.isEmpty()) {
             return genomes.size();
         }
@@ -88,7 +91,8 @@ public class Edge {
      * @param genome the name of a genome
      * @return {@code true} iff. this {@link Edge} is in the given genome
      */
-    public final boolean inGenome(final String genome) {
+    @SuppressWarnings("DesignForExtension")
+    public boolean inGenome(final String genome) {
         return genomes != null && genomes.contains(genome);
     }
 

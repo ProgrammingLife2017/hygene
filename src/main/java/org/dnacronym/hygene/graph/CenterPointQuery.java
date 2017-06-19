@@ -7,9 +7,9 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
+import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
 
 
 /**
@@ -107,11 +107,8 @@ public final class CenterPointQuery {
                 return;
             }
 
-            final Subgraph copy = new Subgraph();
-            this.subgraph.getNodes().forEach(copy::add);
-
-            LAYOUT.layOut(copy);
-            HygeneEventBus.getInstance().post(new LayoutDoneEvent(copy));
+            LAYOUT.layOut(subgraph);
+            HygeneEventBus.getInstance().post(new LayoutDoneEvent(subgraph));
         });
 
         HygeneEventBus.getInstance().register(nodeMetadataCache);

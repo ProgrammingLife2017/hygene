@@ -7,6 +7,10 @@ import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -23,7 +27,7 @@ final class DummyEdgeTest extends EdgeTest {
     void setUp() {
         super.setUp();
 
-        originalEdge = mock(Edge.class);
+        originalEdge = new Edge(getFrom(), getTo());
         dummyEdge = new DummyEdge(getFrom(), getTo(), originalEdge);
         setEdge(dummyEdge);
     }
@@ -32,6 +36,20 @@ final class DummyEdgeTest extends EdgeTest {
     @Test
     void testGetOriginalEdge() {
         assertThat(dummyEdge.getOriginalEdge()).isEqualTo(originalEdge);
+    }
+
+    @Test
+    void testGetImportance() {
+        Set<String> originalGenomes = new HashSet<>(Arrays.asList("a", "b", "c"));
+        originalEdge.setGenomes(originalGenomes);
+        assertThat(dummyEdge.getImportance()).isEqualTo(3);
+    }
+
+    @Test
+    void testInGenome() {
+        Set<String> originalGenomes = new HashSet<>(Arrays.asList("a", "b"));
+        originalEdge.setGenomes(originalGenomes);
+        assertThat(dummyEdge.inGenome("a")).isTrue();
     }
 
     @Test

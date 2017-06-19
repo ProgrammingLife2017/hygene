@@ -1,7 +1,11 @@
 package org.dnacronym.hygene.graph.edge;
 
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.node.Node;
+
+import java.util.Set;
+
 
 /**
  * Class representing a dummy edge, to be used for graph layout.
@@ -26,6 +30,26 @@ public final class DummyEdge extends Edge {
         setGenomes(originalEdge.getGenomes());
     }
 
+
+    @Override
+    public @Nullable Set<String> getGenomes() {
+        return originalEdge.getGenomes();
+    }
+
+    @Override
+    public void setGenomes(@Nullable final Set<String> genomes) {
+        originalEdge.setGenomes(genomes);
+    }
+
+    @Override
+    public int getImportance() {
+        return originalEdge.getImportance();
+    }
+
+    @Override
+    public boolean inGenome(final String genome) {
+        return originalEdge.inGenome(genome);
+    }
 
     /**
      * Returns the original edge.
