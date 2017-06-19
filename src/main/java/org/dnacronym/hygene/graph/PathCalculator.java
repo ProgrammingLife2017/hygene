@@ -106,7 +106,7 @@ public final class PathCalculator {
             visitedNodes.add(active);
             topologicalOrder.add(active);
 
-            visitedEdges.addAll(active.getOutgoingEdges());
+            visitedEdges.addAll(outgoingEdges.get(active));
 
             outgoingEdges.get(active).stream()
                     .filter(e -> !visitedNodes.contains(e.getTo()) && incomingEdges.get((Segment) e.getTo()).stream()
@@ -144,10 +144,9 @@ public final class PathCalculator {
     Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
                                                      final HashMultimap<Segment, Edge> incomingEdges,
                                                      final Map<Segment, Set<String>> genomeStore) {
-        // Create edges genome store
         final Map<Edge, Set<String>> paths = new HashMap<>();
 
-        // Go over topological order and assign importance
+        // Go over topological order and assign genomes
         topologicalOrder.forEach(node -> incomingEdges.get(node).forEach(e -> {
             final Set<String> nodeGenomes = genomeStore.get(node);
             final Set<String> originGenomes = genomeStore.get(e.getFrom());
