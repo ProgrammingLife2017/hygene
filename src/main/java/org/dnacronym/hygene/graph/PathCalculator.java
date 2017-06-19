@@ -3,7 +3,6 @@ package org.dnacronym.hygene.graph;
 import com.google.common.collect.HashMultimap;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
@@ -118,23 +117,6 @@ public final class PathCalculator {
         }
 
         return topologicalOrder;
-    }
-
-    /**
-     * Returns the list of genomes for the given {@link DummyNode}.
-     *
-     * @param dummyNode a {@link DummyNode}
-     * @return the list of genomes for the given {@link DummyNode}
-     */
-    Set<String> getDummyNodeGenomes(final DummyNode dummyNode) {
-        final List<String> diversionSourceGenomes = dummyNode.getDiversionSource().getMetadata().getGenomes();
-        final List<String> diversionDestinationGenomes = dummyNode.getDiversionDestination().getMetadata().getGenomes();
-
-        if (diversionDestinationGenomes.size() > diversionSourceGenomes.size()) {
-            return new HashSet<>(diversionSourceGenomes);
-        }
-
-        return new HashSet<>(diversionDestinationGenomes);
     }
 
     /**
