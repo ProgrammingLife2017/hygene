@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -26,9 +27,9 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
-        final HashMultimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, EdgeDirection.INCOMING);
+        final Multimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, EdgeDirection.INCOMING);
 
-        final HashMultimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeDirection.OUTGOING);
+        final Multimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeDirection.OUTGOING);
 
         final Map<Segment, Set<String>> genomeStore = new HashMap<>();
 
@@ -50,8 +51,8 @@ public final class PathCalculator {
      * @param edgeDirection the edge type {@link EdgeDirection}
      * @return map of {@link Edge}s for each {@link Segment}
      */
-    HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
-        final HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
+    Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
+        final Multimap<Segment, Edge> edgeMap = HashMultimap.create();
 
         subgraph.getSegments().forEach(segment -> {
             final Set<Edge> edges =
@@ -80,8 +81,8 @@ public final class PathCalculator {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
-                                          final HashMultimap<Segment, Edge> incomingEdges,
-                                          final HashMultimap<Segment, Edge> outgoingEdges) {
+                                          final Multimap<Segment, Edge> incomingEdges,
+                                          final Multimap<Segment, Edge> outgoingEdges) {
 
         final Queue<Edge> toVisit = new LinkedList<>();
 
@@ -142,7 +143,7 @@ public final class PathCalculator {
      * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
     Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
-                                                     final HashMultimap<Segment, Edge> incomingEdges,
+                                                     final Multimap<Segment, Edge> incomingEdges,
                                                      final Map<Segment, Set<String>> genomeStore) {
         final Map<Edge, Set<String>> paths = new HashMap<>();
 
