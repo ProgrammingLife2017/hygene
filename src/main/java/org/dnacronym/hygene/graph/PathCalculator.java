@@ -27,9 +27,9 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
-        final Multimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, EdgeDirection.INCOMING);
+        final Multimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, SequenceDirection.LEFT);
 
-        final Multimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeDirection.OUTGOING);
+        final Multimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, SequenceDirection.RIGHT);
 
         final Map<Segment, Set<String>> genomeStore = new HashMap<>();
 
@@ -47,15 +47,15 @@ public final class PathCalculator {
      * <p>
      * {@link DummyEdge}s will not be added but their original edge, for which they are a diversion, will be added.
      *
-     * @param subgraph      the {@link Subgraph}
-     * @param edgeDirection the {@link EdgeDirection}
+     * @param subgraph          the {@link Subgraph}
+     * @param sequenceDirection the {@link EdgeDirection}
      * @return map of {@link Edge}s for each {@link Segment}
      */
-    private Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
+    private Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final SequenceDirection sequenceDirection) {
         final Multimap<Segment, Edge> edgeMap = HashMultimap.create();
 
         subgraph.getSegments().forEach(segment -> {
-            final Set<Edge> edges = edgeDirection == EdgeDirection.INCOMING
+            final Set<Edge> edges = sequenceDirection == SequenceDirection.LEFT
                     ? segment.getIncomingEdges()
                     : segment.getOutgoingEdges();
 
@@ -175,13 +175,5 @@ public final class PathCalculator {
      */
     private void addPathsToEdges(final Map<Edge, Set<String>> paths) {
         paths.forEach(Edge::setGenomes);
-    }
-
-    /**
-     * Direction of an edge, either incoming or outgoing.
-     */
-    enum EdgeDirection {
-        INCOMING,
-        OUTGOING
     }
 }
