@@ -27,16 +27,16 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
-        final HashMultimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, EdgeType.INCOMING);
+        final HashMultimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, EdgeDirection.INCOMING);
 
-        final HashMultimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeType.OUTGOING);
+        final HashMultimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeDirection.OUTGOING);
 
         final Map<Segment, Set<String>> genomeStore = new HashMap<>();
 
         final List<Segment> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore, incomingEdges,
                 outgoingEdges);
 
-        final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
+        final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, incomingEdges, genomeStore);
 
         addPathsToEdges(paths);
     }
@@ -47,15 +47,15 @@ public final class PathCalculator {
      * <p>
      * {@link DummyEdge}s will not be added but their original edge, for which they for a diversion will be added.
      *
-     * @param subgraph the {@link Subgraph}
-     * @param edgeType the edge type {@link EdgeType}
+     * @param subgraph      the {@link Subgraph}
+     * @param edgeDirection the edge type {@link EdgeDirection}
      * @return map of {@link Edge}s for each {@link Segment}
      */
-    HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeType edgeType) {
+    HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
         HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
 
         subgraph.getSegments().forEach(s -> {
-            final Set<Edge> edges = (edgeType == EdgeType.INCOMING) ? s.getIncomingEdges() : s.getOutgoingEdges();
+            final Set<Edge> edges = (edgeDirection == EdgeDirection.INCOMING) ? s.getIncomingEdges() : s.getOutgoingEdges();
 
             edges.stream().forEach(e -> {
                 if (e instanceof DummyEdge) {
@@ -137,16 +137,18 @@ public final class PathCalculator {
      * Uses a topologically ordered set of {@link Node}s to compute the edges' paths.
      *
      * @param topologicalOrder a topologically ordered list of {@link Node}s
+     * @param incomingEdges    map of incoming {@link Edge}s for each {@link Segment}
      * @param genomeStore      a map mapping each {@link Node} to the genomes it is in
      * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
-    Map<Edge, Set<String>> topologicalPathGeneration(final List<Node> topologicalOrder,
-                                                     final Map<Node, Set<String>> genomeStore) {
+    Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
+                                                     final HashMultimap<Segment, Edge> incomingEdges,
+                                                     final Map<Segment, Set<String>> genomeStore) {
         // Create edges genome store
         final Map<Edge, Set<String>> paths = new HashMap<>();
 
         // Go over topological order and assign importance
-        topologicalOrder.forEach(node -> node.getIncomingEdges().forEach(e -> {
+        topologicalOrder.forEach(node -> incomingEdges.get(node).forEach(e -> {
             final Set<String> nodeGenomes = genomeStore.get(node);
             final Set<String> originGenomes = genomeStore.get(e.getFrom());
 
@@ -174,7 +176,10 @@ public final class PathCalculator {
         paths.forEach(Edge::setGenomes);
     }
 
-    enum EdgeType {
+    /**
+     * Direction of an edge, either incoming or outgoing.
+     */
+    enum EdgeDirection {
         INCOMING,
         OUTGOING
     }
