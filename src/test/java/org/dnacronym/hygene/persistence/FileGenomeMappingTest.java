@@ -7,13 +7,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Fail.fail;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -45,10 +45,8 @@ class FileGenomeMappingTest extends FileDatabaseTestBase {
     }
 
     @Test
-    void testRestoreGraph() throws SQLException, GfaParseException {
-        if (!new File(GFA_FILE_NAME + ".hygenecache").delete()) {
-            fail("Setup of testRestoreGraph failed.");
-        }
+    void testRestoreGraph() throws SQLException, GfaParseException, IOException {
+        Files.deleteIfExists(Paths.get(GFA_FILE_NAME + ".hygenecache"));
 
         new GfaFile(GFA_FILE_NAME).parse(mock(ProgressUpdater.class));
 
