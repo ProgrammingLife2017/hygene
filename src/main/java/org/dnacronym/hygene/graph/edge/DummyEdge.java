@@ -37,13 +37,18 @@ public final class DummyEdge extends Edge {
     }
 
     @Override
-    public int getImportance() {
-        final Set<String> originalGenomes = originalEdge.getGenomes();
-        if (originalGenomes != null && !originalGenomes.isEmpty()) {
-            return originalGenomes.size();
-        }
+    public void setGenomes(@Nullable final Set<String> genomes) {
+        originalEdge.setGenomes(genomes);
+    }
 
-        return 1;
+    @Override
+    public int getImportance() {
+        return originalEdge.getImportance();
+    }
+
+    @Override
+    public boolean inGenome(final String genome) {
+        return originalEdge.inGenome(genome);
     }
 
     /**

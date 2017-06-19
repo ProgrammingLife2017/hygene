@@ -65,7 +65,8 @@ public class Edge {
      *
      * @param genomes the genomes
      */
-    public final void setGenomes(@Nullable final Set<String> genomes) {
+    @SuppressWarnings("DesignForExtension")
+    public void setGenomes(@Nullable final Set<String> genomes) {
         this.genomes = genomes;
     }
 
@@ -90,7 +91,8 @@ public class Edge {
      * @param genome the name of a genome
      * @return {@code true} iff. this {@link Edge} is in the given genome
      */
-    public final boolean inGenome(final String genome) {
+    @SuppressWarnings("DesignForExtension")
+    public boolean inGenome(final String genome) {
         return genomes != null && genomes.contains(genome);
     }
 
