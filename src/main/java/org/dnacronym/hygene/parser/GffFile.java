@@ -3,7 +3,7 @@ package org.dnacronym.hygene.parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.parser.factories.GffParserFactory;
 
 
@@ -15,7 +15,7 @@ public final class GffFile {
 
     private final String fileName;
     private final GffParser gffParser;
-    private @MonotonicNonNull FeatureAnnotation featureAnnotation;
+    private @MonotonicNonNull AnnotationCollection annotationCollection;
 
 
     /**
@@ -30,18 +30,18 @@ public final class GffFile {
 
 
     /**
-     * Parses the GFF file into a {@link FeatureAnnotation}.
+     * Parses the GFF file into a {@link AnnotationCollection}.
      *
      * @param progressUpdater a {@link ProgressUpdater} to notify interested parties on progress updates
-     * @return a {@link FeatureAnnotation} based on the contents of the GFF file
+     * @return a {@link AnnotationCollection} based on the contents of the GFF file
      * @throws GffParseException if the file content is not GFF-compliant file
      */
-    public FeatureAnnotation parse(final ProgressUpdater progressUpdater) throws GffParseException {
+    public AnnotationCollection parse(final ProgressUpdater progressUpdater) throws GffParseException {
         LOGGER.info("Start parsing " + fileName);
-        final FeatureAnnotation annotation = gffParser.parse(fileName, progressUpdater);
+        final AnnotationCollection annotation = gffParser.parse(fileName, progressUpdater);
         LOGGER.info("Finished parsing " + fileName);
 
-        this.featureAnnotation = annotation;
+        this.annotationCollection = annotation;
         return annotation;
     }
 
@@ -61,11 +61,11 @@ public final class GffFile {
      *
      * @return the contents of the GFF file
      */
-    public FeatureAnnotation getFeatureAnnotation() {
-        if (featureAnnotation == null) {
-            throw new IllegalStateException("Cannot get the " + FeatureAnnotation.class.getSimpleName()
+    public AnnotationCollection getAnnotationCollection() {
+        if (annotationCollection == null) {
+            throw new IllegalStateException("Cannot get the " + AnnotationCollection.class.getSimpleName()
                     + " before parsing the file.");
         }
-        return featureAnnotation;
+        return annotationCollection;
     }
 }

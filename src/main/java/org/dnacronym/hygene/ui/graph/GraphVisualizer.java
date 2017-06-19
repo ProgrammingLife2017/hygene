@@ -22,7 +22,7 @@ import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
@@ -320,10 +320,10 @@ public final class GraphVisualizer {
             node.getOutgoingEdges().forEach(this::drawEdge);
         }
 
-        for (final FeatureAnnotation featureAnnotation : graphAnnotation.getFeatureAnnotations()) {
+        for (final AnnotationCollection annotationCollection : graphAnnotation.getAnnotationCollections()) {
             graphAnnotationVisualizer.draw(
-                    featureAnnotation.getSequenceId(),
-                    graphAnnotation.getGenomeIndexMap().get(featureAnnotation),
+                    annotationCollection.getSequenceId(),
+                    graphAnnotation.getGenomeIndexMap().get(annotationCollection),
                     graphDimensionsCalculator.getObservableQueryNodes());
         }
 

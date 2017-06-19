@@ -1,8 +1,8 @@
 package org.dnacronym.hygene.parser;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
-import org.dnacronym.hygene.graph.annotation.SubFeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +17,10 @@ import java.util.Map;
 /**
  * Parses GFF files.
  * <p>
- * These files become {@link FeatureAnnotation}s.
+ * These files become {@link AnnotationCollection}s.
  *
  * @see <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">GFF v3 specification</a>
- * @see FeatureAnnotation
+ * @see AnnotationCollection
  */
 @SuppressWarnings("PMD.TooManyMethods") // No reasonable refactor possible
 public final class GffParser {
@@ -47,24 +47,23 @@ public final class GffParser {
     /**
      * Parses a GFF file.
      * <p>
-     * Firstly checks that the files starts with the '{@value GFF_VERSION_HEADER}'.<br>
      * Afterwards, starts parsing the file. Blank lines and lines starting with '#' are ignored. Lines starting with
-     * '##' are added as file metadata to the {@link FeatureAnnotation}.
+     * '##' are added as file metadata to the {@link AnnotationCollection}.
      * <p>
-     * All other lines are parsed and converted to {@link SubFeatureAnnotation}s to be stored in the
-     * {@link FeatureAnnotation}. Only the first encountered seqid is used to construct a {@link FeatureAnnotation}, all
-     * subsequent seqid's are ignored and assumed to be correct.
+     * All other lines are parsed and converted to {@link Annotation}s to be stored in the
+     * {@link AnnotationCollection}. Only the first encountered sequence id is used to construct a
+     * {@link AnnotationCollection}, all subsequent sequence ids are ignored and assumed to be correct.
      *
      * @param gffFile         the path of the GFF file to parse
      * @param progressUpdater the {@link ProgressUpdater} to update whilst parsing
-     * @return a {@link FeatureAnnotation} representing the GFF file
-     * @throws GffParseException if unable to parse the {@link java.io.File}, which can either be caused by an
-     *                        {@link IOException} when opening the file or a semantic error in the GFF file itself
+     * @return a {@link AnnotationCollection} representing the GFF file
+     * @throws GffParseException if unable to parse the {@link java.io.File}, which can either be caused by an {@link
+     *                           IOException} when opening the file or a semantic error in the GFF file itself
      */
     @SuppressWarnings("squid:S135") // An object is only created once in the loop.
-    public FeatureAnnotation parse(final String gffFile, final ProgressUpdater progressUpdater)
+    public AnnotationCollection parse(final String gffFile, final ProgressUpdater progressUpdater)
             throws GffParseException {
-        @MonotonicNonNull FeatureAnnotation featureAnnotation = null;
+        @MonotonicNonNull AnnotationCollection annotationCollection = null;
         final List<String> fileMetadata = new LinkedList<>();
 
         int lineNumber = 1;
@@ -80,27 +79,26 @@ public final class GffParser {
                 }
 
                 final String[] columns = parseLine(line, lineNumber);
-                if (featureAnnotation == null) {
+                if (annotationCollection == null) {
                     checkSequenceId(columns[SEQ_ID_COLUMN], lineNumber);
-                    featureAnnotation = createFeatureAnnotation(columns[SEQ_ID_COLUMN]);
+                    annotationCollection = createFeatureAnnotation(columns[SEQ_ID_COLUMN]);
                 }
 
-                final SubFeatureAnnotation subFeatureAnnotation = parseSubFeatureAnnotation(columns, lineNumber);
-                checkParent(featureAnnotation, subFeatureAnnotation, lineNumber);
-                featureAnnotation.addSubFeatureAnnotation(subFeatureAnnotation);
+                final Annotation annotation = parseSubFeatureAnnotation(columns, lineNumber);
+                annotationCollection.addAnnotation(annotation);
             }
 
-            if (featureAnnotation == null) {
+            if (annotationCollection == null) {
                 throw new GffParseException("An error occurred while reading the GFF file: There was no seqid.");
             }
         } catch (final IOException e) {
             throw new GffParseException("An IO error occurred while reading the GFF file.", e);
         }
 
-        featureAnnotation.addMetadata(fileMetadata);
+        annotationCollection.addMetadata(fileMetadata);
         progressUpdater.updateProgress(PROGRESS_TOTAL, "Finished reading the file.");
 
-        return featureAnnotation;
+        return annotationCollection;
     }
 
     /**
@@ -125,28 +123,28 @@ public final class GffParser {
     }
 
     /**
-     * Creates a {@link FeatureAnnotation} representing the current file.
+     * Creates a {@link AnnotationCollection} representing the current file.
      *
-     * @param seqId the seqId of the {@link FeatureAnnotation}
-     * @return a {@link FeatureAnnotation} representing the current file
+     * @param seqId the seqId of the {@link AnnotationCollection}
+     * @return a {@link AnnotationCollection} representing the current file
      */
-    private FeatureAnnotation createFeatureAnnotation(final String seqId) {
+    private AnnotationCollection createFeatureAnnotation(final String seqId) {
         final String noExtensionSeqId = seqId.lastIndexOf('.') > 0
                 ? seqId.substring(0, seqId.lastIndexOf('.')) : seqId;
-        return new FeatureAnnotation(noExtensionSeqId);
+        return new AnnotationCollection(noExtensionSeqId);
     }
 
     /**
-     * Creates a {@link SubFeatureAnnotation} annotation representing the current line.
+     * Creates a {@link Annotation} annotation representing the current line.
      *
      * @param columns    the columns of the line to convert to a feature annotation
      * @param lineNumber the current line number
-     * @return a {@link SubFeatureAnnotation} representing the current row in the file
-     * @throws GffParseException if unable to create a {@link SubFeatureAnnotation}
+     * @return a {@link Annotation} representing the current row in the file
+     * @throws GffParseException if unable to create a {@link Annotation}
      */
-    private SubFeatureAnnotation parseSubFeatureAnnotation(final String[] columns, final int lineNumber)
+    private Annotation parseSubFeatureAnnotation(final String[] columns, final int lineNumber)
             throws GffParseException {
-        final SubFeatureAnnotation subFeatureAnnotation;
+        final Annotation annotation;
 
         try {
             final int start = Integer.parseInt(columns[START_COLUMN]);
@@ -157,7 +155,7 @@ public final class GffParser {
             checkPhaseValid(phase, lineNumber);
             checkStrandValid(columns[STRAND_COLUMN], lineNumber);
 
-            subFeatureAnnotation = new SubFeatureAnnotation(
+            annotation = new Annotation(
                     columns[SOURCE_COLUMN],
                     columns[TYPE_COLUMN],
                     start,
@@ -179,12 +177,12 @@ public final class GffParser {
             }
             final String key = keyValuePair[0];
 
-            subFeatureAnnotation.setAttribute(
+            annotation.setAttribute(
                     key,
-                    getValues(key, keyValuePair[1], subFeatureAnnotation.getAttributes(), lineNumber));
+                    getValues(key, keyValuePair[1], annotation.getAttributes(), lineNumber));
         }
 
-        return subFeatureAnnotation;
+        return annotation;
     }
 
     /**
@@ -246,44 +244,15 @@ public final class GffParser {
     }
 
     /**
-     * Checks that if the {@link SubFeatureAnnotation} refers to a parent, the {@link FeatureAnnotation} contains a
-     * {@link SubFeatureAnnotation} with that sequence id.
-     *
-     * @param featureAnnotation    the {@link FeatureAnnotation} to get the {@link SubFeatureAnnotation}s from
-     * @param subFeatureAnnotation the {@link SubFeatureAnnotation} with the possible parent reference
-     * @param lineNumber           the current line number
-     * @throws GffParseException if the {@link SubFeatureAnnotation} has an "ID" that refers to a non-existent
-     *                        {@link SubFeatureAnnotation} in the {@link FeatureAnnotation}
-     */
-    private static void checkParent(final FeatureAnnotation featureAnnotation,
-                                    final SubFeatureAnnotation subFeatureAnnotation, final int lineNumber)
-            throws GffParseException {
-        final String[] parents = subFeatureAnnotation.getAttributes().get("Parent");
-        if (parents == null) {
-            return;
-        }
-
-        final Map<String, List<SubFeatureAnnotation>> subFeatureAnnotations =
-                featureAnnotation.getSubFeatureAnnotationsMap();
-
-        for (final String parent : parents) {
-            if (!subFeatureAnnotations.containsKey(parent)) {
-                throw new GffParseException(String.format(PARSE_EXCEPTION_FORMAT, lineNumber,
-                        "Reference made to non-existent parent '" + parent + "'."));
-            }
-        }
-    }
-
-    /**
      * Returns the list of values of a certain key value pair.
      *
      * @param key        the key of the key value pair
      * @param values     the value of the value pair
-     * @param attributes the map of attributes of the current {@link SubFeatureAnnotation}
+     * @param attributes the map of attributes of the current {@link Annotation}
      * @param lineNumber the current line number
      * @return the {@link String} array of values of this key
      * @throws GffParseException if the key is "ID" and there is more than one value, or if the given attributes map
-     *                        already contains the passed key
+     *                           already contains the passed key
      */
     private static String[] getValues(final String key, final String values, final Map<String, String[]> attributes,
                                       final int lineNumber) throws GffParseException {

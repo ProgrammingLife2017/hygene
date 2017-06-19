@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
-import org.dnacronym.hygene.graph.annotation.SubFeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ final class GffParserTest {
     private static final String DEFAULT_GFF_FILE = "src/test/resources/gff/simple.gff";
 
     private GffParser gffParser;
-    private FeatureAnnotation featureAnnotation;
+    private AnnotationCollection annotationCollection;
 
 
     @BeforeEach
@@ -31,51 +31,51 @@ final class GffParserTest {
 
     @Test
     void testSeqId() throws GffParseException {
-        featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
-        assertThat(featureAnnotation.getSequenceId()).isEqualTo("ctg123");
+        annotationCollection = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
+        assertThat(annotationCollection.getSequenceId()).isEqualTo("ctg123");
     }
 
     @Test
     void testMetadataSize() throws GffParseException {
-        featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
-        assertThat(featureAnnotation.getMetadata()).hasSize(2);
+        annotationCollection = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
+        assertThat(annotationCollection.getMetadata()).hasSize(2);
     }
 
     @Test
     void testFeaturesSize() throws GffParseException {
-        featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
-        assertThat(featureAnnotation.getSubFeatureAnnotations()).hasSize(23);
+        annotationCollection = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
+        assertThat(annotationCollection.getAnnotations()).hasSize(23);
     }
 
     @Test
     void testFirstSubFeatureCorrect() throws GffParseException {
-        featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
-        final SubFeatureAnnotation subFeatureAnnotation = featureAnnotation.getSubFeatureAnnotations().get(0);
+        annotationCollection = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
+        final Annotation annotation = annotationCollection.getAnnotations().get(0);
 
-        assertThat(subFeatureAnnotation.getSource()).isEqualTo("source");
-        assertThat(subFeatureAnnotation.getType()).isEqualTo("gene");
-        assertThat(subFeatureAnnotation.getStart()).isEqualTo(1000);
-        assertThat(subFeatureAnnotation.getEnd()).isEqualTo(9000);
-        assertThat(subFeatureAnnotation.getScore()).isEqualTo(2.2);
-        assertThat(subFeatureAnnotation.getStrand()).isEqualTo("+");
-        assertThat(subFeatureAnnotation.getPhase()).isEqualTo(1);
-        assertThat(subFeatureAnnotation.getAttributes().get("ID")[0]).isEqualTo("gene00001");
-        assertThat(subFeatureAnnotation.getAttributes().get("Name")[0]).isEqualTo("EDEN");
+        assertThat(annotation.getSource()).isEqualTo("source");
+        assertThat(annotation.getType()).isEqualTo("gene");
+        assertThat(annotation.getStart()).isEqualTo(1000);
+        assertThat(annotation.getEnd()).isEqualTo(9000);
+        assertThat(annotation.getScore()).isEqualTo(2.2);
+        assertThat(annotation.getStrand()).isEqualTo("+");
+        assertThat(annotation.getPhase()).isEqualTo(1);
+        assertThat(annotation.getAttributes().get("ID")[0]).isEqualTo("gene00001");
+        assertThat(annotation.getAttributes().get("Name")[0]).isEqualTo("EDEN");
     }
 
     @Test
     void testSecondSubFeatureCorrect() throws GffParseException {
-        featureAnnotation = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
-        final SubFeatureAnnotation subFeatureAnnotation = featureAnnotation.getSubFeatureAnnotations().get(1);
+        annotationCollection = gffParser.parse(DEFAULT_GFF_FILE, ProgressUpdater.DUMMY);
+        final Annotation annotation = annotationCollection.getAnnotations().get(1);
 
-        assertThat(subFeatureAnnotation.getSource()).isEqualTo(".");
-        assertThat(subFeatureAnnotation.getType()).isEqualTo("TF_binding_site");
-        assertThat(subFeatureAnnotation.getStart()).isEqualTo(1000);
-        assertThat(subFeatureAnnotation.getEnd()).isEqualTo(1012);
-        assertThat(subFeatureAnnotation.getScore()).isEqualTo(-1);
-        assertThat(subFeatureAnnotation.getStrand()).isEqualTo("+");
-        assertThat(subFeatureAnnotation.getPhase()).isEqualTo(-1);
-        assertThat(subFeatureAnnotation.getAttributes().get("ID")[0]).isEqualTo("tfbs00001");
+        assertThat(annotation.getSource()).isEqualTo(".");
+        assertThat(annotation.getType()).isEqualTo("TF_binding_site");
+        assertThat(annotation.getStart()).isEqualTo(1000);
+        assertThat(annotation.getEnd()).isEqualTo(1012);
+        assertThat(annotation.getScore()).isEqualTo(-1);
+        assertThat(annotation.getStrand()).isEqualTo("+");
+        assertThat(annotation.getPhase()).isEqualTo(-1);
+        assertThat(annotation.getAttributes().get("ID")[0]).isEqualTo("tfbs00001");
     }
 
     /**
