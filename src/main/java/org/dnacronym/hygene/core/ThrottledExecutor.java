@@ -54,7 +54,7 @@ public class ThrottledExecutor {
                 THREAD_COUNT, THREAD_COUNT, 0L, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(2, true),
                 new DiscardNewestPolicy());
-        this.executor = getExitingExecutorService(executor, 0, TimeUnit.MILLISECONDS);
+        this.executor = getExitingExecutorService(executor);
     }
 
 
