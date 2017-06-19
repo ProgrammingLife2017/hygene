@@ -23,7 +23,8 @@ import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
-import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.EdgeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
@@ -75,6 +76,7 @@ public final class GraphVisualizer {
     private Canvas canvas;
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
+    private final EdgeDrawingToolkit edgeDrawingToolkit;
     private final GraphAnnotationVisualizer graphAnnotationVisualizer;
     private final BookmarkStore bookmarkStore;
 
@@ -131,6 +133,7 @@ public final class GraphVisualizer {
         query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
         nodeDrawingToolkit = new NodeDrawingToolkit();
+        edgeDrawingToolkit = new EdgeDrawingToolkit();
         graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
     }
 
@@ -139,13 +142,10 @@ public final class GraphVisualizer {
      * Draw a node on the canvas.
      * <p>
      * Node outlines are also drawn when one of the following conditions are met:
-     * If selected, it is {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#SELECTED}.<br>
-     * If it is not selected, and highlighted, it is
-     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#SELECTED}.<br>
-     * If it is not highlighted, and queried, it is
-     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#QUERIED}.<br>
-     * If it is not queried, and bookmarked, is it
-     * {@link org.dnacronym.hygene.ui.node.NodeDrawingToolkit.HighlightType#BOOKMARKED}.
+     * If selected, it is {@link NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not selected, and highlighted, it is {@link NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not highlighted, and queried, it is {@link NodeDrawingToolkit.HighlightType#QUERIED}.<br>
+     * If it is not queried, and bookmarked, is it {@link NodeDrawingToolkit.HighlightType#BOOKMARKED}.
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
@@ -163,7 +163,7 @@ public final class GraphVisualizer {
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
-        nodeDrawingToolkit.fillNode(nodeX, nodeY, nodeWidth, node.getColor());
+        nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
 
         if (segment.equals(selectedSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
@@ -200,18 +200,18 @@ public final class GraphVisualizer {
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
 
-        graphicsContext.setStroke(getEdgeColor());
-        graphicsContext.setLineWidth(computeEdgeThickness(edge));
-
+        final Color edgeColor;
         if (edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get())) {
-            graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+            edgeColor = NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor();
         } else if (edge instanceof DummyEdge
                 && (((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
                 || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get()))) {
-            graphicsContext.setStroke(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+            edgeColor = NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor();
         } else if (edge.inGenome(selectedPathProperty.get())
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
-            graphicsContext.setStroke(correctColorForEdgeOpacity(Color.BLUE));
+            edgeColor = correctColorForEdgeOpacity(Color.BLUE);
+        } else {
+            edgeColor = getEdgeColor();
         }
 
         if (fromNode instanceof Segment && toNode instanceof Segment) {
@@ -221,7 +221,7 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        graphicsContext.strokeLine(fromX, fromY, toX, toY);
+        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), getEdgeColor());
     }
 
     /**
@@ -384,6 +384,7 @@ public final class GraphVisualizer {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.edgeDrawingToolkit.setGraphicsContext(graphicsContext);
         this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {

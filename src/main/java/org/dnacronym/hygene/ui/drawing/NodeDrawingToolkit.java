@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.drawing;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -9,12 +8,12 @@ import java.util.List;
 
 
 /**
- * Toolkit used to draw nodes attributes.
+ * Toolkit used to draw nodes.
  * <p>
  * This class deals with the drawing of nodes. This includes highlighting a node, drawing text in a node and drawing
  * a bookmark identifier of a node.
  */
-public final class NodeDrawingToolkit implements DrawingToolkit {
+public final class NodeDrawingToolkit extends DrawingToolkit {
     private static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     private static final int NODE_OUTLINE_WIDTH = 3;
     private static final int ARC_SIZE = 10;
@@ -27,24 +26,12 @@ public final class NodeDrawingToolkit implements DrawingToolkit {
      */
     private static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
 
-    private GraphicsContext graphicsContext;
-
     private double canvasHeight;
     private double nodeHeight;
     private double charWidth;
     private double charHeight;
     private Font nodeFont;
 
-
-    /**
-     * Sets the {@link GraphicsContext} used for drawing.
-     *
-     * @param graphicsContext the {@link GraphicsContext} to set
-     */
-    @Override
-    public void setGraphicsContext(final GraphicsContext graphicsContext) {
-        this.graphicsContext = graphicsContext;
-    }
 
     /**
      * Sets the node height used for drawing.
@@ -85,29 +72,60 @@ public final class NodeDrawingToolkit implements DrawingToolkit {
      * @param nodeWidth the width of the node
      * @param fill      the {@link Color} to fill the node with
      */
-    public void fillNode(final double nodeX, final double nodeY, final double nodeWidth, final Color fill) {
+    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final Color fill) {
         graphicsContext.setFill(fill);
         graphicsContext.fillRoundRect(nodeX, nodeY, nodeWidth, nodeHeight, ARC_SIZE, ARC_SIZE);
     }
 
     /**
-     * Fills a rectangle based on the node position and width.
+     * Fills a round rectangle based on the node position and width.
      * <p>
-     * Each color is drawn as a single horizontal band.
+     * The path colors are spread evenly across the width of the node. They are drawn as bands along the node.
      *
-     * @param nodeX     the top left x position of the node
-     * @param nodeY     the top left y position of the node
-     * @param nodeWidth the width of the node
-     * @param colors    colors of this node which are drawn as horizontal bands
+     * @param nodeX      the top left x position of the node
+     * @param nodeY      the top left y position of the node
+     * @param nodeWidth  the width of the node
+     * @param pathColors the colors of the paths going through the node
      */
-    public void fillNode(final double nodeX, final double nodeY, final double nodeWidth, final List<Color> colors) {
+    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final List<Color> pathColors) {
         double colorBandY = nodeY;
-        for (final Color color : colors) {
+        final double bandHeight = nodeHeight / pathColors.size();
+        for (final Color color : pathColors) {
             graphicsContext.setFill(color);
-            graphicsContext.fillRoundRect(nodeX, colorBandY, nodeWidth, nodeHeight / colors.size(), ARC_SIZE, ARC_SIZE);
+            graphicsContext.fillRoundRect(nodeX, colorBandY, nodeWidth, bandHeight, ARC_SIZE, ARC_SIZE);
 
-            colorBandY += nodeHeight / colors.size();
+            colorBandY += bandHeight;
         }
+    }
+
+    /**
+     * Fills a round rectangle based on the node position and width.
+     * <p>
+     * The path colors are spread evenly across the width of the node. They are drawn as bands along the node.<br>
+     * The annotation colors are drawn as dashed lines below the node, each of height {@value ANNOTATION_HEIGHT}.
+     *
+     * @param nodeX            the top left x position of the node
+     * @param nodeY            the top left y position of the node
+     * @param nodeWidth        the width of the node
+     * @param pathColors       the colors of the paths going through the node
+     * @param annotationColors the colors of the annotations going through the node
+     */
+    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final List<Color> pathColors,
+                         final List<Color> annotationColors) {
+        drawNode(nodeX, nodeY, nodeWidth, pathColors);
+
+        graphicsContext.setLineDashes(ANNOTATION_DASH_LENGTH);
+        graphicsContext.setLineWidth(ANNOTATION_HEIGHT);
+
+        double annotationY = nodeY + nodeHeight + ANNOTATION_HEIGHT / 2;
+        for (final Color color : annotationColors) {
+            graphicsContext.setStroke(color);
+            graphicsContext.strokeLine(nodeX, annotationY, nodeX + nodeWidth, annotationY);
+
+            annotationY += ANNOTATION_HEIGHT;
+        }
+
+        graphicsContext.setLineDashes(1);
     }
 
     /**

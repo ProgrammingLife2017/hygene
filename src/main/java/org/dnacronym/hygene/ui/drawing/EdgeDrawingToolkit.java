@@ -1,63 +1,91 @@
 package org.dnacronym.hygene.ui.drawing;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.Collections;
 import java.util.List;
 
 
-public class EdgeDrawingToolkit implements DrawingToolkit {
-    private static final int ANNOTATION_WIDTH = 5;
-    private static final int VERTICAL_ANNOTATION_COUNT = 10;
-
-    private GraphicsContext graphicsContext;
-
-    @Override
-    public void setGraphicsContext(GraphicsContext graphicsContext) {
-        this.graphicsContext = graphicsContext;
-    }
-
-    public void fillEdge(final double fromX, final double fromY, final double toX, final double toY,
+/**
+ * Toolkit used to draw edges.
+ * <p>
+ * This includes drawing an edge, drawing the paths that go through and edge and drawing annotations below an edge.
+ */
+public class EdgeDrawingToolkit extends DrawingToolkit {
+    /**
+     * Draws a single edge from a given to point to a destination point.
+     *
+     * @param fromX     the x position of the origin of the edge
+     * @param fromY     the y position of the origin of the edge
+     * @param toX       the x position of the destination of the edge
+     * @param toY       the y position of the destination of the edge
+     * @param edgeWidth the width of the edge
+     * @param color     the color of the edge
+     */
+    public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
                          final double edgeWidth, final Color color) {
-        fillEdge(fromX, fromY, toX, toY, edgeWidth, Collections.singletonList(color));
+        drawEdge(fromX, fromY, toX, toY, edgeWidth, Collections.singletonList(color));
     }
 
-    public void fillEdge(final double fromX, final double fromY, final double toX, final double toY,
-                         final double edgeWidth, final List<Color> colors) {
-        final double lineWidth = edgeWidth / colors.size();
-        graphicsContext.setLineWidth(lineWidth);
+    /**
+     * Draws a single edge from a given to point to a destination point.
+     * <p>
+     * The path colors are spread evenly across the width of the edge. They are drawn as bands along the edge.
+     *
+     * @param fromX      the x position of the origin of the edge
+     * @param fromY      the y position of the origin of the edge
+     * @param toX        the x position of the destination of the edge
+     * @param toY        the y position of the destination of the edge
+     * @param edgeWidth  the width of the edge
+     * @param pathColors the colors of the paths going through the edge
+     */
+    public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
+                         final double edgeWidth, final List<Color> pathColors) {
+        final double lineHeight = edgeWidth / pathColors.size();
+        graphicsContext.setLineWidth(lineHeight);
 
-        double colorFromY = fromY;
-        double colorToY = toY;
-        for (final Color color : colors) {
+        double pathFromY = fromY;
+        double pathToY = toY;
+        for (final Color color : pathColors) {
             graphicsContext.setStroke(color);
-            graphicsContext.strokeLine(fromX, colorFromY, toX, colorToY);
+            graphicsContext.strokeLine(fromX, pathFromY, toX, pathToY);
 
-            colorFromY += lineWidth;
-            colorToY += lineWidth;
+            pathFromY += lineHeight;
+            pathToY += lineHeight;
         }
     }
 
-    public void drawEdgeAnnotations(final double fromX, final double fromY, final double toX, final double toY,
-                                    final double lineWidth, final List<Color> colors) {
-        double annotationFromX = fromX;
-        double annotationFromY = fromY;
-        final double deltaY = toY - fromY;
+    /**
+     * Draws a single edge from a given to point to a destination point.
+     * <p>
+     * The path colors are spread evenly across the width of the edge. They are drawn as bands along the edge.<br>
+     * Annotations are drawn as strands below the node, each with height {@value ANNOTATION_HEIGHT}.
+     *
+     * @param fromX            the x position of the origin of the edge
+     * @param fromY            the y position of the origin of the edge
+     * @param toX              the x position of the destination of the edge
+     * @param toY              the y position of the destination of the edge
+     * @param edgeWidth        the width of the edge
+     * @param pathColors       the colors of the paths going through the edge
+     * @param annotationColors the colors of the annotations
+     */
+    public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
+                         final double edgeWidth, final List<Color> pathColors, final List<Color> annotationColors) {
+        drawEdge(fromX, fromY, toX, toY, edgeWidth, pathColors);
 
-        graphicsContext.setLineWidth(ANNOTATION_WIDTH);
-        int colorIndex = 0;
+        graphicsContext.setLineDashes(ANNOTATION_DASH_LENGTH);
+        graphicsContext.setLineWidth(ANNOTATION_HEIGHT);
 
-        while (annotationFromX <= toX) {
-            final Color color = colors.get(colorIndex);
+        double annotationFromY = fromY + edgeWidth + ANNOTATION_HEIGHT / 2;
+        double annotationToY = toY + edgeWidth + ANNOTATION_HEIGHT / 2;
+        for (final Color color : annotationColors) {
+            graphicsContext.setStroke(color);
+            graphicsContext.strokeLine(fromX, annotationFromY, toX, annotationToY);
 
-            graphicsContext.setFill(color);
-            graphicsContext.strokeLine(annotationFromX, annotationFromY, toX, toY);
-
-            annotationFromX += ANNOTATION_WIDTH;
-            annotationFromY = deltaY / VERTICAL_ANNOTATION_COUNT;
-
-            colorIndex = (colorIndex + 1) % colors.size();
+            annotationFromY += ANNOTATION_HEIGHT;
+            annotationToY += ANNOTATION_HEIGHT;
         }
+
+        graphicsContext.setLineDashes(1);
     }
 }
