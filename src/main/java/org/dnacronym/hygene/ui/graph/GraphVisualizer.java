@@ -1,9 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
-
-import javax.inject.Inject;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -21,18 +18,17 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
-import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
+
+import javax.inject.Inject;
 
 
 /**
@@ -316,7 +312,7 @@ public final class GraphVisualizer {
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
 
-        // Edges should be drawn before nodes, please don't combine this with node drawing loop.
+        // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             node.getOutgoingEdges().forEach(this::drawEdge);
         }
