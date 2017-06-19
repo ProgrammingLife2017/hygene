@@ -86,6 +86,9 @@ dependencies {
     testCompile("org.assertj:assertj-core:${assertjVersion}")
     testCompile("org.mockito:mockito-core:${mockitoCoreVersion}")
 
+    // Guice Test Extensions
+    testCompile("com.google.inject.extensions:guice-testlib:${guiceVersion}")
+
     // TestFX framework
     testCompile("org.testfx:testfx-core:${testfxVersion}")
     testCompile("org.testfx:testfx-junit:${testfxVersion}")

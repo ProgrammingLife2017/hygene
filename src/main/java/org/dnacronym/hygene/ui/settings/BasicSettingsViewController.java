@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.settings;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
@@ -18,6 +19,7 @@ import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeIncomingEdges;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeOutgoingEdges;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeSequenceLength;
 import org.dnacronym.hygene.graph.colorscheme.minmax.ColorSchemeTotalEdges;
+import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * Settings controller for the basic settings.
  */
-public final class BasicSettingsViewController extends SettingsController {
+public final class BasicSettingsViewController implements Initializable {
     public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
             new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
             new Pair<>("Fixed Color", new FixedColorScheme(Color.CORAL)),
@@ -42,6 +44,13 @@ public final class BasicSettingsViewController extends SettingsController {
     ));
 
     private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);
+
+    @Inject
+    private Settings settings;
+    @Inject
+    private GraphVisualizer graphVisualizer;
+    @Inject
+    private GraphMovementCalculator graphMovementCalculator;
 
     @FXML
     private Slider nodeHeight;
@@ -54,16 +63,13 @@ public final class BasicSettingsViewController extends SettingsController {
     @FXML
     private Slider zoomingSensitivity;
 
-    @Inject
-    private GraphVisualizer graphVisualizer;
-
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        nodeHeight.setValue(getGraphVisualizer().getNodeHeightProperty().get());
-        edgeColor.setValue(getGraphVisualizer().getEdgeColorProperty().get());
-        panningSensitivity.setValue(getGraphMovementCalculator().getPanningSensitivityProperty().get());
-        zoomingSensitivity.setValue(getGraphMovementCalculator().getZoomingSensitivityProperty().get());
+        nodeHeight.setValue(graphVisualizer.getNodeHeightProperty().get());
+        edgeColor.setValue(graphVisualizer.getEdgeColorProperty().get());
+        panningSensitivity.setValue(graphMovementCalculator.getPanningSensitivityProperty().get());
+        zoomingSensitivity.setValue(graphMovementCalculator.getZoomingSensitivityProperty().get());
 
         setUpNodeColorSchemeComboBox();
     }
@@ -96,9 +102,9 @@ public final class BasicSettingsViewController extends SettingsController {
      */
     @FXML
     void nodeHeightSliderDone(final MouseEvent mouseEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final double newValue = ((Slider) mouseEvent.getSource()).getValue();
-            getGraphVisualizer().getNodeHeightProperty().setValue(newValue);
+            graphVisualizer.getNodeHeightProperty().setValue(newValue);
             LOGGER.info("Node height has now been set to " + newValue + ".");
         });
     }
@@ -110,9 +116,9 @@ public final class BasicSettingsViewController extends SettingsController {
      */
     @FXML
     void edgeColorDone(final ActionEvent actionEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final Color newValue = ((ColorPicker) actionEvent.getSource()).getValue();
-            getGraphVisualizer().getEdgeColorProperty().setValue(newValue);
+            graphVisualizer.getEdgeColorProperty().setValue(newValue);
             LOGGER.info("Edge color has now been set to " + newValue + ".");
         });
     }
@@ -124,9 +130,9 @@ public final class BasicSettingsViewController extends SettingsController {
      */
     @FXML
     void panningSensitivitySliderDone(final MouseEvent mouseEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final double newValue = ((Slider) mouseEvent.getSource()).getValue();
-            getGraphMovementCalculator().getPanningSensitivityProperty().setValue(newValue);
+            graphMovementCalculator.getPanningSensitivityProperty().setValue(newValue);
             LOGGER.info("Panning sensitivity has been set to " + newValue + ".");
         });
     }
@@ -138,9 +144,9 @@ public final class BasicSettingsViewController extends SettingsController {
      */
     @FXML
     void zoomingSensitivitySliderDone(final MouseEvent mouseEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             final double newValue = ((Slider) mouseEvent.getSource()).getValue();
-            getGraphMovementCalculator().getZoomingSensitivityProperty().setValue(newValue);
+            graphMovementCalculator.getZoomingSensitivityProperty().setValue(newValue);
             LOGGER.info("Zooming sensitivity has been set to " + newValue + ".");
         });
     }
@@ -152,7 +158,7 @@ public final class BasicSettingsViewController extends SettingsController {
      */
     @FXML
     void onNodeColorSchemeChanged(final ActionEvent actionEvent) {
-        getSettings().addRunnable(() -> {
+        settings.addRunnable(() -> {
             Node.setColorScheme(nodeColorScheme.getValue().getValue());
             LOGGER.info("Node color scheme has been set to " + nodeColorScheme.getValue().getKey() + ".");
             graphVisualizer.draw();

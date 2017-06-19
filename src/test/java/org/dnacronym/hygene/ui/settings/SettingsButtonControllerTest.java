@@ -1,10 +1,13 @@
 package org.dnacronym.hygene.ui.settings;
 
+import com.google.inject.testing.fieldbinder.Bind;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.dnacronym.hygene.ui.UITestBase;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
@@ -17,9 +20,16 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link SettingsButtonController}s.
  */
+@SuppressFBWarnings(
+        value = "URF_UNREAD_FIELD",
+        justification = "Graph visualizer does not need to be read, but still needs to be mocked."
+)
 final class SettingsButtonControllerTest extends UITestBase {
     private SettingsButtonController settingsButtonController;
+    @Bind
     private Settings settings;
+    @Bind
+    private GraphVisualizer graphVisualizer;
 
     private ActionEvent actionEvent;
     private Node source;
@@ -29,9 +39,13 @@ final class SettingsButtonControllerTest extends UITestBase {
 
     @Override
     public void beforeEach() {
-        this.settingsButtonController = new SettingsButtonController();
-
         settings = mock(Settings.class);
+        graphVisualizer = mock(GraphVisualizer.class);
+        createContextOfTest();
+
+        settingsButtonController = new SettingsButtonController();
+        injectMembers(settingsButtonController);
+
         actionEvent = mock(ActionEvent.class);
         stage = mock(Stage.class);
         scene = mock(Scene.class);
@@ -40,7 +54,6 @@ final class SettingsButtonControllerTest extends UITestBase {
         when(actionEvent.getSource()).thenReturn(source);
         when(source.getScene()).thenReturn(scene);
         when(scene.getWindow()).thenReturn(stage);
-        settingsButtonController.setSettings(settings);
     }
 
 

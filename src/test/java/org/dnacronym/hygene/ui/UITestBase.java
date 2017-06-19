@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui;
 
+import com.gluonhq.ignite.guice.GuiceContext;
+import com.google.inject.testing.fieldbinder.BoundFieldModule;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -21,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 public abstract class UITestBase extends FxRobot {
     private Hygene application;
     private Stage primaryStage;
+    private GuiceContext context;
 
 
     /**
@@ -28,12 +32,15 @@ public abstract class UITestBase extends FxRobot {
      * Afterwards, calls the {@link #beforeEach()} method.
      *
      * @throws TimeoutException if unable to set up application
+     * @throws UIInitialisationException if ui was not properly initialized
      * @see FxToolkit#setupApplication(Class, String...)
      */
     @BeforeEach
-    public final void basicBeforeEach() throws TimeoutException {
+    public final void basicBeforeEach() throws TimeoutException, UIInitialisationException {
         this.primaryStage = FxToolkit.registerPrimaryStage();
         this.application = (Hygene) FxToolkit.setupApplication(Hygene.class);
+
+        this.context = Hygene.getInstance().getContext();
 
         FxToolkit.showStage();
 
@@ -100,11 +107,7 @@ public abstract class UITestBase extends FxRobot {
         final CompletableFuture<Object> future = new CompletableFuture<>();
 
         Platform.runLater(() -> {
-            try {
-                Hygene.getInstance().getContext().injectMembers(instance);
-            } catch (final UIInitialisationException e) {
-                e.printStackTrace();
-            }
+            context.injectMembers(instance);
 
             future.complete(null);
         });
@@ -120,15 +123,18 @@ public abstract class UITestBase extends FxRobot {
      * Creates instance of the given class.
      *
      * @param className name of the class
-     * @param <T> type of the class
+     * @param <T>       type of the class
      * @return instance of the given class
      */
     protected final <T> T createInstance(final Class<T> className) {
-        try {
-            return Hygene.getInstance().getContext().getInstance(className);
-        } catch (UIInitialisationException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return context.getInstance(className);
+    }
+
+    /**
+     * Creates a context based on the fields of the current test.
+     */
+    protected final void createContextOfTest() {
+        context = new GuiceContext(this, () -> Arrays.asList(BoundFieldModule.of(this)));
+        context.init();
     }
 }

@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.settings;
 
+import com.google.inject.testing.fieldbinder.Bind;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ChoiceBox;
 import org.apache.logging.log4j.LogManager;
@@ -18,20 +20,26 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link LoggingSettingsViewController}s.
  */
+@SuppressFBWarnings(
+        value = "URF_UNREAD_FIELD",
+        justification = "Graph visualizer does not need to be read, but still needs to be mocked."
+)
 final class LoggingSettingsViewControllerTest extends UITestBase {
     private LoggingSettingsViewController loggingSettingsViewController;
+    @Bind
     private GraphVisualizer graphVisualizer;
+    @Bind
     private Settings settingsMock;
 
 
     @Override
     public void beforeEach() {
-        loggingSettingsViewController = new LoggingSettingsViewController();
-
         graphVisualizer = mock(GraphVisualizer.class);
         settingsMock = mock(Settings.class);
-        loggingSettingsViewController.setGraphVisualizer(graphVisualizer);
-        loggingSettingsViewController.setSettings(settingsMock);
+        createContextOfTest();
+
+        loggingSettingsViewController = new LoggingSettingsViewController();
+        injectMembers(loggingSettingsViewController);
     }
 
     @Test

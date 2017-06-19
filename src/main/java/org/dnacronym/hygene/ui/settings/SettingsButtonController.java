@@ -3,9 +3,11 @@ package org.dnacronym.hygene.ui.settings;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -13,14 +15,17 @@ import java.util.ResourceBundle;
 /**
  * Controller for the three buttons of the settings window.
  */
-public final class SettingsButtonController extends SettingsController {
+public final class SettingsButtonController implements Initializable {
+    @Inject
+    private Settings settings;
+
     @FXML
     private Button apply;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        apply.disableProperty().bind(Bindings.isEmpty(getSettings().getCommands()));
+        apply.disableProperty().bind(Bindings.isEmpty(settings.getCommands()));
     }
 
     /**
@@ -30,7 +35,7 @@ public final class SettingsButtonController extends SettingsController {
      */
     @FXML
     void okAction(final ActionEvent actionEvent) {
-        getSettings().executeAll();
+        settings.executeAll();
 
         final Node source = (Node) actionEvent.getSource();
         source.getScene().getWindow().hide();
@@ -45,7 +50,7 @@ public final class SettingsButtonController extends SettingsController {
      */
     @FXML
     void cancelAction(final ActionEvent actionEvent) {
-        getSettings().clearAll();
+        settings.clearAll();
 
         final Node source = (Node) actionEvent.getSource();
         source.getScene().getWindow().hide();
@@ -60,7 +65,7 @@ public final class SettingsButtonController extends SettingsController {
      */
     @FXML
     void applyAction(final ActionEvent actionEvent) {
-        getSettings().executeAll();
+        settings.executeAll();
         actionEvent.consume();
     }
 }
