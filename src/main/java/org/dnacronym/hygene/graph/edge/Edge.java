@@ -55,7 +55,8 @@ public class Edge {
      *
      * @return the genome this {@link Edge} is in, or {@code null} if metadata has not been parsed yet
      */
-    public final @Nullable Set<String> getGenomes() {
+    @SuppressWarnings("DesignForExtension")
+    public @Nullable Set<String> getGenomes() {
         return genomes;
     }
 
@@ -75,7 +76,8 @@ public class Edge {
      *
      * @return the {@link Edge} importance
      */
-    public final int getImportance() {
+    @SuppressWarnings("DesignForExtension")
+    public int getImportance() {
         if (genomes != null && !genomes.isEmpty()) {
             return genomes.size();
         }
