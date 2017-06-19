@@ -32,9 +32,10 @@ public final class PathCalculator {
 
         final HashMultimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeType.OUTGOING);
 
-        final Map<Node, Set<String>> genomeStore = new HashMap<>();
+        final Map<Segment, Set<String>> genomeStore = new HashMap<>();
 
-        final List<Node> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore);
+        final List<Segment> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore, incomingEdges,
+                outgoingEdges);
 
         final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
 
@@ -49,7 +50,7 @@ public final class PathCalculator {
      *
      * @param subgraph the {@link Subgraph}
      * @param edgeType the edge type {@link EdgeType}
-     * @return the edge map
+     * @return map of {@link Edge}s for each {@link Segment}
      */
     HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeType edgeType) {
         HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
@@ -72,18 +73,23 @@ public final class PathCalculator {
     /**
      * Computes a topological ordering for iterating the given {@link Subgraph}.
      *
-     * @param subgraph    the {@link Subgraph}
-     * @param genomeStore the genome store
+     * @param subgraph      the {@link Subgraph}
+     * @param genomeStore   the genome store
+     * @param incomingEdges map of incoming {@link Edge}s for each {@link Segment}
+     * @param outgoingEdges map of outgoing {@link Edge}s for each {@link Segment}
      * @return a topologically sorted list of the {@link Node}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public List<Node> computeTopologicalOrder(final Subgraph subgraph, final Map<Node, Set<String>> genomeStore) {
+    List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
+                                          final HashMultimap<Segment, Edge> incomingEdges,
+                                          final HashMultimap<Segment, Edge> outgoingEdges) {
+
         final Queue<Edge> toVisit = new LinkedList<>();
 
-        final Node origin = new Segment(-1, -1, 0);
+        final Segment origin = new Segment(-1, -1, 0);
         genomeStore.put(origin, new HashSet<>());
 
-        final List<Node> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
+        final List<Segment> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new Edge(origin, sourceConnectedNode));
@@ -91,30 +97,24 @@ public final class PathCalculator {
                     g.addAll(sourceConnectedNode.getMetadata().getGenomes()));
         });
 
-        final List<Node> topologicalOrder = new LinkedList<>();
+        final List<Segment> topologicalOrder = new LinkedList<>();
 
         final HashSet<Edge> visitedEdges = new HashSet<>();
-        final HashSet<Node> visitedNodes = new HashSet<>();
+        final HashSet<Segment> visitedNodes = new HashSet<>();
 
         while (!toVisit.isEmpty()) {
-            final Node active = toVisit.remove().getTo();
+            final Segment active = (Segment) toVisit.remove().getTo();
             visitedNodes.add(active);
             topologicalOrder.add(active);
 
             visitedEdges.addAll(active.getOutgoingEdges());
 
-            active.getOutgoingEdges().stream()
-                    .filter(e -> !visitedNodes.contains(e.getTo()) && e.getTo().getIncomingEdges().stream()
+            outgoingEdges.get(active).stream()
+                    .filter(e -> !visitedNodes.contains(e.getTo()) && incomingEdges.get((Segment) e.getTo()).stream()
                             .filter(out -> !visitedEdges.contains(out)).count() == 0)
                     .forEach(toVisit::add);
 
-            if (active instanceof Segment) {
-                genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
-            } else if (active instanceof DummyNode) {
-                genomeStore.put(active, getDummyNodeGenomes((DummyNode) active));
-            } else {
-                throw new IllegalStateException("Invalid node type.");
-            }
+            genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
         }
 
         return topologicalOrder;
@@ -145,8 +145,8 @@ public final class PathCalculator {
      * @param subgraph the subgraph
      * @return a list of nodes with no incoming edges
      */
-    List<Node> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
-        return subgraph.getNodes().stream()
+    List<Segment> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
+        return subgraph.getSegments().stream()
                 .filter(node -> subgraph.getNeighbours(node, SequenceDirection.LEFT).isEmpty())
                 .collect(Collectors.toList());
     }
