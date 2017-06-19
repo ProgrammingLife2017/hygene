@@ -59,8 +59,8 @@ class AggregateNodeTest {
     }
 
     /**
-     * Tests that the getNodes() method returns the nodes in the collection during construction, even when nodes are
-     * later added to that collection.
+     * Tests that {@link AggregateNode#getNodes()} returns the nodes in the collection during construction, even when
+     * nodes are later added to that collection.
      */
     @Test
     void testGetNodesAddLater() {
