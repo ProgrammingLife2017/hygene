@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Stores all {@link SimpleBookmark}s of the current session.
  */
-public final class SimpleBookmarkStore {
+public final class SimpleBookmarkStore implements BookmarkStore {
     private static final Logger LOGGER = LogManager.getLogger(SimpleBookmarkStore.class);
 
     private final GraphVisualizer graphVisualizer;
@@ -79,9 +79,7 @@ public final class SimpleBookmarkStore {
     }
 
 
-    /**
-     * Write all {@link Bookmark}s inside all the {@link SimpleBookmark}s in memory to the database.
-     */
+    @Override
     public void writeBookmarksToFile() {
         if (fileBookmarks == null) {
             return;
@@ -109,11 +107,7 @@ public final class SimpleBookmarkStore {
         }
     }
 
-    /**
-     * Adds a single {@link SimpleBookmark}.
-     *
-     * @param bookmark {@link Bookmark} to add
-     */
+    @Override
     public void addBookmark(final Bookmark bookmark) {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
@@ -128,12 +122,7 @@ public final class SimpleBookmarkStore {
         }
     }
 
-    /**
-     * Checks whether this {@link Node} is bookmarked.
-     *
-     * @param node the {@link Node} which may or may not be bookmarked
-     * @return true if {@link Node} has been bookmarked
-     */
+    @Override
     public boolean containsBookmark(final Node node) {
         if (!(node instanceof Segment)) {
             return false;
@@ -149,11 +138,7 @@ public final class SimpleBookmarkStore {
         return false;
     }
 
-    /**
-     * Gets an {@link ObservableList} of {@link SimpleBookmark}s.
-     *
-     * @return {@link ObservableList} of {@link SimpleBookmark}s
-     */
+    @Override
     public ObservableList<SimpleBookmark> getSimpleBookmarks() {
         return observableSimpleBookmarks;
     }

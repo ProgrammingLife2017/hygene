@@ -10,17 +10,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -29,12 +25,14 @@ import java.util.ResourceBundle;
  * Controller for creating bookmarks.
  */
 public final class BookmarkCreateController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(BookmarkCreateController.class);
-
+    @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
     private SequenceVisualizer sequenceVisualizer;
-    private SimpleBookmarkStore simpleBookmarkStore;
+    @Inject
+    private BookmarkStore bookmarkStore;
 
     @FXML
     private TextField baseOffset;
@@ -44,22 +42,6 @@ public final class BookmarkCreateController implements Initializable {
     private TextArea description;
     @FXML
     private Button save;
-
-
-    /**
-     * Create instance of {@link BookmarkCreateController}.
-     */
-    public BookmarkCreateController() {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
-            setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
-            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-            new ErrorDialogue(e).show();
-        }
-    }
 
 
     @Override
@@ -80,42 +62,6 @@ public final class BookmarkCreateController implements Initializable {
         radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
         save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-    }
-
-    /**
-     * Sets the {@link GraphVisualizer} for use by the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
-     */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
-     * Sets the {@link SequenceVisualizer} for use by the controller.
-     *
-     * @param sequenceVisualizer {@link SequenceVisualizer} for use by the controller.
-     */
-    void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
-        this.sequenceVisualizer = sequenceVisualizer;
-    }
-
-    /**
-     * Set the {@link GraphDimensionsCalculator} in the controller.
-     *
-     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
-     */
-    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
-        this.graphDimensionsCalculator = graphDimensionsCalculator;
-    }
-
-    /**
-     * Sets the {@link SimpleBookmarkStore} for use by the controller.
-     *
-     * @param simpleBookmarkStore {@link SimpleBookmarkStore} for use by the controller
-     */
-    void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
-        this.simpleBookmarkStore = simpleBookmarkStore;
     }
 
     /**
@@ -156,7 +102,7 @@ public final class BookmarkCreateController implements Initializable {
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
 
-            simpleBookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
+            bookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
                     description.getText()));
             description.clear();
         }

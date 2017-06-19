@@ -13,15 +13,16 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
+import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
-import org.dnacronym.hygene.ui.settings.Settings;
 import org.dnacronym.hygene.ui.settings.SettingsView;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -40,8 +41,11 @@ public final class MenuController implements Initializable {
 
     private FileChooser gfaFileChooser;
     private FileChooser gffFileChooser;
+
+    @Inject
     private GraphStore graphStore;
-    private Settings settings;
+    @Inject
+    private GenomeNavigation genomeNavigation;
 
     @FXML
     private MenuBar menuBar;
@@ -51,6 +55,7 @@ public final class MenuController implements Initializable {
     @FXML
     private Menu recentFilesMenu;
 
+    @Inject
     private SettingsView settingsView;
 
 
@@ -61,10 +66,7 @@ public final class MenuController implements Initializable {
         }
 
         try {
-            setGraphStore(Hygene.getInstance().getGraphStore());
-            setSettings(Hygene.getInstance().getSettings());
-            gffFileOpen.disableProperty().bind(Hygene.getInstance().getGenomeNavigation().getIndexedFinishedProperty()
-                    .not());
+            gffFileOpen.disableProperty().bind(genomeNavigation.getIndexedFinishedProperty().not());
 
             populateRecentFilesMenu();
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
@@ -73,15 +75,6 @@ public final class MenuController implements Initializable {
             LOGGER.error("Failed to initialize MenuController.", e);
             new ErrorDialogue(e).show();
         }
-    }
-
-    /**
-     * Set the {@link Settings} for use by the controller.
-     *
-     * @param settings {@link Settings} for use by the controller
-     */
-    void setSettings(final Settings settings) {
-        this.settings = settings;
     }
 
     /**
@@ -165,7 +158,6 @@ public final class MenuController implements Initializable {
      */
     @FXML
     void settingsAction() {
-        settingsView = new SettingsView(settings);
         settingsView.show();
     }
 
@@ -248,15 +240,6 @@ public final class MenuController implements Initializable {
      */
     void setGraphStore(final GraphStore graphStore) {
         this.graphStore = graphStore;
-    }
-
-    /**
-     * Returns the {@link FileChooser} used by the menu.
-     *
-     * @return the {@link FileChooser}
-     */
-    FileChooser getGfaFileChooser() {
-        return gfaFileChooser;
     }
 
     /**

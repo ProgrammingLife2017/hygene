@@ -10,10 +10,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -24,7 +22,9 @@ import java.util.ResourceBundle;
 public final class GraphController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GraphController.class);
 
+    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
     private GraphMovementCalculator graphMovementCalculator;
 
     @FXML
@@ -34,22 +34,10 @@ public final class GraphController implements Initializable {
     private Pane graphPane;
 
 
-    /**
-     * Create a new instance of {@link GraphController}.
-     */
-    public GraphController() {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setGraphMovementCalculator(Hygene.getInstance().getGraphMovementCalculator());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Failed to initialize GraphController.", e);
-            new ErrorDialogue(e).show();
-        }
-    }
-
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        addGraphVisualizerListeners();
+
         graphCanvas.heightProperty().bind(graphPane.heightProperty());
         graphCanvas.widthProperty().bind(graphPane.widthProperty());
 
@@ -57,22 +45,9 @@ public final class GraphController implements Initializable {
     }
 
     /**
-     * Sets the {@link GraphMovementCalculator} for use by the controller.
-     *
-     * @param graphMovementCalculator {@link GraphMovementCalculator} for use by the controller
+     * Adds the {@link GraphVisualizer} listeners.
      */
-    void setGraphMovementCalculator(final GraphMovementCalculator graphMovementCalculator) {
-        this.graphMovementCalculator = graphMovementCalculator;
-    }
-
-    /**
-     * Sets the {@link GraphVisualizer} in the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} to store in the {@link GraphController}
-     */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-
+    void addGraphVisualizerListeners() {
         graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldSegment, newSegment) -> {
             if (newSegment == null || newSegment.getId() < 0) {
                 return;

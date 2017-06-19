@@ -9,12 +9,12 @@ import javafx.scene.control.SpinnerValueFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
+import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -26,30 +26,19 @@ import java.util.ResourceBundle;
 public final class GenomeNavigateController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(GenomeNavigateController.class);
 
+    @Inject
     private GraphVisualizer graphVisualizer;
-    private final GenomeNavigation genomeNavigation;
-    private Hygene hygeneInstance;
+    @Inject
+    private GenomeNavigation genomeNavigation;
+    @Inject
+    private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
+    private SequenceVisualizer sequenceVisualizer;
 
     @FXML
     private ComboBox<String> genome;
     @FXML
     private Spinner<Integer> base;
-
-
-    /**
-     * Create instance of {@link GenomeNavigateController}.
-     */
-    public GenomeNavigateController() {
-        try {
-            hygeneInstance = Hygene.getInstance();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-            new ErrorDialogue(e).show();
-        }
-
-        setGraphVisualizer(hygeneInstance.getGraphVisualizer());
-        genomeNavigation = hygeneInstance.getGenomeNavigation();
-    }
 
 
     @Override
@@ -64,15 +53,6 @@ public final class GenomeNavigateController implements Initializable {
         });
 
         genome.itemsProperty().bind(genomeNavigation.getGenomeNames());
-    }
-
-    /**
-     * Sets the {@link GraphVisualizer} for use by the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} for use by the controller
-     */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
     }
 
     /**
@@ -102,10 +82,10 @@ public final class GenomeNavigateController implements Initializable {
                     .orElseThrow(() ->
                             new SQLException("Genome-base combination could not be found in database."));
 
-            hygeneInstance.getGraphDimensionsCalculator().getCenterNodeIdProperty().set(genomePoint.getNodeId());
+            graphDimensionsCalculator.getCenterNodeIdProperty().set(genomePoint.getNodeId());
 
             graphVisualizer.setSelectedSegment(genomePoint.getNodeId());
-            hygeneInstance.getSequenceVisualizer().setOffset(genomePoint.getBaseOffsetInNode());
+            sequenceVisualizer.setOffset(genomePoint.getBaseOffsetInNode());
         } catch (SQLException e) {
             LOGGER.error("Error while looking for genome-base index.", e);
             new WarningDialogue("Genome-base combination could not be found in graph.").show();

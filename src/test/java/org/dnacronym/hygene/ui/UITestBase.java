@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui;
 
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.dnacronym.hygene.ui.runnable.Hygene;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 
@@ -86,5 +89,46 @@ public abstract class UITestBase extends FxRobot {
      */
     public final Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    /**
+     * Injects members of the object annotated with {@code @Inject}.
+     *
+     * @param instance the object of which the members need to be injected
+     */
+    protected final void injectMembers(final Object instance) {
+        final CompletableFuture<Object> future = new CompletableFuture<>();
+
+        Platform.runLater(() -> {
+            try {
+                Hygene.getInstance().getContext().injectMembers(instance);
+            } catch (final UIInitialisationException e) {
+                e.printStackTrace();
+            }
+
+            future.complete(null);
+        });
+
+        try {
+            future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates instance of the given class.
+     *
+     * @param className name of the class
+     * @param <T> type of the class
+     * @return instance of the given class
+     */
+    protected final <T> T createInstance(final Class<T> className) {
+        try {
+            return Hygene.getInstance().getContext().getInstance(className);
+        } catch (UIInitialisationException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

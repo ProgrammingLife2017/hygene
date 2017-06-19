@@ -12,17 +12,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
-import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
-import org.dnacronym.hygene.ui.graph.GraphAnnotation;
-import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
-import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
+import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.node.SequenceVisualizer;
-import org.dnacronym.hygene.ui.progressbar.StatusBar;
-import org.dnacronym.hygene.ui.query.Query;
-import org.dnacronym.hygene.ui.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,31 +44,7 @@ public final class Hygene extends Application {
     @Inject
     private GraphStore graphStore;
     @Inject
-    private SimpleBookmarkStore simpleBookmarkStore;
-
-    @Inject
-    private GraphVisualizer graphVisualizer;
-    @Inject
-    private GraphMovementCalculator graphMovementCalculator;
-    @Inject
-    private GraphDimensionsCalculator graphDimensionsCalculator;
-
-    @Inject
-    private SequenceVisualizer sequenceVisualizer;
-
-    @Inject
-    private Query query;
-
-    @Inject
-    private GraphAnnotation graphAnnotation;
-    @Inject
-    private GenomeNavigation genomeNavigation;
-
-    @Inject
-    private StatusBar statusBar;
-
-    @Inject
-    private Settings settings;
+    private BookmarkStore bookmarkStore;
 
     private Stage primaryStage;
 
@@ -132,7 +99,7 @@ public final class Hygene extends Application {
 
 
         primaryStage.setOnCloseRequest(e -> {
-            simpleBookmarkStore.writeBookmarksToFile();
+            bookmarkStore.writeBookmarksToFile();
             Platform.exit();
         });
 
@@ -162,7 +129,7 @@ public final class Hygene extends Application {
             final String fileName = parameters.get("file");
             if (fileName != null) {
                 try {
-                    getGraphStore().loadGfaFile(new File(fileName),
+                    graphStore.loadGfaFile(new File(fileName),
                             (progress, message) -> LOGGER.info(progress + "% - " + message));
                 } catch (final IOException e) {
                     LOGGER.error(String.format("File %s could not be found.", fileName), e);
@@ -183,110 +150,20 @@ public final class Hygene extends Application {
     }
 
     /**
-     * Gets the {@link GraphStore} of the application.
-     *
-     * @return {@link GraphStore} of the application
-     */
-    public GraphStore getGraphStore() {
-        return graphStore;
-    }
-
-    /**
-     * Gets the {@link GraphVisualizer} of the application.
-     *
-     * @return {@link GraphVisualizer} of the application
-     */
-    public GraphVisualizer getGraphVisualizer() {
-        return graphVisualizer;
-    }
-
-    /**
-     * Gets the {@link SequenceVisualizer} of the application.
-     *
-     * @return {@link SequenceVisualizer} of the application
-     */
-    public SequenceVisualizer getSequenceVisualizer() {
-        return sequenceVisualizer;
-    }
-
-    /**
-     * Gets the {@link Settings} of the application.
-     *
-     * @return {@link Settings} of the application
-     */
-    public Settings getSettings() {
-        return settings;
-    }
-
-    /**
-     * Gets the {@link GraphMovementCalculator} of the application.
-     *
-     * @return {@link GraphMovementCalculator} of the application
-     */
-    public GraphMovementCalculator getGraphMovementCalculator() {
-        return graphMovementCalculator;
-    }
-
-    /**
-     * Gets the {@link GraphDimensionsCalculator} of the application.
-     *
-     * @return {@link GraphDimensionsCalculator} of the application
-     */
-    public GraphDimensionsCalculator getGraphDimensionsCalculator() {
-        return graphDimensionsCalculator;
-    }
-
-    /**
-     * Returns the {@link GenomeNavigation} of the application.
-     *
-     * @return the {@link GenomeNavigation} of the application
-     */
-    public GenomeNavigation getGenomeNavigation() {
-        return genomeNavigation;
-    }
-
-    /**
-     * Gets the {@link GraphAnnotation} of the application.
-     *
-     * @return the {@link GraphAnnotation} of the application
-     */
-    public GraphAnnotation getGraphAnnotation() {
-        return graphAnnotation;
-    }
-
-    /**
-     * Gets the {@link Query} of the application.
-     *
-     * @return the {@link Query} of the application
-     */
-    public Query getQuery() {
-        return query;
-    }
-
-    /**
-     * Gets the {@link SimpleBookmarkStore} of the application.
-     *
-     * @return {@link SimpleBookmarkStore} of the application
-     */
-    public SimpleBookmarkStore getSimpleBookmarkStore() {
-        return simpleBookmarkStore;
-    }
-
-    /**
-     * Gets the {@link StatusBar} of the application.
-     *
-     * @return the {@link StatusBar} of the application
-     */
-    public StatusBar getStatusBar() {
-        return statusBar;
-    }
-
-    /**
      * Gets the primary {@link Stage} of the application.
      *
      * @return primary {@link Stage} of the application
      */
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    /**
+     * Returns the Guice context.
+     *
+     * @return the Guice context
+     */
+    public GuiceContext getContext() {
+        return context;
     }
 }

@@ -9,6 +9,7 @@ import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +21,7 @@ import java.util.ResourceBundle;
 public final class ToolsMenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(ToolsMenuController.class);
 
+    @Inject
     private ConsoleView consoleView;
     private HelpMenuView helpMenuView;
 
@@ -37,16 +39,7 @@ public final class ToolsMenuController implements Initializable {
      */
     @FXML
     void openConsoleAction(final ActionEvent actionEvent) throws IOException {
-        try {
-            if (consoleView == null) {
-                consoleView = new ConsoleView();
-                LOGGER.info("Launched GUI console window");
-            }
-
-            consoleView.bringToFront();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error(e);
-        }
+        consoleView.bringToFront();
 
         actionEvent.consume();
     }

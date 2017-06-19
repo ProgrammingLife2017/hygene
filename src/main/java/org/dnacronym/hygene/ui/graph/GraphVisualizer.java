@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
+
 import javax.inject.Inject;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -24,11 +26,9 @@ import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
+import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 
@@ -79,6 +79,7 @@ public final class GraphVisualizer {
     private GraphicsContext graphicsContext;
     private final NodeDrawingToolkit nodeDrawingToolkit;
     private final GraphAnnotationVisualizer graphAnnotationVisualizer;
+    private final BookmarkStore bookmarkStore;
 
     private RTree rTree;
 
@@ -94,14 +95,18 @@ public final class GraphVisualizer {
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
+     * @param bookmarkStore             the {@link BookmarkStore} used to draw bookmark indications
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
-                           final GraphAnnotation graphAnnotation, final Query query) {
+                           final GraphAnnotation graphAnnotation,
+                           final Query query,
+                           final BookmarkStore bookmarkStore) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.graphAnnotation = graphAnnotation;
         this.query = query;
+        this.bookmarkStore = bookmarkStore;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
@@ -300,13 +305,6 @@ public final class GraphVisualizer {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
         }
 
-        SimpleBookmarkStore simpleBookmarkStore = null;
-        try {
-            simpleBookmarkStore = Hygene.getInstance().getSimpleBookmarkStore();
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to retrieve bookmarks.", e);
-        }
-
         clear();
         nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
@@ -314,7 +312,7 @@ public final class GraphVisualizer {
 
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
-                    simpleBookmarkStore != null && simpleBookmarkStore.containsBookmark(node),
+                    bookmarkStore != null && bookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
 
             node.getOutgoingEdges().forEach(this::drawEdge);
@@ -407,15 +405,15 @@ public final class GraphVisualizer {
             rTree.find(event.getX(), event.getY(),
                     this::setSelectedSegment,
                     (fromNodeId, toNodeId) -> graphDimensionsCalculator.getObservableQueryNodes().stream()
-                                .filter(node -> node instanceof Segment)
-                                .filter(node -> ((Segment) node).getId() == fromNodeId)
-                                .findFirst()
-                                .ifPresent(node -> node.getOutgoingEdges().stream()
-                                        .filter(edge -> edge.getTo() instanceof Segment
-                                                && ((Segment) edge.getTo()).getId() == toNodeId)
-                                        .findFirst()
-                                        .ifPresent(selectedEdgeProperty::setValue)
-                                )
+                            .filter(node -> node instanceof Segment)
+                            .filter(node -> ((Segment) node).getId() == fromNodeId)
+                            .findFirst()
+                            .ifPresent(node -> node.getOutgoingEdges().stream()
+                                    .filter(edge -> edge.getTo() instanceof Segment
+                                            && ((Segment) edge.getTo()).getId() == toNodeId)
+                                    .findFirst()
+                                    .ifPresent(selectedEdgeProperty::setValue)
+                            )
             );
         });
         canvas.setOnMouseMoved(event -> {

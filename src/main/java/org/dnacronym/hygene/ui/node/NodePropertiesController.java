@@ -9,12 +9,10 @@ import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,7 +23,9 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
+    @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
     private GraphVisualizer graphVisualizer;
 
     @FXML
@@ -40,20 +40,6 @@ public final class NodePropertiesController implements Initializable {
     private TextField rightNeighbours;
     @FXML
     private TextField position;
-
-
-    /**
-     * Create instance of {@link NodePropertiesController}.
-     */
-    public NodePropertiesController() {
-        try {
-            setGraphVisualiser(Hygene.getInstance().getGraphVisualizer());
-            setGraphDimensionsCalculator(Hygene.getInstance().getGraphDimensionsCalculator());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Failed to initialize NodePropertiesController.", e);
-            new ErrorDialogue(e).show();
-        }
-    }
 
 
     @Override

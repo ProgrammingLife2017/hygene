@@ -6,15 +6,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -23,8 +18,6 @@ import java.util.ResourceBundle;
  * Controller for the console window.
  */
 public final class ConsoleController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(ConsoleController.class);
-
     private static final String HYGENE_CONSOLE_LOGO = new StringBuilder()
             .append("   %......%\n")
             .append("   %      %       __  __   \n")
@@ -36,6 +29,7 @@ public final class ConsoleController implements Initializable {
             .append("   %      %\n")
             .append("   %......%\n\n").toString();
 
+    @Inject
     private GraphVisualizer graphVisualizer;
 
     @FXML
@@ -43,20 +37,6 @@ public final class ConsoleController implements Initializable {
 
     @FXML
     private TextField consoleInput;
-
-
-    /**
-     * Create instance of {@link ConsoleController}.
-     */
-    public ConsoleController() {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Failed to initialise ConsoleController.", e);
-            new ErrorDialogue(e).show();
-        }
-        HygeneEventBus.getInstance().register(this);
-    }
 
 
     @Override

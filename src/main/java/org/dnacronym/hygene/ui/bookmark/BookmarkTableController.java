@@ -7,12 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,10 +17,10 @@ import java.util.ResourceBundle;
  * Controller for showing of {@link SimpleBookmark}s.
  */
 public final class BookmarkTableController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(BookmarkTableController.class);
     private static final int DESCRIPTION_TEXT_PADDING = 10;
 
-    private SimpleBookmarkStore simpleBookmarkStore;
+    @Inject
+    private BookmarkStore bookmarkStore;
 
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
@@ -41,19 +37,6 @@ public final class BookmarkTableController implements Initializable {
     private TableColumn<SimpleBookmark, Number> radius;
     @FXML
     private TableColumn<SimpleBookmark, String> description;
-
-
-    /**
-     * Create new instance of a {@link BookmarkTableController}.
-     */
-    public BookmarkTableController() {
-        try {
-            setSimpleBookmarkStore(Hygene.getInstance().getSimpleBookmarkStore());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize BookmarkTableController.", e);
-            new ErrorDialogue(e).show();
-        }
-    }
 
 
     @Override
@@ -91,15 +74,6 @@ public final class BookmarkTableController implements Initializable {
             return simpleBookmarkTableRow;
         });
 
-        bookmarksTable.setItems(simpleBookmarkStore.getSimpleBookmarks());
-    }
-
-    /**
-     * Sets the {@link SimpleBookmarkStore} for use by the controller.
-     *
-     * @param simpleBookmarkStore {@link SimpleBookmarkStore} for use by the controller
-     */
-    void setSimpleBookmarkStore(final SimpleBookmarkStore simpleBookmarkStore) {
-        this.simpleBookmarkStore = simpleBookmarkStore;
+        bookmarksTable.setItems(bookmarkStore.getSimpleBookmarks());
     }
 }

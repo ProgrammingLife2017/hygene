@@ -20,13 +20,4 @@ final class HygeneTest extends UITestBase {
         assertThat(Hygene.getInstance().getPrimaryStage()).isEqualTo(getPrimaryStage());
     }
 
-    @Test
-    void testGetGraphStore() throws UIInitialisationException {
-        assertThat(Hygene.getInstance().getGraphStore()).isNotNull();
-    }
-
-    @Test
-    void testGetSimpleBookmarkStore() throws UIInitialisationException {
-        assertThat(Hygene.getInstance().getSimpleBookmarkStore()).isNotNull();
-    }
 }

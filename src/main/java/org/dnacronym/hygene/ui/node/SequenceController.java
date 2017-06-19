@@ -10,14 +10,11 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
-import org.dnacronym.hygene.ui.runnable.Hygene;
-import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,11 +23,13 @@ import java.util.ResourceBundle;
  * Controller for the sequence view.
  */
 public final class SequenceController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(SequenceController.class);
     private static final int CANVAS_PADDING = 10;
 
+    @Inject
     private SequenceVisualizer sequenceVisualizer;
+    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
     private GraphStore graphStore;
 
     @FXML
@@ -45,20 +44,6 @@ public final class SequenceController implements Initializable {
     private TextField setOffset;
     @FXML
     private TextArea sequenceTextArea;
-
-
-    /**
-     * Create instance of {@link SequenceController}.
-     */
-    public SequenceController() {
-        try {
-            setGraphVisualizer(Hygene.getInstance().getGraphVisualizer());
-            setSequenceVisualizer(Hygene.getInstance().getSequenceVisualizer());
-            setGraphStore(Hygene.getInstance().getGraphStore());
-        } catch (final UIInitialisationException e) {
-            LOGGER.error("Unable to initialize " + getClass().getSimpleName() + ".", e);
-        }
-    }
 
 
     @Override
@@ -84,30 +69,12 @@ public final class SequenceController implements Initializable {
     }
 
     /**
-     * Sets the {@link GraphVisualizer} for use by the controller.
-     *
-     * @param graphVisualizer the {@link GraphVisualizer} for use by the controller
-     */
-    void setGraphVisualizer(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
      * Sets the {@link SequenceVisualizer} for use by the controller.
      *
      * @param sequenceVisualizer the {@link SequenceVisualizer} for use by the controller
      */
     void setSequenceVisualizer(final SequenceVisualizer sequenceVisualizer) {
         this.sequenceVisualizer = sequenceVisualizer;
-    }
-
-    /**
-     * Sets the {@link GraphStore} for use by the controller.
-     *
-     * @param graphStore the {@link GraphStore} for use by the controller
-     */
-    void setGraphStore(final GraphStore graphStore) {
-        this.graphStore = graphStore;
     }
 
     /**
