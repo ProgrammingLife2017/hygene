@@ -1,7 +1,7 @@
 package org.dnacronym.hygene.parser;
 
-import org.dnacronym.hygene.graph.annotation.FeatureAnnotation;
-import org.dnacronym.hygene.graph.annotation.SubFeatureAnnotation;
+import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  */
 final class GffFileTest {
     private static final String DEFAULT_GFF_FILE = "src/test/resources/gff/simple.gff";
-    private FeatureAnnotation featureAnnotation;
+    private AnnotationCollection annotationCollection;
     private GffFile gffFile;
 
 
@@ -33,39 +33,25 @@ final class GffFileTest {
 
     @Test
     void testGetFeatureBeforeParsing() {
-        final Throwable throwable = catchThrowable(() -> gffFile.getFeatureAnnotation());
+        final Throwable throwable = catchThrowable(() -> gffFile.getAnnotationCollection());
 
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
     }
 
     /**
-     * These tests test that the created {@link FeatureAnnotation} corresponds with the canonical Gene encoded in the
+     * These tests test that the created {@link AnnotationCollection} corresponds with the canonical Gene encoded in the
      * file, as prescribed by the <a href="https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md">
      * GFF v3 specification</a>.
      */
 
     @Test
-    void testGeneChildren() throws GffParseException {
-        featureAnnotation = gffFile.parse(ProgressUpdater.DUMMY);
-        final SubFeatureAnnotation geneAnnotation = featureAnnotation.getSubFeatureAnnotations().get(0);
-
-        assertThat(geneAnnotation.getAttributes().get("ID")[0]).isEqualTo("gene00001");
-
-        final List<SubFeatureAnnotation> geneAnnotationChildren = geneAnnotation.getChildren();
-        assertThat(geneAnnotationChildren.get(0).getAttributes().get("ID")[0]).isEqualTo("tfbs00001");
-        assertThat(geneAnnotationChildren.get(1).getAttributes().get("ID")[0]).isEqualTo("mRNA00001");
-        assertThat(geneAnnotationChildren.get(2).getAttributes().get("ID")[0]).isEqualTo("mRNA00002");
-        assertThat(geneAnnotationChildren.get(3).getAttributes().get("ID")[0]).isEqualTo("mRNA00003");
-    }
-
-    @Test
     void testTranscript() throws GffParseException {
-        featureAnnotation = gffFile.parse(ProgressUpdater.DUMMY);
+        annotationCollection = gffFile.parse(ProgressUpdater.DUMMY);
 
-        final SubFeatureAnnotation transcriptedProtean1 = featureAnnotation.getSubFeatureAnnotations().get(10);
-        final SubFeatureAnnotation transcriptedProtean2 = featureAnnotation.getSubFeatureAnnotations().get(11);
-        final SubFeatureAnnotation transcriptedProtean3 = featureAnnotation.getSubFeatureAnnotations().get(12);
-        final SubFeatureAnnotation transcriptedProtean4 = featureAnnotation.getSubFeatureAnnotations().get(13);
+        final Annotation transcriptedProtean1 = annotationCollection.getAnnotations().get(10);
+        final Annotation transcriptedProtean2 = annotationCollection.getAnnotations().get(11);
+        final Annotation transcriptedProtean3 = annotationCollection.getAnnotations().get(12);
+        final Annotation transcriptedProtean4 = annotationCollection.getAnnotations().get(13);
 
         assertThat(transcriptedProtean1.getStart()).isEqualTo(1201);
         assertThat(transcriptedProtean1.getEnd()).isEqualTo(1500);
