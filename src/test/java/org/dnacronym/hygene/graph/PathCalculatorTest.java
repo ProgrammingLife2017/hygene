@@ -66,12 +66,13 @@ class PathCalculatorTest {
     }
 
     /**
-     * Test path calculator on the following type of graph:
-     * s2 -------
-     * /           \
+     * Test path calculator on the following type of graph.
+     * <p>
+     * s2 -----------
+     * /             \
      * s1-- s3--d1-d2-s4
-     * \           /
-     * s4--------
+     * \             /
+     * s4------------
      */
     @Test
     void testComputePathsWithDummyNodes1() {
@@ -87,10 +88,10 @@ class PathCalculatorTest {
         final Link e14 = connectNodes(segment1, segment4);
         final Link e24 = connectNodes(segment2, segment4);
 
-        final Link original_s3s4 = connectNodes(segment3, segment4);
-        final Edge e3d1 = connectNodes(segment3, dummy1, original_s3s4);
-        final Edge d1d2 = connectNodes(dummy1, dummy2, original_s3s4);
-        final Edge d2s4 = connectNodes(dummy2, segment4, original_s3s4);
+        final Link originals3s4 = connectNodes(segment3, segment4);
+        final Edge e3d1 = connectNodes(segment3, dummy1, originals3s4);
+        final Edge d1d2 = connectNodes(dummy1, dummy2, originals3s4);
+        final Edge d2s4 = connectNodes(dummy2, segment4, originals3s4);
 
 
         segment1.setMetadata(new NodeMetadata("-", "-", Arrays.asList("a", "b", "c", "d")));
@@ -112,9 +113,10 @@ class PathCalculatorTest {
     }
 
     /**
-     * Test path calculator on the following type of graph:
-     *      d1--s2--d2
-     *    /           \
+     * Test path calculator on the following type of graph.
+     * <p>
+     * d1--s2--d2-----
+     * /              \
      * s1--------------s3
      */
     @Test
@@ -127,13 +129,13 @@ class PathCalculatorTest {
 
         final Link e13 = connectNodes(segment1, segment3);
 
-        final Link original_s1s2 = connectNodes(segment1, segment2);
-        final DummyEdge s1d1 = connectNodes(segment1, dummy1, original_s1s2);
-        final DummyEdge d1s2 = connectNodes(dummy1, segment2, original_s1s2);
+        final Link originals1s2 = connectNodes(segment1, segment2);
+        final DummyEdge s1d1 = connectNodes(segment1, dummy1, originals1s2);
+        final DummyEdge d1s2 = connectNodes(dummy1, segment2, originals1s2);
 
-        final Link original_s2s3 = connectNodes(segment2, segment3);
-        final DummyEdge s2d2 = connectNodes(segment2, dummy2, original_s2s3);
-        final DummyEdge d2s3 = connectNodes(dummy2, segment3, original_s2s3);
+        final Link originals2s3 = connectNodes(segment2, segment3);
+        final DummyEdge s2d2 = connectNodes(segment2, dummy2, originals2s3);
+        final DummyEdge d2s3 = connectNodes(dummy2, segment3, originals2s3);
 
 
         segment1.setMetadata(new NodeMetadata("1", "-", Arrays.asList("a", "b", "c")));
@@ -152,9 +154,10 @@ class PathCalculatorTest {
     }
 
     /**
-     * Test path calculator on the following type of graph:
-     *     d1---d2
-     *    /       \
+     * Test path calculator on the following type of graph.
+     * <p>
+     * d1---d2-----
+     * /           \
      * s1----s2----s3
      */
     @Test
@@ -165,10 +168,10 @@ class PathCalculatorTest {
         final DummyNode dummy1 = new DummyNode(segment1, segment3);
         final DummyNode dummy2 = new DummyNode(segment1, segment3);
 
-        final Link original_s1s3 = connectNodes(segment1, segment3);
-        final DummyEdge s1d1 = connectNodes(segment1, dummy1, original_s1s3);
-        final DummyEdge d1d2 = connectNodes(dummy1, dummy2, original_s1s3);
-        final DummyEdge d2s3 = connectNodes(dummy2, segment3, original_s1s3);
+        final Link originals1s3 = connectNodes(segment1, segment3);
+        final DummyEdge s1d1 = connectNodes(segment1, dummy1, originals1s3);
+        final DummyEdge d1d2 = connectNodes(dummy1, dummy2, originals1s3);
+        final DummyEdge d2s3 = connectNodes(dummy2, segment3, originals1s3);
 
         final Link s1s2 = connectNodes(segment1, segment2);
         final Link s2s3 = connectNodes(segment2, segment3);
@@ -186,7 +189,6 @@ class PathCalculatorTest {
         assertThat(d2s3.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("a")));
         assertThat(s1s2.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b", "c")));
         assertThat(s2s3.getGenomes()).isEqualTo(new HashSet<>(Arrays.asList("b", "c")));
-
     }
 
     /**
@@ -211,7 +213,7 @@ class PathCalculatorTest {
      * @param original  the original {@link Link}
      * @return the {@link DummyEdge}
      */
-    private static DummyEdge connectNodes(final Node leftNode, final Node rightNode, Link original) {
+    private static DummyEdge connectNodes(final Node leftNode, final Node rightNode, final Link original) {
         final DummyEdge dummyEdge = new DummyEdge(leftNode, rightNode, original);
         leftNode.getOutgoingEdges().add(dummyEdge);
         rightNode.getIncomingEdges().add(dummyEdge);

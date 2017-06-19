@@ -3,7 +3,6 @@ package org.dnacronym.hygene.graph;
 import com.google.common.collect.HashMultimap;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.HashMap;
@@ -52,10 +51,11 @@ public final class PathCalculator {
      * @return map of {@link Edge}s for each {@link Segment}
      */
     HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
-        HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
+        final HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
 
         subgraph.getSegments().forEach(s -> {
-            final Set<Edge> edges = (edgeDirection == EdgeDirection.INCOMING) ? s.getIncomingEdges() : s.getOutgoingEdges();
+            final Set<Edge> edges =
+                    (edgeDirection == EdgeDirection.INCOMING) ? s.getIncomingEdges() : s.getOutgoingEdges();
 
             edges.stream().forEach(e -> {
                 if (e instanceof DummyEdge) {
@@ -76,7 +76,7 @@ public final class PathCalculator {
      * @param genomeStore   the genome store
      * @param incomingEdges map of incoming {@link Edge}s for each {@link Segment}
      * @param outgoingEdges map of outgoing {@link Edge}s for each {@link Segment}
-     * @return a topologically sorted list of the {@link Node}s in the given {@link Subgraph}
+     * @return a topologically sorted list of the {@link Segment}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
@@ -120,9 +120,9 @@ public final class PathCalculator {
     }
 
     /**
-     * Determines which {@link Node}s do not have any incoming edges.
+     * Determines which {@link Segment}s do not have any incoming edges.
      * <p>
-     * These {@link Node}s are considered to be connected to the theoretical source node of the {@link Graph}.
+     * These {@link Segment}s are considered to be connected to the theoretical source node of the {@link Graph}.
      *
      * @param subgraph the subgraph
      * @return a list of nodes with no incoming edges
@@ -134,11 +134,11 @@ public final class PathCalculator {
     }
 
     /**
-     * Uses a topologically ordered set of {@link Node}s to compute the edges' paths.
+     * Uses a topologically ordered set of {@link Segment}s to compute the edges' paths.
      *
-     * @param topologicalOrder a topologically ordered list of {@link Node}s
+     * @param topologicalOrder a topologically ordered list of {@link Segment}s
      * @param incomingEdges    map of incoming {@link Edge}s for each {@link Segment}
-     * @param genomeStore      a map mapping each {@link Node} to the genomes it is in
+     * @param genomeStore      a map mapping each {@link Segment} to the genomes it is in
      * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
     Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
