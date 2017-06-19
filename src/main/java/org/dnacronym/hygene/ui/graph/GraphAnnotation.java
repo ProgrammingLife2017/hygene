@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.graph;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.annotation.Annotation;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -27,15 +29,15 @@ public final class GraphAnnotation {
     private final Map<Annotation, GenomePoint> startPoints;
     private final Map<Annotation, GenomePoint> endPoints;
 
-    private GenomeIndex genomeIndex;
-    private AnnotationCollection annotationCollection;
+    private @Nullable GenomeIndex genomeIndex;
+    private @Nullable AnnotationCollection annotationCollection;
 
 
     /**
      * Constructs a new {@link GraphAnnotation}.
      *
      * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
-     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
+     * {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
      * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
      *                         update the {@link AnnotationCollection}s
      */
@@ -43,7 +45,11 @@ public final class GraphAnnotation {
     public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
         this.startPoints = new HashMap<>();
         this.endPoints = new HashMap<>();
-        this.genomeIndex = genomeNavigation.getGenomeIndexProperty().get();
+
+        Optional.ofNullable(genomeNavigation.getGenomeIndexProperty().get())
+                .ifPresent(genomeIndex -> this.genomeIndex = genomeIndex);
+        Optional.ofNullable(graphStore.getGffFileProperty().get())
+                .ifPresent(gffFile -> this.annotationCollection = gffFile.getAnnotationCollection());
 
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
             genomeIndex = newValue;
@@ -68,6 +74,9 @@ public final class GraphAnnotation {
     public List<Annotation> getAnnotationsInRange(final int rangeStart, final int rangeEnd) {
         return annotationCollection.getAnnotations().stream()
                 .filter(annotation -> {
+                    assert startPoints.containsKey(annotation);
+                    assert endPoints.containsKey(annotation);
+
                     final int annotationStart = startPoints.get(annotation).getNodeId();
                     final int annotationEnd = endPoints.get(annotation).getNodeId();
 
@@ -83,6 +92,10 @@ public final class GraphAnnotation {
     private void recalculateAnnotationPoints() {
         startPoints.clear();
         endPoints.clear();
+
+        if (genomeIndex == null) {
+            return;
+        }
 
         final String genomeName = annotationCollection.getSequenceId();
         annotationCollection.getAnnotations().forEach(annotation -> {
