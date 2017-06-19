@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
-import javax.inject.Inject;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -23,9 +22,6 @@ import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
-import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
-import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.node.NodeDrawingToolkit;
 import org.dnacronym.hygene.ui.query.Query;
