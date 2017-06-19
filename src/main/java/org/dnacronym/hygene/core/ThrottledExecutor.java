@@ -50,11 +50,10 @@ public class ThrottledExecutor {
             throw new IllegalArgumentException("The timeout must be a positive integer.");
         }
 
-        final ThreadPoolExecutor executor = new ThreadPoolExecutor(
+        this.executor = getExitingExecutorService(new ThreadPoolExecutor(
                 THREAD_COUNT, THREAD_COUNT, 0L, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(2, true),
-                new DiscardNewestPolicy());
-        this.executor = getExitingExecutorService(executor);
+                new DiscardNewestPolicy()));
     }
 
 
