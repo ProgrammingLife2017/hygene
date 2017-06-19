@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.graph;
 
-import org.dnacronym.hygene.graph.node.DummyNode;
+import com.google.common.collect.HashMultimap;
+import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
@@ -26,6 +28,10 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
+        final HashMultimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, EdgeType.INCOMING);
+
+        final HashMultimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, EdgeType.OUTGOING);
+
         final Map<Node, Set<String>> genomeStore = new HashMap<>();
 
         final List<Node> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore);
@@ -33,6 +39,34 @@ public final class PathCalculator {
         final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, genomeStore);
 
         addPathsToEdges(paths);
+    }
+
+    /**
+     * Builds a map of {@link Segment}s and their edges in the {@link Subgraph} for either the incoming or
+     * outgoing {@link Edge}s.
+     * <p>
+     * {@link DummyEdge}s will not be added but their original edge, for which they for a diversion will be added.
+     *
+     * @param subgraph the {@link Subgraph}
+     * @param edgeType the edge type {@link EdgeType}
+     * @return the edge map
+     */
+    HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeType edgeType) {
+        HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
+
+        subgraph.getSegments().forEach(s -> {
+            final Set<Edge> edges = (edgeType == EdgeType.INCOMING) ? s.getIncomingEdges() : s.getOutgoingEdges();
+
+            edges.stream().forEach(e -> {
+                if (e instanceof DummyEdge) {
+                    edgeMap.put(s, ((DummyEdge) e).getOriginalEdge());
+                } else {
+                    edgeMap.put(s, e);
+                }
+            });
+        });
+
+        return edgeMap;
     }
 
     /**
@@ -156,5 +190,10 @@ public final class PathCalculator {
      */
     void addPathsToEdges(final Map<Edge, Set<String>> paths) {
         paths.forEach(Edge::setGenomes);
+    }
+
+    enum EdgeType {
+        INCOMING,
+        OUTGOING
     }
 }
