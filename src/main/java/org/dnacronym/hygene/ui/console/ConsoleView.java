@@ -25,7 +25,7 @@ public final class ConsoleView {
     /**
      * Constructor for {@link ConsoleView}.
      *
-     * @param fxmlLoader a {@link FXMLLoader} instance for instantiating the new window
+     * @param fxmlLoader an {@link FXMLLoader} instance for instantiating the new window
      * @throws IOException               if there was an error locating or reading the FXML
      * @throws UIInitialisationException if there was an error initializing the provided FXML resource
      */
