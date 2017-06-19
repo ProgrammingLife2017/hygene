@@ -147,12 +147,13 @@ class NodeAggregatorTest {
     /**
      * Tests that aggregation fails if the neighbour of the node's neighbours has a neighbour that is not one of the
      * original node's neighbours.
-     * <p>
-     * B
-     * /   \
-     * A   D - E
-     * \   /
-     * C
+     * <p><pre>
+     * . . . B . . .
+     * . . / . \ . .
+     * . A . D - E .
+     * . . \ . / . .
+     * . . . C . . .
+     * </pre>
      */
     @Test
     void testAggregateNeighbourNeighbourHasOtherIncomingNeighbour() {
