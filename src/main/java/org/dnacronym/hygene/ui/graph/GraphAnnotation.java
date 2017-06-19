@@ -4,15 +4,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -23,78 +24,79 @@ import java.util.Map;
 public final class GraphAnnotation {
     private static final Logger LOGGER = LogManager.getLogger(GraphAnnotation.class);
 
-    private GenomeIndex genomeIndex;
+    private final Map<Annotation, GenomePoint> startPoints;
+    private final Map<Annotation, GenomePoint> endPoints;
 
-    private Map<AnnotationCollection, List<GenomePoint>> genomeIndexMap = new HashMap<>();
-    /**
-     * List that allows faster iteration over all {@link AnnotationCollection}s.
-     */
+    private GenomeIndex genomeIndex;
     private AnnotationCollection annotationCollection;
 
+
     /**
-     * Creates an instance of {@link GraphAnnotation}.
+     * Constructs a new {@link GraphAnnotation}.
      *
-     * @param genomeNavigation the {@link GenomeNavigation} used to retrieve {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
+     * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
+     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
      * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
      *                         update the {@link AnnotationCollection}s
      */
     @Inject
     public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
-        genomeIndex = genomeNavigation.getGenomeIndexProperty().get();
+        this.startPoints = new HashMap<>();
+        this.endPoints = new HashMap<>();
+        this.genomeIndex = genomeNavigation.getGenomeIndexProperty().get();
+
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
             genomeIndex = newValue;
-            genomeIndexMap.clear();
+            recalculateAnnotationPoints();
         });
-
         graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
-            final AnnotationCollection annotationCollection = newValue.getAnnotationCollection();
-            addFeatureAnnotation(annotationCollection);
+            annotationCollection = newValue.getAnnotationCollection();
+            recalculateAnnotationPoints();
         });
     }
 
+
+    /**
+     * Returns a list of the {@link Annotation}s that are in the specified range.
+     * <p>
+     * This method assumes that node ids are in topological order.
+     *
+     * @param rangeStart the id of the left-most node
+     * @param rangeEnd   the id of the right-most node
+     * @return a list of the {@link Annotation}s that are in the specified range
+     */
+    public List<Annotation> getAnnotationsInRange(final int rangeStart, final int rangeEnd) {
+        return annotationCollection.getAnnotations().stream()
+                .filter(annotation -> {
+                    final int annotationStart = startPoints.get(annotation).getNodeId();
+                    final int annotationEnd = endPoints.get(annotation).getNodeId();
+
+                    return rangeStart < annotationEnd && rangeEnd >= annotationStart;
+                })
+                .collect(Collectors.toList());
+    }
 
     /**
      * Adds a {@link AnnotationCollection}, and add {@link GenomePoint}s which denote the start and end points of this
      * annotation in the graph.
-     *
-     * @param annotationCollection the {@link AnnotationCollection} to add
-     * @throws SQLException if an error occurred whilst creating {@link GenomePoint}s
      */
-    private void addFeatureAnnotation(final AnnotationCollection annotationCollection) {
+    private void recalculateAnnotationPoints() {
+        startPoints.clear();
+        endPoints.clear();
+
         final String genomeName = annotationCollection.getSequenceId();
-        final int startOffset = annotationCollection.getAnnotations().get(0).getStart();
-        final int endOffset = annotationCollection.getAnnotations().get(0).getEnd();
+        annotationCollection.getAnnotations().forEach(annotation -> {
+            final int startOffset = annotation.getStart();
+            final int endOffset = annotation.getEnd();
 
-        final List<GenomePoint> genomePoints = new ArrayList<>(2);
-
-        try {
-            genomeIndex.getGenomePoint(genomeName, startOffset).ifPresent(genomePoints::add);
-            genomeIndex.getGenomePoint(genomeName, endOffset).ifPresent(genomePoints::add);
-
-            genomeIndexMap.put(annotationCollection, genomePoints);
-            this.annotationCollection = annotationCollection;
-        } catch (final SQLException e) {
-            LOGGER.error("Unable to add an annotation.", e);
-        }
-    }
-
-    /**
-     * Returns the {@link Map} of {@link AnnotationCollection}s and {@link GenomePoint}s denoting the start and end
-     * points of each {@link AnnotationCollection}.
-     *
-     * @return the {@link Map} of {@link AnnotationCollection}s and {@link GenomePoint}s denoting the start and end
-     * points of each {@link AnnotationCollection}.
-     */
-    public Map<AnnotationCollection, List<GenomePoint>> getGenomeIndexMap() {
-        return genomeIndexMap;
-    }
-
-    /**
-     * Returns the {@link List} of {@link AnnotationCollection}s stored internally.
-     *
-     * @return the {@link List} of {@link AnnotationCollection}s stored internally
-     */
-    public AnnotationCollection getAnnotationCollection() {
-        return annotationCollection;
+            try {
+                genomeIndex.getGenomePoint(genomeName, startOffset)
+                        .ifPresent(genomePoint -> startPoints.put(annotation, genomePoint));
+                genomeIndex.getGenomePoint(genomeName, endOffset)
+                        .ifPresent(genomePoint -> endPoints.put(annotation, genomePoint));
+            } catch (final SQLException e) {
+                LOGGER.error("Could not add an annotation.", e);
+            }
+        });
     }
 }
