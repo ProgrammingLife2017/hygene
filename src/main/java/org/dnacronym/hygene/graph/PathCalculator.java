@@ -53,15 +53,15 @@ public final class PathCalculator {
     HashMultimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final EdgeDirection edgeDirection) {
         final HashMultimap<Segment, Edge> edgeMap = HashMultimap.create();
 
-        subgraph.getSegments().forEach(s -> {
+        subgraph.getSegments().forEach(segment -> {
             final Set<Edge> edges =
-                    (edgeDirection == EdgeDirection.INCOMING) ? s.getIncomingEdges() : s.getOutgoingEdges();
+                    (edgeDirection == EdgeDirection.INCOMING) ? segment.getIncomingEdges() : segment.getOutgoingEdges();
 
-            edges.stream().forEach(e -> {
-                if (e instanceof DummyEdge) {
-                    edgeMap.put(s, ((DummyEdge) e).getOriginalEdge());
+            edges.forEach(edge -> {
+                if (edge instanceof DummyEdge) {
+                    edgeMap.put(segment, ((DummyEdge) edge).getOriginalEdge());
                 } else {
-                    edgeMap.put(s, e);
+                    edgeMap.put(segment, edge);
                 }
             });
         });
