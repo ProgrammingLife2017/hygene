@@ -35,8 +35,8 @@ public final class GraphAnnotation {
      * Creates an instance of {@link GraphAnnotation}.
      *
      * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
-     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es.
-     * @param graphStore       the {@link GraphStore} who's {@link GffFile}s are used to update the
+     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
+     * @param graphStore       the {@link GraphStore} whose {@link GffFile}s are used to update the
      *                         {@link AnnotationCollection}s
      */
     @Inject

@@ -14,7 +14,6 @@ import java.util.List;
  */
 public final class AnnotationCollection {
     private final String sequenceId;
-
     private final List<Annotation> annotations;
     private final List<String> metadata;
 
