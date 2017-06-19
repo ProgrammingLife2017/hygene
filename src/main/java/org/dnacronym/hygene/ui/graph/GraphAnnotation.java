@@ -29,13 +29,12 @@ public final class GraphAnnotation {
     /**
      * List that allows faster iteration over all {@link AnnotationCollection}s.
      */
-    private List<AnnotationCollection> annotationCollections = new ArrayList<>();
+    private AnnotationCollection annotationCollection;
 
     /**
      * Creates an instance of {@link GraphAnnotation}.
      *
-     * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
-     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
+     * @param genomeNavigation the {@link GenomeNavigation} used to retrieve {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
      * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
      *                         update the {@link AnnotationCollection}s
      */
@@ -61,7 +60,7 @@ public final class GraphAnnotation {
      * @param annotationCollection the {@link AnnotationCollection} to add
      * @throws SQLException if an error occurred whilst creating {@link GenomePoint}s
      */
-    public void addFeatureAnnotation(final AnnotationCollection annotationCollection) {
+    private void addFeatureAnnotation(final AnnotationCollection annotationCollection) {
         final String genomeName = annotationCollection.getSequenceId();
         final int startOffset = annotationCollection.getAnnotations().get(0).getStart();
         final int endOffset = annotationCollection.getAnnotations().get(0).getEnd();
@@ -73,7 +72,7 @@ public final class GraphAnnotation {
             genomeIndex.getGenomePoint(genomeName, endOffset).ifPresent(genomePoints::add);
 
             genomeIndexMap.put(annotationCollection, genomePoints);
-            annotationCollections.add(annotationCollection);
+            this.annotationCollection = annotationCollection;
         } catch (final SQLException e) {
             LOGGER.error("Unable to add an annotation.", e);
         }
@@ -95,7 +94,7 @@ public final class GraphAnnotation {
      *
      * @return the {@link List} of {@link AnnotationCollection}s stored internally
      */
-    public List<AnnotationCollection> getAnnotationCollections() {
-        return annotationCollections;
+    public AnnotationCollection getAnnotationCollection() {
+        return annotationCollection;
     }
 }
