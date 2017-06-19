@@ -72,7 +72,7 @@ final class GraphStoreTest extends UITestBase {
             }
 
             Platform.runLater(() -> {
-                assertThat(graphStore.getGffFiles().get()).isNotEmpty();
+                assertThat(graphStore.getGffFileProperty().get()).isNotNull();
                 future.complete(null);
             });
         });

@@ -2,11 +2,7 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.parser.GfaParseException;
@@ -31,9 +27,7 @@ public final class GraphStore {
     public static final String GFF_FILE_NAME = "GFF";
 
     private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
-
-    private final ObservableList<GffFile> gffFiles = FXCollections.observableArrayList();
-    private final ReadOnlyListWrapper<GffFile> readOnlyGffFiles = new ReadOnlyListWrapper<>(gffFiles);
+    private final ObjectProperty<GffFile> gffFileProperty = new SimpleObjectProperty<>();
 
 
     /**
@@ -44,7 +38,7 @@ public final class GraphStore {
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
      * @see GfaFile#parse(ProgressUpdater)
      */
-    public void loadGfaFile(@NonNull final File file, final ProgressUpdater progressUpdater) throws IOException {
+    public void loadGfaFile(final File file, final ProgressUpdater progressUpdater) throws IOException {
         try {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
             gfaFile.parse(progressUpdater);
@@ -65,12 +59,12 @@ public final class GraphStore {
      * @throws IOException if unable to get the GFA file, file is not a gfa file, or unable to parse the file
      * @see GfaFile#parse(ProgressUpdater)
      */
-    public void loadGffFile(@NonNull final File file, final ProgressUpdater progressUpdater) throws IOException {
+    public void loadGffFile(final File file, final ProgressUpdater progressUpdater) throws IOException {
         try {
             final GffFile gffFile = new GffFile(file.getAbsolutePath());
             gffFile.parse(progressUpdater);
 
-            Platform.runLater(() -> gffFiles.add(gffFile));
+            Platform.runLater(() -> gffFileProperty.set(gffFile));
         } catch (final GffParseException e) {
             throw new IOException(e);
         }
@@ -86,11 +80,11 @@ public final class GraphStore {
     }
 
     /**
-     * Gets the {@link ReadOnlyListWrapper} that stores all the {@link GffFile}s loaded into memory.
+     * Gets the {@link ObjectProperty} that stores the {@link GffFile}s loaded into memory.
      *
-     * @return the {@link ReadOnlyListWrapper} that stores all the {@link GffFile}s loaded into memory
+     * @return the {@link ObjectProperty} that stores the {@link GffFile}s loaded into memory
      */
-    public ReadOnlyListWrapper<GffFile> getGffFiles() {
-        return readOnlyGffFiles;
+    public ObjectProperty<GffFile> getGffFileProperty() {
+        return gffFileProperty;
     }
 }

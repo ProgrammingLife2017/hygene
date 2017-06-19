@@ -1,14 +1,13 @@
 package org.dnacronym.hygene.ui.graph;
 
-import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
-import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 
+import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +16,8 @@ import java.util.Map;
 
 
 /**
- * Stores all {@link AnnotationCollection} of the {@link GffFile}s in memory for quick retrieval.
+ * Stores all {@link AnnotationCollection} of the {@link org.dnacronym.hygene.parser.GffFile}s in memory for quick
+ * retrieval.
  */
 @SuppressWarnings("PMD.ImmutableField") // The values are set via event listeners, so they should not be immutable
 public final class GraphAnnotation {
@@ -36,8 +36,8 @@ public final class GraphAnnotation {
      *
      * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
      *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
-     * @param graphStore       the {@link GraphStore} whose {@link GffFile}s are used to update the
-     *                         {@link AnnotationCollection}s
+     * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
+     *                         update the {@link AnnotationCollection}s
      */
     @Inject
     public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
@@ -47,15 +47,9 @@ public final class GraphAnnotation {
             genomeIndexMap.clear();
         });
 
-        graphStore.getGffFiles().addListener((observable, oldValue, newValue) -> {
-            for (final GffFile gffFile : newValue) {
-                final AnnotationCollection annotationCollection = gffFile.getAnnotationCollection();
-                if (genomeIndexMap.containsKey(annotationCollection)) {
-                    continue;
-                }
-
-                addFeatureAnnotation(annotationCollection);
-            }
+        graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
+            final AnnotationCollection annotationCollection = newValue.getAnnotationCollection();
+            addFeatureAnnotation(annotationCollection);
         });
     }
 
