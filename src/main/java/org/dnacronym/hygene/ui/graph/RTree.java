@@ -97,7 +97,7 @@ public final class RTree {
             }
         } catch (final NoSuchElementException e) {
             // There is no need to log the exception itself.
-            LOGGER.info("No node or edge found at position (" + x + ", " + y + ").");
+            LOGGER.debug("No node or edge found at position (" + x + ", " + y + ").");
         }
     }
 }
