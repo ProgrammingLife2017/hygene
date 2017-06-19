@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.node;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.ui.drawing.NodeDrawingToolkit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

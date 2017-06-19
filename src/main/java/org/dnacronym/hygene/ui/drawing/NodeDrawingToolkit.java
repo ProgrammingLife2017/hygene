@@ -1,9 +1,11 @@
-package org.dnacronym.hygene.ui.node;
+package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.List;
 
 
 /**
@@ -12,7 +14,7 @@ import javafx.scene.text.Text;
  * This class deals with the drawing of nodes. This includes highlighting a node, drawing text in a node and drawing
  * a bookmark identifier of a node.
  */
-public final class NodeDrawingToolkit {
+public final class NodeDrawingToolkit implements DrawingToolkit {
     private static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     private static final int NODE_OUTLINE_WIDTH = 3;
     private static final int ARC_SIZE = 10;
@@ -39,6 +41,7 @@ public final class NodeDrawingToolkit {
      *
      * @param graphicsContext the {@link GraphicsContext} to set
      */
+    @Override
     public void setGraphicsContext(final GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
     }
@@ -85,6 +88,26 @@ public final class NodeDrawingToolkit {
     public void fillNode(final double nodeX, final double nodeY, final double nodeWidth, final Color fill) {
         graphicsContext.setFill(fill);
         graphicsContext.fillRoundRect(nodeX, nodeY, nodeWidth, nodeHeight, ARC_SIZE, ARC_SIZE);
+    }
+
+    /**
+     * Fills a rectangle based on the node position and width.
+     * <p>
+     * Each color is drawn as a single horizontal band.
+     *
+     * @param nodeX     the top left x position of the node
+     * @param nodeY     the top left y position of the node
+     * @param nodeWidth the width of the node
+     * @param colors    colors of this node which are drawn as horizontal bands
+     */
+    public void fillNode(final double nodeX, final double nodeY, final double nodeWidth, final List<Color> colors) {
+        double colorBandY = nodeY;
+        for (final Color color : colors) {
+            graphicsContext.setFill(color);
+            graphicsContext.fillRoundRect(nodeX, colorBandY, nodeWidth, nodeHeight / colors.size(), ARC_SIZE, ARC_SIZE);
+
+            colorBandY += nodeHeight / colors.size();
+        }
     }
 
     /**
