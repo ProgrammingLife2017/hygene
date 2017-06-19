@@ -11,6 +11,7 @@ import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,16 @@ public final class GraphAnnotation {
      * @return a list of the {@link Annotation}s that are in the specified range
      */
     public List<Annotation> getAnnotationsInRange(final int rangeStart, final int rangeEnd) {
+        if (rangeStart > rangeEnd) {
+            throw new IllegalArgumentException("Range start must be no larger than range end.");
+        }
+        if (rangeStart < 0) {
+            throw new IllegalArgumentException("Range cannot start below 0.");
+        }
+        if (annotationCollection == null) {
+            return new ArrayList<>();
+        }
+
         return annotationCollection.getAnnotations().stream()
                 .filter(annotation -> {
                     assert startPoints.containsKey(annotation);
