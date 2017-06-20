@@ -51,6 +51,7 @@ public final class GraphAnnotation {
                 .ifPresent(genomeIndex -> this.genomeIndex = genomeIndex);
         Optional.ofNullable(graphStore.getGffFileProperty().get())
                 .ifPresent(gffFile -> this.annotationCollection = gffFile.getAnnotationCollection());
+        recalculateAnnotationPoints();
 
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
             genomeIndex = newValue;
@@ -104,7 +105,7 @@ public final class GraphAnnotation {
         startPoints.clear();
         endPoints.clear();
 
-        if (genomeIndex == null) {
+        if (genomeIndex == null || annotationCollection == null) {
             return;
         }
 
