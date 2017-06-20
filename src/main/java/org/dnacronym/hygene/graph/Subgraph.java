@@ -255,8 +255,7 @@ public final class Subgraph {
         nodes.remove(node.getUuid());
 
         if (node instanceof Segment) {
-            final Segment segment = (Segment) node;
-            segments.remove(segment.getId());
+            segments.remove(((Segment) node).getId());
         }
     }
 }
