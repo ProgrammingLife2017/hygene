@@ -4,11 +4,17 @@ import javafx.scene.canvas.GraphicsContext;
 
 
 /**
- * These toolkit's are used for drawing.
+ * These toolkits are used for drawing.
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod") // This class doesn't need abstract methods
 public abstract class DrawingToolkit {
     static final double ANNOTATION_DASH_LENGTH = 10;
+    /**
+     * Default dash value.
+     * <p>
+     * When passed to {@link GraphicsContext#setLineDashes(double...)}, it turns off dashing.
+     */
+    static final int ANNOTATION_DASH_DEFAULT = 0;
 
     private double annotationHeight = 2;
     private GraphicsContext graphicsContext;
@@ -33,18 +39,18 @@ public abstract class DrawingToolkit {
     }
 
     /**
-     * Sets the height of annotation bands.
+     * Sets the height of annotation lanes.
      *
-     * @param annotationHeight the height of annotation bands
+     * @param annotationHeight the height of annotation lanes
      */
     public final void setAnnotationHeight(final double annotationHeight) {
         this.annotationHeight = annotationHeight;
     }
 
     /**
-     * Returns the height of annotation bands.
+     * Returns the height of annotation lanes.
      *
-     * @return the height of annotation bands
+     * @return the height of annotation lanes
      */
     protected final double getAnnotationHeight() {
         return annotationHeight;

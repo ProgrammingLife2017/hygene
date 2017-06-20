@@ -143,7 +143,7 @@ public final class GraphVisualizer {
      * <p>
      * Node outlines are also drawn when one of the following conditions are met:
      * If selected, it is {@link NodeDrawingToolkit.HighlightType#SELECTED}.<br>
-     * If it is not selected, and highlighted, it is {@link NodeDrawingToolkit.HighlightType#SELECTED}.<br>
+     * If it is not selected, and highlighted, it is {@link NodeDrawingToolkit.HighlightType#HIGHLIGHTED}.<br>
      * If it is not highlighted, and queried, it is {@link NodeDrawingToolkit.HighlightType#QUERIED}.<br>
      * If it is not queried, and bookmarked, is it {@link NodeDrawingToolkit.HighlightType#BOOKMARKED}.
      * <p>

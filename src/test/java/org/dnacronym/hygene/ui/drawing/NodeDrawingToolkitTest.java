@@ -52,7 +52,7 @@ final class NodeDrawingToolkitTest {
     @Test
     void testNodePaths() {
         nodeDrawingToolkit.setNodeHeight(10);
-        nodeDrawingToolkit.drawNodePaths(20, 30, 40, Arrays.asList(Color.BLUE, Color.RED));
+        nodeDrawingToolkit.drawNodeGenomes(20, 30, 40, Arrays.asList(Color.BLUE, Color.RED));
 
         verify(graphicsContext, atLeast(1)).setFill(eq(Color.BLUE));
         verify(graphicsContext, atLeast(1)).setFill(eq(Color.RED));

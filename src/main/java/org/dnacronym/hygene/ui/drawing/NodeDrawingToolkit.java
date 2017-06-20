@@ -74,28 +74,29 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * @param color     the {@link Color} to fill the node with
      */
     public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final Color color) {
-        drawNodePaths(nodeX, nodeY, nodeWidth, Collections.singletonList(color));
+        drawNodeGenomes(nodeX, nodeY, nodeWidth, Collections.singletonList(color));
     }
 
     /**
      * Fills a round rectangle based on the node position and width.
      * <p>
-     * The path colors are spread evenly across the width of the node. They are drawn as bands along the node.
+     * The genome colors are spread evenly across the height of the node. They are drawn as bands along the node.
      *
      * @param nodeX      the top left x position of the node
      * @param nodeY      the top left y position of the node
      * @param nodeWidth  the width of the node
      * @param pathColors the colors of the paths going through the node
      */
-    public void drawNodePaths(final double nodeX, final double nodeY, final double nodeWidth,
-                              final List<Color> pathColors) {
-        double colorBandY = nodeY;
-        final double bandHeight = nodeHeight / pathColors.size();
+    public void drawNodeGenomes(final double nodeX, final double nodeY, final double nodeWidth,
+                                final List<Color> pathColors) {
+        double laneHeightOffset = nodeY;
+        final double laneHeight = nodeHeight / pathColors.size();
+
         for (final Color color : pathColors) {
             getGraphicsContext().setFill(color);
-            getGraphicsContext().fillRoundRect(nodeX, colorBandY, nodeWidth, bandHeight, ARC_SIZE, ARC_SIZE);
+            getGraphicsContext().fillRoundRect(nodeX, laneHeightOffset, nodeWidth, laneHeight, ARC_SIZE, ARC_SIZE);
 
-            colorBandY += bandHeight;
+            laneHeightOffset += laneHeight;
         }
     }
 
@@ -114,15 +115,15 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
         getGraphicsContext().setLineWidth(getAnnotationHeight());
 
-        double annotationY = nodeY + nodeHeight + getAnnotationHeight() + getAnnotationHeight() / 2;
+        double annotationYOffset = nodeY + nodeHeight + getAnnotationHeight() + getAnnotationHeight() / 2;
         for (final Color color : annotationColors) {
             getGraphicsContext().setStroke(color);
-            getGraphicsContext().strokeLine(nodeX, annotationY, nodeX + nodeWidth, annotationY);
+            getGraphicsContext().strokeLine(nodeX, annotationYOffset, nodeX + nodeWidth, annotationYOffset);
 
-            annotationY += getAnnotationHeight();
+            annotationYOffset += getAnnotationHeight();
         }
 
-        getGraphicsContext().setLineDashes(1);
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_DEFAULT);
     }
 
     /**

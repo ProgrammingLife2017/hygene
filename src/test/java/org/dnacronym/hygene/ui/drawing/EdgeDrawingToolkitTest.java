@@ -40,7 +40,7 @@ final class EdgeDrawingToolkitTest {
 
     @Test
     void testDrawEdgeTwoPaths() {
-        drawingToolkit.drawEdgePaths(10, 20, 30, 40, 50, Arrays.asList(Color.BEIGE, Color.BLUE));
+        drawingToolkit.drawEdgeGenomes(10, 20, 30, 40, 50, Arrays.asList(Color.BEIGE, Color.BLUE));
 
         verify(graphicsContext).setLineWidth(eq(25d));
 
