@@ -29,6 +29,7 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 
 /**
@@ -70,6 +71,8 @@ public final class GraphVisualizer {
     private final DoubleProperty nodeHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
+
+    private ObjectProperty<Map<String, String>> genomeMapping;
 
     private Graph graph;
 
@@ -125,8 +128,13 @@ public final class GraphVisualizer {
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
+        genomeMapping = new SimpleObjectProperty<>();
+
         graphDimensionsCalculator.getGraphProperty()
-                .addListener((observable, oldValue, newValue) -> setGraph(newValue));
+                .addListener((observable, oldValue, newValue) -> {
+                    setGraph(newValue);
+                    genomeMapping.set(newValue.getGfaFile().getGenomeMapping());
+                });
         graphDimensionsCalculator.getObservableQueryNodes()
                 .addListener((ListChangeListener<Node>) change -> draw());
 
@@ -526,5 +534,14 @@ public final class GraphVisualizer {
      */
     public BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;
+    }
+
+    /**
+     * The property which contains a map of genome mappings.
+     *
+     * @return property which contain a map genome mappings.
+     */
+    public ObjectProperty<Map<String, String>> genomeMappingProperty() {
+        return genomeMapping;
     }
 }
