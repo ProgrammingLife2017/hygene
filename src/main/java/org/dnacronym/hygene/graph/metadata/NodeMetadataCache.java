@@ -122,12 +122,9 @@ public final class NodeMetadataCache {
             final Map<Integer, NodeMetadata> metadata
                     = gfaFile.parseNodeMetadata(sortedSegmentsWithoutMetadata);
 
-            metadata.entrySet().forEach(entry -> {
-                final Segment segment = subgraph.getSegment(entry.getKey());
-                if (segment != null) {
-                    segment.setMetadata(entry.getValue());
-                }
-            });
+            metadata.entrySet().forEach(entry ->
+                    subgraph.getSegment(entry.getKey())
+                            .ifPresent(segment -> segment.setMetadata(entry.getValue())));
         } catch (final MetadataParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
         }
