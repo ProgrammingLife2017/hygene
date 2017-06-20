@@ -133,15 +133,6 @@ public abstract class Node implements LayoutableNode {
 
 
     /**
-     * Returns the color scheme.
-     *
-     * @return the color scheme
-     */
-    public static ColorScheme getColorScheme() {
-        return colorScheme;
-    }
-
-    /**
      * Sets the color scheme.
      *
      * @param colorScheme the color scheme
