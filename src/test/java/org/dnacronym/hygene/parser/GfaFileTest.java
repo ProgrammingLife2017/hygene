@@ -122,7 +122,7 @@ final class GfaFileTest {
         final Map<String, String> mapping = new HashMap<>();
         mapping.put("basta.fasta", "123");
         gfaFile.setGenomeMapping(mapping);
-        
+
         assertThat(gfaFile.getGenomeMapping()).containsExactly(entry("basta.fasta", "123"));
     }
 
