@@ -87,7 +87,8 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * @param nodeWidth  the width of the node
      * @param pathColors the colors of the paths going through the node
      */
-    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final List<Color> pathColors) {
+    public void drawNodePaths(final double nodeX, final double nodeY, final double nodeWidth,
+                              final List<Color> pathColors) {
         double colorBandY = nodeY;
         final double bandHeight = nodeHeight / pathColors.size();
         for (final Color color : pathColors) {
@@ -107,17 +108,14 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * @param nodeX            the top left x position of the node
      * @param nodeY            the top left y position of the node
      * @param nodeWidth        the width of the node
-     * @param pathColors       the colors of the paths going through the node
      * @param annotationColors the colors of the annotations going through the node
      */
-    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final List<Color> pathColors,
-                         final List<Color> annotationColors) {
-        drawNode(nodeX, nodeY, nodeWidth, pathColors);
-
+    public void drawNodeAnnotations(final double nodeX, final double nodeY, final double nodeWidth,
+                                    final List<Color> annotationColors) {
         graphicsContext.setLineDashes(ANNOTATION_DASH_LENGTH);
         graphicsContext.setLineWidth(ANNOTATION_HEIGHT);
 
-        double annotationY = nodeY + nodeHeight + ANNOTATION_HEIGHT / 2;
+        double annotationY = nodeY + nodeHeight + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
         for (final Color color : annotationColors) {
             graphicsContext.setStroke(color);
             graphicsContext.strokeLine(nodeX, annotationY, nodeX + nodeWidth, annotationY);

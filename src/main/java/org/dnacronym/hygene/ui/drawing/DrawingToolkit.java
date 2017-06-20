@@ -7,7 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
  * These toolkit's are used for drawing.
  */
 public abstract class DrawingToolkit {
-    static final double ANNOTATION_HEIGHT = 5;
+    static final double ANNOTATION_HEIGHT = 4;
     static final double ANNOTATION_DASH_LENGTH = 10;
 
     GraphicsContext graphicsContext;

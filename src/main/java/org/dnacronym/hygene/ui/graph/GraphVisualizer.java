@@ -49,7 +49,7 @@ public final class GraphVisualizer {
     private static final double DEFAULT_NODE_HEIGHT = 20;
     private static final double DEFAULT_DASH_LENGTH = 10;
 
-    private static final double DEFAULT_EDGE_THICKNESS = 1;
+    private static final double DEFAULT_EDGE_THICKNESS = 3;
     private static final Color DEFAULT_EDGE_COLOR = Color.GREY;
     private static final int EDGE_OPACITY_OFFSET = 20;
     private static final double EDGE_OPACITY_ALPHA = 1.5;
@@ -221,7 +221,7 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), getEdgeColor());
+        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), edgeColor);
     }
 
     /**

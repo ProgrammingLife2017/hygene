@@ -33,7 +33,7 @@ final class NodeDrawingToolkitTest {
     @Test
     void testNodeHeight() {
         nodeDrawingToolkit.setNodeHeight(10);
-        nodeDrawingToolkit.drawNode(0, 0, 10, Color.BLACK);
+        nodeDrawingToolkit.drawNodeAnnotations(0, 0, 10, Color.BLACK);
 
         verify(graphicsContext).fillRoundRect(
                 anyDouble(), anyDouble(), anyDouble(), eq(10.0), anyDouble(), anyDouble());
@@ -41,7 +41,7 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testNodeColorDraw() {
-        nodeDrawingToolkit.drawNode(10, 20, 30, Color.ALICEBLUE);
+        nodeDrawingToolkit.drawNodeAnnotations(10, 20, 30, Color.ALICEBLUE);
 
         verify(graphicsContext).setFill(Color.ALICEBLUE);
         verify(graphicsContext).fillRoundRect(10, 20, 30, 0, 10, 10);

@@ -24,7 +24,7 @@ public class EdgeDrawingToolkit extends DrawingToolkit {
      */
     public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
                          final double edgeWidth, final Color color) {
-        drawEdge(fromX, fromY, toX, toY, edgeWidth, Collections.singletonList(color));
+        drawEdgePaths(fromX, fromY, toX, toY, edgeWidth, Collections.singletonList(color));
     }
 
     /**
@@ -39,8 +39,8 @@ public class EdgeDrawingToolkit extends DrawingToolkit {
      * @param edgeWidth  the width of the edge
      * @param pathColors the colors of the paths going through the edge
      */
-    public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
-                         final double edgeWidth, final List<Color> pathColors) {
+    public void drawEdgePaths(final double fromX, final double fromY, final double toX, final double toY,
+                              final double edgeWidth, final List<Color> pathColors) {
         final double lineHeight = edgeWidth / pathColors.size();
         graphicsContext.setLineWidth(lineHeight);
 
@@ -66,18 +66,15 @@ public class EdgeDrawingToolkit extends DrawingToolkit {
      * @param toX              the x position of the destination of the edge
      * @param toY              the y position of the destination of the edge
      * @param edgeWidth        the width of the edge
-     * @param pathColors       the colors of the paths going through the edge
      * @param annotationColors the colors of the annotations
      */
-    public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
-                         final double edgeWidth, final List<Color> pathColors, final List<Color> annotationColors) {
-        drawEdge(fromX, fromY, toX, toY, edgeWidth, pathColors);
-
+    public void drawEdgeAnnotations(final double fromX, final double fromY, final double toX, final double toY,
+                                    final double edgeWidth, final List<Color> annotationColors) {
         graphicsContext.setLineDashes(ANNOTATION_DASH_LENGTH);
         graphicsContext.setLineWidth(ANNOTATION_HEIGHT);
 
-        double annotationFromY = fromY + edgeWidth + ANNOTATION_HEIGHT / 2;
-        double annotationToY = toY + edgeWidth + ANNOTATION_HEIGHT / 2;
+        double annotationFromY = fromY + edgeWidth + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
+        double annotationToY = toY + edgeWidth + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
         for (final Color color : annotationColors) {
             graphicsContext.setStroke(color);
             graphicsContext.strokeLine(fromX, annotationFromY, toX, annotationToY);
