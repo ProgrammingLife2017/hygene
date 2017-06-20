@@ -1,4 +1,4 @@
-package org.dnacronym.hygene.ui.graph;
+package org.dnacronym.hygene.ui.path;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  * <p>
  * This class is used for marking genomes as selected or not.
  */
-public class GenomePath {
+public final class GenomePath {
     private final String name;
     private final String index;
     private final SimpleBooleanProperty isSelected;
@@ -15,10 +15,10 @@ public class GenomePath {
     /**
      * Construct a new {@link GenomePath}.
      *
-     * @param name  the name
      * @param index the index
+     * @param name  the name
      */
-    public GenomePath(final String name, final String index) {
+    public GenomePath(final String index, final String name) {
         this.name = name;
         this.index = index;
         this.isSelected = new SimpleBooleanProperty();
@@ -47,7 +47,7 @@ public class GenomePath {
      *
      * @return true when the genome is selected in the GUI
      */
-    public boolean isIsSelected() {
+    public boolean isSelected() {
         return isSelected.get();
     }
 
@@ -58,5 +58,10 @@ public class GenomePath {
      */
     public SimpleBooleanProperty isSelectedProperty() {
         return isSelected;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

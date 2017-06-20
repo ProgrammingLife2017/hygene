@@ -3,13 +3,13 @@ package org.dnacronym.hygene.ui.graph;
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,6 +27,7 @@ import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.drawing.EdgeDrawingToolkit;
 import org.dnacronym.hygene.ui.drawing.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.path.GenomePath;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
@@ -67,7 +68,7 @@ public final class GraphVisualizer {
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
 
-    private final ListProperty<GenomePath> selectedPathsProperty;
+    private final ObservableList<GenomePath> selectedPathsProperty;
     private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -119,7 +120,7 @@ public final class GraphVisualizer {
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
-        selectedPathsProperty = new SimpleListProperty<>();
+        selectedPathsProperty = FXCollections.observableArrayList();
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -384,10 +385,13 @@ public final class GraphVisualizer {
      */
     void setGraph(final Graph graph) {
         this.graph = graph;
+
+        selectedPathsProperty.clear();
         graph.getGfaFile().getGenomeMapping().forEach((k, v) -> {
-            selectedPathsProperty.clear();
-            selectedPathsProperty.addAll(new GenomePath(k, v));
+            selectedPathsProperty.add(new GenomePath(k, v));
         });
+
+
         draw();
     }
 
@@ -513,7 +517,7 @@ public final class GraphVisualizer {
      *
      * @return property of representing the selected paths.
      */
-    public ListProperty<GenomePath> getSelectedPathsPropertyProperty() {
+    public ObservableList<GenomePath> getSelectedPathsPropertyProperty() {
         return selectedPathsProperty;
     }
 

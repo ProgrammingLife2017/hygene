@@ -1,14 +1,15 @@
 package org.dnacronym.hygene.ui.path;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.graph.GenomePath;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -38,6 +39,8 @@ public final class PathController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         pathList.setCellFactory(CheckBoxListCell.forListView(GenomePath::isSelectedProperty));
 
+        pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         addListeners();
 
         pathPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
@@ -47,14 +50,17 @@ public final class PathController implements Initializable {
      * Adds event listeners to update the list of genomes when the user selects a specific node.
      */
     void addListeners() {
-        pathList.itemsProperty().bindBidirectional(graphVisualizer.getSelectedPathsPropertyProperty());
-//        graphVisualizer.getSelectedPathsPropertyProperty().bindBidirectional(pathList);
-//        pathList.setSelectionModel();
-//        graphVisualizer.getGenomeMappingProperty().addListener((s, oldValue, newValue) -> {
-//            newValue.forEach((index, name) -> {
-//                pathList.getItems().add(new PathListItem(name, false));
-//            });
-//        });
+        pathList.itemsProperty().addListener((a, b, c) -> {
+            c.forEach(p -> {
+                System.out.println("ADDING LISTENER" + p);
+                p.isSelectedProperty().addListener((s, oldValue, newValue) -> {
+                    System.out.printf(p + " was selected");
+                    pathList.getSelectionModel();
+                });
+            });
+        });
+        pathList.itemsProperty().bindBidirectional(new SimpleListProperty<>(graphVisualizer.getSelectedPathsPropertyProperty()));
+
 
 
     }
@@ -66,8 +72,8 @@ public final class PathController implements Initializable {
      */
     @FXML
     void onClearHighlight(final ActionEvent actionEvent) {
-//        graphVisualizer.getSelectedPathProperty().set(null);
-//        LOGGER.info("Cleared the currently selected genome.");
+        LOGGER.info("Cleared the currently selected genome.");
+        pathList.itemsProperty().get().forEach(genomes -> genomes.isSelectedProperty().set(false));
     }
 
     /**
@@ -79,6 +85,9 @@ public final class PathController implements Initializable {
     @FXML
     void onSetHighlight(final ActionEvent mouseEvent) {
         LOGGER.info(pathList.getSelectionModel().getSelectedItems());
+//        MultipleSelectionModel<GenomePath> sm = pathList.getSelectionModel();
+//        sm.selectFirst();
+
 //        LOGGER.info(pathList.getItems().filtered(i -> i.isOn()));
 //        final String selectedGenome = pathList.getSelectionModel().getSelectedItem();
 //        if (selectedGenome != null) {
