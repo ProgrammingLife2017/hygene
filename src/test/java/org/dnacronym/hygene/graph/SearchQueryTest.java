@@ -45,7 +45,7 @@ class SearchQueryTest {
     }
 
     @Test
-    void executeSequeceRegexQuery() throws MetadataParseException {
+    void executeSequenceRegexQuery() throws MetadataParseException {
         assertThat(searchQuery.executeSequenceRegexQuery("TC(A+)GG")).containsOnly(2);
     }
 }
