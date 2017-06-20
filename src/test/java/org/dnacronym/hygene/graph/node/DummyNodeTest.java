@@ -2,10 +2,14 @@ package org.dnacronym.hygene.graph.node;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 
 
@@ -35,6 +39,22 @@ final class DummyNodeTest extends NodeTest {
     @Test
     void testGetOriginalDestination() {
         assertThat(dummyNode.getDiversionDestination()).isEqualTo(diversionDestination);
+    }
+
+    @Test
+    void testDummyNodeHasNoLength() {
+        assertThat(dummyNode.getLength()).isEqualTo(0);
+    }
+
+    @Test
+    void testThatMetadataIsNotSupported() {
+        final Throwable getMetadataException = catchThrowable(() -> dummyNode.getMetadata());
+        assertThat(getMetadataException).isInstanceOf(UnsupportedOperationException.class);
+
+        final Throwable setMetadataException = catchThrowable(() -> dummyNode.setMetadata(mock(NodeMetadata.class)));
+        assertThat(setMetadataException).isInstanceOf(UnsupportedOperationException.class);
+
+        assertThat(dummyNode.hasMetadata()).isFalse();
     }
 
     @Test
