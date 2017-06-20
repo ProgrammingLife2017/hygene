@@ -49,7 +49,7 @@ public final class NodeAggregator {
     public static void aggregate(final Subgraph subgraph) {
         final List<AggregateNode> aggregateNodes = new ArrayList<>();
 
-        subgraph.getNodes().forEach(node -> Optional.ofNullable(aggregate(node)).ifPresent(aggregateNodes::add));
+        subgraph.getNodes().forEach(node -> aggregate(node).ifPresent(aggregateNodes::add));
 
         aggregateNodes.forEach(aggregateNode -> {
             subgraph.removeAll(aggregateNode.getNodes());
@@ -63,29 +63,29 @@ public final class NodeAggregator {
      * @param node a node
      * @return the {@link AggregateNode} the neighbours are now part of, or {@code null} if no aggregation occurred
      */
-    public static @Nullable AggregateNode aggregate(final Node node) {
+    public static Optional<AggregateNode> aggregate(final Node node) {
         final NodeAggregator aggregator = new NodeAggregator(node);
 
         if (!aggregator.nodeHasValidNumberOfNeighbours()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursAreSegments()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursHaveSequenceLengthOne()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursHaveOneNeighbour()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursHaveSameNeighbour()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursAreOnlyNeighboursOfTheirNeighbour()) {
-            return null;
+            return Optional.empty();
         }
 
-        return aggregator.aggregate();
+        return Optional.of(aggregator.aggregate());
     }
 
     /**

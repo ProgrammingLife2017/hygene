@@ -8,9 +8,6 @@ import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -23,7 +20,7 @@ class NodeAggregatorTest {
      */
     @Test
     void testAggregateNoNeighbours() {
-        assertThat(NodeAggregator.aggregate(new Segment(14, 48, 51))).isNull();
+        assertThat(NodeAggregator.aggregate(new Segment(14, 48, 51))).isEmpty();
     }
 
     /**
@@ -37,7 +34,7 @@ class NodeAggregatorTest {
         linkNodes(nodeA, nodeB);
         linkNodes(nodeB, nodeC);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -57,7 +54,7 @@ class NodeAggregatorTest {
         linkNodes(nodeC, nodeE);
         linkNodes(nodeD, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -74,7 +71,7 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -91,7 +88,7 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -107,7 +104,7 @@ class NodeAggregatorTest {
         linkNodes(nodeA, nodeC);
         linkNodes(nodeC, nodeD);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -126,7 +123,7 @@ class NodeAggregatorTest {
         linkNodes(nodeC, nodeD);
         linkNodes(nodeC, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -144,7 +141,7 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -171,7 +168,7 @@ class NodeAggregatorTest {
         linkNodes(nodeC, nodeE);
         linkNodes(nodeD, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -188,7 +185,8 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA);
+        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA)
+                .orElseThrow(() -> new AssertionError("AggregateNode is null."));
         assertThat(aggregateNode).isNotNull();
         assertThat(aggregateNode.getNodes()).containsExactly(nodeB, nodeC);
     }
@@ -207,7 +205,8 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA);
+        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA)
+                .orElseThrow(() -> new AssertionError("AggregateNode is null."));
         final AggregateEdge toAggregateNode = (AggregateEdge) aggregateNode.getIncomingEdges().iterator().next();
         final AggregateEdge fromAggregateNode = (AggregateEdge) aggregateNode.getOutgoingEdges().iterator().next();
 
