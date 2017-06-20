@@ -147,6 +147,59 @@ final class SubgraphTest {
     }
 
     @Test
+    void testRemoveNode() {
+        final Node node = mock(Node.class);
+        subgraph.add(node);
+
+        subgraph.remove(node);
+
+        assertThat(subgraph.getNodes()).isEmpty();
+    }
+
+    @Test
+    void testRemoveAllNodes() {
+        final Node nodeA = mock(Node.class);
+        final Node nodeB = mock(Node.class);
+        final Node nodeC = mock(Node.class);
+        final Node nodeD = mock(Node.class);
+        subgraph.add(nodeA);
+        subgraph.add(nodeB);
+        subgraph.add(nodeC);
+        subgraph.add(nodeD);
+
+        subgraph.removeAll(Arrays.asList(nodeA, nodeB, nodeD));
+
+        assertThat(subgraph.getNodes()).containsExactly(nodeC);
+    }
+
+    @Test
+    void testRemoveSegment() {
+        final Segment segmentA = new Segment(95, 51, 93);
+        final Segment segmentB = new Segment(98, 1, 94);
+        subgraph.add(segmentA);
+        subgraph.add(segmentB);
+
+        subgraph.remove(segmentA);
+
+        assertThat(subgraph.getNodes()).containsExactly(segmentB);
+    }
+
+    @Test
+    void testRemoveAllSegments() {
+        final Segment segmentA = new Segment(89, 30, 81);
+        final Segment segmentB = new Segment(2, 61, 16);
+        final Segment segmentC = new Segment(64, 86, 44);
+        final Segment segmentD = new Segment(93, 87, 10);
+        subgraph.add(segmentA);
+        subgraph.add(segmentB);
+        subgraph.add(segmentC);
+
+        subgraph.removeAll(Arrays.asList(segmentB, segmentD));
+
+        assertThat(subgraph.getNodes()).containsExactly(segmentA, segmentC);
+    }
+
+    @Test
     void testGetNeighbours() {
         final Segment segment1 = new Segment(100, 83, 88);
         final Segment segment2 = new Segment(42, 67, 22);
