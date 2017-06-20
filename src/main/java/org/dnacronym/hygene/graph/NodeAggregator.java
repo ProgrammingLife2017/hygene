@@ -12,11 +12,15 @@ import org.dnacronym.hygene.graph.node.Segment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 /**
  * Aggregator of nodes to achieve semantic zooming.
+ * <p>
+ * Aggregation only happens when the given node has exactly two right neighbours, these neighbours have a sequence
+ * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
  */
 public final class NodeAggregator {
     private final Node startNode;
@@ -38,10 +42,23 @@ public final class NodeAggregator {
 
 
     /**
+     * Aggregates as many nodes as possible.
+     *
+     * @param nodes
+     */
+    public static void aggregate(final Collection<Node> nodes) {
+        final List<AggregateNode> aggregateNodes = new ArrayList<>();
+
+        nodes.forEach(node -> Optional.ofNullable(aggregate(node)).ifPresent(aggregateNodes::add));
+
+        aggregateNodes.forEach(aggregateNode -> {
+            nodes.removeAll(aggregateNode.getNodes());
+            nodes.add(aggregateNode);
+        });
+    }
+
+    /**
      * Aggregates the given node's neighbours, if possible.
-     * <p>
-     * Aggregation only happens when the given node has exactly two right neighbours, these neighbours have a sequence
-     * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
      *
      * @param node a node
      * @return the {@link AggregateNode} the neighbours are now part of, or {@code null} if no aggregation occurred

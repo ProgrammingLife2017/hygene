@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.graph;
 
-import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
@@ -9,6 +8,7 @@ import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 
+import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
