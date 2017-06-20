@@ -100,10 +100,10 @@ public final class SearchQuery {
                 .boxed().collect(Collectors.toList());
 
         return batchNodeIds.stream()
-                .sorted(Comparator.comparingLong(nodeId -> graph.getByteOffset(nodeId)))
+                .sorted(Comparator.comparingLong(graph::getByteOffset))
                 .collect(Collectors.toMap(
                         nodeId -> nodeId,
-                        nodeId -> graph.getByteOffset(nodeId),
+                        graph::getByteOffset,
                         (oldValue, newValue) -> oldValue,
                         LinkedHashMap::new
                 ));

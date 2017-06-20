@@ -48,7 +48,7 @@ public final class Snapshot {
         final String gfaFileNameWithoutExtension = FilenameUtils.removeExtension(file.getName());
 
         final String fileName = gfaFileNameWithoutExtension + "_snapshot_" + new Date().getTime() + "." + FILE_FORMAT;
-        final File destination = new File(file.getParent() + "/" + fileName);
+        final File destination = new File(file.getParent(), fileName);
 
         return new Snapshot(destination);
     }

@@ -49,11 +49,7 @@ public abstract class Node implements LayoutableNode {
         return uuid;
     }
 
-    /**
-     * Returns the X position.
-     *
-     * @return the X position
-     */
+    @Override
     public final long getXPosition() {
         return xPosition;
     }
@@ -76,39 +72,20 @@ public abstract class Node implements LayoutableNode {
         return yPosition;
     }
 
-    /**
-     * Sets the Y position.
-     *
-     * @param yPosition the Y position
-     */
+    @Override
     public final void setYPosition(final int yPosition) {
         this.yPosition = yPosition;
     }
 
-    /**
-     * Returns the incoming edges.
-     *
-     * @return the incoming edges
-     */
+    @Override
     public final Set<Edge> getIncomingEdges() {
         return incomingEdges;
     }
 
-    /**
-     * Returns the outgoing edges.
-     *
-     * @return the outgoing edges
-     */
+    @Override
     public final Set<Edge> getOutgoingEdges() {
         return outgoingEdges;
     }
-
-    /**
-     * Returns the length of the node when visualized.
-     *
-     * @return the length of the node when visualized
-     */
-    public abstract int getLength();
 
     /**
      * Returns this {@link Node}'s metadata.

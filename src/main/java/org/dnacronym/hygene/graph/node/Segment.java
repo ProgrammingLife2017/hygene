@@ -67,11 +67,7 @@ public final class Segment extends Node {
         return Math.max(MIN_SEGMENT_LENGTH, sequenceLength);
     }
 
-    /**
-     * Returns this {@link Node}'s metadata.
-     *
-     * @return this {@link Node}'s metadata
-     */
+    @Override
     public NodeMetadata getMetadata() {
         if (metadata == null) {
             throw new IllegalStateException("Cannot access metadata before it is parsed.");
@@ -80,20 +76,12 @@ public final class Segment extends Node {
         return metadata;
     }
 
-    /**
-     * Sets the metadata for this node.
-     *
-     * @param metadata the metadata for this node
-     */
+    @Override
     public void setMetadata(final NodeMetadata metadata) {
         this.metadata = metadata;
     }
 
-    /**
-     * Returns {@code true} iff. this {@link Node} has metadata set.
-     *
-     * @return {@code true} iff. this {@link Node} has metadata set
-     */
+    @Override
     public boolean hasMetadata() {
         return metadata != null;
     }
