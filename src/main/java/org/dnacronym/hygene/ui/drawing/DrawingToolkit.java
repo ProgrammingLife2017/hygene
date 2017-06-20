@@ -15,14 +15,6 @@ public abstract class DrawingToolkit {
 
 
     /**
-     * Prevent direct instantiation of {@link DrawingToolkit}.
-     */
-    DrawingToolkit() {
-        // This class shouldn't be instantiated directly
-    }
-
-
-    /**
      * Sets the {@link GraphicsContext} used for drawing by the toolkit.
      *
      * @param graphicsContext the {@link GraphicsContext} to use for drawing
