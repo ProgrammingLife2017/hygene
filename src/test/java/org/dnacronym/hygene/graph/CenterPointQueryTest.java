@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
+
 /**
  * Unit tests for {@link CenterPointQuery}.
  */
@@ -19,11 +20,13 @@ final class CenterPointQueryTest {
     private Graph graph;
     private CenterPointQuery centerPointQuery;
 
+
     @BeforeEach
     void setUp() throws GfaParseException {
         graph = new GfaFile(GFA_TEST_FILE).parse(ProgressUpdater.DUMMY);
         centerPointQuery = new CenterPointQuery(graph);
     }
+    
 
     @Test
     void testGetRadius() {
