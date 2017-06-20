@@ -3,9 +3,11 @@ package org.dnacronym.hygene.ui.graph;
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
@@ -65,7 +67,7 @@ public final class GraphVisualizer {
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
 
-    private final ObjectProperty<GenomePath> selectedPathsProperty;
+    private final ListProperty<GenomePath> selectedPathsProperty;
     private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -117,7 +119,7 @@ public final class GraphVisualizer {
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
-        selectedPathsProperty = new SimpleObjectProperty<>();
+        selectedPathsProperty = new SimpleListProperty<>();
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -382,7 +384,10 @@ public final class GraphVisualizer {
      */
     void setGraph(final Graph graph) {
         this.graph = graph;
-
+        graph.getGfaFile().getGenomeMapping().forEach((k, v) -> {
+            selectedPathsProperty.clear();
+            selectedPathsProperty.addAll(new GenomePath(k, v));
+        });
         draw();
     }
 
@@ -508,7 +513,7 @@ public final class GraphVisualizer {
      *
      * @return property of representing the selected paths.
      */
-    public ObjectProperty<GenomePath> getSelectedPathsPropertyProperty() {
+    public ListProperty<GenomePath> getSelectedPathsPropertyProperty() {
         return selectedPathsProperty;
     }
 

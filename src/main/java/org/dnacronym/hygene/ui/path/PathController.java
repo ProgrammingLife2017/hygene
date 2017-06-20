@@ -5,8 +5,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.cell.CheckBoxListCell;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.graph.GenomePath;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -24,7 +26,7 @@ public final class PathController implements Initializable {
     @FXML
     private TitledPane pathPane;
     @FXML
-    private ListView<String> pathList;
+    private ListView<GenomePath> pathList;
 
     @Inject
     private GraphVisualizer graphVisualizer;
@@ -34,36 +36,27 @@ public final class PathController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        pathList.setCellFactory(CheckBoxListCell.forListView(GenomePath::isSelectedProperty));
+
         addListeners();
 
-//        pathPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
+        pathPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
     }
 
     /**
      * Adds event listeners to update the list of genomes when the user selects a specific node.
      */
     void addListeners() {
-//        pathList.setCellFactory(CheckBoxListCell.forListView(PathListItem::onProperty));
-//
-//        graphVisualizer.getSelectedSegmentProperty().addListener((source, oldValue, newValue) -> {
-//            if (newValue != null && newValue.hasMetadata()) {
-//
-//                pathList.getItems().clear();
-//
-//                PathListItem item = new PathListItem(newValue.getMetadata().getName(), true);
-//                pathList.getItems().addAll(item);
-        // }
-//            if (newValue != null && newValue.hasMetadata()) {
-//                pathList.getItems().clear();
-//
-//                pathList.getItems().addAll(newValue.getMetadata().getGenomes().stream()
-//                        .map(g ->
-//                                Optional.ofNullable(graphVisualizer.getGraph().getGfaFile().getGenomeMapping().get(g))
-//                                .orElse(g)
-//                        )
-//                        .collect(Collectors.toList()));
-//            }
+        pathList.itemsProperty().bindBidirectional(graphVisualizer.getSelectedPathsPropertyProperty());
+//        graphVisualizer.getSelectedPathsPropertyProperty().bindBidirectional(pathList);
+//        pathList.setSelectionModel();
+//        graphVisualizer.getGenomeMappingProperty().addListener((s, oldValue, newValue) -> {
+//            newValue.forEach((index, name) -> {
+//                pathList.getItems().add(new PathListItem(name, false));
+//            });
 //        });
+
+
     }
 
     /**
@@ -85,6 +78,8 @@ public final class PathController implements Initializable {
      */
     @FXML
     void onSetHighlight(final ActionEvent mouseEvent) {
+        LOGGER.info(pathList.getSelectionModel().getSelectedItems());
+//        LOGGER.info(pathList.getItems().filtered(i -> i.isOn()));
 //        final String selectedGenome = pathList.getSelectionModel().getSelectedItem();
 //        if (selectedGenome != null) {
 //            graphVisualizer.getSelectedPathProperty().set(selectedGenome);
