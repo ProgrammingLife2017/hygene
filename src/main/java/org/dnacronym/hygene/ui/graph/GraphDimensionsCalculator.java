@@ -31,7 +31,6 @@ import org.dnacronym.hygene.graph.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
