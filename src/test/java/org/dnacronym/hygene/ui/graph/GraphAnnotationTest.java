@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -51,7 +51,8 @@ class GraphAnnotationTest {
      */
     @Test
     void testRangeStartAfterEnd() {
-        assertThrows(IllegalArgumentException.class, () -> graphAnnotation.getAnnotationsInRange(95, 9));
+        assertThatThrownBy(() -> graphAnnotation.getAnnotationsInRange(95, 9))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -59,7 +60,8 @@ class GraphAnnotationTest {
      */
     @Test
     void testNegativeRangeStart() {
-        assertThrows(IllegalArgumentException.class, () -> graphAnnotation.getAnnotationsInRange(-2, 33));
+        assertThatThrownBy(() -> graphAnnotation.getAnnotationsInRange(-2, 33))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
