@@ -185,6 +185,13 @@ class GraphAnnotationTest {
         assertThat(graphAnnotation.getAnnotationsInRange(34, 42)).contains(annotation);
     }
 
+    /**
+     * Tests that the sequence id of the {@link AnnotationCollection} is correctly retrieved.
+     */
+    @Test
+    void testGetSequenceId() {
+        assertThat(annotationCollection.getSequenceId()).isEqualTo("sequence");
+    }
 
     /**
      * Mocks the {@link GenomeNavigation} and its dependencies.

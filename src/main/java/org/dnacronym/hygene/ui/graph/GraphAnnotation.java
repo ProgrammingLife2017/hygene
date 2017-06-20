@@ -38,7 +38,7 @@ public final class GraphAnnotation {
      * Constructs a new {@link GraphAnnotation}.
      *
      * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
-     * {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
+     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
      * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
      *                         update the {@link AnnotationCollection}s
      */
@@ -96,6 +96,17 @@ public final class GraphAnnotation {
                     return rangeStart < annotationEnd && rangeEnd >= annotationStart;
                 })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the sequence id of the currently loaded collection of annotations.
+     * <p>
+     * This sequence id corresponds with the name of the genome the annotations annotate.
+     *
+     * @return the id of the currently loaded collection of annotations
+     */
+    public String getAnnotationsSequenceId() {
+        return annotationCollection.getSequenceId();
     }
 
     /**
