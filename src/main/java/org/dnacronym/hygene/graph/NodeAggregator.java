@@ -2,7 +2,6 @@ package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateNode;
@@ -47,9 +46,11 @@ public final class NodeAggregator {
      * @param subgraph a {@link Subgraph}
      */
     public static void aggregate(final Subgraph subgraph) {
-        final List<AggregateNode> aggregateNodes = new ArrayList<>();
-
-        subgraph.getNodes().forEach(node -> aggregate(node).ifPresent(aggregateNodes::add));
+        final List<AggregateNode> aggregateNodes = subgraph.getNodes().stream()
+                .map(NodeAggregator::aggregate)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
         aggregateNodes.forEach(aggregateNode -> {
             subgraph.removeAll(aggregateNode.getNodes());
