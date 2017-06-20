@@ -315,6 +315,8 @@ public final class GraphVisualizer {
             drawNode(node,
                     bookmarkStore != null && bookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
+
+            node.getOutgoingEdges().forEach(this::drawEdge);
         }
 
         if (displayLaneBordersProperty.get()) {

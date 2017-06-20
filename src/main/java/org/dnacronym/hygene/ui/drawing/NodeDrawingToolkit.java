@@ -73,8 +73,8 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * @param fill      the {@link Color} to fill the node with
      */
     public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final Color fill) {
-        graphicsContext.setFill(fill);
-        graphicsContext.fillRoundRect(nodeX, nodeY, nodeWidth, nodeHeight, ARC_SIZE, ARC_SIZE);
+        getGraphicsContext().setFill(fill);
+        getGraphicsContext().fillRoundRect(nodeX, nodeY, nodeWidth, nodeHeight, ARC_SIZE, ARC_SIZE);
     }
 
     /**
@@ -92,8 +92,8 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
         double colorBandY = nodeY;
         final double bandHeight = nodeHeight / pathColors.size();
         for (final Color color : pathColors) {
-            graphicsContext.setFill(color);
-            graphicsContext.fillRoundRect(nodeX, colorBandY, nodeWidth, bandHeight, ARC_SIZE, ARC_SIZE);
+            getGraphicsContext().setFill(color);
+            getGraphicsContext().fillRoundRect(nodeX, colorBandY, nodeWidth, bandHeight, ARC_SIZE, ARC_SIZE);
 
             colorBandY += bandHeight;
         }
@@ -112,18 +112,18 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      */
     public void drawNodeAnnotations(final double nodeX, final double nodeY, final double nodeWidth,
                                     final List<Color> annotationColors) {
-        graphicsContext.setLineDashes(ANNOTATION_DASH_LENGTH);
-        graphicsContext.setLineWidth(ANNOTATION_HEIGHT);
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
+        getGraphicsContext().setLineWidth(ANNOTATION_HEIGHT);
 
         double annotationY = nodeY + nodeHeight + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
         for (final Color color : annotationColors) {
-            graphicsContext.setStroke(color);
-            graphicsContext.strokeLine(nodeX, annotationY, nodeX + nodeWidth, annotationY);
+            getGraphicsContext().setStroke(color);
+            getGraphicsContext().strokeLine(nodeX, annotationY, nodeX + nodeWidth, annotationY);
 
             annotationY += ANNOTATION_HEIGHT;
         }
 
-        graphicsContext.setLineDashes(1);
+        getGraphicsContext().setLineDashes(1);
     }
 
     /**
@@ -136,9 +136,9 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      */
     public void drawNodeHighlight(final double nodeX, final double nodeY, final double nodeWidth,
                                   final HighlightType highlightType) {
-        graphicsContext.setStroke(highlightType.color);
-        graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
-        graphicsContext.strokeRoundRect(
+        getGraphicsContext().setStroke(highlightType.color);
+        getGraphicsContext().setLineWidth(NODE_OUTLINE_WIDTH);
+        getGraphicsContext().strokeRoundRect(
                 nodeX - NODE_OUTLINE_WIDTH / 2.0,
                 nodeY - NODE_OUTLINE_WIDTH / 2.0,
                 nodeWidth + NODE_OUTLINE_WIDTH,
@@ -157,8 +157,9 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * @param nodeWidth the width of the node to bookmark
      */
     private void drawBookmarkIndicator(final double nodeX, final double nodeWidth) {
-        graphicsContext.setFill(HighlightType.BOOKMARKED.color);
-        graphicsContext.fillRect(nodeX, canvasHeight - BOOKMARK_INDICATOR_HEIGHT, nodeWidth, BOOKMARK_INDICATOR_HEIGHT);
+        getGraphicsContext().setFill(HighlightType.BOOKMARKED.color);
+        getGraphicsContext()
+                .fillRect(nodeX, canvasHeight - BOOKMARK_INDICATOR_HEIGHT, nodeWidth, BOOKMARK_INDICATOR_HEIGHT);
     }
 
     /**
@@ -171,14 +172,14 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      */
     public void drawNodeSequence(final double nodeX, final double nodeY, final double nodeWidth,
                                  final String sequence) {
-        graphicsContext.setFill(Color.BLACK);
-        graphicsContext.setFont(nodeFont);
+        getGraphicsContext().setFill(Color.BLACK);
+        getGraphicsContext().setFont(nodeFont);
         final int charCount = (int) Math.max((nodeWidth - ARC_SIZE) / charWidth, 0);
 
         final double fontX = nodeX + (nodeWidth + (ARC_SIZE / 4.0) - charCount * charWidth) / 2;
         final double fontY = nodeY + nodeHeight / 2 + charHeight / 2;
 
-        graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+        getGraphicsContext().fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
     }
 
     /**

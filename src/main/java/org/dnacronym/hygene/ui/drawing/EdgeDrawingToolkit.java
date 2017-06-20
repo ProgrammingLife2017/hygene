@@ -11,7 +11,7 @@ import java.util.List;
  * <p>
  * This includes drawing an edge, drawing the paths that go through and edge and drawing annotations below an edge.
  */
-public class EdgeDrawingToolkit extends DrawingToolkit {
+public final class EdgeDrawingToolkit extends DrawingToolkit {
     /**
      * Draws a single edge from a given to point to a destination point.
      *
@@ -42,13 +42,13 @@ public class EdgeDrawingToolkit extends DrawingToolkit {
     public void drawEdgePaths(final double fromX, final double fromY, final double toX, final double toY,
                               final double edgeWidth, final List<Color> pathColors) {
         final double lineHeight = edgeWidth / pathColors.size();
-        graphicsContext.setLineWidth(lineHeight);
+        getGraphicsContext().setLineWidth(lineHeight);
 
         double pathFromY = fromY;
         double pathToY = toY;
         for (final Color color : pathColors) {
-            graphicsContext.setStroke(color);
-            graphicsContext.strokeLine(fromX, pathFromY, toX, pathToY);
+            getGraphicsContext().setStroke(color);
+            getGraphicsContext().strokeLine(fromX, pathFromY, toX, pathToY);
 
             pathFromY += lineHeight;
             pathToY += lineHeight;
@@ -70,19 +70,19 @@ public class EdgeDrawingToolkit extends DrawingToolkit {
      */
     public void drawEdgeAnnotations(final double fromX, final double fromY, final double toX, final double toY,
                                     final double edgeWidth, final List<Color> annotationColors) {
-        graphicsContext.setLineDashes(ANNOTATION_DASH_LENGTH);
-        graphicsContext.setLineWidth(ANNOTATION_HEIGHT);
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
+        getGraphicsContext().setLineWidth(ANNOTATION_HEIGHT);
 
         double annotationFromY = fromY + edgeWidth + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
         double annotationToY = toY + edgeWidth + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
         for (final Color color : annotationColors) {
-            graphicsContext.setStroke(color);
-            graphicsContext.strokeLine(fromX, annotationFromY, toX, annotationToY);
+            getGraphicsContext().setStroke(color);
+            getGraphicsContext().strokeLine(fromX, annotationFromY, toX, annotationToY);
 
             annotationFromY += ANNOTATION_HEIGHT;
             annotationToY += ANNOTATION_HEIGHT;
         }
 
-        graphicsContext.setLineDashes(1);
+        getGraphicsContext().setLineDashes(1);
     }
 }
