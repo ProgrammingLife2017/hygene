@@ -11,6 +11,8 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
+import java.util.Optional;
+
 
 /**
  * Enables dynamic centre point queries for a {@link Graph}.
@@ -321,20 +323,20 @@ public final class CenterPointQuery {
      * @param nodeId a node id, as given by the {@link Graph}
      */
     private void addEdges(final int nodeId) {
-        final Node node = subgraph.getSegment(nodeId);
-        if (node == null) {
+        final Optional<Segment> node = subgraph.getSegment(nodeId);
+        if (!node.isPresent()) {
             return;
         }
 
         iterator.visitDirectNeighbours(nodeId, SequenceDirection.RIGHT, neighbourId -> {
-            final Node neighbour = subgraph.getSegment(neighbourId);
-            if (node == null || neighbour == null) {
+            final Optional<Segment> neighbour = subgraph.getSegment(neighbourId);
+            if (!neighbour.isPresent()) {
                 return;
             }
 
-            final Edge edge = new Edge(node, neighbour);
-            node.getOutgoingEdges().add(edge);
-            neighbour.getIncomingEdges().add(edge);
+            final Edge edge = new Edge(node.get(), neighbour.get());
+            node.get().getOutgoingEdges().add(edge);
+            neighbour.get().getIncomingEdges().add(edge);
         });
     }
 

@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.graph;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -11,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
@@ -48,8 +48,8 @@ public final class Subgraph {
      * @param nodeUuid a {@link UUID}
      * @return the {@link Node} with the given {@link UUID}, or {code null} if no such node exists
      */
-    public @Nullable Node getNode(final UUID nodeUuid) {
-        return nodes.get(nodeUuid);
+    public Optional<Node> getNode(final UUID nodeUuid) {
+        return Optional.ofNullable(nodes.get(nodeUuid));
     }
 
     /**
@@ -67,8 +67,8 @@ public final class Subgraph {
      * @param segmentId a segment id
      * @return the {@link Segment} with the given id, or {code null} if no such segment exists
      */
-    public @Nullable Segment getSegment(final int segmentId) {
-        return segments.get(segmentId);
+    public Optional<Segment> getSegment(final int segmentId) {
+        return Optional.ofNullable(segments.get(segmentId));
     }
 
     /**

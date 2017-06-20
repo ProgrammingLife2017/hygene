@@ -14,8 +14,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -35,7 +33,7 @@ final class SubgraphTest {
 
     @Test
     void testGetNodeEmpty() {
-        assertThat(subgraph.getNode(UUID.randomUUID())).isNull();
+        assertThat(subgraph.getNode(UUID.randomUUID())).isEmpty();
     }
 
     @Test
@@ -44,7 +42,7 @@ final class SubgraphTest {
 
         subgraph.add(node);
 
-        assertThat(subgraph.getNode(UUID.randomUUID())).isNull();
+        assertThat(subgraph.getNode(UUID.randomUUID())).isEmpty();
     }
 
     @Test
@@ -53,7 +51,7 @@ final class SubgraphTest {
 
         subgraph.add(node);
 
-        assertThat(subgraph.getNode(node.getUuid())).isEqualTo(node);
+        assertThat(subgraph.getNode(node.getUuid())).contains(node);
     }
 
     @Test
@@ -63,7 +61,7 @@ final class SubgraphTest {
 
     @Test
     void testGetSegmentEmpty() {
-        assertThat(subgraph.getSegment(36)).isNull();
+        assertThat(subgraph.getSegment(36)).isEmpty();
     }
 
     @Test
@@ -72,7 +70,7 @@ final class SubgraphTest {
 
         subgraph.add(segment);
 
-        assertThat(subgraph.getSegment(86)).isNull();
+        assertThat(subgraph.getSegment(86)).isEmpty();
     }
 
     @Test
@@ -81,7 +79,7 @@ final class SubgraphTest {
 
         subgraph.add(segment);
 
-        assertThat(subgraph.getSegment(37)).isEqualTo(segment);
+        assertThat(subgraph.getSegment(37)).contains(segment);
     }
 
     @Test

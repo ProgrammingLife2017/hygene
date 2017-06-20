@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
+
 import javax.inject.Inject;
+
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -29,7 +31,6 @@ import org.dnacronym.hygene.graph.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -178,7 +179,7 @@ public final class GraphDimensionsCalculator {
             return;
         }
 
-        final Segment centerNode = Optional.ofNullable(subgraph.getSegment(centerNodeIdProperty.get()))
+        final Segment centerNode = subgraph.getSegment(centerNodeIdProperty.get())
                 .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
         final long unscaledCenterX = centerNode.getXPosition();
 
