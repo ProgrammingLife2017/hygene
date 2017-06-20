@@ -145,6 +145,8 @@ public final class GraphDimensionsCalculator {
     @Subscribe
     public void onLayoutDoneEvent(final LayoutDoneEvent event) {
         subgraph = event.getSubgraph();
+
+        Platform.runLater(() -> calculate(event.getSubgraph()));
     }
 
     /**
