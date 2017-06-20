@@ -44,16 +44,16 @@ public final class NodeAggregator {
     /**
      * Aggregates as many nodes as possible.
      *
-     * @param nodes
+     * @param subgraph a {@link Subgraph}
      */
-    public static void aggregate(final Collection<Node> nodes) {
+    public static void aggregate(final Subgraph subgraph) {
         final List<AggregateNode> aggregateNodes = new ArrayList<>();
 
-        nodes.forEach(node -> Optional.ofNullable(aggregate(node)).ifPresent(aggregateNodes::add));
+        subgraph.getNodes().forEach(node -> Optional.ofNullable(aggregate(node)).ifPresent(aggregateNodes::add));
 
         aggregateNodes.forEach(aggregateNode -> {
-            nodes.removeAll(aggregateNode.getNodes());
-            nodes.add(aggregateNode);
+            subgraph.removeAll(aggregateNode.getNodes());
+            subgraph.add(aggregateNode);
         });
     }
 
