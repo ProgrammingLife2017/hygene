@@ -73,6 +73,7 @@ public final class GraphAnnotation {
      * @param rangeEnd   the id of the right-most node
      * @return a list of the {@link Annotation}s that are in the specified range
      */
+    @SuppressWarnings("squid:S3346") // False positive, asserts do not have side-effects
     public List<Annotation> getAnnotationsInRange(final int rangeStart, final int rangeEnd) {
         if (rangeStart > rangeEnd) {
             throw new IllegalArgumentException("Range start must be no larger than range end.");
