@@ -40,26 +40,6 @@ public enum SequenceDirection {
     }
 
     /**
-     * Runs the {@link Runnable} {@code left} if this {@link SequenceDirection} is {@link #LEFT} and runs {@link
-     * Runnable} {@code right} if this {@link SequenceDirection} is {@link #RIGHT}.
-     *
-     * @param left  the {@link Runnable} to run if this {@link SequenceDirection} is {@link #LEFT}
-     * @param right the {@link Runnable} to run if this {@link SequenceDirection} is {@link #RIGHT}
-     */
-    public void ternary(final Runnable left, final Runnable right) {
-        switch (this) {
-            case LEFT:
-                left.run();
-                break;
-            case RIGHT:
-                right.run();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown enum value.");
-        }
-    }
-
-    /**
      * Returns the opposite direction.
      *
      * @return the opposite direction
