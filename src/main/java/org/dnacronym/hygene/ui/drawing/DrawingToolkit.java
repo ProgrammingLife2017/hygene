@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod") // This class doesn't need abstract methods
 public abstract class DrawingToolkit {
-    static final double ANNOTATION_HEIGHT = 4;
+    static final double ANNOTATION_HEIGHT = 2;
     static final double ANNOTATION_DASH_LENGTH = 10;
 
     private GraphicsContext graphicsContext;
