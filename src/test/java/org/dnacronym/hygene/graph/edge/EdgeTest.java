@@ -76,6 +76,14 @@ abstract class EdgeTest {
         assertThat(edge.inGenome("a")).isFalse();
     }
 
+    @Test
+    void testToString() {
+        final String string = edge.toString();
+
+        assertThat(string).contains(edge.getFrom().toString());
+        assertThat(string).contains(edge.getTo().toString());
+    }
+
     /**
      * Returns the source node.
      *
