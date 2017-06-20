@@ -1,6 +1,10 @@
 package org.dnacronym.hygene.graph.node;
 
+import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.colorscheme.fixed.FixedColorScheme;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +18,13 @@ abstract class NodeTest {
 
     private Node node;
 
+
+    @Test
+    void testUuid() {
+        final UUID uuid = node.getUuid();
+
+        assertThat(uuid.toString()).hasSize(36);
+    }
 
     @Test
     final void testGetXPosition() {
@@ -37,6 +48,13 @@ abstract class NodeTest {
     @Test
     final void testGetOutgoingEdges() {
         assertThat(node.getOutgoingEdges()).isEmpty();
+    }
+
+    @Test
+    void testGetColor() {
+        Node.setColorScheme(new FixedColorScheme(Color.AQUA));
+
+        assertThat(node.getColor()).isEqualTo(Color.AQUA);
     }
 
 

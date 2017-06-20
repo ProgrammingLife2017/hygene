@@ -47,31 +47,4 @@ public abstract class ColorSchemeMinMax implements ColorScheme {
     final Color calculateColor(final double value) {
         return minColor.interpolate(maxColor, Math.max(Math.min(1, value / maxValue), COLOR_LOWER_BOUND));
     }
-
-    /**
-     * Returns the max value.
-     *
-     * @return the max value of this {@link ColorScheme}
-     */
-    public final double getMaxValue() {
-        return maxValue;
-    }
-
-    /**
-     * Returns the min {@link Color}.
-     *
-     * @return the min {@link Color}
-     */
-    public final Color getMinColor() {
-        return minColor;
-    }
-
-    /**
-     * Returns the max {@link Color}.
-     *
-     * @return the max {@link Color}
-     */
-    public final Color getMaxColor() {
-        return maxColor;
-    }
 }

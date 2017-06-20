@@ -2,8 +2,11 @@ package org.dnacronym.hygene.graph.node;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,6 +42,21 @@ final class SegmentTest extends NodeTest {
     @Test
     void testGetSequenceLength() {
         assertThat(segment.getSequenceLength()).isEqualTo(SEQUENCE_LENGTH);
+    }
+
+    @Test
+    void testToString() {
+        assertThat(segment.toString()).contains(Integer.toString(segment.getId()));
+    }
+
+    @Test
+    void testMetadata() {
+        final NodeMetadata nodeMetadata = new NodeMetadata("name", "sequence", new ArrayList<>());
+
+        segment.setMetadata(nodeMetadata);
+
+        assertThat(segment.hasMetadata()).isTrue();
+        assertThat(segment.getMetadata()).isEqualTo(nodeMetadata);
     }
 
     @Test
