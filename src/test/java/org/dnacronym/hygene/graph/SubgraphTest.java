@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.graph.edge.Link;
+import org.dnacronym.hygene.graph.node.FillNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +40,7 @@ final class SubgraphTest {
 
     @Test
     void testGetNodeNull() {
-        final Node node = mock(Node.class);
-        when(node.getUuid()).thenReturn(UUID.randomUUID());
+        final Node node = new FillNode();
 
         subgraph.add(node);
 
@@ -49,13 +49,11 @@ final class SubgraphTest {
 
     @Test
     void testGetNodeEquals() {
-        final UUID uuid = UUID.randomUUID();
-        final Node node = mock(Node.class);
-        when(node.getUuid()).thenReturn(uuid);
+        final Node node = new FillNode();
 
         subgraph.add(node);
 
-        assertThat(subgraph.getNode(uuid)).isEqualTo(node);
+        assertThat(subgraph.getNode(node.getUuid())).isEqualTo(node);
     }
 
     @Test
@@ -93,19 +91,16 @@ final class SubgraphTest {
 
     @Test
     void testAddNodeAndContains() {
-        final UUID uuid = UUID.randomUUID();
-        final Node node = mock(Node.class);
-        when(node.getUuid()).thenReturn(uuid);
+        final Node node = new FillNode();
 
         subgraph.add(node);
 
-        assertThat(subgraph.contains(uuid)).isTrue();
+        assertThat(subgraph.contains(node.getUuid())).isTrue();
     }
 
     @Test
     void testAddNodeAndContainsNode() {
-        final Node node = mock(Node.class);
-        when(node.getUuid()).thenReturn(UUID.randomUUID());
+        final Node node = new FillNode();
 
         subgraph.add(node);
 
@@ -141,14 +136,14 @@ final class SubgraphTest {
 
     @Test
     void testAddNode() {
-        final Node node = mock(Node.class);
+        final Node node = new FillNode();
         subgraph.add(node);
         assertThat(subgraph.getNodes()).containsExactly(node);
     }
 
     @Test
     void testRemoveNode() {
-        final Node node = mock(Node.class);
+        final Node node = new FillNode();
         subgraph.add(node);
 
         subgraph.remove(node);
@@ -158,10 +153,10 @@ final class SubgraphTest {
 
     @Test
     void testRemoveAllNodes() {
-        final Node nodeA = mock(Node.class);
-        final Node nodeB = mock(Node.class);
-        final Node nodeC = mock(Node.class);
-        final Node nodeD = mock(Node.class);
+        final Node nodeA = new FillNode();
+        final Node nodeB = new FillNode();
+        final Node nodeC = new FillNode();
+        final Node nodeD = new FillNode();
         subgraph.add(nodeA);
         subgraph.add(nodeB);
         subgraph.add(nodeC);
