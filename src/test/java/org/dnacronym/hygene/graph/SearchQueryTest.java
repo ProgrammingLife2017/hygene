@@ -43,4 +43,9 @@ class SearchQueryTest {
     void executeNameRegexQuery() throws MetadataParseException {
         assertThat(searchQuery.executeNameRegexQuery("1[1-2]")).containsExactlyInAnyOrder(1, 2);
     }
+
+    @Test
+    void executeSequeceRegexQuery() throws MetadataParseException {
+        assertThat(searchQuery.executeSequenceRegexQuery("TC(A+)GG")).containsOnly(2);
+    }
 }
