@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.Node;
@@ -58,7 +57,6 @@ public final class GraphVisualizer {
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
-    private final GraphAnnotation graphAnnotation;
     private final Query query;
 
     private final ObjectProperty<Segment> selectedSegmentProperty;
@@ -92,18 +90,14 @@ public final class GraphVisualizer {
      * {@code null}.
      *
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
-     * @param graphAnnotation           the {@link GraphAnnotation} used to retrieve annotations
      * @param query                     the {@link Query} used to get the currently queried nodes
      * @param bookmarkStore             the {@link BookmarkStore} used to draw bookmark indications
      */
     @Inject
-    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator,
-                           final GraphAnnotation graphAnnotation,
-                           final Query query,
+    public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator, final Query query,
                            final BookmarkStore bookmarkStore) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
-        this.graphAnnotation = graphAnnotation;
         this.query = query;
         this.bookmarkStore = bookmarkStore;
 
@@ -321,13 +315,6 @@ public final class GraphVisualizer {
             drawNode(node,
                     bookmarkStore != null && bookmarkStore.containsBookmark(node),
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
-        }
-
-        for (final AnnotationCollection annotationCollection : graphAnnotation.getAnnotationCollections()) {
-            graphAnnotationVisualizer.draw(
-                    annotationCollection.getSequenceId(),
-                    graphAnnotation.getGenomeIndexMap().get(annotationCollection),
-                    graphDimensionsCalculator.getObservableQueryNodes());
         }
 
         if (displayLaneBordersProperty.get()) {
