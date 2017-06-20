@@ -132,7 +132,7 @@ public final class Subgraph {
     }
 
     /**
-     * Adds the given node to the set of nodes.
+     * Adds the given node.
      *
      * @param node the node to be added
      */
@@ -147,6 +147,24 @@ public final class Subgraph {
      */
     public void addAll(final Collection<Node> nodes) {
         nodes.forEach(this::idempotentAdd);
+    }
+
+    /**
+     * Adds the given node.
+     *
+     * @param node a {@link Node}
+     */
+    public void remove(final Node node) {
+        idempotentRemove(node);
+    }
+
+    /**
+     * Removes the given nodes.
+     *
+     * @param nodes the nodes to be removed
+     */
+    public void removeAll(final Collection<Node> nodes) {
+        nodes.forEach(this::idempotentRemove);
     }
 
     /**
@@ -222,6 +240,23 @@ public final class Subgraph {
         if (node instanceof Segment) {
             final Segment segment = (Segment) node;
             segments.put(segment.getId(), segment);
+        }
+    }
+
+    /**
+     * Removes a {@link Node} without any other side effects.
+     * <p>
+     * Calling this method twice with the same {@link Node} will result in no side effects whatsoever, thus promising
+     * idempotence.
+     *
+     * @param node a {@link Node}
+     */
+    private void idempotentRemove(final Node node) {
+        nodes.remove(node.getUuid());
+
+        if (node instanceof Segment) {
+            final Segment segment = (Segment) node;
+            segments.remove(segment.getId());
         }
     }
 }
