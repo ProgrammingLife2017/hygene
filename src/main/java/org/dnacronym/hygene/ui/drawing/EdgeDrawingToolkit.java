@@ -56,10 +56,9 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
     }
 
     /**
-     * Draws a single edge from a given to point to a destination point.
+     * Draws annotations below an edge.
      * <p>
-     * The path colors are spread evenly across the width of the edge. They are drawn as bands along the edge.<br>
-     * Annotations are drawn as strands below the node, each with the set annotation height.
+     * Annotations have the given colors, and are dashed.
      *
      * @param fromX            the x position of the origin of the edge
      * @param fromY            the y position of the origin of the edge
@@ -83,6 +82,6 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
             annotationToY += getAnnotationHeight();
         }
 
-        getGraphicsContext().setLineDashes(1);
+        getGraphicsContext().setLineDashes(0);
     }
 }

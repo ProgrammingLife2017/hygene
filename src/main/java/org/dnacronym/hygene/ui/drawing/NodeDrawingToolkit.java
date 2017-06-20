@@ -100,10 +100,9 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
     }
 
     /**
-     * Fills a round rectangle based on the node position and width.
+     * Draws annotations below a node.
      * <p>
-     * The path colors are spread evenly across the width of the node. They are drawn as bands along the node.<br>
-     * The annotation colors are drawn as dashed lines below the node, each with the set annotation height.
+     * Annotations have the given colors, and are dashed.
      *
      * @param nodeX            the top left x position of the node
      * @param nodeY            the top left y position of the node
