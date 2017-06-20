@@ -64,6 +64,8 @@ public final class GraphVisualizer {
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
+
+    private final ObjectProperty<GenomePath> selectedPathsProperty;
     private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -115,6 +117,7 @@ public final class GraphVisualizer {
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
+        selectedPathsProperty = new SimpleObjectProperty<>();
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -501,6 +504,15 @@ public final class GraphVisualizer {
     }
 
     /**
+     * The property of representing the selected paths.
+     *
+     * @return property of representing the selected paths.
+     */
+    public ObjectProperty<GenomePath> getSelectedPathsPropertyProperty() {
+        return selectedPathsProperty;
+    }
+
+    /**
      * The property of onscreen edge {@link Color}s.
      *
      * @return property which decides the {@link Color} of edges
@@ -541,7 +553,7 @@ public final class GraphVisualizer {
      *
      * @return property which contain a map genome mappings.
      */
-    public ObjectProperty<Map<String, String>> genomeMappingProperty() {
+    public ObjectProperty<Map<String, String>> getGenomeMappingProperty() {
         return genomeMapping;
     }
 }
