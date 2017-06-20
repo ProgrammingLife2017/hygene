@@ -20,7 +20,7 @@ class NodeAggregatorTest {
      */
     @Test
     void testAggregateNoNeighbours() {
-        assertThat(NodeAggregator.aggregate(new Segment(14, 48, 51))).isNull();
+        assertThat(NodeAggregator.aggregate(new Segment(14, 48, 51))).isEmpty();
     }
 
     /**
@@ -34,7 +34,7 @@ class NodeAggregatorTest {
         linkNodes(nodeA, nodeB);
         linkNodes(nodeB, nodeC);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -54,7 +54,7 @@ class NodeAggregatorTest {
         linkNodes(nodeC, nodeE);
         linkNodes(nodeD, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -71,7 +71,7 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -88,7 +88,7 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -104,7 +104,7 @@ class NodeAggregatorTest {
         linkNodes(nodeA, nodeC);
         linkNodes(nodeC, nodeD);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -123,7 +123,7 @@ class NodeAggregatorTest {
         linkNodes(nodeC, nodeD);
         linkNodes(nodeC, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -141,7 +141,7 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -168,7 +168,7 @@ class NodeAggregatorTest {
         linkNodes(nodeC, nodeE);
         linkNodes(nodeD, nodeE);
 
-        assertThat(NodeAggregator.aggregate(nodeA)).isNull();
+        assertThat(NodeAggregator.aggregate(nodeA)).isEmpty();
     }
 
     /**
@@ -185,7 +185,8 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA);
+        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA)
+                .orElseThrow(() -> new AssertionError("AggregateNode is null."));
         assertThat(aggregateNode).isNotNull();
         assertThat(aggregateNode.getNodes()).containsExactly(nodeB, nodeC);
     }
@@ -204,7 +205,8 @@ class NodeAggregatorTest {
         linkNodes(nodeB, nodeD);
         linkNodes(nodeC, nodeD);
 
-        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA);
+        final AggregateNode aggregateNode = NodeAggregator.aggregate(nodeA)
+                .orElseThrow(() -> new AssertionError("AggregateNode is null."));
         final AggregateEdge toAggregateNode = (AggregateEdge) aggregateNode.getIncomingEdges().iterator().next();
         final AggregateEdge fromAggregateNode = (AggregateEdge) aggregateNode.getOutgoingEdges().iterator().next();
 
@@ -218,6 +220,171 @@ class NodeAggregatorTest {
                 nodeC.getOutgoingEdges().iterator().next()
         );
         assertThat(nodeD.getIncomingEdges()).containsExactly(fromAggregateNode);
+    }
+
+
+    /**
+     * Tests that nothing happens if an empty collection is aggregated.
+     */
+    @Test
+    void testAggregateSubgraphEmpty() {
+        final Subgraph subgraph = new Subgraph();
+
+        NodeAggregator.aggregate(subgraph);
+
+        assertThat(subgraph.getNodes()).isEmpty();
+    }
+
+    /**
+     * Tests that nothing happens if a collection with a single node is aggregated.
+     */
+    @Test
+    void testAggregateSubgraphSingleNode() {
+        final Subgraph subgraph = new Subgraph();
+        final Node node = new Segment(90, 98, 55);
+        subgraph.add(node);
+
+        NodeAggregator.aggregate(subgraph);
+
+        assertThat(subgraph.getNodes()).containsExactly(node);
+    }
+
+    /**
+     * Tests that a single aggregation takes place when the simplest aggregable collection of nodes is given.
+     */
+    @Test
+    void testAggregateSubgraphOneSuccess() {
+        final Subgraph subgraph = new Subgraph();
+        final Node nodeA = new Segment(4, 13, 24);
+        final Node nodeB = new Segment(43, 97, 1);
+        final Node nodeC = new Segment(58, 44, 1);
+        final Node nodeD = new Segment(19, 57, 48);
+        linkNodes(nodeA, nodeB);
+        linkNodes(nodeA, nodeC);
+        linkNodes(nodeB, nodeD);
+        linkNodes(nodeC, nodeD);
+        subgraph.add(nodeA);
+        subgraph.add(nodeB);
+        subgraph.add(nodeC);
+        subgraph.add(nodeD);
+
+        NodeAggregator.aggregate(subgraph);
+
+        assertThat(nodeA.getOutgoingEdges()).hasSize(1);
+        assertThat(nodeD.getIncomingEdges()).hasSize(1);
+
+        final AggregateNode aggregateNode = (AggregateNode) nodeA.getOutgoingEdges().iterator().next().getTo();
+        assertThat(aggregateNode.getNodes()).containsExactlyInAnyOrder(nodeB, nodeC);
+
+        assertThat(subgraph.getNodes()).containsExactlyInAnyOrder(nodeA, aggregateNode, nodeD);
+    }
+
+    @Test
+    void testAggregateSubgraphTwoSuccesses() {
+        final Subgraph subgraph = new Subgraph();
+        final Node nodeA = new Segment(93, 36, 43);
+        final Node nodeB = new Segment(60, 28, 1);
+        final Node nodeC = new Segment(95, 85, 1);
+        final Node nodeD = new Segment(44, 69, 12);
+        final Node nodeE = new Segment(73, 46, 1);
+        final Node nodeF = new Segment(98, 73, 1);
+        final Node nodeG = new Segment(59, 20, 65);
+        linkNodes(nodeA, nodeB);
+        linkNodes(nodeA, nodeC);
+        linkNodes(nodeB, nodeD);
+        linkNodes(nodeC, nodeD);
+        linkNodes(nodeD, nodeE);
+        linkNodes(nodeD, nodeF);
+        linkNodes(nodeE, nodeG);
+        linkNodes(nodeF, nodeG);
+        subgraph.add(nodeA);
+        subgraph.add(nodeB);
+        subgraph.add(nodeC);
+        subgraph.add(nodeD);
+        subgraph.add(nodeE);
+        subgraph.add(nodeF);
+        subgraph.add(nodeG);
+
+        NodeAggregator.aggregate(subgraph);
+
+        assertThat(nodeA.getOutgoingEdges()).hasSize(1);
+        assertThat(nodeD.getIncomingEdges()).hasSize(1);
+
+        assertThat(nodeD.getOutgoingEdges()).hasSize(1);
+        assertThat(nodeG.getIncomingEdges()).hasSize(1);
+
+        final AggregateNode aggregateNode1 = (AggregateNode) nodeA.getOutgoingEdges().iterator().next().getTo();
+        assertThat(aggregateNode1.getNodes()).containsExactlyInAnyOrder(nodeB, nodeC);
+
+        final AggregateNode aggregateNode2 = (AggregateNode) nodeD.getOutgoingEdges().iterator().next().getTo();
+        assertThat(aggregateNode2.getNodes()).containsExactlyInAnyOrder(nodeE, nodeF);
+
+        assertThat(subgraph.getNodes()).containsExactlyInAnyOrder(nodeA, aggregateNode1, nodeD, aggregateNode2, nodeG);
+    }
+
+    /**
+     * Tests that only a single aggregation takes place in a relatively complex graph.
+     * <p><pre>
+     * . . . . . . . . . . . . . . .
+     * . . . . . C . . . G . . . . .
+     * . . . . / . \ . / . \ . . . .
+     * . A - B . . . E . . . I . . .
+     * . . . . \ . / . \ . / . \ . .
+     * . . . . . D . . . H . . . J .
+     * . . . . . . \ . . . . . / . .
+     * . . . . . . . F - - - - . . .
+     * . . . . . . . . . . . . . . .
+     * </pre>
+     */
+    @Test
+    void testAggregateSubgraphOneSuccessManyFailures() {
+        final Subgraph subgraph = new Subgraph();
+        final Node nodeA = new Segment(4, 76, 86);
+        final Node nodeB = new Segment(73, 12, 4);
+        final Node nodeC = new Segment(36, 49, 1);
+        final Node nodeD = new Segment(18, 64, 1);
+        final Node nodeE = new Segment(12, 88, 89);
+        final Node nodeF = new Segment(88, 100, 71);
+        final Node nodeG = new Segment(89, 87, 1);
+        final Node nodeH = new Segment(58, 61, 1);
+        final Node nodeI = new Segment(15, 34, 15);
+        final Node nodeJ = new Segment(51, 54, 71);
+        final Node nodeK = new Segment(8, 40, 99);
+        linkNodes(nodeA, nodeB);
+        linkNodes(nodeB, nodeC);
+        linkNodes(nodeB, nodeD);
+        linkNodes(nodeC, nodeE);
+        linkNodes(nodeD, nodeE);
+        linkNodes(nodeD, nodeF);
+        linkNodes(nodeE, nodeG);
+        linkNodes(nodeE, nodeH);
+        linkNodes(nodeF, nodeJ);
+        linkNodes(nodeG, nodeI);
+        linkNodes(nodeH, nodeI);
+        linkNodes(nodeI, nodeJ);
+        subgraph.add(nodeA);
+        subgraph.add(nodeB);
+        subgraph.add(nodeC);
+        subgraph.add(nodeD);
+        subgraph.add(nodeE);
+        subgraph.add(nodeF);
+        subgraph.add(nodeG);
+        subgraph.add(nodeH);
+        subgraph.add(nodeI);
+        subgraph.add(nodeJ);
+        subgraph.add(nodeK);
+
+        NodeAggregator.aggregate(subgraph);
+
+        assertThat(nodeB.getOutgoingEdges()).hasSize(2);
+        assertThat(nodeE.getIncomingEdges()).hasSize(2);
+        assertThat(nodeE.getOutgoingEdges()).hasSize(1);
+        assertThat(nodeI.getIncomingEdges()).hasSize(1);
+
+        final AggregateNode aggregateNode = (AggregateNode) nodeE.getOutgoingEdges().iterator().next().getTo();
+        assertThat(subgraph.getNodes()).containsExactlyInAnyOrder(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, aggregateNode,
+                nodeI, nodeJ, nodeK);
+        assertThat(aggregateNode.getNodes()).containsExactlyInAnyOrder(nodeG, nodeH);
     }
 
 

@@ -2,7 +2,6 @@ package org.dnacronym.hygene.graph;
 
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateNode;
@@ -12,11 +11,15 @@ import org.dnacronym.hygene.graph.node.Segment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 /**
  * Aggregator of nodes to achieve semantic zooming.
+ * <p>
+ * Aggregation only happens when the given node has exactly two right neighbours, these neighbours have a sequence
+ * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
  */
 public final class NodeAggregator {
     private final Node startNode;
@@ -38,37 +41,52 @@ public final class NodeAggregator {
 
 
     /**
+     * Aggregates as many nodes as possible.
+     *
+     * @param subgraph a {@link Subgraph}
+     */
+    public static void aggregate(final Subgraph subgraph) {
+        final List<AggregateNode> aggregateNodes = subgraph.getNodes().stream()
+                .map(NodeAggregator::aggregate)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        aggregateNodes.forEach(aggregateNode -> {
+            subgraph.removeAll(aggregateNode.getNodes());
+            subgraph.add(aggregateNode);
+        });
+    }
+
+    /**
      * Aggregates the given node's neighbours, if possible.
-     * <p>
-     * Aggregation only happens when the given node has exactly two right neighbours, these neighbours have a sequence
-     * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
      *
      * @param node a node
      * @return the {@link AggregateNode} the neighbours are now part of, or {@code null} if no aggregation occurred
      */
-    public static @Nullable AggregateNode aggregate(final Node node) {
+    public static Optional<AggregateNode> aggregate(final Node node) {
         final NodeAggregator aggregator = new NodeAggregator(node);
 
         if (!aggregator.nodeHasValidNumberOfNeighbours()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursAreSegments()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursHaveSequenceLengthOne()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursHaveOneNeighbour()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursHaveSameNeighbour()) {
-            return null;
+            return Optional.empty();
         }
         if (!aggregator.neighboursAreOnlyNeighboursOfTheirNeighbour()) {
-            return null;
+            return Optional.empty();
         }
 
-        return aggregator.aggregate();
+        return Optional.of(aggregator.aggregate());
     }
 
     /**
