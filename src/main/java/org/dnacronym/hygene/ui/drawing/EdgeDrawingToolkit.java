@@ -59,7 +59,7 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
      * Draws a single edge from a given to point to a destination point.
      * <p>
      * The path colors are spread evenly across the width of the edge. They are drawn as bands along the edge.<br>
-     * Annotations are drawn as strands below the node, each with height {@value ANNOTATION_HEIGHT}.
+     * Annotations are drawn as strands below the node, each with the set annotation height.
      *
      * @param fromX            the x position of the origin of the edge
      * @param fromY            the y position of the origin of the edge
@@ -71,16 +71,16 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
     public void drawEdgeAnnotations(final double fromX, final double fromY, final double toX, final double toY,
                                     final double edgeWidth, final List<Color> annotationColors) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
-        getGraphicsContext().setLineWidth(ANNOTATION_HEIGHT);
+        getGraphicsContext().setLineWidth(getAnnotationHeight());
 
-        double annotationFromY = fromY + edgeWidth + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
-        double annotationToY = toY + edgeWidth + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
+        double annotationFromY = fromY + edgeWidth + getAnnotationHeight() + getAnnotationHeight() / 2;
+        double annotationToY = toY + edgeWidth + getAnnotationHeight() + getAnnotationHeight() / 2;
         for (final Color color : annotationColors) {
             getGraphicsContext().setStroke(color);
             getGraphicsContext().strokeLine(fromX, annotationFromY, toX, annotationToY);
 
-            annotationFromY += ANNOTATION_HEIGHT;
-            annotationToY += ANNOTATION_HEIGHT;
+            annotationFromY += getAnnotationHeight();
+            annotationToY += getAnnotationHeight();
         }
 
         getGraphicsContext().setLineDashes(1);

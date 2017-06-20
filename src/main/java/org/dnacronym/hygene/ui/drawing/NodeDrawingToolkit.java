@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -70,11 +71,10 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * @param nodeX     the top left x position of the node
      * @param nodeY     the top left y position of the node
      * @param nodeWidth the width of the node
-     * @param fill      the {@link Color} to fill the node with
+     * @param color     the {@link Color} to fill the node with
      */
-    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final Color fill) {
-        getGraphicsContext().setFill(fill);
-        getGraphicsContext().fillRoundRect(nodeX, nodeY, nodeWidth, nodeHeight, ARC_SIZE, ARC_SIZE);
+    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final Color color) {
+        drawNodePaths(nodeX, nodeY, nodeWidth, Collections.singletonList(color));
     }
 
     /**
@@ -103,7 +103,7 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      * Fills a round rectangle based on the node position and width.
      * <p>
      * The path colors are spread evenly across the width of the node. They are drawn as bands along the node.<br>
-     * The annotation colors are drawn as dashed lines below the node, each of height {@value ANNOTATION_HEIGHT}.
+     * The annotation colors are drawn as dashed lines below the node, each with the set annotation height.
      *
      * @param nodeX            the top left x position of the node
      * @param nodeY            the top left y position of the node
@@ -113,14 +113,14 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
     public void drawNodeAnnotations(final double nodeX, final double nodeY, final double nodeWidth,
                                     final List<Color> annotationColors) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
-        getGraphicsContext().setLineWidth(ANNOTATION_HEIGHT);
+        getGraphicsContext().setLineWidth(getAnnotationHeight());
 
-        double annotationY = nodeY + nodeHeight + ANNOTATION_HEIGHT + ANNOTATION_HEIGHT / 2;
+        double annotationY = nodeY + nodeHeight + getAnnotationHeight() + getAnnotationHeight() / 2;
         for (final Color color : annotationColors) {
             getGraphicsContext().setStroke(color);
             getGraphicsContext().strokeLine(nodeX, annotationY, nodeX + nodeWidth, annotationY);
 
-            annotationY += ANNOTATION_HEIGHT;
+            annotationY += getAnnotationHeight();
         }
 
         getGraphicsContext().setLineDashes(1);

@@ -8,9 +8,9 @@ import javafx.scene.canvas.GraphicsContext;
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod") // This class doesn't need abstract methods
 public abstract class DrawingToolkit {
-    static final double ANNOTATION_HEIGHT = 2;
     static final double ANNOTATION_DASH_LENGTH = 10;
 
+    private double annotationHeight = 2;
     private GraphicsContext graphicsContext;
 
 
@@ -38,5 +38,23 @@ public abstract class DrawingToolkit {
      */
     protected final GraphicsContext getGraphicsContext() {
         return graphicsContext;
+    }
+
+    /**
+     * Sets the height of annotation bands.
+     *
+     * @param annotationHeight the height of annotation bands
+     */
+    public final void setAnnotationHeight(final double annotationHeight) {
+        this.annotationHeight = annotationHeight;
+    }
+
+    /**
+     * Returns the height of annotation bands.
+     *
+     * @return the height of annotation bands
+     */
+    protected final double getAnnotationHeight() {
+        return annotationHeight;
     }
 }
