@@ -48,9 +48,9 @@ public final class GraphAnnotation {
         this.endPoints = new HashMap<>();
 
         Optional.ofNullable(genomeNavigation.getGenomeIndexProperty().get())
-                .ifPresent(genomeIndex -> this.genomeIndex = genomeIndex);
+                .ifPresent(newGenomeIndex -> genomeIndex = newGenomeIndex);
         Optional.ofNullable(graphStore.getGffFileProperty().get())
-                .ifPresent(gffFile -> this.annotationCollection = gffFile.getAnnotationCollection());
+                .ifPresent(gffFile -> annotationCollection = gffFile.getAnnotationCollection());
         recalculateAnnotationPoints();
 
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
