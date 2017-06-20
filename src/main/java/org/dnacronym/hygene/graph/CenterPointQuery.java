@@ -147,7 +147,7 @@ public final class CenterPointQuery {
             throw new IllegalArgumentException("Centre point node id cannot exceed graph size.");
         }
         if (radius < 0) {
-            throw new IllegalArgumentException("Radius must cannot be negative.");
+            throw new IllegalArgumentException("Radius cannot be negative.");
         }
 
         this.centre = centre;
