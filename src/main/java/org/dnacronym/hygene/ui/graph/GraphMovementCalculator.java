@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javax.inject.Inject;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
@@ -16,6 +17,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
     private static final double DEFAULT_ZOOMING_SENSITIVITY = 10;
+    private static final double RADIUS_ZOOMING_FACTOR = 40000.0;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
@@ -100,7 +102,9 @@ public final class GraphMovementCalculator {
      * @param deltaY delta in the y direction
      */
     public void onScroll(final double deltaY) {
-        final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get());
+        final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get()
+                * (graphDimensionsCalculator.getViewRadiusProperty().get() / RADIUS_ZOOMING_FACTOR));
+
         graphDimensionsCalculator.getViewRadiusProperty().set(
                 graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange
         );
