@@ -17,7 +17,7 @@ public final class ColorRoulette {
      */
     public synchronized Color getNext() {
         final DarkQuantitativeColors[] colors = DarkQuantitativeColors.values();
-        index = ++index % colors.length;
+        index = (index + 1) % colors.length;
 
         return colors[index].color;
     }
