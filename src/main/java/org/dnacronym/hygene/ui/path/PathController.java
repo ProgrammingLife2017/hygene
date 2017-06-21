@@ -49,7 +49,7 @@ public final class PathController implements Initializable {
      * Adds event listeners to update the list of genomes when the user selects a specific node.
      */
     void addListeners() {
-        pathList.setItems(graphVisualizer.getSelectedPathsProperty());
+        pathList.setItems(graphVisualizer.getGenomePathsProperty());
     }
 
     /**

@@ -38,7 +38,6 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -88,8 +87,6 @@ public final class GraphVisualizer {
     private final DoubleProperty nodeHeightProperty;
 
     private final BooleanProperty displayLaneBordersProperty;
-
-    private final ObjectProperty<Map<String, String>> genomeMapping;
 
     private Graph graph;
 
@@ -149,13 +146,9 @@ public final class GraphVisualizer {
         displayLaneBordersProperty = new SimpleBooleanProperty();
         displayLaneBordersProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        genomeMapping = new SimpleObjectProperty<>();
-
         graphDimensionsCalculator.getGraphProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    setGraph(newValue);
-                    genomeMapping.set(newValue.getGfaFile().getGenomeMapping());
-                });
+                .addListener((observable, oldValue, newValue) -> setGraph(newValue));
+
         graphDimensionsCalculator.getObservableQueryNodes()
                 .addListener((ListChangeListener<Node>) change -> draw());
 
@@ -566,7 +559,7 @@ public final class GraphVisualizer {
      *
      * @return property of representing the selected paths.
      */
-    public ObservableList<GenomePath> getSelectedPathsProperty() {
+    public ObservableList<GenomePath> getGenomePathsProperty() {
         return genomePaths;
     }
 
@@ -604,14 +597,5 @@ public final class GraphVisualizer {
      */
     public BooleanProperty getDisplayBordersProperty() {
         return displayLaneBordersProperty;
-    }
-
-    /**
-     * The property which contains a map of genome mappings.
-     *
-     * @return property which contain a map genome mappings.
-     */
-    public ObjectProperty<Map<String, String>> getGenomeMappingProperty() {
-        return genomeMapping;
     }
 }
