@@ -23,8 +23,8 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
@@ -211,8 +211,8 @@ public final class GraphVisualizer {
      * @param edge the edge to be drawn
      */
     private void drawEdge(final Edge edge) {
-        final Node fromNode = edge.getFrom();
-        final Node toNode = edge.getTo();
+        final GfaNode fromNode = edge.getFromSegment();
+        final GfaNode toNode = edge.getToSegment();
 
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
@@ -238,7 +238,8 @@ public final class GraphVisualizer {
     private List<Color> computeEdgeColors(final Edge edge) {
         final List<Color> edgeColors;
 
-        if (hovered(edge)) {
+        if (edge.getFromSegment().equals(hoveredSegmentProperty.get())
+                || edge.getToSegment().equals(hoveredSegmentProperty.get())) {
             edgeColors = Collections.singletonList(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
         } else if (edge.getGenomes() != null
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
@@ -257,20 +258,6 @@ public final class GraphVisualizer {
         }
 
         return edgeColors;
-    }
-
-    /**
-     * Checks whether the {@link Edge} if part of the {@link Segment} being hovered.
-     *
-     * @param edge the {@link Edge}
-     * @return if the edge is part of the {@link Segment} being hovered
-     */
-    boolean hovered(final Edge edge) {
-        if (edge instanceof DummyEdge) {
-            return ((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
-                    || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get());
-        }
-        return edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get());
     }
 
     /**
