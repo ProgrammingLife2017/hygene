@@ -2,11 +2,13 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.scene.paint.Color;
 
+
 /**
  * Class that will sequentially generate a quantitative color scheme.
  */
 public final class ColorRoulette {
     private int index = -1;
+
 
     /**
      * Retrieves the next {@link Color}.
@@ -19,6 +21,7 @@ public final class ColorRoulette {
 
         return colors[index].color;
     }
+
 
     /**
      * Enum representing a color scheme containing a dark quantitative color scheme.
@@ -41,7 +44,7 @@ public final class ColorRoulette {
 
 
         /**
-         * Construct a new {@link DarkQuantitativeColors} instance.
+         * Constructs a new {@link DarkQuantitativeColors} instance.
          *
          * @param color the color
          */

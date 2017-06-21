@@ -9,16 +9,19 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+
 /**
  * Unit test for {@link ColorRoulette}.
  */
 class ColorRouletteTest {
     private ColorRoulette colorRoulette;
 
+
     @BeforeEach
     void setUp() throws IOException, SQLException {
         colorRoulette = new ColorRoulette();
     }
+
 
     @Test
     void getNext() {
