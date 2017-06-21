@@ -75,7 +75,6 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<GfaNode> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
-    private final ObjectProperty<String> selectedPathProperty;
     private final ObjectProperty<GfaNode> hoveredSegmentProperty;
 
     private final ObservableList<GenomePath> genomePaths;
