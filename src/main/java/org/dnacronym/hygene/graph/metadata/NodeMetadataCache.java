@@ -168,7 +168,7 @@ public final class NodeMetadataCache {
                 .map(node -> (AggregateSegment) node)
                 .forEach(aggregateSegment -> aggregateSegment.setMetadata(
                         new NodeMetadata(aggregateSegment.getSegments().stream()
-                                .filter(segment -> segment.hasMetadata())
+                                .filter(Segment::hasMetadata)
                                 .map(Segment::getMetadata)
                                 .collect(Collectors.toList()))));
     }

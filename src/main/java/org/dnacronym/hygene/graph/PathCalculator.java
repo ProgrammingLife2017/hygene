@@ -110,7 +110,7 @@ public final class PathCalculator {
             outgoingEdges.get(current).stream()
                     .filter(edge -> !visitedNodes.contains(edge.getTo()))
                     .filter(edge -> incomingEdges.get((GfaNode) edge.getTo()).stream()
-                            .allMatch(to -> visitedEdges.contains(to)))
+                            .allMatch(visitedEdges::contains))
                     .forEach(toVisit::add);
 
             genomeStore.put(current, new HashSet<>(current.getMetadata().getGenomes()));
