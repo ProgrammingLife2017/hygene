@@ -8,9 +8,9 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.MetadataParser;
-import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileGenomeIndex;
@@ -141,11 +141,8 @@ public final class GenomeIndex {
             final String nextGenome = bodyTokenizer.nextToken();
 
             if (!nextGenome.isEmpty()) {
-                final String name = nextGenome.lastIndexOf('.') > 0
-                        ? nextGenome.substring(0, nextGenome.lastIndexOf('.')) : nextGenome;
-
-                genomeBaseCounts.put(name, 0);
-                genomeNames.add(name);
+                genomeBaseCounts.put(nextGenome, 0);
+                genomeNames.add(nextGenome);
             }
         }
 
@@ -194,17 +191,15 @@ public final class GenomeIndex {
             final List<String> nodeGenomes = gfaFile.parseNodeMetadata(graph.getByteOffset(nodeId)).getGenomes();
 
             for (final String genome : nodeGenomes) {
-                final String noExtensionGenome = genome.lastIndexOf('.') > 0
-                        ? genome.substring(0, genome.lastIndexOf('.')) : genome;
-
                 final int genomeIndex;
                 final String genomeName;
-                if (StringUtils.isNumeric(noExtensionGenome)) {
-                    genomeIndex = Integer.parseInt(noExtensionGenome);
+
+                if (StringUtils.isNumeric(genome)) {
+                    genomeIndex = Integer.parseInt(genome);
                     genomeName = genomeNames.get(genomeIndex);
                 } else {
-                    genomeIndex = genomeNames.indexOf(noExtensionGenome);
-                    genomeName = noExtensionGenome;
+                    genomeIndex = genomeNames.indexOf(genome);
+                    genomeName = genome;
                 }
 
                 final Integer genomeBaseCount = genomeBaseCounts.get(genomeName);
