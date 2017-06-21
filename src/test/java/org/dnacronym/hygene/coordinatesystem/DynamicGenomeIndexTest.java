@@ -2,6 +2,7 @@ package org.dnacronym.hygene.coordinatesystem;
 
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GfaParseException;
+import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class DynamicGenomeIndexTest {
 
 
     @Test
-    void testInsertion() {
+    void testInsertion() throws MetadataParseException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g1.fasta");
         dynamicGenomeIndex.buildIndex();
 
@@ -42,7 +43,7 @@ class DynamicGenomeIndexTest {
     }
 
     @Test
-    void testSecondInsertion() {
+    void testSecondInsertion() throws MetadataParseException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g2.fasta");
         dynamicGenomeIndex.buildIndex();
 
@@ -54,7 +55,7 @@ class DynamicGenomeIndexTest {
     }
 
     @Test
-    void testNestedInsertion() {
+    void testNestedInsertion() throws MetadataParseException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g3.fasta");
         dynamicGenomeIndex.buildIndex();
 
