@@ -132,14 +132,7 @@ public final class NodeMetadataCache {
             metadata.forEach((key, value) -> subgraph.getSegment(key)
                     .ifPresent(segment -> segment.setMetadata(value)));
 
-            subgraph.getGfaNodes().stream()
-                    .filter(node -> node instanceof AggregateSegment)
-                    .map(node -> (AggregateSegment) node)
-                    .forEachOrdered(aggregateSegment -> aggregateSegment.setMetadata(
-                            new NodeMetadata(aggregateSegment.getSegments().stream()
-                                    .filter(segment -> segment.hasMetadata())
-                                    .map(Segment::getMetadata)
-                                    .collect(Collectors.toList()))));
+            setAggregateNodeMetadata(subgraph);
         } catch (final MetadataParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
         }
@@ -162,5 +155,21 @@ public final class NodeMetadataCache {
                         (oldValue, newValue) -> oldValue,
                         LinkedHashMap::new
                 ));
+    }
+
+    /**
+     * Calculates metadata for all aggregate segments in the given subgraph.
+     *
+     * @param subgraph a subgraph
+     */
+    private void setAggregateNodeMetadata(final Subgraph subgraph) {
+        subgraph.getGfaNodes().stream()
+                .filter(node -> node instanceof AggregateSegment)
+                .map(node -> (AggregateSegment) node)
+                .forEach(aggregateSegment -> aggregateSegment.setMetadata(
+                        new NodeMetadata(aggregateSegment.getSegments().stream()
+                                .filter(segment -> segment.hasMetadata())
+                                .map(Segment::getMetadata)
+                                .collect(Collectors.toList()))));
     }
 }
