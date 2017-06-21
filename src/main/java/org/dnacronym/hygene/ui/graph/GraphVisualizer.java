@@ -35,6 +35,7 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -218,7 +219,6 @@ public final class GraphVisualizer {
      *
      * @param edge the edge to be drawn
      */
-    @SuppressWarnings("PMD.CyclomaticComplexity") // Some application logic should be moved to Edge class
     private void drawEdge(final Edge edge) {
         final Node fromNode = edge.getFrom();
         final Node toNode = edge.getTo();
@@ -228,28 +228,6 @@ public final class GraphVisualizer {
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
 
-        final Color edgeColor;
-        if (edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get())) {
-            edgeColor = NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor();
-        } else if (edge instanceof DummyEdge
-                && (((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
-                || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get()))) {
-            edgeColor = NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor();
-        } else if (edge.inGenome(selectedPathProperty.get())
-                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
-            edgeColor = correctColorForEdgeOpacity(Color.BLUE);
-        } else {
-            edgeColor = getEdgeColor();
-        }
-
-        final Set<String> edgeGenomes = edge.getGenomes();
-        List<Color> pathColors = null;
-        if (edgeGenomes != null) {
-            pathColors = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet()).stream()
-                    .map(path -> correctColorForEdgeOpacity(selectedGenomePaths.get(path)))
-                    .collect(Collectors.toList());
-        }
-
         if (fromNode instanceof Segment && toNode instanceof Segment) {
             final int fromSegmentId = ((Segment) fromNode).getId();
             final int toSegmentId = ((Segment) toNode).getId();
@@ -257,11 +235,52 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        if (pathColors != null && !pathColors.isEmpty()) {
-            edgeDrawingToolkit.drawEdgeGenomes(fromX, fromY, toX, toY, computeEdgeThickness(edge), pathColors);
+        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), computeEdgeColors(edge));
+    }
+
+    /**
+     * Computes the {@link Color} of the {@link Edge}.
+     *
+     * @param edge the {@link Edge}
+     * @return list of {@link Edge} colors
+     */
+    private List<Color> computeEdgeColors(final Edge edge) {
+        final List<Color> edgeColors;
+
+        if (hovered(edge)) {
+            edgeColors = Collections.singletonList(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+        } else if (edge.inGenome(selectedPathProperty.get())
+                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
+            edgeColors = Collections.singletonList(correctColorForEdgeOpacity(Color.BLUE));
+        } else if (edge.getGenomes() != null) {
+            Set<String> selectedGenomesInEdge = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet());
+
+            if (selectedGenomesInEdge.isEmpty()) {
+                edgeColors = Collections.singletonList(getEdgeColor());
+            } else {
+                edgeColors = selectedGenomesInEdge.stream()
+                        .map(path -> correctColorForEdgeOpacity(selectedGenomePaths.get(path)))
+                        .collect(Collectors.toList());
+            }
         } else {
-            edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), edgeColor);
+            edgeColors = Collections.singletonList(getEdgeColor());
         }
+
+        return edgeColors;
+    }
+
+    /**
+     * Checks whether the {@link Edge} if part of the {@link Segment} being hovered.
+     *
+     * @param edge the {@link Edge}
+     * @return if the edge is part of the {@link Segment} being hovered
+     */
+    boolean hovered(final Edge edge) {
+        if (edge instanceof DummyEdge) {
+            return (((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
+                    || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get()));
+        }
+        return edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get());
     }
 
     /**
