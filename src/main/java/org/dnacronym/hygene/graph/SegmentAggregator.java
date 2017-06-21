@@ -4,7 +4,7 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.AggregateNode;
+import org.dnacronym.hygene.graph.node.AggregateSegment;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
@@ -21,21 +21,23 @@ import java.util.stream.Collectors;
  * Aggregation only happens when the given node has exactly two right neighbours, these neighbours have a sequence
  * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
  */
-public final class NodeAggregator {
+public final class SegmentAggregator {
     private final Node startNode;
-    private final List<Node> neighbours;
+    private final List<Segment> neighbours;
     private @MonotonicNonNull Node endNode;
 
 
     /**
-     * Constructs a new {@link NodeAggregator} for a particular {@link Node}.
+     * Constructs a new {@link SegmentAggregator} for a particular {@link Node}.
      *
      * @param node the {@link Node} to aggregate
      */
-    private NodeAggregator(final Node node) {
+    private SegmentAggregator(final Node node) {
         this.startNode = node;
         this.neighbours = node.getOutgoingEdges().stream()
                 .map(Edge::getTo)
+                .filter(neighbour -> neighbour instanceof Segment)
+                .map(neighbour -> (Segment) neighbour)
                 .collect(Collectors.toList());
     }
 
@@ -46,15 +48,15 @@ public final class NodeAggregator {
      * @param subgraph a {@link Subgraph}
      */
     public static void aggregate(final Subgraph subgraph) {
-        final List<AggregateNode> aggregateNodes = subgraph.getNodes().stream()
-                .map(NodeAggregator::aggregate)
+        final List<AggregateSegment> aggregateSegments = subgraph.getNodes().stream()
+                .map(SegmentAggregator::aggregate)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
 
-        aggregateNodes.forEach(aggregateNode -> {
-            subgraph.removeAll(aggregateNode.getNodes());
-            subgraph.add(aggregateNode);
+        aggregateSegments.forEach(aggregateSegment -> {
+            subgraph.removeAll(aggregateSegment.getSegments());
+            subgraph.add(aggregateSegment);
         });
     }
 
@@ -62,10 +64,10 @@ public final class NodeAggregator {
      * Aggregates the given node's neighbours, if possible.
      *
      * @param node a node
-     * @return the {@link AggregateNode} the neighbours are now part of, or {@code null} if no aggregation occurred
+     * @return the {@link AggregateSegment} the neighbours are now part of, or {@code null} if no aggregation occurred
      */
-    public static Optional<AggregateNode> aggregate(final Node node) {
-        final NodeAggregator aggregator = new NodeAggregator(node);
+    public static Optional<AggregateSegment> aggregate(final Node node) {
+        final SegmentAggregator aggregator = new SegmentAggregator(node);
 
         if (!aggregator.nodeHasValidNumberOfNeighbours()) {
             return Optional.empty();
@@ -90,27 +92,27 @@ public final class NodeAggregator {
     }
 
     /**
-     * Aggregates the node's neighbours into an {@link AggregateNode}, and rewires the edges from and to that node.
+     * Aggregates the node's neighbours into an {@link AggregateSegment}, and rewires the edges from and to that node.
      *
-     * @return an {@link AggregateNode}
+     * @return an {@link AggregateSegment}
      */
-    private AggregateNode aggregate() {
-        final Collection<Node> aggregatedNodes = new ArrayList<>();
+    private AggregateSegment aggregate() {
+        final Collection<Segment> aggregatedNodes = new ArrayList<>();
         aggregatedNodes.add(neighbours.get(0));
         aggregatedNodes.add(neighbours.get(1));
-        final AggregateNode aggregateNode = new AggregateNode(aggregatedNodes);
+        final AggregateSegment aggregateSegment = new AggregateSegment(aggregatedNodes);
 
-        final Edge toAggregateNode = new AggregateEdge(startNode, aggregateNode, startNode.getOutgoingEdges());
+        final Edge toAggregateSegment = new AggregateEdge(startNode, aggregateSegment, startNode.getOutgoingEdges());
         startNode.getOutgoingEdges().clear();
-        startNode.getOutgoingEdges().add(toAggregateNode);
-        aggregateNode.getIncomingEdges().add(toAggregateNode);
+        startNode.getOutgoingEdges().add(toAggregateSegment);
+        aggregateSegment.getIncomingEdges().add(toAggregateSegment);
 
-        final Edge fromAggregateNode = new AggregateEdge(aggregateNode, getEndNode(), getEndNode().getIncomingEdges());
+        final Edge fromAggregateSegment = new AggregateEdge(aggregateSegment, getEndNode(), getEndNode().getIncomingEdges());
         getEndNode().getIncomingEdges().clear();
-        getEndNode().getIncomingEdges().add(fromAggregateNode);
-        aggregateNode.getOutgoingEdges().add(fromAggregateNode);
+        getEndNode().getIncomingEdges().add(fromAggregateSegment);
+        aggregateSegment.getOutgoingEdges().add(fromAggregateSegment);
 
-        return aggregateNode;
+        return aggregateSegment;
     }
 
 
