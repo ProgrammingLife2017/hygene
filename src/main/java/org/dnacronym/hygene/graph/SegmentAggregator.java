@@ -107,7 +107,8 @@ public final class SegmentAggregator {
         startNode.getOutgoingEdges().add(toAggregateSegment);
         aggregateSegment.getIncomingEdges().add(toAggregateSegment);
 
-        final Edge fromAggregateSegment = new AggregateEdge(aggregateSegment, getEndNode(), getEndNode().getIncomingEdges());
+        final Edge fromAggregateSegment = new AggregateEdge(aggregateSegment, getEndNode(),
+                getEndNode().getIncomingEdges());
         getEndNode().getIncomingEdges().clear();
         getEndNode().getIncomingEdges().add(fromAggregateSegment);
         aggregateSegment.getOutgoingEdges().add(fromAggregateSegment);

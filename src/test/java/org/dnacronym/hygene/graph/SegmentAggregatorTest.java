@@ -208,7 +208,8 @@ class SegmentAggregatorTest {
         final AggregateSegment aggregateSegment = SegmentAggregator.aggregate(nodeA)
                 .orElseThrow(() -> new AssertionError("AggregateSegment is null."));
         final AggregateEdge toAggregateSegment = (AggregateEdge) aggregateSegment.getIncomingEdges().iterator().next();
-        final AggregateEdge fromAggregateSegment = (AggregateEdge) aggregateSegment.getOutgoingEdges().iterator().next();
+        final AggregateEdge fromAggregateSegment = (AggregateEdge) aggregateSegment.getOutgoingEdges()
+                .iterator().next();
 
         assertThat(nodeA.getOutgoingEdges()).containsExactly(toAggregateSegment);
         assertThat(toAggregateSegment.getEdges()).containsExactly(
@@ -273,7 +274,8 @@ class SegmentAggregatorTest {
         assertThat(segmentA.getOutgoingEdges()).hasSize(1);
         assertThat(segmentD.getIncomingEdges()).hasSize(1);
 
-        final AggregateSegment aggregateSegment = (AggregateSegment) segmentA.getOutgoingEdges().iterator().next().getTo();
+        final AggregateSegment aggregateSegment = (AggregateSegment) segmentA.getOutgoingEdges().iterator()
+                .next().getTo();
         assertThat(aggregateSegment.getSegments()).containsExactlyInAnyOrder(segmentB, segmentC);
 
         assertThat(subgraph.getNodes()).containsExactlyInAnyOrder(segmentA, aggregateSegment, segmentD);
@@ -313,13 +315,16 @@ class SegmentAggregatorTest {
         assertThat(segmentD.getOutgoingEdges()).hasSize(1);
         assertThat(segmentG.getIncomingEdges()).hasSize(1);
 
-        final AggregateSegment aggregateSegment1 = (AggregateSegment) segmentA.getOutgoingEdges().iterator().next().getTo();
+        final AggregateSegment aggregateSegment1 = (AggregateSegment) segmentA.getOutgoingEdges()
+                .iterator().next().getTo();
         assertThat(aggregateSegment1.getSegments()).containsExactlyInAnyOrder(segmentB, segmentC);
 
-        final AggregateSegment aggregateSegment2 = (AggregateSegment) segmentD.getOutgoingEdges().iterator().next().getTo();
+        final AggregateSegment aggregateSegment2 = (AggregateSegment) segmentD.getOutgoingEdges()
+                .iterator().next().getTo();
         assertThat(aggregateSegment2.getSegments()).containsExactlyInAnyOrder(segmentE, segmentF);
 
-        assertThat(subgraph.getNodes()).containsExactlyInAnyOrder(segmentA, aggregateSegment1, segmentD, aggregateSegment2, segmentG);
+        assertThat(subgraph.getNodes()).containsExactlyInAnyOrder(segmentA, aggregateSegment1, segmentD,
+                aggregateSegment2, segmentG);
     }
 
     /**
