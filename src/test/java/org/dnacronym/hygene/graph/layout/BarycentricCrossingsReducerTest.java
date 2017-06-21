@@ -1,12 +1,9 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.node.FillNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -130,18 +127,5 @@ public final class BarycentricCrossingsReducerTest extends LayerConstructingTest
         assertThatLayerContainsExactly(layers[3], 5, -9999, -9999, 4, 11);
         assertThatLayerContainsExactly(layers[4], 6, 7, -9999, 4, 12);
         assertThatLayerContainsExactly(layers[5], 8, 9, 10);
-    }
-
-
-    private void assertThatLayerContainsExactly(final Node[] layer, final int... nodeIds) {
-        assertThat(layer).hasSameSizeAs(nodeIds);
-
-        for (int i = 0; i < layer.length; i++) {
-            if (nodeIds[i] == -9999) {
-                assertThat(layer[i]).isInstanceOf(FillNode.class);
-            } else {
-                assertThat(layer[i]).isEqualTo(getNode(nodeIds[i]));
-            }
-        }
     }
 }
