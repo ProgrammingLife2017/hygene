@@ -54,6 +54,7 @@ import java.util.stream.Collectors;
  * @see GraphDimensionsCalculator
  */
 @SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods"})
+// This will be fixed at a later date.
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
@@ -421,23 +422,24 @@ public final class GraphVisualizer {
         this.graph = graph;
 
         genomePaths.clear();
-        final List<GenomePath> genomePathList = graph.getGfaFile().getGenomeMapping().entrySet().stream()
+        final List<GenomePath> newGenomePaths = graph.getGfaFile().getGenomeMapping().entrySet().stream()
                 .map(entry -> new GenomePath(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        genomePathList.forEach(path -> path.selectedProperty().addListener((o, oldIsSelected, newIsSelected) -> {
-            if (newIsSelected) {
-                final Color genomeColor = colorRoulette.getNext();
-                selectedGenomePaths.put(path.getIndex(), genomeColor);
-                selectedGenomePaths.put(path.getName(), genomeColor);
-            } else {
-                selectedGenomePaths.remove(path.getIndex());
-                selectedGenomePaths.remove(path.getName());
-            }
-            LOGGER.info(selectedGenomePaths);
-        }));
+        newGenomePaths.forEach(path -> path.selectedProperty()
+                .addListener((o, oldIsSelected, newIsSelected) -> {
+                    if (newIsSelected) {
+                        final Color genomeColor = colorRoulette.getNext();
+                        selectedGenomePaths.put(path.getIndex(), genomeColor);
+                        selectedGenomePaths.put(path.getName(), genomeColor);
+                    } else {
+                        selectedGenomePaths.remove(path.getIndex());
+                        selectedGenomePaths.remove(path.getName());
+                    }
+                    LOGGER.debug(selectedGenomePaths);
+                }));
 
-        genomePaths.addAll(genomePathList);
+        genomePaths.addAll(newGenomePaths);
 
         draw();
     }
@@ -549,9 +551,9 @@ public final class GraphVisualizer {
     }
 
     /**
-     * The property of representing the selected paths.
+     * The property representing the selected paths.
      *
-     * @return property of representing the selected paths
+     * @return property representing the selected paths
      */
     public ObservableList<GenomePath> getGenomePathsProperty() {
         return genomePaths;
