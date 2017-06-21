@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -10,7 +11,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,9 +33,11 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -68,12 +70,14 @@ public final class GraphVisualizer {
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
+    private final ColorRoulette colorRoulette;
+
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
 
     private final ObservableList<GenomePath> genomePaths;
-    private final ObservableSet<GenomePath> selectedGenomePaths;
+    private final HashMap<String, Color> selectedGenomePaths;
 
     private final ObjectProperty<Segment> hoveredSegmentProperty;
 
@@ -116,6 +120,7 @@ public final class GraphVisualizer {
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
         this.bookmarkStore = bookmarkStore;
+        this.colorRoulette = new ColorRoulette();
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
@@ -126,8 +131,8 @@ public final class GraphVisualizer {
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
-        genomePaths = FXCollections.observableArrayList();
-        selectedGenomePaths = FXCollections.observableSet(new HashSet<>());
+        genomePaths = FXCollections.observableArrayList(new HashSet<>());
+        selectedGenomePaths = new HashMap<>();
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -235,6 +240,14 @@ public final class GraphVisualizer {
             edgeColor = getEdgeColor();
         }
 
+        final Set<String> edgeGenomes = edge.getGenomes();
+        List<Color> pathColors = null;
+        if (edgeGenomes != null) {
+            pathColors = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet()).stream()
+                    .map(path -> correctColorForEdgeOpacity(selectedGenomePaths.get(path)))
+                    .collect(Collectors.toList());
+        }
+
         if (fromNode instanceof Segment && toNode instanceof Segment) {
             final int fromSegmentId = ((Segment) fromNode).getId();
             final int toSegmentId = ((Segment) toNode).getId();
@@ -242,7 +255,11 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), edgeColor);
+        if (pathColors != null && pathColors.size() > 0) {
+            edgeDrawingToolkit.drawEdgeGenomes(fromX, fromY, toX, toY, computeEdgeThickness(edge), pathColors);
+        } else {
+            edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), edgeColor);
+        }
     }
 
     /**
@@ -290,6 +307,16 @@ public final class GraphVisualizer {
      */
     private Color correctColorForEdgeOpacity(final Color color) {
         return color.deriveColor(1, 1, 1, computeEdgeOpacity());
+    }
+
+    /**
+     * Correct a list of {@link Color}s for the current edge opacity.
+     *
+     * @param colors the list of {@link Color}s
+     * @return the list of {@link Color}s corrected for edge opacity
+     */
+    private List<Color> correctColorForEdgeOpacity(final List<Color> colors) {
+        return colors.stream().map(i -> correctColorForEdgeOpacity(i)).collect(Collectors.toList());
     }
 
     /**
@@ -400,9 +427,12 @@ public final class GraphVisualizer {
 
         genomePathList.forEach(path -> path.isSelectedProperty().addListener((o, oldIsSelected, newIsSelected) -> {
             if (newIsSelected) {
-                selectedGenomePaths.add(path);
+                Color genomeColor = colorRoulette.getNext();
+                selectedGenomePaths.put(path.getIndex(), genomeColor);
+                selectedGenomePaths.put(path.getName(), genomeColor);
             } else {
-                selectedGenomePaths.remove(path);
+                selectedGenomePaths.remove(path.getIndex());
+                selectedGenomePaths.remove(path.getName());
             }
             LOGGER.info(selectedGenomePaths);
         }));
@@ -411,6 +441,14 @@ public final class GraphVisualizer {
 
         draw();
     }
+
+//    Set<String> getSelectedGenomesInEdge(final Edge edge) {
+//        return Sets.intersection(selectedGenomePaths, edge.getGenomes());
+//    }
+
+//    void assignColor() {
+//        genomePathColors
+//    }
 
     /**
      * Set {@link Canvas} which the {@link GraphVisualizer} use to draw.
