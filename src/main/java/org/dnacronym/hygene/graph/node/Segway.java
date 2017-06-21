@@ -1,12 +1,21 @@
 package org.dnacronym.hygene.graph.node;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
  * An abstract kind of segment that may contain GFA segments.
  */
 public abstract class Segway extends Node {
+    /**
+     * Returns the segment with the given id, if present.
+     *
+     * @param segmentId the id of a segment
+     * @return the segment with the given id, if present
+     */
+    public abstract Optional<Segment> getSegment(int segmentId);
+
     /**
      * Returns all inner segments.
      *

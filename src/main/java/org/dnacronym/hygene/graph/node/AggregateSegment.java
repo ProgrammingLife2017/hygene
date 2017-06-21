@@ -5,8 +5,8 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -36,6 +36,19 @@ public final class AggregateSegment extends Segway {
 
 
     /**
+     * Returns the segment with the given id, if present.
+     *
+     * @param segmentId the id of a segment
+     * @return the segment with the given id, if present
+     */
+    @Override
+    public Optional<Segment> getSegment(final int segmentId) {
+        return segments.stream()
+                .filter(segment -> segment.getId() == segmentId)
+                .findFirst();
+    }
+
+    /**
      * Returns the aggregated segments.
      *
      * @return the aggregated segments
@@ -52,7 +65,7 @@ public final class AggregateSegment extends Segway {
      * @return {@code true} iff. a segment with the given id is aggregated in this node
      */
     @Override
-    public boolean containsSegment(int segmentId) {
+    public boolean containsSegment(final int segmentId) {
         return segments.stream().anyMatch(segment -> segment.getId() == segmentId);
     }
 

@@ -5,6 +5,7 @@ import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -48,6 +49,17 @@ public final class Segment extends Segway {
     }
 
     /**
+     * Returns this segment if it has the given id.
+     *
+     * @param segmentId the id of a segment
+     * @return this segment if it has the given id
+     */
+    @Override
+    public Optional<Segment> getSegment(final int segmentId) {
+        return id == segmentId ? Optional.of(this) : Optional.empty();
+    }
+
+    /**
      * Returns this {@link Segment} as a singleton list.
      *
      * @return this {@link Segment} as a singleton list
@@ -57,8 +69,14 @@ public final class Segment extends Segway {
         return Collections.singletonList(this);
     }
 
+    /**
+     * Returns {@code true} iff. this segment has the given id.
+     *
+     * @param segmentId the id of a segment
+     * @return {@code true} iff. this segment has the given id
+     */
     @Override
-    public boolean containsSegment(int segmentId) {
+    public boolean containsSegment(final int segmentId) {
         return id == segmentId;
     }
 
