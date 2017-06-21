@@ -3,12 +3,15 @@ package org.dnacronym.hygene.graph.node;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * Class representing a single, non-dummy segment node.
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
-public final class Segment extends Node {
+public final class Segment extends Segway {
     /**
      * The minimal length of a segment.
      */
@@ -45,6 +48,21 @@ public final class Segment extends Node {
     }
 
     /**
+     * Returns this {@link Segment} as a singleton list.
+     *
+     * @return this {@link Segment} as a singleton list
+     */
+    @Override
+    public List<Segment> getSegments() {
+        return Collections.singletonList(this);
+    }
+
+    @Override
+    public boolean containsSegment(int segmentId) {
+        return id == segmentId;
+    }
+
+    /**
      * Returns the byte offset.
      *
      * @return the byte offset
@@ -67,6 +85,11 @@ public final class Segment extends Node {
         return Math.max(MIN_SEGMENT_LENGTH, sequenceLength);
     }
 
+    /**
+     * Returns {@code true} iff. the given id equals this segment's id.
+     *
+     * @return {@code true} iff. the given id equals this segment's id
+     */
     @Override
     public NodeMetadata getMetadata() {
         if (metadata == null) {
