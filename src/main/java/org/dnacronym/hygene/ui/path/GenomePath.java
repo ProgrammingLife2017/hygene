@@ -3,7 +3,7 @@ package org.dnacronym.hygene.ui.path;
 import javafx.beans.property.SimpleBooleanProperty;
 
 /**
- * Class representing a Genome path.
+ * Class representing a Genome path in GUI.
  * <p>
  * This class is used for marking genomes as selected or not.
  */

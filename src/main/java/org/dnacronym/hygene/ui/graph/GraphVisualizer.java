@@ -254,7 +254,8 @@ public final class GraphVisualizer {
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
             edgeColors = Collections.singletonList(correctColorForEdgeOpacity(Color.BLUE));
         } else if (edge.getGenomes() != null) {
-            final Set<String> selectedGenomesInEdge = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet());
+            final Set<String> selectedGenomesInEdge
+                    = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet());
 
             if (selectedGenomesInEdge.isEmpty()) {
                 edgeColors = Collections.singletonList(getEdgeColor());
