@@ -28,13 +28,16 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
-        final Multimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, SequenceDirection.LEFT);
+        final List<Segment> segments = subgraph.getGfaNodes().stream()
+                .flatMap(gfaNode -> gfaNode.getSegments().stream())
+                .collect(Collectors.toList());
 
-        final Multimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, SequenceDirection.RIGHT);
+        final Multimap<Segment, Edge> incomingEdges = buildEdgeMap(segments, SequenceDirection.LEFT);
+        final Multimap<Segment, Edge> outgoingEdges = buildEdgeMap(segments, SequenceDirection.RIGHT);
 
         final Map<Segment, Set<String>> genomeStore = new HashMap<>();
 
-        final List<Segment> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore, incomingEdges,
+        final List<Segment> topologicalOrder = computeTopologicalOrder(segments, genomeStore, incomingEdges,
                 outgoingEdges);
 
         final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, incomingEdges, genomeStore);
@@ -48,14 +51,15 @@ public final class PathCalculator {
      * <p>
      * {@link DummyEdge}s will not be added but their original edge, for which they are a diversion, will be added.
      *
-     * @param subgraph          the {@link Subgraph}
+     * @param segments          the {@link Segment}s
      * @param sequenceDirection the {@link EdgeDirection}
      * @return map of {@link Edge}s for each {@link Segment}
      */
-    private Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final SequenceDirection sequenceDirection) {
+    private Multimap<Segment, Edge> buildEdgeMap(final List<Segment> segments,
+                                                 final SequenceDirection sequenceDirection) {
         final Multimap<Segment, Edge> edgeMap = HashMultimap.create();
 
-        subgraph.getSegments().forEach(segment -> {
+        segments.forEach(segment -> {
             final Set<Edge> edges = sequenceDirection == SequenceDirection.LEFT
                     ? segment.getIncomingEdges()
                     : segment.getOutgoingEdges();
@@ -75,23 +79,23 @@ public final class PathCalculator {
     /**
      * Computes a topological ordering for iterating the given {@link Subgraph}.
      *
-     * @param subgraph      the {@link Subgraph}
+     * @param segments      the {@link Subgraph}
      * @param genomeStore   the genome store
      * @param incomingEdges map of incoming {@link Edge}s for each {@link Segment}
      * @param outgoingEdges map of outgoing {@link Edge}s for each {@link Segment}
      * @return a topologically sorted list of the {@link Segment}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
+    private List<Segment> computeTopologicalOrder(final List<Segment> segments,
+                                                  final Map<Segment, Set<String>> genomeStore,
                                                   final Multimap<Segment, Edge> incomingEdges,
                                                   final Multimap<Segment, Edge> outgoingEdges) {
-
         final Queue<Edge> toVisit = new LinkedList<>();
 
         final Segment origin = new Segment(-1, -1, 0);
         genomeStore.put(origin, new HashSet<>());
 
-        final List<Segment> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
+        final List<Segment> sourceConnectedNodes = getNodesWithNoIncomingEdges(segments);
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new SimpleEdge(origin, sourceConnectedNode));
@@ -127,12 +131,12 @@ public final class PathCalculator {
      * <p>
      * These {@link Segment}s are considered to be connected to the theoretical source node of the {@link Graph}.
      *
-     * @param subgraph the subgraph
+     * @param segments the subgraph
      * @return a list of nodes with no incoming edges
      */
-    private List<Segment> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
-        return subgraph.getSegments().stream()
-                .filter(node -> subgraph.getNeighbours(node, SequenceDirection.LEFT).isEmpty())
+    private List<Segment> getNodesWithNoIncomingEdges(final List<Segment> segments) {
+        return segments.stream()
+                .filter(segment -> segment.getIncomingEdges().isEmpty())
                 .collect(Collectors.toList());
     }
 

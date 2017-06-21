@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
@@ -30,7 +31,7 @@ public final class Subgraph {
     /**
      * A mapping from ids to their respective {@link Segment}s.
      */
-    private final Map<Integer, Segment> segments;
+    private final Map<Integer, GfaNode> segments;
 
 
     /**
@@ -68,7 +69,12 @@ public final class Subgraph {
      * @return the {@link Segment} with the given id, or {code null} if no such segment exists
      */
     public Optional<Segment> getSegment(final int segmentId) {
-        return Optional.ofNullable(segments.get(segmentId));
+        final GfaNode gfaNode = segments.get(segmentId);
+        if (gfaNode == null) {
+            return Optional.empty();
+        }
+
+        return gfaNode.getSegment(segmentId);
     }
 
     /**
@@ -76,7 +82,7 @@ public final class Subgraph {
      *
      * @return all nodes that are {@link Segment}s
      */
-    public Collection<Segment> getSegments() {
+    public Collection<GfaNode> getGfaNodes() {
         return segments.values();
     }
 
@@ -237,9 +243,8 @@ public final class Subgraph {
     private void idempotentAdd(final Node node) {
         nodes.put(node.getUuid(), node);
 
-        if (node instanceof Segment) {
-            final Segment segment = (Segment) node;
-            segments.put(segment.getId(), segment);
+        if (node instanceof GfaNode) {
+            ((GfaNode) node).getSegments().forEach(segment -> segments.put(segment.getId(), (GfaNode) node));
         }
     }
 
@@ -254,8 +259,8 @@ public final class Subgraph {
     private void idempotentRemove(final Node node) {
         nodes.remove(node.getUuid());
 
-        if (node instanceof Segment) {
-            segments.remove(((Segment) node).getId());
+        if (node instanceof GfaNode) {
+            ((GfaNode) node).getSegments().forEach(segment -> segments.remove(segment.getId()));
         }
     }
 }

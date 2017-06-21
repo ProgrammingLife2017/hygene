@@ -90,7 +90,7 @@ public final class NodePropertiesController implements Initializable {
         if (node.hasMetadata()) {
             sequencePreview.setText(String.valueOf(node.getMetadata().getSequence()));
         } else {
-            LOGGER.error("Unable to parse sequence of node %s.", node);
+            LOGGER.error("Unable to parse sequence of node " + node.getId() + ".");
         }
 
         leftNeighbours.setText(String.valueOf(node.getIncomingEdges().size()));

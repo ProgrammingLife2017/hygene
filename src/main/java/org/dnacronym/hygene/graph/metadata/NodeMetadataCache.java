@@ -8,16 +8,18 @@ import org.dnacronym.hygene.core.ThrottledExecutor;
 import org.dnacronym.hygene.event.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
-import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.PathCalculator;
+import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParseException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -107,18 +109,22 @@ public final class NodeMetadataCache {
      * @param subgraph a {@link Subgraph} with metadata
      */
     private void retrieveMetadata(final GfaFile gfaFile, final Subgraph subgraph) {
-        subgraph.getSegments().stream()
-                .filter(segment -> !segment.hasMetadata() && cache.containsKey(segment.getId()))
+        final List<Segment> segmentsWithoutMetadata = new ArrayList<>();
+
+        subgraph.getGfaNodes().stream()
+                .flatMap(gfaNode -> gfaNode.getSegments().stream())
                 .forEach(segment -> {
                     final NodeMetadata metadata = cache.get(segment.getId());
-                    if (metadata != null) {
+                    if (metadata == null) {
+                        segmentsWithoutMetadata.add(segment);
+                    } else {
                         segment.setMetadata(metadata);
                     }
                 });
 
         try {
             final Map<Integer, Long> sortedSegmentsWithoutMetadata
-                    = getSortedSegmentsWithoutMetadata(subgraph.getSegments());
+                    = getSortedSegmentsWithoutMetadata(segmentsWithoutMetadata);
             final Map<Integer, NodeMetadata> metadata
                     = gfaFile.parseNodeMetadata(sortedSegmentsWithoutMetadata);
 
