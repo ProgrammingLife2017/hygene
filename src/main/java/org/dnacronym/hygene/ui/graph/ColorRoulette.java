@@ -33,7 +33,7 @@ public final class ColorRoulette {
         DARK_GREEN(Color.rgb(51, 160, 44)),
         PINK(Color.rgb(251, 154, 153)),
         RED(Color.rgb(227, 26, 28)),
-        UNHEALTHLY_DIARREA(Color.rgb(253, 191, 111)),
+        OCHRE(Color.rgb(253, 191, 111)),
         ORANGE(Color.rgb(255, 127, 0)),
         VIOLET(Color.rgb(202, 178, 214)),
         PURPLE(Color.rgb(106, 61, 154)),
