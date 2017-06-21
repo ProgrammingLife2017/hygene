@@ -145,7 +145,7 @@ public final class Subgraph {
      *
      * @param nodes the nodes to be added
      */
-    public void addAll(final Collection<Node> nodes) {
+    public void addAll(final Collection<? extends Node> nodes) {
         nodes.forEach(this::idempotentAdd);
     }
 
@@ -163,7 +163,7 @@ public final class Subgraph {
      *
      * @param nodes the nodes to be removed
      */
-    public void removeAll(final Collection<Node> nodes) {
+    public void removeAll(final Collection<? extends Node> nodes) {
         nodes.forEach(this::idempotentRemove);
     }
 
