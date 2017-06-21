@@ -228,7 +228,7 @@ public final class GfaParser {
         if (indexOfGenomeNames > -1) {
             final String[] names = line.substring(indexOfGenomeNames + HEADER_GENOME_NAMES_PREFIX.length()).split(";");
             for (int i = 0; i < names.length; i++) {
-                genomeMapping.put(Integer.toString(i + 1), names[i]);
+                genomeMapping.put(Integer.toString(i), names[i]);
             }
         } else {
             throw new GfaParseException("Not an header containing genome names at position " + byteOffset + ".");
