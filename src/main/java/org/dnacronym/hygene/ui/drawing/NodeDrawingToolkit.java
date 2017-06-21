@@ -1,18 +1,20 @@
-package org.dnacronym.hygene.ui.node;
+package org.dnacronym.hygene.ui.drawing;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Collections;
+import java.util.List;
+
 
 /**
- * Toolkit used to draw nodes attributes.
+ * Toolkit used to draw nodes.
  * <p>
  * This class deals with the drawing of nodes. This includes highlighting a node, drawing text in a node and drawing
  * a bookmark identifier of a node.
  */
-public final class NodeDrawingToolkit {
+public final class NodeDrawingToolkit extends DrawingToolkit {
     private static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     private static final int NODE_OUTLINE_WIDTH = 3;
     private static final int ARC_SIZE = 10;
@@ -25,23 +27,12 @@ public final class NodeDrawingToolkit {
      */
     private static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
 
-    private GraphicsContext graphicsContext;
-
     private double canvasHeight;
     private double nodeHeight;
     private double charWidth;
     private double charHeight;
     private Font nodeFont;
 
-
-    /**
-     * Sets the {@link GraphicsContext} used for drawing.
-     *
-     * @param graphicsContext the {@link GraphicsContext} to set
-     */
-    public void setGraphicsContext(final GraphicsContext graphicsContext) {
-        this.graphicsContext = graphicsContext;
-    }
 
     /**
      * Sets the node height used for drawing.
@@ -80,11 +71,59 @@ public final class NodeDrawingToolkit {
      * @param nodeX     the top left x position of the node
      * @param nodeY     the top left y position of the node
      * @param nodeWidth the width of the node
-     * @param fill      the {@link Color} to fill the node with
+     * @param color     the {@link Color} to fill the node with
      */
-    public void fillNode(final double nodeX, final double nodeY, final double nodeWidth, final Color fill) {
-        graphicsContext.setFill(fill);
-        graphicsContext.fillRoundRect(nodeX, nodeY, nodeWidth, nodeHeight, ARC_SIZE, ARC_SIZE);
+    public void drawNode(final double nodeX, final double nodeY, final double nodeWidth, final Color color) {
+        drawNodeGenomes(nodeX, nodeY, nodeWidth, Collections.singletonList(color));
+    }
+
+    /**
+     * Fills a round rectangle based on the node position and width.
+     * <p>
+     * The genome colors are spread evenly across the height of the node. They are drawn as lanes along the node.
+     *
+     * @param nodeX      the top left x position of the node
+     * @param nodeY      the top left y position of the node
+     * @param nodeWidth  the width of the node
+     * @param pathColors the colors of the paths going through the node
+     */
+    public void drawNodeGenomes(final double nodeX, final double nodeY, final double nodeWidth,
+                                final List<Color> pathColors) {
+        double laneHeightOffset = nodeY;
+        final double laneHeight = nodeHeight / pathColors.size();
+
+        for (final Color color : pathColors) {
+            getGraphicsContext().setFill(color);
+            getGraphicsContext().fillRoundRect(nodeX, laneHeightOffset, nodeWidth, laneHeight, ARC_SIZE, ARC_SIZE);
+
+            laneHeightOffset += laneHeight;
+        }
+    }
+
+    /**
+     * Draws annotations below a node.
+     * <p>
+     * Annotations have the given colors, and are dashed.
+     *
+     * @param nodeX            the top left x position of the node
+     * @param nodeY            the top left y position of the node
+     * @param nodeWidth        the width of the node
+     * @param annotationColors the colors of the annotations going through the node
+     */
+    public void drawNodeAnnotations(final double nodeX, final double nodeY, final double nodeWidth,
+                                    final List<Color> annotationColors) {
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
+        getGraphicsContext().setLineWidth(getAnnotationHeight());
+
+        double annotationYOffset = nodeY + nodeHeight + getAnnotationHeight() + getAnnotationHeight() / 2;
+        for (final Color color : annotationColors) {
+            getGraphicsContext().setStroke(color);
+            getGraphicsContext().strokeLine(nodeX, annotationYOffset, nodeX + nodeWidth, annotationYOffset);
+
+            annotationYOffset += getAnnotationHeight();
+        }
+
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_DEFAULT);
     }
 
     /**
@@ -97,9 +136,9 @@ public final class NodeDrawingToolkit {
      */
     public void drawNodeHighlight(final double nodeX, final double nodeY, final double nodeWidth,
                                   final HighlightType highlightType) {
-        graphicsContext.setStroke(highlightType.color);
-        graphicsContext.setLineWidth(NODE_OUTLINE_WIDTH);
-        graphicsContext.strokeRoundRect(
+        getGraphicsContext().setStroke(highlightType.color);
+        getGraphicsContext().setLineWidth(NODE_OUTLINE_WIDTH);
+        getGraphicsContext().strokeRoundRect(
                 nodeX - NODE_OUTLINE_WIDTH / 2.0,
                 nodeY - NODE_OUTLINE_WIDTH / 2.0,
                 nodeWidth + NODE_OUTLINE_WIDTH,
@@ -118,8 +157,9 @@ public final class NodeDrawingToolkit {
      * @param nodeWidth the width of the node to bookmark
      */
     private void drawBookmarkIndicator(final double nodeX, final double nodeWidth) {
-        graphicsContext.setFill(HighlightType.BOOKMARKED.color);
-        graphicsContext.fillRect(nodeX, canvasHeight - BOOKMARK_INDICATOR_HEIGHT, nodeWidth, BOOKMARK_INDICATOR_HEIGHT);
+        getGraphicsContext().setFill(HighlightType.BOOKMARKED.color);
+        getGraphicsContext()
+                .fillRect(nodeX, canvasHeight - BOOKMARK_INDICATOR_HEIGHT, nodeWidth, BOOKMARK_INDICATOR_HEIGHT);
     }
 
     /**
@@ -132,14 +172,14 @@ public final class NodeDrawingToolkit {
      */
     public void drawNodeSequence(final double nodeX, final double nodeY, final double nodeWidth,
                                  final String sequence) {
-        graphicsContext.setFill(Color.BLACK);
-        graphicsContext.setFont(nodeFont);
+        getGraphicsContext().setFill(Color.BLACK);
+        getGraphicsContext().setFont(nodeFont);
         final int charCount = (int) Math.max((nodeWidth - ARC_SIZE) / charWidth, 0);
 
         final double fontX = nodeX + (nodeWidth + (ARC_SIZE / 4.0) - charCount * charWidth) / 2;
         final double fontY = nodeY + nodeHeight / 2 + charHeight / 2;
 
-        graphicsContext.fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+        getGraphicsContext().fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
     }
 
     /**

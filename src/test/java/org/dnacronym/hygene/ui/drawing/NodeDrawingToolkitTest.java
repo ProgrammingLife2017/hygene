@@ -1,9 +1,11 @@
-package org.dnacronym.hygene.ui.node;
+package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,7 +34,7 @@ final class NodeDrawingToolkitTest {
     @Test
     void testNodeHeight() {
         nodeDrawingToolkit.setNodeHeight(10);
-        nodeDrawingToolkit.fillNode(0, 0, 10, Color.BLACK);
+        nodeDrawingToolkit.drawNode(0, 0, 10, Color.BLACK);
 
         verify(graphicsContext).fillRoundRect(
                 anyDouble(), anyDouble(), anyDouble(), eq(10.0), anyDouble(), anyDouble());
@@ -40,10 +42,42 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testNodeColorDraw() {
-        nodeDrawingToolkit.fillNode(10, 20, 30, Color.ALICEBLUE);
+        nodeDrawingToolkit.drawNode(10, 20, 30, Color.ALICEBLUE);
 
-        verify(graphicsContext).setFill(Color.ALICEBLUE);
-        verify(graphicsContext).fillRoundRect(10, 20, 30, 0, 10, 10);
+        verify(graphicsContext).setFill(eq(Color.ALICEBLUE));
+        verify(graphicsContext).fillRoundRect(
+                eq(10d), eq(20d), eq(30d), eq(0d), eq(10d), eq(10d));
+    }
+
+    @Test
+    void testNodePaths() {
+        nodeDrawingToolkit.setNodeHeight(10);
+        nodeDrawingToolkit.drawNodeGenomes(20, 30, 40, Arrays.asList(Color.BLUE, Color.RED));
+
+        verify(graphicsContext, atLeast(1)).setFill(eq(Color.BLUE));
+        verify(graphicsContext, atLeast(1)).setFill(eq(Color.RED));
+
+        verify(graphicsContext).fillRoundRect(
+                eq(20d), eq(30d), eq(40d), eq(5d), eq(10d), eq(10d));
+        verify(graphicsContext).fillRoundRect(
+                eq(20d), eq(35d), eq(40d), eq(5d), eq(10d), eq(10d));
+    }
+
+    @Test
+    void testNodeAnnotations() {
+        nodeDrawingToolkit.setNodeHeight(20);
+        nodeDrawingToolkit.setAnnotationHeight(5);
+        nodeDrawingToolkit.drawNodeAnnotations(50, 80, 40, Arrays.asList(Color.BLACK, Color.WHITE));
+
+        verify(graphicsContext, atLeast(1)).setStroke(eq(Color.BLACK));
+        verify(graphicsContext, atLeast(1)).setStroke(eq(Color.WHITE));
+
+        verify(graphicsContext).setLineDashes(10);
+
+        verify(graphicsContext).strokeLine(
+                eq(50d), eq(80 + 20 + 5 + 5d / 2), eq(50 + 40d), eq(80 + 20 + 5 + 5d / 2));
+        verify(graphicsContext).strokeLine(
+                eq(50d), eq(80 + 20 + 5 + 5d / 2), eq(50 + 40d), eq(80 + 20 + 5 + 5d / 2));
     }
 
     @Test
@@ -51,7 +85,8 @@ final class NodeDrawingToolkitTest {
         nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeDrawingToolkit.HighlightType.SELECTED);
 
         verify(graphicsContext, atLeast(1)).setStroke(Color.rgb(0, 255, 46));
-        verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10, 10);
+
+        verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10d, 10d);
     }
 
     @Test
@@ -59,7 +94,7 @@ final class NodeDrawingToolkitTest {
         nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeDrawingToolkit.HighlightType.BOOKMARKED);
 
         verify(graphicsContext, atLeast(1)).setStroke(Color.RED);
-        verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10, 10);
+        verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10d, 10d);
     }
 
     @Test
