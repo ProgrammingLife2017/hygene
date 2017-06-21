@@ -75,7 +75,6 @@ public final class GraphVisualizer {
 
     private final ObjectProperty<Segment> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
-    private final ObjectProperty<String> selectedPathProperty;
 
     private final ObservableList<GenomePath> genomePaths;
     private final ObservableMap<String, Color> selectedGenomePaths;
@@ -128,8 +127,6 @@ public final class GraphVisualizer {
         hoveredSegmentProperty = new SimpleObjectProperty<>();
         hoveredSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
-        selectedPathProperty = new SimpleObjectProperty<>();
-        selectedPathProperty.addListener(observable -> draw());
         genomePaths = FXCollections.observableArrayList(new HashSet<>());
         selectedGenomePaths = FXCollections.observableHashMap();
         selectedGenomePaths.addListener((MapChangeListener<String, Color>) change -> draw());
@@ -237,16 +234,13 @@ public final class GraphVisualizer {
      * @param edge the {@link Edge}
      * @return list of {@link Edge} colors
      */
-    @SuppressWarnings("PMD.ConfusingTernary")
     private List<Color> computeEdgeColors(final Edge edge) {
         final List<Color> edgeColors;
 
         if (hovered(edge)) {
             edgeColors = Collections.singletonList(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
-        } else if (edge.inGenome(selectedPathProperty.get())
+        } else if (edge.getGenomes() != null
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
-            edgeColors = Collections.singletonList(correctColorForEdgeOpacity(Color.BLUE));
-        } else if (edge.getGenomes() != null) {
             final Set<String> selectedGenomesInEdge
                     = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet());
 
