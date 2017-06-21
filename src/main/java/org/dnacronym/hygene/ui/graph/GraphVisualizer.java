@@ -551,7 +551,7 @@ public final class GraphVisualizer {
     /**
      * The property of representing the selected paths.
      *
-     * @return property of representing the selected paths.
+     * @return property of representing the selected paths
      */
     public ObservableList<GenomePath> getGenomePathsProperty() {
         return genomePaths;
