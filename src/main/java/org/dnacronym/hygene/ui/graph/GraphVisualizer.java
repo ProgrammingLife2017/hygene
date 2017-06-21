@@ -10,7 +10,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,7 +35,6 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public final class GraphVisualizer {
     private final ObjectProperty<String> selectedPathProperty;
 
     private final ObservableList<GenomePath> genomePaths;
-    private final HashMap<String, Color> selectedGenomePaths;
+    private final ObservableMap<String, Color> selectedGenomePaths;
 
     private final ObjectProperty<Segment> hoveredSegmentProperty;
 
@@ -132,7 +133,8 @@ public final class GraphVisualizer {
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
         genomePaths = FXCollections.observableArrayList(new HashSet<>());
-        selectedGenomePaths = new HashMap<>();
+        selectedGenomePaths = FXCollections.observableHashMap();
+        selectedGenomePaths.addListener((MapChangeListener<String, Color>) change -> draw());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -307,16 +309,6 @@ public final class GraphVisualizer {
      */
     private Color correctColorForEdgeOpacity(final Color color) {
         return color.deriveColor(1, 1, 1, computeEdgeOpacity());
-    }
-
-    /**
-     * Correct a list of {@link Color}s for the current edge opacity.
-     *
-     * @param colors the list of {@link Color}s
-     * @return the list of {@link Color}s corrected for edge opacity
-     */
-    private List<Color> correctColorForEdgeOpacity(final List<Color> colors) {
-        return colors.stream().map(i -> correctColorForEdgeOpacity(i)).collect(Collectors.toList());
     }
 
     /**
