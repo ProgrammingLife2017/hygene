@@ -2,15 +2,18 @@ package org.dnacronym.hygene.graph.node;
 
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 
 /**
  * Aggregates multiple segments into a single node.
  */
-public final class AggregateSegment extends Node {
-    private final Collection<Segment> segments;
+public final class AggregateSegment extends GfaNode {
+    private final List<Segment> segments;
     private final int length;
 
 
@@ -24,7 +27,7 @@ public final class AggregateSegment extends Node {
             throw new IllegalArgumentException("AggregateSegment cannot aggregate an empty collection.");
         }
 
-        this.segments = new LinkedHashSet<>(segments);
+        this.segments = new ArrayList<>(segments);
         this.length = segments.stream()
                 .map(Segment::getLength)
                 .max(Integer::compare)
@@ -33,12 +36,37 @@ public final class AggregateSegment extends Node {
 
 
     /**
+     * Returns the segment with the given id, if present.
+     *
+     * @param segmentId the id of a segment
+     * @return the segment with the given id, if present
+     */
+    @Override
+    public Optional<Segment> getSegment(final int segmentId) {
+        return segments.stream()
+                .filter(segment -> segment.getId() == segmentId)
+                .findFirst();
+    }
+
+    /**
      * Returns the aggregated segments.
      *
      * @return the aggregated segments
      */
-    public Collection<Segment> getSegments() {
-        return segments;
+    @Override
+    public List<Segment> getSegments() {
+        return Collections.unmodifiableList(segments);
+    }
+
+    /**
+     * Returns {@code true} iff. a segment with the given id is aggregated in this node.
+     *
+     * @param segmentId the id of a segment
+     * @return {@code true} iff. a segment with the given id is aggregated in this node
+     */
+    @Override
+    public boolean containsSegment(final int segmentId) {
+        return segments.stream().anyMatch(segment -> segment.getId() == segmentId);
     }
 
     /**

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -58,13 +59,13 @@ class AggregateSegmentTest {
 
         final AggregateSegment aggregateSegment = new AggregateSegment(segments);
 
-        assertThat(aggregateSegment.getSegments()).isNotEqualTo(segments);
+        assertThat(aggregateSegment.getSegments()).isNotSameAs(segments);
         assertThat(aggregateSegment.getSegments()).containsExactlyElementsOf(segments);
     }
 
     /**
-     * Tests that {@link AggregateSegment#getSegments()} returns the nodes in the collection during construction, even when
-     * nodes are later added to that collection.
+     * Tests that {@link AggregateSegment#getSegments()} returns the nodes in the collection during construction, even
+     * when nodes are later added to that collection.
      */
     @Test
     void testGetNodesAddLater() {
@@ -76,8 +77,32 @@ class AggregateSegmentTest {
         final Segment segmentB = new Segment(29, 73, 64);
         segments.add(segmentB);
 
-        assertThat(aggregateSegment.getSegments()).isNotEqualTo(segments);
+        assertThat(aggregateSegment.getSegments()).isNotSameAs(segments);
         assertThat(aggregateSegment.getSegments()).containsExactly(segmentA);
+    }
+
+    @Test
+    void testContainsSegmentTrue() {
+        final List<Segment> segments = new ArrayList<>();
+        final Segment segmentA = new Segment(42, 86, 72);
+        final Segment segmentB = new Segment(27, 55, 5);
+        segments.add(segmentA);
+        segments.add(segmentB);
+        final AggregateSegment aggregateSegment = new AggregateSegment(segments);
+
+        assertThat(aggregateSegment.containsSegment(42)).isTrue();
+    }
+
+    @Test
+    void testContainsSegmentFalse() {
+        final List<Segment> segments = new ArrayList<>();
+        final Segment segmentA = new Segment(9, 99, 70);
+        final Segment segmentB = new Segment(35, 64, 88);
+        segments.add(segmentA);
+        segments.add(segmentB);
+        final AggregateSegment aggregateSegment = new AggregateSegment(segments);
+
+        assertThat(aggregateSegment.containsSegment(30)).isFalse();
     }
 
     @Test
