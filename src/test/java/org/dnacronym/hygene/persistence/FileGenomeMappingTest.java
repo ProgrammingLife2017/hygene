@@ -46,10 +46,7 @@ class FileGenomeMappingTest extends FileDatabaseTestBase {
 
     @Test
     void testRestoreGraph() throws SQLException, GfaParseException, IOException {
-        Files.deleteIfExists(Paths.get(GFA_FILE_NAME + ".hygenecache"));
-
         new GfaFile(GFA_FILE_NAME).parse(mock(ProgressUpdater.class));
-
         assertThat(fileGenomeMapping.getMappings().size()).isEqualTo(2);
     }
 

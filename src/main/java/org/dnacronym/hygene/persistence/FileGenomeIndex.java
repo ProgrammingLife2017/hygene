@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Class responsible for storing and retrieving genome coordinate system index points.
  */
 public final class FileGenomeIndex {
-    private static final Logger LOGGER = LogManager.getLogger(FileGenomeIndex.class);
+    private static final Logger LOGGER = LogManager.getLogger(GraphLoader.class);
 
     static final String TABLE_NAME = "genome_index";
 
