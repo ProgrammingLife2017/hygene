@@ -84,6 +84,7 @@ abstract class EdgeTest {
         assertThat(string).contains(edge.getTo().toString());
     }
 
+
     /**
      * Returns the source node.
      *
@@ -94,12 +95,30 @@ abstract class EdgeTest {
     }
 
     /**
+     * Sets the source node.
+     *
+     * @param from the source node
+     */
+    final void setFrom(final Node from) {
+        this.from = from;
+    }
+
+    /**
      * Returns the destination node.
      *
      * @return the destination node
      */
     final Node getTo() {
         return to;
+    }
+
+    /**
+     * Sets the destination node.
+     *
+     * @param to the destination node
+     */
+    final void setTo(final Node to) {
+        this.to = to;
     }
 
     /**

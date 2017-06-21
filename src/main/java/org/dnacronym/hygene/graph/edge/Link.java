@@ -1,13 +1,15 @@
 package org.dnacronym.hygene.graph.edge;
 
+import org.dnacronym.hygene.graph.node.GfaNode;
 
-import org.dnacronym.hygene.graph.node.Node;
 
 /**
  * Class representing a single, non-dummy edge.
  */
 @SuppressWarnings("squid:S2160") // Superclass equals/hashCode use UUID, which is unique enough
 public final class Link extends Edge {
+    private final GfaNode from;
+    private final GfaNode to;
     private final int byteOffset;
 
 
@@ -18,11 +20,24 @@ public final class Link extends Edge {
      * @param to         the destination of the edge
      * @param byteOffset the byte offset of the corresponding link in the GFA file this edge was defined in
      */
-    public Link(final Node from, final Node to, final int byteOffset) {
+    public Link(final GfaNode from, final GfaNode to, final int byteOffset) {
         super(from, to);
+
+        this.from = from;
+        this.to = to;
         this.byteOffset = byteOffset;
     }
 
+
+    @Override
+    public GfaNode getFromSegment() {
+        return from;
+    }
+
+    @Override
+    public GfaNode getToSegment() {
+        return to;
+    }
 
     /**
      * Returns the byte offset.

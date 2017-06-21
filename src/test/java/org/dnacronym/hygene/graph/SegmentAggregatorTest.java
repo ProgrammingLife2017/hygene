@@ -2,8 +2,9 @@ package org.dnacronym.hygene.graph;
 
 import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.edge.SimpleEdge;
 import org.dnacronym.hygene.graph.node.AggregateSegment;
-import org.dnacronym.hygene.graph.node.FillNode;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.junit.jupiter.api.Test;
@@ -28,11 +29,11 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateOneNeighbour() {
-        final Node nodeA = new Segment(53, 81, 42);
-        final Node nodeB = new Segment(19, 4, 1);
-        final Node nodeC = new Segment(27, 3, 61);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeB, nodeC);
+        final GfaNode nodeA = new Segment(53, 81, 42);
+        final GfaNode nodeB = new Segment(19, 4, 1);
+        final GfaNode nodeC = new Segment(27, 3, 61);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeB, nodeC);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -42,34 +43,17 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateThreeNeighbours() {
-        final Node nodeA = new Segment(1, 92, 10);
-        final Node nodeB = new Segment(21, 59, 1);
-        final Node nodeC = new Segment(27, 86, 1);
-        final Node nodeD = new Segment(35, 97, 1);
-        final Node nodeE = new Segment(42, 76, 21);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeA, nodeD);
-        linkNodes(nodeB, nodeE);
-        linkNodes(nodeC, nodeE);
-        linkNodes(nodeD, nodeE);
-
-        assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
-    }
-
-    /**
-     * Tests that aggregation fails if one of the node's neighbours is not a segment.
-     */
-    @Test
-    void testAggregateNeighboursAreNotSegments() {
-        final Node nodeA = new Segment(4, 83, 96);
-        final Node nodeB = new FillNode();
-        final Node nodeC = new Segment(38, 79, 1);
-        final Node nodeD = new Segment(53, 95, 43);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeD);
-        linkNodes(nodeC, nodeD);
+        final GfaNode nodeA = new Segment(1, 92, 10);
+        final GfaNode nodeB = new Segment(21, 59, 1);
+        final GfaNode nodeC = new Segment(27, 86, 1);
+        final GfaNode nodeD = new Segment(35, 97, 1);
+        final GfaNode nodeE = new Segment(42, 76, 21);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeA, nodeD);
+        linkGfaNodes(nodeB, nodeE);
+        linkGfaNodes(nodeC, nodeE);
+        linkGfaNodes(nodeD, nodeE);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -79,14 +63,14 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateNeighboursHaveInvalidSequenceLength() {
-        final Node nodeA = new Segment(75, 9, 93);
-        final Node nodeB = new Segment(98, 14, 1);
-        final Node nodeC = new Segment(93, 21, 50);
-        final Node nodeD = new Segment(45, 77, 85);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeD);
-        linkNodes(nodeC, nodeD);
+        final GfaNode nodeA = new Segment(75, 9, 93);
+        final GfaNode nodeB = new Segment(98, 14, 1);
+        final GfaNode nodeC = new Segment(93, 21, 50);
+        final GfaNode nodeD = new Segment(45, 77, 85);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeB, nodeD);
+        linkGfaNodes(nodeC, nodeD);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -96,13 +80,13 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateNeighbourHasNoNeighbours() {
-        final Node nodeA = new Segment(57, 37, 11);
-        final Node nodeB = new Segment(65, 85, 1);
-        final Node nodeC = new Segment(89, 5, 1);
-        final Node nodeD = new Segment(7, 100, 90);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeC, nodeD);
+        final GfaNode nodeA = new Segment(57, 37, 11);
+        final GfaNode nodeB = new Segment(65, 85, 1);
+        final GfaNode nodeC = new Segment(89, 5, 1);
+        final GfaNode nodeD = new Segment(7, 100, 90);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeC, nodeD);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -112,16 +96,16 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateNeighbourHasMultipleNeighbours() {
-        final Node nodeA = new Segment(91, 91, 68);
-        final Node nodeB = new Segment(100, 62, 1);
-        final Node nodeC = new Segment(85, 44, 1);
-        final Node nodeD = new Segment(24, 28, 81);
-        final Node nodeE = new Segment(64, 73, 35);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeD);
-        linkNodes(nodeC, nodeD);
-        linkNodes(nodeC, nodeE);
+        final GfaNode nodeA = new Segment(91, 91, 68);
+        final GfaNode nodeB = new Segment(100, 62, 1);
+        final GfaNode nodeC = new Segment(85, 44, 1);
+        final GfaNode nodeD = new Segment(24, 28, 81);
+        final GfaNode nodeE = new Segment(64, 73, 35);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeB, nodeD);
+        linkGfaNodes(nodeC, nodeD);
+        linkGfaNodes(nodeC, nodeE);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -131,15 +115,15 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateNeighboursHaveDifferentNeighbour() {
-        final Node nodeA = new Segment(13, 23, 20);
-        final Node nodeB = new Segment(75, 60, 1);
-        final Node nodeC = new Segment(54, 21, 1);
-        final Node nodeD = new Segment(24, 44, 48);
-        final Node nodeE = new Segment(66, 8, 100);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeD);
-        linkNodes(nodeC, nodeE);
+        final GfaNode nodeA = new Segment(13, 23, 20);
+        final GfaNode nodeB = new Segment(75, 60, 1);
+        final GfaNode nodeC = new Segment(54, 21, 1);
+        final GfaNode nodeD = new Segment(24, 44, 48);
+        final GfaNode nodeE = new Segment(66, 8, 100);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeB, nodeD);
+        linkGfaNodes(nodeC, nodeE);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -157,16 +141,16 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateNeighbourNeighbourHasOtherIncomingNeighbour() {
-        final Node nodeA = new Segment(74, 55, 35);
-        final Node nodeB = new Segment(87, 53, 1);
-        final Node nodeC = new Segment(58, 55, 1);
-        final Node nodeD = new Segment(67, 42, 1);
-        final Node nodeE = new Segment(47, 90, 60);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeE);
-        linkNodes(nodeC, nodeE);
-        linkNodes(nodeD, nodeE);
+        final GfaNode nodeA = new Segment(74, 55, 35);
+        final GfaNode nodeB = new Segment(87, 53, 1);
+        final GfaNode nodeC = new Segment(58, 55, 1);
+        final GfaNode nodeD = new Segment(67, 42, 1);
+        final GfaNode nodeE = new Segment(47, 90, 60);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeB, nodeE);
+        linkGfaNodes(nodeC, nodeE);
+        linkGfaNodes(nodeD, nodeE);
 
         assertThat(SegmentAggregator.aggregate(nodeA)).isEmpty();
     }
@@ -176,14 +160,14 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateSuccessContainment() {
-        final Node nodeA = new Segment(4, 13, 24);
-        final Node nodeB = new Segment(43, 97, 1);
-        final Node nodeC = new Segment(58, 44, 1);
-        final Node nodeD = new Segment(19, 57, 48);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeD);
-        linkNodes(nodeC, nodeD);
+        final GfaNode nodeA = new Segment(4, 13, 24);
+        final GfaNode nodeB = new Segment(43, 97, 1);
+        final GfaNode nodeC = new Segment(58, 44, 1);
+        final GfaNode nodeD = new Segment(19, 57, 48);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeB, nodeD);
+        linkGfaNodes(nodeC, nodeD);
 
         final AggregateSegment aggregateSegment = SegmentAggregator.aggregate(nodeA)
                 .orElseThrow(() -> new AssertionError("AggregateSegment is null."));
@@ -196,14 +180,14 @@ class SegmentAggregatorTest {
      */
     @Test
     void testAggregateSuccessEdges() {
-        final Node nodeA = new Segment(93, 16, 46);
-        final Node nodeB = new Segment(47, 94, 1);
-        final Node nodeC = new Segment(60, 80, 1);
-        final Node nodeD = new Segment(63, 59, 64);
-        linkNodes(nodeA, nodeB);
-        linkNodes(nodeA, nodeC);
-        linkNodes(nodeB, nodeD);
-        linkNodes(nodeC, nodeD);
+        final GfaNode nodeA = new Segment(93, 16, 46);
+        final GfaNode nodeB = new Segment(47, 94, 1);
+        final GfaNode nodeC = new Segment(60, 80, 1);
+        final GfaNode nodeD = new Segment(63, 59, 64);
+        linkGfaNodes(nodeA, nodeB);
+        linkGfaNodes(nodeA, nodeC);
+        linkGfaNodes(nodeB, nodeD);
+        linkGfaNodes(nodeC, nodeD);
 
         final AggregateSegment aggregateSegment = SegmentAggregator.aggregate(nodeA)
                 .orElseThrow(() -> new AssertionError("AggregateSegment is null."));
@@ -260,10 +244,10 @@ class SegmentAggregatorTest {
         final Segment segmentB = new Segment(43, 97, 1);
         final Segment segmentC = new Segment(58, 44, 1);
         final Segment segmentD = new Segment(19, 57, 48);
-        linkNodes(segmentA, segmentB);
-        linkNodes(segmentA, segmentC);
-        linkNodes(segmentB, segmentD);
-        linkNodes(segmentC, segmentD);
+        linkGfaNodes(segmentA, segmentB);
+        linkGfaNodes(segmentA, segmentC);
+        linkGfaNodes(segmentB, segmentD);
+        linkGfaNodes(segmentC, segmentD);
         subgraph.add(segmentA);
         subgraph.add(segmentB);
         subgraph.add(segmentC);
@@ -291,14 +275,14 @@ class SegmentAggregatorTest {
         final Segment segmentE = new Segment(73, 46, 1);
         final Segment segmentF = new Segment(98, 73, 1);
         final Segment segmentG = new Segment(59, 20, 65);
-        linkNodes(segmentA, segmentB);
-        linkNodes(segmentA, segmentC);
-        linkNodes(segmentB, segmentD);
-        linkNodes(segmentC, segmentD);
-        linkNodes(segmentD, segmentE);
-        linkNodes(segmentD, segmentF);
-        linkNodes(segmentE, segmentG);
-        linkNodes(segmentF, segmentG);
+        linkGfaNodes(segmentA, segmentB);
+        linkGfaNodes(segmentA, segmentC);
+        linkGfaNodes(segmentB, segmentD);
+        linkGfaNodes(segmentC, segmentD);
+        linkGfaNodes(segmentD, segmentE);
+        linkGfaNodes(segmentD, segmentF);
+        linkGfaNodes(segmentE, segmentG);
+        linkGfaNodes(segmentF, segmentG);
         subgraph.add(segmentA);
         subgraph.add(segmentB);
         subgraph.add(segmentC);
@@ -355,18 +339,18 @@ class SegmentAggregatorTest {
         final Segment segmentI = new Segment(15, 34, 15);
         final Segment segmentJ = new Segment(51, 54, 71);
         final Segment segmentK = new Segment(8, 40, 99);
-        linkNodes(segmentA, segmentB);
-        linkNodes(segmentB, segmentC);
-        linkNodes(segmentB, segmentD);
-        linkNodes(segmentC, segmentE);
-        linkNodes(segmentD, segmentE);
-        linkNodes(segmentD, segmentF);
-        linkNodes(segmentE, segmentG);
-        linkNodes(segmentE, segmentH);
-        linkNodes(segmentF, segmentJ);
-        linkNodes(segmentG, segmentI);
-        linkNodes(segmentH, segmentI);
-        linkNodes(segmentI, segmentJ);
+        linkGfaNodes(segmentA, segmentB);
+        linkGfaNodes(segmentB, segmentC);
+        linkGfaNodes(segmentB, segmentD);
+        linkGfaNodes(segmentC, segmentE);
+        linkGfaNodes(segmentD, segmentE);
+        linkGfaNodes(segmentD, segmentF);
+        linkGfaNodes(segmentE, segmentG);
+        linkGfaNodes(segmentE, segmentH);
+        linkGfaNodes(segmentF, segmentJ);
+        linkGfaNodes(segmentG, segmentI);
+        linkGfaNodes(segmentH, segmentI);
+        linkGfaNodes(segmentI, segmentJ);
         subgraph.add(segmentA);
         subgraph.add(segmentB);
         subgraph.add(segmentC);
@@ -400,8 +384,8 @@ class SegmentAggregatorTest {
      * @param from the node from which the edge departs
      * @param to   the node at which the edge arrives
      */
-    private void linkNodes(final Node from, final Node to) {
-        final Edge edge = new Edge(from, to);
+    private void linkGfaNodes(final GfaNode from, final GfaNode to) {
+        final Edge edge = new SimpleEdge(from, to);
         from.getOutgoingEdges().add(edge);
         to.getIncomingEdges().add(edge);
     }

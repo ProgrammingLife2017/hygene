@@ -1,7 +1,8 @@
 package org.dnacronym.hygene.graph.layout;
 
-import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.node.FillNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -50,7 +51,7 @@ abstract class LayerConstructingTestBase {
         Arrays.stream(edges).forEach(edgeArray -> {
                     final Node source = layer1.get(edgeArray[0]);
                     final Node destination = layer2.get(edgeArray[1]);
-                    final Edge edge = new Edge(source, destination);
+                    final Edge edge = new DummyEdge(source, destination, null);
 
                     source.getOutgoingEdges().add(edge);
                     destination.getIncomingEdges().add(edge);

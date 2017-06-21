@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.edge.SimpleEdge;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.HashMap;
@@ -93,7 +94,7 @@ public final class PathCalculator {
         final List<Segment> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
-            toVisit.add(new Edge(origin, sourceConnectedNode));
+            toVisit.add(new SimpleEdge(origin, sourceConnectedNode));
             Optional.ofNullable(genomeStore.get(origin)).ifPresent(g ->
                     g.addAll(sourceConnectedNode.getMetadata().getGenomes()));
         });

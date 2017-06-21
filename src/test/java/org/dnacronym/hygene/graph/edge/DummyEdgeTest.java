@@ -3,6 +3,7 @@ package org.dnacronym.hygene.graph.edge;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ import static org.mockito.Mockito.mock;
  * Test suite for the {@link DummyEdge} class.
  */
 final class DummyEdgeTest extends EdgeTest {
+    private GfaNode from;
+    private GfaNode to;
     private DummyEdge dummyEdge;
     private Edge originalEdge;
 
@@ -27,7 +30,9 @@ final class DummyEdgeTest extends EdgeTest {
     void setUp() {
         super.setUp();
 
-        originalEdge = new Edge(getFrom(), getTo());
+        from = mock(GfaNode.class);
+        to = mock(GfaNode.class);
+        originalEdge = new SimpleEdge(from, to);
         dummyEdge = new DummyEdge(getFrom(), getTo(), originalEdge);
         setEdge(dummyEdge);
     }

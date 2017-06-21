@@ -5,6 +5,7 @@ import org.dnacronym.hygene.core.ThrottledDefaultExecutor;
 import org.dnacronym.hygene.event.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.edge.SimpleEdge;
 import org.dnacronym.hygene.graph.layout.Layout;
 import org.dnacronym.hygene.graph.layout.SugiyamaLayout;
 import org.dnacronym.hygene.graph.metadata.NodeMetadataCache;
@@ -334,7 +335,7 @@ public final class CenterPointQuery {
                 return;
             }
 
-            final Edge edge = new Edge(node.get(), neighbour.get());
+            final Edge edge = new SimpleEdge(node.get(), neighbour.get());
             node.get().getOutgoingEdges().add(edge);
             neighbour.get().getIncomingEdges().add(edge);
         });

@@ -1,6 +1,6 @@
 package org.dnacronym.hygene.graph.edge;
 
-import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.GfaNode;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -10,6 +10,8 @@ import java.util.LinkedHashSet;
  * An aggregation of edges.
  */
 public final class AggregateEdge extends Edge {
+    private final GfaNode from;
+    private final GfaNode to;
     private final Collection<Edge> edges;
 
 
@@ -20,9 +22,11 @@ public final class AggregateEdge extends Edge {
      * @param to    the destination of the edge
      * @param edges the edges to aggregate
      */
-    public AggregateEdge(final Node from, final Node to, final Collection<Edge> edges) {
+    public AggregateEdge(final GfaNode from, final GfaNode to, final Collection<Edge> edges) {
         super(from, to);
 
+        this.from = from;
+        this.to = to;
         this.edges = new LinkedHashSet<>(edges);
     }
 
@@ -34,5 +38,15 @@ public final class AggregateEdge extends Edge {
      */
     public Collection<Edge> getEdges() {
         return edges;
+    }
+
+    @Override
+    public GfaNode getFromSegment() {
+        return from;
+    }
+
+    @Override
+    public GfaNode getToSegment() {
+        return to;
     }
 }

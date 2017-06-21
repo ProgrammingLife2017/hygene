@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.graph.edge;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Class representing a generic edge.
  */
-public class Edge {
+public abstract class Edge {
     private final UUID uuid;
     private final Node from;
     private final Node to;
@@ -42,6 +43,13 @@ public class Edge {
     }
 
     /**
+     * Returns the {@link GfaNode} from which this edge actually departs.
+     *
+     * @return the {@link GfaNode} from which this edge actually departs
+     */
+    public abstract GfaNode getFromSegment();
+
+    /**
      * Returns the destination node.
      *
      * @return the destination node
@@ -49,6 +57,13 @@ public class Edge {
     public final Node getTo() {
         return to;
     }
+
+    /**
+     * Returns the {@link GfaNode} to which this edge actually goes.
+     *
+     * @return the {@link GfaNode} to which this edge actually goes
+     */
+    public abstract GfaNode getToSegment();
 
     /**
      * Returns the genome this {@link Edge} is in, or {@code null} if metadata has not been parsed yet.
