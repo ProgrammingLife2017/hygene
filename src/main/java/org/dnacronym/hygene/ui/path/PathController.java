@@ -36,7 +36,7 @@ public final class PathController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        pathList.setCellFactory(CheckBoxListCell.forListView(GenomePath::isSelectedProperty));
+        pathList.setCellFactory(CheckBoxListCell.forListView(GenomePath::selectedProperty));
 
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -60,7 +60,7 @@ public final class PathController implements Initializable {
     @FXML
     void onClearHighlight(final ActionEvent actionEvent) {
         LOGGER.info("Cleared the currently selected genome.");
-        pathList.itemsProperty().get().forEach(genomes -> genomes.isSelectedProperty().set(false));
+        pathList.itemsProperty().get().forEach(genomes -> genomes.selectedProperty().set(false));
     }
 
     /**

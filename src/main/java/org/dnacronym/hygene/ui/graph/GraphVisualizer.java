@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields"}) // This will be fixed at a later date.
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods"})
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
 
@@ -89,7 +89,7 @@ public final class GraphVisualizer {
 
     private final BooleanProperty displayLaneBordersProperty;
 
-    private ObjectProperty<Map<String, String>> genomeMapping;
+    private final ObjectProperty<Map<String, String>> genomeMapping;
 
     private Graph graph;
 
@@ -244,6 +244,7 @@ public final class GraphVisualizer {
      * @param edge the {@link Edge}
      * @return list of {@link Edge} colors
      */
+    @SuppressWarnings("PMD.ConfusingTernary")
     private List<Color> computeEdgeColors(final Edge edge) {
         final List<Color> edgeColors;
 
@@ -253,7 +254,7 @@ public final class GraphVisualizer {
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
             edgeColors = Collections.singletonList(correctColorForEdgeOpacity(Color.BLUE));
         } else if (edge.getGenomes() != null) {
-            Set<String> selectedGenomesInEdge = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet());
+            final Set<String> selectedGenomesInEdge = Sets.intersection(edge.getGenomes(), selectedGenomePaths.keySet());
 
             if (selectedGenomesInEdge.isEmpty()) {
                 edgeColors = Collections.singletonList(getEdgeColor());
@@ -277,8 +278,8 @@ public final class GraphVisualizer {
      */
     boolean hovered(final Edge edge) {
         if (edge instanceof DummyEdge) {
-            return (((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
-                    || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get()));
+            return ((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
+                    || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get());
         }
         return edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get());
     }
@@ -432,11 +433,11 @@ public final class GraphVisualizer {
         this.graph = graph;
 
         genomePaths.clear();
-        List<GenomePath> genomePathList = graph.getGfaFile().getGenomeMapping().entrySet().stream()
+        final List<GenomePath> genomePathList = graph.getGfaFile().getGenomeMapping().entrySet().stream()
                 .map(entry -> new GenomePath(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        genomePathList.forEach(path -> path.isSelectedProperty().addListener((o, oldIsSelected, newIsSelected) -> {
+        genomePathList.forEach(path -> path.selectedProperty().addListener((o, oldIsSelected, newIsSelected) -> {
             if (newIsSelected) {
                 final Color genomeColor = colorRoulette.getNext();
                 selectedGenomePaths.put(path.getIndex(), genomeColor);
@@ -557,17 +558,6 @@ public final class GraphVisualizer {
      */
     public ObjectProperty<Edge> getSelectedEdgeProperty() {
         return selectedEdgeProperty;
-    }
-
-    /**
-     * The property of the selected path.
-     * <p>
-     * This path is updated every time the user selects a new path for the path menu.
-     *
-     * @return the path
-     */
-    public ObjectProperty<String> getSelectedPathProperty() {
-        return selectedPathProperty;
     }
 
     /**

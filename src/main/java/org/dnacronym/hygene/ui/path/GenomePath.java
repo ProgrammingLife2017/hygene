@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 public final class GenomePath {
     private final String name;
     private final String index;
-    private final SimpleBooleanProperty isSelected;
+    private final SimpleBooleanProperty selected;
 
     /**
      * Construct a new {@link GenomePath}.
@@ -21,7 +21,7 @@ public final class GenomePath {
     public GenomePath(final String index, final String name) {
         this.name = name;
         this.index = index;
-        this.isSelected = new SimpleBooleanProperty();
+        this.selected = new SimpleBooleanProperty();
     }
 
     /**
@@ -48,7 +48,7 @@ public final class GenomePath {
      * @return true when the genome is selected in the GUI
      */
     public boolean isSelected() {
-        return isSelected.get();
+        return selected.get();
     }
 
     /**
@@ -56,8 +56,8 @@ public final class GenomePath {
      *
      * @return property which decides whether the genome is currently selected
      */
-    public SimpleBooleanProperty isSelectedProperty() {
-        return isSelected;
+    public SimpleBooleanProperty selectedProperty() {
+        return selected;
     }
 
     @Override
