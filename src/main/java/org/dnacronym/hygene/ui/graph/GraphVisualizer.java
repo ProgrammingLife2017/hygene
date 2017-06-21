@@ -173,20 +173,20 @@ public final class GraphVisualizer {
      * @param queried    the boolean indicating whether this node has been queried
      */
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried) {
-        if (!(node instanceof Segment)) {
+        if (!(node instanceof GfaNode)) {
             return;
         }
 
-        final Segment segment = (Segment) node;
+        final GfaNode gfaNode = (GfaNode) node;
         final double nodeX = graphDimensionsCalculator.computeXPosition(node);
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
 
-        if (segment.equals(selectedSegmentProperty.get())) {
+        if (gfaNode.equals(selectedSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
-        } else if (segment.equals(hoveredSegmentProperty.get())) {
+        } else if (gfaNode.equals(hoveredSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
         } else if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
@@ -194,12 +194,13 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
-        if (segment.hasMetadata()) {
-            final String sequence = segment.getMetadata().getSequence();
+        if (gfaNode.hasMetadata()) {
+            final String sequence = gfaNode.getMetadata().getSequence();
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
-        rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
+                nodeHeightProperty.get()));
     }
 
     /**
