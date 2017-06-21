@@ -96,7 +96,7 @@ public class DynamicGenomeIndex {
         }
     }
 
-    public int getNodeId(final int base) {
+    public int getNodeByBase(final int base) {
         return baseCounts.floorEntry(base).getValue();
     }
 
