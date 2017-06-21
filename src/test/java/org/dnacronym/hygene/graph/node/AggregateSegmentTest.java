@@ -1,17 +1,13 @@
 package org.dnacronym.hygene.graph.node;
 
-import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 
 
 /**
@@ -103,18 +99,5 @@ class AggregateSegmentTest {
         final AggregateSegment aggregateSegment = new AggregateSegment(segments);
 
         assertThat(aggregateSegment.containsSegment(30)).isFalse();
-    }
-
-    @Test
-    void testThatMetadataIsNotSupported() {
-        final AggregateSegment node = new AggregateSegment(Arrays.asList(new Segment(0, 0, 0)));
-
-        final Throwable getMetadataException = catchThrowable(() -> node.getMetadata());
-        assertThat(getMetadataException).isInstanceOf(UnsupportedOperationException.class);
-
-        final Throwable setMetadataException = catchThrowable(() -> node.setMetadata(mock(NodeMetadata.class)));
-        assertThat(setMetadataException).isInstanceOf(UnsupportedOperationException.class);
-
-        assertThat(node.hasMetadata()).isFalse();
     }
 }
