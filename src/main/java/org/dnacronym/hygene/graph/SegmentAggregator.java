@@ -72,9 +72,6 @@ public final class SegmentAggregator {
         if (!aggregator.nodeHasValidNumberOfNeighbours()) {
             return Optional.empty();
         }
-        if (!aggregator.neighboursAreSegments()) {
-            return Optional.empty();
-        }
         if (!aggregator.neighboursHaveSequenceLengthOne()) {
             return Optional.empty();
         }
@@ -127,23 +124,13 @@ public final class SegmentAggregator {
     }
 
     /**
-     * Returns {@code true} iff. both neighbours are {@link Segment}s.
-     *
-     * @return {@code true} iff. both neighbours are {@link Segment}s
-     */
-    private boolean neighboursAreSegments() {
-        return neighbours.get(0) instanceof Segment
-                && neighbours.get(1) instanceof Segment;
-    }
-
-    /**
      * Returns {@code true} iff. both neighbours' sequences consist of one base.
      *
      * @return {@code true} iff. both neighbours' sequences consist of one base
      */
     private boolean neighboursHaveSequenceLengthOne() {
-        return ((Segment) neighbours.get(0)).getSequenceLength() == 1
-                && ((Segment) neighbours.get(1)).getSequenceLength() == 1;
+        return neighbours.get(0).getSequenceLength() == 1
+                && neighbours.get(1).getSequenceLength() == 1;
     }
 
     /**
