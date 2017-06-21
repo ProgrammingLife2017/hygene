@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.path;
 
-import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,19 +49,7 @@ public final class PathController implements Initializable {
      * Adds event listeners to update the list of genomes when the user selects a specific node.
      */
     void addListeners() {
-        pathList.itemsProperty().addListener((a, b, c) -> {
-            c.forEach(p -> {
-                System.out.println("ADDING LISTENER" + p);
-                p.isSelectedProperty().addListener((s, oldValue, newValue) -> {
-                    System.out.printf(p + " was selected");
-                    pathList.getSelectionModel();
-                });
-            });
-        });
-        pathList.itemsProperty().bindBidirectional(new SimpleListProperty<>(graphVisualizer.getSelectedPathsPropertyProperty()));
-
-
-
+        pathList.setItems(graphVisualizer.getSelectedPathsProperty());
     }
 
     /**
@@ -85,14 +72,5 @@ public final class PathController implements Initializable {
     @FXML
     void onSetHighlight(final ActionEvent mouseEvent) {
         LOGGER.info(pathList.getSelectionModel().getSelectedItems());
-//        MultipleSelectionModel<GenomePath> sm = pathList.getSelectionModel();
-//        sm.selectFirst();
-
-//        LOGGER.info(pathList.getItems().filtered(i -> i.isOn()));
-//        final String selectedGenome = pathList.getSelectionModel().getSelectedItem();
-//        if (selectedGenome != null) {
-//            graphVisualizer.getSelectedPathProperty().set(selectedGenome);
-//            LOGGER.info("Set the currently selected genome to " + selectedGenome);
-//        }
     }
 }

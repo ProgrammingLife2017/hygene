@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,7 +33,10 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -68,7 +72,9 @@ public final class GraphVisualizer {
     private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<String> selectedPathProperty;
 
-    private final ObservableList<GenomePath> selectedPathsProperty;
+    private final ObservableList<GenomePath> genomePaths;
+    private final ObservableSet<GenomePath> selectedGenomePaths;
+
     private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
@@ -120,7 +126,8 @@ public final class GraphVisualizer {
 
         selectedPathProperty = new SimpleObjectProperty<>();
         selectedPathProperty.addListener(observable -> draw());
-        selectedPathsProperty = FXCollections.observableArrayList();
+        genomePaths = FXCollections.observableArrayList();
+        selectedGenomePaths = FXCollections.observableSet(new HashSet<>());
 
         edgeColorProperty = new SimpleObjectProperty<>(DEFAULT_EDGE_COLOR);
         nodeHeightProperty = new SimpleDoubleProperty(DEFAULT_NODE_HEIGHT);
@@ -386,11 +393,21 @@ public final class GraphVisualizer {
     void setGraph(final Graph graph) {
         this.graph = graph;
 
-        selectedPathsProperty.clear();
-        graph.getGfaFile().getGenomeMapping().forEach((k, v) -> {
-            selectedPathsProperty.add(new GenomePath(k, v));
-        });
+        genomePaths.clear();
+        List<GenomePath> genomePathList = graph.getGfaFile().getGenomeMapping().entrySet().stream()
+                .map((e) -> new GenomePath(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
 
+        genomePathList.forEach(path -> path.isSelectedProperty().addListener((o, oldIsSelected, newIsSelected) -> {
+            if (newIsSelected) {
+                selectedGenomePaths.add(path);
+            } else {
+                selectedGenomePaths.remove(path);
+            }
+            LOGGER.info(selectedGenomePaths);
+        }));
+
+        genomePaths.addAll(genomePathList);
 
         draw();
     }
@@ -517,8 +534,8 @@ public final class GraphVisualizer {
      *
      * @return property of representing the selected paths.
      */
-    public ObservableList<GenomePath> getSelectedPathsPropertyProperty() {
-        return selectedPathsProperty;
+    public ObservableList<GenomePath> getSelectedPathsProperty() {
+        return genomePaths;
     }
 
     /**
