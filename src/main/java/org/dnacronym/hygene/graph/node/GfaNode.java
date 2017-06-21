@@ -5,9 +5,9 @@ import java.util.Optional;
 
 
 /**
- * An abstract kind of segment that may contain GFA segments.
+ * An abstract kind of segment that may contain any number of GFA segments.
  */
-public abstract class Segway extends Node {
+public abstract class GfaNode extends Node {
     /**
      * Returns the segment with the given id, if present.
      *

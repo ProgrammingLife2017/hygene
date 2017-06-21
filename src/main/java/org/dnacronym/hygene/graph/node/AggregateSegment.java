@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * Aggregates multiple segments into a single node.
  */
-public final class AggregateSegment extends Segway {
+public final class AggregateSegment extends GfaNode {
     private final List<Segment> segments;
     private final int length;
 
