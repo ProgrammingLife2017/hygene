@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph.layout;
 
 import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.FillNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -68,5 +71,17 @@ abstract class LayerConstructingTestBase {
 
     protected Node getNode(final int id) {
         return nodes.get(id);
+    }
+
+    protected void assertThatLayerContainsExactly(final Node[] layer, final int... nodeIds) {
+        assertThat(layer).hasSameSizeAs(nodeIds);
+
+        for (int i = 0; i < layer.length; i++) {
+            if (nodeIds[i] == -9999) {
+                assertThat(layer[i]).isInstanceOf(FillNode.class);
+            } else {
+                assertThat(layer[i]).isEqualTo(getNode(nodeIds[i]));
+            }
+        }
     }
 }
