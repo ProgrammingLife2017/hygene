@@ -73,13 +73,13 @@ public final class GraphVisualizer {
 
     private final ColorRoulette colorRoulette;
 
-    private final ObjectProperty<Segment> selectedSegmentProperty;
+    private final ObjectProperty<GfaNode> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
+    private final ObjectProperty<String> selectedPathProperty;
+    private final ObjectProperty<GfaNode> hoveredSegmentProperty;
 
     private final ObservableList<GenomePath> genomePaths;
     private final ObservableMap<String, Color> selectedGenomePaths;
-
-    private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
 
@@ -184,7 +184,8 @@ public final class GraphVisualizer {
 
         nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
 
-        if (gfaNode.equals(selectedSegmentProperty.get())) {
+        if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
+                .anyMatch(segmentId -> selectedSegmentProperty.get().getSegmentIds().contains(segmentId))) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
         } else if (gfaNode.equals(hoveredSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
@@ -488,14 +489,14 @@ public final class GraphVisualizer {
      */
     public void setSelectedSegment(final int nodeId) {
         final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
-                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+                .filtered(node -> node instanceof GfaNode && ((GfaNode) node).containsSegment(nodeId));
 
         if (segment.isEmpty()) {
             LOGGER.error("Cannot select node that is not in subgraph.");
             return;
         }
 
-        selectedSegmentProperty.set((Segment) segment.get(0));
+        selectedSegmentProperty.set((GfaNode) segment.get(0));
     }
 
     /**
@@ -505,14 +506,14 @@ public final class GraphVisualizer {
      */
     public void setHoveredSegmentProperty(final int nodeId) {
         final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
-                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+                .filtered(node -> node instanceof GfaNode && ((GfaNode) node).containsSegment(nodeId));
 
         if (segment.isEmpty()) {
             LOGGER.error("Cannot select node that is not in subgraph.");
             return;
         }
 
-        hoveredSegmentProperty.set((Segment) segment.get(0));
+        hoveredSegmentProperty.set((GfaNode) segment.get(0));
     }
 
     /**
@@ -522,7 +523,7 @@ public final class GraphVisualizer {
      *
      * @return the selected {@link Segment} by the user, which can be {@code null}
      */
-    public ObjectProperty<Segment> getSelectedSegmentProperty() {
+    public ObjectProperty<GfaNode> getSelectedSegmentProperty() {
         return selectedSegmentProperty;
     }
 

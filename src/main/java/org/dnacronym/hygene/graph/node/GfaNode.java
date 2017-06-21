@@ -23,6 +23,9 @@ public abstract class GfaNode extends Node {
      */
     public abstract List<Segment> getSegments();
 
+    //
+    public abstract List<Integer> getSegmentIds();
+
     /**
      * Returns {@code true} iff. this segment contains a segment with the given id.
      *

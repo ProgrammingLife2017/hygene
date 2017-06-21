@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -59,6 +60,18 @@ public final class AggregateSegment extends GfaNode {
     @Override
     public List<Segment> getSegments() {
         return Collections.unmodifiableList(segments);
+    }
+
+    /**
+     * Returns the ids of the aggregated segments.
+     *
+     * @return the ids of the aggregated segments
+     */
+    @Override
+    public List<Integer> getSegmentIds() {
+        return segments.stream()
+                .map(Segment::getId)
+                .collect(Collectors.toList());
     }
 
     /**

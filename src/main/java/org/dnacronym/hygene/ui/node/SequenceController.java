@@ -10,6 +10,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -59,7 +60,7 @@ public final class SequenceController implements Initializable {
         });
 
         graphVisualizer.getSelectedSegmentProperty()
-                .addListener((observable, oldValue, newNode) -> updateFields(newNode));
+                .addListener((observable, oldNode, newNode) -> updateFields(newNode));
         sequenceCanvas.widthProperty().bind(sequenceGrid.widthProperty().subtract(CANVAS_PADDING * 2));
 
         sequenceViewPane.visibleProperty().bind(sequenceVisualizer.getVisibleProperty()
@@ -78,20 +79,21 @@ public final class SequenceController implements Initializable {
     }
 
     /**
-     * Updates the fields that describe the sequence of the {@link Segment}.
+     * Updates the fields that describe the sequence of the {@link GfaNode}.
      * <p>
-     * If this {@link Segment} is {@code null}, the fields are simply cleared.
+     * If this {@link GfaNode} is {@code null}, the fields are simply cleared.
      *
-     * @param segment the {@link Segment} whose sequence properties should be displayed
+     * @param node the {@link GfaNode} whose sequence properties should be displayed
      */
-    void updateFields(final Segment segment) {
-        if (segment == null) {
+    void updateFields(final GfaNode node) {
+        if (!(node instanceof Segment)) { // Or equals null
             lengthField.clear();
             sequenceTextArea.clear();
             sequenceVisualizer.getSequenceProperty().set(null);
             return;
         }
 
+        final Segment segment = (Segment) node;
         lengthField.setText(String.valueOf(segment.getSequenceLength()));
         setOffset.setPromptText("0 - " + (segment.getSequenceLength() - 1));
 

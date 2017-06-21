@@ -48,20 +48,20 @@ public final class GraphController implements Initializable {
      * Adds the {@link GraphVisualizer} listeners.
      */
     void addGraphVisualizerListeners() {
-        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldSegment, newSegment) -> {
-            if (newSegment == null || newSegment.getId() < 0) {
+        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldNode, newNode) -> {
+            if (newNode == null) {
                 return;
             }
 
-            LOGGER.info("Selected node id: " + newSegment.getId() + "\n");
+            LOGGER.info("Selected node id: " + newNode.getSegmentIds().toString() + "\n");
         });
 
-        graphVisualizer.getSelectedEdgeProperty().addListener((observable, oldEdge, edge) -> {
-            if (edge == null) {
+        graphVisualizer.getSelectedEdgeProperty().addListener((observable, oldEdge, newEdge) -> {
+            if (newEdge == null) {
                 return;
             }
 
-            LOGGER.info("Selected edge from node id: " + edge.getFrom() + " to node id: " + edge.getTo() + "\n");
+            LOGGER.info("Selected edge from node id: " + newEdge.getFrom() + " to node id: " + newEdge.getTo() + "\n");
         });
     }
 

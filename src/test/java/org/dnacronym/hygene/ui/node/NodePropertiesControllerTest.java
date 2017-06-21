@@ -5,11 +5,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.UITestBase;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -31,8 +34,8 @@ final class NodePropertiesControllerTest extends UITestBase {
         graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
         graphVisualizer = mock(GraphVisualizer.class);
         node = mock(Segment.class);
-        when(node.getId()).thenReturn(20);
-        final ObjectProperty<Segment> selectedNodeProperty = new SimpleObjectProperty<>(node);
+        when(node.getSegmentIds()).thenReturn(Collections.singletonList(20));
+        final ObjectProperty<GfaNode> selectedNodeProperty = new SimpleObjectProperty<>(node);
         when(graphVisualizer.getSelectedSegmentProperty()).thenReturn(selectedNodeProperty);
 
         nodePropertiesController = new NodePropertiesController();
