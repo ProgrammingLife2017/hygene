@@ -24,7 +24,7 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
      */
     public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
                          final double edgeWidth, final Color color) {
-        drawEdgeGenomes(fromX, fromY, toX, toY, edgeWidth, Collections.singletonList(color));
+        drawEdge(fromX, fromY, toX, toY, edgeWidth, Collections.singletonList(color));
     }
 
     /**
@@ -39,8 +39,8 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
      * @param edgeWidth  the width of the edge
      * @param pathColors the colors of the paths going through the edge
      */
-    public void drawEdgeGenomes(final double fromX, final double fromY, final double toX, final double toY,
-                                final double edgeWidth, final List<Color> pathColors) {
+    public void drawEdge(final double fromX, final double fromY, final double toX, final double toY,
+                         final double edgeWidth, final List<Color> pathColors) {
         final double laneHeight = edgeWidth / pathColors.size();
         getGraphicsContext().setLineWidth(laneHeight);
 
