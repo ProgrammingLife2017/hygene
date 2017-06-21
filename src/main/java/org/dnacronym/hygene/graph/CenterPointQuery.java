@@ -110,6 +110,7 @@ public final class CenterPointQuery {
                 return;
             }
 
+            SegmentAggregator.aggregate(subgraph);
             LAYOUT.layOut(subgraph);
             HygeneEventBus.getInstance().post(new LayoutDoneEvent(subgraph));
         });
