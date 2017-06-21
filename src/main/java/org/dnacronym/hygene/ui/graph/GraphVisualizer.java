@@ -257,7 +257,7 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        if (pathColors != null && pathColors.size() > 0) {
+        if (pathColors != null && !pathColors.isEmpty()) {
             edgeDrawingToolkit.drawEdgeGenomes(fromX, fromY, toX, toY, computeEdgeThickness(edge), pathColors);
         } else {
             edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), edgeColor);
@@ -414,12 +414,12 @@ public final class GraphVisualizer {
 
         genomePaths.clear();
         List<GenomePath> genomePathList = graph.getGfaFile().getGenomeMapping().entrySet().stream()
-                .map((e) -> new GenomePath(e.getKey(), e.getValue()))
+                .map(entry -> new GenomePath(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
         genomePathList.forEach(path -> path.isSelectedProperty().addListener((o, oldIsSelected, newIsSelected) -> {
             if (newIsSelected) {
-                Color genomeColor = colorRoulette.getNext();
+                final Color genomeColor = colorRoulette.getNext();
                 selectedGenomePaths.put(path.getIndex(), genomeColor);
                 selectedGenomePaths.put(path.getName(), genomeColor);
             } else {
@@ -433,14 +433,6 @@ public final class GraphVisualizer {
 
         draw();
     }
-
-//    Set<String> getSelectedGenomesInEdge(final Edge edge) {
-//        return Sets.intersection(selectedGenomePaths, edge.getGenomes());
-//    }
-
-//    void assignColor() {
-//        genomePathColors
-//    }
 
     /**
      * Set {@link Canvas} which the {@link GraphVisualizer} use to draw.
