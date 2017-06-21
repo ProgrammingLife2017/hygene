@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
@@ -36,7 +35,6 @@ public final class AggregateSegment extends GfaNode {
                 .map(Segment::getLength)
                 .max(Integer::compare)
                 .orElseThrow(() -> new IllegalStateException("Collection is non-empty and has no maximum."));
-        this.metadata = new NodeMetadata(segments.stream().map(Segment::getMetadata).collect(Collectors.toList()));
     }
 
 

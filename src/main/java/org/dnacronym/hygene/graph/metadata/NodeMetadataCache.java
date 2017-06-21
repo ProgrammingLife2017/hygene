@@ -10,6 +10,7 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.PathCalculator;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.node.AggregateSegment;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.MetadataParseException;
@@ -130,6 +131,15 @@ public final class NodeMetadataCache {
 
             metadata.forEach((key, value) -> subgraph.getSegment(key)
                     .ifPresent(segment -> segment.setMetadata(value)));
+
+            subgraph.getGfaNodes().stream()
+                    .filter(node -> node instanceof AggregateSegment)
+                    .map(node -> (AggregateSegment) node)
+                    .forEachOrdered(aggregateSegment -> aggregateSegment.setMetadata(
+                            new NodeMetadata(aggregateSegment.getSegments().stream()
+                                    .filter(segment -> segment.hasMetadata())
+                                    .map(Segment::getMetadata)
+                                    .collect(Collectors.toList()))));
         } catch (final MetadataParseException e) {
             LOGGER.error("Node metadata could not be retrieved.", e);
         }
