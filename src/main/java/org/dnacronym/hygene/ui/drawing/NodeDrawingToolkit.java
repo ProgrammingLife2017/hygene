@@ -17,6 +17,7 @@ import java.util.List;
 public final class NodeDrawingToolkit extends DrawingToolkit {
     private static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     private static final int NODE_OUTLINE_WIDTH = 3;
+    private static final int SNP_HEIGHT_FACTOR = 3;
     private static final int ARC_SIZE = 10;
     /**
      * Font used inside the nodes, this should always be a monospace font.
@@ -29,6 +30,7 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
 
     private double canvasHeight;
     private double nodeHeight;
+    private double snpHeight;
     private double charWidth;
     private double charHeight;
     private Font nodeFont;
@@ -43,6 +45,7 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
      */
     public void setNodeHeight(final double nodeHeight) {
         this.nodeHeight = nodeHeight;
+        this.snpHeight = nodeHeight * SNP_HEIGHT_FACTOR;
 
         final Text text = new Text("X");
         text.setFont(new Font(DEFAULT_NODE_FONT, 1));
@@ -181,6 +184,36 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
 
         getGraphicsContext().fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
     }
+
+    /**
+     * Fills a rhombus based on the snp position and width, with the set {@link Color} fill.
+     *
+     * @param snpX     the top left x position of the snp
+     * @param snpY     the top left y position of the snp
+     * @param snpWidth the width of the snp
+     * @param color    the {@link Color} to fill the node with
+     */
+    public void drawSnp(final double snpX, final double snpY, final double snpWidth, final Color color) {
+        final double snpXMiddle = snpX + snpWidth / 2;
+        final double snpYMiddle = snpY + nodeHeight / 2;
+
+        getGraphicsContext().setFill(color);
+        getGraphicsContext().fillPolygon(
+                new double[] {
+                        snpXMiddle - snpWidth / 2,
+                        snpXMiddle,
+                        snpXMiddle + snpWidth / 2,
+                        snpXMiddle
+                },
+                new double[] {
+                        snpYMiddle,
+                        snpYMiddle - snpHeight / 2,
+                        snpYMiddle,
+                        snpYMiddle + snpHeight / 2
+                },
+                4);
+    }
+
 
     /**
      * A highlight type denotes what the highlight type is.
