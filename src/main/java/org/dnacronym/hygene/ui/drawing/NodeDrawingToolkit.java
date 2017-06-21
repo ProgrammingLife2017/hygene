@@ -80,7 +80,7 @@ public final class NodeDrawingToolkit extends DrawingToolkit {
     /**
      * Fills a round rectangle based on the node position and width.
      * <p>
-     * The genome colors are spread evenly across the height of the node. They are drawn as bands along the node.
+     * The genome colors are spread evenly across the height of the node. They are drawn as lanes along the node.
      *
      * @param nodeX      the top left x position of the node
      * @param nodeY      the top left y position of the node

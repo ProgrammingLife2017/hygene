@@ -30,7 +30,7 @@ public final class EdgeDrawingToolkit extends DrawingToolkit {
     /**
      * Draws a single edge from a given to point to a destination point.
      * <p>
-     * The genome colors are spread evenly across the height of the edge. They are drawn as bands along the edge.
+     * The genome colors are spread evenly across the height of the edge. They are drawn as lanes along the edge.
      *
      * @param fromX      the x position of the origin of the edge
      * @param fromY      the y position of the origin of the edge
