@@ -174,6 +174,15 @@ public final class GraphAnnotation {
     }
 
     /**
+     * Returns all annotations.
+     *
+     * @return all annotations
+     */
+    public AnnotationCollection getAnnotationCollection() {
+        return annotationCollection;
+    }
+
+    /**
      * Adds a {@link AnnotationCollection}, and add {@link org.dnacronym.hygene.coordinatesystem.GenomePoint}s which
      * denote the start and end points of this annotation in the graph.
      * <p>

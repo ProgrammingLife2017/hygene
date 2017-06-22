@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph.annotation;
 
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -245,5 +246,21 @@ public final class Annotation {
      */
     public int getEndNodeId() {
         return endNodeId;
+    }
+
+    /**
+     * Checks whether the annotation details match the given query.
+     *
+     * @param query search term
+     * @return true if the annotation details match the given query, false otherwise
+     */
+    public boolean matchString(final String query) {
+        return source.contains(query)
+                || type.contains(query)
+                || strand.contains(query)
+                || attributes.keySet().stream().anyMatch(key -> key.contains(query))
+                || attributes.values().stream().anyMatch(
+                        values -> Arrays.stream(values).anyMatch(value -> value.contains(query))
+        );
     }
 }

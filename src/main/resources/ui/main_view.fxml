@@ -41,6 +41,9 @@
                     <TitledPane animated="false" text="All Bookmarks" expanded="false">
                         <fx:include source="bookmark/bookmarks_table_view.fxml"/>
                     </TitledPane>
+                    <TitledPane animated="false" text="Annotation Search" expanded="false">
+                        <fx:include source="genomeindex/annotation_query_view.fxml"/>
+                    </TitledPane>
                     <TitledPane animated="false" text="Query" expanded="false">
                         <fx:include source="query/query.fxml"/>
                     </TitledPane>
