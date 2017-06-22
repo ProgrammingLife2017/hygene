@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Unit tests for {@link FileGenomeMapping}.
  */
-class FileGenomeMappingTest extends FileDatabaseTestBase {
+class FileGenomeMappingControllerTest extends FileDatabaseTestBase {
     private FileDatabase fileDatabase;
     private FileGenomeMapping fileGenomeMapping;
 

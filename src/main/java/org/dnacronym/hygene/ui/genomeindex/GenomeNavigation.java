@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
-import javax.inject.Inject;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -19,6 +18,7 @@ import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.progressbar.StatusBar;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -44,7 +44,7 @@ public final class GenomeNavigation {
      * Creates an instance of {@link GenomeNavigation}.
      *
      * @param graphStore the {@link GraphStore} whose {@link GfaFile} is observed
-     * @param statusBar  the {@link StatusBar} which is used to show genome indexing progress
+     * @param statusBar  the {@link StatusBar} which is used to show the genome indexing progress
      */
     @Inject
     public GenomeNavigation(final GraphStore graphStore, final StatusBar statusBar) {

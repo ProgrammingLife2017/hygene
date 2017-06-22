@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
-import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
@@ -84,83 +83,6 @@ class GraphAnnotationTest {
     }
 
     /**
-     * Tests that an empty range is returned if the only annotation is not in the specified range.
-     */
-    @Test
-    void testSingleAnnotationMiss() {
-        final Annotation annotation = new Annotation("source", "type", 23, 85, 38.0, "strand", 90);
-        annotationCollection.addAnnotation(annotation);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(12, 21)).isEmpty();
-    }
-
-    /**
-     * Tests that the only annotation is returned if the annotation is entirely within the specified range.
-     */
-    @Test
-    void testSingleAnnotationHitWithin() {
-        final Annotation annotation = new Annotation("source", "type", 63, 47, 9.0, "strand", 19);
-        annotationCollection.addAnnotation(annotation);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(3, 93)).containsExactly(annotation);
-    }
-
-    /**
-     * Tests that the only annotation is returned if the range is entirely within the only annotation.
-     */
-    @Test
-    void testSingleAnnotationHitAround() {
-        final Annotation annotation = new Annotation("source", "type", 33, 85, 55.0, "strand", 13);
-        annotationCollection.addAnnotation(annotation);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(69, 83)).containsExactly(annotation);
-    }
-
-    /**
-     * Tests that the only annotation is returned if the range partially overlaps with the annotation on the left side.
-     */
-    @Test
-    void testSingleAnnotationHitLeftMargin() {
-        final Annotation annotation = new Annotation("source", "type", 58, 76, 96.0, "strand", 47);
-        annotationCollection.addAnnotation(annotation);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(43, 67)).containsExactly(annotation);
-    }
-
-    /**
-     * Tests that the only annotation is returned if the range partially overlaps with the annotation on the right side.
-     */
-    @Test
-    void testSingleAnnotationHitRightMargin() {
-        final Annotation annotation = new Annotation("source", "type", 54, 90, 72.0, "strand", 78);
-        annotationCollection.addAnnotation(annotation);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(57, 103)).containsExactly(annotation);
-    }
-
-    /**
-     * Tests that all annotations in range are returned if there are multiple annotations.
-     */
-    @Test
-    void testMultipleAnnotations() {
-        final Annotation annotationA = new Annotation("sourceA", "typeA", 54, 90, 72.0, "strandA", 78);
-        final Annotation annotationB = new Annotation("sourceB", "typeB", 14, 97, 20.0, "strandB", 91);
-        final Annotation annotationC = new Annotation("sourceC", "typeC", 33, 49, 42.0, "strandC", 41);
-        annotationCollection.addAnnotation(annotationA);
-        annotationCollection.addAnnotation(annotationB);
-        annotationCollection.addAnnotation(annotationC);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(51, 93))
-                .containsExactlyInAnyOrder(annotationA, annotationB);
-    }
-
-    /**
      * Tests that annotations are properly updated when the genome index updates.
      */
     @Test
@@ -172,19 +94,12 @@ class GraphAnnotationTest {
     }
 
     /**
-     * Tests that annotations are properly updated when the genome index updates.
+     * Tests that the sequence id of the {@link AnnotationCollection} is correctly retrieved.
      */
     @Test
-    void testUpdateGffFileProperty() {
-        final Annotation annotation = new Annotation("source", "type", 33, 63, 71.0, "strand", 26);
-        annotationCollection.addAnnotation(annotation);
-
-        gffFileProperty.set(mock(GffFile.class));
-        gffFileProperty.set(gffFile);
-
-        assertThat(graphAnnotation.getAnnotationsInRange(34, 42)).contains(annotation);
+    void testGetSequenceId() {
+        assertThat(annotationCollection.getSequenceId()).isEqualTo("sequence");
     }
-
 
     /**
      * Mocks the {@link GenomeNavigation} and its dependencies.

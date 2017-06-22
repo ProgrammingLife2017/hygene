@@ -74,6 +74,9 @@ public final class GraphVisualizer {
 
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
 
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    // Will be fixed in the next PR, outside the scope of this PR
+    private final GraphAnnotation graphAnnotation;
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
 
@@ -116,15 +119,17 @@ public final class GraphVisualizer {
      * @param graphDimensionsCalculator {@link GraphDimensionsCalculator} used to calculate node positions
      * @param query                     the {@link Query} used to get the currently queried nodes
      * @param bookmarkStore             the {@link BookmarkStore} used to draw bookmark indications
+     * @param graphAnnotation           the {@link GraphAnnotation} used to draw annotations
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator, final Query query,
-                           final BookmarkStore bookmarkStore) {
+                           final BookmarkStore bookmarkStore, final GraphAnnotation graphAnnotation) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
         this.bookmarkStore = bookmarkStore;
         this.colorRoulette = new ColorRoulette();
+        this.graphAnnotation = graphAnnotation;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
