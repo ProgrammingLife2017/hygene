@@ -35,6 +35,7 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -252,10 +253,19 @@ public final class GraphVisualizer {
         return annotationColors;
     }
 
-    private List<Color> nodeAnnotationColors(final Segment node, final List<Annotation> annotations) {
+    /**
+     * Returns all the colors of all the annotations going through this branch.
+     *
+     * @param segment     the {@link Segment} to get the annotation colors for
+     * @param annotations the list of annotations in the current view
+     * @return the list of colors of the annotations going through the given {@link Segment}
+     */
+    private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
         for (final Annotation annotation : annotations) {
-            if (node.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())) {
+            if (segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                    && segment.getId() >= annotation.getStartNodeId()
+                    && segment.getId() < annotation.getEndNodeId()) {
                 annotationColors.add(annotation.getColor());
             }
         }
