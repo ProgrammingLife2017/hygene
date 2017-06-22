@@ -24,6 +24,7 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.AggregateSegment;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -182,6 +183,14 @@ public final class GraphVisualizer {
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
+        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
+                nodeHeightProperty.get()));
+
+        if (node instanceof AggregateSegment) {
+            nodeDrawingToolkit.drawSnp(nodeX, nodeY, nodeWidth, node.getColor());
+            return;
+        }
+
         nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
@@ -199,9 +208,6 @@ public final class GraphVisualizer {
             final String sequence = gfaNode.getMetadata().getSequence();
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
-
-        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
-                nodeHeightProperty.get()));
     }
 
     /**
