@@ -37,7 +37,7 @@ public final class GenomeMappingView {
 
         stage.setTitle(TITLE);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setOnCloseRequest(Event::consume); // prevent user from closing stage
+        stage.setOnCloseRequest(Event::consume); // prevent user from closing stage directly
     }
 
 

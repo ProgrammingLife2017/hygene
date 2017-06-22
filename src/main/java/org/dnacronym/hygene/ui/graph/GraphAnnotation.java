@@ -11,6 +11,7 @@ import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.ui.genomeindex.GenomeMappingView;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
+import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
@@ -31,12 +32,16 @@ import java.util.stream.Collectors;
 @SuppressWarnings("PMD.ImmutableField") // The values are set via event listeners, so they should not be immutable
 public final class GraphAnnotation {
     private static final Logger LOGGER = LogManager.getLogger(GraphAnnotation.class);
+    private static final int PROGRESS_UPDATE_INTERVAL = 100;
 
     private final Map<Annotation, GenomePoint> startPoints;
     private final Map<Annotation, GenomePoint> endPoints;
 
     @Inject
     private GenomeMappingView genomeMappingView;
+    @Inject
+    private StatusBar statusBar;
+
     private String mappedGenome;
     private StringProperty sequenceIdProperty;
 
@@ -147,27 +152,47 @@ public final class GraphAnnotation {
     /**
      * Adds a {@link AnnotationCollection}, and add {@link GenomePoint}s which denote the start and end points of this
      * annotation in the graph.
+     * <p>
+     * If the mappedGenome is not set ({@code null} or empty), it will divert to using the sequence id
+     * directly of the {@link AnnotationCollection}.
      */
     private void recalculateAnnotationPoints() {
         startPoints.clear();
         endPoints.clear();
 
-        if (genomeIndex == null || annotationCollection == null || mappedGenome == null) {
+        if (genomeIndex == null || annotationCollection == null) {
             return;
         }
 
-        annotationCollection.getAnnotations().forEach(annotation -> {
-            final int startOffset = annotation.getStart();
-            final int endOffset = annotation.getEnd();
+        final String genome = mappedGenome == null || mappedGenome.isEmpty()
+                ? annotationCollection.getSequenceId()
+                : mappedGenome;
 
-            try {
-                genomeIndex.getGenomePoint(mappedGenome, startOffset)
-                        .ifPresent(genomePoint -> startPoints.put(annotation, genomePoint));
-                genomeIndex.getGenomePoint(mappedGenome, endOffset)
-                        .ifPresent(genomePoint -> endPoints.put(annotation, genomePoint));
-            } catch (final SQLException e) {
-                LOGGER.error("Could not add an annotation.", e);
-            }
+        statusBar.monitorTask(progressUpdater -> {
+            final int[] position = {0};
+            final int total = annotationCollection.getAnnotations().size();
+            annotationCollection.getAnnotations().forEach(annotation -> {
+                if (position[0] % PROGRESS_UPDATE_INTERVAL == 0) {
+                    progressUpdater.updateProgress(
+                            Math.round(100f * position[0] / total),
+                            "Placing annotation " + position[0] + "/" + total
+                    );
+                }
+
+                final int startOffset = annotation.getStart();
+                final int endOffset = annotation.getEnd();
+
+                try {
+                    genomeIndex.getGenomePoint(genome, startOffset)
+                            .ifPresent(genomePoint -> startPoints.put(annotation, genomePoint));
+                    genomeIndex.getGenomePoint(genome, endOffset)
+                            .ifPresent(genomePoint -> endPoints.put(annotation, genomePoint));
+                } catch (final SQLException e) {
+                    LOGGER.error("Could not add an annotation.", e);
+                }
+
+                position[0]++;
+            });
         });
     }
 }
