@@ -205,9 +205,10 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor());
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
-                .anyMatch(segmentId -> selectedSegmentProperty.get().getSegmentIds().contains(segmentId))) {
+                .anyMatch(segmentId -> selectedSegmentProperty.get().containsSegment(segmentId))) {
             nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.SELECTED);
-        } else if (gfaNode.equals(hoveredSegmentProperty.get())) {
+        } else if (hoveredSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
+                .anyMatch(segmentId -> hoveredSegmentProperty.get().containsSegment(segmentId))) {
             nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.HIGHLIGHTED);
         } else if (queried) {
             nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.QUERIED);

@@ -19,24 +19,8 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      */
     @Override
     public void draw(final double snpX, final double snpY, final double snpWidth, final Color color) {
-        final double snpXMiddle = snpX + snpWidth / 2;
-        final double snpYMiddle = snpY + getNodeHeight() / 2;
-
         getGraphicsContext().setFill(color);
-        getGraphicsContext().fillPolygon(
-                new double[] {
-                        snpXMiddle - snpWidth / 2,
-                        snpXMiddle,
-                        snpXMiddle + snpWidth / 2,
-                        snpXMiddle
-                },
-                new double[] {
-                        snpYMiddle,
-                        snpYMiddle - getSnpHeight() / 2,
-                        snpYMiddle,
-                        snpYMiddle + getSnpHeight() / 2
-                },
-                4);
+        getGraphicsContext().fillPolygon(getRhombusX(snpX, snpWidth), getRhombusY(snpY), 4);
     }
 
     /**
@@ -82,7 +66,9 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     @Override
     public void drawHighlight(final double snpX, final double snpY, final double snpWidth,
                               final HighlightType highlightType) {
-        // Not yet implemented
+        getGraphicsContext().setStroke(highlightType.getColor());
+        getGraphicsContext().setLineWidth(NODE_OUTLINE_WIDTH);
+        getGraphicsContext().strokePolygon(getRhombusX(snpX, snpWidth), getRhombusY(snpY), 4);
     }
 
     /**
@@ -96,5 +82,41 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     @Override
     public void drawSequence(final double snpX, final double snpY, final double snpWidth, final String sequence) {
         // Not yet implemented
+    }
+
+
+    /**
+     * Returns the four X-coordinates for a rhombus at the given position with the given width.
+     *
+     * @param left  the left-most point of the rhombus
+     * @param width the width of the rhombus
+     * @return the four X-coordinates for a rhombus at the given position with the given width
+     */
+    private double[] getRhombusX(final double left, final double width) {
+        final double center = left + width / 2;
+
+        return new double[] {
+                center - width / 2,
+                center,
+                center + width / 2,
+                center
+        };
+    }
+
+    /**
+     * Returns the four Y-coordinates for a rhombus at the given position.
+     *
+     * @param top the top of the rhombus
+     * @return the four Y-coordinates for a rhombus at the given position
+     */
+    private double[] getRhombusY(final double top) {
+        final double center = top + getNodeHeight() / 2;
+
+        return new double[] {
+                center,
+                center - getSnpHeight() / 2,
+                center,
+                center + getSnpHeight() / 2
+        };
     }
 }
