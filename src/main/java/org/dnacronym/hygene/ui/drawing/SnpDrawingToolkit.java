@@ -10,7 +10,7 @@ import java.util.List;
  */
 public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     /**
-     * Fills a round rectangle based on the node position and width, with the set {@link Color} fill.
+     * Fills a rhombus based on the node position and width, with the set {@link Color} fill.
      *
      * @param snpX     the top left x position of the node
      * @param snpY     the top left y position of the node
@@ -40,7 +40,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     }
 
     /**
-     * Fills a round rectangle based on the node position and width.
+     * Fills a rhombus based on the node position and width.
      * <p>
      * The genome colors are spread evenly across the height of the node. They are drawn as lanes along the node.
      *
