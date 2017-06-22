@@ -306,16 +306,29 @@ public final class GraphVisualizer {
         final List<Color> annotationColors = new ArrayList<>();
 
         for (final Annotation annotation : annotations) {
-            if (edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                    && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                    && edge.getFromSegment() instanceof Segment
-                    && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
-                    && edge.getToSegment() instanceof Segment
-                    && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId()) {
+            if (edgePartOfAnnotation(edge, annotation)) {
                 annotationColors.add(annotation.getColor());
             }
         }
         return annotationColors;
+    }
+
+
+    /**
+     * Checks if the given {@link Edge} is part of the given {@link Annotation}.
+     *
+     * @param edge       the {@link Edge} to check
+     * @param annotation the {@link Annotation} to check
+     * @return true iff the two nodes of the edge are within bounds of the annotation and have the same genome as the
+     * annotation
+     */
+    private boolean edgePartOfAnnotation(final Edge edge, final Annotation annotation) {
+        return edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                && edge.getFromSegment() instanceof Segment
+                && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
+                && edge.getToSegment() instanceof Segment
+                && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId();
     }
 
     /**
