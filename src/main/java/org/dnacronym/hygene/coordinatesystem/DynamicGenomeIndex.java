@@ -28,7 +28,7 @@ public final class DynamicGenomeIndex {
     /**
      * Maps from base counts to node IDs.
      */
-    @SuppressWarnings("PMD.LooseCoupling") // We explicitly want to use the TreeMap as a type here.
+    @SuppressWarnings("PMD.LooseCoupling") // We explicitly want to use the TreeMap as a type here
     private final TreeMap<Integer, Integer> baseCounts;
     private int currentNode;
 
@@ -59,7 +59,6 @@ public final class DynamicGenomeIndex {
      *
      * @throws IOException if an error occurs during IO operations
      */
-    @SuppressWarnings("squid:S2583") // false positive due to currentNode being updated in a lambda
     public void buildIndex() throws IOException {
         if (graph.getNodeArrays().length == 2) {
             return;
@@ -68,15 +67,7 @@ public final class DynamicGenomeIndex {
 
         collectNodesOfGenome();
 
-        // Pick random node in genomeName
-        currentNode = nodesInGenome.iterator().next();
-
-        // Get left-most node of genomeNamed
-        graphIterator.visitIndirectNeighbours(currentNode, SequenceDirection.LEFT, neighbour -> {
-            if (neighbour != 0 && containsGenome(neighbour)) {
-                currentNode = neighbour;
-            }
-        });
+        findLeftMostNode(graphIterator);
 
         int currentBaseCount = 1;
         visited.add(currentNode);
@@ -114,7 +105,7 @@ public final class DynamicGenomeIndex {
      * Returns the offset within a node that a point in the coordinate system has.
      *
      * @param base the base coordinate within the current genome
-     * @return the base offset within the node, or -1 if it no node has been found
+     * @return the base offset within the node, or -1 if no node has been found
      */
     public int getBaseOffsetWithinNode(final int base) {
         final Integer floorKey = baseCounts.floorKey(base);
@@ -125,19 +116,8 @@ public final class DynamicGenomeIndex {
     }
 
     /**
-     * Checks whether a certain node is in the genome.
+     * Collects all nodes that belong to the current genome and stores it in {@code nodesInGenome}.
      *
-     * @param nodeId the ID of that node
-     * @return {@code true} iff. that node is in the genome
-     */
-    private boolean containsGenome(final int nodeId) {
-        return nodesInGenome.contains(nodeId);
-    }
-
-    /**
-     * Collects all nodes that belong to the current genome.
-     *
-     * @throws MetadataParseException if the syntax of the GFA file is invalid in some form
      * @throws IOException            if an error occurs during IO operations
      */
     private void collectNodesOfGenome() throws IOException {
@@ -159,7 +139,6 @@ public final class DynamicGenomeIndex {
             }
 
             handleGenomeString(genomes, counter[0]);
-
         });
     }
 
@@ -182,21 +161,23 @@ public final class DynamicGenomeIndex {
     }
 
     /**
-     * Finds the next node to the right of the current node. If the found node has a left neighbour which was not yet
-     * visited, but is part of the genome, the found node is skipped.
+     * Finds the next node to the right of the current node.
+     * <p>
+     * If the found node has a left neighbour which was not yet visited, but is part of the genome, the found node is
+     * flagged and then skipped. The next node is stored in {@code currentNode}.
      *
      * @param graphIterator the graph iterator
      */
     private void findNextNode(final GraphIterator graphIterator) {
         graphIterator.visitDirectNeighbours(currentNode, SequenceDirection.RIGHT, neighbour -> {
-            if (neighbour == graph.getNodeArrays().length - 1 || !containsGenome(neighbour)) {
+            if (neighbour == graph.getNodeArrays().length - 1 || !nodesInGenome.contains(neighbour)) {
                 return;
             }
 
             final boolean[] flag = {false};
 
             graphIterator.visitDirectNeighbours(neighbour, SequenceDirection.LEFT, neighbourOfNeighbour -> {
-                if (!visited.contains(neighbourOfNeighbour) && containsGenome(neighbourOfNeighbour)) {
+                if (!visited.contains(neighbourOfNeighbour) && nodesInGenome.contains(neighbourOfNeighbour)) {
                     flag[0] = true;
                 }
             });
@@ -206,6 +187,24 @@ public final class DynamicGenomeIndex {
             }
 
             currentNode = neighbour;
+        });
+    }
+
+    /**
+     * Finds the left most node in the graph.
+     * <p>
+     * It first picks a random node within the genome, and then it goes as much to the left as possible to find the
+     * left most node.
+     *
+     * @param graphIterator the graph iterator
+     */
+    private void findLeftMostNode(final GraphIterator graphIterator) {
+        currentNode = nodesInGenome.iterator().next();
+
+        graphIterator.visitIndirectNeighbours(currentNode, SequenceDirection.LEFT, neighbour -> {
+            if (neighbour != 0 && nodesInGenome.contains(neighbour)) {
+                currentNode = neighbour;
+            }
         });
     }
 }
