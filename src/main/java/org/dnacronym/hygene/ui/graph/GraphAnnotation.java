@@ -79,8 +79,17 @@ public final class GraphAnnotation {
             }
         });
 
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> gfaFile = newValue);
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
+            gfaFile = newValue;
+            recalculateAnnotationPoints();
+        });
         graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
+            dynamicGenomeIndex = null;
+            annotationCollection = null;
+            if (newValue == null) {
+                return;
+            }
+
             annotationCollection = newValue.getAnnotationCollection();
             sequenceIdProperty.set(annotationCollection.getSequenceId());
 
