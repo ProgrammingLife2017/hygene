@@ -18,6 +18,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentWidth the width of the node
      * @param color     the {@link Color} to fill the node with
      */
+    @Override
     public void draw(final double segmentX, final double segmentY, final double segmentWidth, final Color color) {
         drawGenomes(segmentX, segmentY, segmentWidth, Collections.singletonList(color));
     }
@@ -32,6 +33,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentWidth    the width of the node
      * @param genomeColors the colors of the paths going through the node
      */
+    @Override
     public void drawGenomes(final double segmentX, final double segmentY, final double segmentWidth,
                             final List<Color> genomeColors) {
         double laneHeightOffset = segmentY;
@@ -56,6 +58,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentWidth        the width of the node
      * @param annotationColors the colors of the annotations going through the node
      */
+    @Override
     public void drawAnnotations(final double segmentX, final double segmentY, final double segmentWidth,
                                 final List<Color> annotationColors) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
@@ -80,6 +83,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentWidth     the width of the node
      * @param highlightType the type of highlight
      */
+    @Override
     public void drawHighlight(final double segmentX, final double segmentY, final double segmentWidth,
                               final HighlightType highlightType) {
         getGraphicsContext().setStroke(highlightType.getColor());
@@ -104,6 +108,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentWidth the width of the node
      * @param sequence  the sequence of the node
      */
+    @Override
     public void drawSequence(final double segmentX, final double segmentY, final double segmentWidth,
                              final String sequence) {
         getGraphicsContext().setFill(Color.BLACK);
