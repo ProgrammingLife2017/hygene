@@ -30,7 +30,10 @@ import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.drawing.EdgeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.HighlightType;
 import org.dnacronym.hygene.ui.drawing.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.SegmentDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.SnpDrawingToolkit;
 import org.dnacronym.hygene.ui.path.GenomePath;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
@@ -54,7 +57,8 @@ import java.util.stream.Collectors;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods"})
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods",
+        "PMD.CyclomaticComplexity"})
 // This will be fixed at a later date.
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
@@ -92,7 +96,8 @@ public final class GraphVisualizer {
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
-    private final NodeDrawingToolkit nodeDrawingToolkit;
+    private final SegmentDrawingToolkit segmentDrawingToolkit;
+    private final SnpDrawingToolkit snpDrawingToolkit;
     private final EdgeDrawingToolkit edgeDrawingToolkit;
     private final GraphAnnotationVisualizer graphAnnotationVisualizer;
     private final BookmarkStore bookmarkStore;
@@ -152,7 +157,8 @@ public final class GraphVisualizer {
 
         query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
-        nodeDrawingToolkit = new NodeDrawingToolkit();
+        segmentDrawingToolkit = new SegmentDrawingToolkit();
+        snpDrawingToolkit = new SnpDrawingToolkit();
         edgeDrawingToolkit = new EdgeDrawingToolkit();
         graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
     }
@@ -162,10 +168,10 @@ public final class GraphVisualizer {
      * Draw a node on the canvas.
      * <p>
      * Node outlines are also drawn when one of the following conditions are met:
-     * If selected, it is {@link NodeDrawingToolkit.HighlightType#SELECTED}.<br>
-     * If it is not selected, and highlighted, it is {@link NodeDrawingToolkit.HighlightType#HIGHLIGHTED}.<br>
-     * If it is not highlighted, and queried, it is {@link NodeDrawingToolkit.HighlightType#QUERIED}.<br>
-     * If it is not queried, and bookmarked, is it {@link NodeDrawingToolkit.HighlightType#BOOKMARKED}.
+     * If selected, it is {@link HighlightType#SELECTED}.<br>
+     * If it is not selected, and highlighted, it is {@link HighlightType#HIGHLIGHTED}.<br>
+     * If it is not highlighted, and queried, it is {@link HighlightType#QUERIED}.<br>
+     * If it is not queried, and bookmarked, is it {@link HighlightType#BOOKMARKED}.
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
@@ -186,27 +192,32 @@ public final class GraphVisualizer {
         gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
                 nodeHeightProperty.get()));
 
-        if (node instanceof AggregateSegment) {
-            nodeDrawingToolkit.drawSnp(nodeX, nodeY, nodeWidth, node.getColor());
+        final NodeDrawingToolkit nodeDrawingToolkit;
+        if (node instanceof Segment) {
+            nodeDrawingToolkit = segmentDrawingToolkit;
+        } else if (node instanceof AggregateSegment) {
+            nodeDrawingToolkit = snpDrawingToolkit;
+        } else {
+            LOGGER.warn("Cannot draw node of class " + node.getClass().getName() + ".");
             return;
         }
 
-        nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
+        nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor());
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
                 .anyMatch(segmentId -> selectedSegmentProperty.get().getSegmentIds().contains(segmentId))) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.SELECTED);
         } else if (gfaNode.equals(hoveredSegmentProperty.get())) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.HIGHLIGHTED);
         } else if (queried) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.QUERIED);
         } else if (bookmarked) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.BOOKMARKED);
         }
 
         if (gfaNode.hasMetadata()) {
             final String sequence = gfaNode.getMetadata().getSequence();
-            nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
+            nodeDrawingToolkit.drawSequence(nodeX, nodeY, nodeWidth, sequence);
         }
     }
 
@@ -247,7 +258,7 @@ public final class GraphVisualizer {
 
         if (edge.getFromSegment().equals(hoveredSegmentProperty.get())
                 || edge.getToSegment().equals(hoveredSegmentProperty.get())) {
-            edgeColors = Collections.singletonList(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+            edgeColors = Collections.singletonList(HighlightType.HIGHLIGHTED.getColor());
         } else if (edge.getGenomes() != null
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
             final Set<String> selectedGenomesInEdge
@@ -344,8 +355,10 @@ public final class GraphVisualizer {
         }
 
         clear();
-        nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
-        nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        segmentDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        segmentDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        snpDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        snpDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
 
@@ -446,7 +459,8 @@ public final class GraphVisualizer {
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
-        this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.segmentDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.snpDrawingToolkit.setGraphicsContext(graphicsContext);
         this.edgeDrawingToolkit.setGraphicsContext(graphicsContext);
         this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 
