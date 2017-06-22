@@ -24,6 +24,7 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
