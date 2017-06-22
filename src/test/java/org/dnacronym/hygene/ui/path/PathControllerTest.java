@@ -25,49 +25,49 @@ final class PathControllerTest {
 
     @Test
     void testSubstringNull() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate(null, false);
+        final Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate(null, false);
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 
     @Test
     void testSubstringEmptyString() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("", false);
+        final Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("", false);
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 
     @Test
     void testSubstringBasicWord() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("hello", false);
+        final Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("hello", false);
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 
     @Test
     void testSubstringBasicWordWithCaps() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("world", true);
+        final Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("world", true);
         assertThat(genomePathPredicate.test(genomePath)).isFalse();
     }
 
     @Test
     void testSubstringBasicWordWithCapsNegative() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("World", true);
+        final Predicate<GenomePath> genomePathPredicate = pathController.getSubstringPredicate("World", true);
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 
     @Test
     void testRegexNull() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getRegexPredicate(null);
+        final Predicate<GenomePath> genomePathPredicate = pathController.getRegexPredicate(null);
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 
     @Test
     void testRegexEmptyString() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getRegexPredicate("");
+        final Predicate<GenomePath> genomePathPredicate = pathController.getRegexPredicate("");
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 
     @Test
     void testRegexBasicWord() throws Exception {
-        Predicate<GenomePath> genomePathPredicate = pathController.getRegexPredicate(".*");
+        final Predicate<GenomePath> genomePathPredicate = pathController.getRegexPredicate(".*");
         assertThat(genomePathPredicate.test(genomePath)).isTrue();
     }
 }
