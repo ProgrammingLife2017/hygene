@@ -32,7 +32,7 @@ class DynamicGenomeIndexTest {
 
 
     @Test
-    void testInsertion() throws MetadataParseException, IOException, IOException {
+    void testInsertion() throws MetadataParseException, IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g1.fasta");
         dynamicGenomeIndex.buildIndex();
 
