@@ -263,7 +263,8 @@ public final class GraphVisualizer {
     private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
         for (final Annotation annotation : annotations) {
-            if (segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+            if (segment.hasMetadata()
+                    && segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                     && segment.getId() >= annotation.getStartNodeId()
                     && segment.getId() < annotation.getEndNodeId()) {
                 annotationColors.add(annotation.getColor());
