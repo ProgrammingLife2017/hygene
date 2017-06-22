@@ -211,11 +211,11 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
-        nodeDrawingToolkit.drawNodeAnnotations(nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations));
+        gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawNodeAnnotations(
+                nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations)));
 
         gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
                 nodeHeightProperty.get()));
-
     }
 
     /**
