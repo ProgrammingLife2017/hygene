@@ -53,8 +53,8 @@ public final class GraphAnnotation {
     /**
      * Constructs a new {@link GraphAnnotation}.
      *
-     * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
-     *                         update the {@link AnnotationCollection}s
+     * @param graphStore the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
+     *                   update the {@link AnnotationCollection}s
      */
     @Inject
     public GraphAnnotation(final GraphStore graphStore) {
@@ -91,8 +91,6 @@ public final class GraphAnnotation {
                     LOGGER.error("Unable to showAndWait genome mapping view.", e);
                 }
             }
-
-            recalculateAnnotationPoints();
         });
     }
 
@@ -101,7 +99,8 @@ public final class GraphAnnotation {
      * <p>
      * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file. This also
      * prompts the internal {@link DynamicGenomeIndex} to re-index the genomes based on the given genome and the current
-     * GFA file.
+     * GFA file.<br>
+     * Afterwards prompts a recalculation of annotation points.
      *
      * @param mappedGenome the genome in the GFA the GFF genome should map onto
      */
@@ -110,6 +109,8 @@ public final class GraphAnnotation {
 
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, mappedGenome);
         dynamicGenomeIndex.buildIndex();
+
+        recalculateAnnotationPoints();
     }
 
     /**
