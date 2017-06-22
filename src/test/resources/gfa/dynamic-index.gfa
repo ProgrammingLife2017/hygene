@@ -1,7 +1,7 @@
 H	VN:Z:1.0
 H	ORI:Z:g1.fasta;g2.fasta;g3.fasta
 S	11	ACC	*	ORI:Z:g1.fasta;g2.fasta;g3.fasta
-S	12	ATT	*	ORI:Z:1
+S	12	ATT	*	ORI:Z:0
 S	13	TCA	*	ORI:Z:g1.fasta;g2.fasta
 S	14	ACC	*	ORI:Z:g2.fasta
 S	15	TCA	*	ORI:Z:g1.fasta;g2.fasta
