@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Controller paths for the path highlighting menu.
+ * Controller for the path highlighting menu.
  */
 public final class PathController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(PathController.class);
@@ -124,7 +124,7 @@ public final class PathController implements Initializable {
     Predicate<GenomePath> getSubstringPredicate(final String query, final boolean matchCase) {
         return s -> query == null
                 || query.length() == 0
-                || (s.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase)
+                || s.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase
                 || s.getName().contains(query);
     }
 

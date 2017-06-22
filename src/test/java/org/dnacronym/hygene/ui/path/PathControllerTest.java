@@ -9,7 +9,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
 /**
- * Unit test for {@link PathController}
+ * Unit test for {@link PathController}.
  */
 final class PathControllerTest {
     private PathController pathController;
