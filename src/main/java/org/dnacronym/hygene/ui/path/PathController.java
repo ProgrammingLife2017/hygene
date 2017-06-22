@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.path;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -80,10 +81,14 @@ public final class PathController implements Initializable {
         searchField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate(getPredicate(newValue)));
 
-        pathsFound.textProperty().setValue("Paths found: " + filteredList.size());
+        matchCase.selectedProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate(getPredicate(searchField.getText())));
+
+        regex.selectedProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate(getPredicate(searchField.getText())));
 
         // Updates the label with the number of paths that are displayed
-        searchField.textProperty().addListener((observable, oldValue, newValue) ->
+        filteredList.getSource().addListener((ListChangeListener<GenomePath>) c ->
                 pathsFound.textProperty().setValue("Paths found: " + filteredList.size()));
     }
 
@@ -119,8 +124,8 @@ public final class PathController implements Initializable {
     Predicate<GenomePath> getSubstringPredicate(final String query, final boolean matchCase) {
         return s -> query == null
                 || query.length() == 0
-                || s.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase
-                || s.getName().contains(query) && matchCase;
+                || (s.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase)
+                || s.getName().contains(query);
     }
 
 
