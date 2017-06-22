@@ -95,8 +95,8 @@ public final class PathController implements Initializable {
     /**
      * Gets the predicate that will be used to match genomes in the search list.
      * <p>
-     * This method will return a {@link Predicate} will, depending on the search method selected in the GUI,
-     * return either substring, substring case-sensitive, or regex.
+     * This method will return a {@link Predicate} that, depending on the search method selected in the GUI,
+     * will either be substring case-insensitive, substring case-sensitive, or regex.
      *
      * @param query the search query
      * @return the predicate
@@ -112,25 +112,26 @@ public final class PathController implements Initializable {
     }
 
     /**
-     * Will return a substring predicate.
+     * Return a substring predicate.
      * <p>
-     * This predicate will evaluate to true if: the query is null, an empty string, or a substring of the value being
-     * matches.
+     * This predicate will evaluate to true if: the query is null or empty string (indicating there is no
+     * user input available in the GUI), or a substring of the value being matched.
      *
      * @param query     the search query
      * @param matchCase to make the search case sensitive
      * @return the predicate
      */
+    @SuppressWarnings("squid:S1067")
     Predicate<GenomePath> getSubstringPredicate(final String query, final boolean matchCase) {
-        return s -> query == null
+        return genomePath -> query == null
                 || query.length() == 0
-                || s.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase
-                || s.getName().contains(query);
+                || genomePath.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase
+                || genomePath.getName().contains(query);
     }
 
 
     /**
-     * Will return a regex predicate.
+     * Returns a regex predicate.
      * <p>
      * The predicate returned will preform a regex match on the input.
      *
@@ -138,7 +139,7 @@ public final class PathController implements Initializable {
      * @return the predicate
      */
     Predicate<GenomePath> getRegexPredicate(final String query) {
-        return s -> query == null || query.length() == 0 || Pattern.matches(query, s.getName());
+        return genomePath -> query == null || query.length() == 0 || Pattern.matches(query, genomePath.getName());
     }
 
     /**
