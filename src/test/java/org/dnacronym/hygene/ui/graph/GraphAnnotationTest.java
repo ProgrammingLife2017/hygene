@@ -41,7 +41,7 @@ class GraphAnnotationTest {
         initGenomeNavigationMock();
         initGraphStoreMock();
 
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
+        graphAnnotation = new GraphAnnotation(graphStore);
     }
 
 
@@ -77,7 +77,7 @@ class GraphAnnotationTest {
     @Test
     void testNullAnnotationCollection() {
         when(gffFile.getAnnotationCollection()).thenReturn(null);
-        graphAnnotation = new GraphAnnotation(genomeNavigation, graphStore);
+        graphAnnotation = new GraphAnnotation(graphStore);
 
         assertThat(graphAnnotation.getAnnotationsInRange(11, 24)).isEmpty();
     }
