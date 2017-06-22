@@ -4,7 +4,6 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.MetadataParseException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,16 +16,20 @@ import java.util.TreeMap;
 
 
 /**
- * .
+ * Represents a dynamic genome index for single genomes.
  */
-public class DynamicGenomeIndex {
+public final class DynamicGenomeIndex {
     private final GfaFile gfaFile;
     private final Graph graph;
     private final String genomeName;
     private final String genomeIndex;
-    private Set<Integer> visited;
-    private Set<Integer> nodesInGenome;
-    private TreeMap<Integer, Integer> baseCounts;
+    private final Set<Integer> visited;
+    private final Set<Integer> nodesInGenome;
+    /**
+     * Maps from base counts to node IDs.
+     */
+    @SuppressWarnings("PMD.LooseCoupling") // We explicitly want to use the TreeMap as a type here.
+    private final TreeMap<Integer, Integer> baseCounts;
     private int currentNode;
 
 
@@ -54,22 +57,21 @@ public class DynamicGenomeIndex {
     /**
      * Collects all nodes that belong to the current genome.
      *
-     * @throws MetadataParseException if the syntax of the GFA file is invalid in some form
-     * @throws IOException            if an error occurs during IO operations
+     * @throws IOException if an error occurs during IO operations
      */
     @SuppressWarnings("squid:S2583") // false positive due to currentNode being updated in a lambda
-    public void buildIndex() throws MetadataParseException, IOException {
-        final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
-
+    public void buildIndex() throws IOException {
         if (graph.getNodeArrays().length == 2) {
             return;
         }
+        final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
+
         collectNodesOfGenome();
 
         // Pick random node in genomeName
         currentNode = nodesInGenome.iterator().next();
 
-        // Get left-most node of genomeName
+        // Get left-most node of genomeNamed
         graphIterator.visitIndirectNeighbours(currentNode, SequenceDirection.LEFT, neighbour -> {
             if (neighbour != 0 && containsGenome(neighbour)) {
                 currentNode = neighbour;
@@ -83,25 +85,9 @@ public class DynamicGenomeIndex {
             currentBaseCount += graph.getSequenceLength(currentNode);
 
             final int oldNode = currentNode;
-            graphIterator.visitDirectNeighbours(currentNode, SequenceDirection.RIGHT, neighbour -> {
-                if (neighbour == graph.getNodeArrays().length - 1 || !containsGenome(neighbour)) {
-                    return;
-                }
 
-                final boolean[] flag = {false};
+            findNextNode(graphIterator);
 
-                graphIterator.visitDirectNeighbours(neighbour, SequenceDirection.LEFT, neighbourOfNeighbour -> {
-                    if (!visited.contains(neighbourOfNeighbour) && containsGenome(neighbourOfNeighbour)) {
-                        flag[0] = true;
-                    }
-                });
-
-                if (flag[0]) {
-                    return;
-                }
-
-                currentNode = neighbour;
-            });
             if (oldNode == currentNode) {
                 break;
             }
@@ -111,23 +97,31 @@ public class DynamicGenomeIndex {
     }
 
     /**
-     * Returns the ID of the node this base belongs to.
+     * Finds the node belonging to the given base, if it exists.
      *
-     * @param base the base coordinate within the current genome
-     * @return the ID of the node this base belongs to
+     * @param base the base number
+     * @return the node belonging to the given base or -1 if no node has been found
      */
     public int getNodeByBase(final int base) {
-        return baseCounts.floorEntry(base).getValue();
+        final Map.Entry<Integer, Integer> baseCountEntry = baseCounts.floorEntry(base);
+        if (baseCountEntry == null) {
+            return -1;
+        }
+        return baseCountEntry.getValue();
     }
 
     /**
      * Returns the offset within a node that a point in the coordinate system has.
      *
      * @param base the base coordinate within the current genome
-     * @return the base offset within the node
+     * @return the base offset within the node, or -1 if it no node has been found
      */
     public int getBaseOffsetWithinNode(final int base) {
-        return base - baseCounts.floorKey(base);
+        final Integer floorKey = baseCounts.floorKey(base);
+        if (floorKey == null) {
+            return -1;
+        }
+        return base - floorKey;
     }
 
     /**
@@ -146,24 +140,26 @@ public class DynamicGenomeIndex {
      * @throws MetadataParseException if the syntax of the GFA file is invalid in some form
      * @throws IOException            if an error occurs during IO operations
      */
-    private void collectNodesOfGenome() throws MetadataParseException, IOException {
+    private void collectNodesOfGenome() throws IOException {
         final int[] counter = {0};
         Files.lines(Paths.get(gfaFile.getFileName())).forEach(line -> {
-            if (line.startsWith("S")) {
-                counter[0]++;
-
-                final int oriIndex = line.indexOf("ORI:Z:") + 6;
-                final String genomesRaw = line.substring(oriIndex);
-                final int tabIndex = genomesRaw.indexOf('\t');
-                final String genomes;
-                if (tabIndex == -1) {
-                    genomes = genomesRaw;
-                } else {
-                    genomes = genomesRaw.substring(0, tabIndex);
-                }
-
-                handleGenomeString(genomes, counter[0]);
+            if (line.charAt(0) != 'S') {
+                return;
             }
+            counter[0]++;
+
+            final int oriIndex = line.indexOf("ORI:Z:") + 6;
+            final String genomesRaw = line.substring(oriIndex);
+            final int tabIndex = genomesRaw.indexOf('\t');
+            final String genomes;
+            if (tabIndex == -1) {
+                genomes = genomesRaw;
+            } else {
+                genomes = genomesRaw.substring(0, tabIndex);
+            }
+
+            handleGenomeString(genomes, counter[0]);
+
         });
     }
 
@@ -183,5 +179,33 @@ public class DynamicGenomeIndex {
                 break;
             }
         }
+    }
+
+    /**
+     * Finds the next node to the right of the current node. If the found node has a left neighbour which was not yet
+     * visited, but is part of the genome, the found node is skipped.
+     *
+     * @param graphIterator the graph iterator
+     */
+    private void findNextNode(final GraphIterator graphIterator) {
+        graphIterator.visitDirectNeighbours(currentNode, SequenceDirection.RIGHT, neighbour -> {
+            if (neighbour == graph.getNodeArrays().length - 1 || !containsGenome(neighbour)) {
+                return;
+            }
+
+            final boolean[] flag = {false};
+
+            graphIterator.visitDirectNeighbours(neighbour, SequenceDirection.LEFT, neighbourOfNeighbour -> {
+                if (!visited.contains(neighbourOfNeighbour) && containsGenome(neighbourOfNeighbour)) {
+                    flag[0] = true;
+                }
+            });
+
+            if (flag[0]) {
+                return;
+            }
+
+            currentNode = neighbour;
+        });
     }
 }
