@@ -10,8 +10,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
-import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.bookmark.Bookmark;
+import org.dnacronym.hygene.graph.node.GfaNode;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
@@ -46,7 +47,7 @@ public final class BookmarkCreateController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final ObjectProperty<Segment> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
+        final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
@@ -98,7 +99,8 @@ public final class BookmarkCreateController implements Initializable {
         final String radiusString = radius.getText().replaceAll("[^\\d]", "");
 
         if (!baseString.isEmpty() && !radiusString.isEmpty()) {
-            final Segment segment = graphVisualizer.getSelectedSegmentProperty().get();
+            final GfaNode gfaNode = graphVisualizer.getSelectedSegmentProperty().get();
+            final Segment segment = gfaNode.getSegments().get(0);
             final int baseOffsetValue = Integer.parseInt(baseString);
             final int radiusValue = Integer.parseInt(radiusString);
 

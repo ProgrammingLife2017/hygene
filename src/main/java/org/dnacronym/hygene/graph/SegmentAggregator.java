@@ -103,6 +103,7 @@ public final class SegmentAggregator {
         aggregatedNodes.add(neighbours.get(0));
         aggregatedNodes.add(neighbours.get(1));
         final AggregateSegment aggregateSegment = new AggregateSegment(aggregatedNodes);
+        aggregateSegment.setXPosition(Math.min(neighbours.get(0).getXPosition(), neighbours.get(1).getXPosition()));
 
         final Edge toAggregateSegment = new AggregateEdge(startSegment, aggregateSegment,
                 startSegment.getOutgoingEdges());

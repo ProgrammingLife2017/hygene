@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.graph.node;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -15,6 +17,8 @@ import java.util.Optional;
 public final class AggregateSegment extends GfaNode {
     private final List<Segment> segments;
     private final int length;
+
+    private @MonotonicNonNull NodeMetadata metadata;
 
 
     /**
@@ -59,6 +63,18 @@ public final class AggregateSegment extends GfaNode {
     }
 
     /**
+     * Returns the ids of the aggregated segments.
+     *
+     * @return the ids of the aggregated segments
+     */
+    @Override
+    public List<Integer> getSegmentIds() {
+        return segments.stream()
+                .map(Segment::getId)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Returns {@code true} iff. a segment with the given id is aggregated in this node.
      *
      * @param segmentId the id of a segment
@@ -81,16 +97,19 @@ public final class AggregateSegment extends GfaNode {
 
     @Override
     public NodeMetadata getMetadata() {
-        throw new UnsupportedOperationException("AggregateSegments cannot have metadata.");
+        if (metadata == null) {
+            throw new IllegalStateException("Cannot access metadata before it is parsed.");
+        }
+        return metadata;
     }
 
     @Override
     public void setMetadata(final NodeMetadata metadata) {
-        throw new UnsupportedOperationException("AggregateSegments cannot have metadata.");
+        this.metadata = metadata;
     }
 
     @Override
     public boolean hasMetadata() {
-        return false;
+        return metadata != null;
     }
 }
