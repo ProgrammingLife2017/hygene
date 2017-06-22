@@ -16,7 +16,7 @@ public abstract class DrawingToolkit {
      */
     static final int ANNOTATION_DASH_DEFAULT = 0;
 
-    private double annotationHeight = 2;
+    private double annotationHeight = 1;
     private GraphicsContext graphicsContext;
 
 
