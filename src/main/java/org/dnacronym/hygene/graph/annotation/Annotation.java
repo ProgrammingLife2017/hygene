@@ -27,6 +27,8 @@ public final class Annotation {
     private final String strand;
     private final int phase;
 
+    private int startNodeId;
+    private int endNodeId;
     private Color color;
 
 
@@ -207,5 +209,41 @@ public final class Annotation {
      */
     public Color getColor() {
         return color;
+    }
+
+    /**
+     * Sets the start node id which denotes in which node this annotation starts.
+     *
+     * @param startNodeId the id of the node where this annotation starts
+     */
+    public void setStartNodeId(final int startNodeId) {
+        this.startNodeId = startNodeId;
+    }
+
+    /**
+     * Returns the id of the node where this annotation starts.
+     *
+     * @return the id of the node where this annotation starts
+     */
+    public int getStartNodeId() {
+        return startNodeId;
+    }
+
+    /**
+     * Sets the id of the node where this annotation ends.
+     *
+     * @param endNodeId the id of the node where this annotation ends
+     */
+    public void setEndNodeId(final int endNodeId) {
+        this.endNodeId = endNodeId;
+    }
+
+    /**
+     * Returns the id of the node where this annotation ends.
+     *
+     * @return the id of the node where this annotation ends
+     */
+    public int getEndNodeId() {
+        return endNodeId;
     }
 }

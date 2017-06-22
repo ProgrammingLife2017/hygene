@@ -201,9 +201,15 @@ public final class GraphAnnotation {
 
                 try {
                     genomeIndex.getGenomePoint(genome, startOffset)
-                            .ifPresent(genomePoint -> startPoints.put(annotation, genomePoint));
+                            .ifPresent(genomePoint -> {
+                                annotation.setStartNodeId(genomePoint.getNodeId());
+                                startPoints.put(annotation, genomePoint);
+                            });
                     genomeIndex.getGenomePoint(genome, endOffset)
-                            .ifPresent(genomePoint -> endPoints.put(annotation, genomePoint));
+                            .ifPresent(genomePoint -> {
+                                annotation.setEndNodeId(genomePoint.getNodeId());
+                                endPoints.put(annotation, genomePoint);
+                            });
                 } catch (final SQLException e) {
                     LOGGER.error("Could not add an annotation.", e);
                 }

@@ -26,6 +26,7 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
@@ -36,6 +37,7 @@ import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -210,10 +212,19 @@ public final class GraphVisualizer {
         rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
     }
 
-    private List<Color> nodeAnnotationColors(final Segment node, final List<Annotation> annotations) {
+    /**
+     * Returns all the colors of all the annotations going through this branch.
+     *
+     * @param segment     the {@link Segment} to get the annotation colors for
+     * @param annotations the list of annotations in the current view
+     * @return the list of colors of the annotations going through the given {@link Segment}
+     */
+    private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
         for (final Annotation annotation : annotations) {
-            if (node.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())) {
+            if (segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                    && segment.getId() >= annotation.getStartNodeId()
+                    && segment.getId() < annotation.getEndNodeId()) {
                 annotationColors.add(annotation.getColor());
             }
         }
@@ -256,8 +267,7 @@ public final class GraphVisualizer {
     private List<Color> computeEdgeColors(final Edge edge) {
         final List<Color> edgeColors;
 
-        if (edge.getFromSegment().equals(hoveredSegmentProperty.get())
-                || edge.getToSegment().equals(hoveredSegmentProperty.get())) {
+        if (hovered(edge)) {
             edgeColors = Collections.singletonList(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
         } else if (edge.getGenomes() != null
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
@@ -278,17 +288,26 @@ public final class GraphVisualizer {
         return edgeColors;
     }
 
+    /**
+     * Returns the list of colors going through a given {@link Edge}.
+     *
+     * @param edge        the {@link Edge} to get the annotation colors for
+     * @param annotations the list of onscreen annotations
+     * @return the list of colors of annotations going through the given {@link Edge}
+     */
     private List<Color> edgeAnnotationColors(final Edge edge, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
 
         for (final Annotation annotation : annotations) {
-            final Edge originalEdge = edge instanceof DummyEdge ? ((DummyEdge) edge).getOriginalEdge() : edge;
-            if (originalEdge.getFrom().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                    && originalEdge.getTo().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())) {
+            if (edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                    && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                    && edge.getFromSegment() instanceof Segment
+                    && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
+                    && edge.getToSegment() instanceof Segment
+                    && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId()) {
                 annotationColors.add(annotation.getColor());
             }
         }
-
         return annotationColors;
     }
 
