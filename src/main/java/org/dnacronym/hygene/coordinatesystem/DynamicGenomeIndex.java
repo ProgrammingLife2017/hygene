@@ -57,6 +57,7 @@ public class DynamicGenomeIndex {
      * @throws MetadataParseException if the syntax of the GFA file is invalid in some form
      * @throws IOException            if an error occurs during IO operations
      */
+    @SuppressWarnings("squid:S2583") // false positive due to currentNode being updated in a lambda
     public void buildIndex() throws MetadataParseException, IOException {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
 
@@ -161,16 +162,26 @@ public class DynamicGenomeIndex {
                     genomes = genomesRaw.substring(0, tabIndex);
                 }
 
-                final StringTokenizer st = new StringTokenizer(genomes, ";");
-                String token;
-                while (st.hasMoreTokens()) {
-                    token = st.nextToken();
-                    if (token.equals(genomeIndex) || token.equals(genomeName)) {
-                        nodesInGenome.add(counter[0]);
-                        break;
-                    }
-                }
+                handleGenomeString(genomes, counter[0]);
             }
         });
+    }
+
+    /**
+     * Evaluates the genome field string of a node.
+     *
+     * @param genomes   the string of genomes
+     * @param currentId the ID of the node that is being evaluated
+     */
+    private void handleGenomeString(final String genomes, final int currentId) {
+        final StringTokenizer st = new StringTokenizer(genomes, ";");
+        String token;
+        while (st.hasMoreTokens()) {
+            token = st.nextToken();
+            if (token.equals(genomeIndex) || token.equals(genomeName)) {
+                nodesInGenome.add(currentId);
+                break;
+            }
+        }
     }
 }
