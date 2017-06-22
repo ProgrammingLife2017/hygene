@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.ui.graph;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -7,9 +9,12 @@ import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
+import org.dnacronym.hygene.ui.genomeindex.GenomeMappingView;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +35,11 @@ public final class GraphAnnotation {
     private final Map<Annotation, GenomePoint> startPoints;
     private final Map<Annotation, GenomePoint> endPoints;
 
+    @Inject
+    private GenomeMappingView genomeMappingView;
+    private String mappedGenome;
+    private StringProperty sequenceIdProperty;
+
     private @Nullable GenomeIndex genomeIndex;
     private @Nullable AnnotationCollection annotationCollection;
 
@@ -46,11 +56,20 @@ public final class GraphAnnotation {
     public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
         this.startPoints = new HashMap<>();
         this.endPoints = new HashMap<>();
+        this.sequenceIdProperty = new SimpleStringProperty();
 
         Optional.ofNullable(genomeNavigation.getGenomeIndexProperty().get())
                 .ifPresent(newGenomeIndex -> genomeIndex = newGenomeIndex);
-        Optional.ofNullable(graphStore.getGffFileProperty().get())
-                .ifPresent(gffFile -> annotationCollection = gffFile.getAnnotationCollection());
+        Optional.ofNullable(graphStore.getGffFileProperty().get()).ifPresent(gffFile -> {
+            annotationCollection = gffFile.getAnnotationCollection();
+            sequenceIdProperty.set(annotationCollection.getSequenceId());
+
+            try {
+                genomeMappingView.showAndWait();
+            } catch (final UIInitialisationException | IOException e) {
+                LOGGER.error("Unable to showAndWait genome mapping view.", e);
+            }
+        });
         recalculateAnnotationPoints();
 
         genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
@@ -59,10 +78,28 @@ public final class GraphAnnotation {
         });
         graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
             annotationCollection = newValue.getAnnotationCollection();
+            sequenceIdProperty.set(annotationCollection.getSequenceId());
+
+            try {
+                genomeMappingView.showAndWait();
+            } catch (final UIInitialisationException | IOException e) {
+                LOGGER.error("Unable to showAndWait genome mapping view.", e);
+            }
+
             recalculateAnnotationPoints();
         });
     }
 
+    /**
+     * Sets the mapped genome.
+     * <p>
+     * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file.
+     *
+     * @param mappedGenome the genome in the GFA the GFF genome should map onto
+     */
+    public void setMappedGenome(final String mappedGenome) {
+        this.mappedGenome = mappedGenome;
+    }
 
     /**
      * Returns a list of the {@link Annotation}s that are in the specified range.
@@ -99,14 +136,12 @@ public final class GraphAnnotation {
     }
 
     /**
-     * Returns the sequence id of the currently loaded collection of annotations.
-     * <p>
-     * This sequence id corresponds with the name of the genome the annotations annotate.
+     * Returns the property which decides the sequence id of the currently loaded GFF file.
      *
-     * @return the id of the currently loaded collection of annotations
+     * @return the property which decides the sequence id of the currently loaded GFF file
      */
-    public String getAnnotationsSequenceId() {
-        return annotationCollection.getSequenceId();
+    public StringProperty getAnnotationsSequenceId() {
+        return sequenceIdProperty;
     }
 
     /**
@@ -117,19 +152,18 @@ public final class GraphAnnotation {
         startPoints.clear();
         endPoints.clear();
 
-        if (genomeIndex == null || annotationCollection == null) {
+        if (genomeIndex == null || annotationCollection == null || mappedGenome == null) {
             return;
         }
 
-        final String genomeName = annotationCollection.getSequenceId();
         annotationCollection.getAnnotations().forEach(annotation -> {
             final int startOffset = annotation.getStart();
             final int endOffset = annotation.getEnd();
 
             try {
-                genomeIndex.getGenomePoint(genomeName, startOffset)
+                genomeIndex.getGenomePoint(mappedGenome, startOffset)
                         .ifPresent(genomePoint -> startPoints.put(annotation, genomePoint));
-                genomeIndex.getGenomePoint(genomeName, endOffset)
+                genomeIndex.getGenomePoint(mappedGenome, endOffset)
                         .ifPresent(genomePoint -> endPoints.put(annotation, genomePoint));
             } catch (final SQLException e) {
                 LOGGER.error("Could not add an annotation.", e);
