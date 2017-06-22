@@ -105,7 +105,7 @@ public final class GraphAnnotation {
     /**
      * Sets the mapped genome.
      * <p>
-     * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file.
+     * This genome represents what the genome of the currently loaded GFF file should map onto in the GFA file.
      *
      * @param mappedGenome the genome in the GFA the GFF genome should map onto
      */
@@ -159,9 +159,6 @@ public final class GraphAnnotation {
     /**
      * Adds a {@link AnnotationCollection}, and add {@link GenomePoint}s which denote the start and end points of this
      * annotation in the graph.
-     * <p>
-     * If the mappedGenome is not set ({@code null} or empty), it will divert to using the sequence id
-     * directly of the {@link AnnotationCollection}.
      */
     private void recalculateAnnotationPoints() {
         startPoints.clear();
