@@ -23,8 +23,9 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.annotation.Annotation;
+import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
@@ -69,8 +70,6 @@ public final class GraphVisualizer {
 
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
 
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    // Will be fixed in the next PR, outside the scope of this PR
     private final GraphAnnotation graphAnnotation;
     private final GraphDimensionsCalculator graphDimensionsCalculator;
     private final Query query;
@@ -178,7 +177,8 @@ public final class GraphVisualizer {
      * @param bookmarked the boolean indicating whether this node is bookmarked
      * @param queried    the boolean indicating whether this node has been queried
      */
-    private void drawNode(final Node node, final boolean bookmarked, final boolean queried) {
+    private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
+                          final List<Annotation> annotations) {
         if (!(node instanceof Segment)) {
             return;
         }
@@ -205,7 +205,20 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
+        nodeDrawingToolkit.drawNodeAnnotations(nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations));
+
         rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+    }
+
+    private List<Color> nodeAnnotationColors(final Segment node, final List<Annotation> annotations) {
+        final List<Color> annotationColors = new ArrayList<>();
+        for (final Annotation annotation : annotations) {
+            if (node.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())) {
+                annotationColors.add(annotation.getColor());
+            }
+        }
+
+        return annotationColors;
     }
 
     /**
@@ -215,7 +228,7 @@ public final class GraphVisualizer {
      *
      * @param edge the edge to be drawn
      */
-    private void drawEdge(final Edge edge) {
+    private void drawEdge(final Edge edge, final List<Annotation> annotations) {
         final GfaNode fromNode = edge.getFromSegment();
         final GfaNode toNode = edge.getToSegment();
 
@@ -231,7 +244,10 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), computeEdgeColors(edge));
+        final double edgeThickness = computeEdgeThickness(edge);
+        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, edgeThickness, computeEdgeColors(edge));
+        edgeDrawingToolkit.drawEdgeAnnotations(fromX, fromY, toX, toY, edgeThickness,
+                edgeAnnotationColors(edge, annotations));
     }
 
     /**
@@ -263,6 +279,34 @@ public final class GraphVisualizer {
         }
 
         return edgeColors;
+    }
+
+    private List<Color> edgeAnnotationColors(final Edge edge, final List<Annotation> annotations) {
+        final List<Color> annotationColors = new ArrayList<>();
+
+        for (final Annotation annotation : annotations) {
+            final Edge originalEdge = edge instanceof DummyEdge ? ((DummyEdge) edge).getOriginalEdge() : edge;
+            if (originalEdge.getFrom().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                    && originalEdge.getTo().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())) {
+                annotationColors.add(annotation.getColor());
+            }
+        }
+
+        return annotationColors;
+    }
+
+    /**
+     * Checks whether the {@link Edge} if part of the {@link Segment} being hovered.
+     *
+     * @param edge the {@link Edge}
+     * @return if the edge is part of the {@link Segment} being hovered
+     */
+    boolean hovered(final Edge edge) {
+        if (edge instanceof DummyEdge) {
+            return ((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
+                    || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get());
+        }
+        return edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get());
     }
 
     /**
@@ -346,16 +390,30 @@ public final class GraphVisualizer {
         nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
+        int minNodeId = Integer.MAX_VALUE;
+        int maxNodeId = 0;
+
+        for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
+            if (!(node instanceof Segment)) {
+                continue;
+            }
+            minNodeId = Math.min(minNodeId, ((Segment) node).getId());
+            maxNodeId = Math.max(maxNodeId, ((Segment) node).getId());
+        }
+        maxNodeId = Math.max(maxNodeId, minNodeId);
+
+        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId, maxNodeId);
 
         // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            node.getOutgoingEdges().forEach(this::drawEdge);
+            node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations));
         }
 
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             drawNode(node,
                     bookmarkStore != null && bookmarkStore.containsBookmark(node),
-                    node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
+                    node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
+                    observableAnnotations);
         }
 
         if (displayLaneBordersProperty.get()) {

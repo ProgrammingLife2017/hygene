@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph.annotation;
 
+import javafx.scene.paint.Color;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +27,13 @@ public final class Annotation {
     private final String strand;
     private final int phase;
 
+    private Color color;
+
 
     /**
      * Creates an instance of a {@link Annotation}.
+     * <p>
+     * Sets the color of the {@link Annotation} to the default {@link Color#BROWN}.
      *
      * @param source the source node
      * @param type   the type
@@ -46,6 +52,7 @@ public final class Annotation {
         this.score = score;
         this.strand = strand;
         this.phase = phase;
+        this.color = Color.BEIGE;
 
         attributes = new HashMap<>();
     }
@@ -182,5 +189,23 @@ public final class Annotation {
      */
     public Map<String, String[]> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Sets the {@link Color} of this annotation
+     *
+     * @param color the {@link Color} of this annotation
+     */
+    public void setColor(final Color color) {
+        this.color = color;
+    }
+
+    /**
+     * Returns the {@link Color} of this annotation
+     *
+     * @return the {@link Color} of this annotation
+     */
+    public Color getColor() {
+        return color;
     }
 }

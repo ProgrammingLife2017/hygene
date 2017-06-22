@@ -114,6 +114,15 @@ public final class GraphAnnotation {
     }
 
     /**
+     * Returns the genome onto which the user chose to map the annotations of the GFF file.
+     *
+     * @return the genome onto which the user chose to map the annotations of the GFF file
+     */
+    public String getMappedGenome() {
+        return mappedGenome;
+    }
+
+    /**
      * Returns a list of the {@link Annotation}s that are in the specified range.
      * <p>
      * This method assumes that node ids are in topological order.
@@ -136,8 +145,9 @@ public final class GraphAnnotation {
 
         return annotationCollection.getAnnotations().stream()
                 .filter(annotation -> {
-                    assert startPoints.containsKey(annotation);
-                    assert endPoints.containsKey(annotation);
+                    if (!startPoints.containsKey(annotation) || !endPoints.containsKey(annotation)) {
+                        return false;
+                    }
 
                     final int annotationStart = startPoints.get(annotation).getNodeId();
                     final int annotationEnd = endPoints.get(annotation).getNodeId();
