@@ -18,6 +18,7 @@ import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -82,9 +83,8 @@ public final class PathController implements Initializable {
         pathsFound.textProperty().setValue("Paths found: " + filteredList.size());
 
         // Updates the label with the number of paths that are displayed
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            pathsFound.textProperty().setValue("Paths found: " + filteredList.size());
-        });
+        searchField.textProperty().addListener((observable, oldValue, newValue) ->
+                pathsFound.textProperty().setValue("Paths found: " + filteredList.size()));
     }
 
     /**
@@ -119,8 +119,8 @@ public final class PathController implements Initializable {
     Predicate<GenomePath> getSubstringPredicate(final String query, final boolean matchCase) {
         return s -> query == null
                 || query.length() == 0
-                || (s.getName().toLowerCase().contains(query.toLowerCase()) && !matchCase)
-                || (s.getName().contains(query) && matchCase);
+                || s.getName().toLowerCase(Locale.US).contains(query.toLowerCase(Locale.US)) && !matchCase
+                || s.getName().contains(query) && matchCase;
     }
 
 
