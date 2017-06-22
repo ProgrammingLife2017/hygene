@@ -15,7 +15,6 @@ import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ public final class GraphAnnotation {
 
             try {
                 genomeMappingView.showAndWait();
-            } catch (final UIInitialisationException | IOException e) {
+            } catch (final UIInitialisationException e) {
                 LOGGER.error("Unable to showAndWait genome mapping view.", e);
             }
         });
@@ -87,7 +86,7 @@ public final class GraphAnnotation {
 
             try {
                 genomeMappingView.showAndWait();
-            } catch (final UIInitialisationException | IOException e) {
+            } catch (final UIInitialisationException e) {
                 LOGGER.error("Unable to showAndWait genome mapping view.", e);
             }
 

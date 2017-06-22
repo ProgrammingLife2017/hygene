@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.genomeindex;
 
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,25 +18,28 @@ import java.net.URL;
  */
 public final class GenomeMappingView {
     private static final String TITLE = "Mapping";
-    private static final String GENOME_MAPPING_VIEW = "/ui/genomeindex/genome_mapping.fxml";
+    private static final String GENOME_MAPPING_VIEW = "/ui/genomeindex/genome_mapping_view.fxml";
 
-    private final FXMLLoader fxmlLoader;
     private final Stage stage;
 
 
     /**
      * Creates an instance of a {@link GenomeMappingView}.
      *
-     * @param fxmlLoader the {@link FXMLLoader} used to load the controller
+     * @throws IOException if unable to load the controller
      */
     @Inject
-    public GenomeMappingView(final FXMLLoader fxmlLoader) {
+    public GenomeMappingView(final FXMLLoader fxmlLoader) throws UIInitialisationException, IOException {
         stage = new Stage();
-        this.fxmlLoader = fxmlLoader;
-
         stage.setTitle(TITLE);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnCloseRequest(Event::consume); // prevent user from closing stage directly
+
+        final URL resource = getClass().getResource(GENOME_MAPPING_VIEW);
+        fxmlLoader.setLocation(resource);
+        final Scene rootScene = new Scene(fxmlLoader.load());
+
+        stage.setScene(rootScene);
     }
 
 
@@ -45,16 +47,9 @@ public final class GenomeMappingView {
      * Show the stage, which blocks the underlying view.
      *
      * @throws UIInitialisationException if the UI has not been initialized
-     * @throws IOException               if unable to load the controller
      */
-    public void showAndWait() throws UIInitialisationException, IOException {
+    public void showAndWait() throws UIInitialisationException {
         stage.initOwner(Hygene.getInstance().getPrimaryStage());
-
-        final URL resource = getClass().getResource(GENOME_MAPPING_VIEW);
-        fxmlLoader.setLocation(resource);
-        final Parent parent = fxmlLoader.load();
-        final Scene rootScene = new Scene(parent);
-        stage.setScene(rootScene);
 
         stage.showAndWait();
     }
