@@ -325,6 +325,7 @@ public final class GraphVisualizer {
      * @return true iff the two nodes of the edge are within bounds of the annotation and have the same genome as the
      * annotation
      */
+    @SuppressWarnings("squid:S1067") // fixing this will require a re-write of the Edge class
     private boolean edgePartOfAnnotation(final Edge edge, final Annotation annotation) {
         return edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                 && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
