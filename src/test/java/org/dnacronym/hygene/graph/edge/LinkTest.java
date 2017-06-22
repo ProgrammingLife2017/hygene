@@ -3,6 +3,7 @@ package org.dnacronym.hygene.graph.edge;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ import static org.mockito.Mockito.mock;
 final class LinkTest extends EdgeTest {
     private static final int BYTE_OFFSET = 29;
 
+    private GfaNode from;
+    private GfaNode to;
     private Link link;
 
 
@@ -24,7 +27,12 @@ final class LinkTest extends EdgeTest {
     void setUp() {
         super.setUp();
 
-        link = new Link(getFrom(), getTo(), BYTE_OFFSET);
+        from = mock(GfaNode.class);
+        to = mock(GfaNode.class);
+        link = new Link(from, to, BYTE_OFFSET);
+
+        setFrom(from);
+        setTo(to);
         setEdge(link);
     }
 

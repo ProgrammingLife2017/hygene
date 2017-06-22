@@ -1,13 +1,14 @@
 package org.dnacronym.hygene.graph.layout;
 
+import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
-import org.dnacronym.hygene.graph.node.DummyNode;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.edge.Link;
+import org.dnacronym.hygene.graph.node.DummyNode;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.LayoutableNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.Subgraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -151,8 +152,8 @@ final class FafospLayererTest {
      */
     @Test
     void testSimpleDummyEdge() {
-        final Node nodeA = new Segment(66, 72, 32);
-        final Node nodeB = new Segment(2, 97, 93);
+        final GfaNode nodeA = new Segment(66, 72, 32);
+        final GfaNode nodeB = new Segment(2, 97, 93);
         addEdge(nodeA, nodeB);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 2000);
@@ -172,8 +173,8 @@ final class FafospLayererTest {
      */
     @Test
     void testLongDummyEdge() {
-        final Node nodeA = new Segment(29, 75, 27);
-        final Node nodeB = new Segment(23, 52, 4);
+        final GfaNode nodeA = new Segment(29, 75, 27);
+        final GfaNode nodeB = new Segment(23, 52, 4);
         addEdge(nodeA, nodeB);
         addAtPosition(nodeA, 0);
         addAtPosition(nodeB, 5000);
@@ -196,10 +197,10 @@ final class FafospLayererTest {
 
     @Test
     void testMultipleDummyEdge() {
-        final Node nodeA = new Segment(78, 46, 46);
-        final Node nodeB = new Segment(66, 28, 14);
-        final Node nodeC = new Segment(50, 87, 2);
-        final Node nodeD = new Segment(45, 20, 48);
+        final GfaNode nodeA = new Segment(78, 46, 46);
+        final GfaNode nodeB = new Segment(66, 28, 14);
+        final GfaNode nodeC = new Segment(50, 87, 2);
+        final GfaNode nodeD = new Segment(45, 20, 48);
         addEdge(nodeA, nodeB);
         addEdge(nodeA, nodeC);
         addEdge(nodeA, nodeD);
@@ -234,10 +235,10 @@ final class FafospLayererTest {
 
     @Test
     void testSubstitutionDummyEdge() {
-        final Node nodeA = new Segment(71, 5, 68);
-        final Node nodeB = new Segment(18, 99, 54);
-        final Node nodeC = new Segment(35, 76, 40);
-        final Node nodeD = new Segment(63, 32, 36);
+        final GfaNode nodeA = new Segment(71, 5, 68);
+        final GfaNode nodeB = new Segment(18, 99, 54);
+        final GfaNode nodeC = new Segment(35, 76, 40);
+        final GfaNode nodeD = new Segment(63, 32, 36);
         addEdge(nodeA, nodeB);
         addEdge(nodeA, nodeC);
         addEdge(nodeB, nodeD);
@@ -295,12 +296,12 @@ final class FafospLayererTest {
     }
 
     /**
-     * Adds an edge between the given {@link Node}s.
+     * Adds an edge between the given {@link GfaNode}s.
      *
-     * @param from the {@link Node} the edge leaves from
-     * @param to   the {@link Node} the edge arrives at
+     * @param from the {@link GfaNode} the edge leaves from
+     * @param to   the {@link GfaNode} the edge arrives at
      */
-    private void addEdge(final Node from, final Node to) {
+    private void addEdge(final GfaNode from, final GfaNode to) {
         final Edge edge = new Link(from, to, 17);
         from.getOutgoingEdges().add(edge);
         to.getIncomingEdges().add(edge);

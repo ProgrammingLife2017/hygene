@@ -2,6 +2,7 @@ package org.dnacronym.hygene.graph.edge;
 
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.Set;
@@ -30,6 +31,16 @@ public final class DummyEdge extends Edge {
         setGenomes(originalEdge.getGenomes());
     }
 
+
+    @Override
+    public GfaNode getFromSegment() {
+        return originalEdge.getFromSegment();
+    }
+
+    @Override
+    public GfaNode getToSegment() {
+        return originalEdge.getToSegment();
+    }
 
     @Override
     public @Nullable Set<String> getGenomes() {

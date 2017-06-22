@@ -5,6 +5,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.graph.edge.AggregateEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateSegment;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
@@ -22,19 +23,19 @@ import java.util.stream.Collectors;
  * length of {@code 1}, and these neighbours have exactly one right neighbour which is shared between them.
  */
 public final class SegmentAggregator {
-    private final Node startNode;
+    private final Segment startSegment;
     private final List<Segment> neighbours;
-    private @MonotonicNonNull Node endNode;
+    private @MonotonicNonNull Segment endSegment;
 
 
     /**
-     * Constructs a new {@link SegmentAggregator} for a particular {@link Node}.
+     * Constructs a new {@link SegmentAggregator} for a particular {@link Segment}.
      *
-     * @param node the {@link Node} to aggregate
+     * @param segment the {@link Segment} to aggregate
      */
-    private SegmentAggregator(final Node node) {
-        this.startNode = node;
-        this.neighbours = node.getOutgoingEdges().stream()
+    private SegmentAggregator(final Segment segment) {
+        this.startSegment = segment;
+        this.neighbours = segment.getOutgoingEdges().stream()
                 .map(Edge::getTo)
                 .filter(neighbour -> neighbour instanceof Segment)
                 .map(neighbour -> (Segment) neighbour)
@@ -67,9 +68,13 @@ public final class SegmentAggregator {
      * @return the {@link AggregateSegment} the neighbours are now part of, or {@code null} if no aggregation occurred
      */
     public static Optional<AggregateSegment> aggregate(final Node node) {
-        final SegmentAggregator aggregator = new SegmentAggregator(node);
+        if (!(node instanceof Segment)) {
+            return Optional.empty();
+        }
 
-        if (!aggregator.nodeHasValidNumberOfNeighbours()) {
+        final SegmentAggregator aggregator = new SegmentAggregator((Segment) node);
+
+        if (!aggregator.segmentHasValidNumberOfNeighbours()) {
             return Optional.empty();
         }
         if (!aggregator.neighboursHaveSequenceLengthOne()) {
@@ -99,15 +104,16 @@ public final class SegmentAggregator {
         aggregatedNodes.add(neighbours.get(1));
         final AggregateSegment aggregateSegment = new AggregateSegment(aggregatedNodes);
 
-        final Edge toAggregateSegment = new AggregateEdge(startNode, aggregateSegment, startNode.getOutgoingEdges());
-        startNode.getOutgoingEdges().clear();
-        startNode.getOutgoingEdges().add(toAggregateSegment);
+        final Edge toAggregateSegment = new AggregateEdge(startSegment, aggregateSegment,
+                startSegment.getOutgoingEdges());
+        startSegment.getOutgoingEdges().clear();
+        startSegment.getOutgoingEdges().add(toAggregateSegment);
         aggregateSegment.getIncomingEdges().add(toAggregateSegment);
 
-        final Edge fromAggregateSegment = new AggregateEdge(aggregateSegment, getEndNode(),
-                getEndNode().getIncomingEdges());
-        getEndNode().getIncomingEdges().clear();
-        getEndNode().getIncomingEdges().add(fromAggregateSegment);
+        final Edge fromAggregateSegment = new AggregateEdge(aggregateSegment, getEndSegment(),
+                getEndSegment().getIncomingEdges());
+        getEndSegment().getIncomingEdges().clear();
+        getEndSegment().getIncomingEdges().add(fromAggregateSegment);
         aggregateSegment.getOutgoingEdges().add(fromAggregateSegment);
 
         return aggregateSegment;
@@ -119,7 +125,7 @@ public final class SegmentAggregator {
      *
      * @return {@code true} iff. the node has exactly two neighbours to its right
      */
-    private boolean nodeHasValidNumberOfNeighbours() {
+    private boolean segmentHasValidNumberOfNeighbours() {
         return neighbours.size() == 2;
     }
 
@@ -167,7 +173,7 @@ public final class SegmentAggregator {
      * @return {@code true} iff. the neighbours are the only neighbours of their shared neighbours
      */
     private boolean neighboursAreOnlyNeighboursOfTheirNeighbour() {
-        return getEndNode().getIncomingEdges().size() == 2;
+        return getEndSegment().getIncomingEdges().size() == 2;
     }
 
     /**
@@ -175,12 +181,17 @@ public final class SegmentAggregator {
      *
      * @return the node's first neighbour's first neighbour
      */
-    @EnsuresNonNull("endNode")
-    private Node getEndNode() {
-        if (endNode == null) {
-            endNode = neighbours.get(0).getOutgoingEdges().iterator().next().getTo();
+    @EnsuresNonNull("endSegment")
+    private Segment getEndSegment() {
+        if (endSegment == null) {
+            final GfaNode endNode = neighbours.get(0).getOutgoingEdges().iterator().next().getToSegment();
+            if (!(endNode instanceof Segment)) {
+                throw new IllegalStateException("End node cannot not be a Segment at this point.");
+            }
+
+            endSegment = (Segment) endNode;
         }
 
-        return endNode;
+        return endSegment;
     }
 }
