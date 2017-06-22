@@ -24,7 +24,6 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
@@ -211,8 +210,8 @@ public final class GraphVisualizer {
      * @param edge the edge to be drawn
      */
     private void drawEdge(final Edge edge) {
-        final GfaNode fromNode = edge.getFromSegment();
-        final GfaNode toNode = edge.getToSegment();
+        final Node fromNode = edge.getFrom();
+        final Node toNode = edge.getTo();
 
         final double fromX = graphDimensionsCalculator.computeRightXPosition(fromNode);
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
