@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,12 +13,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphAnnotation;
-import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.path.GenomePath;
 
 import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 /**
@@ -29,7 +31,7 @@ public final class GenomeMappingController implements Initializable {
     @Inject
     private GraphAnnotation graphAnnotation;
     @Inject
-    private GraphVisualizer graphVisualizer;
+    private GraphStore graphStore;
 
     @FXML
     private ListView<GenomePath> gfaGenomes;
@@ -43,7 +45,13 @@ public final class GenomeMappingController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        gfaGenomes.setItems(graphVisualizer.getGenomePathsProperty());
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
+            gfaGenomes.setItems(FXCollections.observableArrayList(
+                    newValue.getGenomeMapping().entrySet().stream()
+                            .map(entry -> new GenomePath(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList())));
+        });
+
         gfaGenomes.setCellFactory(listView -> {
             final ListCell<GenomePath> genomePathCell = new ListCell<GenomePath>() {
                 @Override
