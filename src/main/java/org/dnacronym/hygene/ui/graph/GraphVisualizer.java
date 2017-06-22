@@ -26,7 +26,6 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
-import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
@@ -175,9 +174,10 @@ public final class GraphVisualizer {
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
-     * @param node       the node to draw
-     * @param bookmarked the boolean indicating whether this node is bookmarked
-     * @param queried    the boolean indicating whether this node has been queried
+     * @param node        the node to draw
+     * @param bookmarked  the boolean indicating whether this node is bookmarked
+     * @param queried     the boolean indicating whether this node has been queried
+     * @param annotations the list of annotations in view
      */
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
                           final List<Annotation> annotations) {
@@ -194,11 +194,14 @@ public final class GraphVisualizer {
 
         if (segment.equals(selectedSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
-        } else if (segment.equals(hoveredSegmentProperty.get())) {
+        }
+        if (segment.equals(hoveredSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
-        } else if (queried) {
+        }
+        if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
-        } else if (bookmarked) {
+        }
+        if (bookmarked) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
@@ -237,7 +240,8 @@ public final class GraphVisualizer {
      * <p>
      * The edge is afterwards added to the {@link RTree}.
      *
-     * @param edge the edge to be drawn
+     * @param edge        the edge to be drawn
+     * @param annotations the list of annotations in view
      */
     private void drawEdge(final Edge edge, final List<Annotation> annotations) {
         final Node fromNode = edge.getFrom();
@@ -255,7 +259,10 @@ public final class GraphVisualizer {
             rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
         }
 
-        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, computeEdgeThickness(edge), computeEdgeColors(edge));
+        final double edgeThickness = computeEdgeThickness(edge);
+        edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, edgeThickness, computeEdgeColors(edge));
+        edgeDrawingToolkit.drawEdgeAnnotations(
+                fromX, fromY, toX, toY, edgeThickness, edgeAnnotationColors(edge, annotations));
     }
 
     /**
