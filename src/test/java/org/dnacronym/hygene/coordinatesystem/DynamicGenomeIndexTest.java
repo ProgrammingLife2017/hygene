@@ -32,35 +32,36 @@ class DynamicGenomeIndexTest {
 
 
     @Test
-    void testInsertion() throws MetadataParseException {
+    void testInsertion() throws MetadataParseException, IOException, IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g1.fasta");
         dynamicGenomeIndex.buildIndex();
 
-        assertThat(dynamicGenomeIndex.getNodeByBase(2)).isEqualTo(1);
-        assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(2);
-        assertThat(dynamicGenomeIndex.getNodeByBase(5)).isEqualTo(2);
-        assertThat(dynamicGenomeIndex.getNodeByBase(7)).isEqualTo(3);
+        assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(1);
+        assertThat(dynamicGenomeIndex.getNodeByBase(4)).isEqualTo(2);
+        assertThat(dynamicGenomeIndex.getNodeByBase(6)).isEqualTo(2);
+        assertThat(dynamicGenomeIndex.getNodeByBase(8)).isEqualTo(3);
+        assertThat(dynamicGenomeIndex.getBaseOffsetWithinNode(8)).isEqualTo(1);
     }
 
     @Test
-    void testSecondInsertion() throws MetadataParseException {
+    void testSecondInsertion() throws MetadataParseException, IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g2.fasta");
         dynamicGenomeIndex.buildIndex();
 
-        assertThat(dynamicGenomeIndex.getNodeByBase(2)).isEqualTo(1);
-        assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(3);
-        assertThat(dynamicGenomeIndex.getNodeByBase(6)).isEqualTo(4);
+        assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(1);
+        assertThat(dynamicGenomeIndex.getNodeByBase(4)).isEqualTo(3);
         assertThat(dynamicGenomeIndex.getNodeByBase(7)).isEqualTo(4);
-        assertThat(dynamicGenomeIndex.getNodeByBase(9)).isEqualTo(5);
+        assertThat(dynamicGenomeIndex.getNodeByBase(8)).isEqualTo(4);
+        assertThat(dynamicGenomeIndex.getNodeByBase(10)).isEqualTo(5);
     }
 
     @Test
-    void testNestedInsertion() throws MetadataParseException {
+    void testNestedInsertion() throws MetadataParseException, IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g3.fasta");
         dynamicGenomeIndex.buildIndex();
 
-        assertThat(dynamicGenomeIndex.getNodeByBase(2)).isEqualTo(1);
-        assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(6);
-        assertThat(dynamicGenomeIndex.getNodeByBase(5)).isEqualTo(6);
+        assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(1);
+        assertThat(dynamicGenomeIndex.getNodeByBase(4)).isEqualTo(6);
+        assertThat(dynamicGenomeIndex.getNodeByBase(6)).isEqualTo(6);
     }
 }

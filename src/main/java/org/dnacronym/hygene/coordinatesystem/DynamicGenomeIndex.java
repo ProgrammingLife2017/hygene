@@ -26,11 +26,16 @@ public class DynamicGenomeIndex {
     private final String genomeIndex;
     private Set<Integer> visited;
     private Set<Integer> nodesInGenome;
-    private int currentBaseCount;
     private TreeMap<Integer, Integer> baseCounts;
-    int currentNode = -1;
+    private int currentNode;
 
 
+    /**
+     * Constructs a {@link DynamicGenomeIndex} instance.
+     *
+     * @param gfaFile    the GFA file
+     * @param genomeName the name of the genome to be indexed
+     */
     public DynamicGenomeIndex(final GfaFile gfaFile, final String genomeName) {
         this.gfaFile = gfaFile;
         this.graph = gfaFile.getGraph();
@@ -38,29 +43,30 @@ public class DynamicGenomeIndex {
         this.genomeIndex = gfaFile.getGenomeMapping().entrySet().stream()
                 .filter(entry -> entry.getValue().equals(genomeName))
                 .map(Map.Entry::getKey).findFirst().orElse(genomeName);
+
         visited = new HashSet<>();
         baseCounts = new TreeMap<>();
         nodesInGenome = new HashSet<>();
+        currentNode = -1;
     }
 
 
-    public void buildIndex() throws MetadataParseException {
+    /**
+     * Collects all nodes that belong to the current genome.
+     *
+     * @throws MetadataParseException if the syntax of the GFA file is invalid in some form
+     * @throws IOException            if an error occurs during IO operations
+     */
+    public void buildIndex() throws MetadataParseException, IOException {
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
 
         if (graph.getNodeArrays().length == 2) {
             return;
         }
-        currentBaseCount = 0;
-
         collectNodesOfGenome();
 
         // Pick random node in genomeName
-        for (int i = 1; i < graph.getNodeArrays().length - 1; i++) {
-            if (containsGenome(i)) {
-                currentNode = i;
-                break;
-            }
-        }
+        currentNode = nodesInGenome.iterator().next();
 
         // Get left-most node of genomeName
         graphIterator.visitIndirectNeighbours(currentNode, SequenceDirection.LEFT, neighbour -> {
@@ -69,6 +75,7 @@ public class DynamicGenomeIndex {
             }
         });
 
+        int currentBaseCount = 1;
         visited.add(currentNode);
         while (currentNode != graph.getNodeArrays().length - 1) {
             baseCounts.put(currentBaseCount, currentNode);
@@ -102,44 +109,68 @@ public class DynamicGenomeIndex {
         }
     }
 
+    /**
+     * Returns the ID of the node this base belongs to.
+     *
+     * @param base the base coordinate within the current genome
+     * @return the ID of the node this base belongs to
+     */
     public int getNodeByBase(final int base) {
         return baseCounts.floorEntry(base).getValue();
     }
 
+    /**
+     * Returns the offset within a node that a point in the coordinate system has.
+     *
+     * @param base the base coordinate within the current genome
+     * @return the base offset within the node
+     */
+    public int getBaseOffsetWithinNode(final int base) {
+        return base - baseCounts.floorKey(base);
+    }
+
+    /**
+     * Checks whether a certain node is in the genome.
+     *
+     * @param nodeId the ID of that node
+     * @return {@code true} iff. that node is in the genome
+     */
     private boolean containsGenome(final int nodeId) {
         return nodesInGenome.contains(nodeId);
     }
 
-    private void collectNodesOfGenome() throws MetadataParseException {
-        try {
-            final int[] counter = {0};
-            Files.lines(Paths.get(gfaFile.getFileName())).forEach(line -> {
-                if (line.startsWith("S")) {
-                    counter[0]++;
+    /**
+     * Collects all nodes that belong to the current genome.
+     *
+     * @throws MetadataParseException if the syntax of the GFA file is invalid in some form
+     * @throws IOException            if an error occurs during IO operations
+     */
+    private void collectNodesOfGenome() throws MetadataParseException, IOException {
+        final int[] counter = {0};
+        Files.lines(Paths.get(gfaFile.getFileName())).forEach(line -> {
+            if (line.startsWith("S")) {
+                counter[0]++;
 
-                    final int oriIndex = line.indexOf("ORI:Z:") + 6;
-                    final String genomesRaw = line.substring(oriIndex);
-                    final int tabIndex = genomesRaw.indexOf('\t');
-                    final String genomes;
-                    if (tabIndex == -1) {
-                        genomes = genomesRaw;
-                    } else {
-                        genomes = genomesRaw.substring(0, tabIndex);
-                    }
+                final int oriIndex = line.indexOf("ORI:Z:") + 6;
+                final String genomesRaw = line.substring(oriIndex);
+                final int tabIndex = genomesRaw.indexOf('\t');
+                final String genomes;
+                if (tabIndex == -1) {
+                    genomes = genomesRaw;
+                } else {
+                    genomes = genomesRaw.substring(0, tabIndex);
+                }
 
-                    final StringTokenizer st = new StringTokenizer(genomes, ";");
-                    String token;
-                    while (st.hasMoreTokens()) {
-                        token = st.nextToken();
-                        if (token.equals(genomeIndex) || token.equals(genomeName)) {
-                            nodesInGenome.add(counter[0]);
-                            break;
-                        }
+                final StringTokenizer st = new StringTokenizer(genomes, ";");
+                String token;
+                while (st.hasMoreTokens()) {
+                    token = st.nextToken();
+                    if (token.equals(genomeIndex) || token.equals(genomeName)) {
+                        nodesInGenome.add(counter[0]);
+                        break;
                     }
                 }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }
+        });
     }
 }
