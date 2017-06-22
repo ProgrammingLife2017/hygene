@@ -17,24 +17,24 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link NodeDrawingToolkit}.
  */
-final class NodeDrawingToolkitTest {
-    private NodeDrawingToolkit nodeDrawingToolkit;
+final class SegmentDrawingToolkitTest {
+    private NodeDrawingToolkit segmentDrawingToolkit;
     private GraphicsContext graphicsContext;
 
 
     @BeforeEach
     void beforeEach() {
-        nodeDrawingToolkit = new NodeDrawingToolkit();
+        segmentDrawingToolkit = new SegmentDrawingToolkit();
 
         graphicsContext = mock(GraphicsContext.class);
-        nodeDrawingToolkit.setGraphicsContext(graphicsContext);
+        segmentDrawingToolkit.setGraphicsContext(graphicsContext);
     }
 
 
     @Test
     void testNodeHeight() {
-        nodeDrawingToolkit.setNodeHeight(10);
-        nodeDrawingToolkit.drawNode(0, 0, 10, Color.BLACK);
+        segmentDrawingToolkit.setNodeHeight(10);
+        segmentDrawingToolkit.draw(0, 0, 10, Color.BLACK);
 
         verify(graphicsContext).fillRoundRect(
                 anyDouble(), anyDouble(), anyDouble(), eq(10.0), anyDouble(), anyDouble());
@@ -42,7 +42,7 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testNodeColorDraw() {
-        nodeDrawingToolkit.drawNode(10, 20, 30, Color.ALICEBLUE);
+        segmentDrawingToolkit.draw(10, 20, 30, Color.ALICEBLUE);
 
         verify(graphicsContext).setFill(eq(Color.ALICEBLUE));
         verify(graphicsContext).fillRoundRect(
@@ -51,8 +51,8 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testNodePaths() {
-        nodeDrawingToolkit.setNodeHeight(10);
-        nodeDrawingToolkit.drawNodeGenomes(20, 30, 40, Arrays.asList(Color.BLUE, Color.RED));
+        segmentDrawingToolkit.setNodeHeight(10);
+        segmentDrawingToolkit.drawGenomes(20, 30, 40, Arrays.asList(Color.BLUE, Color.RED));
 
         verify(graphicsContext, atLeast(1)).setFill(eq(Color.BLUE));
         verify(graphicsContext, atLeast(1)).setFill(eq(Color.RED));
@@ -65,9 +65,9 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testNodeAnnotations() {
-        nodeDrawingToolkit.setNodeHeight(20);
-        nodeDrawingToolkit.setAnnotationHeight(5);
-        nodeDrawingToolkit.drawNodeAnnotations(50, 80, 40, Arrays.asList(Color.BLACK, Color.WHITE));
+        segmentDrawingToolkit.setNodeHeight(20);
+        segmentDrawingToolkit.setAnnotationHeight(5);
+        segmentDrawingToolkit.drawAnnotations(50, 80, 40, Arrays.asList(Color.BLACK, Color.WHITE));
 
         verify(graphicsContext, atLeast(1)).setStroke(eq(Color.BLACK));
         verify(graphicsContext, atLeast(1)).setStroke(eq(Color.WHITE));
@@ -82,7 +82,7 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testHighlightSelectedNodeDraw() {
-        nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeDrawingToolkit.HighlightType.SELECTED);
+        segmentDrawingToolkit.drawHighlight(10, 20, 30, HighlightType.SELECTED);
 
         verify(graphicsContext, atLeast(1)).setStroke(Color.rgb(0, 255, 46));
 
@@ -91,7 +91,7 @@ final class NodeDrawingToolkitTest {
 
     @Test
     void testHighlightBookmarkedNodeDraw() {
-        nodeDrawingToolkit.drawNodeHighlight(10, 20, 30, NodeDrawingToolkit.HighlightType.BOOKMARKED);
+        segmentDrawingToolkit.drawHighlight(10, 20, 30, HighlightType.BOOKMARKED);
 
         verify(graphicsContext, atLeast(1)).setStroke(Color.RED);
         verify(graphicsContext).strokeRoundRect(10 - 3 / 2.0, 20 - 3 / 2.0, 30 + 3, 3, 10d, 10d);
@@ -101,7 +101,7 @@ final class NodeDrawingToolkitTest {
     void testDrawText() {
         final String text = "test text";
 
-        nodeDrawingToolkit.drawNodeSequence(0, 0, 100, text);
+        segmentDrawingToolkit.drawSequence(0, 0, 100, text);
 
         verify(graphicsContext).fillText(eq(text), anyDouble(), anyDouble());
     }
@@ -110,7 +110,7 @@ final class NodeDrawingToolkitTest {
     void testDrawTextTrimmed() {
         final String text = "test text";
 
-        nodeDrawingToolkit.drawNodeSequence(0, 0, 0, text);
+        segmentDrawingToolkit.drawSequence(0, 0, 0, text);
 
         verify(graphicsContext).fillText(eq(""), anyDouble(), anyDouble());
     }
