@@ -66,12 +66,18 @@ public final class GraphAnnotation {
                 .ifPresent(newGenomeIndex -> genomeIndex = newGenomeIndex);
         Optional.ofNullable(graphStore.getGffFileProperty().get()).ifPresent(gffFile -> {
             annotationCollection = gffFile.getAnnotationCollection();
+            if (annotationCollection == null) {
+                return;
+            }
+
             sequenceIdProperty.set(annotationCollection.getSequenceId());
 
-            try {
-                genomeMappingView.showAndWait();
-            } catch (final UIInitialisationException e) {
-                LOGGER.error("Unable to showAndWait genome mapping view.", e);
+            if (genomeMappingView != null) {
+                try {
+                    genomeMappingView.showAndWait();
+                } catch (final UIInitialisationException e) {
+                    LOGGER.error("Unable to showAndWait genome mapping view.", e);
+                }
             }
         });
         recalculateAnnotationPoints();
@@ -84,10 +90,12 @@ public final class GraphAnnotation {
             annotationCollection = newValue.getAnnotationCollection();
             sequenceIdProperty.set(annotationCollection.getSequenceId());
 
-            try {
-                genomeMappingView.showAndWait();
-            } catch (final UIInitialisationException e) {
-                LOGGER.error("Unable to showAndWait genome mapping view.", e);
+            if (genomeMappingView != null) {
+                try {
+                    genomeMappingView.showAndWait();
+                } catch (final UIInitialisationException e) {
+                    LOGGER.error("Unable to showAndWait genome mapping view.", e);
+                }
             }
 
             recalculateAnnotationPoints();
@@ -159,7 +167,7 @@ public final class GraphAnnotation {
         startPoints.clear();
         endPoints.clear();
 
-        if (genomeIndex == null || annotationCollection == null) {
+        if (genomeIndex == null || annotationCollection == null || statusBar == null) {
             return;
         }
 
