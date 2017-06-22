@@ -2,7 +2,6 @@ package org.dnacronym.hygene.coordinatesystem;
 
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GfaParseException;
-import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,7 @@ class DynamicGenomeIndexTest {
 
 
     @Test
-    void testInsertion() throws MetadataParseException, IOException {
+    void testInsertion() throws IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g1.fasta");
         dynamicGenomeIndex.buildIndex();
 
@@ -44,7 +43,7 @@ class DynamicGenomeIndexTest {
     }
 
     @Test
-    void testSecondInsertion() throws MetadataParseException, IOException {
+    void testSecondInsertion() throws IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g2.fasta");
         dynamicGenomeIndex.buildIndex();
 
@@ -56,12 +55,26 @@ class DynamicGenomeIndexTest {
     }
 
     @Test
-    void testNestedInsertion() throws MetadataParseException, IOException {
+    void testNestedInsertion() throws IOException {
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g3.fasta");
         dynamicGenomeIndex.buildIndex();
 
         assertThat(dynamicGenomeIndex.getNodeByBase(3)).isEqualTo(1);
         assertThat(dynamicGenomeIndex.getNodeByBase(4)).isEqualTo(6);
         assertThat(dynamicGenomeIndex.getNodeByBase(6)).isEqualTo(6);
+    }
+
+    @Test
+    void testGetNodeByBaseNoResults() {
+        dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g3.fasta");
+
+        assertThat(dynamicGenomeIndex.getNodeByBase(2)).isEqualTo(-1);
+    }
+
+    @Test
+    void testGetBaseOffsetWithinNodeNoResults() throws IOException {
+        dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, "g3.fasta");
+
+        assertThat(dynamicGenomeIndex.getBaseOffsetWithinNode(2)).isEqualTo(-1);
     }
 }
