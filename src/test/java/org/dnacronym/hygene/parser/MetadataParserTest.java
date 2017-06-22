@@ -158,6 +158,6 @@ final class MetadataParserTest {
     }
 
     private String replaceSpacesWithTabs(final String string) {
-        return String.format(string.replaceAll(" ", "\t"));
+        return string.replaceAll(" ", "\t");
     }
 }

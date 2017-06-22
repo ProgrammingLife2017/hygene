@@ -24,6 +24,7 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
@@ -73,13 +74,12 @@ public final class GraphVisualizer {
 
     private final ColorRoulette colorRoulette;
 
-    private final ObjectProperty<Segment> selectedSegmentProperty;
+    private final ObjectProperty<GfaNode> selectedSegmentProperty;
     private final ObjectProperty<Edge> selectedEdgeProperty;
+    private final ObjectProperty<GfaNode> hoveredSegmentProperty;
 
     private final ObservableList<GenomePath> genomePaths;
     private final ObservableMap<String, Color> selectedGenomePaths;
-
-    private final ObjectProperty<Segment> hoveredSegmentProperty;
 
     private final ObjectProperty<Color> edgeColorProperty;
 
@@ -173,20 +173,21 @@ public final class GraphVisualizer {
      * @param queried    the boolean indicating whether this node has been queried
      */
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried) {
-        if (!(node instanceof Segment)) {
+        if (!(node instanceof GfaNode)) {
             return;
         }
 
-        final Segment segment = (Segment) node;
+        final GfaNode gfaNode = (GfaNode) node;
         final double nodeX = graphDimensionsCalculator.computeXPosition(node);
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
         nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
 
-        if (segment.equals(selectedSegmentProperty.get())) {
+        if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
+                .anyMatch(segmentId -> selectedSegmentProperty.get().getSegmentIds().contains(segmentId))) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
-        } else if (segment.equals(hoveredSegmentProperty.get())) {
+        } else if (gfaNode.equals(hoveredSegmentProperty.get())) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
         } else if (queried) {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
@@ -194,12 +195,13 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
         }
 
-        if (segment.hasMetadata()) {
-            final String sequence = segment.getMetadata().getSequence();
+        if (gfaNode.hasMetadata()) {
+            final String sequence = gfaNode.getMetadata().getSequence();
             nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
-        rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
+                nodeHeightProperty.get()));
     }
 
     /**
@@ -487,14 +489,14 @@ public final class GraphVisualizer {
      */
     public void setSelectedSegment(final int nodeId) {
         final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
-                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+                .filtered(node -> node instanceof GfaNode && ((GfaNode) node).containsSegment(nodeId));
 
         if (segment.isEmpty()) {
             LOGGER.error("Cannot select node that is not in subgraph.");
             return;
         }
 
-        selectedSegmentProperty.set((Segment) segment.get(0));
+        selectedSegmentProperty.set((GfaNode) segment.get(0));
     }
 
     /**
@@ -504,14 +506,14 @@ public final class GraphVisualizer {
      */
     public void setHoveredSegmentProperty(final int nodeId) {
         final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
-                .filtered(node -> node instanceof Segment && ((Segment) node).getId() == nodeId);
+                .filtered(node -> node instanceof GfaNode && ((GfaNode) node).containsSegment(nodeId));
 
         if (segment.isEmpty()) {
             LOGGER.error("Cannot select node that is not in subgraph.");
             return;
         }
 
-        hoveredSegmentProperty.set((Segment) segment.get(0));
+        hoveredSegmentProperty.set((GfaNode) segment.get(0));
     }
 
     /**
@@ -521,7 +523,7 @@ public final class GraphVisualizer {
      *
      * @return the selected {@link Segment} by the user, which can be {@code null}
      */
-    public ObjectProperty<Segment> getSelectedSegmentProperty() {
+    public ObjectProperty<GfaNode> getSelectedSegmentProperty() {
         return selectedSegmentProperty;
     }
 

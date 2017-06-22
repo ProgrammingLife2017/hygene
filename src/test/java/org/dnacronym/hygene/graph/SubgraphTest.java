@@ -84,7 +84,7 @@ final class SubgraphTest {
 
     @Test
     void testGetSegmentsEmpty() {
-        assertThat(subgraph.getSegments()).isEmpty();
+        assertThat(subgraph.getGfaNodes()).isEmpty();
     }
 
     @Test

@@ -70,6 +70,16 @@ public final class Segment extends GfaNode {
     }
 
     /**
+     * Returns this {@link Segment}'s id as a singleton list.
+     *
+     * @return this {@link Segment}'s id as a singleton list
+     */
+    @Override
+    public List<Integer> getSegmentIds() {
+        return Collections.singletonList(id);
+    }
+
+    /**
      * Returns {@code true} iff. this segment has the given id.
      *
      * @param segmentId the id of a segment

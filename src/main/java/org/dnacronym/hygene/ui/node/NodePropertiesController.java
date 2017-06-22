@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -44,7 +45,7 @@ public final class NodePropertiesController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final ObjectProperty<Segment> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
+        final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
         final NeighbourVisualizer neighbourVisualizer
                 = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
@@ -57,7 +58,7 @@ public final class NodePropertiesController implements Initializable {
      * Set the {@link GraphVisualizer}, whose selected node can be bound to the UI elements in the controller.
      *
      * @param graphVisualizer {@link GraphVisualizer} who's selected node we are interested in
-     * @see GraphVisualizer#selectedNodeProperty
+     * @see GraphVisualizer#selectedSegmentProperty
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
@@ -73,30 +74,31 @@ public final class NodePropertiesController implements Initializable {
     }
 
     /**
-     * Updates the fields that describe the properties of the {@link Segment}.
+     * Updates the fields that describe the properties of the {@link GfaNode}.
      * <p>
-     * If this {@link Segment} is {@code null}, the fields are simply cleared.
+     * If this {@link GfaNode} is {@code null}, the fields are simply cleared.
      *
-     * @param node the {@link Segment} whose properties should be displayed
+     * @param node the {@link GfaNode} whose properties should be displayed
      */
-    void updateFields(final Segment node) {
-        if (node == null) {
+    void updateFields(final GfaNode node) {
+        if (!(node instanceof Segment)) { // Or equals null
             clearNodeFields();
             return;
         }
 
-        nodeId.setText(String.valueOf(node.getId()));
+        final Segment segment = (Segment) node;
+        nodeId.setText(String.valueOf(segment.getId()));
 
-        if (node.hasMetadata()) {
-            sequencePreview.setText(String.valueOf(node.getMetadata().getSequence()));
+        if (segment.hasMetadata()) {
+            sequencePreview.setText(String.valueOf(segment.getMetadata().getSequence()));
         } else {
-            LOGGER.error("Unable to parse sequence of node %s.", node);
+            LOGGER.error("Unable to parse sequence of node " + segment.getId() + ".");
         }
 
-        leftNeighbours.setText(String.valueOf(node.getIncomingEdges().size()));
-        rightNeighbours.setText(String.valueOf(node.getOutgoingEdges().size()));
+        leftNeighbours.setText(String.valueOf(segment.getIncomingEdges().size()));
+        rightNeighbours.setText(String.valueOf(segment.getOutgoingEdges().size()));
 
-        position.setText(String.valueOf(node.getId()));
+        position.setText(String.valueOf(segment.getId()));
     }
 
 
@@ -118,9 +120,9 @@ public final class NodePropertiesController implements Initializable {
      */
     @FXML
     void onFocusAction(final ActionEvent actionEvent) {
-        final Segment selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
+        final GfaNode selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
         if (selectedNode != null) {
-            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getId());
+            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getSegmentIds().get(0));
         }
 
         actionEvent.consume();

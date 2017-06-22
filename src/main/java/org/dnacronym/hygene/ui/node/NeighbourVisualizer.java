@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 
 
@@ -27,10 +28,9 @@ final class NeighbourVisualizer {
      * @param edgeColorProperty property which determines the color of edges to neighbours
      * @param nodeProperty      property which determines what node should actually be visualised
      */
-    NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty,
-                        final ObjectProperty<Segment> nodeProperty) {
-        nodeProperty.addListener((observable, oldNode, newNode) -> draw(newNode, edgeColorProperty.get()));
+    NeighbourVisualizer(final ObjectProperty<Color> edgeColorProperty, final ObjectProperty<GfaNode> nodeProperty) {
         edgeColorProperty.addListener((observable, oldColor, newColor) -> draw(nodeProperty.get(), newColor));
+        nodeProperty.addListener((observable, oldNode, newNode) -> draw(newNode, edgeColorProperty.get()));
     }
 
 
@@ -54,50 +54,55 @@ final class NeighbourVisualizer {
     /**
      * Draw the node and outgoing edges.
      *
-     * @param segment   the {@link Segment} to draw
+     * @param node      the {@link GfaNode} to draw
      * @param edgeColor the {@link Color} of edges
      */
-    private void draw(final Segment segment, final Color edgeColor) {
+    private void draw(final GfaNode node, final Color edgeColor) {
         clear();
 
-        if (segment != null) {
-            final int leftNeighbours = segment.getIncomingEdges().size();
-            final int rightNeighbours = segment.getOutgoingEdges().size();
-            final Color nodeColor = segment.getColor();
-
-            final double topLeftX = canvas.getWidth() / 2 - canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
-            final double topLeftY = canvas.getHeight() / 2 - canvas.getHeight() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
-            final double width = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getWidth();
-            final double height = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getHeight();
-
-            graphicsContext.setFill(edgeColor);
-
-            for (int left = 0; left < leftNeighbours; left++) {
-                graphicsContext.strokeLine(
-                        0,
-                        topLeftY + (height / (leftNeighbours + 1)) * (left + 1),
-                        canvas.getWidth() / 2,
-                        topLeftY + (height / (leftNeighbours + 1)) * (left + 1)
-                );
-            }
-
-            for (int right = 0; right < rightNeighbours; right++) {
-                graphicsContext.strokeLine(
-                        canvas.getWidth() / 2,
-                        topLeftY + (height / (rightNeighbours + 1)) * (right + 1),
-                        canvas.getWidth(),
-                        topLeftY + (height / (rightNeighbours + 1)) * (right + 1)
-                );
-            }
-
-            graphicsContext.setFill(nodeColor);
-            graphicsContext.fillRoundRect(
-                    topLeftX,
-                    topLeftY,
-                    width,
-                    height,
-                    ARC_PORTION_OF_CANVAS * canvas.getWidth(),
-                    ARC_PORTION_OF_CANVAS * canvas.getHeight());
+        if (node == null) {
+            return;
         }
+        if (!(node instanceof Segment)) {
+            return;
+        }
+
+        final int leftNeighbours = node.getIncomingEdges().size();
+        final int rightNeighbours = node.getOutgoingEdges().size();
+        final Color nodeColor = node.getColor();
+
+        final double topLeftX = canvas.getWidth() / 2 - canvas.getWidth() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
+        final double topLeftY = canvas.getHeight() / 2 - canvas.getHeight() * NODE_WIDTH_PORTION_OF_CANVAS / 2;
+        final double width = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getWidth();
+        final double height = NODE_WIDTH_PORTION_OF_CANVAS * canvas.getHeight();
+
+        graphicsContext.setFill(edgeColor);
+
+        for (int left = 0; left < leftNeighbours; left++) {
+            graphicsContext.strokeLine(
+                    0,
+                    topLeftY + (height / (leftNeighbours + 1)) * (left + 1),
+                    canvas.getWidth() / 2,
+                    topLeftY + (height / (leftNeighbours + 1)) * (left + 1)
+            );
+        }
+
+        for (int right = 0; right < rightNeighbours; right++) {
+            graphicsContext.strokeLine(
+                    canvas.getWidth() / 2,
+                    topLeftY + (height / (rightNeighbours + 1)) * (right + 1),
+                    canvas.getWidth(),
+                    topLeftY + (height / (rightNeighbours + 1)) * (right + 1)
+            );
+        }
+
+        graphicsContext.setFill(nodeColor);
+        graphicsContext.fillRoundRect(
+                topLeftX,
+                topLeftY,
+                width,
+                height,
+                ARC_PORTION_OF_CANVAS * canvas.getWidth(),
+                ARC_PORTION_OF_CANVAS * canvas.getHeight());
     }
 }

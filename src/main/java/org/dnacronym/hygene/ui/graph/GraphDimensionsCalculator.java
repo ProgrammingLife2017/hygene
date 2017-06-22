@@ -192,10 +192,6 @@ public final class GraphDimensionsCalculator {
         subgraph.getNodes().forEach(node -> {
             neighbours.add(node);
 
-            if (!(node instanceof Segment)) {
-                return;
-            }
-
             tempMinY[0] = Math.min(tempMinY[0], node.getYPosition());
             tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });

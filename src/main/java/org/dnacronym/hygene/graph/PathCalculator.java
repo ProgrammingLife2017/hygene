@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.edge.SimpleEdge;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import java.util.HashMap;
@@ -28,13 +29,12 @@ public final class PathCalculator {
      * @param subgraph the {@link Subgraph} for which to compute the paths
      */
     public void computePaths(final Subgraph subgraph) {
-        final Multimap<Segment, Edge> incomingEdges = buildEdgeMap(subgraph, SequenceDirection.LEFT);
+        final Multimap<GfaNode, Edge> incomingEdges = buildEdgeMap(subgraph, SequenceDirection.LEFT);
+        final Multimap<GfaNode, Edge> outgoingEdges = buildEdgeMap(subgraph, SequenceDirection.RIGHT);
 
-        final Multimap<Segment, Edge> outgoingEdges = buildEdgeMap(subgraph, SequenceDirection.RIGHT);
+        final Map<GfaNode, Set<String>> genomeStore = new HashMap<>();
 
-        final Map<Segment, Set<String>> genomeStore = new HashMap<>();
-
-        final List<Segment> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore, incomingEdges,
+        final List<GfaNode> topologicalOrder = computeTopologicalOrder(subgraph, genomeStore, incomingEdges,
                 outgoingEdges);
 
         final Map<Edge, Set<String>> paths = topologicalPathGeneration(topologicalOrder, incomingEdges, genomeStore);
@@ -49,16 +49,15 @@ public final class PathCalculator {
      * {@link DummyEdge}s will not be added but their original edge, for which they are a diversion, will be added.
      *
      * @param subgraph          the {@link Subgraph}
-     * @param sequenceDirection the {@link EdgeDirection}
+     * @param sequenceDirection the {@link SequenceDirection}
      * @return map of {@link Edge}s for each {@link Segment}
      */
-    private Multimap<Segment, Edge> buildEdgeMap(final Subgraph subgraph, final SequenceDirection sequenceDirection) {
-        final Multimap<Segment, Edge> edgeMap = HashMultimap.create();
+    private Multimap<GfaNode, Edge> buildEdgeMap(final Subgraph subgraph,
+                                                 final SequenceDirection sequenceDirection) {
+        final Multimap<GfaNode, Edge> edgeMap = HashMultimap.create();
 
-        subgraph.getSegments().forEach(segment -> {
-            final Set<Edge> edges = sequenceDirection == SequenceDirection.LEFT
-                    ? segment.getIncomingEdges()
-                    : segment.getOutgoingEdges();
+        subgraph.getGfaNodes().forEach(segment -> {
+            final Set<Edge> edges = sequenceDirection.ternary(segment.getIncomingEdges(), segment.getOutgoingEdges());
 
             edges.forEach(edge -> {
                 if (edge instanceof DummyEdge) {
@@ -82,41 +81,39 @@ public final class PathCalculator {
      * @return a topologically sorted list of the {@link Segment}s in the given {@link Subgraph}
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private List<Segment> computeTopologicalOrder(final Subgraph subgraph, final Map<Segment, Set<String>> genomeStore,
-                                                  final Multimap<Segment, Edge> incomingEdges,
-                                                  final Multimap<Segment, Edge> outgoingEdges) {
-
+    private List<GfaNode> computeTopologicalOrder(final Subgraph subgraph, final Map<GfaNode, Set<String>> genomeStore,
+                                                  final Multimap<GfaNode, Edge> incomingEdges,
+                                                  final Multimap<GfaNode, Edge> outgoingEdges) {
         final Queue<Edge> toVisit = new LinkedList<>();
 
-        final Segment origin = new Segment(-1, -1, 0);
+        final GfaNode origin = new Segment(-1, -1, 0);
         genomeStore.put(origin, new HashSet<>());
 
-        final List<Segment> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
+        final List<GfaNode> sourceConnectedNodes = getNodesWithNoIncomingEdges(subgraph);
 
         sourceConnectedNodes.forEach(sourceConnectedNode -> {
             toVisit.add(new SimpleEdge(origin, sourceConnectedNode));
-            Optional.ofNullable(genomeStore.get(origin)).ifPresent(g ->
-                    g.addAll(sourceConnectedNode.getMetadata().getGenomes()));
+            Optional.ofNullable(genomeStore.get(origin))
+                    .ifPresent(originGenomes -> originGenomes.addAll(sourceConnectedNode.getMetadata().getGenomes()));
         });
 
-        final List<Segment> topologicalOrder = new LinkedList<>();
-
+        final List<GfaNode> topologicalOrder = new LinkedList<>();
         final HashSet<Edge> visitedEdges = new HashSet<>();
-        final HashSet<Segment> visitedNodes = new HashSet<>();
+        final HashSet<GfaNode> visitedNodes = new HashSet<>();
 
         while (!toVisit.isEmpty()) {
-            final Segment active = (Segment) toVisit.remove().getTo();
-            visitedNodes.add(active);
-            topologicalOrder.add(active);
+            final GfaNode current = toVisit.remove().getToSegment();
+            visitedNodes.add(current);
+            topologicalOrder.add(current);
 
-            visitedEdges.addAll(outgoingEdges.get(active));
-
-            outgoingEdges.get(active).stream()
-                    .filter(e -> !visitedNodes.contains(e.getTo()) && incomingEdges.get((Segment) e.getTo()).stream()
-                            .filter(out -> !visitedEdges.contains(out)).count() == 0)
+            visitedEdges.addAll(outgoingEdges.get(current));
+            outgoingEdges.get(current).stream()
+                    .filter(edge -> !visitedNodes.contains(edge.getTo()))
+                    .filter(edge -> incomingEdges.get((GfaNode) edge.getTo()).stream()
+                            .allMatch(visitedEdges::contains))
                     .forEach(toVisit::add);
 
-            genomeStore.put(active, new HashSet<>(active.getMetadata().getGenomes()));
+            genomeStore.put(current, new HashSet<>(current.getMetadata().getGenomes()));
         }
 
         return topologicalOrder;
@@ -130,9 +127,9 @@ public final class PathCalculator {
      * @param subgraph the subgraph
      * @return a list of nodes with no incoming edges
      */
-    private List<Segment> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
-        return subgraph.getSegments().stream()
-                .filter(node -> subgraph.getNeighbours(node, SequenceDirection.LEFT).isEmpty())
+    private List<GfaNode> getNodesWithNoIncomingEdges(final Subgraph subgraph) {
+        return subgraph.getGfaNodes().stream()
+                .filter(segment -> segment.getIncomingEdges().isEmpty())
                 .collect(Collectors.toList());
     }
 
@@ -144,9 +141,9 @@ public final class PathCalculator {
      * @param genomeStore      a map mapping each {@link Segment} to the genomes it is in
      * @return a mapping from {@link Edge}s to each of the genomes they're in
      */
-    private Map<Edge, Set<String>> topologicalPathGeneration(final List<Segment> topologicalOrder,
-                                                             final Multimap<Segment, Edge> incomingEdges,
-                                                             final Map<Segment, Set<String>> genomeStore) {
+    private Map<Edge, Set<String>> topologicalPathGeneration(final List<GfaNode> topologicalOrder,
+                                                             final Multimap<GfaNode, Edge> incomingEdges,
+                                                             final Map<GfaNode, Set<String>> genomeStore) {
         final Map<Edge, Set<String>> paths = new HashMap<>();
 
         // Go over topological order and assign genomes

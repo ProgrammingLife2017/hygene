@@ -4,12 +4,12 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.CenterPointQueryChangeEvent;
 import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.MetadataParseException;
 import org.dnacronym.hygene.parser.MetadataParser;
-import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +19,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -158,6 +161,76 @@ final class NodeMetadataCacheTest {
 
         verify(parser).parseNodeMetadata(eq(gfaFile), captor.capture());
         assertThat(captor.getValue()).isEmpty();
+    }
+
+    /**
+     * Tests that the merge constructor creates an empty metadata object.
+     */
+    @Test
+    void testMergeConstructorEmptyCollection() {
+        final List<NodeMetadata> metadataList = new ArrayList<>();
+
+        final NodeMetadata mergedMetadata = new NodeMetadata(metadataList);
+
+        assertThat(mergedMetadata.getName()).isEqualTo("[]");
+        assertThat(mergedMetadata.getSequence()).isEqualTo("[]");
+        assertThat(mergedMetadata.getGenomes()).isEmpty();
+    }
+
+    @Test
+    void testMergeConstructorSingleElementNoGenomes() {
+        final List<NodeMetadata> metadataList = new ArrayList<>();
+        final NodeMetadata metadata = new NodeMetadata("name", "sequence", new ArrayList<>());
+        metadataList.add(metadata);
+
+        final NodeMetadata mergedMetadata = new NodeMetadata(metadataList);
+
+        assertThat(mergedMetadata.getName()).isEqualTo("[name]");
+        assertThat(mergedMetadata.getSequence()).isEqualTo("[sequence]");
+        assertThat(mergedMetadata.getGenomes()).isEmpty();
+    }
+
+    @Test
+    void testMergeConstructorSingleElementWithGenomes() {
+        final List<NodeMetadata> metadataList = new ArrayList<>();
+        final NodeMetadata metadata = new NodeMetadata("name", "sequence", Arrays.asList("genA", "genB"));
+        metadataList.add(metadata);
+
+        final NodeMetadata mergedMetadata = new NodeMetadata(metadataList);
+
+        assertThat(mergedMetadata.getName()).isEqualTo("[name]");
+        assertThat(mergedMetadata.getSequence()).isEqualTo("[sequence]");
+        assertThat(mergedMetadata.getGenomes()).containsExactly("genA", "genB");
+    }
+
+    @Test
+    void testMergeConstructorMultipleElementsWithoutDuplicates() {
+        final List<NodeMetadata> metadataList = new ArrayList<>();
+        final NodeMetadata metadataA = new NodeMetadata("nameA", "sequenceA", Arrays.asList("genA", "genB"));
+        final NodeMetadata metadataB = new NodeMetadata("nameB", "sequenceB", Arrays.asList("genC", "genD"));
+        metadataList.add(metadataA);
+        metadataList.add(metadataB);
+
+        final NodeMetadata mergedMetadata = new NodeMetadata(metadataList);
+
+        assertThat(mergedMetadata.getName()).isEqualTo("[nameA, nameB]");
+        assertThat(mergedMetadata.getSequence()).isEqualTo("[sequenceA, sequenceB]");
+        assertThat(mergedMetadata.getGenomes()).containsExactly("genA", "genB", "genC", "genD");
+    }
+
+    @Test
+    void testMergeConstructorMultipleElementsWithDuplicates() {
+        final List<NodeMetadata> metadataList = new ArrayList<>();
+        final NodeMetadata metadataA = new NodeMetadata("nameA", "sequenceA", Arrays.asList("genA", "genB"));
+        final NodeMetadata metadataB = new NodeMetadata("nameB", "sequenceB", Arrays.asList("genB", "genC"));
+        metadataList.add(metadataA);
+        metadataList.add(metadataB);
+
+        final NodeMetadata mergedMetadata = new NodeMetadata(metadataList);
+
+        assertThat(mergedMetadata.getName()).isEqualTo("[nameA, nameB]");
+        assertThat(mergedMetadata.getSequence()).isEqualTo("[sequenceA, sequenceB]");
+        assertThat(mergedMetadata.getGenomes()).containsExactly("genA", "genB", "genC");
     }
 
 

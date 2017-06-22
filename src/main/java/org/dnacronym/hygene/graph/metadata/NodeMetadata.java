@@ -1,10 +1,14 @@
 package org.dnacronym.hygene.graph.metadata;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
- * Represents the metadata of a {@link Node}.
+ * Represents the metadata of a {@link org.dnacronym.hygene.graph.node.Node}.
  */
 public final class NodeMetadata {
     private final String name;
@@ -23,6 +27,22 @@ public final class NodeMetadata {
         this.name = name;
         this.sequence = sequence;
         this.genomes = genomes;
+    }
+
+    /**
+     * Combines the given sets of {@link NodeMetadata} into a single object.
+     *
+     * @param nodeMetadata a collection of {@link NodeMetadata}
+     */
+    public NodeMetadata(final Collection<NodeMetadata> nodeMetadata) {
+        this.name = nodeMetadata.stream().map(NodeMetadata::getName).collect(Collectors.toList()).toString();
+        this.sequence = nodeMetadata.stream().map(NodeMetadata::getSequence).collect(Collectors.toList()).toString();
+
+        final Set<String> combinedGenomes = nodeMetadata.stream()
+                .map(NodeMetadata::getGenomes)
+                .flatMap(List::stream)
+                .collect(Collectors.toSet());
+        this.genomes = new ArrayList<>(combinedGenomes);
     }
 
 

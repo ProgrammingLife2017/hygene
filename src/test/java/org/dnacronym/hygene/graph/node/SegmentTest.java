@@ -60,6 +60,21 @@ final class SegmentTest extends NodeTest {
     }
 
     @Test
+    void testGetSegmentIds() {
+        assertThat(segment.getSegmentIds()).containsExactly(ID);
+    }
+
+    @Test
+    void testContainsSegmentFalse() {
+        assertThat(segment.containsSegment(ID - 1)).isFalse();
+    }
+
+    @Test
+    void testContainsSegmentTrue() {
+        assertThat(segment.containsSegment(ID)).isTrue();
+    }
+
+    @Test
     void testEquals() {
         EqualsVerifier.forClass(Segment.class)
                 .withRedefinedSuperclass()
