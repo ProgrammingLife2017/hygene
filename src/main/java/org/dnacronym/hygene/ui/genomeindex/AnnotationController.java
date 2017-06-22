@@ -52,12 +52,9 @@ public final class AnnotationController implements Initializable {
     private TableColumn<Annotation, String> nameColumn;
     @FXML
     private TableColumn<Annotation, String> typeColumn;
-    @FXML
-    private TableColumn<Annotation, Integer> startColumn;
 
 
     @Override
-    @SuppressWarnings("squid:MaximumInheritanceDepth") // To modify table cell factories
     public void initialize(final URL location, final ResourceBundle resources) {
         queryField.textProperty().addListener((observable, oldValue, newValue) ->
                 annotationSearch.search(newValue));
