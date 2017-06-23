@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
 import javax.inject.Inject;
@@ -27,8 +26,6 @@ public final class ViewMenuController implements Initializable {
     private GraphStore graphStore;
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    @Inject
-    private GraphVisualizer graphVisualizer;
 
     @FXML
     private MenuItem toggleSequenceVisualizer;
