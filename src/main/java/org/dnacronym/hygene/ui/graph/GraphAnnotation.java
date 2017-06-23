@@ -10,6 +10,7 @@ import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.genomeindex.GenomeMappingView;
 import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
@@ -109,16 +110,20 @@ public final class GraphAnnotation {
      * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file. This also
      * prompts the internal {@link DynamicGenomeIndex} to re-index the genomes based on the given genome and the current
      * GFA file.<br>
-     * Afterwards prompts a recalculation of annotation points.
+     * Afterwards recalculates the annotation start and end points.
      *
      * @param mappedGenome the genome in the GFA the GFF genome should map onto
+     * @throws IOException if unable to build an index for the given mapped genome
      */
     public void setMappedGenome(final String mappedGenome) throws IOException {
         this.mappedGenome = mappedGenome;
 
+        LOGGER.info("Building an index for " + mappedGenome);
+
         dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, mappedGenome);
         dynamicGenomeIndex.buildIndex();
 
+        LOGGER.info("Finished building an index for " + mappedGenome);
         recalculateAnnotationPoints();
     }
 
@@ -191,12 +196,14 @@ public final class GraphAnnotation {
         }
 
         statusBar.monitorTask(progressUpdater -> {
-            final int[] position = {0};
+            final int[] position = {1};
             final int total = annotationCollection.getAnnotations().size();
+            LOGGER.info("Started placing " + total + " annotations");
+
             annotationCollection.getAnnotations().forEach(annotation -> {
                 if (position[0] % PROGRESS_UPDATE_INTERVAL == 0) {
                     progressUpdater.updateProgress(
-                            Math.round(100f * position[0] / total),
+                            Math.round(Math.max(5, 100f * position[0] / total)),
                             "Placing annotation " + position[0] + "/" + total
                     );
                 }
@@ -217,6 +224,13 @@ public final class GraphAnnotation {
 
                 position[0]++;
             });
+
+            if (position[0] < total) {
+                new WarningDialogue("Unable to place " + (total - position[0]) + " annotations.").show();
+            }
+
+            LOGGER.info("Finished placing " + position[0] + " of " + total + " annotations");
+            progressUpdater.updateProgress(StatusBar.PROGRESS_MAX, "Finished placing annotations");
         });
     }
 }

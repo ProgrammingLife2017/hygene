@@ -98,9 +98,8 @@ public final class GenomeMappingController implements Initializable {
         try {
             graphAnnotation.setMappedGenome(genomeChoice.getText());
         } catch (final IOException e) {
-            LOGGER.error("Unable to set mapped genome.", e);
+            LOGGER.error("Unable to build an index for genome " + genomeChoice.getText() + ".", e);
             (new ErrorDialogue(e)).show();
-            return;
         }
 
         final Node source = (Node) actionEvent.getSource();
