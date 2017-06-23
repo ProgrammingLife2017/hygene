@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.GfaNode;
-import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -81,24 +80,22 @@ public final class NodePropertiesController implements Initializable {
      * @param node the {@link GfaNode} whose properties should be displayed
      */
     void updateFields(final GfaNode node) {
-        if (!(node instanceof Segment)) { // Or equals null
+        if (node == null) {
             clearNodeFields();
             return;
         }
 
-        final Segment segment = (Segment) node;
-        nodeId.setText(String.valueOf(segment.getId()));
-
-        if (segment.hasMetadata()) {
-            sequencePreview.setText(String.valueOf(segment.getMetadata().getSequence()));
+        if (node.hasMetadata()) {
+            nodeId.setText(node.getMetadata().getName());
+            sequencePreview.setText(String.valueOf(node.getMetadata().getSequence()));
         } else {
-            LOGGER.error("Unable to parse sequence of node " + segment.getId() + ".");
+            LOGGER.error("Node " + node.getSegmentIds().toString() + " does not have metadata.");
         }
 
-        leftNeighbours.setText(String.valueOf(segment.getIncomingEdges().size()));
-        rightNeighbours.setText(String.valueOf(segment.getOutgoingEdges().size()));
+        leftNeighbours.setText(String.valueOf(node.getIncomingEdges().size()));
+        rightNeighbours.setText(String.valueOf(node.getOutgoingEdges().size()));
 
-        position.setText(String.valueOf(segment.getId()));
+        position.setText(node.getSegmentIds().toString());
     }
 
 

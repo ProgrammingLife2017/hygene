@@ -10,4 +10,9 @@
             <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
         </accelerator>
     </MenuItem>
+    <MenuItem fx:id="toggleAggregation" onAction="#toggleAggregationAction">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
 </Menu>

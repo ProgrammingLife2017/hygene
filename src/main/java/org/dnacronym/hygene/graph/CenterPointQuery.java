@@ -92,6 +92,10 @@ public final class CenterPointQuery {
      * The maximum distance to the centre the nodes in the cache actually have.
      */
     private int cacheRadius;
+    /**
+     * Determines whether to aggregate nodes.
+     */
+    private boolean aggregateNodes = true;
 
 
     /**
@@ -110,7 +114,9 @@ public final class CenterPointQuery {
                 return;
             }
 
-            SegmentAggregator.aggregate(subgraph);
+            if (aggregateNodes) {
+                SegmentAggregator.aggregate(subgraph);
+            }
             LAYOUT.layOut(subgraph);
             HygeneEventBus.getInstance().post(new LayoutDoneEvent(subgraph));
         });
@@ -340,6 +346,15 @@ public final class CenterPointQuery {
             node.get().getOutgoingEdges().add(edge);
             neighbour.get().getIncomingEdges().add(edge);
         });
+    }
+
+    /**
+     * Sets the field deciding whether to aggregate nodes.
+     *
+     * @param aggregateNodes whether to aggregate nodes
+     */
+    public void setAggregateNodes(final boolean aggregateNodes) {
+        this.aggregateNodes = aggregateNodes;
     }
 
     /**
