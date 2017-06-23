@@ -468,7 +468,6 @@ public final class GraphVisualizer {
                     || node instanceof GfaNode && bookmarkStore.getSimpleBookmarks().stream().anyMatch(
                     simpleBookmark -> ((GfaNode) node).containsSegment(simpleBookmark.getNodeIdProperty().get()))
             );
-
             drawNode(node,
                     bookmarked,
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
