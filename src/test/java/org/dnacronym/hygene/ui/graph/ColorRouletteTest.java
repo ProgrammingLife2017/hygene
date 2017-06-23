@@ -27,6 +27,6 @@ class ColorRouletteTest {
     void getNext() {
         final Color color = colorRoulette.getNext();
 
-        assertThat(color).isEqualTo(ColorRoulette.DarkQuantitativeColors.LIGHT_BLUE.getColor());
+        assertThat(color).isEqualTo(ColorRoulette.DarkQuantitativeColors.DARK_BLUE.getColor());
     }
 }
