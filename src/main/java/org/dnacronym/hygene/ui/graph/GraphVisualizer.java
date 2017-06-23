@@ -24,7 +24,6 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.annotation.Annotation;
-import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.node.AggregateSegment;
 import org.dnacronym.hygene.graph.node.GfaNode;
@@ -186,6 +185,7 @@ public final class GraphVisualizer {
      * @param queried     the boolean indicating whether this node has been queried
      * @param annotations the list of annotations in view
      */
+    @SuppressWarnings("PMD.NPathComplexity") // See comment at top of class
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
                           final List<Annotation> annotations) {
         if (!(node instanceof GfaNode)) {
@@ -232,7 +232,7 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
-        gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawNodeAnnotations(
+        gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawAnnotations(
                 nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations)));
 
         gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
@@ -249,7 +249,8 @@ public final class GraphVisualizer {
     private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
         for (final Annotation annotation : annotations) {
-            if (segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+            if (segment.hasMetadata()
+                    && segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                     && segment.getId() >= annotation.getStartNodeId()
                     && segment.getId() < annotation.getEndNodeId()) {
                 annotationColors.add(annotation.getColor());
@@ -349,7 +350,8 @@ public final class GraphVisualizer {
      */
     @SuppressWarnings("squid:S1067") // fixing this will require a re-write of the Edge class
     private boolean edgePartOfAnnotation(final Edge edge, final Annotation annotation) {
-        return edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+        return edge.getFromSegment().hasMetadata() && edge.getToSegment().hasMetadata()
+                && edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                 && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                 && edge.getFromSegment() instanceof Segment
                 && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
