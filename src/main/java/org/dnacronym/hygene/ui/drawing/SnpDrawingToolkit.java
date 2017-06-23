@@ -69,6 +69,10 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         getGraphicsContext().setStroke(highlightType.getColor());
         getGraphicsContext().setLineWidth(NODE_OUTLINE_WIDTH);
         getGraphicsContext().strokePolygon(getRhombusX(snpX, snpWidth), getRhombusY(snpY), 4);
+
+        if (highlightType == HighlightType.BOOKMARKED) {
+            drawBookmarkIndicator(snpX, snpWidth);
+        }
     }
 
     /**
