@@ -393,4 +393,13 @@ public final class GraphDimensionsCalculator {
     public IntegerProperty getViewRadiusProperty() {
         return viewRadiusProperty;
     }
+
+    /**
+     * Returns the center-point query.
+     *
+     * @return the center-point query
+     */
+    public CenterPointQuery getCenterPointQuery() {
+        return centerPointQuery;
+    }
 }
