@@ -139,7 +139,10 @@ public final class MenuController implements Initializable {
             throws UIInitialisationException, IOException {
         final Stage primaryStage = Hygene.getInstance().getPrimaryStage();
 
-        fileChooser.setInitialDirectory(RecentDirectory.get(type));
+        final File recentDirectory = RecentDirectory.get(type);
+        if (recentDirectory.exists()) {
+            fileChooser.setInitialDirectory(recentDirectory);
+        }
 
         final File file = fileChooser.showOpenDialog(primaryStage.getScene().getWindow());
         if (file == null) {
