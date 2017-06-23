@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 
 /**
@@ -103,7 +104,12 @@ public final class PathController implements Initializable {
      */
     Predicate<GenomePath> getPredicate(final String query) {
         if (regex.isSelected()) {
-            return getRegexPredicate(query);
+            try {
+                Pattern.compile(query);
+                return getRegexPredicate(query);
+            } catch (PatternSyntaxException e) {
+                LOGGER.debug("Invalid regex syntax", e);
+            }
         } else if (matchCase.isSelected()) {
             return getSubstringPredicate(query, true);
         }
@@ -151,5 +157,6 @@ public final class PathController implements Initializable {
     void onClearHighlight(final ActionEvent actionEvent) {
         LOGGER.info("Cleared the currently selected genome.");
         pathList.itemsProperty().get().forEach(genomes -> genomes.selectedProperty().set(false));
+        actionEvent.consume();
     }
 }
