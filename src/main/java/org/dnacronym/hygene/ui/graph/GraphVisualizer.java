@@ -26,12 +26,16 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.edge.DummyEdge;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.AggregateSegment;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.drawing.EdgeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.HighlightType;
 import org.dnacronym.hygene.ui.drawing.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.SegmentDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.SnpDrawingToolkit;
 import org.dnacronym.hygene.ui.path.GenomePath;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
@@ -56,7 +60,8 @@ import java.util.stream.Collectors;
  * @see GraphicsContext
  * @see GraphDimensionsCalculator
  */
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods"})
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods",
+        "PMD.CyclomaticComplexity"})
 // This will be fixed at a later date.
 public final class GraphVisualizer {
     private static final Logger LOGGER = LogManager.getLogger(GraphVisualizer.class);
@@ -95,7 +100,8 @@ public final class GraphVisualizer {
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
-    private final NodeDrawingToolkit nodeDrawingToolkit;
+    private final SegmentDrawingToolkit segmentDrawingToolkit;
+    private final SnpDrawingToolkit snpDrawingToolkit;
     private final EdgeDrawingToolkit edgeDrawingToolkit;
     private final GraphAnnotationVisualizer graphAnnotationVisualizer;
     private final BookmarkStore bookmarkStore;
@@ -157,7 +163,8 @@ public final class GraphVisualizer {
 
         query.getQueriedNodes().addListener((ListChangeListener<Integer>) observable -> draw());
 
-        nodeDrawingToolkit = new NodeDrawingToolkit();
+        segmentDrawingToolkit = new SegmentDrawingToolkit();
+        snpDrawingToolkit = new SnpDrawingToolkit();
         edgeDrawingToolkit = new EdgeDrawingToolkit();
         graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
     }
@@ -167,10 +174,10 @@ public final class GraphVisualizer {
      * Draw a node on the canvas.
      * <p>
      * Node outlines are also drawn when one of the following conditions are met:
-     * If selected, it is {@link NodeDrawingToolkit.HighlightType#SELECTED}.<br>
-     * If it is not selected, and highlighted, it is {@link NodeDrawingToolkit.HighlightType#HIGHLIGHTED}.<br>
-     * If it is not highlighted, and queried, it is {@link NodeDrawingToolkit.HighlightType#QUERIED}.<br>
-     * If it is not queried, and bookmarked, is it {@link NodeDrawingToolkit.HighlightType#BOOKMARKED}.
+     * If selected, it is {@link HighlightType#SELECTED}.<br>
+     * If it is not selected, and highlighted, it is {@link HighlightType#HIGHLIGHTED}.<br>
+     * If it is not highlighted, and queried, it is {@link HighlightType#QUERIED}.<br>
+     * If it is not queried, and bookmarked, is it {@link HighlightType#BOOKMARKED}.
      * <p>
      * The node is afterwards added to the {@link RTree}.
      *
@@ -190,25 +197,39 @@ public final class GraphVisualizer {
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
 
-        nodeDrawingToolkit.drawNode(nodeX, nodeY, nodeWidth, node.getColor());
+        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
+                nodeHeightProperty.get()));
+
+        final NodeDrawingToolkit nodeDrawingToolkit;
+        if (node instanceof Segment) {
+            nodeDrawingToolkit = segmentDrawingToolkit;
+        } else if (node instanceof AggregateSegment) {
+            nodeDrawingToolkit = snpDrawingToolkit;
+        } else {
+            LOGGER.warn("Cannot draw node of class " + node.getClass().getName() + ".");
+            return;
+        }
+
+        nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor());
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
-                .anyMatch(segmentId -> selectedSegmentProperty.get().getSegmentIds().contains(segmentId))) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.SELECTED);
+                .anyMatch(segmentId -> selectedSegmentProperty.get().containsSegment(segmentId))) {
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.SELECTED);
         }
-        if (gfaNode.equals(hoveredSegmentProperty.get())) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.HIGHLIGHTED);
+        if (hoveredSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
+                .anyMatch(segmentId -> hoveredSegmentProperty.get().containsSegment(segmentId))) {
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.HIGHLIGHTED);
         }
         if (queried) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.QUERIED);
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.QUERIED);
         }
         if (bookmarked) {
-            nodeDrawingToolkit.drawNodeHighlight(nodeX, nodeY, nodeWidth, NodeDrawingToolkit.HighlightType.BOOKMARKED);
+            nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.BOOKMARKED);
         }
 
         if (gfaNode.hasMetadata()) {
             final String sequence = gfaNode.getMetadata().getSequence();
-            nodeDrawingToolkit.drawNodeSequence(nodeX, nodeY, nodeWidth, sequence);
+            nodeDrawingToolkit.drawSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
         gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawNodeAnnotations(
@@ -277,8 +298,9 @@ public final class GraphVisualizer {
     private List<Color> computeEdgeColors(final Edge edge) {
         final List<Color> edgeColors;
 
-        if (hovered(edge)) {
-            edgeColors = Collections.singletonList(NodeDrawingToolkit.HighlightType.HIGHLIGHTED.getColor());
+        if (edge.getFromSegment().equals(hoveredSegmentProperty.get())
+                || edge.getToSegment().equals(hoveredSegmentProperty.get())) {
+            edgeColors = Collections.singletonList(HighlightType.HIGHLIGHTED.getColor());
         } else if (edge.getGenomes() != null
                 && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
             final Set<String> selectedGenomesInEdge
@@ -333,20 +355,6 @@ public final class GraphVisualizer {
                 && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
                 && edge.getToSegment() instanceof Segment
                 && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId();
-    }
-
-    /**
-     * Checks whether the {@link Edge} if part of the {@link Segment} being hovered.
-     *
-     * @param edge the {@link Edge}
-     * @return if the edge is part of the {@link Segment} being hovered
-     */
-    boolean hovered(final Edge edge) {
-        if (edge instanceof DummyEdge) {
-            return ((DummyEdge) edge).getOriginalEdge().getFrom().equals(hoveredSegmentProperty.get())
-                    || ((DummyEdge) edge).getOriginalEdge().getTo().equals(hoveredSegmentProperty.get());
-        }
-        return edge.getFrom().equals(hoveredSegmentProperty.get()) || edge.getTo().equals(hoveredSegmentProperty.get());
     }
 
     /**
@@ -426,23 +434,27 @@ public final class GraphVisualizer {
         }
 
         clear();
-        nodeDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
-        nodeDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        segmentDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        segmentDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        snpDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        snpDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
-        int minNodeId = Integer.MAX_VALUE;
-        int maxNodeId = 0;
+        final int[] minNodeId = {Integer.MAX_VALUE};
+        final int[] maxNodeId = {0};
 
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            if (!(node instanceof Segment)) {
+            if (!(node instanceof GfaNode)) {
                 continue;
             }
-            minNodeId = Math.min(minNodeId, ((Segment) node).getId());
-            maxNodeId = Math.max(maxNodeId, ((Segment) node).getId());
+            ((GfaNode) node).getSegmentIds().forEach(nodeId -> {
+                minNodeId[0] = Math.min(minNodeId[0], nodeId);
+                maxNodeId[0] = Math.max(maxNodeId[0], nodeId);
+            });
         }
-        maxNodeId = Math.max(maxNodeId, minNodeId);
+        maxNodeId[0] = Math.max(maxNodeId[0], minNodeId[0]);
 
-        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId, maxNodeId);
+        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId[0], maxNodeId[0]);
 
         // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
@@ -542,7 +554,8 @@ public final class GraphVisualizer {
     public void setCanvas(final Canvas canvas) {
         this.canvas = canvas;
         this.graphicsContext = canvas.getGraphicsContext2D();
-        this.nodeDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.segmentDrawingToolkit.setGraphicsContext(graphicsContext);
+        this.snpDrawingToolkit.setGraphicsContext(graphicsContext);
         this.edgeDrawingToolkit.setGraphicsContext(graphicsContext);
         this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 

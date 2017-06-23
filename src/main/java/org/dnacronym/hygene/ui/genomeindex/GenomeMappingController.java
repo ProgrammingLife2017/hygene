@@ -44,13 +44,13 @@ public final class GenomeMappingController implements Initializable {
 
 
     @Override
+    @SuppressWarnings("squid:MaximumInheritanceDepth") // Caused by setting the cell factory of gfaGenomes
     public void initialize(final URL location, final ResourceBundle resources) {
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-            gfaGenomes.setItems(FXCollections.observableArrayList(
-                    newValue.getGenomeMapping().entrySet().stream()
-                            .map(entry -> new GenomePath(entry.getKey(), entry.getValue()))
-                            .collect(Collectors.toList())));
-        });
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) ->
+                gfaGenomes.setItems(FXCollections.observableArrayList(
+                        newValue.getGenomeMapping().entrySet().stream()
+                                .map(entry -> new GenomePath(entry.getKey(), entry.getValue()))
+                                .collect(Collectors.toList()))));
 
         gfaGenomes.setCellFactory(listView -> {
             final ListCell<GenomePath> genomePathCell = new ListCell<GenomePath>() {

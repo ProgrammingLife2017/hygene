@@ -1,9 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
-
-import javax.inject.Inject;
-
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -23,12 +20,13 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.graph.node.Node;
-import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
-import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.Segment;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,9 +51,6 @@ public final class GraphDimensionsCalculator {
      */
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
-
-    private static final int MIN_ZOOM_FACTOR = 4;
-    private static final int MAX_ZOOM_FACTOR = 1000;
 
     private final IntegerProperty minXNodeIdProperty;
     private final IntegerProperty maxXNodeIdProperty;
@@ -118,10 +113,6 @@ public final class GraphDimensionsCalculator {
 
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() < FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
-                    || newValue.intValue() > FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
-                return;
-            }
             calculate(subgraph);
             radiusProperty.set(((newValue.intValue() + FafospLayerer.LAYER_WIDTH - 1)
                     / FafospLayerer.LAYER_WIDTH) / 2);

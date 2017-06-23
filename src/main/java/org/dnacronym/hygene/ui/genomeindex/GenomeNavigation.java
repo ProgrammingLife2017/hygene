@@ -44,7 +44,7 @@ public final class GenomeNavigation {
      * Creates an instance of {@link GenomeNavigation}.
      *
      * @param graphStore the {@link GraphStore} whose {@link GfaFile} is observed
-     * @param statusBar  the {@link StatusBar} which is used to showAndWait genome indexing progress
+     * @param statusBar  the {@link StatusBar} which is used to show the genome indexing progress
      */
     @Inject
     public GenomeNavigation(final GraphStore graphStore, final StatusBar statusBar) {
