@@ -376,9 +376,9 @@ public final class GraphVisualizer {
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
             final boolean bookmarked = bookmarkStore != null
                     && (bookmarkStore.containsBookmark(node)
-                    || ((node instanceof GfaNode && bookmarkStore.getSimpleBookmarks().stream().anyMatch(
-                    simpleBookmark -> ((GfaNode) node).containsSegment(simpleBookmark.getNodeIdProperty().get())))
-            ));
+                    || node instanceof GfaNode && bookmarkStore.getSimpleBookmarks().stream().anyMatch(
+                    simpleBookmark -> ((GfaNode) node).containsSegment(simpleBookmark.getNodeIdProperty().get()))
+            );
             drawNode(node, bookmarked,
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()));
         }
