@@ -5,7 +5,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.node.GfaNode;
-import org.dnacronym.hygene.graph.node.Segment;
 
 
 /**
@@ -61,9 +60,6 @@ final class NeighbourVisualizer {
         clear();
 
         if (node == null) {
-            return;
-        }
-        if (!(node instanceof Segment)) {
             return;
         }
 

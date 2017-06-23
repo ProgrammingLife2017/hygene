@@ -53,7 +53,7 @@ public final class GraphController implements Initializable {
                 return;
             }
 
-            LOGGER.info("Selected node id: " + newNode.getSegmentIds().toString() + "\n");
+            LOGGER.info("Selected node id: " + newNode.getSegmentIds().toString() + ".");
         });
 
         graphVisualizer.getSelectedEdgeProperty().addListener((observable, oldEdge, newEdge) -> {
