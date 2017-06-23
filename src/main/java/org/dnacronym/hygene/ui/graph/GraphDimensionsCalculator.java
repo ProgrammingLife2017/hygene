@@ -1,9 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
 import com.google.common.eventbus.Subscribe;
-
-import javax.inject.Inject;
-
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -23,12 +20,13 @@ import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
-import org.dnacronym.hygene.graph.node.Node;
-import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
-import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.node.Node;
+import org.dnacronym.hygene.graph.node.Segment;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -401,5 +399,14 @@ public final class GraphDimensionsCalculator {
      */
     public IntegerProperty getViewRadiusProperty() {
         return viewRadiusProperty;
+    }
+
+    /**
+     * Returns the center-point query.
+     *
+     * @return the center-point query
+     */
+    public CenterPointQuery getCenterPointQuery() {
+        return centerPointQuery;
     }
 }
