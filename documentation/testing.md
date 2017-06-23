@@ -64,3 +64,8 @@ Our coverage of this week increased to 80% (CodeCov 77%).
 During this sprint we worked a lot on adding new features at a high pace. Unfortunately, this was not really good for our code quality and test coverage. During the next sprints we will work hard on increasing this again.
 
 Our coverage of this week decreased to 79% (CodeCov 76%).
+
+## Sprint 8
+This last sprint was a continuation of last week in terms of testing. At the beginning of the week we added missing tests for the features introduct last sprint. However, we had to add a lot of new features at a high pace, again, which was not necessarily good in terms of covered code.
+
+Our coverage of this week decreased to 78% (CodeCov 75%).
