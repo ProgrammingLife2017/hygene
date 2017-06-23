@@ -23,13 +23,18 @@ import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.core.HygeneEventBus;
 import org.dnacronym.hygene.event.SnapshotButtonWasPressed;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.node.AggregateSegment;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.drawing.EdgeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.HighlightType;
 import org.dnacronym.hygene.ui.drawing.NodeDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.SegmentDrawingToolkit;
+import org.dnacronym.hygene.ui.drawing.SnpDrawingToolkit;
 import org.dnacronym.hygene.ui.path.GenomePath;
 import org.dnacronym.hygene.ui.query.Query;
 import org.dnacronym.hygene.ui.settings.BasicSettingsViewController;
@@ -226,31 +231,11 @@ public final class GraphVisualizer {
             final String sequence = gfaNode.getMetadata().getSequence();
             nodeDrawingToolkit.drawSequence(nodeX, nodeY, nodeWidth, sequence);
         }
-        nodeDrawingToolkit.drawNodeAnnotations(nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations));
 
-        gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawAnnotations(
-                nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations)));
-    }
-
-    /**
-     * Returns all the colors of all the annotations going through this branch.
-     *
-     * @param segment     the {@link Segment} to get the annotation colors for
-     * @param annotations the list of annotations in the current view
-     * @return the list of colors of the annotations going through the given {@link Segment}
-     */
-    private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
-        final List<Color> annotationColors = new ArrayList<>();
-        for (final Annotation annotation : annotations) {
-            if (segment.hasMetadata()
-                    && segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                    && segment.getId() >= annotation.getStartNodeId()
-                    && segment.getId() < annotation.getEndNodeId()) {
-                annotationColors.add(annotation.getColor());
-            }
-        }
-
-        return annotationColors;
+        gfaNode.getSegments().forEach(segment -> {
+            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations));
+            rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+        });
     }
 
     /**
