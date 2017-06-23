@@ -11,6 +11,14 @@
     -fx-base: -background;
 }
 
+#graphScrollBar.side_button {
+    -fx-background-color: transparent;
+}
+
+#graphScrollBar {
+    -fx-background-color: transparent;
+}
+
 .square_button {
     -fx-min-height: 45;
     -fx-min-width: 45;

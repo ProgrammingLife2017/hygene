@@ -2,8 +2,11 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.layout.Pane;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
+import org.dnacronym.hygene.ui.drawing.HeatMapDrawing;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -18,7 +21,11 @@ public final class GraphSliderController implements Initializable {
     private GraphDimensionsCalculator graphDimensionsCalculator;
 
     @FXML
+    private Pane sliderPane;
+    @FXML
     private ScrollBar graphScrollBar;
+    @FXML
+    private Canvas heatMapCanvas;
 
 
     @Override
@@ -29,6 +36,14 @@ public final class GraphSliderController implements Initializable {
             graphScrollBar.setMax((double) FafospLayerer.LAYER_WIDTH * newValue.getUnscaledXPosition(sentinelId - 1)
                     + newValue.getLength(sentinelId - 1));
         });
+
+        heatMapCanvas.widthProperty().bind(sliderPane.widthProperty());
+        heatMapCanvas.heightProperty().bind(sliderPane.heightProperty());
+
+        final HeatMapDrawing heatMapDrawing = new HeatMapDrawing();
+        heatMapDrawing.setCanvas(heatMapCanvas);
+
+        heatMapDrawing.setBuckets(buckets);
 
         graphScrollBar.valueProperty().bindBidirectional(graphDimensionsCalculator.getViewPointProperty());
         graphDimensionsCalculator.getViewRadiusProperty().addListener(observable -> graphScrollBar.setVisibleAmount(
