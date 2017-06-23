@@ -1,9 +1,10 @@
 package org.dnacronym.hygene.ui.graph;
 
-import javax.inject.Inject;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.dnacronym.hygene.graph.layout.FafospLayerer;
+
+import javax.inject.Inject;
 
 
 /**
@@ -18,6 +19,9 @@ public final class GraphMovementCalculator {
     private static final double DEFAULT_PANNING_SENSITIVITY = 0.005;
     private static final double DEFAULT_ZOOMING_SENSITIVITY = 10;
     private static final double RADIUS_ZOOMING_FACTOR = 20000.0;
+
+    private static final int MIN_ZOOM_FACTOR = 4;
+    private static final int MAX_ZOOM_FACTOR = 1000;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 
@@ -104,10 +108,12 @@ public final class GraphMovementCalculator {
     public void onScroll(final double deltaY) {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get()
                 * (graphDimensionsCalculator.getViewRadiusProperty().get() / RADIUS_ZOOMING_FACTOR));
-
-        graphDimensionsCalculator.getViewRadiusProperty().set(
-                graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange
-        );
+        final int newViewRadius = graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange;
+        if (newViewRadius < FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
+                || newViewRadius > FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
+            return;
+        }
+        graphDimensionsCalculator.getViewRadiusProperty().set(newViewRadius);
     }
 
     /**
