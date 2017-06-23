@@ -27,18 +27,18 @@ public final class ColorRoulette {
      * Enum representing a color scheme containing a dark quantitative color scheme.
      */
     enum DarkQuantitativeColors {
-        LIGHT_BLUE(Color.rgb(166, 206, 227)),
         DARK_BLUE(Color.rgb(31, 120, 180)),
-        LIGHT_GREEN(Color.rgb(178, 223, 138)),
         DARK_GREEN(Color.rgb(51, 160, 44)),
-        PINK(Color.rgb(251, 154, 153)),
         RED(Color.rgb(227, 26, 28)),
+        PURPLE(Color.rgb(106, 61, 154)),
+        BROWN(Color.rgb(177, 89, 40)),
         OCHRE(Color.rgb(253, 191, 111)),
         ORANGE(Color.rgb(255, 127, 0)),
+        LIGHT_GREEN(Color.rgb(178, 223, 138)),
         VIOLET(Color.rgb(202, 178, 214)),
-        PURPLE(Color.rgb(106, 61, 154)),
-        YELLOW(Color.rgb(255, 255, 153)),
-        BROWN(Color.rgb(177, 89, 40));
+        LIGHT_BLUE(Color.rgb(166, 206, 227)),
+        PINK(Color.rgb(251, 154, 153)),
+        YELLOW(Color.rgb(255, 255, 153));
 
         private Color color;
 
