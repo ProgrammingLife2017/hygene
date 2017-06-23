@@ -19,6 +19,8 @@ import java.util.TreeMap;
  * Represents a dynamic genome index for single genomes.
  */
 public final class DynamicGenomeIndex {
+    public static final String GENOME_LIST_HEADER_PREFIX = "ORI:Z:";
+
     private final GfaFile gfaFile;
     private final Graph graph;
     private final String genomeName;
@@ -128,7 +130,7 @@ public final class DynamicGenomeIndex {
             }
             counter[0]++;
 
-            final int oriIndex = line.indexOf("ORI:Z:") + 6;
+            final int oriIndex = line.indexOf(GENOME_LIST_HEADER_PREFIX) + GENOME_LIST_HEADER_PREFIX.length();
             final String genomesRaw = line.substring(oriIndex);
             final int tabIndex = genomesRaw.indexOf('\t');
             final String genomes;
