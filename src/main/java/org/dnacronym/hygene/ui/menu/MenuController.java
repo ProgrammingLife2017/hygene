@@ -5,11 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
@@ -48,8 +46,6 @@ public final class MenuController implements Initializable {
     private GenomeNavigation genomeNavigation;
 
     @FXML
-    private MenuBar menuBar;
-    @FXML
     private MenuItem gffFileOpen;
 
     @FXML
@@ -61,10 +57,6 @@ public final class MenuController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        if (SystemUtils.IS_OS_MAC) {
-            menuBar.useSystemMenuBarProperty().set(true);
-        }
-
         try {
             gffFileOpen.disableProperty().bind(genomeNavigation.getIndexedFinishedProperty().not());
 

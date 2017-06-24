@@ -1,3 +1,9 @@
+.root {
+    -fx-accent: #00aa87;
+    -fx-focus-color: #00aa87;
+    -fx-base: #f5f5f3;
+}
+
 .square_button {
     -fx-min-height: 45;
     -fx-min-width: 45;
@@ -10,9 +16,21 @@
     -fx-background-radius: 0;
 }
 
+Button {
+    -fx-border-color: #00aa87;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+    -fx-border-radius: 4px;
+}
+
+Button:hover {
+    -fx-background-color: #00aa87;
+    -fx-text-fill: white;
+}
+
 .side_button {
-    -fx-focus-color: transparent;
-    -fx-background-color: transparent;
+    -fx-focus-color: white;
+    -fx-background-color: white;
     -fx-background-radius: 0;
 }
 
@@ -24,4 +42,84 @@
 
 .mnemonic-underline {
     -fx-stroke: -fx-text-base-color;
+}
+
+MenuBar {
+    -fx-background-color: white;
+    -fx-border-color: #00aa87 black #e3e3e3 black;
+    -fx-border-width: 4px 0 2px 0;
+}
+
+#graphNavigationButtons {
+    -fx-background-color: white;
+    -fx-border-color: #e3e3e3;
+    -fx-border-width: 2px 0 0 0;
+}
+
+#leftPane, #rightPane, TitledPane > AnchorPane {
+    -fx-background-color: white;
+}
+
+.sidePane Separator .line {
+    -fx-border-color: #e3e3e3;
+    -fx-border-width: 1 1 1 1;
+}
+
+TitledPane {
+    -fx-text-fill: white;
+    -fx-start-margin: 10px;
+}
+
+TitledPane > .title {
+    -fx-background-color: #00aa87;
+}
+
+TitledPane > .title > .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.sidePane {
+    -fx-background-color: white;
+}
+
+.leftSidePane {
+    -fx-padding: 10px;
+    -fx-border-color: #e3e3e3;
+    -fx-border-width: 0 2px 0 0;
+}
+
+.rightSidePane {
+    -fx-padding: 10px;
+    -fx-border-color: #e3e3e3;
+    -fx-border-width: 0 0 0 2px;
+}
+
+#bottomBar {
+    -fx-background-color: #00aa87;
+}
+
+#bottomBar Label {
+    -fx-text-fill: white;
+}
+
+#sequenceViewPane AnchorPane {
+    -fx-background-color: white;
+}
+
+TabPane .tab-header-area .tab-header-background {
+    -fx-background-color: #00aa87;
+}
+
+TabPane .tab {
+    -fx-background-color: #e3e3e3;
+}
+
+TabPane .tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: white;
+    -fx-border-width: 0 0 1px 0;
+}
+
+TabPane AnchorPane {
+    -fx-background-color: white;
 }

@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="queryPane" prefHeight="100.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.query.QueryController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.query.QueryController"
+            styleClass="sidePane">
     <children>
         <GridPane hgap="5.0" vgap="20.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
                   AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">

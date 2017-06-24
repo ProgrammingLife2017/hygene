@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane fx:id="tablePane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkTableController"
-            maxHeight="1.7976931348623157E308">
+            maxHeight="1.7976931348623157E308" styleClass="sidePane">
     <TableView fx:id="bookmarksTable" maxHeight="Infinity" maxWidth="Infinity"
                AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
                AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">

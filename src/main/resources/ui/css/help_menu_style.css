@@ -1,10 +1,10 @@
 #sidebar {
-    -fx-background-color: #1156c3;
+    -fx-background-color: #00aa87;
 }
 
 .button {
     -fx-pref-height: 42px;
-    -fx-background-color: #1156c3;
+    -fx-background-color: #00aa87;
     -fx-font: 12px "Arial";
     -fx-text-fill: #ffffff;
 
@@ -13,5 +13,5 @@
 }
 
 .button:hover {
-    -fx-background-color: #246fc3;
+    -fx-background-color: rgba(255, 255, 255, 0.2);
 }

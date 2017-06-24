@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@../css/default_style.css"
             fx:controller="org.dnacronym.hygene.ui.genomeindex.GenomeMappingController">
     <children>
         <GridPane hgap="5.0" layoutX="14.0" layoutY="14.0" vgap="10.0" AnchorPane.bottomAnchor="10.0"

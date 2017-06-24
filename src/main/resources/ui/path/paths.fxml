@@ -18,7 +18,7 @@
                     AnchorPane.topAnchor="0.0">
             <content>
                 <GridPane vgap="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                          AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                          AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" styleClass="sidePane">
                     <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="10.0"/>
                         <ColumnConstraints hgrow="SOMETIMES"/>
