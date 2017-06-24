@@ -233,7 +233,7 @@ public final class GraphVisualizer {
         }
 
         gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawAnnotations(
-                nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations)));
+                nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations)));
 
         gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
                 nodeHeightProperty.get()));
@@ -246,7 +246,7 @@ public final class GraphVisualizer {
      * @param annotations the list of annotations in the current view
      * @return the list of colors of the annotations going through the given {@link Segment}
      */
-    private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
+    private List<Color> segmentAnnotationColors(final Segment segment, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
         for (final Annotation annotation : annotations) {
             if (segment.hasMetadata()
@@ -456,7 +456,8 @@ public final class GraphVisualizer {
         }
         maxNodeId[0] = Math.max(maxNodeId[0], minNodeId[0]);
 
-        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId[0], maxNodeId[0]);
+        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId[0],
+                maxNodeId[0]);
 
         // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {

@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Class representing an index point in the genome coordinate system.
  */
-public final class  GenomePoint {
+public final class GenomePoint {
     private final int genomeId;
     private final int base;
     private final int nodeId;
