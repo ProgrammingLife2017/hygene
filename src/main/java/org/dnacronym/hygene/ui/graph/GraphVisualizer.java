@@ -455,7 +455,8 @@ public final class GraphVisualizer {
         }
         maxNodeId[0] = Math.max(maxNodeId[0], minNodeId[0]);
 
-        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId[0], maxNodeId[0]);
+        final List<Annotation> observableAnnotations = graphAnnotation.getAnnotationsInRange(minNodeId[0],
+                maxNodeId[0]);
 
         // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
