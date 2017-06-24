@@ -1,10 +1,12 @@
+@import "default_style.css";
+
 #sidebar {
-    -fx-background-color: #00aa87;
+    -fx-background-color: -hygene;
 }
 
 .button {
     -fx-pref-height: 42px;
-    -fx-background-color: #00aa87;
+    -fx-background-color: -hygene;
     -fx-font: 12px "Arial";
     -fx-text-fill: #ffffff;
 
