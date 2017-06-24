@@ -233,7 +233,7 @@ public final class GraphVisualizer {
         }
 
         gfaNode.getSegments().forEach(segment -> {
-            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, nodeAnnotationColors(segment, annotations));
+            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations));
             rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
         });
     }
@@ -245,7 +245,7 @@ public final class GraphVisualizer {
      * @param annotations the list of annotations in the current view
      * @return the list of colors of the annotations going through the given {@link Segment}
      */
-    private List<Color> nodeAnnotationColors(final Segment segment, final List<Annotation> annotations) {
+    private List<Color> segmentAnnotationColors(final Segment segment, final List<Annotation> annotations) {
         final List<Color> annotationColors = new ArrayList<>();
         for (final Annotation annotation : annotations) {
             if (segment.hasMetadata()
