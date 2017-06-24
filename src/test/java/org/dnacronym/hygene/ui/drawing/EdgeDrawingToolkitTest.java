@@ -55,13 +55,15 @@ final class EdgeDrawingToolkitTest {
     void testDrawAnnotations() {
         drawingToolkit.drawEdgeAnnotations(50, 60, 70, 80, 5, Arrays.asList(Color.AZURE, Color.BLUE));
 
-        verify(graphicsContext).setLineWidth(eq(2d));
+        verify(graphicsContext).setLineWidth(eq(3d));
 
         verify(graphicsContext, atLeast(1)).setStroke(Color.AZURE);
         verify(graphicsContext, atLeast(1)).setStroke(Color.BLUE);
 
-        verify(graphicsContext).strokeLine(eq(50d), eq(60d + 5 + 2 + 1), eq(70d), eq(80d + 5 + 2 + 1));
-        verify(graphicsContext).strokeLine(eq(50d), eq(60d + 5 + 2 + 1), eq(70d), eq(80d + 5 + 2 + 1));
+        verify(graphicsContext).strokeLine(
+                eq(50d), eq(60d + 5 + 3 + 3d / 2), eq(70d), eq(80d + 5 + 3 + 3d / 2));
+        verify(graphicsContext).strokeLine(
+                eq(50d), eq(60d + 5 + 3 + 3 + 3d / 2), eq(70d), eq(80d + 5 + 3 + 3 + 3d / 2));
     }
 
     @Test

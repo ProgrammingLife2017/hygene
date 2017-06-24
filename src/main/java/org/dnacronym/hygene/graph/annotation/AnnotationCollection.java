@@ -1,5 +1,7 @@
 package org.dnacronym.hygene.graph.annotation;
 
+import org.dnacronym.hygene.ui.graph.ColorRoulette;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ public final class AnnotationCollection {
     private final String sequenceId;
     private final List<Annotation> annotations;
     private final List<String> metadata;
+    private final ColorRoulette colorRoulette;
 
 
     /**
@@ -25,6 +28,7 @@ public final class AnnotationCollection {
      */
     public AnnotationCollection(final String sequenceId) {
         this.sequenceId = sequenceId;
+        this.colorRoulette = new ColorRoulette();
 
         this.annotations = new ArrayList<>();
         this.metadata = new ArrayList<>();
@@ -66,6 +70,7 @@ public final class AnnotationCollection {
      * @param annotation the {@link Annotation} to add to this {@link AnnotationCollection}
      */
     public void addAnnotation(final Annotation annotation) {
+        annotation.setColor(colorRoulette.getNextLightColor());
         annotations.add(annotation);
     }
 

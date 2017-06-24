@@ -105,12 +105,21 @@ public final class GraphAnnotation {
     /**
      * Sets the mapped genome.
      * <p>
-     * This genome represents what the genome of the currently loaded GFF file should map onto in the GFA file.
+     * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file.
      *
      * @param mappedGenome the genome in the GFA the GFF genome should map onto
      */
     public void setMappedGenome(final String mappedGenome) {
         this.mappedGenome = mappedGenome;
+    }
+
+    /**
+     * Returns the genome onto which the user chose to map the annotations of the GFF file.
+     *
+     * @return the genome onto which the user chose to map the annotations of the GFF file
+     */
+    public String getMappedGenome() {
+        return mappedGenome;
     }
 
     /**
@@ -136,8 +145,9 @@ public final class GraphAnnotation {
 
         return annotationCollection.getAnnotations().stream()
                 .filter(annotation -> {
-                    assert startPoints.containsKey(annotation);
-                    assert endPoints.containsKey(annotation);
+                    if (!startPoints.containsKey(annotation) || !endPoints.containsKey(annotation)) {
+                        return false;
+                    }
 
                     final int annotationStart = startPoints.get(annotation).getNodeId();
                     final int annotationEnd = endPoints.get(annotation).getNodeId();
@@ -159,6 +169,9 @@ public final class GraphAnnotation {
     /**
      * Adds a {@link AnnotationCollection}, and add {@link GenomePoint}s which denote the start and end points of this
      * annotation in the graph.
+     * <p>
+     * If the mappedGenome is not set ({@code null} or empty), it will divert to using the sequence id
+     * directly of the {@link AnnotationCollection}.
      */
     private void recalculateAnnotationPoints() {
         startPoints.clear();
@@ -188,9 +201,15 @@ public final class GraphAnnotation {
 
                 try {
                     genomeIndex.getGenomePoint(genome, startOffset)
-                            .ifPresent(genomePoint -> startPoints.put(annotation, genomePoint));
+                            .ifPresent(genomePoint -> {
+                                annotation.setStartNodeId(genomePoint.getNodeId());
+                                startPoints.put(annotation, genomePoint);
+                            });
                     genomeIndex.getGenomePoint(genome, endOffset)
-                            .ifPresent(genomePoint -> endPoints.put(annotation, genomePoint));
+                            .ifPresent(genomePoint -> {
+                                annotation.setEndNodeId(genomePoint.getNodeId());
+                                endPoints.put(annotation, genomePoint);
+                            });
                 } catch (final SQLException e) {
                     LOGGER.error("Could not add an annotation.", e);
                 }
