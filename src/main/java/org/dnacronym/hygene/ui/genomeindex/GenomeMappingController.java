@@ -99,7 +99,7 @@ public final class GenomeMappingController implements Initializable {
             graphAnnotation.setMappedGenome(genomeChoice.getText());
         } catch (final IOException e) {
             LOGGER.error("Unable to build an index for genome " + genomeChoice.getText() + ".", e);
-            (new ErrorDialogue(e)).show();
+            new ErrorDialogue(e).show();
         }
 
         final Node source = (Node) actionEvent.getSource();
