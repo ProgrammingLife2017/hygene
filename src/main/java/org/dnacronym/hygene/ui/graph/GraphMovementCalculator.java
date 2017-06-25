@@ -90,7 +90,7 @@ public final class GraphMovementCalculator {
 
         final double currentCenterNodeId = graphDimensionsCalculator.getViewPointProperty().get();
 
-        final double translation = centerX - x;
+        final double translation = (centerX - x) * 100;
         final int newViewPoint = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 

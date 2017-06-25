@@ -127,24 +127,28 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
-        viewPointProperty = new SimpleLongProperty(0);
+        viewPointProperty = new SimpleLongProperty(2000);
         viewPointProperty.addListener((observable, oldValue, newValue) -> {
-            final SequenceDirection direction = newValue.intValue() < oldValue.intValue()
+            final SequenceDirection direction = newValue.longValue() < oldValue.longValue()
                     ? SequenceDirection.LEFT
                     : SequenceDirection.RIGHT;
 
-            int difference = Math.abs(newValue.intValue() - oldValue.intValue());
             GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+            if (newValue.longValue() == centerNode.getXPosition()) {
+                return;
+            }
 
             // Find new center node
-            while (difference > 0) {
-                difference--;
-
+            while (direction.ternary(
+                    centerNode.getXPosition() > newValue.longValue(),
+                    centerNode.getXPosition() + centerNode.getLength() < newValue.longValue()
+            )) {
                 final Set<Edge> neighbours = direction.ternary(
                         centerNode.getIncomingEdges(),
                         centerNode.getOutgoingEdges());
                 final Edge firstEdge = neighbours.iterator().next();
                 centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
+
                 if (direction.ternary(centerNode.getIncomingEdges(), centerNode.getOutgoingEdges()).isEmpty()) {
                     centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
                     centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
@@ -152,6 +156,7 @@ public final class GraphDimensionsCalculator {
             }
 
             // Set center node
+            calculate(subgraph);
             centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
         });
         viewRadiusProperty = new SimpleIntegerProperty(1);
@@ -217,7 +222,6 @@ public final class GraphDimensionsCalculator {
 
         final Segment centerNode = subgraph.getSegment(centerNodeIdProperty.get())
                 .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
-        final long unscaledCenterX = centerNode.getXPosition();
 
         final int[] tempMinY = {centerNode.getYPosition()};
         final int[] tempMaxY = {centerNode.getYPosition()};
@@ -240,6 +244,8 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
+        this.minX = viewPointProperty.longValue() - viewRadiusProperty.get() / 2;
+        this.maxX = viewPointProperty.longValue() + viewRadiusProperty.get() / 2;
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
@@ -261,7 +267,8 @@ public final class GraphDimensionsCalculator {
         centerPointQuery = new CenterPointQuery(graph);
 
         nodeCountProperty.set(graph.getNodeArrays().length);
-        centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
+        centerNodeIdProperty.set(1);
+        viewPointProperty.set(0);
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
 
         new GraphLocation(this, graphStore).restore();
