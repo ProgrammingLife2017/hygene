@@ -131,20 +131,21 @@ public final class GraphDimensionsCalculator {
             int difference = Math.abs(newValue.intValue() - oldValue.intValue());
             GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
 
+            // Find new center node
             while (difference > 0) {
                 difference--;
 
                 final Set<Edge> neighbours = direction.ternary(
                         centerNode.getIncomingEdges(),
                         centerNode.getOutgoingEdges());
-                if (neighbours.isEmpty()) {
-                    break;
-                }
+                assert !neighbours.isEmpty();
 
                 final Edge firstEdge = neighbours.iterator().next();
                 centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
-                centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
             }
+
+            // Set center node
+            centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
         });
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
