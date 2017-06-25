@@ -235,11 +235,15 @@ public final class GraphAnnotation {
                 final int endOffset = annotation.getEnd();
 
                 final int startNodeId = genomeIndex.getNodeByBase(startOffset);
+                final int startNodeBaseOffset = genomeIndex.getBaseOffsetWithinNode(startOffset);
                 final int endNodeId = genomeIndex.getNodeByBase(endOffset);
+                final int endNodeBaseOffset = genomeIndex.getBaseOffsetWithinNode(endOffset);
 
                 if (startNodeId != -1 && endNodeId != -1) {
                     annotation.setStartNodeId(startNodeId);
+                    annotation.setStartNodeBaseOffset(startNodeBaseOffset);
                     annotation.setEndNodeId(endNodeId);
+                    annotation.setEndNodeBaseOffset(endNodeBaseOffset);
 
                     startPoints.put(annotation, startNodeId);
                     endPoints.put(annotation, endNodeId);

@@ -30,7 +30,9 @@ public final class Annotation {
     private final int phase;
 
     private int startNodeId;
+    private int startNodeBaseOffset;
     private int endNodeId;
+    private int endNodeBaseOffset;
     private Color color;
 
 
@@ -247,6 +249,42 @@ public final class Annotation {
      */
     public int getEndNodeId() {
         return endNodeId;
+    }
+
+    /**
+     * Sets the base offset in the start node.
+     *
+     * @param startNodeIdBaseOffset the base offset in the start node
+     */
+    public void setStartNodeBaseOffset(final int startNodeIdBaseOffset) {
+        this.startNodeBaseOffset = startNodeIdBaseOffset;
+    }
+
+    /**
+     * Returns the base offset in the start node.
+     *
+     * @return the base offset in the start node
+     */
+    public int getStartNodeBaseOffset() {
+        return startNodeBaseOffset;
+    }
+
+    /**
+     * Sets the base offset in the end node.
+     *
+     * @param endNodeIdBaseOffset the base offset in the end node
+     */
+    public void setEndNodeBaseOffset(final int endNodeIdBaseOffset) {
+        this.endNodeBaseOffset = endNodeIdBaseOffset;
+    }
+
+    /**
+     * Returns the base offset in the end node.
+     *
+     * @return the base offset in the end node
+     */
+    public int getEndNodeBaseOffset() {
+        return endNodeBaseOffset;
     }
 
     /**
