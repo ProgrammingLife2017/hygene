@@ -127,7 +127,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
         final double sequenceWidth = sequenceToDraw.length() * getCharWidth();
 
         final double fontX = segmentX + segmentWidth / 2 - sequenceWidth / 2;
-        final double fontY = segmentY - getNodeHeight() / 2 + getCharHeight() / 2;
+        final double fontY = segmentY + getNodeHeight() / 2 - getCharHeight();
 
         getGraphicsContext().fillText(sequenceToDraw, fontX, fontY);
     }
