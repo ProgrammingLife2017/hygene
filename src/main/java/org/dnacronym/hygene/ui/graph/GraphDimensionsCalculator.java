@@ -22,13 +22,16 @@ import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -57,10 +60,11 @@ public final class GraphDimensionsCalculator {
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
-    private final IntegerProperty nodeCountProperty;
+    private final IntegerProperty viewPointProperty;
     private final IntegerProperty viewRadiusProperty;
 
     private final DoubleProperty nodeHeightProperty;
+    private final IntegerProperty nodeCountProperty;
     private final DoubleProperty laneHeightProperty;
     private final IntegerProperty laneCountProperty;
 
@@ -99,9 +103,15 @@ public final class GraphDimensionsCalculator {
         nodeCountProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
-            centerNodeIdProperty.set(Math.max(
-                    0,
-                    Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
+            if (newValue.intValue() < 0) {
+                centerNodeIdProperty.set(0);
+                return;
+            }
+            if (newValue.intValue() >= getNodeCountProperty().intValue()) {
+                centerNodeIdProperty.set(nodeCountProperty.intValue() - 1);
+                return;
+            }
+
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
@@ -111,6 +121,37 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
+        viewPointProperty = new SimpleIntegerProperty(0);
+        viewPointProperty.addListener(((observable, oldValue, newValue) -> {
+            int difference = newValue.intValue() - oldValue.intValue();
+            GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+
+            if (difference > 0) {
+                // Move to right
+                while (difference > 0) {
+                    final Set<Edge> neighbours = centerNode.getOutgoingEdges();
+                    if (neighbours.isEmpty()) {
+                        return;
+                    }
+
+                    centerNode = neighbours.iterator().next().getToSegment();
+                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+                    difference--;
+                }
+            } else {
+                // Move to left
+                while (difference < 0) {
+                    final Set<Edge> neighbours = centerNode.getIncomingEdges();
+                    if (neighbours.isEmpty()) {
+                        return;
+                    }
+
+                    centerNode = neighbours.iterator().next().getFromSegment();
+                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+                    difference++;
+                }
+            }
+        }));
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
             calculate(subgraph);
@@ -383,6 +424,15 @@ public final class GraphDimensionsCalculator {
      */
     public IntegerProperty getRadiusProperty() {
         return radiusProperty;
+    }
+
+    /**
+     * Returns the view point property.
+     *
+     * @return the view point property
+     */
+    public IntegerProperty getViewPointProperty() {
+        return viewPointProperty;
     }
 
     /**

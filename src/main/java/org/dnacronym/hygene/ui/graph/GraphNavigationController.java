@@ -39,9 +39,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftLargeAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(
-                graphDimensionsCalculator.getCenterNodeIdProperty().get() - JUMP_AMOUNT
-        );
+        graphDimensionsCalculator.getViewPointProperty().set(
+                graphDimensionsCalculator.getViewPointProperty().get() - JUMP_AMOUNT);
         actionEvent.consume();
     }
 
@@ -52,9 +51,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goLeftAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(
-                graphDimensionsCalculator.getCenterNodeIdProperty().get() - 1
-        );
+        graphDimensionsCalculator.getViewPointProperty().set(
+                graphDimensionsCalculator.getViewPointProperty().get() - 1);
         actionEvent.consume();
     }
 
@@ -65,9 +63,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(
-                graphDimensionsCalculator.getCenterNodeIdProperty().get() + 1
-        );
+        graphDimensionsCalculator.getViewPointProperty().set(
+                graphDimensionsCalculator.getViewPointProperty().get() + 1);
         actionEvent.consume();
     }
 
@@ -78,9 +75,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void goRightLargeAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(
-                graphDimensionsCalculator.getCenterNodeIdProperty().get() + JUMP_AMOUNT
-        );
+        graphDimensionsCalculator.getViewPointProperty().set(
+                graphDimensionsCalculator.getViewPointProperty().get() + JUMP_AMOUNT);
         actionEvent.consume();
     }
 

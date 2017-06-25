@@ -88,14 +88,13 @@ public final class GraphMovementCalculator {
         dragging = true;
         lastX = x;
 
-        final double currentCenterNodeId = graphDimensionsCalculator.getCenterNodeIdProperty().get();
+        final double currentCenterNodeId = graphDimensionsCalculator.getViewPointProperty().get();
 
         final double translation = centerX - x;
-        final int newCenterNodeId = (int) (currentCenterNodeId
+        final int newViewPoint = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(newCenterNodeId);
-        dragging = newCenterNodeId > 0 && newCenterNodeId < graphDimensionsCalculator.getNodeCountProperty().get();
+        graphDimensionsCalculator.getViewPointProperty().set(newViewPoint);
     }
 
     /**
