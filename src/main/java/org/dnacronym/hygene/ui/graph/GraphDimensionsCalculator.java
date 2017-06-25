@@ -235,6 +235,7 @@ public final class GraphDimensionsCalculator {
      */
     void setCanvasSize(final double canvasWidth, final double canvasHeight) {
         canvasDimension = new Dimension2D(canvasWidth, canvasHeight);
+        calculate(subgraph);
     }
 
     /**
