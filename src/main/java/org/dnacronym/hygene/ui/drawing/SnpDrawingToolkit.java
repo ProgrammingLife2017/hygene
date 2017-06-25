@@ -64,7 +64,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      * @param annotationColors the colors of the annotations going through the node
      * @param startOffset      the offset of the start of the annotation in the node. If it runs from the start of the
      *                         node, it should be 0
-     * @param endOffset        the offset of teh end of the annotation in de node. If it runs to the end of the node, it
+     * @param endOffset        the offset of the end of the annotation in de node. If it runs to the end of the node, it
      *                         should be equal to the node width
      */
     @Override
