@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.coordinatesystem.DynamicGenomeIndex;
+import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.progressbar.StatusBar;
 
@@ -33,6 +33,8 @@ public final class GenomeNavigation {
 
     /**
      * Creates an instance of {@link GenomeNavigation}.
+     *
+     * @param graphStore the injected {@link GraphStore} instance
      */
     @Inject
     public GenomeNavigation(final GraphStore graphStore) {
@@ -46,16 +48,19 @@ public final class GenomeNavigation {
 
 
     /**
-     * Triggers the population of the genome index.
+     * Indexes the genome with the given name and performs the desired {@code action} as soon as this index is complete.
+     *
+     * @param genomeName the name of the genome
+     * @param action     the action to be undertaken once that genome has been indexed
      */
-    public void runActionOnIndexedGenome(final String genomeName, final Consumer<DynamicGenomeIndex> action) {
+    public void runActionOnIndexedGenome(final String genomeName, final Consumer<GenomeIndex> action) {
         statusBar.monitorTask(progressUpdater -> {
             final Thread worker = new Thread(() -> {
                 try {
-                    final DynamicGenomeIndex dynamicGenomeIndex = new DynamicGenomeIndex(
+                    final GenomeIndex genomeIndex = new GenomeIndex(
                             graphStore.getGfaFileProperty().get(), genomeName);
-                    dynamicGenomeIndex.buildIndex(progressUpdater);
-                    action.accept(dynamicGenomeIndex);
+                    genomeIndex.buildIndex(progressUpdater);
+                    action.accept(genomeIndex);
                 } catch (final IOException e) {
                     LOGGER.error("Unable to populate genome index.", e);
                 }

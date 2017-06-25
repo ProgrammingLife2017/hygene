@@ -6,8 +6,7 @@ import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.coordinatesystem.DynamicGenomeIndex;
-import org.dnacronym.hygene.coordinatesystem.GenomePoint;
+import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
@@ -53,6 +52,8 @@ public final class GraphAnnotation {
 
     /**
      * Constructs a new {@link GraphAnnotation}.
+     *
+     * @param graphStore the injected {@link GraphStore} instance
      */
     @Inject
     public GraphAnnotation(final GraphStore graphStore) {
@@ -101,7 +102,7 @@ public final class GraphAnnotation {
      * Sets the mapped genome.
      * <p>
      * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file. This also
-     * prompts the internal {@link DynamicGenomeIndex} to re-index the genomes based on the given genome and the current
+     * prompts the internal {@link GenomeIndex} to re-index the genomes based on the given genome and the current
      * GFA file.<br>
      * Afterwards recalculates the annotation start and end points.
      *
@@ -113,9 +114,9 @@ public final class GraphAnnotation {
 
         LOGGER.info("Building an index for " + mappedGenome);
 
-        genomeNavigation.runActionOnIndexedGenome(mappedGenome, dynamicGenomeIndex -> Platform.runLater(() -> {
+        genomeNavigation.runActionOnIndexedGenome(mappedGenome, genomeIndex -> Platform.runLater(() -> {
             LOGGER.info("Finished building an index for " + mappedGenome);
-            recalculateAnnotationPoints(dynamicGenomeIndex);
+            recalculateAnnotationPoints(genomeIndex);
         }));
     }
 
@@ -173,13 +174,15 @@ public final class GraphAnnotation {
     }
 
     /**
-     * Adds a {@link AnnotationCollection}, and add {@link GenomePoint}s which denote the start and end points of this
-     * annotation in the graph.
+     * Adds a {@link AnnotationCollection}, and add {@link org.dnacronym.hygene.coordinatesystem.GenomePoint}s which
+     * denote the start and end points of this annotation in the graph.
      * <p>
      * If the mappedGenome is not set ({@code null} or empty), it will divert to using the sequence id
      * directly of the {@link AnnotationCollection}.
+     *
+     * @param genomeIndex the {@link GenomeIndex} instance
      */
-    private void recalculateAnnotationPoints(final DynamicGenomeIndex dynamicGenomeIndex) {
+    private void recalculateAnnotationPoints(final GenomeIndex genomeIndex) {
         startPoints.clear();
         endPoints.clear();
 
@@ -203,8 +206,8 @@ public final class GraphAnnotation {
                 final int startOffset = annotation.getStart();
                 final int endOffset = annotation.getEnd();
 
-                final int startNodeId = dynamicGenomeIndex.getNodeByBase(startOffset);
-                final int endNodeId = dynamicGenomeIndex.getNodeByBase(endOffset);
+                final int startNodeId = genomeIndex.getNodeByBase(startOffset);
+                final int endNodeId = genomeIndex.getNodeByBase(endOffset);
 
                 if (startNodeId != -1 && endNodeId != -1) {
                     annotation.setStartNodeId(startNodeId);
