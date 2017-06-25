@@ -75,6 +75,7 @@ public final class GraphVisualizer {
     private static final double EDGE_OPACITY_BETA = 4.25;
 
     private static final int MAX_PATH_THICKNESS_DRAWING_RADIUS = 150;
+    private static final int MAX_SEQUENCE_DRAWING_RADIUS = 150;
 
     private final GraphAnnotation graphAnnotation;
     private final GraphDimensionsCalculator graphDimensionsCalculator;
@@ -227,7 +228,8 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawHighlight(nodeX, nodeY, nodeWidth, HighlightType.BOOKMARKED);
         }
 
-        if (gfaNode.hasMetadata()) {
+        if (gfaNode.hasMetadata()
+                && graphDimensionsCalculator.getRadiusProperty().get() < MAX_SEQUENCE_DRAWING_RADIUS) {
             final String sequence = gfaNode.getMetadata().getSequence();
             nodeDrawingToolkit.drawSequence(nodeX, nodeY, nodeWidth, sequence);
         }
