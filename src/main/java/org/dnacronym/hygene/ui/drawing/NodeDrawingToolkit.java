@@ -5,6 +5,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -22,6 +23,7 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
      * Scalar for the size of the node text font as fraction of the node's height.
      */
     static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
+    static final double MAC_NODE_FONT_HEIGHT_SCALAR = 0.5;
     static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     static final int NODE_OUTLINE_WIDTH = 3;
     static final int SNP_HEIGHT_FACTOR = 3;
@@ -33,6 +35,7 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     private double charWidth;
     private double charHeight;
     private Font nodeFont;
+
 
 
     /**
@@ -50,7 +53,16 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
         text.setFont(new Font(DEFAULT_NODE_FONT, 1));
 
         final double font1PHeight = text.getLayoutBounds().getHeight();
-        final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
+        final double nodeFontScalar;
+
+        final String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+        if (os.contains("mac") || os.contains("darwin")) {
+            nodeFontScalar = MAC_NODE_FONT_HEIGHT_SCALAR;
+        } else {
+            nodeFontScalar = DEFAULT_NODE_FONT_HEIGHT_SCALAR;
+        }
+
+        final double fontSize = nodeFontScalar * nodeHeight / font1PHeight;
         this.nodeFont = new Font(DEFAULT_NODE_FONT, fontSize);
         text.setFont(nodeFont);
 
