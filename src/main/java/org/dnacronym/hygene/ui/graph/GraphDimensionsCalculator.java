@@ -104,12 +104,12 @@ public final class GraphDimensionsCalculator {
         nodeCountProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() < 0) {
-                centerNodeIdProperty.set(0);
+            if (newValue.intValue() < 1) {
+                centerNodeIdProperty.set(1);
                 return;
             }
-            if (newValue.intValue() >= getNodeCountProperty().intValue()) {
-                centerNodeIdProperty.set(nodeCountProperty.intValue() - 1);
+            if (newValue.intValue() >= getNodeCountProperty().intValue() - 1) {
+                centerNodeIdProperty.set(nodeCountProperty.intValue() - 2);
                 return;
             }
 
