@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public final class BasicSettingsViewController implements Initializable {
     private static final Color MIN_COLOR = Color.ALICEBLUE;
-    private static final Color MAX_COLOR = Color.rgb(0, 164, 130);
+    private static final Color MAX_COLOR = Color.rgb(3, 73, 58);
     public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
             new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, MIN_COLOR, MAX_COLOR)),
             new Pair<>("Fixed Color", new FixedColorScheme(MAX_COLOR)),
