@@ -61,12 +61,15 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      *
      * @param snpX             the top left x position of the node
      * @param snpY             the top left y position of the node
-     * @param snpWidth         the width of the node
      * @param annotationColors the colors of the annotations going through the node
+     * @param startOffset      the offset of the start of the annotation in the node. If it runs from the start of the
+     *                         node, it should be 0
+     * @param endOffset        the offset of teh end of the annotation in de node. If it runs to the end of the node, it
+     *                         should be equal to the node width
      */
     @Override
     public void drawAnnotations(final double snpX, final double snpY, final double snpWidth,
-                                final List<Color> annotationColors) {
+                                final List<Color> annotationColors, final double startOffset, final double endOffset) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
         getGraphicsContext().setLineWidth(getAnnotationHeight());
 

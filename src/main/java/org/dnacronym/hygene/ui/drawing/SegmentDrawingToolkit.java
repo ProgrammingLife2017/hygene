@@ -16,7 +16,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentX     the top left x position of the node
      * @param segmentY     the top left y position of the node
      * @param segmentWidth the width of the node
-     * @param color     the {@link Color} to fill the node with
+     * @param color        the {@link Color} to fill the node with
      */
     @Override
     public void draw(final double segmentX, final double segmentY, final double segmentWidth, final Color color,
@@ -29,9 +29,9 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * <p>
      * The genome colors are spread evenly across the height of the node. They are drawn as lanes along the node.
      *
-     * @param segmentX        the top left x position of the node
-     * @param segmentY        the top left y position of the node
-     * @param segmentWidth    the width of the node
+     * @param segmentX     the top left x position of the node
+     * @param segmentY     the top left y position of the node
+     * @param segmentWidth the width of the node
      * @param genomeColors the colors of the paths going through the node
      */
     @Override
@@ -54,21 +54,25 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * <p>
      * Annotations have the given colors, and are dashed.
      *
-     * @param segmentX            the top left x position of the node
-     * @param segmentY            the top left y position of the node
-     * @param segmentWidth        the width of the node
+     * @param segmentX         the top left x position of the node
+     * @param segmentY         the top left y position of the node
      * @param annotationColors the colors of the annotations going through the node
+     * @param startOffset      the offset of the start of the annotation in the node. If it runs from the start of the
+     *                         node, it should be 0
+     * @param endOffset        the offset of teh end of the annotation in de node. If it runs to the end of the node, it
+     *                         should be equal to the node width
      */
     @Override
-    public void drawAnnotations(final double segmentX, final double segmentY, final double segmentWidth,
-                                final List<Color> annotationColors) {
+    public void drawAnnotations(final double segmentX, final double segmentY,
+                                final List<Color> annotationColors, final double startOffset, final double endOffset) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
         getGraphicsContext().setLineWidth(getAnnotationHeight());
 
         double annotationYOffset = segmentY + getNodeHeight() + getAnnotationHeight() + getAnnotationHeight() / 2;
         for (final Color color : annotationColors) {
             getGraphicsContext().setStroke(color);
-            getGraphicsContext().strokeLine(segmentX, annotationYOffset, segmentX + segmentWidth, annotationYOffset);
+            getGraphicsContext().strokeLine(
+                    segmentX + startOffset, annotationYOffset, segmentX + endOffset, annotationYOffset);
 
             annotationYOffset += getAnnotationHeight();
         }
@@ -79,9 +83,9 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
     /**
      * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.
      *
-     * @param segmentX         the top left x position of the node
-     * @param segmentY         the top left y position of the node
-     * @param segmentWidth     the width of the node
+     * @param segmentX      the top left x position of the node
+     * @param segmentY      the top left y position of the node
+     * @param segmentWidth  the width of the node
      * @param highlightType the type of highlight
      */
     @Override
@@ -107,7 +111,7 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentX     the top left x position of the node
      * @param segmentY     the top left y position of the node
      * @param segmentWidth the width of the node
-     * @param sequence  the sequence of the node
+     * @param sequence     the sequence of the node
      */
     @Override
     public void drawSequence(final double segmentX, final double segmentY, final double segmentWidth,

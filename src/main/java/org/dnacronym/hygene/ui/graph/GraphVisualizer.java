@@ -233,7 +233,9 @@ public final class GraphVisualizer {
         }
 
         gfaNode.getSegments().forEach(segment -> {
-            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations));
+            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, segmentAnnotationColors(segment, annotations),
+                    getStartAnnotationOffset(segment, annotations) * nodeWidth,
+                    getEndAnnotationOffset(segment, annotations) * nodeWidth);
             rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
         });
     }
@@ -274,6 +276,38 @@ public final class GraphVisualizer {
         }
 
         return annotationColors;
+    }
+
+    /**
+     * Returns the offset within a node based on the given annotations.
+     *
+     * @param segment     the {@link Segment} to get the annotation offset for
+     * @param annotations the list of annotations in the current view
+     * @return the offset of the start of an annotation within a node scaled between 0 and 1
+     */
+    private double getStartAnnotationOffset(final Segment segment, final List<Annotation> annotations) {
+        for (final Annotation annotation : annotations) {
+            if (segment.getId() == annotation.getStartNodeId()) {
+                return (double) annotation.getStartNodeBaseOffset() / segment.getLength();
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Returns the offset within a node based on the given annotations.
+     *
+     * @param segment     the {@link Segment} to get the annotation offset for
+     * @param annotations the list of annotations in the current view
+     * @return the offset of the end of an annotation within a node scaled between 0 and 1
+     */
+    private double getEndAnnotationOffset(final Segment segment, final List<Annotation> annotations) {
+        for (final Annotation annotation : annotations) {
+            if (segment.getId() == annotation.getStartNodeId()) {
+                return (double) annotation.getEndNodeBaseOffset() / segment.getLength();
+            }
+        }
+        return 1;
     }
 
     /**
