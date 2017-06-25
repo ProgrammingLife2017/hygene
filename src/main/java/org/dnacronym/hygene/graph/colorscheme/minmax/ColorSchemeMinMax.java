@@ -12,8 +12,6 @@ import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
  * position in the scale of {@code [0, max value]}.
  */
 public abstract class ColorSchemeMinMax implements ColorScheme {
-    private static final double COLOR_LOWER_BOUND = 0.25;
-
     private final int maxValue;
     private final Color minColor;
     private final Color maxColor;
@@ -38,13 +36,12 @@ public abstract class ColorSchemeMinMax implements ColorScheme {
      * Calculates the color based on the passed value, max value, min color and max color.
      * <p>
      * The color is determined to be an interpolation of the minimum and maximum color. The interpolation amount is on a
-     * scale from {@value COLOR_LOWER_BOUND} to 1, and determined to be the value of the value divided by the max value
-     * capped off at 1.
+     * scale from 0 to 1, and determined to be the value of the value divided by the max value capped off at 1.
      *
      * @param value the value to decide the color for
      * @return the color of the value
      */
     final Color calculateColor(final double value) {
-        return minColor.interpolate(maxColor, Math.max(Math.min(1, value / maxValue), COLOR_LOWER_BOUND));
+        return minColor.interpolate(maxColor, Math.min(1, value / maxValue));
     }
 }
