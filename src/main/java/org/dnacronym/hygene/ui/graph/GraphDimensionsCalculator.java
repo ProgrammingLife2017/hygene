@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -12,6 +13,7 @@ import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,7 +63,7 @@ public final class GraphDimensionsCalculator {
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
-    private final IntegerProperty viewPointProperty;
+    private final LongProperty viewPointProperty;
     private final IntegerProperty viewRadiusProperty;
 
     private final DoubleProperty nodeHeightProperty;
@@ -125,7 +127,7 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
-        viewPointProperty = new SimpleIntegerProperty(0);
+        viewPointProperty = new SimpleLongProperty(0);
         viewPointProperty.addListener((observable, oldValue, newValue) -> {
             final SequenceDirection direction = newValue.intValue() < oldValue.intValue()
                     ? SequenceDirection.LEFT
@@ -455,7 +457,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return the view point property
      */
-    public IntegerProperty getViewPointProperty() {
+    public LongProperty getViewPointProperty() {
         return viewPointProperty;
     }
 
