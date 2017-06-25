@@ -16,17 +16,17 @@ import static org.mockito.Mockito.when;
 final class GraphMovementCalculatorTest {
     private GraphMovementCalculator graphMovementCalculator;
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    private IntegerProperty centerNodeIdProperty;
+    private IntegerProperty viewPointProperty;
     private IntegerProperty radiusProperty;
 
 
     @BeforeEach
     void beforeEach() {
-        centerNodeIdProperty = new SimpleIntegerProperty(0);
+        viewPointProperty = new SimpleIntegerProperty(0);
         radiusProperty = new SimpleIntegerProperty(0);
 
         graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
-        when(graphDimensionsCalculator.getCenterNodeIdProperty()).thenReturn(centerNodeIdProperty);
+        when(graphDimensionsCalculator.getViewPointProperty()).thenReturn(viewPointProperty);
         when(graphDimensionsCalculator.getRadiusProperty()).thenReturn(radiusProperty);
         when(graphDimensionsCalculator.getNodeCountProperty()).thenReturn(new SimpleIntegerProperty(65));
 
@@ -41,7 +41,7 @@ final class GraphMovementCalculatorTest {
         graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(-100);
 
-        assertThat(centerNodeIdProperty.get()).isEqualTo(100);
+        assertThat(viewPointProperty.get()).isEqualTo(100);
     }
 
     @Test
@@ -49,6 +49,6 @@ final class GraphMovementCalculatorTest {
         graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(100);
 
-        assertThat(centerNodeIdProperty.get()).isEqualTo(-100);
+        assertThat(viewPointProperty.get()).isEqualTo(-100);
     }
 }
