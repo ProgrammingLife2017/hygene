@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.graph;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.LogManager;
@@ -9,9 +10,9 @@ import org.dnacronym.hygene.coordinatesystem.DynamicGenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
-import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.genomeindex.GenomeMappingView;
+import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
@@ -40,10 +41,9 @@ public final class GraphAnnotation {
     @Inject
     private GenomeMappingView genomeMappingView;
     @Inject
+    private GenomeNavigation genomeNavigation;
+    @Inject
     private StatusBar statusBar;
-
-    private GfaFile gfaFile;
-    private DynamicGenomeIndex dynamicGenomeIndex;
 
     private String mappedGenome;
     private StringProperty sequenceIdProperty;
@@ -53,9 +53,6 @@ public final class GraphAnnotation {
 
     /**
      * Constructs a new {@link GraphAnnotation}.
-     *
-     * @param graphStore the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
-     *                   update the {@link AnnotationCollection}s
      */
     @Inject
     public GraphAnnotation(final GraphStore graphStore) {
@@ -75,17 +72,13 @@ public final class GraphAnnotation {
                 try {
                     genomeMappingView.showAndWait();
                 } catch (final UIInitialisationException e) {
-                    LOGGER.error("Unable to showAndWait genome mapping view.", e);
+                    LOGGER.error("Unable to show genome mapping view.", e);
                 }
             }
         });
 
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
-            gfaFile = newValue;
-            recalculateAnnotationPoints();
-        });
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> annotationCollection = null);
         graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
-            dynamicGenomeIndex = null;
             annotationCollection = null;
             if (newValue == null) {
                 return;
@@ -98,7 +91,7 @@ public final class GraphAnnotation {
                 try {
                     genomeMappingView.showAndWait();
                 } catch (final UIInitialisationException e) {
-                    LOGGER.error("Unable to showAndWait genome mapping view.", e);
+                    LOGGER.error("Unable to show genome mapping view.", e);
                 }
             }
         });
@@ -120,11 +113,10 @@ public final class GraphAnnotation {
 
         LOGGER.info("Building an index for " + mappedGenome);
 
-        dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, mappedGenome);
-        dynamicGenomeIndex.buildIndex();
-
-        LOGGER.info("Finished building an index for " + mappedGenome);
-        recalculateAnnotationPoints();
+        genomeNavigation.runActionOnIndexedGenome(mappedGenome, dynamicGenomeIndex -> Platform.runLater(() -> {
+            LOGGER.info("Finished building an index for " + mappedGenome);
+            recalculateAnnotationPoints(dynamicGenomeIndex);
+        }));
     }
 
     /**
@@ -187,11 +179,11 @@ public final class GraphAnnotation {
      * If the mappedGenome is not set ({@code null} or empty), it will divert to using the sequence id
      * directly of the {@link AnnotationCollection}.
      */
-    private void recalculateAnnotationPoints() {
+    private void recalculateAnnotationPoints(final DynamicGenomeIndex dynamicGenomeIndex) {
         startPoints.clear();
         endPoints.clear();
 
-        if (dynamicGenomeIndex == null || annotationCollection == null || statusBar == null) {
+        if (annotationCollection == null || statusBar == null) {
             return;
         }
 

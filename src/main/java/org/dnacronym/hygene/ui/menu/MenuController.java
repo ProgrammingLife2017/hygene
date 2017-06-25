@@ -58,8 +58,6 @@ public final class MenuController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            gffFileOpen.disableProperty().bind(genomeNavigation.getIndexedFinishedProperty().not());
-
             populateRecentFilesMenu();
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
             setGffFileChooser(initFileChooser(GraphStore.GFF_FILE_NAME, GraphStore.GFF_FILE_EXTENSION));

@@ -4,6 +4,7 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.parser.ProgressUpdater;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -59,15 +60,16 @@ public final class DynamicGenomeIndex {
     /**
      * Collects all nodes that belong to the current genome.
      *
+     * @param progressUpdater the instance that should be informed of the progress of this task
      * @throws IOException if an error occurs during IO operations
      */
-    public void buildIndex() throws IOException {
+    public void buildIndex(final ProgressUpdater progressUpdater) throws IOException {
         if (graph.getNodeArrays().length == 2) {
             return;
         }
         final GraphIterator graphIterator = new GraphIterator(gfaFile.getGraph());
 
-        collectNodesOfGenome();
+        collectNodesOfGenome(progressUpdater);
 
         findLeftMostNode(graphIterator);
 
@@ -120,10 +122,12 @@ public final class DynamicGenomeIndex {
     /**
      * Collects all nodes that belong to the current genome and stores it in {@code nodesInGenome}.
      *
+     * @param progressUpdater the instance that should be informed of the progress of this task
      * @throws IOException            if an error occurs during IO operations
      */
-    private void collectNodesOfGenome() throws IOException {
+    private void collectNodesOfGenome(final ProgressUpdater progressUpdater) throws IOException {
         final int[] counter = {0};
+        final int[] currentProgress = {-1};
         Files.lines(Paths.get(gfaFile.getFileName())).forEach(line -> {
             if (line.charAt(0) != 'S') {
                 return;
@@ -141,6 +145,12 @@ public final class DynamicGenomeIndex {
             }
 
             handleGenomeString(genomes, counter[0]);
+
+            final int newProgress = Math.round((100.0f * counter[0]) / (graph.getNodeArrays().length - 2));
+            if (newProgress > currentProgress[0]) {
+                progressUpdater.updateProgress(newProgress, "Indexing genomes...");
+                currentProgress[0] = newProgress;
+            }
         });
     }
 
