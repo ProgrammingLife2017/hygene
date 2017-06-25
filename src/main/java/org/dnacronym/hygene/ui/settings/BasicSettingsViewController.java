@@ -35,12 +35,14 @@ import java.util.stream.Collectors;
  * Settings controller for the basic settings.
  */
 public final class BasicSettingsViewController implements Initializable {
+    private static final Color MIN_COLOR = Color.ALICEBLUE;
+    private static final Color MAX_COLOR = Color.rgb(3, 73, 58);
     public static final List<Pair<String, ColorScheme>> NODE_COLOR_SCHEMES = Collections.unmodifiableList(Arrays.asList(
-            new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, Color.ALICEBLUE, Color.CORAL)),
-            new Pair<>("Fixed Color", new FixedColorScheme(Color.CORAL)),
-            new Pair<>("Number of Incoming Edges", new ColorSchemeIncomingEdges(5, Color.ALICEBLUE, Color.CORAL)),
-            new Pair<>("Number of Outgoing Edges", new ColorSchemeOutgoingEdges(5, Color.ALICEBLUE, Color.CORAL)),
-            new Pair<>("Length of Sequence", new ColorSchemeSequenceLength(5000, Color.ALICEBLUE, Color.CORAL))
+            new Pair<>("Total Number of Edges", new ColorSchemeTotalEdges(10, MIN_COLOR, MAX_COLOR)),
+            new Pair<>("Fixed Color", new FixedColorScheme(MAX_COLOR)),
+            new Pair<>("Number of Incoming Edges", new ColorSchemeIncomingEdges(5, MIN_COLOR, MAX_COLOR)),
+            new Pair<>("Number of Outgoing Edges", new ColorSchemeOutgoingEdges(5, MIN_COLOR, MAX_COLOR)),
+            new Pair<>("Length of Sequence", new ColorSchemeSequenceLength(5000, MIN_COLOR, MAX_COLOR))
     ));
 
     private static final Logger LOGGER = LogManager.getLogger(BasicSettingsViewController.class);

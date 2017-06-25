@@ -22,7 +22,7 @@
                        prefWidth="0"/>
             <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
                         minWidth="0">
-                <VBox>
+                <VBox styleClass="leftSidePane" spacing="10">
                     <TitledPane animated="false" text="Node Properties">
                         <fx:include source="node/node_properties_view.fxml"/>
                     </TitledPane>
@@ -36,9 +36,9 @@
     </left>
 
     <right>
-        <HBox>
-            <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0">
-                <VBox>
+        <HBox styleClass="sidePane">
+            <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0" styleClass="sidePane">
+                <VBox styleClass="rightSidePane" spacing="10">
                     <TitledPane animated="false" text="All Bookmarks">
                         <fx:include source="bookmark/bookmarks_table_view.fxml"/>
                     </TitledPane>
@@ -60,7 +60,6 @@
     <center>
         <VBox BorderPane.alignment="BOTTOM_LEFT">
             <fx:include source="graph/graph_view.fxml" VBox.vgrow="SOMETIMES"/>
-            <Separator maxWidth="Infinity"/>
             <fx:include source="graph/graph_navigation_view.fxml" VBox.vgrow="NEVER"/>
             <fx:include source="graph/graph_slider_view.fxml" VBox.vgrow="NEVER"/>
         </VBox>

@@ -1,3 +1,16 @@
+* {
+    -hygene: #00aa87;
+    -secondary: #e3e3e3;
+    -background: #f5f5f3;
+    -content-background: #ffffff;
+}
+
+.root {
+    -fx-accent: -hygene;
+    -fx-focus-color: -hygene;
+    -fx-base: -background;
+}
+
 .square_button {
     -fx-min-height: 45;
     -fx-min-width: 45;
@@ -10,9 +23,21 @@
     -fx-background-radius: 0;
 }
 
+Button {
+    -fx-border-color: -hygene;
+    -fx-border-width: 2px;
+    -fx-background-color: -content-background;
+    -fx-border-radius: 4px;
+}
+
+Button:hover {
+    -fx-background-color: -hygene;
+    -fx-text-fill: -content-background;
+}
+
 .side_button {
-    -fx-focus-color: transparent;
-    -fx-background-color: transparent;
+    -fx-focus-color: -content-background;
+    -fx-background-color: -content-background;
     -fx-background-radius: 0;
 }
 
@@ -24,4 +49,84 @@
 
 .mnemonic-underline {
     -fx-stroke: -fx-text-base-color;
+}
+
+MenuBar {
+    -fx-background-color: -content-background;
+    -fx-border-color: -hygene black -secondary black;
+    -fx-border-width: 4px 0 2px 0;
+}
+
+#graphNavigationButtons {
+    -fx-background-color: -content-background;
+    -fx-border-color: -secondary;
+    -fx-border-width: 2px 0 0 0;
+}
+
+#leftPane, #rightPane, TitledPane > AnchorPane {
+    -fx-background-color: -content-background;
+}
+
+.sidePane Separator .line {
+    -fx-border-color: -secondary;
+    -fx-border-width: 1 1 1 1;
+}
+
+TitledPane {
+    -fx-text-fill: -content-background;
+    -fx-start-margin: 10px;
+}
+
+TitledPane > .title {
+    -fx-background-color: -hygene;
+}
+
+TitledPane > .title > .arrow-button .arrow {
+    -fx-background-color: -content-background;
+}
+
+.sidePane {
+    -fx-background-color: -content-background;
+}
+
+.leftSidePane {
+    -fx-padding: 10px;
+    -fx-border-color: -secondary;
+    -fx-border-width: 0 2px 0 0;
+}
+
+.rightSidePane {
+    -fx-padding: 10px;
+    -fx-border-color: -secondary;
+    -fx-border-width: 0 0 0 2px;
+}
+
+#bottomBar {
+    -fx-background-color: -hygene;
+}
+
+#bottomBar Label {
+    -fx-text-fill: -content-background;
+}
+
+#sequenceViewPane AnchorPane {
+    -fx-background-color: -content-background;
+}
+
+TabPane .tab-header-area .tab-header-background {
+    -fx-background-color: -hygene;
+}
+
+TabPane .tab {
+    -fx-background-color: -secondary;
+}
+
+TabPane .tab:selected {
+    -fx-background-color: -content-background;
+    -fx-border-color: -content-background;
+    -fx-border-width: 0 0 1px 0;
+}
+
+TabPane AnchorPane {
+    -fx-background-color: -content-background;
 }
