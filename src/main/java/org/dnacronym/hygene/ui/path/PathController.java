@@ -4,20 +4,30 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -59,6 +69,25 @@ public final class PathController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         pathList.setCellFactory(CheckBoxListCell.forListView(GenomePath::selectedProperty));
+
+        pathList.setCellFactory(new Callback<ListView<GenomePath>, ListCell<GenomePath>>() {
+            @Override
+            public ListCell<GenomePath> call(ListView<GenomePath> listView) {
+                return new ListCell<GenomePath>() {
+                    @Override
+                    protected void updateItem(GenomePath genome, boolean empty) {
+                        super.updateItem(genome, empty);
+                        if (genome != null) {
+                            GenomeData genomeData = new GenomeData();
+                            genomeData.setInfo(genome);
+                            setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+
+                            setGraphic(genomeData.getBox());
+                        }
+                    }
+                };
+            }
+        });
 
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -158,5 +187,35 @@ public final class PathController implements Initializable {
         LOGGER.info("Cleared the currently selected genome.");
         pathList.itemsProperty().get().forEach(genomes -> genomes.selectedProperty().set(false));
         actionEvent.consume();
+    }
+
+    public class GenomeData {
+        @FXML
+        private HBox hBox;
+        @FXML
+        private Label genomeName;
+        @FXML
+        private CheckBox isSelected;
+
+        public GenomeData() {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/path/genomeListCell.fxml"));
+            fxmlLoader.setController(this);
+            try {
+                fxmlLoader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void setInfo(GenomePath genomePath) {
+            genomeName.setText(genomePath.getName());
+            isSelected.selectedProperty().bindBidirectional(genomePath.selectedProperty());
+            hBox.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        }
+
+        public HBox getBox() {
+            return hBox;
+        }
     }
 }
