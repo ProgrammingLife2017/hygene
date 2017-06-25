@@ -21,6 +21,7 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
@@ -123,33 +124,26 @@ public final class GraphDimensionsCalculator {
 
         viewPointProperty = new SimpleIntegerProperty(0);
         viewPointProperty.addListener((observable, oldValue, newValue) -> {
-            int difference = newValue.intValue() - oldValue.intValue();
+            final SequenceDirection direction = newValue.intValue() < oldValue.intValue()
+                    ? SequenceDirection.LEFT
+                    : SequenceDirection.RIGHT;
+
+            int difference = Math.abs(newValue.intValue() - oldValue.intValue());
             GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
 
-            if (difference > 0) {
-                // Move to right
-                while (difference > 0) {
-                    final Set<Edge> neighbours = centerNode.getOutgoingEdges();
-                    if (neighbours.isEmpty()) {
-                        return;
-                    }
+            while (difference > 0) {
+                difference--;
 
-                    centerNode = neighbours.iterator().next().getToSegment();
-                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
-                    difference--;
+                final Set<Edge> neighbours = direction.ternary(
+                        centerNode.getIncomingEdges(),
+                        centerNode.getOutgoingEdges());
+                if (neighbours.isEmpty()) {
+                    break;
                 }
-            } else {
-                // Move to left
-                while (difference < 0) {
-                    final Set<Edge> neighbours = centerNode.getIncomingEdges();
-                    if (neighbours.isEmpty()) {
-                        return;
-                    }
 
-                    centerNode = neighbours.iterator().next().getFromSegment();
-                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
-                    difference++;
-                }
+                final Edge firstEdge = neighbours.iterator().next();
+                centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
+                centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
             }
         });
         viewRadiusProperty = new SimpleIntegerProperty(1);
