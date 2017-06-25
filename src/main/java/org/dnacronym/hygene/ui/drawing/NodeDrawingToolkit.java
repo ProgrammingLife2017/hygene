@@ -17,7 +17,7 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     /**
      * Font used inside the nodes, this should always be a monospace font.
      */
-    static final String DEFAULT_NODE_FONT = "Consolas";
+    static final String DEFAULT_NODE_FONT = "Courier New";
     /**
      * Scalar for the size of the node text font as fraction of the node's height.
      */
