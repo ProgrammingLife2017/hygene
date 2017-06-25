@@ -3,9 +3,9 @@ package org.dnacronym.hygene.ui.drawing;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -19,12 +19,11 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
      * Font used inside the nodes, this should always be a monospace font.
      */
     private static final String DEFAULT_NODE_FONT = "Courier New";
-    private static final String DEFAULT_MAC_NODE_FONT = "PT Mono";
+    private static final String DEFAULT_MAC_NODE_FONT = "Andale Mono";
     /**
      * Scalar for the size of the node text font as fraction of the node's height.
      */
     static final double DEFAULT_NODE_FONT_HEIGHT_SCALAR = 0.7;
-    static final double MAC_NODE_FONT_HEIGHT_SCALAR = 0.5;
     static final int BOOKMARK_INDICATOR_HEIGHT = 10;
     static final int NODE_OUTLINE_WIDTH = 3;
     static final int SNP_HEIGHT_FACTOR = 3;
@@ -55,19 +54,15 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
 
         final double font1PHeight = text.getLayoutBounds().getHeight();
 
-        final double nodeFontScalar;
         final String font;
 
-        final String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-        if (os.contains("mac") || os.contains("darwin")) {
-            nodeFontScalar = MAC_NODE_FONT_HEIGHT_SCALAR;
+        if (SystemUtils.IS_OS_MAC) {
             font = DEFAULT_MAC_NODE_FONT;
         } else {
-            nodeFontScalar = DEFAULT_NODE_FONT_HEIGHT_SCALAR;
             font = DEFAULT_NODE_FONT;
         }
 
-        final double fontSize = nodeFontScalar * nodeHeight / font1PHeight;
+        final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
         this.nodeFont = new Font(font, fontSize);
         text.setFont(nodeFont);
 
