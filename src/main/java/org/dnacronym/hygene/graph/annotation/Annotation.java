@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -255,12 +256,23 @@ public final class Annotation {
      * @return true if the annotation details match the given query, false otherwise
      */
     public boolean matchString(final String query) {
-        return source.contains(query)
-                || type.contains(query)
-                || strand.contains(query)
-                || attributes.keySet().stream().anyMatch(key -> key.contains(query))
+        return stringContains(source, query)
+                || stringContains(type, query)
+                || stringContains(strand, query)
+                || attributes.keySet().stream().anyMatch(key -> stringContains(key, query))
                 || attributes.values().stream().anyMatch(
-                        values -> Arrays.stream(values).anyMatch(value -> value.contains(query))
+                        values -> Arrays.stream(values).anyMatch(value -> stringContains(value, query))
         );
+    }
+
+    /**
+     * Checks if given (lower cased) source string contains the given (lower cased) value.
+     *
+     * @param source the source string
+     * @param value the value to check
+     * @return true if source contains value
+     */
+    private boolean stringContains(final String source, final String value) {
+        return source.toLowerCase(Locale.US).contains(value.toLowerCase(Locale.US));
     }
 }
