@@ -138,10 +138,12 @@ public final class GraphDimensionsCalculator {
                 final Set<Edge> neighbours = direction.ternary(
                         centerNode.getIncomingEdges(),
                         centerNode.getOutgoingEdges());
-                assert !neighbours.isEmpty();
-
                 final Edge firstEdge = neighbours.iterator().next();
                 centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
+                if (direction.ternary(centerNode.getIncomingEdges(), centerNode.getOutgoingEdges()).isEmpty()) {
+                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+                    centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+                }
             }
 
             // Set center node
