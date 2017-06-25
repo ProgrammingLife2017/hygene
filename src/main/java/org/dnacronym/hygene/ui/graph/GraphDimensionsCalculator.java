@@ -47,7 +47,7 @@ import java.util.Set;
  * @see GraphDimensionsCalculator
  * @see CenterPointQuery
  */
-@SuppressWarnings("PMD.TooManyFields") // This class is tightly coupled, and does not need to be divided further.
+@SuppressWarnings({"PMD.TooManyFields", "PMD.ExcessiveImports"})
 public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
@@ -122,7 +122,7 @@ public final class GraphDimensionsCalculator {
         });
 
         viewPointProperty = new SimpleIntegerProperty(0);
-        viewPointProperty.addListener(((observable, oldValue, newValue) -> {
+        viewPointProperty.addListener((observable, oldValue, newValue) -> {
             int difference = newValue.intValue() - oldValue.intValue();
             GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
 
@@ -151,7 +151,7 @@ public final class GraphDimensionsCalculator {
                     difference++;
                 }
             }
-        }));
+        });
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
             calculate(subgraph);
