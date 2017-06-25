@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -85,6 +86,8 @@ public final class BookmarkCreateController implements Initializable {
 
     /**
      * When the user saves the bookmark.
+     * <p>
+     * Hides the owner {@link javafx.stage.Window} afterwards.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -106,6 +109,9 @@ public final class BookmarkCreateController implements Initializable {
             bookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
                     description.getText()));
             description.clear();
+
+            final Node source = (Node) actionEvent.getSource();
+            source.getScene().getWindow().hide();
         }
 
         actionEvent.consume();

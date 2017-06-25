@@ -36,10 +36,7 @@
             <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0" styleClass="sidePane">
                 <VBox styleClass="rightSidePane" spacing="10">
                     <TitledPane animated="false" text="All Bookmarks">
-                        <VBox>
-                            <fx:include source="bookmark/bookmarks_table_view.fxml"/>
-                            <fx:include source="bookmark/bookmark_create_view.fxml"/>
-                        </VBox>
+                        <fx:include source="bookmark/bookmarks_table_view.fxml"/>
                     </TitledPane>
                     <TitledPane animated="false" text="Query" expanded="false">
                         <fx:include source="query/query.fxml"/>

@@ -1,12 +1,21 @@
 package org.dnacronym.hygene.ui.bookmark;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.node.GfaNode;
+import org.dnacronym.hygene.ui.genomeindex.GenomeMappingController;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
+import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -17,10 +26,15 @@ import java.util.ResourceBundle;
  * Controller for showing of {@link SimpleBookmark}s.
  */
 public final class BookmarkTableController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(GenomeMappingController.class);
     private static final int DESCRIPTION_TEXT_PADDING = 10;
 
     @Inject
     private BookmarkStore bookmarkStore;
+    @Inject
+    private GraphVisualizer graphVisualizer;
+    @Inject
+    private BookmarkCreateView bookmarkCreateView;
 
     /**
      * Table which shows the bookmarks of the current graph in view. If a user double clicks on a row, the current
@@ -37,6 +51,8 @@ public final class BookmarkTableController implements Initializable {
     private TableColumn<SimpleBookmark, Number> radius;
     @FXML
     private TableColumn<SimpleBookmark, String> description;
+    @FXML
+    private Button createBookmarkButton;
 
 
     @Override
@@ -75,5 +91,26 @@ public final class BookmarkTableController implements Initializable {
         });
 
         bookmarksTable.setItems(bookmarkStore.getSimpleBookmarks());
+
+        final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
+        createBookmarkButton.disableProperty().bind(selectedNodeProperty.isNull());
+        selectedNodeProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                createBookmarkButton.setText("Create Bookmark (Select node first)");
+            } else {
+                createBookmarkButton.setText("Create Bookmark for Node " + newValue.getSegmentIds());
+            }
+        });
+    }
+
+    @FXML
+    void createBookmarkAction(final ActionEvent actionEvent) {
+        try {
+            bookmarkCreateView.showAndWait();
+        } catch (final UIInitialisationException e) {
+            LOGGER.error("Unable to show the bookmark create view.", e);
+        }
+
+        actionEvent.consume();
     }
 }
