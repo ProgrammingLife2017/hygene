@@ -180,15 +180,23 @@ public final class GraphDimensionsCalculator {
         final int[] tempMaxY = {centerNode.getYPosition()};
 
         final List<Node> neighbours = new LinkedList<>();
+
+        this.minX = unscaledCenterX - viewRadiusProperty.get() / 2;
+        this.maxX = unscaledCenterX + viewRadiusProperty.get() / 2;
+
         subgraph.getNodes().forEach(node -> {
             neighbours.add(node);
+
+            final double nodeXPosition = computeXPosition(node);
+
+            if (nodeXPosition < 0 || nodeXPosition > canvasDimension.getWidth()) {
+                return;
+            }
 
             tempMinY[0] = Math.min(tempMinY[0], node.getYPosition());
             tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
-        this.minX = unscaledCenterX - viewRadiusProperty.get() / 2;
-        this.maxX = unscaledCenterX + viewRadiusProperty.get() / 2;
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
