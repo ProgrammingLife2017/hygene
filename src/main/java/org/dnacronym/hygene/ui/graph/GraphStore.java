@@ -4,8 +4,8 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.dnacronym.hygene.parser.GfaFile;
-import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.parser.GfaParseException;
+import org.dnacronym.hygene.parser.GffFile;
 import org.dnacronym.hygene.parser.GffParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -26,8 +26,19 @@ public final class GraphStore {
     public static final String GFF_FILE_EXTENSION = "gff";
     public static final String GFF_FILE_NAME = "GFF";
 
-    private final ObjectProperty<GfaFile> gfaFileProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<GffFile> gffFileProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<GfaFile> gfaFileProperty;
+    private final ObjectProperty<GffFile> gffFileProperty;
+
+
+    /**
+     * Creates an instance of {@link GraphStore}.
+     */
+    public GraphStore() {
+        gfaFileProperty = new SimpleObjectProperty<>();
+        gffFileProperty = new SimpleObjectProperty<>();
+
+        getGfaFileProperty().addListener((observable, oldValue, newValue) -> gffFileProperty.set(null));
+    }
 
 
     /**

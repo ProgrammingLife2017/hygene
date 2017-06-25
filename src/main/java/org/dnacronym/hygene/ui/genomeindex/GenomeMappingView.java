@@ -49,7 +49,9 @@ public final class GenomeMappingView {
      * @throws UIInitialisationException if the UI has not been initialized
      */
     public void showAndWait() throws UIInitialisationException {
-        stage.initOwner(Hygene.getInstance().getPrimaryStage());
+        if (stage.getOwner() == null) {
+            stage.initOwner(Hygene.getInstance().getPrimaryStage());
+        }
 
         stage.showAndWait();
     }

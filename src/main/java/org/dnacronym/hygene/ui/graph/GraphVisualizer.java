@@ -232,11 +232,10 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawSequence(nodeX, nodeY, nodeWidth, sequence);
         }
 
-        gfaNode.getSegments().forEach(segment -> nodeDrawingToolkit.drawAnnotations(
-                nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations)));
-
-        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
-                nodeHeightProperty.get()));
+        gfaNode.getSegments().forEach(segment -> {
+            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations));
+            rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+        });
     }
 
     /**

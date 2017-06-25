@@ -11,12 +11,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphAnnotation;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.path.GenomePath;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -88,10 +90,16 @@ public final class GenomeMappingController implements Initializable {
      */
     @FXML
     void okAction(final ActionEvent actionEvent) {
-        graphAnnotation.setMappedGenome(genomeChoice.getText());
         if (genomeChoice.getText().isEmpty()) {
             (new WarningDialogue("Please select a mapping.")).show();
             return;
+        }
+
+        try {
+            graphAnnotation.setMappedGenome(genomeChoice.getText());
+        } catch (final IOException e) {
+            LOGGER.error("Unable to build an index for genome " + genomeChoice.getText() + ".", e);
+            new ErrorDialogue(e).show();
         }
 
         final Node source = (Node) actionEvent.getSource();

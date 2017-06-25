@@ -5,17 +5,18 @@ import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
+import org.dnacronym.hygene.coordinatesystem.DynamicGenomeIndex;
 import org.dnacronym.hygene.coordinatesystem.GenomePoint;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
+import org.dnacronym.hygene.parser.GfaFile;
+import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.genomeindex.GenomeMappingView;
-import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.progressbar.StatusBar;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
 import javax.inject.Inject;
-import java.sql.SQLException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,37 +34,35 @@ public final class GraphAnnotation {
     private static final Logger LOGGER = LogManager.getLogger(GraphAnnotation.class);
     private static final int PROGRESS_UPDATE_INTERVAL = 100;
 
-    private final Map<Annotation, GenomePoint> startPoints;
-    private final Map<Annotation, GenomePoint> endPoints;
+    private final Map<Annotation, Integer> startPoints;
+    private final Map<Annotation, Integer> endPoints;
 
     @Inject
     private GenomeMappingView genomeMappingView;
     @Inject
     private StatusBar statusBar;
 
+    private GfaFile gfaFile;
+    private DynamicGenomeIndex dynamicGenomeIndex;
+
     private String mappedGenome;
     private StringProperty sequenceIdProperty;
 
-    private @Nullable GenomeIndex genomeIndex;
     private @Nullable AnnotationCollection annotationCollection;
 
 
     /**
      * Constructs a new {@link GraphAnnotation}.
      *
-     * @param genomeNavigation the {@link GenomeNavigation} used to retrieve
-     *                         {@link org.dnacronym.hygene.coordinatesystem.GenomeIndex}es
-     * @param graphStore       the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
-     *                         update the {@link AnnotationCollection}s
+     * @param graphStore the {@link GraphStore} whose {@link org.dnacronym.hygene.parser.GffFile}s are used to
+     *                   update the {@link AnnotationCollection}s
      */
     @Inject
-    public GraphAnnotation(final GenomeNavigation genomeNavigation, final GraphStore graphStore) {
+    public GraphAnnotation(final GraphStore graphStore) {
         this.startPoints = new HashMap<>();
         this.endPoints = new HashMap<>();
         this.sequenceIdProperty = new SimpleStringProperty();
 
-        Optional.ofNullable(genomeNavigation.getGenomeIndexProperty().get())
-                .ifPresent(newGenomeIndex -> genomeIndex = newGenomeIndex);
         Optional.ofNullable(graphStore.getGffFileProperty().get()).ifPresent(gffFile -> {
             annotationCollection = gffFile.getAnnotationCollection();
             if (annotationCollection == null) {
@@ -80,13 +79,18 @@ public final class GraphAnnotation {
                 }
             }
         });
-        recalculateAnnotationPoints();
 
-        genomeNavigation.getGenomeIndexProperty().addListener((observable, oldValue, newValue) -> {
-            genomeIndex = newValue;
+        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> {
+            gfaFile = newValue;
             recalculateAnnotationPoints();
         });
         graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
+            dynamicGenomeIndex = null;
+            annotationCollection = null;
+            if (newValue == null) {
+                return;
+            }
+
             annotationCollection = newValue.getAnnotationCollection();
             sequenceIdProperty.set(annotationCollection.getSequenceId());
 
@@ -97,20 +101,30 @@ public final class GraphAnnotation {
                     LOGGER.error("Unable to showAndWait genome mapping view.", e);
                 }
             }
-
-            recalculateAnnotationPoints();
         });
     }
 
     /**
      * Sets the mapped genome.
      * <p>
-     * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file.
+     * This genome represents what the genome of the current loaded GFF file should map onto in the GFA file. This also
+     * prompts the internal {@link DynamicGenomeIndex} to re-index the genomes based on the given genome and the current
+     * GFA file.<br>
+     * Afterwards recalculates the annotation start and end points.
      *
      * @param mappedGenome the genome in the GFA the GFF genome should map onto
+     * @throws IOException if unable to build an index for the given mapped genome
      */
-    public void setMappedGenome(final String mappedGenome) {
+    public void setMappedGenome(final String mappedGenome) throws IOException {
         this.mappedGenome = mappedGenome;
+
+        LOGGER.info("Building an index for " + mappedGenome);
+
+        dynamicGenomeIndex = new DynamicGenomeIndex(gfaFile, mappedGenome);
+        dynamicGenomeIndex.buildIndex();
+
+        LOGGER.info("Finished building an index for " + mappedGenome);
+        recalculateAnnotationPoints();
     }
 
     /**
@@ -149,8 +163,8 @@ public final class GraphAnnotation {
                         return false;
                     }
 
-                    final int annotationStart = startPoints.get(annotation).getNodeId();
-                    final int annotationEnd = endPoints.get(annotation).getNodeId();
+                    final int annotationStart = startPoints.get(annotation);
+                    final int annotationEnd = endPoints.get(annotation);
 
                     return rangeStart < annotationEnd && rangeEnd >= annotationStart;
                 })
@@ -177,21 +191,19 @@ public final class GraphAnnotation {
         startPoints.clear();
         endPoints.clear();
 
-        if (genomeIndex == null || annotationCollection == null || statusBar == null) {
+        if (dynamicGenomeIndex == null || annotationCollection == null || statusBar == null) {
             return;
         }
 
-        final String genome = mappedGenome == null || mappedGenome.isEmpty()
-                ? annotationCollection.getSequenceId()
-                : mappedGenome;
-
         statusBar.monitorTask(progressUpdater -> {
-            final int[] position = {0};
+            final int[] position = {1};
             final int total = annotationCollection.getAnnotations().size();
+            LOGGER.info("Started placing " + total + " annotations");
+
             annotationCollection.getAnnotations().forEach(annotation -> {
                 if (position[0] % PROGRESS_UPDATE_INTERVAL == 0) {
                     progressUpdater.updateProgress(
-                            Math.round(100f * position[0] / total),
+                            Math.round(Math.max(5, 100f * position[0] / total)),
                             "Placing annotation " + position[0] + "/" + total
                     );
                 }
@@ -199,23 +211,26 @@ public final class GraphAnnotation {
                 final int startOffset = annotation.getStart();
                 final int endOffset = annotation.getEnd();
 
-                try {
-                    genomeIndex.getGenomePoint(genome, startOffset)
-                            .ifPresent(genomePoint -> {
-                                annotation.setStartNodeId(genomePoint.getNodeId());
-                                startPoints.put(annotation, genomePoint);
-                            });
-                    genomeIndex.getGenomePoint(genome, endOffset)
-                            .ifPresent(genomePoint -> {
-                                annotation.setEndNodeId(genomePoint.getNodeId());
-                                endPoints.put(annotation, genomePoint);
-                            });
-                } catch (final SQLException e) {
-                    LOGGER.error("Could not add an annotation.", e);
+                final int startNodeId = dynamicGenomeIndex.getNodeByBase(startOffset);
+                final int endNodeId = dynamicGenomeIndex.getNodeByBase(endOffset);
+
+                if (startNodeId != -1 && endNodeId != -1) {
+                    annotation.setStartNodeId(startNodeId);
+                    annotation.setEndNodeId(endNodeId);
+
+                    startPoints.put(annotation, startNodeId);
+                    endPoints.put(annotation, endNodeId);
                 }
 
                 position[0]++;
             });
+
+            if (position[0] < total) {
+                new WarningDialogue("Unable to place " + (total - position[0]) + " annotations.").show();
+            }
+
+            LOGGER.info("Finished placing " + position[0] + " of " + total + " annotations");
+            progressUpdater.updateProgress(StatusBar.PROGRESS_MAX, "Finished placing annotations");
         });
     }
 }
