@@ -45,8 +45,6 @@ public final class MenuController implements Initializable {
     private SettingsView settingsView;
 
     @FXML
-    private MenuBar menuBar;
-    @FXML
     private Menu recentFilesMenu;
 
 
