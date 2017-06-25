@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.path;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -12,6 +13,7 @@ public final class GenomePath {
     private final String name;
     private final String index;
     private final SimpleBooleanProperty selected;
+    private Color color;
 
 
     /**
@@ -66,5 +68,9 @@ public final class GenomePath {
     @Override
     public String toString() {
         return name;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
