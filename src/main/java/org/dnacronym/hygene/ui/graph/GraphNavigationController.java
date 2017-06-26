@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
  * Controller for the buttons of graph navigation.
  */
 public final class GraphNavigationController implements Initializable {
+    private static final int GO_AMOUNT = 1000;
     private static final int JUMP_AMOUNT = 100;
     private static final int ZOOM_AMOUNT = 2000;
 
@@ -40,7 +41,7 @@ public final class GraphNavigationController implements Initializable {
     @FXML
     void goLeftLargeAction(final ActionEvent actionEvent) {
         graphDimensionsCalculator.getViewPointProperty().set(
-                graphDimensionsCalculator.getViewPointProperty().get() - 100 * JUMP_AMOUNT);
+                graphDimensionsCalculator.getViewPointProperty().get() - GO_AMOUNT * JUMP_AMOUNT);
         actionEvent.consume();
     }
 
@@ -52,7 +53,7 @@ public final class GraphNavigationController implements Initializable {
     @FXML
     void goLeftAction(final ActionEvent actionEvent) {
         graphDimensionsCalculator.getViewPointProperty().set(
-                graphDimensionsCalculator.getViewPointProperty().get() - 100);
+                graphDimensionsCalculator.getViewPointProperty().get() - GO_AMOUNT);
         actionEvent.consume();
     }
 
@@ -64,7 +65,7 @@ public final class GraphNavigationController implements Initializable {
     @FXML
     void goRightAction(final ActionEvent actionEvent) {
         graphDimensionsCalculator.getViewPointProperty().set(
-                graphDimensionsCalculator.getViewPointProperty().get() + 100);
+                graphDimensionsCalculator.getViewPointProperty().get() + GO_AMOUNT);
         actionEvent.consume();
     }
 
@@ -76,7 +77,7 @@ public final class GraphNavigationController implements Initializable {
     @FXML
     void goRightLargeAction(final ActionEvent actionEvent) {
         graphDimensionsCalculator.getViewPointProperty().set(
-                graphDimensionsCalculator.getViewPointProperty().get() + 100 * JUMP_AMOUNT);
+                graphDimensionsCalculator.getViewPointProperty().get() + GO_AMOUNT * JUMP_AMOUNT);
         actionEvent.consume();
     }
 
