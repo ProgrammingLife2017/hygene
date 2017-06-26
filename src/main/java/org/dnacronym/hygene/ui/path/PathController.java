@@ -36,7 +36,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Controller for the path highlighting menu.
  */
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({"PMD.ExcessiveImports", "squid:MaximumInheritanceDepth"})
 public final class PathController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(PathController.class);
 
