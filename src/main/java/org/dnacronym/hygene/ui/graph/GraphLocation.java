@@ -1,7 +1,10 @@
 package org.dnacronym.hygene.ui.graph;
 
+import com.google.common.eventbus.Subscribe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.core.HygeneEventBus;
+import org.dnacronym.hygene.event.GfaFileWillChangeEvent;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.FileGraphLocation;
@@ -27,8 +30,12 @@ public class GraphLocation {
             loadFileGraphLocation(graphStore.getGfaFileProperty().get());
         }
 
+
         graphStore.getGfaFileProperty().addListener((observable, old, newValue) -> loadFileGraphLocation(newValue));
+
+        HygeneEventBus.getInstance().register(this);
     }
+
 
     /**
      * Stores the current position in the database.
@@ -57,11 +64,24 @@ public class GraphLocation {
         }
 
         try {
+            if (!fileGraphLocation.locationIsStored()) {
+                return;
+            }
             graphDimensionsCalculator.getCenterNodeIdProperty().set(fileGraphLocation.getCenterNodeId());
             graphDimensionsCalculator.getRadiusProperty().set(fileGraphLocation.getRadius());
         } catch (final SQLException e) {
             LOGGER.error("Location could not be restored", e);
         }
+    }
+
+    /**
+     * Listens for {@link GfaFileWillChangeEvent}s.
+     *
+     * @param event the event
+     */
+    @Subscribe
+    public void onGraphChange(final GfaFileWillChangeEvent event) {
+        store();
     }
 
     /**
