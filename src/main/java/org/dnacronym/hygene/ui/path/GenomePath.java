@@ -1,7 +1,10 @@
 package org.dnacronym.hygene.ui.path;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -10,10 +13,13 @@ import javafx.scene.paint.Color;
  * This class is used for marking genomes as selected.
  */
 public final class GenomePath {
+    private static final Logger LOGGER = LogManager.getLogger(GenomePath.class);
+
+
     private final String name;
     private final String index;
     private final SimpleBooleanProperty selected;
-    private Color color;
+    private final SimpleObjectProperty<Color> color;
 
 
     /**
@@ -26,6 +32,7 @@ public final class GenomePath {
         this.name = name;
         this.index = index;
         this.selected = new SimpleBooleanProperty();
+        this.color = new SimpleObjectProperty<>();
     }
 
 
@@ -75,7 +82,7 @@ public final class GenomePath {
      *
      * @return the color
      */
-    public Color getColor() {
+    public SimpleObjectProperty<Color> getColor() {
         return color;
     }
 
@@ -85,6 +92,7 @@ public final class GenomePath {
      * @param color the color
      */
     public void setColor(Color color) {
-        this.color = color;
+        LOGGER.info("Changing color of " + getName() + " to " + getColor().get());
+        this.color.set(color);
     }
 }
