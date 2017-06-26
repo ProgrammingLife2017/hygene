@@ -1,7 +1,6 @@
 package org.dnacronym.hygene.ui.node;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -105,21 +104,6 @@ public final class NodePropertiesController implements Initializable {
         leftNeighbours.setText("");
         rightNeighbours.setText("");
         position.setText("");
-    }
-
-    /**
-     * When the user clicks on the focus {@link javafx.scene.control.Button}.
-     *
-     * @param actionEvent the {@link ActionEvent}
-     */
-    @FXML
-    void onFocusAction(final ActionEvent actionEvent) {
-        final GfaNode selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
-        if (selectedNode != null) {
-            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getSegmentIds().get(0));
-        }
-
-        actionEvent.consume();
     }
 
     /**
