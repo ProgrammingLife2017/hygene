@@ -127,6 +127,21 @@ public abstract class Node implements LayoutableNode {
         return colorScheme.calculateColor(this);
     }
 
+    public static final Color baseToColor(final char base) {
+        switch (base) {
+            case 'A':
+                return Color.RED;
+            case 'T':
+                return Color.RED;
+            case 'C':
+                return Color.BLUE;
+            case 'G':
+                return Color.BLUE;
+            default:
+                return Color.GRAY;
+        }
+    }
+
 
     @Override
     public final boolean equals(final @Nullable Object o) {

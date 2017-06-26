@@ -1,6 +1,7 @@
 package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,10 +29,10 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
             getGraphicsContext().setFill(color);
             getGraphicsContext().fillPolygon(getRhombusX(snpX, snpWidth), getRhombusY(snpY), 4);
         } else {
-            getGraphicsContext().setFill(baseToColor(sequences.get(0)));
+            getGraphicsContext().setFill(Node.baseToColor(sequences.get(0)));
             getGraphicsContext().fillPolygon(getRhombusTopX(snpX, snpWidth), getRhombusTopY(snpY), 3);
 
-            getGraphicsContext().setFill(baseToColor(sequences.get(1)));
+            getGraphicsContext().setFill(Node.baseToColor(sequences.get(1)));
             getGraphicsContext().fillPolygon(getRhombusBottomX(snpX, snpWidth), getRhombusBottomY(snpY), 3);
         }
     }
@@ -189,20 +190,5 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
                 .map(sequence -> sequence.trim())
                 .map(sequence -> sequence.charAt(0))
                 .collect(Collectors.toList());
-    }
-
-    private Color baseToColor(final char base) {
-        switch (base) {
-            case 'A':
-                return Color.RED;
-            case 'T':
-                return Color.RED;
-            case 'C':
-                return Color.BLUE;
-            case 'G':
-                return Color.BLUE;
-            default:
-                return Color.GRAY;
-        }
     }
 }
