@@ -9,41 +9,45 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
-<AnchorPane fx:id="bookmarkCreatePane" styleClass="sidePane" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkCreateController">
-    <GridPane hgap="5.0" vgap="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+<AnchorPane fx:id="bookmarkCreatePane" styleClass="sidePane" stylesheets="@../css/default_style.css"
+            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.bookmark.BookmarkCreateController">
+    <GridPane hgap="5.0" vgap="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="110.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="110.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="110.0" />
-            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="110.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="110.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="110.0"/>
+            <ColumnConstraints hgrow="SOMETIMES"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
+            <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES"/>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES"/>
+            <RowConstraints vgrow="SOMETIMES"/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
         </rowConstraints>
         <children>
-            <Label text="Description" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-            <TextArea fx:id="description" prefHeight="50.0" prefWidth="100.0" promptText="Descripition of the node" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+            <Label text="Description" GridPane.rowIndex="4" GridPane.valignment="TOP"/>
+            <TextArea fx:id="description" prefHeight="50.0" prefWidth="100.0" promptText="Descripition of the node"
+                      wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
                 <tooltip>
-                    <Tooltip text="Description of the current bookmark." />
+                    <Tooltip text="Description of the current bookmark."/>
                 </tooltip>
             </TextArea>
-            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveAction" text="Save" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveAction" text="Save"
+                    GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                 <tooltip>
-                    <Tooltip text="Save the bookmark to file." />
+                    <Tooltip text="Save the bookmark to file."/>
                 </tooltip>
             </Button>
-            <Label text="Node position" />
-            <TextField fx:id="baseOffset" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Radius" GridPane.columnIndex="1" />
-            <Label fx:id="radius" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Base offset" GridPane.columnIndex="2" />
-            <Label fx:id="nodePosition" text="--" GridPane.rowIndex="1" />
+            <Label text="Node position"/>
+            <TextField fx:id="baseOffset" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <Label text="Radius" GridPane.columnIndex="1"/>
+            <Label fx:id="radius" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Base offset" GridPane.columnIndex="2"/>
+            <Label fx:id="nodePosition" text="--" GridPane.rowIndex="1"/>
         </children>
     </GridPane>
 </AnchorPane>

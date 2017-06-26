@@ -35,6 +35,14 @@ Button:hover {
     -fx-text-fill: -content-background;
 }
 
+.important_button {
+    -fx-border-color: -hygene;
+    -fx-border-width: 2px;
+    -fx-background-color: -secondary;
+    -fx-border-radius: 4px;
+    -fx-text-fill: -content-background;
+}
+
 .side_button {
     -fx-focus-color: -content-background;
     -fx-background-color: -content-background;
