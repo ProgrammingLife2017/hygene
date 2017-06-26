@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * Toolkit used to draw SNPs; single-nucleotide polymorphisms.
  */
 public final class SnpDrawingToolkit extends NodeDrawingToolkit {
+
     /**
      * Fills a rhombus based on the node position and width, with the set {@link Color} fill.
      *
@@ -54,21 +55,49 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     @Override
     public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
                             final List<Color> genomeColors) {
-        assert genomeColors.size() == 2;
-
         final double centerY = snpY + getNodeHeight() / 2;
 
-        getGraphicsContext().setFill(genomeColors.get(0));
-        getGraphicsContext().fillPolygon(
-                new double[] {snpX, snpX + snpWidth / 2, snpX + snpWidth},
-                new double[] {centerY, centerY - getSnpHeight() / 2, centerY},
-                3);
+        EdgeDrawingToolkit nodeDrawingToolkit = new EdgeDrawingToolkit();
+        nodeDrawingToolkit.setGraphicsContext(getGraphicsContext());
+        nodeDrawingToolkit.drawEdge(snpX, centerY, snpX + snpWidth, centerY, getSnpHeight() / 8, genomeColors);
+    }
 
-        getGraphicsContext().setFill(genomeColors.get(1));
-        getGraphicsContext().fillPolygon(
-                new double[] {snpX, snpX + snpWidth / 2, snpX + snpWidth},
-                new double[] {centerY, centerY + getSnpHeight() / 2, centerY},
-                3);
+    public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
+                            final List<Color> topGenomeColors, final List<Color> bottomGenomeColors) {
+        final double centerY = snpY + getNodeHeight() / 2;
+
+        EdgeDrawingToolkit nodeDrawingToolkit = new EdgeDrawingToolkit();
+        nodeDrawingToolkit.setGraphicsContext(getGraphicsContext());
+        nodeDrawingToolkit.drawEdge(
+                snpX,
+                centerY,
+                snpX + snpWidth / 2,
+                centerY + getSnpHeight() / 2,
+                getSnpHeight() / 8,
+                topGenomeColors);
+        nodeDrawingToolkit.drawEdge(
+                snpX + snpWidth / 2,
+                centerY + getSnpHeight() / 2,
+                snpX + snpWidth,
+                centerY,
+                getSnpHeight() / 8,
+                topGenomeColors);
+
+        nodeDrawingToolkit.drawEdge(
+                snpX,
+                centerY,
+                snpX + snpWidth / 2,
+                centerY - getSnpHeight() / 2,
+                getSnpHeight() / 8,
+                bottomGenomeColors);
+        nodeDrawingToolkit.drawEdge(
+                snpX + snpWidth / 2,
+                centerY - getSnpHeight() / 2,
+                snpX + snpWidth,
+                centerY,
+                getSnpHeight() / 8,
+                bottomGenomeColors);
+
     }
 
     /**

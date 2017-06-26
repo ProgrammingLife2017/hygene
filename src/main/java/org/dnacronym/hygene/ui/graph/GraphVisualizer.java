@@ -210,7 +210,14 @@ public final class GraphVisualizer {
         } else {
             nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), "");
         }
-        nodeDrawingToolkit.drawGenomes(nodeX, nodeY, nodeWidth, computeNodeColors(gfaNode));
+
+        if (node instanceof AggregateSegment) {
+            final List<Color> topColors = computeNodeColors(gfaNode.getSegments().get(0));
+            final List<Color> bottomColors = computeNodeColors(gfaNode.getSegments().get(1));
+            ((SnpDrawingToolkit) nodeDrawingToolkit).drawGenomes(nodeX, nodeY, nodeWidth, topColors, bottomColors);
+        } else {
+            nodeDrawingToolkit.drawGenomes(nodeX, nodeY, nodeWidth, computeNodeColors(gfaNode));
+        }
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
                 .anyMatch(segmentId -> selectedSegmentProperty.get().containsSegment(segmentId))) {
@@ -263,12 +270,6 @@ public final class GraphVisualizer {
                         nodeColors.add(selectedGenomePaths.get(genome));
                     }
                 }
-            }
-        }
-
-        if (nodeColors.isEmpty()) {
-            for (final Segment segment : gfaNode.getSegments()) {
-                nodeColors.add(segment.getColor());
             }
         }
 
