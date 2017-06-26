@@ -4,8 +4,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.node.GfaNode;
@@ -27,18 +27,19 @@ public final class NodePropertiesController implements Initializable {
     private GraphDimensionsCalculator graphDimensionsCalculator;
     @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
+    private SequenceVisualizer sequenceVisualizer;
 
     @FXML
-    private TextField nodeId;
+    private Label nodeId;
     @FXML
-    private TextField sequencePreview;
-
+    private Label sequencePreview;
     @FXML
-    private TextField leftNeighbours;
+    private Label leftNeighbours;
     @FXML
-    private TextField rightNeighbours;
+    private Label rightNeighbours;
     @FXML
-    private TextField position;
+    private Label position;
 
 
     @Override
@@ -99,11 +100,11 @@ public final class NodePropertiesController implements Initializable {
      * Clear all text fields used to describe node properties.
      */
     private void clearNodeFields() {
-        nodeId.clear();
-        sequencePreview.clear();
-        leftNeighbours.clear();
-        rightNeighbours.clear();
-        position.clear();
+        nodeId.setText("");
+        sequencePreview.setText("");
+        leftNeighbours.setText("");
+        rightNeighbours.setText("");
+        position.setText("");
     }
 
     /**
@@ -119,5 +120,16 @@ public final class NodePropertiesController implements Initializable {
         }
 
         actionEvent.consume();
+    }
+
+    /**
+     * When the user clicks on the view sequence {@link javafx.scene.control.Button}.
+     *
+     * @param event the {@link MouseEvent}
+     */
+    @FXML
+    void onViewSequence(final MouseEvent event) {
+        sequenceVisualizer.getVisibleProperty().set(!sequenceVisualizer.getVisibleProperty().get());
+        event.consume();
     }
 }
