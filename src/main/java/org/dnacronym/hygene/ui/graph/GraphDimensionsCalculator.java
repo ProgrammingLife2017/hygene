@@ -228,8 +228,8 @@ public final class GraphDimensionsCalculator {
 
         final List<Node> neighbours = new LinkedList<>();
 
-        this.minX = unscaledCenterX - viewRadiusProperty.get() / 2;
-        this.maxX = unscaledCenterX + viewRadiusProperty.get() / 2;
+        this.minX = viewPointProperty.get() - viewRadiusProperty.get() / 2;
+        this.maxX = viewPointProperty.get() + viewRadiusProperty.get() / 2;
 
         subgraph.getNodes().forEach(node -> {
             neighbours.add(node);
