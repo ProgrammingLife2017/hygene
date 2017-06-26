@@ -214,9 +214,10 @@ public final class PathController implements Initializable {
         public void setInfo(GenomePath genomePath) {
             genomeName.setText(genomePath.getName());
             isSelected.selectedProperty().bindBidirectional(genomePath.selectedProperty());
-            wrapper.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY, new Insets(5,5,5,5))));
-            hBox.setBackground(Background.EMPTY);
-            hBox.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY, new Insets(5,5,5,5))));
+            hBox.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY, Insets.EMPTY)));
+//            hBox.setBackground(Background.EMPTY);
+//            wrapper.setBackground(Background.EMPTY);
+//            hBox.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY, new Insets(5,5,5,5))));
         }
 
         public HBox getBox() {
