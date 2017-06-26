@@ -122,6 +122,19 @@ public final class GraphDimensionsCalculator {
 
         viewPointProperty = new SimpleLongProperty(2000);
         viewPointProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue.longValue() < 0) {
+                viewPointProperty.set(0);
+                return;
+            }
+            final int sentinelId = getGraphProperty().get().getNodeArrays().length - 1;
+            final long sentinelEndPosition = (long) FafospLayerer.LAYER_WIDTH
+                    * getGraphProperty().get().getUnscaledXPosition(sentinelId)
+                    + getGraphProperty().get().getLength(sentinelId);
+            if (newValue.longValue() > sentinelEndPosition) {
+                viewPointProperty.set(sentinelEndPosition);
+                return;
+            }
+
             final Graph graph = getGraphProperty().get();
             final SequenceDirection direction = newValue.longValue() < oldValue.longValue()
                     ? SequenceDirection.LEFT
