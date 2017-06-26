@@ -36,7 +36,7 @@ final class SegmentDrawingToolkitTest {
     @Test
     void testNodeHeight() {
         segmentDrawingToolkit.setNodeHeight(10);
-        segmentDrawingToolkit.draw(0, 0, 10, Color.BLACK);
+        segmentDrawingToolkit.draw(0, 0, 10, Color.BLACK, "");
 
         verify(graphicsContext).fillRoundRect(
                 anyDouble(), anyDouble(), anyDouble(), eq(10.0), anyDouble(), anyDouble());
@@ -44,7 +44,7 @@ final class SegmentDrawingToolkitTest {
 
     @Test
     void testNodeColorDraw() {
-        segmentDrawingToolkit.draw(10, 20, 30, Color.ALICEBLUE);
+        segmentDrawingToolkit.draw(10, 20, 30, Color.ALICEBLUE, "");
 
         verify(graphicsContext).setFill(eq(Color.ALICEBLUE));
         verify(graphicsContext).fillRoundRect(

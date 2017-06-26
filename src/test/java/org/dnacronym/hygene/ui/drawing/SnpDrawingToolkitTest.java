@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link SegmentDrawingToolkit}.
  */
-final class SnpDrawingToolkitTest {
+final class SnpDrawingToolkitTest extends UITestBase {
     private NodeDrawingToolkit snpDrawingToolkit;
 
     @Mock
@@ -29,7 +30,8 @@ final class SnpDrawingToolkitTest {
 
 
     @BeforeEach
-    void beforeEach() {
+    @Override
+    public void beforeEach() {
         MockitoAnnotations.initMocks(this);
 
         snpDrawingToolkit = new SnpDrawingToolkit();
@@ -40,7 +42,7 @@ final class SnpDrawingToolkitTest {
     @Test
     void testNodeHeight() {
         snpDrawingToolkit.setNodeHeight(10);
-        snpDrawingToolkit.draw(0, 0, 10, Color.BLACK);
+        snpDrawingToolkit.draw(0, 0, 10, Color.BLACK, "");
 
         verify(graphicsContext).fillPolygon(xArray.capture(), yArray.capture(), eq(4));
         assertThat(xArray.getValue()).containsExactly(0, 5, 10, 5);
