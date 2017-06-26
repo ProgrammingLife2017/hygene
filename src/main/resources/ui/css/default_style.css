@@ -53,8 +53,14 @@ Button:hover {
 
 MenuBar {
     -fx-background-color: -content-background;
+
     -fx-border-color: -hygene black -secondary black;
     -fx-border-width: 4px 0 2px 0;
+
+    -fx-background-image: url("../../icons/hygene_logo_header.png");
+    -fx-background-position: right;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 90px;
 }
 
 #graphNavigationButtons {
