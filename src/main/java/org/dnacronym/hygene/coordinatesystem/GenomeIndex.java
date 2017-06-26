@@ -125,6 +125,7 @@ public final class GenomeIndex {
      * @param progressUpdater the instance that should be informed of the progress of this task
      * @throws IOException            if an error occurs during IO operations
      */
+    @SuppressWarnings("squid:S1188")
     private void collectNodesOfGenome(final ProgressUpdater progressUpdater) throws IOException {
         final int[] counter = {0};
         final int[] currentProgress = {-1};
