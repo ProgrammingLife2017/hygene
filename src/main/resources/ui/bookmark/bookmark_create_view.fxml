@@ -31,8 +31,8 @@
                     <Tooltip text="Create a bookmark for the currently selected node."/>
                 </tooltip>
             </Label>
-            <Label text="Base Offset" GridPane.rowIndex="1"/>
-            <Label text="View Radius" GridPane.rowIndex="2"/>
+            <Label text="Base offset" GridPane.rowIndex="1"/>
+            <Label text="View radius" GridPane.rowIndex="2"/>
             <Label text="Description" GridPane.rowIndex="3"/>
             <TextField fx:id="baseOffset" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <tooltip>
