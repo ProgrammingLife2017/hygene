@@ -1,6 +1,8 @@
 package org.dnacronym.hygene.ui.path;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -12,6 +14,7 @@ public final class GenomePath {
     private final String name;
     private final String index;
     private final SimpleBooleanProperty selected;
+    private final SimpleObjectProperty<Color> color;
 
 
     /**
@@ -24,6 +27,7 @@ public final class GenomePath {
         this.name = name;
         this.index = index;
         this.selected = new SimpleBooleanProperty();
+        this.color = new SimpleObjectProperty<>();
     }
 
 
@@ -66,5 +70,23 @@ public final class GenomePath {
     @Override
     public String toString() {
         return name;
+    }
+
+    /**
+     * Gets color.
+     *
+     * @return the color
+     */
+    public SimpleObjectProperty<Color> getColor() {
+        return color;
+    }
+
+    /**
+     * Sets color.
+     *
+     * @param color the color
+     */
+    public void setColor(final Color color) {
+        this.color.set(color);
     }
 }

@@ -1,17 +1,24 @@
 package org.dnacronym.hygene.ui.path;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -29,6 +36,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Controller for the path highlighting menu.
  */
+@SuppressWarnings({"PMD.ExcessiveImports", "squid:MaximumInheritanceDepth"})
 public final class PathController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(PathController.class);
 
@@ -36,7 +44,7 @@ public final class PathController implements Initializable {
     private TitledPane pathPane;
 
     @FXML
-    private ListView<GenomePath> pathList;
+    private TableView<GenomePath> pathTable;
 
     @FXML
     private TextField searchField;
@@ -50,6 +58,15 @@ public final class PathController implements Initializable {
     @FXML
     private CheckBox regex;
 
+    @FXML
+    private TableColumn<GenomePath, Color> colorColumn;
+
+    @FXML
+    private TableColumn<GenomePath, Boolean> selectedColumn;
+
+    @FXML
+    private TableColumn<GenomePath, String> nameColumn;
+
     @Inject
     private GraphVisualizer graphVisualizer;
     @Inject
@@ -58,13 +75,43 @@ public final class PathController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        pathList.setCellFactory(CheckBoxListCell.forListView(GenomePath::selectedProperty));
+        nameColumn.setCellValueFactory(cell -> {
+            if (cell.getValue().getName() == null) {
+                return new SimpleStringProperty("[unknown genome]");
+            } else {
+                return new SimpleStringProperty(cell.getValue().getName());
+            }
+        });
 
-        pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        colorColumn.setCellValueFactory(cell -> cell.getValue().getColor());
 
-        addListeners();
+        colorColumn.setCellFactory(cell -> new TableCell<GenomePath, Color>() {
+            @Override
+            protected void updateItem(final Color color, final boolean empty) {
+                super.updateItem(color, empty);
+
+                if (color == null) {
+                    setBackground(Background.EMPTY);
+                } else {
+                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            }
+        });
+
+        selectedColumn.setCellValueFactory(cell -> cell.getValue().selectedProperty());
+
+        selectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectedColumn));
+
+        final FilteredList<GenomePath> filteredList = new FilteredList<>(graphVisualizer.getGenomePathsProperty(),
+                s -> s.getName().contains(searchField.textProperty().get()));
+
+        pathTable.setItems(filteredList);
+
+        pathTable.setEditable(true);
 
         pathPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
+
+        addListeners();
     }
 
     /**
@@ -76,7 +123,7 @@ public final class PathController implements Initializable {
         final FilteredList<GenomePath> filteredList = new FilteredList<>(graphVisualizer.getGenomePathsProperty(),
                 s -> s.getName().contains(searchField.textProperty().get()));
 
-        pathList.setItems(filteredList);
+        pathTable.setItems(filteredList);
 
         // Updates the filtered list predicate on a search
         searchField.textProperty().addListener((observable, oldValue, newValue) ->
@@ -156,7 +203,7 @@ public final class PathController implements Initializable {
     @FXML
     void onClearHighlight(final ActionEvent actionEvent) {
         LOGGER.info("Cleared the currently selected genome.");
-        pathList.itemsProperty().get().forEach(genomes -> genomes.selectedProperty().set(false));
+        pathTable.itemsProperty().get().forEach(genomes -> genomes.selectedProperty().set(false));
         actionEvent.consume();
     }
 }

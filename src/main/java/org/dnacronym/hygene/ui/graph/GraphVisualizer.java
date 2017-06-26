@@ -543,9 +543,11 @@ public final class GraphVisualizer {
                         final Color genomeColor = colorRoulette.getNext();
                         selectedGenomePaths.put(path.getIndex(), genomeColor);
                         selectedGenomePaths.put(path.getName(), genomeColor);
+                        path.setColor(genomeColor);
                     } else {
                         selectedGenomePaths.remove(path.getIndex());
                         selectedGenomePaths.remove(path.getName());
+                        path.setColor(null);
                     }
                     LOGGER.debug(selectedGenomePaths);
                 }));
