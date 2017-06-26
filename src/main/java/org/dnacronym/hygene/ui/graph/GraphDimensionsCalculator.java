@@ -21,14 +21,18 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
+import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -44,7 +48,7 @@ import java.util.List;
  * @see GraphDimensionsCalculator
  * @see CenterPointQuery
  */
-@SuppressWarnings("PMD.TooManyFields") // This class is tightly coupled, and does not need to be divided further.
+@SuppressWarnings({"PMD.TooManyFields", "PMD.ExcessiveImports"})
 public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
@@ -57,10 +61,11 @@ public final class GraphDimensionsCalculator {
 
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
-    private final IntegerProperty nodeCountProperty;
+    private final IntegerProperty viewPointProperty;
     private final IntegerProperty viewRadiusProperty;
 
     private final DoubleProperty nodeHeightProperty;
+    private final IntegerProperty nodeCountProperty;
     private final DoubleProperty laneHeightProperty;
     private final IntegerProperty laneCountProperty;
 
@@ -99,9 +104,15 @@ public final class GraphDimensionsCalculator {
         nodeCountProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty.addListener((observable, oldValue, newValue) -> {
-            centerNodeIdProperty.set(Math.max(
-                    0,
-                    Math.min(newValue.intValue(), getNodeCountProperty().subtract(1).get())));
+            if (newValue.intValue() < 1) {
+                centerNodeIdProperty.set(1);
+                return;
+            }
+            if (newValue.intValue() >= getNodeCountProperty().intValue() - 1) {
+                centerNodeIdProperty.set(nodeCountProperty.intValue() - 2);
+                return;
+            }
+
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
         radiusProperty.addListener((observable, oldValue, newValue) -> {
@@ -111,6 +122,33 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
+        viewPointProperty = new SimpleIntegerProperty(0);
+        viewPointProperty.addListener((observable, oldValue, newValue) -> {
+            final SequenceDirection direction = newValue.intValue() < oldValue.intValue()
+                    ? SequenceDirection.LEFT
+                    : SequenceDirection.RIGHT;
+
+            int difference = Math.abs(newValue.intValue() - oldValue.intValue());
+            GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+
+            // Find new center node
+            while (difference > 0) {
+                difference--;
+
+                final Set<Edge> neighbours = direction.ternary(
+                        centerNode.getIncomingEdges(),
+                        centerNode.getOutgoingEdges());
+                final Edge firstEdge = neighbours.iterator().next();
+                centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
+                if (direction.ternary(centerNode.getIncomingEdges(), centerNode.getOutgoingEdges()).isEmpty()) {
+                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+                    centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+                }
+            }
+
+            // Set center node
+            centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+        });
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
             calculate(subgraph);
@@ -391,6 +429,15 @@ public final class GraphDimensionsCalculator {
      */
     public IntegerProperty getRadiusProperty() {
         return radiusProperty;
+    }
+
+    /**
+     * Returns the view point property.
+     *
+     * @return the view point property
+     */
+    public IntegerProperty getViewPointProperty() {
+        return viewPointProperty;
     }
 
     /**
