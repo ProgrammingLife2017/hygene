@@ -20,8 +20,7 @@
                           HBox.hgrow="NEVER"/>
             <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
                        prefWidth="0"/>
-            <ScrollPane fx:id="leftPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="Infinity"
-                        minWidth="0">
+            <ScrollPane fx:id="leftPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0" styleClass="sidePane">
                 <VBox styleClass="leftSidePane" spacing="10">
                     <TitledPane animated="false" text="Node Properties">
                         <fx:include source="node/node_properties_view.fxml"/>
