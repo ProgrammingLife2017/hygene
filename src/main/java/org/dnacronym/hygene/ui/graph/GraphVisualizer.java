@@ -193,21 +193,21 @@ public final class GraphVisualizer {
             return;
         }
 
-        final GfaNode gfaNode = (GfaNode) node;
         final double nodeX = graphDimensionsCalculator.computeXPosition(node);
-        final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
+
+        if (nodeX + nodeWidth < 0 || nodeX > canvas.getWidth()) {
+            return;
+        }
+
+        final GfaNode gfaNode = (GfaNode) node;
+        final double nodeY = graphDimensionsCalculator.computeYPosition(node);
 
         gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
                 nodeHeightProperty.get()));
 
-        final NodeDrawingToolkit nodeDrawingToolkit;
-        if (node instanceof Segment) {
-            nodeDrawingToolkit = segmentDrawingToolkit;
-        } else if (node instanceof AggregateSegment) {
-            nodeDrawingToolkit = snpDrawingToolkit;
-        } else {
-            LOGGER.warn("Cannot draw node of class " + node.getClass().getName() + ".");
+        final NodeDrawingToolkit nodeDrawingToolkit = createNodeDrawingToolkit(node);
+        if (nodeDrawingToolkit == null) {
             return;
         }
 
@@ -238,6 +238,23 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations));
             rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
         });
+    }
+
+    /**
+     * Creates the correct toolkit for the given node.
+     *
+     * @param node the node
+     * @return  the correct toolkit for the given node
+     */
+    private NodeDrawingToolkit createNodeDrawingToolkit(final Node node) {
+        if (node instanceof Segment) {
+             return segmentDrawingToolkit;
+        } else if (node instanceof AggregateSegment) {
+             return snpDrawingToolkit;
+        } else {
+            LOGGER.warn("Cannot draw node of class " + node.getClass().getName() + ".");
+            return null;
+        }
     }
 
     /**
