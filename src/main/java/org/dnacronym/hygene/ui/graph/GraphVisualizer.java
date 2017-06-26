@@ -639,7 +639,6 @@ public final class GraphVisualizer {
             return;
         }
 
-
         hoveredSegmentProperty.set((GfaNode) segment.get(0));
 
         new NodeTooltip(
