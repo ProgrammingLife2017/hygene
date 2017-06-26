@@ -46,11 +46,17 @@ public final class BarycentricCrossingsReducer implements SugiyamaCrossingsReduc
         final Map<LayoutableNode, Integer> lengthyNodes = lengthyNodeFinder.findInLayers(layers);
 
         for (int i = 1; i < layers.length; i++) {
+            if (Thread.interrupted()) {
+                return;
+            }
             layers[i] = reduceCrossingsBetweenLayers(layers, i, lengthyNodes);
         }
 
         final EdgeOptimizer edgeOptimizer = new EdgeOptimizer(layers);
         for (int i = 1; i < layers.length; i++) {
+            if (Thread.interrupted()) {
+                return;
+            }
             layers[i] = edgeOptimizer.fixJumpingEdges(i);
         }
     }
