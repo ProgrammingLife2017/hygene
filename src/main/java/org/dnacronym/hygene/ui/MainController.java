@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import org.dnacronym.hygene.ui.graph.GraphStore;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -18,6 +19,8 @@ import java.util.ResourceBundle;
 public final class MainController implements Initializable {
     @Inject
     private GraphStore graphStore;
+    @Inject
+    private GraphVisualizer graphVisualizer;
 
     @FXML
     private ToggleButton toggleLeftPane;
@@ -46,5 +49,11 @@ public final class MainController implements Initializable {
         toggleRightPane.textProperty().bind(Bindings.when(toggleRightPane.selectedProperty())
                 .then(">")
                 .otherwise("<"));
+
+        graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                toggleLeftPane.setSelected(true);
+            }
+        });
     }
 }
