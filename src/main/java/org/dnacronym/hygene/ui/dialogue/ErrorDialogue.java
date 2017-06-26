@@ -13,9 +13,13 @@ public final class ErrorDialogue extends Dialogue {
      * Construct a new {@link ErrorDialogue}.
      *
      * @param exception the {@link Exception} that is the cause of the dialogue. Its message is displayed as message in
-     *                 the {@link Dialogue}
+     *                  the {@link Dialogue}
      */
     public ErrorDialogue(final Exception exception) {
-        super("Error", exception.getMessage(), Alert.AlertType.ERROR);
+        this(exception.getMessage());
+    }
+
+    public ErrorDialogue(final String message) {
+        super("Error", message, Alert.AlertType.ERROR);
     }
 }

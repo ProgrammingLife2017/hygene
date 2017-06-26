@@ -272,6 +272,11 @@ public final class MenuController implements Initializable {
      * @throws UIInitialisationException if initialisation of the UI fails
      */
     private void loadFile(final File file) throws IOException, UIInitialisationException {
+        if (!file.exists()) {
+            new ErrorDialogue("The file has been moved or deleted and could not be opened.").show();
+            return;
+        }
+
         final ProgressBarView progressBarView = new ProgressBarView();
 
         progressBarView.monitorTask(progressUpdater -> {
