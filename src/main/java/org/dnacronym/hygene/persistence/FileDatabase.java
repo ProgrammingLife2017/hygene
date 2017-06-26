@@ -17,13 +17,14 @@ import java.sql.SQLException;
 public final class FileDatabase implements AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger(FileDatabase.class);
 
-    static final int DB_VERSION = 12;
+    static final int DB_VERSION = 13;
 
     private final String fileName;
     private FileDatabaseDriver fileDatabaseDriver;
     private FileMetadata fileMetadata;
     private FileBookmarks fileBookmarks;
     private FileGenomeMapping fileGenomeMapping;
+    private FileGraphLocation fileGraphLocation;
 
 
     /**
@@ -68,6 +69,7 @@ public final class FileDatabase implements AutoCloseable {
 
         fileBookmarks = new FileBookmarks(this);
         fileGenomeMapping = new FileGenomeMapping(this);
+        fileGraphLocation = new FileGraphLocation(this);
     }
 
 
@@ -83,6 +85,7 @@ public final class FileDatabase implements AutoCloseable {
 
         fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
         fileDatabaseDriver.setUpTable(fileGenomeMapping.getTable());
+        fileDatabaseDriver.setUpTable(fileGraphLocation.getTable());
     }
 
     /**

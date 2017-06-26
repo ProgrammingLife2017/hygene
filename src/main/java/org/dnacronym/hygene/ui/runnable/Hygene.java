@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
+import org.dnacronym.hygene.ui.graph.GraphLocation;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 
 import java.io.File;
@@ -46,6 +47,8 @@ public final class Hygene extends Application {
     private GraphStore graphStore;
     @Inject
     private BookmarkStore bookmarkStore;
+    @Inject
+    private GraphLocation graphLocation;
 
     private Stage primaryStage;
 
@@ -100,6 +103,7 @@ public final class Hygene extends Application {
 
 
         primaryStage.setOnCloseRequest(e -> {
+            graphLocation.store();
             bookmarkStore.writeBookmarksToFile();
             Platform.exit();
         });
