@@ -17,13 +17,12 @@ import java.sql.SQLException;
 public final class FileDatabase implements AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger(FileDatabase.class);
 
-    static final int DB_VERSION = 11;
+    static final int DB_VERSION = 12;
 
     private final String fileName;
     private FileDatabaseDriver fileDatabaseDriver;
     private FileMetadata fileMetadata;
     private FileBookmarks fileBookmarks;
-    private FileGenomeIndex fileGenomeIndex;
     private FileGenomeMapping fileGenomeMapping;
 
 
@@ -68,7 +67,6 @@ public final class FileDatabase implements AutoCloseable {
         fileMetadata = new FileMetadata(this);
 
         fileBookmarks = new FileBookmarks(this);
-        fileGenomeIndex = new FileGenomeIndex(this);
         fileGenomeMapping = new FileGenomeMapping(this);
     }
 
@@ -84,7 +82,6 @@ public final class FileDatabase implements AutoCloseable {
         fileMetadata.storeMetadata();
 
         fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
-        fileDatabaseDriver.setUpTable(fileGenomeIndex.getTable());
         fileDatabaseDriver.setUpTable(fileGenomeMapping.getTable());
     }
 
@@ -122,15 +119,6 @@ public final class FileDatabase implements AutoCloseable {
      */
     public FileBookmarks getFileBookmarks() {
         return fileBookmarks;
-    }
-
-    /**
-     * Returns the file genome index.
-     *
-     * @return the file genome index
-     */
-    public FileGenomeIndex getFileGenomeIndex() {
-        return fileGenomeIndex;
     }
 
     /**

@@ -3,15 +3,10 @@ package org.dnacronym.hygene.coordinatesystem;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.ProgressUpdater;
-import org.dnacronym.hygene.persistence.FileDatabase;
-import org.dnacronym.hygene.persistence.FileDatabaseDriver;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,60 +14,67 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Test suite for the {@link GenomeIndex} class.
+ * Unit tests for {@link GenomeIndex}.
  */
 class GenomeIndexTest {
-    private static final String TEST_GFA_FILE_NAME = "src/test/resources/gfa/index.gfa";
+    private static final String TEST_GFA_FILE_NAME = "src/test/resources/gfa/dynamic-index.gfa";
 
     private GenomeIndex genomeIndex;
-    private FileDatabase fileDatabase;
+    private GfaFile gfaFile;
 
 
     @BeforeEach
     void setUp() throws IOException, SQLException, GfaParseException {
-        deleteDatabase();
-        fileDatabase = new FileDatabase(TEST_GFA_FILE_NAME);
-
-        final GfaFile gfaFile = new GfaFile(TEST_GFA_FILE_NAME);
+        gfaFile = new GfaFile(TEST_GFA_FILE_NAME);
         gfaFile.parse(mock(ProgressUpdater.class));
-        genomeIndex = new GenomeIndex(gfaFile, fileDatabase);
-    }
-
-    @AfterEach
-    void tearDown() throws IOException, SQLException {
-        fileDatabase.close();
-        deleteDatabase();
     }
 
 
     @Test
-    void testGetClosestNode() throws GfaParseException, SQLException {
-        genomeIndex.populateIndex(mock(ProgressUpdater.class));
-        assertThat(genomeIndex.getGenomePoint("g2.fasta", 5)).hasValueSatisfying(genomePoint -> {
-            assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
-            assertThat(genomePoint.getNodeId()).isEqualTo(4);
-        });
+    void testInsertion() throws IOException {
+        genomeIndex = new GenomeIndex(gfaFile, "g1.fasta");
+        genomeIndex.buildIndex(mock(ProgressUpdater.class));
+
+        assertThat(genomeIndex.getNodeByBase(3)).isEqualTo(1);
+        assertThat(genomeIndex.getNodeByBase(4)).isEqualTo(2);
+        assertThat(genomeIndex.getNodeByBase(6)).isEqualTo(2);
+        assertThat(genomeIndex.getNodeByBase(8)).isEqualTo(3);
+        assertThat(genomeIndex.getBaseOffsetWithinNode(8)).isEqualTo(1);
     }
 
     @Test
-    void testGetClosestNodeSingleBaseNode() throws GfaParseException, SQLException {
-        genomeIndex.populateIndex(mock(ProgressUpdater.class));
-        assertThat(genomeIndex.getGenomePoint("g2.fasta", 3)).hasValueSatisfying(genomePoint -> {
-            assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(0);
-            assertThat(genomePoint.getNodeId()).isEqualTo(3);
-        });
+    void testSecondInsertion() throws IOException {
+        genomeIndex = new GenomeIndex(gfaFile, "g2.fasta");
+        genomeIndex.buildIndex(mock(ProgressUpdater.class));
+
+        assertThat(genomeIndex.getNodeByBase(3)).isEqualTo(1);
+        assertThat(genomeIndex.getNodeByBase(4)).isEqualTo(3);
+        assertThat(genomeIndex.getNodeByBase(7)).isEqualTo(4);
+        assertThat(genomeIndex.getNodeByBase(8)).isEqualTo(4);
+        assertThat(genomeIndex.getNodeByBase(10)).isEqualTo(5);
     }
 
     @Test
-    void testGetClosestNodeFirstNode() throws GfaParseException, SQLException {
-        genomeIndex.populateIndex(mock(ProgressUpdater.class));
-        assertThat(genomeIndex.getGenomePoint("g1.fasta", 1)).hasValueSatisfying(genomePoint -> {
-            assertThat(genomePoint.getBaseOffsetInNode()).isEqualTo(1);
-            assertThat(genomePoint.getNodeId()).isEqualTo(1);
-        });
+    void testNestedInsertion() throws IOException {
+        genomeIndex = new GenomeIndex(gfaFile, "g3.fasta");
+        genomeIndex.buildIndex(mock(ProgressUpdater.class));
+
+        assertThat(genomeIndex.getNodeByBase(3)).isEqualTo(1);
+        assertThat(genomeIndex.getNodeByBase(4)).isEqualTo(6);
+        assertThat(genomeIndex.getNodeByBase(6)).isEqualTo(6);
     }
 
-    private void deleteDatabase() throws IOException {
-        Files.deleteIfExists(new File(TEST_GFA_FILE_NAME + FileDatabaseDriver.DB_FILE_EXTENSION).toPath());
+    @Test
+    void testGetNodeByBaseNoResults() {
+        genomeIndex = new GenomeIndex(gfaFile, "g3.fasta");
+
+        assertThat(genomeIndex.getNodeByBase(2)).isEqualTo(-1);
+    }
+
+    @Test
+    void testGetBaseOffsetWithinNodeNoResults() throws IOException {
+        genomeIndex = new GenomeIndex(gfaFile, "g3.fasta");
+
+        assertThat(genomeIndex.getBaseOffsetWithinNode(2)).isEqualTo(-1);
     }
 }

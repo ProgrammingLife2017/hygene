@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
-import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
@@ -43,23 +42,15 @@ public final class MenuController implements Initializable {
     @Inject
     private GraphStore graphStore;
     @Inject
-    private GenomeNavigation genomeNavigation;
-
-    @FXML
-    private MenuItem gffFileOpen;
+    private SettingsView settingsView;
 
     @FXML
     private Menu recentFilesMenu;
-
-    @Inject
-    private SettingsView settingsView;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         try {
-            gffFileOpen.disableProperty().bind(genomeNavigation.getIndexedFinishedProperty().not());
-
             populateRecentFilesMenu();
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
             setGffFileChooser(initFileChooser(GraphStore.GFF_FILE_NAME, GraphStore.GFF_FILE_EXTENSION));

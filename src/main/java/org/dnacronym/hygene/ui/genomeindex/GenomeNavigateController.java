@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,15 +9,12 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.coordinatesystem.GenomePoint;
-import org.dnacronym.hygene.ui.dialogue.WarningDialogue;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
 import javax.inject.Inject;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 
@@ -62,11 +60,6 @@ public final class GenomeNavigateController implements Initializable {
      */
     @FXML
     public void onGoAction(final ActionEvent actionEvent) {
-        if (!genomeNavigation.getIndexedFinishedProperty().get()) {
-            new WarningDialogue("Genome indexing process still in progress, unable to navigate.").show();
-            return;
-        }
-
         final int selectedBase;
 
         try {
@@ -76,19 +69,12 @@ public final class GenomeNavigateController implements Initializable {
             return;
         }
 
-        try {
-            final GenomePoint genomePoint = genomeNavigation.getGenomeIndexProperty().get()
-                    .getGenomePoint(genome.getValue(), selectedBase)
-                    .orElseThrow(() ->
-                            new SQLException("Genome-base combination could not be found in database."));
+        genomeNavigation.runActionOnIndexedGenome(genome.getValue(), dynamicGenomeIndex -> Platform.runLater(() -> {
+            final int nodeId = dynamicGenomeIndex.getNodeByBase(selectedBase);
+            graphDimensionsCalculator.getCenterNodeIdProperty().set(nodeId);
+            graphVisualizer.setSelectedSegment(nodeId);
 
-            graphDimensionsCalculator.getCenterNodeIdProperty().set(genomePoint.getNodeId());
-
-            graphVisualizer.setSelectedSegment(genomePoint.getNodeId());
-            sequenceVisualizer.setOffset(genomePoint.getBaseOffsetInNode());
-        } catch (SQLException e) {
-            LOGGER.error("Error while looking for genome-base index.", e);
-            new WarningDialogue("Genome-base combination could not be found in graph.").show();
-        }
+            sequenceVisualizer.setOffset(dynamicGenomeIndex.getBaseOffsetWithinNode(selectedBase));
+        }));
     }
 }
