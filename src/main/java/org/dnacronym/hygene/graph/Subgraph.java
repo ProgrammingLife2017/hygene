@@ -42,6 +42,16 @@ public final class Subgraph {
         this.nodes = Collections.synchronizedMap(new LinkedHashMap<>());
     }
 
+    /**
+     * Constructs a copy of an existing {@link Subgraph}.
+     *
+     * @param subgraph an existing {@link Subgraph}
+     */
+    public Subgraph(final Subgraph subgraph) {
+        this.nodes = Collections.synchronizedMap(new LinkedHashMap<>(subgraph.nodes));
+        this.segments = Collections.synchronizedMap(new LinkedHashMap<>(subgraph.segments));
+    }
+
 
     /**
      * Returns the {@link Node} with the given {@link UUID}, or {code null} if no such node exists.

@@ -114,11 +114,13 @@ public final class CenterPointQuery {
                 return;
             }
 
+            final Subgraph subgraphCopy = new Subgraph(subgraph);
             if (aggregateNodes) {
-                SegmentAggregator.aggregate(subgraph);
+                SegmentAggregator.aggregate(subgraphCopy);
             }
-            LAYOUT.layOut(subgraph);
-            HygeneEventBus.getInstance().post(new LayoutDoneEvent(subgraph));
+            LAYOUT.layOut(subgraphCopy);
+
+            HygeneEventBus.getInstance().post(new LayoutDoneEvent(subgraphCopy));
         });
 
         HygeneEventBus.getInstance().register(nodeMetadataCache);
