@@ -547,6 +547,7 @@ public final class GraphVisualizer {
                     } else {
                         selectedGenomePaths.remove(path.getIndex());
                         selectedGenomePaths.remove(path.getName());
+                        path.setColor(null);
                     }
                     LOGGER.debug(selectedGenomePaths);
                 }));
