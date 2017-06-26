@@ -43,7 +43,7 @@ final class GraphMovementCalculatorTest {
         graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(-100);
 
-        assertThat(viewPointProperty.get()).isEqualTo(100);
+        assertThat(viewPointProperty.get()).isEqualTo(10000);
     }
 
     @Test
@@ -51,6 +51,6 @@ final class GraphMovementCalculatorTest {
         graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(100);
 
-        assertThat(viewPointProperty.get()).isEqualTo(-100);
+        assertThat(viewPointProperty.get()).isEqualTo(-10000);
     }
 }

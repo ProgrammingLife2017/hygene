@@ -26,16 +26,13 @@ import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.Subgraph;
-import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
-import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -77,15 +74,6 @@ public final class GraphDimensionsCalculator {
     private Subgraph subgraph;
 
     private long minX;
-
-    public long getMinX() {
-        return minX;
-    }
-
-    public long getMaxX() {
-        return maxX;
-    }
-
     private long maxX;
     private int minY;
     private Dimension2D canvasDimension;
@@ -102,6 +90,7 @@ public final class GraphDimensionsCalculator {
      * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
     @Inject
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public GraphDimensionsCalculator(final GraphStore graphStore) {
         this.graphStore = graphStore;
         observableQueryNodes = FXCollections.observableArrayList();
@@ -467,5 +456,13 @@ public final class GraphDimensionsCalculator {
      */
     public CenterPointQuery getCenterPointQuery() {
         return centerPointQuery;
+    }
+
+    public long getMinX() {
+        return minX;
+    }
+
+    public long getMaxX() {
+        return maxX;
     }
 }
