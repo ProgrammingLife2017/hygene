@@ -639,7 +639,16 @@ public final class GraphVisualizer {
             return;
         }
 
+
         hoveredSegmentProperty.set((GfaNode) segment.get(0));
+
+        new NodeTooltip(
+                graphicsContext,
+                (GfaNode) segment.get(0),
+                graphDimensionsCalculator.computeXPosition(segment.get(0))
+                        + (graphDimensionsCalculator.computeWidth(segment.get(0)) / 2),
+                graphDimensionsCalculator.computeBelowYPosition(segment.get(0))
+        ).show();
     }
 
     /**
