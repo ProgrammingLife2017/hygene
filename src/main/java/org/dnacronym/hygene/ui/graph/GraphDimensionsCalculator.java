@@ -58,9 +58,6 @@ public final class GraphDimensionsCalculator {
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
 
-    private final IntegerProperty minXNodeIdProperty;
-    private final IntegerProperty maxXNodeIdProperty;
-
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
     private final LongProperty viewPointProperty;
@@ -79,6 +76,15 @@ public final class GraphDimensionsCalculator {
     private Subgraph subgraph;
 
     private long minX;
+
+    public long getMinX() {
+        return minX;
+    }
+
+    public long getMaxX() {
+        return maxX;
+    }
+
     private long maxX;
     private int minY;
     private Dimension2D canvasDimension;
@@ -99,9 +105,6 @@ public final class GraphDimensionsCalculator {
         this.graphStore = graphStore;
         observableQueryNodes = FXCollections.observableArrayList();
         readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
-
-        minXNodeIdProperty = new SimpleIntegerProperty(1);
-        maxXNodeIdProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty = new SimpleIntegerProperty(1);
         radiusProperty = new SimpleIntegerProperty(DEFAULT_RADIUS);
@@ -362,26 +365,6 @@ public final class GraphDimensionsCalculator {
      */
     double computeWidth(final Node node) {
         return ((double) node.getLength()) / (maxX - minX) * canvasDimension.getWidth();
-    }
-
-    /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link Node} in the current query with the
-     * smallest (leftmost) x position.
-     *
-     * @return the {@link ReadOnlyIntegerProperty} describing the {@link Node} with the smallest x position
-     */
-    public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
-        return minXNodeIdProperty;
-    }
-
-    /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link Node} in the current query with the
-     * largest (rightmost) x position.
-     *
-     * @return the {@link ReadOnlyIntegerProperty} describing the {@link Node} with the largest x position
-     */
-    public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
-        return maxXNodeIdProperty;
     }
 
     /**

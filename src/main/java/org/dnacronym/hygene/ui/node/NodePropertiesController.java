@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -170,6 +171,23 @@ public final class NodePropertiesController implements Initializable {
         leftNeighbours.setText("");
         rightNeighbours.setText("");
         position.setText("");
+    }
+
+    /**
+     * When the user clicks on the view sequence {@link javafx.scene.control.Button}.
+     *
+     * @param event the {@link MouseEvent}
+     */
+    @FXML
+    void onFocusAction(final ActionEvent actionEvent) {
+        final GfaNode selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
+        if (selectedNode != null) {
+            final long selectedNodePosition = FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
+                    .getUnscaledXPosition(selectedNode.getSegmentIds().get(0));
+            graphDimensionsCalculator.getViewPointProperty().set(selectedNodePosition);
+        }
+
+        actionEvent.consume();
     }
 
     /**
