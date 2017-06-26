@@ -205,7 +205,11 @@ public final class GraphVisualizer {
 
         final GfaNode gfaNode = (GfaNode) node;
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
-        nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor());
+        if (node.hasMetadata()) {
+            nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), node.getMetadata().getSequence());
+        } else {
+            nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), "");
+        }
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
                 .anyMatch(segmentId -> selectedSegmentProperty.get().containsSegment(segmentId))) {
