@@ -36,15 +36,16 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Controller for the path highlighting menu.
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class PathController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(PathController.class);
 
     @FXML
     private TitledPane pathPane;
-    //
+
     @FXML
     private TableView<GenomePath> pathTable;
-    //
+
     @FXML
     private TextField searchField;
 
@@ -86,13 +87,13 @@ public final class PathController implements Initializable {
 
         colorColumn.setCellFactory(cell -> new TableCell<GenomePath, Color>() {
             @Override
-            protected void updateItem(Color color, boolean empty) {
+            protected void updateItem(final Color color, final boolean empty) {
                 super.updateItem(color, empty);
 
-                if (color != null) {
-                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
-                } else {
+                if (color == null) {
                     setBackground(Background.EMPTY);
+                } else {
+                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
                 }
             }
         });
