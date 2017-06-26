@@ -30,8 +30,10 @@
                 <TableView fx:id="resultsTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0"
                            GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                     <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name"/>
-                        <TableColumn fx:id="typeColumn" editable="false" prefWidth="75.0" text="Type"/>
+                        <TableColumn fx:id="colorColumn" prefWidth="10.0" text="Color"/>
+                        <TableColumn fx:id="nameColumn" prefWidth="110.0" text="Name"/>
+                        <TableColumn fx:id="typeColumn" editable="false" prefWidth="40.0" text="Type"/>
+                        <TableColumn fx:id="startColumn" editable="false" prefWidth="40.0" text="Start Base"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

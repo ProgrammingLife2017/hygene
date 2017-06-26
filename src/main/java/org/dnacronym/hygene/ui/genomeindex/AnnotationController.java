@@ -1,15 +1,26 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
@@ -27,19 +38,28 @@ public final class AnnotationController implements Initializable {
     private GraphDimensionsCalculator graphDimensionsCalculator;
     @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
+    private GraphStore graphStore;
 
     @FXML
     private TextField queryField;
     @FXML
     private TableView<Annotation> resultsTable;
     @FXML
+    private TableColumn<Annotation, Color> colorColumn;
+    @FXML
     private TableColumn<Annotation, String> nameColumn;
     @FXML
     private TableColumn<Annotation, String> typeColumn;
+    @FXML
+    private TableColumn<Annotation, Integer> startColumn;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        queryField.textProperty().addListener((observable, oldValue, newValue) ->
+               annotationSearch.search(newValue));
+
         resultsTable.setRowFactory(tableView -> {
             final TableRow<Annotation> annotationTableRow = new TableRow<>();
             annotationTableRow.setOnMouseClicked(event -> {
@@ -60,8 +80,25 @@ public final class AnnotationController implements Initializable {
             }
         });
         typeColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getType()));
+        startColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getStart()));
 
         resultsTable.itemsProperty().bind(annotationSearch.getSearchResults());
+
+        colorColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getColor()));
+        colorColumn.setCellFactory(cell -> new TableCell<Annotation, Color>() {
+            @Override
+            protected void updateItem(final Color color, final boolean empty) {
+                super.updateItem(color, empty);
+
+                if (color == null || empty) {
+                    setBackground(Background.EMPTY);
+                } else {
+                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            }
+        });
+
+        graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> annotationSearch.search(""));
     }
 
     /**
