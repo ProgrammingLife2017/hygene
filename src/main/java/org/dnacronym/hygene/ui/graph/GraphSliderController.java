@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  * Controller of the slider which allows traversing the graph.
  */
 public final class GraphSliderController implements Initializable {
-    private static final int BUCKET_COUNT = 1500;
+    private static final int BUCKET_COUNT = 2500;
 
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
