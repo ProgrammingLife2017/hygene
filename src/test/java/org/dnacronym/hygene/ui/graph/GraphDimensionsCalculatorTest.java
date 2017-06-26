@@ -2,10 +2,10 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.scene.canvas.Canvas;
 import org.assertj.core.data.Offset;
-import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.NodeBuilder;
+import org.dnacronym.hygene.graph.Subgraph;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ final class GraphDimensionsCalculatorTest {
 
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         graphStore = new GraphStore();
         graphDimensionsCalculator = new GraphDimensionsCalculator(graphStore);
 
@@ -38,19 +38,19 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testGraphChanged() {
-        assertThat(graphDimensionsCalculator.getNodeCountProperty().get()).isEqualTo(1);
+        assertThat(graphDimensionsCalculator.getNodeCountProperty().get()).isEqualTo(3);
 
         final GfaFile gfaFileTwoNodes = mock(GfaFile.class);
         when(gfaFileTwoNodes.getGraph()).thenReturn(createTwoNodeGraph());
         graphStore.getGfaFileProperty().set(gfaFileTwoNodes);
 
-        assertThat(graphDimensionsCalculator.getNodeCountProperty().get()).isEqualTo(2);
+        assertThat(graphDimensionsCalculator.getNodeCountProperty().get()).isEqualTo(4);
     }
 
     @Test
     void testComputeYPosition() {
         final Subgraph subgraph = new Subgraph();
-        final Segment segment = new Segment(0, 0, 0);
+        final Segment segment = new Segment(1, 0, 0);
         segment.setYPosition(30);
         subgraph.add(segment);
 
@@ -63,7 +63,7 @@ final class GraphDimensionsCalculatorTest {
     @Test
     void testComputeMiddleYPosition() {
         final Subgraph subgraph = new Subgraph();
-        final Segment segment = new Segment(0, 0, 0);
+        final Segment segment = new Segment(1, 0, 0);
         segment.setYPosition(30);
         subgraph.add(segment);
 
@@ -75,7 +75,7 @@ final class GraphDimensionsCalculatorTest {
 
     @Test
     void testComputeAndGetLaneHeight() {
-        final Segment segment = new Segment(0, 0, 0);
+        final Segment segment = new Segment(1, 0, 0);
         final Subgraph subgraph = new Subgraph();
         subgraph.add(segment);
         graphDimensionsCalculator.calculate(subgraph);
@@ -86,21 +86,25 @@ final class GraphDimensionsCalculatorTest {
     @Test
     void testUpperBoundNodeId() {
         graphDimensionsCalculator.getCenterNodeIdProperty().set(1000);
-        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
+        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(1);
     }
 
     @Test
     void testLowerBoundNodeId() {
         graphDimensionsCalculator.getCenterNodeIdProperty().set(-1000);
-        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(0);
+        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(1);
     }
 
 
     private Graph createGraph() {
         return new Graph(new int[][] {
                 NodeBuilder.start()
+                        .toArray(),
+                NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
+                        .toArray(),
+                NodeBuilder.start()
                         .toArray()
         }, null);
     }
@@ -108,12 +112,16 @@ final class GraphDimensionsCalculatorTest {
     private Graph createTwoNodeGraph() {
         return new Graph(new int[][] {
                 NodeBuilder.start()
+                        .toArray(),
+                NodeBuilder.start()
                         .withSequenceLength(500)
                         .withUnscaledXPosition(600)
                         .toArray(),
                 NodeBuilder.start()
                         .withSequenceLength(300)
                         .withUnscaledXPosition(400)
+                        .toArray(),
+                NodeBuilder.start()
                         .toArray()
         }, null);
     }
