@@ -1,13 +1,20 @@
 package org.dnacronym.hygene.ui.node;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
+import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -39,14 +46,63 @@ public final class NodePropertiesController implements Initializable {
     private Label rightNeighbours;
     @FXML
     private Label position;
+    @FXML
+    private TableColumn<Annotation, String> nameAnnotation;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
+        nameAnnotation.setCellValueFactory(cell -> {
+            final String[] name = cell.getValue().getAttributes().get("Name");
+            return new SimpleStringProperty(name == null ? "" : name[0]);
+        });
+        nameAnnotation.setCellFactory(this::wrappableTableCell);
+
+//        typeAnnotation.setCellValueFactory(cell -> {
+//            final String type = cell.getValue().getType();
+//            return new SimpleStringProperty(type == null ? "" : type);
+//        });
+//        typeAnnotation.setCellFactory(this::wrappableTableCell);
+//        colorAnnotation.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getColor()));
+//        colorAnnotation.setCellFactory(column -> new TableCell<Annotation, Color>() {
+//            @Override
+//            protected void updateItem(final Color color, final boolean empty) {
+//                super.updateItem(color, empty);
+//                if (color == null || empty) {
+//                    setBackground(Background.EMPTY);
+//                } else {
+//                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+//                }
+//            }
+//        });
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
+    }
+
+
+    /**
+     * Create a table cell that wraps the text inside.
+     *
+     * @param param the table column
+     * @return a table cell that wraps the text inside
+     */
+    TableCell<Annotation, String> wrappableTableCell(final TableColumn<Annotation, String> param) {
+        return new TableCell<Annotation, String>() {
+            @Override
+            protected void updateItem(final String item, final boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+                final Text text = new Text(item);
+                text.setWrappingWidth(param.getWidth());
+                setPrefHeight(text.getLayoutBounds().getHeight());
+                setGraphic(text);
+            }
+        };
     }
 
     /**
@@ -92,6 +148,11 @@ public final class NodePropertiesController implements Initializable {
         rightNeighbours.setText(String.valueOf(node.getOutgoingEdges().size()));
 
         position.setText(node.getSegmentIds().toString());
+
+        annotationTable.setItems(FXCollections.observableArrayList(
+                node instanceof Segment
+                        ? graphAnnotation.getAnnotationsOfNode(((Segment) node).getId())
+                        : FXCollections.emptyObservableList()));
     }
 
 
