@@ -6,6 +6,7 @@ import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -200,10 +201,6 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
 
 
     private List<Character> extractSequences(final String sequenceDescription) {
-        if ("".equals(sequenceDescription)) {
-            return new ArrayList<>();
-        }
-
         String sequences = sequenceDescription;
         if (sequences.charAt(0) == '[') {
             sequences = sequences.substring(1);
@@ -213,8 +210,23 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         }
 
         return Arrays.stream(sequences.split(","))
-                .map(String::trim)
+                .map(sequence -> sequence.trim())
                 .map(sequence -> sequence.charAt(0))
                 .collect(Collectors.toList());
+    }
+
+    private Color baseToColor(final char base) {
+        switch (base) {
+            case 'A':
+                return Color.RED;
+            case 'T':
+                return Color.RED;
+            case 'C':
+                return Color.BLUE;
+            case 'G':
+                return Color.BLUE;
+            default:
+                return Color.GRAY;
+        }
     }
 }
