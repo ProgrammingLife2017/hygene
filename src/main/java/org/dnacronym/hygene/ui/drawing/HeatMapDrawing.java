@@ -90,13 +90,13 @@ public final class HeatMapDrawing {
 
         graphicsContext.setFill(Color.RED);
         for (final Integer bucket : buckets) {
-            graphicsContext.setFill(
-                    MIN_COLOR.interpolate(MAX_COLOR, (((double) bucket - minValue) / 2 + prevValue / 2) / maxValue));
+            final double normalized = (double) (bucket - minValue + 1) / Math.max(1, maxValue - minValue + 1);
+            graphicsContext.setFill(MIN_COLOR.interpolate(MAX_COLOR, normalized / 2 + prevValue / 2));
 
-            final double bucketHeight = (double) (bucket - minValue) / maxValue * canvasHeight.get();
+            final double bucketHeight = normalized * canvasHeight.get();
             graphicsContext.fillRect(xPos, 0, bucketWidth, bucketHeight);
 
-            prevValue = bucket;
+            prevValue = normalized;
             xPos += bucketWidth;
         }
     }
