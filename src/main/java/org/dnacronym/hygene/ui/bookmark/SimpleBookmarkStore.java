@@ -112,7 +112,7 @@ public final class SimpleBookmarkStore implements BookmarkStore {
     public void addBookmark(final Bookmark bookmark) {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
-                final long bookmarkPosition = FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
+                final long bookmarkPosition = (long) FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
                         .getUnscaledXPosition(bookmark.getNodeId());
                 graphDimensionsCalculator.getViewPointProperty().set(bookmarkPosition);
                 graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());

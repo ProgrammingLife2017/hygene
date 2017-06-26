@@ -26,13 +26,13 @@ public final class GraphSliderController implements Initializable {
         graphDimensionsCalculator.getGraphProperty().addListener((observable, oldValue, newValue) -> {
             final int sentinelId = newValue.getNodeArrays().length - 1;
             graphScrollBar.setMin(1);
-            graphScrollBar.setMax(FafospLayerer.LAYER_WIDTH * newValue.getUnscaledXPosition(sentinelId - 1)
+            graphScrollBar.setMax((double) FafospLayerer.LAYER_WIDTH * newValue.getUnscaledXPosition(sentinelId - 1)
                     + newValue.getLength(sentinelId - 1));
         });
 
         graphScrollBar.valueProperty().bindBidirectional(graphDimensionsCalculator.getViewPointProperty());
-        graphDimensionsCalculator.getViewRadiusProperty().addListener((observable) -> graphScrollBar.setVisibleAmount(
-                graphDimensionsCalculator.getMaxX() - graphDimensionsCalculator.getMinX()));
+        graphDimensionsCalculator.getViewRadiusProperty().addListener(observable -> graphScrollBar.setVisibleAmount(
+                (double) graphDimensionsCalculator.getMaxX() - graphDimensionsCalculator.getMinX()));
 
         graphScrollBar.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
         graphScrollBar.visibleProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());

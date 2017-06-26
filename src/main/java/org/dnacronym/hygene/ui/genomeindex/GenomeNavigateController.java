@@ -72,7 +72,8 @@ public final class GenomeNavigateController implements Initializable {
 
         genomeNavigation.runActionOnIndexedGenome(genome.getValue(), dynamicGenomeIndex -> Platform.runLater(() -> {
             final int nodeId = dynamicGenomeIndex.getNodeByBase(selectedBase);
-            final long nodePos = FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph().getUnscaledXPosition(nodeId);
+            final long nodePos = (long) FafospLayerer.LAYER_WIDTH
+                    * graphVisualizer.getGraph().getUnscaledXPosition(nodeId);
             graphDimensionsCalculator.getViewPointProperty().set(nodePos);
             graphVisualizer.setSelectedSegment(nodeId);
 

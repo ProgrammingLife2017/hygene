@@ -90,7 +90,7 @@ public final class GraphDimensionsCalculator {
      * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
     @Inject
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S1188", "squid:S3776"})
     public GraphDimensionsCalculator(final GraphStore graphStore) {
         this.graphStore = graphStore;
         observableQueryNodes = FXCollections.observableArrayList();
@@ -128,7 +128,7 @@ public final class GraphDimensionsCalculator {
                     : SequenceDirection.RIGHT;
 
             int centerNodeId = centerNodeIdProperty.get();
-            if (newValue.longValue() == FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)) {
+            if (newValue.longValue() == (long) FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)) {
                 return;
             }
 

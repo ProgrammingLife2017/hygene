@@ -182,7 +182,7 @@ public final class NodePropertiesController implements Initializable {
     void onFocusAction(final ActionEvent actionEvent) {
         final GfaNode selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
         if (selectedNode != null) {
-            final long selectedNodePosition = FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
+            final long selectedNodePosition = (long) FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
                     .getUnscaledXPosition(selectedNode.getSegmentIds().get(0));
             graphDimensionsCalculator.getViewPointProperty().set(selectedNodePosition);
         }

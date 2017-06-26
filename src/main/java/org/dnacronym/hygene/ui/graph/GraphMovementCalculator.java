@@ -108,8 +108,8 @@ public final class GraphMovementCalculator {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get()
                 * (graphDimensionsCalculator.getViewRadiusProperty().get() / RADIUS_ZOOMING_FACTOR));
         final int newViewRadius = graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange;
-        if (newViewRadius < FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
-                || newViewRadius > FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
+        if (newViewRadius < (long) FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
+                || newViewRadius > (long) FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
             return;
         }
         graphDimensionsCalculator.getViewRadiusProperty().set(newViewRadius);
