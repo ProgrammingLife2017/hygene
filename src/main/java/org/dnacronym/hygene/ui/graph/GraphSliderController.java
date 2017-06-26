@@ -5,11 +5,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.Pane;
+import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.GraphIterator;
+import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.ui.drawing.HeatMapDrawing;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 
@@ -17,7 +24,7 @@ import java.util.ResourceBundle;
  * Controller of the slider which allows traversing the graph.
  */
 public final class GraphSliderController implements Initializable {
-    private static final int BUCKET_COUNT = 2000;
+    private static final int BUCKET_COUNT = 1500;
 
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;

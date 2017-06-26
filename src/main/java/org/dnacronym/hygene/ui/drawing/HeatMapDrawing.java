@@ -38,9 +38,9 @@ public final class HeatMapDrawing {
         maxValue = 0;
         minValue = Integer.MAX_VALUE;
 
-        for (final Integer integer : buckets) {
-            maxValue = Math.max(maxValue, integer);
-            minValue = Math.min(minValue, integer);
+        for (final Integer bucket : buckets) {
+            maxValue = Math.max(maxValue, bucket);
+            minValue = Math.min(minValue, bucket);
         }
 
         draw();
@@ -93,7 +93,7 @@ public final class HeatMapDrawing {
             final double normalized = (double) (bucket - minValue + 1) / Math.max(1, maxValue - minValue + 1);
             graphicsContext.setFill(MIN_COLOR.interpolate(MAX_COLOR, normalized / 2 + prevValue / 2));
 
-            final double bucketHeight = normalized * canvasHeight.get();
+            final double bucketHeight = (normalized / 2 + prevValue / 2) * canvasHeight.get();
             graphicsContext.fillRect(xPos, 0, bucketWidth, bucketHeight);
 
             prevValue = normalized;
