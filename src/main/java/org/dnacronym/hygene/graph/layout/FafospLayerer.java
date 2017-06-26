@@ -65,6 +65,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param data   the {@link LayererData}
      * @param layers an array of layers
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
     private void addToLayers(final LayererData data, final LayoutableNode[][] layers) {
         final Set<Node> addLayoutableNodeLater = new HashSet<>();
 
