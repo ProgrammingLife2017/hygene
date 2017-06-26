@@ -86,7 +86,7 @@ public final class HeatMapDrawing {
     private void drawHeatMap(final int minValue, final int maxValue, final List<Integer> buckets) {
         final double bucketWidth = canvasWidth.get() / buckets.size();
         double xPos = 0;
-        double prevValue = 0; // used to allow smoother transition in heatmap
+        double prevValue = 0; // used to allow smoother transition in heat map
 
         graphicsContext.setFill(Color.RED);
         for (final Integer bucket : buckets) {

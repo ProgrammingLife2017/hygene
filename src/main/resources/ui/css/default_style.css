@@ -11,12 +11,28 @@
     -fx-base: -background;
 }
 
-#graphScrollBar.side_button {
+#graphScrollBar {
     -fx-background-color: transparent;
 }
 
-#graphScrollBar {
+#graphScrollBar .increment-button,
+#graphScrollBar .decrement-button {
     -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+    -fx-padding: 0 0 10 0;
+}
+
+#graphScrollBar .increment-arrow,
+#graphScrollBar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0em;
+}
+
+#graphScrollBar .thumb {
+    -fx-border-color: -hygene;
+    -fx-border-width: 2px;
+    -fx-background-color: transparent;
+    -fx-border-radius: 4px;
 }
 
 .square_button {
