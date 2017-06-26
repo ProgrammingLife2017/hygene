@@ -70,6 +70,20 @@ public final class GenomePath {
         return name;
     }
 
+    /**
+     * Gets color.
+     *
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * Sets color.
+     *
+     * @param color the color
+     */
     public void setColor(Color color) {
         this.color = color;
     }

@@ -17,6 +17,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -81,6 +82,7 @@ public final class PathController implements Initializable {
                             GenomeData genomeData = new GenomeData();
                             genomeData.setInfo(genome);
                             setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+                            genomeData.getBox().setBackground(Background.EMPTY);
 
                             setGraphic(genomeData.getBox());
                         }
@@ -191,6 +193,8 @@ public final class PathController implements Initializable {
 
     public class GenomeData {
         @FXML
+        private HBox wrapper;
+        @FXML
         private HBox hBox;
         @FXML
         private Label genomeName;
@@ -210,12 +214,13 @@ public final class PathController implements Initializable {
         public void setInfo(GenomePath genomePath) {
             genomeName.setText(genomePath.getName());
             isSelected.selectedProperty().bindBidirectional(genomePath.selectedProperty());
-            hBox.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-
+            wrapper.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY, new Insets(5,5,5,5))));
+            hBox.setBackground(Background.EMPTY);
+            hBox.setBackground(new Background(new BackgroundFill(Color.RED,CornerRadii.EMPTY, new Insets(5,5,5,5))));
         }
 
         public HBox getBox() {
-            return hBox;
+            return wrapper;
         }
     }
 }

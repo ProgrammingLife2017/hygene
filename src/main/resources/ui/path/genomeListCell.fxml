@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox fx:id="hBox" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
-    <children>
-        <CheckBox fx:id="isSelected" />
-        <Label fx:id="genomeName" alignment="CENTER_RIGHT" />
-    </children>
+
+<HBox fx:id="wrapper" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fx:id="hBox">
+          <children>
+              <CheckBox fx:id="isSelected" />
+              <Label fx:id="genomeName" alignment="CENTER_RIGHT" />
+          </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
 </HBox>
