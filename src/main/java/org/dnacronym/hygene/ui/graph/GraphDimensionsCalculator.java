@@ -85,6 +85,8 @@ public final class GraphDimensionsCalculator {
     private final ReadOnlyListWrapper<Node> readOnlyObservableNodes;
 
 
+    private final GraphStore graphStore;
+
     /**
      * Create a new instance of {@link GraphDimensionsCalculator}.
      *
@@ -92,6 +94,7 @@ public final class GraphDimensionsCalculator {
      */
     @Inject
     public GraphDimensionsCalculator(final GraphStore graphStore) {
+        this.graphStore = graphStore;
         observableQueryNodes = FXCollections.observableArrayList();
         readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
 
@@ -258,6 +261,8 @@ public final class GraphDimensionsCalculator {
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
+
+        new GraphLocation(this, graphStore).restore();
     }
 
     /**

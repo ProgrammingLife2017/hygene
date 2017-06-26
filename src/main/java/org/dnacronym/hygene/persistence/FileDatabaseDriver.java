@@ -133,7 +133,6 @@ public final class FileDatabaseDriver implements AutoCloseable {
     synchronized String getSingleValue(final String tableName, final String keyColumnName, final String keyColumnValue,
                                        final String valueColumnName) throws SQLException {
         final String sql = "SELECT * FROM " + tableName + " WHERE " + keyColumnName + "='" + keyColumnValue + "'";
-
         try (Statement statement = connection.createStatement()) {
             try (ResultSet resultSet = statement.executeQuery(sql)) {
                 if (!resultSet.next()) {
