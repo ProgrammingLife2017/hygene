@@ -74,6 +74,15 @@ public final class GraphDimensionsCalculator {
     private Subgraph subgraph;
 
     private long minX;
+
+    public long getMinX() {
+        return minX;
+    }
+
+    public long getMaxX() {
+        return maxX;
+    }
+
     private long maxX;
     private int minY;
     private Dimension2D canvasDimension;
