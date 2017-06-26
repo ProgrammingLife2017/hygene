@@ -54,7 +54,21 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     @Override
     public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
                             final List<Color> genomeColors) {
-        // Not yet implemented
+        assert genomeColors.size() == 2;
+
+        final double centerY = snpY + getNodeHeight() / 2;
+
+        getGraphicsContext().setFill(genomeColors.get(0));
+        getGraphicsContext().fillPolygon(
+                new double[] {snpX, snpX + snpWidth / 2, snpX + snpWidth},
+                new double[] {centerY, centerY - getSnpHeight() / 2, centerY},
+                3);
+
+        getGraphicsContext().setFill(genomeColors.get(1));
+        getGraphicsContext().fillPolygon(
+                new double[] {snpX, snpX + snpWidth / 2, snpX + snpWidth},
+                new double[] {centerY, centerY + getSnpHeight() / 2, centerY},
+                3);
     }
 
     /**

@@ -210,6 +210,7 @@ public final class GraphVisualizer {
         } else {
             nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), "");
         }
+        nodeDrawingToolkit.drawGenomes(nodeX, nodeY, nodeWidth, computeNodeColors(gfaNode));
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
                 .anyMatch(segmentId -> selectedSegmentProperty.get().containsSegment(segmentId))) {
@@ -247,6 +248,31 @@ public final class GraphVisualizer {
 
             rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
         });
+    }
+
+    private List<Color> computeNodeColors(final GfaNode gfaNode) {
+        final List<Color> nodeColors = new ArrayList<>();
+
+        for (final Segment segment : gfaNode.getSegments()) {
+            if (segment.hasMetadata()
+                    && segment.getMetadata().getGenomes() != null
+                    && !segment.getMetadata().getGenomes().isEmpty()
+                    && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
+                for (final String genome : segment.getMetadata().getGenomes()) {
+                    if (selectedGenomePaths.containsKey(genome)) {
+                        nodeColors.add(selectedGenomePaths.get(genome));
+                    }
+                }
+            }
+        }
+
+        if (nodeColors.isEmpty()) {
+            for (final Segment segment : gfaNode.getSegments()) {
+                nodeColors.add(segment.getColor());
+            }
+        }
+
+        return nodeColors;
     }
 
     /**
