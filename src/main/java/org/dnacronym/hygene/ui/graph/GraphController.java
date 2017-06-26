@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -26,6 +27,8 @@ public final class GraphController implements Initializable {
     private GraphVisualizer graphVisualizer;
     @Inject
     private GraphMovementCalculator graphMovementCalculator;
+    @Inject
+    private GraphStore graphStore;
 
     @FXML
     private Canvas graphCanvas;
@@ -40,6 +43,15 @@ public final class GraphController implements Initializable {
 
         graphCanvas.heightProperty().bind(graphPane.heightProperty());
         graphCanvas.widthProperty().bind(graphPane.widthProperty());
+
+        graphCanvas.widthProperty().addListener((observable, oldValue, newValue) -> {
+            if (graphStore.getGfaFileProperty().get() != null) {
+                return;
+            }
+
+            drawWelcomeImage();
+        });
+
 
         graphVisualizer.setCanvas(graphCanvas);
     }
@@ -137,5 +149,19 @@ public final class GraphController implements Initializable {
         ((Node) scrollEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
 
         scrollEvent.consume();
+    }
+
+    /**
+     * Displays a welcome image on the canvas.
+     */
+    private void drawWelcomeImage() {
+        graphCanvas.getGraphicsContext2D().clearRect(0, 0, graphCanvas.getWidth(), graphCanvas.getHeight());
+
+        final Image image = new Image(getClass().getResource("/icons/welcome.png").toString());
+        graphCanvas.getGraphicsContext2D().drawImage(image,
+                graphCanvas.getWidth() / 2 - image.getWidth() / 4,
+                graphCanvas.getHeight() / 2 - image.getHeight() / 4,
+                image.getWidth() / 2,
+                image.getHeight() / 2);
     }
 }
