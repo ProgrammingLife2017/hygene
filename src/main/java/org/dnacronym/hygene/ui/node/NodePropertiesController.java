@@ -32,8 +32,7 @@ public final class NodePropertiesController implements Initializable {
     private TextField nodeId;
     @FXML
     private TextField sequencePreview;
-    @FXML
-    private Canvas neighbourCanvas;
+
     @FXML
     private TextField leftNeighbours;
     @FXML
@@ -46,9 +45,6 @@ public final class NodePropertiesController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
-        final NeighbourVisualizer neighbourVisualizer
-                = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
-        neighbourVisualizer.setCanvas(neighbourCanvas);
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
     }
