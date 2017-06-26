@@ -1,20 +1,28 @@
 package org.dnacronym.hygene.ui.node;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.ui.graph.GraphAnnotation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
@@ -35,6 +43,8 @@ public final class NodePropertiesController implements Initializable {
     private GraphVisualizer graphVisualizer;
     @Inject
     private SequenceVisualizer sequenceVisualizer;
+    @Inject
+    private GraphAnnotation graphAnnotation;
 
     @FXML
     private Label nodeId;
@@ -47,7 +57,13 @@ public final class NodePropertiesController implements Initializable {
     @FXML
     private Label position;
     @FXML
+    private TableView<Annotation> annotationTable;
+    @FXML
     private TableColumn<Annotation, String> nameAnnotation;
+    @FXML
+    private TableColumn<Annotation, String> typeAnnotation;
+    @FXML
+    private TableColumn<Annotation, Color> colorAnnotation;
 
 
     @Override
@@ -60,23 +76,24 @@ public final class NodePropertiesController implements Initializable {
         });
         nameAnnotation.setCellFactory(this::wrappableTableCell);
 
-//        typeAnnotation.setCellValueFactory(cell -> {
-//            final String type = cell.getValue().getType();
-//            return new SimpleStringProperty(type == null ? "" : type);
-//        });
-//        typeAnnotation.setCellFactory(this::wrappableTableCell);
-//        colorAnnotation.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getColor()));
-//        colorAnnotation.setCellFactory(column -> new TableCell<Annotation, Color>() {
-//            @Override
-//            protected void updateItem(final Color color, final boolean empty) {
-//                super.updateItem(color, empty);
-//                if (color == null || empty) {
-//                    setBackground(Background.EMPTY);
-//                } else {
-//                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
-//                }
-//            }
-//        });
+        typeAnnotation.setCellValueFactory(cell -> {
+            final String type = cell.getValue().getType();
+            return new SimpleStringProperty(type == null ? "" : type);
+        });
+        typeAnnotation.setCellFactory(this::wrappableTableCell);
+
+        colorAnnotation.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getColor()));
+        colorAnnotation.setCellFactory(column -> new TableCell<Annotation, Color>() {
+            @Override
+            protected void updateItem(final Color color, final boolean empty) {
+                super.updateItem(color, empty);
+                if (color == null || empty) {
+                    setBackground(Background.EMPTY);
+                } else {
+                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            }
+        });
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
     }
