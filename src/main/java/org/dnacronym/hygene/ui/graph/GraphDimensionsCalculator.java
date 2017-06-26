@@ -23,6 +23,7 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.edge.Edge;
@@ -132,35 +133,34 @@ public final class GraphDimensionsCalculator {
 
         viewPointProperty = new SimpleLongProperty(2000);
         viewPointProperty.addListener((observable, oldValue, newValue) -> {
+            final Graph graph = getGraphProperty().get();
             final SequenceDirection direction = newValue.longValue() < oldValue.longValue()
                     ? SequenceDirection.LEFT
                     : SequenceDirection.RIGHT;
 
-            GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
-            if (newValue.longValue() == centerNode.getXPosition()) {
+            int centerNodeId = centerNodeIdProperty.get();
+            if (newValue.longValue() == FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)) {
                 return;
             }
 
             // Find new center node
             while (direction.ternary(
-                    centerNode.getXPosition() > newValue.longValue(),
-                    centerNode.getXPosition() + centerNode.getLength() < newValue.longValue()
+                    FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId) > newValue.longValue(),
+                    FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)
+                            + graph.getLength(centerNodeId) < newValue.longValue()
             )) {
-                final Set<Edge> neighbours = direction.ternary(
-                        centerNode.getIncomingEdges(),
-                        centerNode.getOutgoingEdges());
-                final Edge firstEdge = neighbours.iterator().next();
-                centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
-
-                if (direction.ternary(centerNode.getIncomingEdges(), centerNode.getOutgoingEdges()).isEmpty()) {
-                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
-                    centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+                final int[] firstNeighbour = {-1};
+                new GraphIterator(graph).visitDirectNeighboursWhile(centerNodeId, direction,
+                        ignored -> firstNeighbour[0] == -1, neighbour -> firstNeighbour[0] = neighbour);
+                if (firstNeighbour[0] < 0) {
+                    break;
                 }
+                centerNodeId = firstNeighbour[0];
             }
 
             // Set center node
             calculate(subgraph);
-            centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+            centerNodeIdProperty.set(centerNodeId);
         });
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
