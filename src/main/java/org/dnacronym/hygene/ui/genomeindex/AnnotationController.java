@@ -16,6 +16,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -30,6 +31,8 @@ import java.util.ResourceBundle;
  * Controller for the annotation search view.
  */
 public final class AnnotationController implements Initializable {
+    private static final int TEXT_PADDING = 10;
+
     @Inject
     private AnnotationSearch annotationSearch;
     @Inject
@@ -54,9 +57,10 @@ public final class AnnotationController implements Initializable {
 
 
     @Override
+    @SuppressWarnings("squid:MaximumInheritanceDepth") // To modify table cell factories
     public void initialize(final URL location, final ResourceBundle resources) {
         queryField.textProperty().addListener((observable, oldValue, newValue) ->
-               annotationSearch.search(newValue));
+                annotationSearch.search(newValue));
 
         resultsTable.setRowFactory(tableView -> {
             final TableRow<Annotation> annotationTableRow = new TableRow<>();
@@ -69,6 +73,9 @@ public final class AnnotationController implements Initializable {
             });
             return annotationTableRow;
         });
+
+        nameColumn.setCellFactory(this::createWrappableTableCell);
+        typeColumn.setCellFactory(this::createWrappableTableCell);
 
         nameColumn.setCellValueFactory(cell -> {
             if (cell.getValue().getAttributes().get("Name") == null) {
@@ -109,5 +116,30 @@ public final class AnnotationController implements Initializable {
         annotationSearch.search(queryField.getText());
 
         actionEvent.consume();
+    }
+
+    /**
+     * Creates a wrapped table cell.
+     *
+     * @param column the table column in which the cell resides
+     * @return a TableCell with the text wrapped inside
+     */
+    private TableCell<Annotation, String> createWrappableTableCell(final TableColumn<Annotation, String> column) {
+        return new TableCell<Annotation, String>() {
+            @Override
+            protected void updateItem(final String item, final boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                final Text text = new Text(item);
+                text.setWrappingWidth(column.getWidth() - TEXT_PADDING);
+                setPrefHeight(text.getLayoutBounds().getHeight());
+
+                setGraphic(text);
+            }
+        };
     }
 }
