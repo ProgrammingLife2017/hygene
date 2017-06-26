@@ -273,7 +273,7 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(1);
-        viewPointProperty.set(0);
+        viewPointProperty.set(3500);
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
 
         new GraphLocation(this, graphStore).restore();
