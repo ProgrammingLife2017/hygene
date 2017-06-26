@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.path;
 
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,5 +49,11 @@ class GenomePathTest {
     @Test
     void testToString() {
         assertThat(genomePath.toString()).isEqualTo("nutella.fasta");
+    }
+
+    @Test
+    void testColor() {
+        genomePath.setColor(Color.RED);
+        assertThat(genomePath.getColor().get()).isEqualTo(Color.RED);
     }
 }
