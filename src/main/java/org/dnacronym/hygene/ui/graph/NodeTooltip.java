@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 
+
 /**
  * Represents a {@link NodeTooltip}.
  */
@@ -23,6 +24,7 @@ public class NodeTooltip {
     private final double middleX;
     private final double belowY;
 
+
     /**
      * Constructs {@link NodeTooltip}.
      *
@@ -37,6 +39,7 @@ public class NodeTooltip {
         this.middleX = middleX;
         this.belowY = belowY;
     }
+
 
     /**
      * Shows the tooltip.
