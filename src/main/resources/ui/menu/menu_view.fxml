@@ -21,12 +21,12 @@
                     </items>
                 </Menu>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem onAction="#openGffFileAction" text="Open GFF file">
+                <MenuItem fx:id="openGffFile" disable="true" onAction="#openGffFileAction" text="Open GFF file">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="G" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
                     </accelerator>
                 </MenuItem>
-                <MenuItem onAction="#closeGffFileAction" text="Close GFF file">
+                <MenuItem fx:id="closeGffFile" disable="true" onAction="#closeGffFileAction" text="Close GFF file">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
                     </accelerator>

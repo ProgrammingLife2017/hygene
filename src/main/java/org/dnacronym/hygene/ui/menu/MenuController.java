@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.dialogue.ErrorDialogue;
 import org.dnacronym.hygene.ui.graph.GraphStore;
+import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.progressbar.ProgressBarView;
 import org.dnacronym.hygene.ui.recent.RecentDirectory;
 import org.dnacronym.hygene.ui.recent.RecentFiles;
@@ -42,10 +43,16 @@ public final class MenuController implements Initializable {
     @Inject
     private GraphStore graphStore;
     @Inject
+    private GraphVisualizer graphVisualizer;
+    @Inject
     private SettingsView settingsView;
 
     @FXML
     private Menu recentFilesMenu;
+    @FXML
+    private MenuItem openGffFile;
+    @FXML
+    private MenuItem closeGffFile;
 
 
     @Override
@@ -54,6 +61,10 @@ public final class MenuController implements Initializable {
             populateRecentFilesMenu();
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
             setGffFileChooser(initFileChooser(GraphStore.GFF_FILE_NAME, GraphStore.GFF_FILE_EXTENSION));
+
+
+            openGffFile.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+            closeGffFile.disableProperty().bind(graphStore.getGffFileProperty().isNull());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
             new ErrorDialogue(e).show();
@@ -111,6 +122,7 @@ public final class MenuController implements Initializable {
     @FXML
     void closeGffFileAction(final ActionEvent event) {
         graphStore.getGffFileProperty().setValue(null);
+        graphVisualizer.draw();
     }
 
     /**
