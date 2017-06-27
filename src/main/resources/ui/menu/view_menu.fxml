@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <Menu mnemonicParsing="false" text="View" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.dnacronym.hygene.ui.menu.ViewMenuController">
@@ -20,11 +21,13 @@
             <KeyCodeCombination alt="UP" code="M" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
         </accelerator>
     </MenuItem>
+    <SeparatorMenuItem mnemonicParsing="false"/>
     <MenuItem fx:id="toggleAggregation" onAction="#toggleAggregationAction" text="Toggle SNP collapsing">
         <accelerator>
             <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
         </accelerator>
     </MenuItem>
+    <SeparatorMenuItem mnemonicParsing="false"/>
     <MenuItem mnemonicParsing="false" onAction="#openConsoleAction" text="Open console">
         <accelerator>
             <KeyCodeCombination alt="UP" code="T" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
