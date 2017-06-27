@@ -7,11 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
+import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,6 +28,8 @@ public final class ViewMenuController implements Initializable {
     private GraphStore graphStore;
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
+    private ConsoleView consoleView;
 
     @FXML
     private MenuItem toggleSequenceVisualizer;
@@ -93,5 +97,27 @@ public final class ViewMenuController implements Initializable {
     void toggleAggregationAction(final ActionEvent actionEvent) {
         aggregationProperty.set(!aggregationProperty.get());
         actionEvent.consume();
+    }
+
+    /**
+     * Opens an independent stage showing the console window.
+     *
+     * @param actionEvent {@link ActionEvent} associated with the event
+     * @throws IOException if unable to located the FXML resource
+     */
+    @FXML
+    void openConsoleAction(final ActionEvent actionEvent) throws IOException {
+        consoleView.bringToFront();
+
+        actionEvent.consume();
+    }
+
+    /**
+     * Returns the {@link ConsoleView} attached to this menu.
+     *
+     * @return the {@link ConsoleView}
+     */
+    public ConsoleView getConsoleView() {
+        return consoleView;
     }
 }

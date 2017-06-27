@@ -46,6 +46,6 @@
             </items>
         </Menu>
         <fx:include source="view_menu.fxml"/>
-        <fx:include source="tools_menu.fxml"/>
+        <fx:include source="help_menu.fxml"/>
     </menus>
 </MenuBar>

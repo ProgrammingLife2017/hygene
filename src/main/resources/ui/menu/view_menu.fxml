@@ -15,4 +15,9 @@
             <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
         </accelerator>
     </MenuItem>
+    <MenuItem mnemonicParsing="false" onAction="#openConsoleAction" text="Open console">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="T" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
 </Menu>
