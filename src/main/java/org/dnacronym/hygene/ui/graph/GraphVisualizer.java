@@ -334,14 +334,10 @@ public final class GraphVisualizer {
      * @return the list of colors of annotations going through the given {@link Edge}
      */
     private List<Color> edgeAnnotationColors(final Edge edge, final List<Annotation> annotations) {
-        final List<Color> annotationColors = new ArrayList<>();
-
-        for (final Annotation annotation : annotations) {
-            if (edgePartOfAnnotation(edge, annotation)) {
-                annotationColors.add(annotation.getColor());
-            }
-        }
-        return annotationColors;
+        return annotations.stream()
+                .filter(annotation -> edgePartOfAnnotation(edge, annotation))
+                .map(Annotation::getColor)
+                .collect(Collectors.toList());
     }
 
 
@@ -358,10 +354,8 @@ public final class GraphVisualizer {
         return edge.getFromSegment().hasMetadata() && edge.getToSegment().hasMetadata()
                 && edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                 && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                && edge.getFromSegment() instanceof Segment
-                && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
-                && edge.getToSegment() instanceof Segment
-                && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId();
+                && edge.getFromSegment().getSegmentIds().stream().anyMatch(id -> id >= annotation.getStartNodeId())
+                && edge.getToSegment().getSegmentIds().stream().anyMatch(id -> id < annotation.getEndNodeId());
     }
 
     /**

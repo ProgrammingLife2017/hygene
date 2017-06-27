@@ -52,7 +52,21 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     @Override
     public void drawAnnotations(final double snpX, final double snpY, final double snpWidth,
                                 final List<Color> annotationColors) {
-        // Not yet implemented
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
+        getGraphicsContext().setLineWidth(getAnnotationHeight());
+
+        double annotationYOffset = snpY + getNodeHeight() + getAnnotationHeight() + getAnnotationHeight() / 2;
+        for (final Color color : annotationColors) {
+            getGraphicsContext().setStroke(color);
+            getGraphicsContext().strokeLine(snpX, annotationYOffset,
+                    snpX + snpWidth / 2, annotationYOffset + getSnpHeight() / 2);
+            getGraphicsContext().strokeLine(snpX + snpWidth / 2, annotationYOffset + getSnpHeight() / 2,
+                    snpX + snpWidth, annotationYOffset);
+
+            annotationYOffset += getAnnotationHeight();
+        }
+
+        getGraphicsContext().setLineDashes(ANNOTATION_DASH_DEFAULT);
     }
 
     /**
