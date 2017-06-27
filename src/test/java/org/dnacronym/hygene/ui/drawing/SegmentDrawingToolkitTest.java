@@ -66,23 +66,6 @@ final class SegmentDrawingToolkitTest extends UITestBase {
     }
 
     @Test
-    void testNodeAnnotations() {
-        segmentDrawingToolkit.setNodeHeight(20);
-        segmentDrawingToolkit.setAnnotationHeight(5);
-        segmentDrawingToolkit.drawAnnotations(50, 80, 5, Arrays.asList(Color.BLACK, Color.WHITE), 0, 40);
-
-        verify(graphicsContext, atLeast(1)).setStroke(eq(Color.BLACK));
-        verify(graphicsContext, atLeast(1)).setStroke(eq(Color.WHITE));
-
-        verify(graphicsContext).setLineDashes(10);
-
-        verify(graphicsContext).strokeLine(
-                eq(50d), eq(80 + 20 + 10 + 5d / 2), eq(50 + 40d), eq(80 + 20 + 10 + 5d / 2));
-        verify(graphicsContext).strokeLine(
-                eq(50d), eq(80 + 20 + 10 + 5d / 2), eq(50 + 40d), eq(80 + 20 + 10 + 5d / 2));
-    }
-
-    @Test
     void testHighlightSelectedNodeDraw() {
         segmentDrawingToolkit.drawHighlight(10, 20, 30, HighlightType.SELECTED);
 
