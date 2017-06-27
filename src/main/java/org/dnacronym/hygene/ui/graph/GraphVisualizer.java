@@ -631,23 +631,17 @@ public final class GraphVisualizer {
      * @param nodeId node the id of the newly hovered {@link Segment}
      */
     public void setHoveredSegmentProperty(final int nodeId) {
-        final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
-                .filtered(node -> node instanceof GfaNode && ((GfaNode) node).containsSegment(nodeId));
+        graphDimensionsCalculator.getCenterPointQuery().getCache().getSegment(nodeId).ifPresent(segment -> {
+            hoveredSegmentProperty.set(segment);
 
-        if (segment.isEmpty()) {
-            LOGGER.error("Cannot select node that is not in subgraph.");
-            return;
-        }
-
-        hoveredSegmentProperty.set((GfaNode) segment.get(0));
-
-        new NodeTooltip(
-                graphicsContext,
-                (GfaNode) segment.get(0),
-                graphDimensionsCalculator.computeXPosition(segment.get(0))
-                        + (graphDimensionsCalculator.computeWidth(segment.get(0)) / 2),
-                graphDimensionsCalculator.computeBelowYPosition(segment.get(0))
-        ).show();
+            new NodeTooltip(
+                    graphicsContext,
+                    segment,
+                    graphDimensionsCalculator.computeXPosition(segment)
+                            + (graphDimensionsCalculator.computeWidth(segment) / 2),
+                    graphDimensionsCalculator.computeBelowYPosition(segment)
+            ).show();
+        });
     }
 
     /**
