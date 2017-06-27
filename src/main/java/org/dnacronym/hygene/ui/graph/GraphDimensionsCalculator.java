@@ -273,7 +273,10 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(1);
-        viewPointProperty.set(3500);
+        final int sentinelId = graph.getNodeArrays().length - 1;
+        final long sentinelPosition = (long) FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(sentinelId)
+                + graph.getLength(sentinelId);
+        viewPointProperty.set(sentinelPosition / 2);
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
 
         new GraphLocation(this, graphStore).restore();
