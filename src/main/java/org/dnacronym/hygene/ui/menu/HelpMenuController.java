@@ -5,11 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,11 +16,9 @@ import java.util.ResourceBundle;
 /**
  * Controller for the tools menu.
  */
-public final class ToolsMenuController implements Initializable {
-    private static final Logger LOGGER = LogManager.getLogger(ToolsMenuController.class);
+public final class HelpMenuController implements Initializable {
+    private static final Logger LOGGER = LogManager.getLogger(HelpMenuController.class);
 
-    @Inject
-    private ConsoleView consoleView;
     private HelpMenuView helpMenuView;
 
 
@@ -32,24 +28,12 @@ public final class ToolsMenuController implements Initializable {
     }
 
     /**
-     * Opens an independent stage showing the console window.
-     *
-     * @param actionEvent {@link ActionEvent} associated with the event
-     * @throws IOException if unable to located the FXML resource
-     */
-    @FXML
-    void openConsoleAction(final ActionEvent actionEvent) throws IOException {
-        consoleView.bringToFront();
-
-        actionEvent.consume();
-    }
-
-    /**
      * Opens an independent stage showing the help menu.
      *
      * @param actionEvent {@link ActionEvent} associated with the event
      * @throws IOException if unable to locate FXML resource
      */
+    @FXML
     public void openHelpAction(final ActionEvent actionEvent) throws IOException {
         try {
             if (helpMenuView == null) {
@@ -65,13 +49,10 @@ public final class ToolsMenuController implements Initializable {
         actionEvent.consume();
     }
 
-    /**
-     * Returns the {@link ConsoleView} attached to this menu.
-     *
-     * @return the {@link ConsoleView}
-     */
-    public ConsoleView getConsoleView() {
-        return consoleView;
+    @FXML
+    public void openAboutAction(final ActionEvent actionEvent) throws IOException {
+        // TODO add About menu
+        actionEvent.consume();
     }
 
     /**

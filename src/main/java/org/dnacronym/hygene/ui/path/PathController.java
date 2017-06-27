@@ -13,7 +13,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -21,7 +20,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
@@ -39,9 +37,6 @@ import java.util.regex.PatternSyntaxException;
 @SuppressWarnings({"PMD.ExcessiveImports", "squid:MaximumInheritanceDepth"})
 public final class PathController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(PathController.class);
-
-    @FXML
-    private TitledPane pathPane;
 
     @FXML
     private TableView<GenomePath> pathTable;
@@ -69,8 +64,6 @@ public final class PathController implements Initializable {
 
     @Inject
     private GraphVisualizer graphVisualizer;
-    @Inject
-    private GraphStore graphStore;
 
 
     @Override
@@ -108,8 +101,6 @@ public final class PathController implements Initializable {
         pathTable.setItems(filteredList);
 
         pathTable.setEditable(true);
-
-        pathPane.visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
 
         addListeners();
     }

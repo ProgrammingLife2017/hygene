@@ -2,6 +2,7 @@ package org.dnacronym.hygene.ui.runnable;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import org.dnacronym.hygene.ui.MainController;
 import org.dnacronym.hygene.ui.bookmark.BookmarkStore;
 import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
@@ -33,6 +34,7 @@ public final class GuiceModule extends AbstractModule {
         bind(GenomeNavigation.class).in(Singleton.class);
         bind(GraphAnnotation.class).in(Singleton.class);
         bind(GraphVisualizer.class).in(Singleton.class);
+        bind(MainController.class).in(Singleton.class);
 
         bind(SequenceVisualizer.class).in(Singleton.class);
         bind(StatusBar.class).in(Singleton.class);

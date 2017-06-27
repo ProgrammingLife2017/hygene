@@ -7,11 +7,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
+import org.dnacronym.hygene.ui.MainController;
+import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -23,12 +26,20 @@ public final class ViewMenuController implements Initializable {
     @Inject
     private SequenceVisualizer sequenceVisualizer;
     @Inject
+    private MainController mainController;
+    @Inject
     private GraphStore graphStore;
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
+    private ConsoleView consoleView;
 
     @FXML
     private MenuItem toggleSequenceVisualizer;
+    @FXML
+    private MenuItem openBookmarks;
+    @FXML
+    private MenuItem openGenomePaths;
     @FXML
     private MenuItem toggleAggregation;
 
@@ -46,6 +57,8 @@ public final class ViewMenuController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         toggleSequenceVisualizer.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+        openBookmarks.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+        openGenomePaths.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
         toggleAggregation.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
 
         aggregationProperty.addListener((observable, oldValue, newValue) -> {
@@ -57,11 +70,8 @@ public final class ViewMenuController implements Initializable {
         });
 
         toggleSequenceVisualizer.textProperty().bind(Bindings.when(sequenceVisualizer.getVisibleProperty())
-                .then("Hide s_equence view")
-                .otherwise("Show s_equence view"));
-        toggleAggregation.textProperty().bind(Bindings.when(aggregationProperty)
-                .then("Disa_ble node aggregation")
-                .otherwise("Ena_ble node aggregation"));
+                .then("Hide node s_equence")
+                .otherwise("Show node s_equence"));
     }
 
     /**
@@ -84,6 +94,18 @@ public final class ViewMenuController implements Initializable {
         actionEvent.consume();
     }
 
+    @FXML
+    void openBookmarksAction(final ActionEvent actionEvent) {
+        mainController.expandBookmarksPane();
+        actionEvent.consume();
+    }
+
+    @FXML
+    void openGenomePathsAction(final ActionEvent actionEvent) {
+        mainController.expandGenomePathsPane();
+        actionEvent.consume();
+    }
+
     /**
      * When the user wants to toggle the aggregation of nodes.
      *
@@ -93,5 +115,27 @@ public final class ViewMenuController implements Initializable {
     void toggleAggregationAction(final ActionEvent actionEvent) {
         aggregationProperty.set(!aggregationProperty.get());
         actionEvent.consume();
+    }
+
+    /**
+     * Opens an independent stage showing the console window.
+     *
+     * @param actionEvent {@link ActionEvent} associated with the event
+     * @throws IOException if unable to located the FXML resource
+     */
+    @FXML
+    void openConsoleAction(final ActionEvent actionEvent) throws IOException {
+        consoleView.bringToFront();
+
+        actionEvent.consume();
+    }
+
+    /**
+     * Returns the {@link ConsoleView} attached to this menu.
+     *
+     * @return the {@link ConsoleView}
+     */
+    public ConsoleView getConsoleView() {
+        return consoleView;
     }
 }

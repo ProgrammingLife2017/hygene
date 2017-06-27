@@ -26,7 +26,10 @@
                     <TitledPane fx:id="nodeProperties" animated="false" text="Node Properties" expanded="false">
                         <fx:include source="node/node_properties_view.fxml"/>
                     </TitledPane>
-                    <fx:include source="path/paths.fxml"/>
+                    <TitledPane fx:id="genomePathsPane" animated="false" minWidth="300.0" text="Highlight Genome"
+                                expanded="false">
+                        <fx:include source="path/paths.fxml"/>
+                    </TitledPane>
                 </VBox>
             </ScrollPane>
         </HBox>
@@ -36,16 +39,17 @@
         <HBox styleClass="sidePane">
             <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0" styleClass="sidePane">
                 <VBox styleClass="rightSidePane" spacing="10">
-                    <TitledPane animated="false" text="All Bookmarks">
+                    <TitledPane fx:id="bookmarksPane" animated="false" text="Bookmarks">
                         <fx:include source="bookmark/bookmarks_table_view.fxml"/>
                     </TitledPane>
-                    <TitledPane animated="false" text="Annotation Search" expanded="false">
+                    <TitledPane fx:id="annotationSearchPane" animated="false" text="Search GFF Annotation"
+                                expanded="false">
                         <fx:include source="genomeindex/annotation_query_view.fxml"/>
                     </TitledPane>
-                    <TitledPane animated="false" text="Query" expanded="false">
+                    <TitledPane fx:id="queryPane" animated="false" text="Search Sequence" expanded="false">
                         <fx:include source="query/query.fxml"/>
                     </TitledPane>
-                    <TitledPane animated="false" text="Genome Navigation" expanded="false">
+                    <TitledPane fx:id="genomeNavigationPane" animated="false" text="Navigate Genome" expanded="false">
                         <fx:include source="genomeindex/genome_navigate_view.fxml"/>
                     </TitledPane>
                 </VBox>
