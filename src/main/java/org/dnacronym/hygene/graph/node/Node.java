@@ -138,13 +138,13 @@ public abstract class Node implements LayoutableNode {
     public static final Color baseToColor(final char base) {
         switch (base) {
             case 'A':
-                return Color.rgb(38, 165, 38);
+                return Color.rgb(230, 245, 201);
             case 'T':
-                return Color.rgb(255, 0, 0);
+                return Color.rgb(244, 202, 228);
             case 'C':
-                return Color.rgb(0, 0, 255);
+                return Color.rgb(203, 213, 232);
             case 'G':
-                return Color.rgb(209, 113, 5);
+                return Color.rgb(253, 205, 172);
             default:
                 return Color.GRAY;
         }
