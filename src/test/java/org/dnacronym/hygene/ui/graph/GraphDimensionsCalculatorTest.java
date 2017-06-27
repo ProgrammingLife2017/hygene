@@ -105,6 +105,7 @@ final class GraphDimensionsCalculatorTest {
                         .withUnscaledXPosition(600)
                         .toArray(),
                 NodeBuilder.start()
+                        .withUnscaledXPosition(1000)
                         .toArray()
         }, null);
     }
@@ -122,6 +123,7 @@ final class GraphDimensionsCalculatorTest {
                         .withUnscaledXPosition(400)
                         .toArray(),
                 NodeBuilder.start()
+                        .withUnscaledXPosition(1000)
                         .toArray()
         }, null);
     }

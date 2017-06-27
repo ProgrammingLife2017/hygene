@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -70,18 +69,5 @@ final class SimpleBookmarkStoreTest {
         assertThat(simpleBookmarkStore.getSimpleBookmarks()).hasSize(2);
         assertThat(simpleBookmarkStore.getSimpleBookmarks().get(0))
                 .isNotEqualTo(simpleBookmarkStore.getSimpleBookmarks().get(1));
-    }
-
-    @Test
-    void testSetOnClick() {
-        simpleBookmarkStore.addBookmark(bookmark);
-
-        final SimpleBookmark simpleBookmark = simpleBookmarkStore.getSimpleBookmarks().get(0);
-        simpleBookmark.getOnClick().run();
-
-        verify(graphVisualizer).setSelectedSegment(0);
-        assertThat(centerNodeIdProperty.get()).isEqualTo(0);
-        assertThat(radiusProperty.get()).isEqualTo(32);
-        verify(sequenceVisualizer).setOffset(5);
     }
 }

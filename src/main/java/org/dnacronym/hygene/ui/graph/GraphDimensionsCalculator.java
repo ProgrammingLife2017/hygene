@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -12,6 +13,7 @@ import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,18 +23,16 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.Graph;
+import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.Subgraph;
-import org.dnacronym.hygene.graph.edge.Edge;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
-import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -48,7 +48,7 @@ import java.util.Set;
  * @see GraphDimensionsCalculator
  * @see CenterPointQuery
  */
-@SuppressWarnings({"PMD.TooManyFields", "PMD.ExcessiveImports"})
+@SuppressWarnings("PMD")
 public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
@@ -56,12 +56,9 @@ public final class GraphDimensionsCalculator {
     private static final int DEFAULT_RADIUS = 10;
     private static final int DEFAULT_LANE_COUNT = 10;
 
-    private final IntegerProperty minXNodeIdProperty;
-    private final IntegerProperty maxXNodeIdProperty;
-
     private final IntegerProperty centerNodeIdProperty;
     private final IntegerProperty radiusProperty;
-    private final IntegerProperty viewPointProperty;
+    private final LongProperty viewPointProperty;
     private final IntegerProperty viewRadiusProperty;
 
     private final DoubleProperty nodeHeightProperty;
@@ -93,13 +90,11 @@ public final class GraphDimensionsCalculator {
      * @param graphStore the {@link GraphStore} who's {@link org.dnacronym.hygene.parser.GfaFile} is observed
      */
     @Inject
+    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S1188", "squid:S3776"})
     public GraphDimensionsCalculator(final GraphStore graphStore) {
         this.graphStore = graphStore;
         observableQueryNodes = FXCollections.observableArrayList();
         readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
-
-        minXNodeIdProperty = new SimpleIntegerProperty(1);
-        maxXNodeIdProperty = new SimpleIntegerProperty(1);
 
         centerNodeIdProperty = new SimpleIntegerProperty(1);
         radiusProperty = new SimpleIntegerProperty(DEFAULT_RADIUS);
@@ -125,32 +120,49 @@ public final class GraphDimensionsCalculator {
             centerPointQuery.query(centerNodeIdProperty.get(), radiusProperty.get());
         });
 
-        viewPointProperty = new SimpleIntegerProperty(0);
+        viewPointProperty = new SimpleLongProperty(2000);
         viewPointProperty.addListener((observable, oldValue, newValue) -> {
-            final SequenceDirection direction = newValue.intValue() < oldValue.intValue()
+            if (newValue.longValue() < 0) {
+                viewPointProperty.set(0);
+                return;
+            }
+            final int sentinelId = getGraphProperty().get().getNodeArrays().length - 1;
+            final long sentinelEndPosition = (long) FafospLayerer.LAYER_WIDTH
+                    * getGraphProperty().get().getUnscaledXPosition(sentinelId)
+                    + getGraphProperty().get().getLength(sentinelId);
+            if (newValue.longValue() > sentinelEndPosition) {
+                viewPointProperty.set(sentinelEndPosition);
+                return;
+            }
+
+            final Graph graph = getGraphProperty().get();
+            final SequenceDirection direction = newValue.longValue() < oldValue.longValue()
                     ? SequenceDirection.LEFT
                     : SequenceDirection.RIGHT;
 
-            int difference = Math.abs(newValue.intValue() - oldValue.intValue());
-            GfaNode centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+            int centerNodeId = centerNodeIdProperty.get();
+            if (newValue.longValue() == (long) FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)) {
+                return;
+            }
 
             // Find new center node
-            while (difference > 0) {
-                difference--;
-
-                final Set<Edge> neighbours = direction.ternary(
-                        centerNode.getIncomingEdges(),
-                        centerNode.getOutgoingEdges());
-                final Edge firstEdge = neighbours.iterator().next();
-                centerNode = direction.ternary(firstEdge.getFromSegment(), firstEdge.getToSegment());
-                if (direction.ternary(centerNode.getIncomingEdges(), centerNode.getOutgoingEdges()).isEmpty()) {
-                    centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
-                    centerNode = subgraph.getSegment(centerNodeIdProperty.intValue()).get();
+            while (direction.ternary(
+                    FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId) > newValue.longValue(),
+                    FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)
+                            + graph.getLength(centerNodeId) < newValue.longValue()
+            )) {
+                final int[] firstNeighbour = {-1};
+                new GraphIterator(graph).visitDirectNeighboursWhile(centerNodeId, direction,
+                        ignored -> firstNeighbour[0] == -1, neighbour -> firstNeighbour[0] = neighbour);
+                if (firstNeighbour[0] < 0) {
+                    break;
                 }
+                centerNodeId = firstNeighbour[0];
             }
 
             // Set center node
-            centerNodeIdProperty.set(centerNode.getSegmentIds().get(0));
+            calculate(subgraph);
+            centerNodeIdProperty.set(centerNodeId);
         });
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
@@ -215,15 +227,14 @@ public final class GraphDimensionsCalculator {
 
         final Segment centerNode = subgraph.getSegment(centerNodeIdProperty.get())
                 .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
-        final long unscaledCenterX = centerNode.getXPosition();
 
         final int[] tempMinY = {centerNode.getYPosition()};
         final int[] tempMaxY = {centerNode.getYPosition()};
 
         final List<Node> neighbours = new LinkedList<>();
 
-        this.minX = unscaledCenterX - viewRadiusProperty.get() / 2;
-        this.maxX = unscaledCenterX + viewRadiusProperty.get() / 2;
+        this.minX = viewPointProperty.get() - viewRadiusProperty.get() / 2;
+        this.maxX = viewPointProperty.get() + viewRadiusProperty.get() / 2;
 
         subgraph.getNodes().forEach(node -> {
             neighbours.add(node);
@@ -238,6 +249,8 @@ public final class GraphDimensionsCalculator {
             tempMaxY[0] = Math.max(tempMaxY[0], node.getYPosition());
         });
 
+        this.minX = viewPointProperty.longValue() - viewRadiusProperty.get() / 2;
+        this.maxX = viewPointProperty.longValue() + viewRadiusProperty.get() / 2;
         this.minY = tempMinY[0];
         final int maxY = tempMaxY[0];
 
@@ -259,7 +272,11 @@ public final class GraphDimensionsCalculator {
         centerPointQuery = new CenterPointQuery(graph);
 
         nodeCountProperty.set(graph.getNodeArrays().length);
-        centerNodeIdProperty.set(nodeCountProperty.divide(2).intValue());
+        centerNodeIdProperty.set(1);
+        final int sentinelId = graph.getNodeArrays().length - 1;
+        final long sentinelPosition = (long) FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(sentinelId)
+                + graph.getLength(sentinelId);
+        viewPointProperty.set(sentinelPosition / 2);
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
 
         new GraphLocation(this, graphStore).restore();
@@ -356,26 +373,6 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link Node} in the current query with the
-     * smallest (leftmost) x position.
-     *
-     * @return the {@link ReadOnlyIntegerProperty} describing the {@link Node} with the smallest x position
-     */
-    public ReadOnlyIntegerProperty getMinXNodeIdProperty() {
-        return minXNodeIdProperty;
-    }
-
-    /**
-     * Gets the {@link ReadOnlyIntegerProperty} which describes the {@link Node} in the current query with the
-     * largest (rightmost) x position.
-     *
-     * @return the {@link ReadOnlyIntegerProperty} describing the {@link Node} with the largest x position
-     */
-    public ReadOnlyIntegerProperty getMaxXNodeIdProperty() {
-        return maxXNodeIdProperty;
-    }
-
-    /**
      * Gets the {@link ReadOnlyIntegerProperty} which describes the amount of lanes.
      *
      * @return the {@link ReadOnlyIntegerProperty} which describes the amount of lanes
@@ -455,7 +452,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return the view point property
      */
-    public IntegerProperty getViewPointProperty() {
+    public LongProperty getViewPointProperty() {
         return viewPointProperty;
     }
 
@@ -475,5 +472,13 @@ public final class GraphDimensionsCalculator {
      */
     public CenterPointQuery getCenterPointQuery() {
         return centerPointQuery;
+    }
+
+    public long getMinX() {
+        return minX;
+    }
+
+    public long getMaxX() {
+        return maxX;
     }
 }

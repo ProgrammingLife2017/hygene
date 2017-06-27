@@ -120,16 +120,6 @@ public final class NodePropertiesController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphVisualizer}, whose selected node can be bound to the UI elements in the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} who's selected node we are interested in
-     * @see GraphVisualizer#selectedSegmentProperty
-     */
-    void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
      * Updates the fields that describe the properties of the {@link GfaNode}.
      * <p>
      * If this {@link GfaNode} is {@code null}, the fields are simply cleared.

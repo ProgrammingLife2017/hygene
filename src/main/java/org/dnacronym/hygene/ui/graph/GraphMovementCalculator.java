@@ -90,7 +90,7 @@ public final class GraphMovementCalculator {
 
         final double currentCenterNodeId = graphDimensionsCalculator.getViewPointProperty().get();
 
-        final double translation = centerX - x;
+        final double translation = (centerX - x) * 100;
         final int newViewPoint = (int) (currentCenterNodeId
                 + Math.round(panningSensitivityProperty.get() * translation));
 
@@ -108,8 +108,8 @@ public final class GraphMovementCalculator {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get()
                 * (graphDimensionsCalculator.getViewRadiusProperty().get() / RADIUS_ZOOMING_FACTOR));
         final int newViewRadius = graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange;
-        if (newViewRadius < FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
-                || newViewRadius > FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
+        if (newViewRadius < (long) FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
+                || newViewRadius > (long) FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
             return;
         }
         graphDimensionsCalculator.getViewRadiusProperty().set(newViewRadius);

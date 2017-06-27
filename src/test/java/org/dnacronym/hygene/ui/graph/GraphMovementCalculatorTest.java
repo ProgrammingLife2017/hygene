@@ -1,7 +1,9 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,13 +18,13 @@ import static org.mockito.Mockito.when;
 final class GraphMovementCalculatorTest {
     private GraphMovementCalculator graphMovementCalculator;
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    private IntegerProperty viewPointProperty;
+    private LongProperty viewPointProperty;
     private IntegerProperty radiusProperty;
 
 
     @BeforeEach
     void beforeEach() {
-        viewPointProperty = new SimpleIntegerProperty(0);
+        viewPointProperty = new SimpleLongProperty(0);
         radiusProperty = new SimpleIntegerProperty(0);
 
         graphDimensionsCalculator = mock(GraphDimensionsCalculator.class);
@@ -41,7 +43,7 @@ final class GraphMovementCalculatorTest {
         graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(-100);
 
-        assertThat(viewPointProperty.get()).isEqualTo(100);
+        assertThat(viewPointProperty.get()).isEqualTo(10000);
     }
 
     @Test
@@ -49,6 +51,6 @@ final class GraphMovementCalculatorTest {
         graphMovementCalculator.onMouseDragEntered(0);
         graphMovementCalculator.onMouseDragged(100);
 
-        assertThat(viewPointProperty.get()).isEqualTo(-100);
+        assertThat(viewPointProperty.get()).isEqualTo(-10000);
     }
 }
