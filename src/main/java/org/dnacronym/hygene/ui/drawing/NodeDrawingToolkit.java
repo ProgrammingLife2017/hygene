@@ -4,8 +4,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.apache.commons.lang3.SystemUtils;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -35,7 +37,6 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     private double charWidth;
     private double charHeight;
     private Font nodeFont;
-
 
 
     /**
@@ -107,12 +108,18 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
      * <p>
      * Annotations have the given colors, and are dashed.
      *
-     * @param nodeX            the top left x position of the node
-     * @param nodeY            the top left y position of the node
-     * @param nodeWidth        the width of the node
-     * @param annotationColors the colors of the annotations going through the node
+     * @param nodeX       the top left x position of the node
+     * @param nodeY       the top left y position of the node
+     * @param nodeWidth   the width of the node
+     * @param annotations
+     * @param startOffset the offset of the start of the annotation in the node. If it runs from the start of the
+     *                    node, it should be 0
+     * @param endOffset   the offset of the end of the annotation in de node. If it runs to the end of the node, it
+     *                    should be equal to the node width
      */
-    public abstract void drawAnnotations(double nodeX, double nodeY, double nodeWidth, List<Color> annotationColors);
+    public abstract void drawAnnotations(double nodeX, double nodeY, final double nodeWidth,
+                                         final List<Annotation> annotations, final Map<Annotation, Double> startOffset,
+                                         final Map<Annotation, Double> endOffset);
 
     /**
      * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.

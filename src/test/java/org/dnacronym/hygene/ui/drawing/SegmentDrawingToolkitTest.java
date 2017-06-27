@@ -2,7 +2,7 @@ package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.junit.jupiter.api.BeforeEach;
+import org.dnacronym.hygene.ui.UITestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -19,13 +19,13 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link NodeDrawingToolkit}.
  */
-final class SegmentDrawingToolkitTest {
+final class SegmentDrawingToolkitTest extends UITestBase {
     private NodeDrawingToolkit segmentDrawingToolkit;
     private GraphicsContext graphicsContext;
 
 
-    @BeforeEach
-    void beforeEach() {
+    @Override
+    public void beforeEach() {
         segmentDrawingToolkit = new SegmentDrawingToolkit();
 
         graphicsContext = mock(GraphicsContext.class);
@@ -63,23 +63,6 @@ final class SegmentDrawingToolkitTest {
                 eq(20d), eq(30d), eq(40d), eq(5d), eq(10d), eq(10d));
         verify(graphicsContext).fillRoundRect(
                 eq(20d), eq(35d), eq(40d), eq(5d), eq(10d), eq(10d));
-    }
-
-    @Test
-    void testNodeAnnotations() {
-        segmentDrawingToolkit.setNodeHeight(20);
-        segmentDrawingToolkit.setAnnotationHeight(5);
-        segmentDrawingToolkit.drawAnnotations(50, 80, 40, Arrays.asList(Color.BLACK, Color.WHITE));
-
-        verify(graphicsContext, atLeast(1)).setStroke(eq(Color.BLACK));
-        verify(graphicsContext, atLeast(1)).setStroke(eq(Color.WHITE));
-
-        verify(graphicsContext).setLineDashes(10);
-
-        verify(graphicsContext).strokeLine(
-                eq(50d), eq(80 + 20 + 5 + 5d / 2), eq(50 + 40d), eq(80 + 20 + 5 + 5d / 2));
-        verify(graphicsContext).strokeLine(
-                eq(50d), eq(80 + 20 + 5 + 5d / 2), eq(50 + 40d), eq(80 + 20 + 5 + 5d / 2));
     }
 
     @Test

@@ -233,7 +233,18 @@ public final class GraphVisualizer {
         }
 
         gfaNode.getSegments().forEach(segment -> {
-            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth, segmentAnnotationColors(segment, annotations));
+            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth,
+                    segmentAnnotationColors(segment, annotations),
+
+                    annotations.stream()
+                            .filter(annotation -> annotation.getStartNodeId() == segment.getId())
+                            .collect(Collectors.toMap(annotation -> annotation,
+                                    annotation -> (double) annotation.getStartNodeBaseOffset() / segment.getLength())),
+                    annotations.stream()
+                            .filter(annotation -> annotation.getStartNodeId() == segment.getId())
+                            .collect(Collectors.toMap(annotation -> annotation,
+                                    annotation -> (double) annotation.getEndNodeBaseOffset() / segment.getLength())));
+
             rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
         });
     }
@@ -262,18 +273,18 @@ public final class GraphVisualizer {
      * @param annotations the list of annotations in the current view
      * @return the list of colors of the annotations going through the given {@link Segment}
      */
-    private List<Color> segmentAnnotationColors(final Segment segment, final List<Annotation> annotations) {
-        final List<Color> annotationColors = new ArrayList<>();
+    private List<Annotation> segmentAnnotationColors(final Segment segment, final List<Annotation> annotations) {
+        final List<Annotation> filteredAnnotations = new ArrayList<>();
         for (final Annotation annotation : annotations) {
             if (segment.hasMetadata()
                     && segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
                     && segment.getId() >= annotation.getStartNodeId()
                     && segment.getId() < annotation.getEndNodeId()) {
-                annotationColors.add(annotation.getColor());
+                filteredAnnotations.add(annotation);
             }
         }
 
-        return annotationColors;
+        return filteredAnnotations;
     }
 
     /**
