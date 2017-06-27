@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
@@ -121,16 +120,6 @@ public final class NodePropertiesController implements Initializable {
     }
 
     /**
-     * Set the {@link GraphVisualizer}, whose selected node can be bound to the UI elements in the controller.
-     *
-     * @param graphVisualizer {@link GraphVisualizer} who's selected node we are interested in
-     * @see GraphVisualizer#selectedSegmentProperty
-     */
-    void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
-        this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
      * Updates the fields that describe the properties of the {@link GfaNode}.
      * <p>
      * If this {@link GfaNode} is {@code null}, the fields are simply cleared.
@@ -171,23 +160,6 @@ public final class NodePropertiesController implements Initializable {
         leftNeighbours.setText("");
         rightNeighbours.setText("");
         position.setText("");
-    }
-
-    /**
-     * When the user clicks on the view sequence {@link javafx.scene.control.Button}.
-     *
-     * @param event the {@link MouseEvent}
-     */
-    @FXML
-    void onFocusAction(final ActionEvent actionEvent) {
-        final GfaNode selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
-        if (selectedNode != null) {
-            final long selectedNodePosition = (long) FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
-                    .getUnscaledXPosition(selectedNode.getSegmentIds().get(0));
-            graphDimensionsCalculator.getViewPointProperty().set(selectedNodePosition);
-        }
-
-        actionEvent.consume();
     }
 
     /**
