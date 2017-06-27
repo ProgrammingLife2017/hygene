@@ -31,6 +31,7 @@ import org.dnacronym.hygene.graph.node.Segment;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -194,11 +195,13 @@ public final class GraphDimensionsCalculator {
             return;
         }
 
-        final Segment centerNode = subgraph.getSegment(centerNodeIdProperty.get())
-                .orElseThrow(() -> new IllegalStateException("Cannot calculate properties without a center node."));
+        final Optional<Segment> centerNode = subgraph.getSegment(centerNodeIdProperty.get());
+        if (!centerNode.isPresent()) {
+            return;
+        }
 
-        final int[] tempMinY = {centerNode.getYPosition()};
-        final int[] tempMaxY = {centerNode.getYPosition()};
+        final int[] tempMinY = {centerNode.get().getYPosition()};
+        final int[] tempMaxY = {centerNode.get().getYPosition()};
 
         final List<Node> neighbours = new LinkedList<>();
 
