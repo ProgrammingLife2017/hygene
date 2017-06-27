@@ -39,6 +39,16 @@ public class FileGraphLocation {
     }
 
     /**
+     * Checks if there is a stored location.
+     *
+     * @return true if there is a stored location
+     * @throws SQLException in the case of an error during SQL operations
+     */
+    public boolean locationIsStored() throws SQLException {
+        return fileDatabaseDriver.hasRow(TABLE_NAME, "'1'", "1");
+    }
+
+    /**
      * Retrieves the stored center node id.
      *
      * @throws SQLException in the case of an error during SQL operations
