@@ -80,6 +80,8 @@ public final class GraphDimensionsCalculator {
     private final ObservableList<Node> observableQueryNodes;
     private final ReadOnlyListWrapper<Node> readOnlyObservableNodes;
 
+    private long lastScrollTime;
+
 
     /**
      * Create a new instance of {@link GraphDimensionsCalculator}.
@@ -447,5 +449,21 @@ public final class GraphDimensionsCalculator {
 
     public long getMaxX() {
         return maxX;
+    }
+
+    /**
+     * Updates last scroll time.
+     */
+    public void updateLastScrollTime() {
+        this.lastScrollTime = System.currentTimeMillis();
+    }
+
+    /**
+     * Returns last scroll time.
+     *
+     * @return last scroll time
+     */
+    public long getLastScrollTime() {
+        return lastScrollTime;
     }
 }

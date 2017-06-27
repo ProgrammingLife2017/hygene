@@ -111,6 +111,7 @@ public final class GraphMovementCalculator {
             return;
         }
         graphDimensionsCalculator.getViewRadiusProperty().set(newViewRadius);
+        graphDimensionsCalculator.updateLastScrollTime();
     }
 
     /**
