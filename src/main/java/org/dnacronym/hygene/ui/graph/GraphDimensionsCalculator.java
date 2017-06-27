@@ -458,6 +458,11 @@ public final class GraphDimensionsCalculator {
         this.lastScrollTime = System.currentTimeMillis();
     }
 
+    /**
+     * Returns last scroll time.
+     *
+     * @return last scroll time
+     */
     public long getLastScrollTime() {
         return lastScrollTime;
     }
