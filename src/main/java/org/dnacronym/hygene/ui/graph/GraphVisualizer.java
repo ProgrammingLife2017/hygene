@@ -659,6 +659,7 @@ public final class GraphVisualizer {
             hoveredSegmentProperty.set(segment);
 
             new NodeTooltip(
+                    this,
                     graphicsContext,
                     segment,
                     graphDimensionsCalculator.computeXPosition(segment)

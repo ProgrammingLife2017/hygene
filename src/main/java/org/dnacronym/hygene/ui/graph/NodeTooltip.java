@@ -1,17 +1,21 @@
 package org.dnacronym.hygene.ui.graph;
 
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.ui.path.GenomePath;
+
+import javax.inject.Inject;
 
 
 /**
  * Represents a {@link NodeTooltip}.
  */
 public class NodeTooltip {
-    private static final Color HYGENE_COLOR = Color.rgb(0, 179, 146);
+    private static final Color HYGREEN = Color.rgb(0, 179, 146);
     private static final int DEFAULT_WIDTH = 315;
     private static final int DEFAULT_HEIGHT = 85;
     private static final int LINE_HEIGHT = 10;
@@ -20,6 +24,7 @@ public class NodeTooltip {
     private static final int Y_PADDING = 20;
     private static final int MAX_SEQUENCE_LENGTH = 20;
 
+    private final GraphVisualizer graphVisualizer;
     private final GraphicsContext graphicsContext;
     private final GfaNode node;
     private final int height;
@@ -37,10 +42,12 @@ public class NodeTooltip {
      * @param middleX         the middle x position of the node
      * @param belowY          the below y position of the node
      */
-    public NodeTooltip(final GraphicsContext graphicsContext, final GfaNode node, final double middleX,
-                       final double belowY) {
+    @Inject
+    public NodeTooltip(final GraphVisualizer graphVisualizer, final GraphicsContext graphicsContext,
+                       final GfaNode node, final double middleX, final double belowY) {
         int tempHeight = DEFAULT_HEIGHT;
 
+        this.graphVisualizer = graphVisualizer;
         this.graphicsContext = graphicsContext;
         this.node = node;
         this.middleX = middleX;
@@ -85,7 +92,7 @@ public class NodeTooltip {
                 3
         );
 
-        graphicsContext.setFill(HYGENE_COLOR);
+        graphicsContext.setFill(HYGREEN);
         graphicsContext.fillRect(
                 middleX - (DEFAULT_WIDTH / 2),
                 belowY + LINE_HEIGHT + (height - BORDER_BOTTOM_HEIGHT),
@@ -133,6 +140,9 @@ public class NodeTooltip {
         offset += LINE_HEIGHT;
     }
 
+    /**
+     * Draws the sequence length text.
+     */
     private void drawSequenceLength() {
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillText(
@@ -154,12 +164,26 @@ public class NodeTooltip {
 
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillText(
-                "Genomes:\n" + formatGenomes(node.getMetadata().getGenomes().toString()),
+                "Genomes:",
                 middleX - (DEFAULT_WIDTH / 2) + X_PADDING,
                 belowY + LINE_HEIGHT + Y_PADDING + offset
         );
+        offset += LINE_HEIGHT;
 
-        offset += LINE_HEIGHT * node.getMetadata().getGenomes().size();
+        node.getMetadata().getGenomes().forEach(genome -> {
+            final FilteredList<GenomePath> possiblePaths = graphVisualizer.getGenomePathsProperty()
+                    .filtered(genomePath -> genomePath.getName().equals(genome));
+            if (possiblePaths.isEmpty()) {
+                return;
+            }
+
+            final Color color = possiblePaths.get(0).getColor().get();
+            graphicsContext.setFill(color == null ? Color.BLACK : color);
+            graphicsContext.fillText("    " + genome,
+                    middleX - (DEFAULT_WIDTH / 2) + X_PADDING,
+                    belowY + LINE_HEIGHT + Y_PADDING + offset);
+            offset += LINE_HEIGHT;
+        });
     }
 
     private String limitStringAt(final String string, final int length) {
