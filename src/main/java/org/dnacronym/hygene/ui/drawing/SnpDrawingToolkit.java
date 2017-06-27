@@ -5,8 +5,6 @@ import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.Node;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -75,9 +73,8 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
                             final List<Color> genomeColors) {
         final double centerY = snpY + getNodeHeight() / 2;
 
-        EdgeDrawingToolkit nodeDrawingToolkit = new EdgeDrawingToolkit();
-        nodeDrawingToolkit.setGraphicsContext(getGraphicsContext());
-        nodeDrawingToolkit.drawEdge(snpX, centerY, snpX + snpWidth, centerY, getSnpHeight() / 8, genomeColors);
+        edgeDrawingToolkit.setGraphicsContext(getGraphicsContext());
+        edgeDrawingToolkit.drawEdge(snpX, centerY, snpX + snpWidth, centerY, getSnpHeight() / 8, genomeColors);
     }
 
     public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
@@ -273,20 +270,5 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
                 .map(sequence -> sequence.trim())
                 .map(sequence -> sequence.charAt(0))
                 .collect(Collectors.toList());
-    }
-
-    private Color baseToColor(final char base) {
-        switch (base) {
-            case 'A':
-                return Color.RED;
-            case 'T':
-                return Color.RED;
-            case 'C':
-                return Color.BLUE;
-            case 'G':
-                return Color.BLUE;
-            default:
-                return Color.GRAY;
-        }
     }
 }
