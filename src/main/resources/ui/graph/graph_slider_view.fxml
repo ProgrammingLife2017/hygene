@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.Tooltip?>
-<ScrollBar fx:id="graphScrollBar" xmlns:fx="http://javafx.com/fxml/1" minHeight="60" prefHeight="60"
-           xmlns="http://javafx.com/javafx/8.0.102"
-           fx:controller="org.dnacronym.hygene.ui.graph.GraphSliderController">
-    <tooltip>
-        <Tooltip text="Slide through the currently loaded GFA graph."/>
-    </tooltip>
-</ScrollBar>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<AnchorPane fx:id="sliderPane" minHeight="60.0" minWidth="0.0" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.graph.GraphSliderController">
+    <children>
+        <Canvas fx:id="heatMapCanvas" height="60.0" width="100.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" StackPane.alignment="TOP_LEFT"/>
+        <ScrollBar fx:id="graphScrollBar" minHeight="-Infinity" prefHeight="60.0" AnchorPane.bottomAnchor="0"
+                   AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <tooltip>
+                <Tooltip text="Slide through the currently loaded GFA graph."/>
+            </tooltip>
+        </ScrollBar>
+    </children>
+</AnchorPane>
