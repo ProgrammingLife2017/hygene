@@ -1,11 +1,13 @@
 package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -69,12 +71,14 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      */
     @Override
     public void drawAnnotations(final double snpX, final double snpY, final double nodeWidth,
-                                final List<Color> annotationColors, final double startOffset, final double endOffset) {
+                                final List<Annotation> annotations, final Map<Annotation, Double> startOffset,
+                                final Map<Annotation, Double> endOffset) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
         getGraphicsContext().setLineWidth(getAnnotationHeight());
 
         double annotationYOffset = snpY + getNodeHeight() + getAnnotationHeight() + getAnnotationHeight() / 2;
-        for (final Color color : annotationColors) {
+        for (final Annotation annotation : annotations) {
+            final Color color = annotation.getColor();
             getGraphicsContext().setStroke(color);
             getGraphicsContext().strokeLine(snpX, annotationYOffset,
                     snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2);

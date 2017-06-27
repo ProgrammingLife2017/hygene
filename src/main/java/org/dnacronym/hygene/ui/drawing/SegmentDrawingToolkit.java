@@ -1,9 +1,11 @@
 package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -58,22 +60,29 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param segmentY         the top left y position of the node
      * @param nodeWidth        the width of the node
      * @param annotationColors the colors of the annotations going through the node
-     * @param startOffset      the offset of the start of the annotation in the node. If it runs from the start of the
+     * @param startOffsets     the offset of the start of the annotation in the node. If it runs from the start of the
      *                         node, it should be 0
-     * @param endOffset        the offset of the end of the annotation in de node. If it runs to the end of the node, it
+     * @param endOffsets       the offset of the end of the annotation in de node. If it runs to the end of the node, it
      *                         should be equal to the node width
      */
     @Override
     public void drawAnnotations(final double segmentX, final double segmentY, final double nodeWidth,
-                                final List<Color> annotationColors, final double startOffset, final double endOffset) {
+                                final List<Annotation> annotations, final Map<Annotation, Double> startOffsets,
+                                final Map<Annotation, Double> endOffsets) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
         getGraphicsContext().setLineWidth(getAnnotationHeight());
 
         double annotationYOffset = segmentY + getNodeHeight() + getAnnotationHeight() + getAnnotationHeight() / 2;
-        for (final Color color : annotationColors) {
+        for (final Annotation annotation : annotations) {
+            final Color color = annotation.getColor();
+
+            final double startOffset = startOffsets.containsKey(annotation) ? startOffsets.get(annotation) : 0;
+            final double endOffset = endOffsets.containsKey(annotation) ? endOffsets.get(annotation) : 1;
+
             getGraphicsContext().setStroke(color);
             getGraphicsContext().strokeLine(
-                    segmentX + startOffset, annotationYOffset, segmentX + endOffset, annotationYOffset);
+                    segmentX + startOffset * nodeWidth, annotationYOffset,
+                    segmentX + endOffset * nodeWidth, annotationYOffset);
 
             annotationYOffset += getAnnotationHeight();
         }
