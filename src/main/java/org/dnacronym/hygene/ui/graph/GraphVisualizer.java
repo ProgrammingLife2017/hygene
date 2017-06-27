@@ -233,7 +233,8 @@ public final class GraphVisualizer {
         }
 
         gfaNode.getSegments().forEach(segment -> {
-            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, segmentAnnotationColors(segment, annotations),
+            nodeDrawingToolkit.drawAnnotations(nodeX, nodeY, nodeWidth,
+                    segmentAnnotationColors(segment, annotations),
                     getStartAnnotationOffset(segment, annotations) * nodeWidth,
                     getEndAnnotationOffset(segment, annotations) * nodeWidth);
             rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());

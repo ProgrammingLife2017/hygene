@@ -37,7 +37,6 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     private Font nodeFont;
 
 
-
     /**
      * Sets the node height used for drawing.
      * <p>
@@ -109,14 +108,16 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
      *
      * @param nodeX            the top left x position of the node
      * @param nodeY            the top left y position of the node
+     * @param nodeWidth        the width of the node
      * @param annotationColors the colors of the annotations going through the node
      * @param startOffset      the offset of the start of the annotation in the node. If it runs from the start of the
      *                         node, it should be 0
      * @param endOffset        the offset of the end of the annotation in de node. If it runs to the end of the node, it
      *                         should be equal to the node width
      */
-    public abstract void drawAnnotations(double nodeX, double nodeY, List<Color> annotationColors,
-                                         final double startOffset, final double endOffset);
+    public abstract void drawAnnotations(double nodeX, double nodeY, final double nodeWidth,
+                                         List<Color> annotationColors, final double startOffset,
+                                         final double endOffset);
 
     /**
      * Draw a highlight band around a given node of width {@value NODE_OUTLINE_WIDTH}.

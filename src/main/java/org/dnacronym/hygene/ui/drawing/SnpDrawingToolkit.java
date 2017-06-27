@@ -68,7 +68,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      *                         should be equal to the node width
      */
     @Override
-    public void drawAnnotations(final double snpX, final double snpY, final double snpWidth,
+    public void drawAnnotations(final double snpX, final double snpY, final double nodeWidth,
                                 final List<Color> annotationColors, final double startOffset, final double endOffset) {
         getGraphicsContext().setLineDashes(ANNOTATION_DASH_LENGTH);
         getGraphicsContext().setLineWidth(getAnnotationHeight());
@@ -77,9 +77,9 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         for (final Color color : annotationColors) {
             getGraphicsContext().setStroke(color);
             getGraphicsContext().strokeLine(snpX, annotationYOffset,
-                    snpX + snpWidth / 2, annotationYOffset + getSnpHeight() / 2);
-            getGraphicsContext().strokeLine(snpX + snpWidth / 2, annotationYOffset + getSnpHeight() / 2,
-                    snpX + snpWidth, annotationYOffset);
+                    snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2);
+            getGraphicsContext().strokeLine(snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2,
+                    snpX + nodeWidth, annotationYOffset);
 
             annotationYOffset += getAnnotationHeight();
         }
