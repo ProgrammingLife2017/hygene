@@ -18,22 +18,19 @@ import java.net.URL;
  * Simple view for creating new bookmarks.
  */
 public class AboutView {
-    private static final String TITLE = "About";
     private static final String ABOUT_VIEW = "/ui/about/about_view.fxml";
 
     private final Stage stage;
 
 
     /**
-     * Creates an instance of a {@link GenomeMappingView}.
+     * Creates an instance of a {@link AboutView}.
      *
      * @throws IOException if unable to load the controller
      */
     @Inject
     public AboutView(final FXMLLoader fxmlLoader) throws UIInitialisationException, IOException {
         stage = new Stage();
-        stage.setTitle(TITLE);
-
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
 
