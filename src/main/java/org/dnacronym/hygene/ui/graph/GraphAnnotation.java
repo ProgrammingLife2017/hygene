@@ -165,6 +165,25 @@ public final class GraphAnnotation {
     }
 
     /**
+     * Returns the list of annotations going through the given node.
+     *
+     * @param nodeId the node id
+     * @return the list of {@link Annotation}s going through the given node
+     */
+    public List<Annotation> getAnnotationsOfNode(final int nodeId) {
+        if (nodeId < 0) {
+            throw new IllegalArgumentException("Node id cant be negative.");
+        }
+        if (annotationCollection == null) {
+            return new ArrayList<>();
+        }
+
+        return annotationCollection.getAnnotations().stream()
+                .filter(annotation -> nodeId >= annotation.getStartNodeId() && nodeId < annotation.getEndNodeId())
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Returns the property which decides the sequence id of the currently loaded GFF file.
      *
      * @return the property which decides the sequence id of the currently loaded GFF file

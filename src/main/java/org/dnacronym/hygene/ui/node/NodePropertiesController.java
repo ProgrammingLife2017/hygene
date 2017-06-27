@@ -1,15 +1,28 @@
 package org.dnacronym.hygene.ui.node;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.event.ActionEvent;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
-import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
+import org.dnacronym.hygene.graph.node.Segment;
+import org.dnacronym.hygene.ui.graph.GraphAnnotation;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
@@ -24,33 +37,86 @@ public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
     @Inject
-    private GraphDimensionsCalculator graphDimensionsCalculator;
-    @Inject
     private GraphVisualizer graphVisualizer;
+    @Inject
+    private SequenceVisualizer sequenceVisualizer;
+    @Inject
+    private GraphAnnotation graphAnnotation;
 
     @FXML
-    private TextField nodeId;
+    private Label nodeId;
     @FXML
-    private TextField sequencePreview;
+    private Label sequencePreview;
     @FXML
-    private Canvas neighbourCanvas;
+    private Label leftNeighbours;
     @FXML
-    private TextField leftNeighbours;
+    private Label rightNeighbours;
     @FXML
-    private TextField rightNeighbours;
+    private Label position;
     @FXML
-    private TextField position;
+    private TableView<Annotation> annotationTable;
+    @FXML
+    private TableColumn<Annotation, String> nameAnnotation;
+    @FXML
+    private TableColumn<Annotation, String> typeAnnotation;
+    @FXML
+    private TableColumn<Annotation, Color> colorAnnotation;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
 
-        final NeighbourVisualizer neighbourVisualizer
-                = new NeighbourVisualizer(graphVisualizer.getEdgeColorProperty(), selectedNodeProperty);
-        neighbourVisualizer.setCanvas(neighbourCanvas);
+        nameAnnotation.setCellValueFactory(cell -> {
+            final String[] name = cell.getValue().getAttributes().get("Name");
+            return new SimpleStringProperty(name == null ? "" : name[0]);
+        });
+        nameAnnotation.setCellFactory(this::wrappableTableCell);
+
+        typeAnnotation.setCellValueFactory(cell -> {
+            final String type = cell.getValue().getType();
+            return new SimpleStringProperty(type == null ? "" : type);
+        });
+        typeAnnotation.setCellFactory(this::wrappableTableCell);
+
+        colorAnnotation.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getColor()));
+        colorAnnotation.setCellFactory(column -> new TableCell<Annotation, Color>() {
+            @Override
+            protected void updateItem(final Color color, final boolean empty) {
+                super.updateItem(color, empty);
+                if (color == null || empty) {
+                    setBackground(Background.EMPTY);
+                } else {
+                    setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            }
+        });
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));
+    }
+
+
+    /**
+     * Create a table cell that wraps the text inside.
+     *
+     * @param param the table column
+     * @return a table cell that wraps the text inside
+     */
+    TableCell<Annotation, String> wrappableTableCell(final TableColumn<Annotation, String> param) {
+        return new TableCell<Annotation, String>() {
+            @Override
+            protected void updateItem(final String item, final boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+                final Text text = new Text(item);
+                text.setWrappingWidth(param.getWidth());
+                setPrefHeight(text.getLayoutBounds().getHeight());
+                setGraphic(text);
+            }
+        };
     }
 
     /**
@@ -61,15 +127,6 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
-     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
-     *
-     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
-     */
-    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
-        this.graphDimensionsCalculator = graphDimensionsCalculator;
     }
 
     /**
@@ -96,6 +153,11 @@ public final class NodePropertiesController implements Initializable {
         rightNeighbours.setText(String.valueOf(node.getOutgoingEdges().size()));
 
         position.setText(node.getSegmentIds().toString());
+
+        annotationTable.setItems(FXCollections.observableArrayList(
+                node instanceof Segment
+                        ? graphAnnotation.getAnnotationsOfNode(((Segment) node).getId())
+                        : FXCollections.emptyObservableList()));
     }
 
 
@@ -103,25 +165,21 @@ public final class NodePropertiesController implements Initializable {
      * Clear all text fields used to describe node properties.
      */
     private void clearNodeFields() {
-        nodeId.clear();
-        sequencePreview.clear();
-        leftNeighbours.clear();
-        rightNeighbours.clear();
-        position.clear();
+        nodeId.setText("");
+        sequencePreview.setText("");
+        leftNeighbours.setText("");
+        rightNeighbours.setText("");
+        position.setText("");
     }
 
     /**
-     * When the user clicks on the focus {@link javafx.scene.control.Button}.
+     * When the user clicks on the view sequence {@link javafx.scene.control.Button}.
      *
-     * @param actionEvent the {@link ActionEvent}
+     * @param event the {@link MouseEvent}
      */
     @FXML
-    void onFocusAction(final ActionEvent actionEvent) {
-        final GfaNode selectedNode = graphVisualizer.getSelectedSegmentProperty().get();
-        if (selectedNode != null) {
-            graphDimensionsCalculator.getCenterNodeIdProperty().set(selectedNode.getSegmentIds().get(0));
-        }
-
-        actionEvent.consume();
+    void onViewSequence(final MouseEvent event) {
+        sequenceVisualizer.getVisibleProperty().set(!sequenceVisualizer.getVisibleProperty().get());
+        event.consume();
     }
 }

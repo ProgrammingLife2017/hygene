@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.path.PathController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.dnacronym.hygene.ui.path.PathController">
     <children>
         <TitledPane fx:id="pathPane" animated="false" minWidth="300.0" text="Path Highlighting"
                     AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -33,7 +34,7 @@
                         <TableView fx:id="pathTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                             <columns>
                                 <TableColumn fx:id="colorColumn" maxWidth="10.0" prefWidth="10" />
-                                <TableColumn fx:id="selectedColumn" maxWidth="53.0" minWidth="20.0" prefWidth="53.0" />
+                                <TableColumn fx:id="selectedColumn" maxWidth="-1.0" minWidth="28.0" prefWidth="-1.0"/>
                                 <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" prefWidth="214.0" text="Name" />
                             </columns>
                             <columnResizePolicy>
