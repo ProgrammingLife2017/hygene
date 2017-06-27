@@ -3,8 +3,6 @@ package org.dnacronym.hygene.ui.graph;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.dnacronym.hygene.core.HygeneEventBus;
-import org.dnacronym.hygene.event.GfaFileWillChangeEvent;
 import org.dnacronym.hygene.parser.GfaFile;
 import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.parser.GffFile;
@@ -52,7 +50,6 @@ public final class GraphStore {
      * @see GfaFile#parse(ProgressUpdater)
      */
     public void loadGfaFile(final File file, final ProgressUpdater progressUpdater) throws IOException {
-        HygeneEventBus.getInstance().post(new GfaFileWillChangeEvent());
         try {
             final GfaFile gfaFile = new GfaFile(file.getAbsolutePath());
             gfaFile.parse(progressUpdater);

@@ -7,7 +7,6 @@ import org.dnacronym.hygene.ui.bookmark.SimpleBookmarkStore;
 import org.dnacronym.hygene.ui.genomeindex.GenomeNavigation;
 import org.dnacronym.hygene.ui.graph.GraphAnnotation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
-import org.dnacronym.hygene.ui.graph.GraphLocation;
 import org.dnacronym.hygene.ui.graph.GraphMovementCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -28,7 +27,6 @@ public final class GuiceModule extends AbstractModule {
         bind(Settings.class).in(Singleton.class);
         bind(Query.class).in(Singleton.class);
         bind(BookmarkStore.class).to(SimpleBookmarkStore.class).in(Singleton.class);
-        bind(GraphLocation.class).in(Singleton.class);
 
         bind(GraphDimensionsCalculator.class).in(Singleton.class);
         bind(GraphMovementCalculator.class).in(Singleton.class);

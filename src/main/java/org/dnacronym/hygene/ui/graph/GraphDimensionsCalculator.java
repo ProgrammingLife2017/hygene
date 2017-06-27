@@ -82,8 +82,6 @@ public final class GraphDimensionsCalculator {
     private final ReadOnlyListWrapper<Node> readOnlyObservableNodes;
 
 
-    private final GraphStore graphStore;
-
     /**
      * Create a new instance of {@link GraphDimensionsCalculator}.
      *
@@ -92,7 +90,6 @@ public final class GraphDimensionsCalculator {
     @Inject
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "squid:S1188", "squid:S3776"})
     public GraphDimensionsCalculator(final GraphStore graphStore) {
-        this.graphStore = graphStore;
         observableQueryNodes = FXCollections.observableArrayList();
         readOnlyObservableNodes = new ReadOnlyListWrapper<>(observableQueryNodes);
 
@@ -278,8 +275,6 @@ public final class GraphDimensionsCalculator {
                 + graph.getLength(sentinelId);
         viewPointProperty.set(sentinelPosition / 2);
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
-
-        new GraphLocation(this, graphStore).restore();
     }
 
     /**
