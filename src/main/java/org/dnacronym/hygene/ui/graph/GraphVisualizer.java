@@ -304,7 +304,7 @@ public final class GraphVisualizer {
      */
     private double getEndAnnotationOffset(final Segment segment, final List<Annotation> annotations) {
         for (final Annotation annotation : annotations) {
-            if (segment.getId() == annotation.getStartNodeId()) {
+            if (segment.getId() == annotation.getEndNodeId()) {
                 return (double) annotation.getEndNodeBaseOffset() / segment.getLength();
             }
         }
