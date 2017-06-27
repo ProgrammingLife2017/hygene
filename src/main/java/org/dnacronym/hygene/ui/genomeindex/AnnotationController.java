@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -82,7 +81,6 @@ public final class AnnotationController implements Initializable {
             }
         });
         typeColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getType()));
-        startColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getStart()));
 
         resultsTable.itemsProperty().bind(annotationSearch.getSearchResults());
 

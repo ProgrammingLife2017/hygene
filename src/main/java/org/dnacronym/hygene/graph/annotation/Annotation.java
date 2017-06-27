@@ -304,22 +304,6 @@ public final class Annotation {
     }
 
     /**
-     * Checks whether the annotation details match the given query.
-     *
-     * @param query search term
-     * @return true if the annotation details match the given query, false otherwise
-     */
-    public boolean matchString(final String query) {
-        return stringContains(source, query)
-                || stringContains(type, query)
-                || stringContains(strand, query)
-                || attributes.keySet().stream().anyMatch(key -> stringContains(key, query))
-                || attributes.values().stream().anyMatch(
-                        values -> Arrays.stream(values).anyMatch(value -> stringContains(value, query))
-        );
-    }
-
-    /**
      * Checks if given (lower cased) source string contains the given (lower cased) value.
      *
      * @param source the source string

@@ -180,11 +180,11 @@ public final class GraphAnnotation {
         if (nodeId < 0) {
             throw new IllegalArgumentException("Node id cant be negative.");
         }
-        if (annotationCollection == null) {
+        if (annotationCollectionProperty.get() == null) {
             return new ArrayList<>();
         }
 
-        return annotationCollection.getAnnotations().stream()
+        return annotationCollectionProperty.get().getAnnotations().stream()
                 .filter(annotation -> nodeId >= annotation.getStartNodeId() && nodeId < annotation.getEndNodeId())
                 .collect(Collectors.toList());
     }
