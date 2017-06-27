@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
-import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.ui.drawing.HeatMapDrawing;
 
 import javax.inject.Inject;
