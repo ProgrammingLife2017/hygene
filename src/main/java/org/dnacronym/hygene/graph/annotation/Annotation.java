@@ -310,12 +310,12 @@ public final class Annotation {
      * @return true if the annotation details match the given query, false otherwise
      */
     public boolean matchString(final String query) {
-        return source.contains(query)
-                || type.contains(query)
-                || strand.contains(query)
-                || attributes.keySet().stream().anyMatch(key -> key.contains(query))
+        return stringContains(source, query)
+                || stringContains(type, query)
+                || stringContains(strand, query)
+                || attributes.keySet().stream().anyMatch(key -> stringContains(key, query))
                 || attributes.values().stream().anyMatch(
-                        values -> Arrays.stream(values).anyMatch(value -> value.contains(query))
+                        values -> Arrays.stream(values).anyMatch(value -> stringContains(value, query))
         );
     }
 
