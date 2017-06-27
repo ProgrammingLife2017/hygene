@@ -38,7 +38,7 @@ public final class NodeMetadataCache {
     /**
      * The minimum number of milliseconds that must be between each retrieval operation.
      */
-    private static final int RETRIEVE_METADATA_TIMEOUT = 10;
+    private static final int RETRIEVE_METADATA_TIMEOUT = 750;
 
     private final ThrottledExecutor retrievalExecutor;
     private final GfaFile gfaFile;
