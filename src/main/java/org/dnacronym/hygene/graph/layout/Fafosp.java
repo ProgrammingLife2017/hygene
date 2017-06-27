@@ -37,6 +37,7 @@ public final class Fafosp {
     /**
      * Calculates the optimal horizontal position of each node in the {@link Graph}.
      */
+    @SuppressWarnings({"PMD.LooseCoupling", "squid:S1319"}) // I need a TreeMap
     public TreeMap<Long, Integer> horizontal() {
         final TreeMap<Long, Integer> nodePositions = new TreeMap<>();
 

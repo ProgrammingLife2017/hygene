@@ -23,8 +23,6 @@ import org.dnacronym.hygene.event.LayoutDoneEvent;
 import org.dnacronym.hygene.event.NodeMetadataCacheUpdateEvent;
 import org.dnacronym.hygene.graph.CenterPointQuery;
 import org.dnacronym.hygene.graph.Graph;
-import org.dnacronym.hygene.graph.GraphIterator;
-import org.dnacronym.hygene.graph.SequenceDirection;
 import org.dnacronym.hygene.graph.Subgraph;
 import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.graph.node.Node;

@@ -27,6 +27,7 @@ public final class Graph {
 
     private final int[][] nodeArrays;
     private final GfaFile gfaFile;
+    @SuppressWarnings("PMD.LooseCoupling")
     private @MonotonicNonNull TreeMap<Long, Integer> nodePositions;
 
 
@@ -152,6 +153,7 @@ public final class Graph {
         );
     }
 
+    @SuppressWarnings({"PMD.LooseCoupling", "squid:S1319"}) // I need a TreeMap
     public void setNodePositions(final TreeMap<Long, Integer> nodePositions) {
         this.nodePositions = nodePositions;
     }
