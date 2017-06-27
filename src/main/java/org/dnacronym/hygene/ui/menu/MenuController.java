@@ -108,6 +108,11 @@ public final class MenuController implements Initializable {
         });
     }
 
+    @FXML
+    void closeGffFileAction(final ActionEvent event) {
+        graphStore.getGffFileProperty().setValue(null);
+    }
+
     /**
      * Opens a {@link FileChooser} and sets the parent {@link javafx.stage.Window} as
      * {@link Hygene#getPrimaryStage()#getOwner()}.
