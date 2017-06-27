@@ -23,7 +23,6 @@ import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphAnnotation;
-import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
@@ -37,8 +36,6 @@ import java.util.ResourceBundle;
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
-    @Inject
-    private GraphDimensionsCalculator graphDimensionsCalculator;
     @Inject
     private GraphVisualizer graphVisualizer;
     @Inject
@@ -130,15 +127,6 @@ public final class NodePropertiesController implements Initializable {
      */
     void setGraphVisualiser(final GraphVisualizer graphVisualizer) {
         this.graphVisualizer = graphVisualizer;
-    }
-
-    /**
-     * Sets the {@link GraphDimensionsCalculator} for use by the controller.
-     *
-     * @param graphDimensionsCalculator the {@link GraphDimensionsCalculator} for use by the controller
-     */
-    void setGraphDimensionsCalculator(final GraphDimensionsCalculator graphDimensionsCalculator) {
-        this.graphDimensionsCalculator = graphDimensionsCalculator;
     }
 
     /**
