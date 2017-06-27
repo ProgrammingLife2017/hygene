@@ -24,7 +24,6 @@ public final class FileDatabase implements AutoCloseable {
     private FileMetadata fileMetadata;
     private FileBookmarks fileBookmarks;
     private FileGenomeMapping fileGenomeMapping;
-    private FileGraphLocation fileGraphLocation;
 
 
     /**
@@ -69,7 +68,6 @@ public final class FileDatabase implements AutoCloseable {
 
         fileBookmarks = new FileBookmarks(this);
         fileGenomeMapping = new FileGenomeMapping(this);
-        fileGraphLocation = new FileGraphLocation(this);
     }
 
 
@@ -85,7 +83,6 @@ public final class FileDatabase implements AutoCloseable {
 
         fileDatabaseDriver.setUpTable(fileBookmarks.getTable());
         fileDatabaseDriver.setUpTable(fileGenomeMapping.getTable());
-        fileDatabaseDriver.setUpTable(fileGraphLocation.getTable());
     }
 
     /**
