@@ -19,7 +19,8 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * @param color     the {@link Color} to fill the node with
      */
     @Override
-    public void draw(final double segmentX, final double segmentY, final double segmentWidth, final Color color) {
+    public void draw(final double segmentX, final double segmentY, final double segmentWidth, final Color color,
+                     final String sequence) {
         drawGenomes(segmentX, segmentY, segmentWidth, Collections.singletonList(color));
     }
 

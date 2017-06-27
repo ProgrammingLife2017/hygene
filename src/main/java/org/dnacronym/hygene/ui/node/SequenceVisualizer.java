@@ -11,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.ui.graph.RTree;
 
 import java.util.Optional;
@@ -182,7 +183,7 @@ public final class SequenceVisualizer {
                 ARC_SIZE, ARC_SIZE);
 
         int onscreen = 0;
-        graphicsContext.setLineWidth(1);
+        graphicsContext.setLineWidth(2);
         for (int i = offsetProperty.get(); i < sequenceProperty.get().length(); i++, onscreen++) {
             final double topRightX = canvas.getWidth() / 2 - SQUARE_WIDTH
                     + (i - offsetProperty.get()) * (SQUARE_WIDTH + HORIZONTAL_GAP);
@@ -216,9 +217,9 @@ public final class SequenceVisualizer {
         final String base = String.valueOf(sequenceProperty.get().charAt(i));
 
         drawSquare(base, topRightX, VERTICAL_GAP,
-                i == hoveredBaseIdProperty.get() ? Color.RED : Color.BLUE, Color.BLACK);
+                i == hoveredBaseIdProperty.get() ? Color.PURPLE : Node.baseToColor(base.charAt(0)), Color.BLACK);
         drawSquare(String.valueOf(i), topRightX, VERTICAL_GAP * 2 + SQUARE_HEIGHT,
-                i == hoveredBaseIdProperty.get() ? Color.DARKRED : Color.DARKBLUE, Color.BLACK);
+                i == hoveredBaseIdProperty.get() ? Color.PURPLE : Color.rgb(0, 170, 135), Color.BLACK);
 
         rTree.addNode(i, topRightX, VERTICAL_GAP, SQUARE_WIDTH, SQUARE_HEIGHT * 2 + VERTICAL_GAP);
     }

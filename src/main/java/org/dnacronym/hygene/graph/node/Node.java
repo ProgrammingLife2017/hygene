@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.graph.colorscheme.ColorScheme;
 import org.dnacronym.hygene.graph.colorscheme.fixed.FixedColorScheme;
-import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 import org.dnacronym.hygene.graph.edge.Edge;
+import org.dnacronym.hygene.graph.metadata.NodeMetadata;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -125,6 +125,29 @@ public abstract class Node implements LayoutableNode {
      */
     public final Color getColor() {
         return colorScheme.calculateColor(this);
+    }
+
+    /**
+     * Returns the color of a given base.
+     * <p>
+     * Must be either `A`, `T`, `C` or `G`. If not recognized, simply {@link Color#GRAY}.
+     *
+     * @param base the base
+     * @return the {@link Color}
+     */
+    public static final Color baseToColor(final char base) {
+        switch (base) {
+            case 'A':
+                return Color.rgb(230, 245, 201);
+            case 'T':
+                return Color.rgb(244, 202, 228);
+            case 'C':
+                return Color.rgb(203, 213, 232);
+            case 'G':
+                return Color.rgb(253, 205, 172);
+            default:
+                return Color.GRAY;
+        }
     }
 
 

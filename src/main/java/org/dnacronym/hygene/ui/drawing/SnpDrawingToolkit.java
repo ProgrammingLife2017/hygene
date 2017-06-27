@@ -1,8 +1,12 @@
 package org.dnacronym.hygene.ui.drawing;
 
 import javafx.scene.paint.Color;
+import org.dnacronym.hygene.graph.node.Node;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -18,9 +22,20 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      * @param color    the {@link Color} to fill the node with
      */
     @Override
-    public void draw(final double snpX, final double snpY, final double snpWidth, final Color color) {
-        getGraphicsContext().setFill(color);
-        getGraphicsContext().fillPolygon(getRhombusX(snpX, snpWidth), getRhombusY(snpY), 4);
+    public void draw(final double snpX, final double snpY, final double snpWidth, final Color color,
+                     final String sequence) {
+        final List<Character> sequences = extractSequences(sequence);
+
+        if (sequences.isEmpty()) {
+            getGraphicsContext().setFill(color);
+            getGraphicsContext().fillPolygon(getRhombusX(snpX, snpWidth), getRhombusY(snpY), 4);
+        } else {
+            getGraphicsContext().setFill(Node.baseToColor(sequences.get(0)));
+            getGraphicsContext().fillPolygon(getRhombusTopX(snpX, snpWidth), getRhombusTopY(snpY), 3);
+
+            getGraphicsContext().setFill(Node.baseToColor(sequences.get(1)));
+            getGraphicsContext().fillPolygon(getRhombusBottomX(snpX, snpWidth), getRhombusBottomY(snpY), 3);
+        }
     }
 
     /**
@@ -99,17 +114,21 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      */
     @Override
     public void drawSequence(final double snpX, final double snpY, final double snpWidth, final String sequence) {
-        // Not yet implemented
+        if (snpWidth / 2 <= getCharWidth()) {
+            return;
+        }
+
+        getGraphicsContext().setFill(Color.BLACK);
+        getGraphicsContext().setFont(getNodeFont());
+
+        final List<Character> sequences = extractSequences(sequence);
+        getGraphicsContext().fillText(sequences.get(0).toString(),
+                snpX + snpWidth / 2 - getCharWidth() / 2, snpY);
+        getGraphicsContext().fillText(sequences.get(1).toString(),
+                snpX + snpWidth / 2 - getCharWidth() / 2, snpY + getSnpHeight() / 2);
     }
 
 
-    /**
-     * Returns the four X-coordinates for a rhombus at the given position with the given width.
-     *
-     * @param left  the left-most point of the rhombus
-     * @param width the width of the rhombus
-     * @return the four X-coordinates for a rhombus at the given position with the given width
-     */
     private double[] getRhombusX(final double left, final double width) {
         final double center = left + width / 2;
 
@@ -121,12 +140,6 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         };
     }
 
-    /**
-     * Returns the four Y-coordinates for a rhombus at the given position.
-     *
-     * @param top the top of the rhombus
-     * @return the four Y-coordinates for a rhombus at the given position
-     */
     private double[] getRhombusY(final double top) {
         final double center = top + getNodeHeight() / 2;
 
@@ -136,5 +149,65 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
                 center,
                 center + getSnpHeight() / 2
         };
+    }
+
+    private double[] getRhombusTopX(final double left, final double width) {
+        final double center = left + width / 2;
+
+        return new double[] {
+                center - width / 2,
+                center,
+                center + width / 2
+        };
+    }
+
+    private double[] getRhombusBottomX(final double left, final double width) {
+        final double center = left + width / 2;
+
+        return new double[] {
+                center + width / 2,
+                center,
+                center - width / 2,
+        };
+    }
+
+    private double[] getRhombusTopY(final double top) {
+        final double center = top + getNodeHeight() / 2;
+
+        return new double[] {
+                center,
+                center - getSnpHeight() / 2,
+                center
+        };
+    }
+
+    private double[] getRhombusBottomY(final double top) {
+        final double center = top + getNodeHeight() / 2;
+
+        return new double[] {
+                center,
+                center + getSnpHeight() / 2,
+                center
+        };
+    }
+
+
+    private List<Character> extractSequences(final String sequenceDescription) {
+        if ("".equals(sequenceDescription)) {
+            return new ArrayList<>();
+        }
+
+        String sequences = sequenceDescription;
+        if (sequences.charAt(0) == '[') {
+            sequences = sequences.substring(1);
+        }
+        if (sequences.charAt(sequences.length() - 1) == ']') {
+            sequences = sequences.substring(0, sequences.length() - 1);
+        }
+
+        return Arrays.stream(sequences.split(","))
+                .map(String::trim)
+                .map(sequence -> sequence.charAt(0))
+                .collect(Collectors.toList());
     }
 }

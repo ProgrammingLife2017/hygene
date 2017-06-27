@@ -88,7 +88,7 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
      * @param nodeWidth the width of the node
      * @param color     the {@link Color} to fill the node with
      */
-    public abstract void draw(double nodeX, double nodeY, double nodeWidth, Color color);
+    public abstract void draw(double nodeX, double nodeY, double nodeWidth, Color color, String sequence);
 
     /**
      * Fills a round rectangle based on the node position and width.
