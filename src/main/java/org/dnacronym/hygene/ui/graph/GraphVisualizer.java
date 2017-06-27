@@ -580,8 +580,7 @@ public final class GraphVisualizer {
 
             selectedSegmentProperty.setValue(null);
 
-            rTree.find(event.getX(), event.getY(), this::setSelectedSegment, (ignored1, ignored2) -> {
-            });
+            rTree.find(event.getX(), event.getY(), this::setSelectedSegment);
         });
         canvas.setOnMouseMoved(event -> {
             if (rTree == null) {
