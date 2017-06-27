@@ -52,6 +52,14 @@ public final class GraphController implements Initializable {
             drawWelcomeImage();
         });
 
+        graphCanvas.heightProperty().addListener((observable, oldValue, newValue) -> {
+            if (graphStore.getGfaFileProperty().get() != null) {
+                return;
+            }
+
+            drawWelcomeImage();
+        });
+
 
         graphVisualizer.setCanvas(graphCanvas);
     }
