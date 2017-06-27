@@ -65,10 +65,15 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * @param data   the {@link LayererData}
      * @param layers an array of layers
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // That is exactly what this method should do
     private void addToLayers(final LayererData data, final LayoutableNode[][] layers) {
         final Set<Node> addLayoutableNodeLater = new HashSet<>();
 
-        data.nodes.forEach(node -> {
+        for (final LayoutableNode node : data.nodes) {
+            if (Thread.interrupted()) {
+                return;
+            }
+
             forEachLayer(data, node, layer -> addToLayerSomewhere(layers[layer], node));
 
             final Set<Edge> addEdgeLater = new HashSet<>();
@@ -91,7 +96,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
 
             node.getOutgoingEdges().addAll(addEdgeLater);
             node.getOutgoingEdges().removeAll(removeEdgeLater);
-        });
+        }
 
         data.subgraph.addAll(addLayoutableNodeLater);
     }
@@ -166,7 +171,7 @@ public final class FafospLayerer implements SugiyamaLayerer {
      * The returned {@link DummyEdge} is not added to the {@link LayoutableNode} from which it departs, because this
      * might result in a {@link java.util.ConcurrentModificationException}.
      *
-     * @param edge       the original {@link Edge} that was replaced with {@link DummyNode}s
+     * @param edge                 the original {@link Edge} that was replaced with {@link DummyNode}s
      * @param dummyLayoutableNodes the {@link DummyNode}s that replaced the given {@link Edge}
      * @return the first of the added {@link DummyEdge}s
      */
