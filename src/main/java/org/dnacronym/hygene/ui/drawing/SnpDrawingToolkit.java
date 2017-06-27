@@ -1,5 +1,6 @@
 package org.dnacronym.hygene.ui.drawing;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.Node;
@@ -16,6 +17,23 @@ import java.util.stream.Collectors;
  * Toolkit used to draw SNPs; single-nucleotide polymorphisms.
  */
 public final class SnpDrawingToolkit extends NodeDrawingToolkit {
+    private final EdgeDrawingToolkit edgeDrawingToolkit;
+
+
+    /**
+     * Creates instance of {@link SnpDrawingToolkit}.
+     */
+    public SnpDrawingToolkit() {
+        edgeDrawingToolkit = new EdgeDrawingToolkit();
+    }
+
+
+    @Override
+    public void setGraphicsContext(final GraphicsContext graphicsContext) {
+        super.setGraphicsContext(graphicsContext);
+        edgeDrawingToolkit.setGraphicsContext(graphicsContext);
+    }
+
 
     /**
      * Fills a rhombus based on the node position and width, with the set {@link Color} fill.
@@ -65,37 +83,36 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
                             final List<Color> topGenomeColors, final List<Color> bottomGenomeColors) {
         final double centerY = snpY + getNodeHeight() / 2;
+        final double edgeWidth = snpWidth / 8;
 
-        EdgeDrawingToolkit nodeDrawingToolkit = new EdgeDrawingToolkit();
-        nodeDrawingToolkit.setGraphicsContext(getGraphicsContext());
-        nodeDrawingToolkit.drawEdge(
-                snpX,
+        edgeDrawingToolkit.drawEdge(
+                snpX - edgeWidth / 2,
                 centerY,
                 snpX + snpWidth / 2,
-                centerY + getSnpHeight() / 2,
-                getSnpHeight() / 8,
+                centerY + getSnpHeight() / 2 + edgeWidth / 2,
+                edgeWidth,
                 topGenomeColors);
-        nodeDrawingToolkit.drawEdge(
+        edgeDrawingToolkit.drawEdge(
                 snpX + snpWidth / 2,
-                centerY + getSnpHeight() / 2,
-                snpX + snpWidth,
+                centerY + getSnpHeight() / 2 + edgeWidth / 2,
+                snpX + snpWidth + edgeWidth / 2,
                 centerY,
-                getSnpHeight() / 8,
+                edgeWidth,
                 topGenomeColors);
 
-        nodeDrawingToolkit.drawEdge(
-                snpX,
+        edgeDrawingToolkit.drawEdge(
+                snpX - edgeWidth / 2,
                 centerY,
                 snpX + snpWidth / 2,
-                centerY - getSnpHeight() / 2,
-                getSnpHeight() / 8,
+                centerY - getSnpHeight() / 2 - edgeWidth / 2,
+                edgeWidth,
                 bottomGenomeColors);
-        nodeDrawingToolkit.drawEdge(
+        edgeDrawingToolkit.drawEdge(
                 snpX + snpWidth / 2,
-                centerY - getSnpHeight() / 2,
-                snpX + snpWidth,
+                centerY - getSnpHeight() / 2 - edgeWidth / 2,
+                snpX + snpWidth + edgeWidth / 2,
                 centerY,
-                getSnpHeight() / 8,
+                edgeWidth,
                 bottomGenomeColors);
 
     }

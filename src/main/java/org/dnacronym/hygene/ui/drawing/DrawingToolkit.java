@@ -25,7 +25,7 @@ public abstract class DrawingToolkit {
      *
      * @param graphicsContext the {@link GraphicsContext} to use for drawing
      */
-    public final void setGraphicsContext(final GraphicsContext graphicsContext) {
+    public void setGraphicsContext(final GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
     }
 
