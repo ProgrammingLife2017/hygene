@@ -76,13 +76,14 @@ public final class GfaFile {
             if (graphLoader.hasGraph()) {
                 genomeMapping = fileDatabase.getFileGenomeMapping().getMappings();
                 graph = new Graph(graphLoader.restoreGraph(progressUpdater, fileName), this);
+                graph.setNodePositions(new Fafosp(graph).horizontal());
             } else {
                 LOGGER.info("Start parsing");
                 graph = gfaParser.parse(this, progressUpdater);
                 LOGGER.info("Finished parsing");
 
                 LOGGER.info("Start fafosp x");
-                new Fafosp(graph).horizontal();
+                graph.setNodePositions(new Fafosp(graph).horizontal());
 
                 LOGGER.info("GfaFile parse finished");
 

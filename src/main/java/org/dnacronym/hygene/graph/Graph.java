@@ -1,8 +1,12 @@
 package org.dnacronym.hygene.graph;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
 import org.dnacronym.hygene.parser.GfaFile;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -23,13 +27,14 @@ public final class Graph {
 
     private final int[][] nodeArrays;
     private final GfaFile gfaFile;
+    private @MonotonicNonNull TreeMap<Long, Integer> nodePositions;
 
 
     /**
      * Constructs a graph from array based data structure.
      *
-     * @param nodeArrays    nested array containing the graph's data
-     * @param gfaFile       a reference to the GFA file from which the graph is created
+     * @param nodeArrays nested array containing the graph's data
+     * @param gfaFile    a reference to the GFA file from which the graph is created
      */
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
@@ -145,6 +150,26 @@ public final class Graph {
                 ) / EDGE_DATA_SIZE,
                 nodeArrays[id][NODE_OUTGOING_EDGES_INDEX]
         );
+    }
+
+    public void setNodePositions(final TreeMap<Long, Integer> nodePositions) {
+        this.nodePositions = nodePositions;
+    }
+
+    public int getNodeAtPosition(final long position) {
+        if (nodePositions == null) {
+            throw new IllegalStateException("Cannot give node position while TreeMap was not set.");
+        }
+
+        Map.Entry<Long, Integer> myEntry = nodePositions.floorEntry(position);
+        if (myEntry == null) {
+            myEntry = nodePositions.ceilingEntry(position);
+            if (myEntry == null) {
+                throw new IllegalStateException("Could not find that kind of node.");
+            }
+        }
+
+        return myEntry.getValue();
     }
 
     /**

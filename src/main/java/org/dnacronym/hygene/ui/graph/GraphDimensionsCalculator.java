@@ -135,34 +135,8 @@ public final class GraphDimensionsCalculator {
                 return;
             }
 
-            final Graph graph = getGraphProperty().get();
-            final SequenceDirection direction = newValue.longValue() < oldValue.longValue()
-                    ? SequenceDirection.LEFT
-                    : SequenceDirection.RIGHT;
-
-            int centerNodeId = centerNodeIdProperty.get();
-            if (newValue.longValue() == (long) FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)) {
-                return;
-            }
-
-            // Find new center node
-            while (direction.ternary(
-                    FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId) > newValue.longValue(),
-                    FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(centerNodeId)
-                            + graph.getLength(centerNodeId) < newValue.longValue()
-            )) {
-                final int[] firstNeighbour = {-1};
-                new GraphIterator(graph).visitDirectNeighboursWhile(centerNodeId, direction,
-                        ignored -> firstNeighbour[0] == -1, neighbour -> firstNeighbour[0] = neighbour);
-                if (firstNeighbour[0] < 0) {
-                    break;
-                }
-                centerNodeId = firstNeighbour[0];
-            }
-
-            // Set center node
+            centerNodeIdProperty.set(getGraphProperty().get().getNodeAtPosition(newValue.longValue()));
             calculate(subgraph);
-            centerNodeIdProperty.set(centerNodeId);
         });
         viewRadiusProperty = new SimpleIntegerProperty(1);
         viewRadiusProperty.addListener((observable, oldValue, newValue) -> {
