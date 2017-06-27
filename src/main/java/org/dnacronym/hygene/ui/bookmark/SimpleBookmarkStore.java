@@ -5,10 +5,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.graph.layout.FafospLayerer;
+import org.dnacronym.hygene.graph.bookmark.Bookmark;
 import org.dnacronym.hygene.graph.node.Node;
 import org.dnacronym.hygene.graph.node.Segment;
-import org.dnacronym.hygene.graph.bookmark.Bookmark;
 import org.dnacronym.hygene.parser.GfaParseException;
 import org.dnacronym.hygene.persistence.FileBookmarks;
 import org.dnacronym.hygene.persistence.FileDatabase;
@@ -112,8 +111,7 @@ public final class SimpleBookmarkStore implements BookmarkStore {
     public void addBookmark(final Bookmark bookmark) {
         try {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
-                final long bookmarkPosition = (long) FafospLayerer.LAYER_WIDTH * graphVisualizer.getGraph()
-                        .getUnscaledXPosition(bookmark.getNodeId());
+                final long bookmarkPosition = graphVisualizer.getGraph().getRealStartXPosition(bookmark.getNodeId());
                 graphDimensionsCalculator.getViewPointProperty().set(bookmarkPosition);
                 graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());
 

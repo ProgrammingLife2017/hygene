@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.GraphIterator;
 import org.dnacronym.hygene.graph.SequenceDirection;
-import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.ui.drawing.HeatMapDrawing;
 
 import javax.inject.Inject;
@@ -45,8 +44,7 @@ public final class GraphSliderController implements Initializable {
         graphDimensionsCalculator.getGraphProperty().addListener((observable, oldValue, newValue) -> {
             final int sentinelId = newValue.getNodeArrays().length - 1;
             graphScrollBar.setMin(1);
-            graphScrollBar.setMax((double) FafospLayerer.LAYER_WIDTH * newValue.getUnscaledXPosition(sentinelId - 1)
-                    + newValue.getLength(sentinelId - 1));
+            graphScrollBar.setMax(newValue.getRealEndXPosition(sentinelId - 1));
         });
 
         heatMapCanvas.widthProperty().bind(sliderPane.widthProperty());
@@ -80,9 +78,8 @@ public final class GraphSliderController implements Initializable {
         final long bucketSize = Math.round((double) graphWidth / BUCKET_COUNT);
 
         new GraphIterator(graph).visitAll(SequenceDirection.RIGHT, nodeId -> {
-            final int left = Math.toIntExact(((long) graph.getUnscaledXPosition(nodeId) * 1000) / bucketSize);
-            final int right = Math.toIntExact(((long) graph.getUnscaledXPosition(nodeId) * 1000
-                    + graph.getLength(nodeId)) / bucketSize);
+            final int left = Math.toIntExact(graph.getRealStartXPosition(nodeId) / bucketSize);
+            final int right = Math.toIntExact(graph.getRealEndXPosition(nodeId) / bucketSize);
 
             for (int pos = left; pos <= right; pos++) {
                 buckets.put(pos, buckets.containsKey(pos) ? buckets.get(pos) + 1 : 1);

@@ -9,7 +9,6 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import org.dnacronym.hygene.ui.node.SequenceVisualizer;
@@ -72,8 +71,7 @@ public final class GenomeNavigateController implements Initializable {
 
         genomeNavigation.runActionOnIndexedGenome(genome.getValue(), dynamicGenomeIndex -> Platform.runLater(() -> {
             final int nodeId = dynamicGenomeIndex.getNodeByBase(selectedBase);
-            final long nodePos = (long) FafospLayerer.LAYER_WIDTH
-                    * graphVisualizer.getGraph().getUnscaledXPosition(nodeId);
+            final long nodePos = graphVisualizer.getGraph().getRealStartXPosition(nodeId);
             graphDimensionsCalculator.getViewPointProperty().set(nodePos);
             graphVisualizer.setSelectedSegment(nodeId);
 

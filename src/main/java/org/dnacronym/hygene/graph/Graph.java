@@ -3,6 +3,7 @@ package org.dnacronym.hygene.graph;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.dnacronym.hygene.core.UnsignedInteger;
+import org.dnacronym.hygene.graph.layout.FafospLayerer;
 import org.dnacronym.hygene.parser.GfaFile;
 
 import java.util.Map;
@@ -124,6 +125,14 @@ public final class Graph {
      */
     public int getUnscaledXPosition(final int id) {
         return nodeArrays[id][UNSCALED_X_POSITION_INDEX];
+    }
+
+    public long getRealStartXPosition(final int id) {
+        return (long) FafospLayerer.LAYER_WIDTH * getUnscaledXPosition(id);
+    }
+
+    public long getRealEndXPosition(final int id) {
+        return getRealStartXPosition(id) + getLength(id);
     }
 
     /**

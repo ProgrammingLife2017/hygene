@@ -122,9 +122,7 @@ public final class GraphDimensionsCalculator {
                 return;
             }
             final int sentinelId = getGraphProperty().get().getNodeArrays().length - 1;
-            final long sentinelEndPosition = (long) FafospLayerer.LAYER_WIDTH
-                    * getGraphProperty().get().getUnscaledXPosition(sentinelId)
-                    + getGraphProperty().get().getLength(sentinelId);
+            final long sentinelEndPosition = getGraphProperty().get().getRealEndXPosition(sentinelId);
             if (newValue.longValue() > sentinelEndPosition) {
                 viewPointProperty.set(sentinelEndPosition);
                 return;
@@ -242,9 +240,8 @@ public final class GraphDimensionsCalculator {
 
         nodeCountProperty.set(graph.getNodeArrays().length);
         centerNodeIdProperty.set(1);
-        final int sentinelId = graph.getNodeArrays().length - 1;
-        final long sentinelPosition = (long) FafospLayerer.LAYER_WIDTH * graph.getUnscaledXPosition(sentinelId)
-                + graph.getLength(sentinelId);
+        final int sinkId = graph.getNodeArrays().length - 1;
+        final long sentinelPosition = graph.getRealEndXPosition(sinkId);
         viewPointProperty.set(sentinelPosition / 2);
         viewRadiusProperty.set(DEFAULT_RADIUS * FafospLayerer.LAYER_WIDTH);
     }
