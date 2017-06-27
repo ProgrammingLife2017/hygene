@@ -13,7 +13,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -245,7 +244,9 @@ public final class GraphVisualizer {
                             .collect(Collectors.toMap(annotation -> annotation,
                                     annotation -> (double) annotation.getEndNodeBaseOffset() / segment.getLength())));
 
-            rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+            if (graphDimensionsCalculator.getObservableQueryNodes().size() < 5000) {
+                rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
+            }
         });
     }
 
@@ -596,6 +597,9 @@ public final class GraphVisualizer {
             if (rTree == null) {
                 return;
             }
+            if (graphDimensionsCalculator.getLastScrollTime() > System.currentTimeMillis() - 100) {
+                return;
+            }
             hoveredSegmentProperty.set(null);
             rTree.find(event.getX(), event.getY(), this::setHoveredSegmentProperty);
         });
@@ -614,15 +618,8 @@ public final class GraphVisualizer {
      * @param nodeId node the id of the newly selected {@link Segment}
      */
     public void setSelectedSegment(final int nodeId) {
-        final FilteredList<Node> segment = graphDimensionsCalculator.getObservableQueryNodes()
-                .filtered(node -> node instanceof GfaNode && ((GfaNode) node).containsSegment(nodeId));
-
-        if (segment.isEmpty()) {
-            LOGGER.error("Cannot select node that is not in subgraph.");
-            return;
-        }
-
-        selectedSegmentProperty.set((GfaNode) segment.get(0));
+        graphDimensionsCalculator.getCenterPointQuery().getCache().getSegment(nodeId)
+                .ifPresent(selectedSegmentProperty::set);
     }
 
     /**
