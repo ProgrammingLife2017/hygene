@@ -84,7 +84,6 @@ public final class GraphVisualizer {
     private final ColorRoulette colorRoulette;
 
     private final ObjectProperty<GfaNode> selectedSegmentProperty;
-    private final ObjectProperty<Edge> selectedEdgeProperty;
     private final ObjectProperty<GfaNode> hoveredSegmentProperty;
 
     private final ObservableList<GenomePath> genomePaths;
@@ -134,8 +133,6 @@ public final class GraphVisualizer {
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
 
-        selectedEdgeProperty = new SimpleObjectProperty<>();
-        selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
         hoveredSegmentProperty = new SimpleObjectProperty<>();
         hoveredSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
@@ -240,13 +237,13 @@ public final class GraphVisualizer {
      * Creates the correct toolkit for the given node.
      *
      * @param node the node
-     * @return  the correct toolkit for the given node
+     * @return the correct toolkit for the given node
      */
     private NodeDrawingToolkit createNodeDrawingToolkit(final Node node) {
         if (node instanceof Segment) {
-             return segmentDrawingToolkit;
+            return segmentDrawingToolkit;
         } else if (node instanceof AggregateSegment) {
-             return snpDrawingToolkit;
+            return snpDrawingToolkit;
         } else {
             LOGGER.warn("Cannot draw node of class " + node.getClass().getName() + ".");
             return null;
@@ -582,21 +579,9 @@ public final class GraphVisualizer {
             }
 
             selectedSegmentProperty.setValue(null);
-            selectedEdgeProperty.setValue(null);
 
-            rTree.find(event.getX(), event.getY(),
-                    this::setSelectedSegment,
-                    (fromNodeId, toNodeId) -> graphDimensionsCalculator.getObservableQueryNodes().stream()
-                            .filter(node -> node instanceof Segment)
-                            .filter(node -> ((Segment) node).getId() == fromNodeId)
-                            .findFirst()
-                            .ifPresent(node -> node.getOutgoingEdges().stream()
-                                    .filter(edge -> edge.getTo() instanceof Segment
-                                            && ((Segment) edge.getTo()).getId() == toNodeId)
-                                    .findFirst()
-                                    .ifPresent(selectedEdgeProperty::setValue)
-                            )
-            );
+            rTree.find(event.getX(), event.getY(), this::setSelectedSegment, (ignored1, ignored2) -> {
+            });
         });
         canvas.setOnMouseMoved(event -> {
             if (rTree == null) {
@@ -665,17 +650,6 @@ public final class GraphVisualizer {
      */
     public ObjectProperty<GfaNode> getSelectedSegmentProperty() {
         return selectedSegmentProperty;
-    }
-
-    /**
-     * The property of the selected edge.
-     * <p>
-     * This edge is updated every time the user clicks on an edge in the canvas.
-     *
-     * @return Selected {@link Edge} by the user, which can be {@code null}
-     */
-    public ObjectProperty<Edge> getSelectedEdgeProperty() {
-        return selectedEdgeProperty;
     }
 
     /**

@@ -75,14 +75,6 @@ public final class GraphController implements Initializable {
 
             LOGGER.info("Selected node id: " + newNode.getSegmentIds().toString() + ".");
         });
-
-        graphVisualizer.getSelectedEdgeProperty().addListener((observable, oldEdge, newEdge) -> {
-            if (newEdge == null) {
-                return;
-            }
-
-            LOGGER.info("Selected edge from node id: " + newEdge.getFrom() + " to node id: " + newEdge.getTo() + "\n");
-        });
     }
 
     /**
