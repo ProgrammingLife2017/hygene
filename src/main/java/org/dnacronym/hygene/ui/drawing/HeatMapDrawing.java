@@ -90,7 +90,7 @@ public final class HeatMapDrawing {
 
         graphicsContext.setFill(Color.RED);
         for (final Integer bucket : buckets) {
-            final double normalized = (double) (bucket - minValue + 1) / Math.max(1, maxValue - minValue + 1);
+            final double normalized = Math.log(bucket - minValue + 1d) / Math.log(maxValue - minValue + 1d);
             graphicsContext.setFill(MIN_COLOR.interpolate(MAX_COLOR, normalized / 2 + prevValue / 2));
 
             final double bucketHeight = (normalized / 2 + prevValue / 2) * canvasHeight.get();
