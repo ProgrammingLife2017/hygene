@@ -7,6 +7,7 @@ import org.dnacronym.hygene.graph.SequenceDirection;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TreeMap;
 
 
 /**
@@ -36,7 +37,10 @@ public final class Fafosp {
     /**
      * Calculates the optimal horizontal position of each node in the {@link Graph}.
      */
-    public void horizontal() {
+    @SuppressWarnings({"PMD.LooseCoupling", "squid:S1319"}) // I need a TreeMap
+    public TreeMap<Long, Integer> horizontal() {
+        final TreeMap<Long, Integer> nodePositions = new TreeMap<>();
+
         final long[] xPositions = new long[nodeArrays.length];
         Arrays.fill(xPositions, -1);
 
@@ -56,6 +60,7 @@ public final class Fafosp {
 
             // Horizontal position cannot always be determined by FAFOSP-X
             if (xPositions[head] >= 0) {
+                nodePositions.put(xPositions[head], head);
                 // Add neighbours of which horizontal position was not set
                 iterator.visitDirectNeighbours(head, SequenceDirection.RIGHT, neighbour -> {
                     if (xPositions[neighbour] < 0) {
@@ -68,6 +73,8 @@ public final class Fafosp {
         for (int i = 0; i < xPositions.length; i++) {
             graph.setUnscaledXPosition(i, (int) (xPositions[i] / COLUMN_WIDTH));
         }
+
+        return nodePositions;
     }
 
     /**
