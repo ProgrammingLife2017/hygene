@@ -10,12 +10,12 @@
     <menus>
         <Menu mnemonicParsing="false" text="File">
             <items>
-                <Menu fx:id="recentFilesMenu" mnemonicParsing="false" text="Recent Files">
+                <Menu fx:id="recentFilesMenu" mnemonicParsing="false" text="Recent GFA Files">
                     <items>
                         <MenuItem disable="true" mnemonicParsing="false" text="No recently opened files"/>
                     </items>
                 </Menu>
-                <MenuItem mnemonicParsing="false" onAction="#openGfaFileAction" text="Open">
+                <MenuItem mnemonicParsing="false" onAction="#openGfaFileAction" text="Open GFA file">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
                     </accelerator>
