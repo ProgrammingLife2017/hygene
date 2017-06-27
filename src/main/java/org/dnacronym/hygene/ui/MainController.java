@@ -47,7 +47,7 @@ public final class MainController implements Initializable {
             Hygene.getInstance().getPrimaryStage().setMinHeight(650.0);
             Hygene.getInstance().getPrimaryStage().setMinWidth(920.0);
         } catch (final UIInitialisationException e) {
-            LOGGER.error("Hygene instance not initialised.");
+            LOGGER.error("Hygene instance not initialised.", e);
         }
 
         leftPane.visibleProperty().bind(toggleLeftPane.selectedProperty()
