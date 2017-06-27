@@ -34,6 +34,10 @@ public final class ViewMenuController implements Initializable {
     @FXML
     private MenuItem toggleSequenceVisualizer;
     @FXML
+    private MenuItem openBookmarks;
+    @FXML
+    private MenuItem openGenomePaths;
+    @FXML
     private MenuItem toggleAggregation;
 
     private final BooleanProperty aggregationProperty;
@@ -50,6 +54,8 @@ public final class ViewMenuController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         toggleSequenceVisualizer.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+        openBookmarks.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+        openGenomePaths.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
         toggleAggregation.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
 
         aggregationProperty.addListener((observable, oldValue, newValue) -> {
@@ -61,11 +67,8 @@ public final class ViewMenuController implements Initializable {
         });
 
         toggleSequenceVisualizer.textProperty().bind(Bindings.when(sequenceVisualizer.getVisibleProperty())
-                .then("Hide s_equence view")
-                .otherwise("Show s_equence view"));
-        toggleAggregation.textProperty().bind(Bindings.when(aggregationProperty)
-                .then("Disa_ble node aggregation")
-                .otherwise("Ena_ble node aggregation"));
+                .then("Hide node s_equence")
+                .otherwise("Show node s_equence"));
     }
 
     /**
@@ -85,6 +88,18 @@ public final class ViewMenuController implements Initializable {
     @FXML
     void toggleSequenceVisualizerAction(final ActionEvent actionEvent) {
         sequenceVisualizer.getVisibleProperty().set(!sequenceVisualizer.getVisibleProperty().get());
+        actionEvent.consume();
+    }
+
+    @FXML
+    void openBookmarksAction(final ActionEvent actionEvent) {
+        // TODO
+        actionEvent.consume();
+    }
+
+    @FXML
+    void openGenomePathsAction(final ActionEvent actionEvent) {
+        // TODO
         actionEvent.consume();
     }
 

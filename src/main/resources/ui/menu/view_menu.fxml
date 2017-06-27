@@ -10,7 +10,17 @@
             <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
         </accelerator>
     </MenuItem>
-    <MenuItem fx:id="toggleAggregation" onAction="#toggleAggregationAction">
+    <MenuItem fx:id="openBookmarks" onAction="#openBookmarksAction" text="Open bookmarks">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
+    <MenuItem fx:id="openGenomePaths" onAction="#openGenomePathsAction" text="Open genome path options">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="M" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
+    <MenuItem fx:id="toggleAggregation" onAction="#toggleAggregationAction" text="Toggle SNP collapsing">
         <accelerator>
             <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
         </accelerator>
