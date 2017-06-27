@@ -1,11 +1,12 @@
 package org.dnacronym.hygene.ui.bookmark;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -36,18 +37,24 @@ public final class BookmarkCreateController implements Initializable {
     private BookmarkStore bookmarkStore;
 
     @FXML
+    private Label nodePosition;
+    @FXML
     private TextField baseOffset;
     @FXML
-    private TextField radius;
+    private Label radius;
     @FXML
     private TextArea description;
     @FXML
-    private Button save;
+    private Button saveButton;
 
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         final ObjectProperty<GfaNode> selectedNodeProperty = graphVisualizer.getSelectedSegmentProperty();
+
+        selectedNodeProperty.addListener((observable, oldValue, newValue) ->
+                nodePosition.setText(newValue == null ? "" : String.valueOf(newValue.getSegmentIds())));
+        radius.textProperty().bind(graphDimensionsCalculator.getRadiusProperty().asString());
 
         baseOffset.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
         baseOffset.setText(String.valueOf(sequenceVisualizer.getOffsetProperty().get()));
@@ -55,14 +62,7 @@ public final class BookmarkCreateController implements Initializable {
         sequenceVisualizer.getOffsetProperty().addListener((observable, oldValue, newValue) ->
                 baseOffset.setText(String.valueOf(newValue)));
 
-        radius.setText(String.valueOf(graphDimensionsCalculator.getRadiusProperty().get()));
-        graphDimensionsCalculator.getRadiusProperty().addListener((observable, oldValue, newValue) ->
-                radius.setText(String.valueOf(newValue)));
-
-        baseOffset.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-        radius.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-        description.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
-        save.visibleProperty().bind(Bindings.isNotNull(selectedNodeProperty));
+        saveButton.disableProperty().bind(selectedNodeProperty.isNull());
     }
 
     /**
@@ -86,6 +86,8 @@ public final class BookmarkCreateController implements Initializable {
 
     /**
      * When the user saves the bookmark.
+     * <p>
+     * Hides the owner {@link javafx.stage.Window} afterwards.
      *
      * @param actionEvent the {@link ActionEvent}
      */
@@ -107,6 +109,9 @@ public final class BookmarkCreateController implements Initializable {
             bookmarkStore.addBookmark(new Bookmark(segment.getId(), baseOffsetValue, radiusValue,
                     description.getText()));
             description.clear();
+
+            final Node source = (Node) actionEvent.getSource();
+            source.getScene().getWindow().hide();
         }
 
         actionEvent.consume();
