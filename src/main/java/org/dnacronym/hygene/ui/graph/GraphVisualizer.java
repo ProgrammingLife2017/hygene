@@ -200,16 +200,14 @@ public final class GraphVisualizer {
             return;
         }
 
-        final GfaNode gfaNode = (GfaNode) node;
-        final double nodeY = graphDimensionsCalculator.computeYPosition(node);
-
         final NodeDrawingToolkit nodeDrawingToolkit = createNodeDrawingToolkit(node);
         if (nodeDrawingToolkit == null) {
             return;
         }
 
+        final GfaNode gfaNode = (GfaNode) node;
+        final double nodeY = graphDimensionsCalculator.computeYPosition(node);
         nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor());
-
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
                 .anyMatch(segmentId -> selectedSegmentProperty.get().containsSegment(segmentId))) {
