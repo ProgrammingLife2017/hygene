@@ -184,7 +184,7 @@ public final class GraphVisualizer {
      * @param queried     the boolean indicating whether this node has been queried
      * @param annotations the list of annotations in view
      */
-    @SuppressWarnings("PMD.NPathComplexity") // See comment at top of class
+    @SuppressWarnings({"PMD.NPathComplexity", "squid:S134"}) // See comment at top of class
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
                           final List<Annotation> annotations) {
         if (!(node instanceof GfaNode)) {
