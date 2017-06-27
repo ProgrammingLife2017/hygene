@@ -8,8 +8,6 @@ import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.path.GenomePath;
 
-import javax.inject.Inject;
-
 
 /**
  * Represents a {@link NodeTooltip}.
@@ -42,7 +40,6 @@ public class NodeTooltip {
      * @param middleX         the middle x position of the node
      * @param belowY          the below y position of the node
      */
-    @Inject
     public NodeTooltip(final GraphVisualizer graphVisualizer, final GraphicsContext graphicsContext,
                        final GfaNode node, final double middleX, final double belowY) {
         int tempHeight = DEFAULT_HEIGHT;
@@ -57,7 +54,7 @@ public class NodeTooltip {
             tempHeight += node.getMetadata().getGenomes().size() * LINE_HEIGHT + 10;
         }
         if (node.getSegments().get(0).getSequenceLength() > MAX_SEQUENCE_LENGTH) {
-            tempHeight += LINE_HEIGHT + 5;
+            tempHeight += LINE_HEIGHT * 1.5;
         }
 
         this.height = tempHeight;
@@ -116,7 +113,7 @@ public class NodeTooltip {
                 belowY + LINE_HEIGHT + Y_PADDING + offset
         );
 
-        offset += LINE_HEIGHT + 5;
+        offset += LINE_HEIGHT * 1.5;
     }
 
     /**
@@ -146,7 +143,7 @@ public class NodeTooltip {
     private void drawSequenceLength() {
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillText(
-                "Length: " + node.getSegments().get(0).getSequenceLength(),
+                "Length:   " + node.getSegments().get(0).getSequenceLength(),
                 middleX - (DEFAULT_WIDTH / 2) + X_PADDING,
                 belowY + LINE_HEIGHT + Y_PADDING + offset
         );
@@ -162,6 +159,7 @@ public class NodeTooltip {
             return;
         }
 
+        offset += LINE_HEIGHT / 2;
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillText(
                 "Genomes:",
