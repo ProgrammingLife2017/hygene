@@ -203,9 +203,6 @@ public final class GraphVisualizer {
         final GfaNode gfaNode = (GfaNode) node;
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
 
-        gfaNode.getSegments().forEach(segment -> rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth,
-                nodeHeightProperty.get()));
-
         final NodeDrawingToolkit nodeDrawingToolkit = createNodeDrawingToolkit(node);
         if (nodeDrawingToolkit == null) {
             return;
@@ -295,13 +292,6 @@ public final class GraphVisualizer {
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
-
-        if (fromNode instanceof Segment && toNode instanceof Segment) {
-            final int fromSegmentId = ((Segment) fromNode).getId();
-            final int toSegmentId = ((Segment) toNode).getId();
-
-            rTree.addEdge(fromSegmentId, toSegmentId, fromX, fromY, toX, toY);
-        }
 
         final double edgeThickness = computeEdgeThickness(edge);
         edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, edgeThickness, computeEdgeColors(edge));
