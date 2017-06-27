@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<Menu mnemonicParsing="false" text="Navigate" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.dnacronym.hygene.ui.menu.NavigateMenuController">
+    <MenuItem fx:id="openGenomeNavigation" onAction="#openGenomeNavigationAction" text="Go to base in genome">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="D" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
+    <MenuItem fx:id="openQuery" onAction="#openQueryAction" text="Search for sequence pattern">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="U" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
+    <MenuItem fx:id="openAnnotationSearch" onAction="#openAnnotationSearchAction" text="Search in GFF annotations">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="T" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+        </accelerator>
+    </MenuItem>
+</Menu>
