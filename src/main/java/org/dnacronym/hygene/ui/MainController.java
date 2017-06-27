@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
@@ -29,6 +30,8 @@ public final class MainController implements Initializable {
     @FXML
     private ToggleButton toggleRightPane;
     @FXML
+    private TitledPane nodeProperties;
+    @FXML
     private ScrollPane rightPane;
 
 
@@ -53,6 +56,7 @@ public final class MainController implements Initializable {
         graphVisualizer.getSelectedSegmentProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 toggleLeftPane.setSelected(true);
+                nodeProperties.setExpanded(true);
             }
         });
     }
