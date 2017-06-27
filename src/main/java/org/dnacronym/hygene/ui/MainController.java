@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.BorderPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -30,6 +31,8 @@ public final class MainController implements Initializable {
     private GraphVisualizer graphVisualizer;
 
     @FXML
+    private BorderPane mainBorderPane;
+    @FXML
     private ToggleButton toggleLeftPane;
     @FXML
     private ScrollPane leftPane;
@@ -49,6 +52,9 @@ public final class MainController implements Initializable {
         } catch (final UIInitialisationException e) {
             LOGGER.error("Hygene instance not initialised.", e);
         }
+
+        mainBorderPane.getLeft().visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
+        mainBorderPane.getRight().visibleProperty().bind(graphStore.getGfaFileProperty().isNotNull());
 
         leftPane.visibleProperty().bind(toggleLeftPane.selectedProperty()
                 .and(graphStore.getGfaFileProperty().isNotNull()));
