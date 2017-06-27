@@ -52,6 +52,8 @@ public final class MenuController implements Initializable {
     @FXML
     private MenuItem openGffFile;
     @FXML
+    private MenuItem closeGfaFile;
+    @FXML
     private MenuItem closeGffFile;
 
 
@@ -62,8 +64,8 @@ public final class MenuController implements Initializable {
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
             setGffFileChooser(initFileChooser(GraphStore.GFF_FILE_NAME, GraphStore.GFF_FILE_EXTENSION));
 
-
             openGffFile.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
+            closeGfaFile.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
             closeGffFile.disableProperty().bind(graphStore.getGffFileProperty().isNull());
         } catch (final UIInitialisationException e) {
             LOGGER.error("Failed to initialize MenuController.", e);
@@ -117,6 +119,14 @@ public final class MenuController implements Initializable {
                 LOGGER.error(String.format(FAILED_TO_LOAD_FILE, gffFile.getName()), e);
             }
         });
+    }
+
+    @FXML
+    void closeGfaFileAction(final ActionEvent event) {
+        // TODO Properly close GFA file (doesn't do anything, at the moment)
+//        graphStore.getGffFileProperty().setValue(null);
+//        graphStore.getGfaFileProperty().setValue(null);
+//        graphVisualizer.draw();
     }
 
     @FXML
