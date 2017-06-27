@@ -80,7 +80,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
                             final List<Color> topGenomeColors, final List<Color> bottomGenomeColors) {
         final double centerY = snpY + getNodeHeight() / 2;
-        final double edgeWidth = snpWidth / 8;
+        final double edgeWidth = getSnpHeight() / 8;
 
         edgeDrawingToolkit.drawEdge(
                 snpX - edgeWidth / 2,
