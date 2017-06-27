@@ -123,9 +123,9 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
 
         final List<Character> sequences = extractSequences(sequence);
         getGraphicsContext().fillText(sequences.get(0).toString(),
-                snpX + snpWidth / 2 - getCharWidth() / 2, snpY);
+                snpX + snpWidth / 2 - getCharWidth() / 2, snpY + 5);
         getGraphicsContext().fillText(sequences.get(1).toString(),
-                snpX + snpWidth / 2 - getCharWidth() / 2, snpY + getSnpHeight() / 2);
+                snpX + snpWidth / 2 - getCharWidth() / 2, snpY + getSnpHeight() / 2 - 5);
     }
 
 
