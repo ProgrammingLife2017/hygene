@@ -132,6 +132,7 @@ public final class GraphVisualizer {
         this.graphAnnotation = graphAnnotation;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
+        selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
 
         hoveredSegmentProperty = new SimpleObjectProperty<>();
         hoveredSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
