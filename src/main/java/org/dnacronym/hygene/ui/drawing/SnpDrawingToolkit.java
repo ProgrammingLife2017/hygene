@@ -192,7 +192,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         }
 
         return Arrays.stream(sequences.split(","))
-                .map(sequence -> sequence.trim())
+                .map(String::trim)
                 .map(sequence -> sequence.charAt(0))
                 .collect(Collectors.toList());
     }
