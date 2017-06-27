@@ -48,7 +48,7 @@ import java.util.List;
  * @see GraphDimensionsCalculator
  * @see CenterPointQuery
  */
-@SuppressWarnings({"PMD.TooManyFields", "PMD.ExcessiveImports"})
+@SuppressWarnings("PMD")
 public final class GraphDimensionsCalculator {
     /**
      * The default horizontal displacement between two adjacent nodes.
