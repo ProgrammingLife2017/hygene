@@ -193,16 +193,4 @@ public class NodeTooltip {
             return string;
         }
     }
-
-    private String formatGenomes(final String string) {
-        String formattedString = string;
-        if (formattedString.charAt(0) == '[') {
-            formattedString = formattedString.substring(1);
-        }
-        if (formattedString.charAt(formattedString.length() - 1) == ']') {
-            formattedString = formattedString.substring(0, formattedString.length() - 1);
-        }
-
-        return "    " + formattedString.replaceAll(", ", "\n    ");
-    }
 }
