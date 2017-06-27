@@ -1,11 +1,13 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.dnacronym.hygene.coordinatesystem.GenomeIndex;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.annotation.AnnotationCollection;
@@ -47,7 +49,7 @@ public final class GraphAnnotation {
     private String mappedGenome;
     private StringProperty sequenceIdProperty;
 
-    private @Nullable AnnotationCollection annotationCollection;
+    private final ObjectProperty<AnnotationCollection> annotationCollectionProperty;
 
 
     /**
@@ -61,13 +63,15 @@ public final class GraphAnnotation {
         this.endPoints = new HashMap<>();
         this.sequenceIdProperty = new SimpleStringProperty();
 
+        annotationCollectionProperty = new SimpleObjectProperty<>();
+
         Optional.ofNullable(graphStore.getGffFileProperty().get()).ifPresent(gffFile -> {
-            annotationCollection = gffFile.getAnnotationCollection();
-            if (annotationCollection == null) {
+            annotationCollectionProperty.set(gffFile.getAnnotationCollection());
+            if (annotationCollectionProperty.get() == null) {
                 return;
             }
 
-            sequenceIdProperty.set(annotationCollection.getSequenceId());
+            sequenceIdProperty.set(annotationCollectionProperty.get().getSequenceId());
 
             if (genomeMappingView != null) {
                 try {
@@ -78,15 +82,17 @@ public final class GraphAnnotation {
             }
         });
 
-        graphStore.getGfaFileProperty().addListener((observable, oldValue, newValue) -> annotationCollection = null);
         graphStore.getGffFileProperty().addListener((observable, oldValue, newValue) -> {
-            annotationCollection = null;
+            annotationCollectionProperty.set(null);
+            startPoints.clear();
+            endPoints.clear();
+
             if (newValue == null) {
                 return;
             }
 
-            annotationCollection = newValue.getAnnotationCollection();
-            sequenceIdProperty.set(annotationCollection.getSequenceId());
+            annotationCollectionProperty.set(newValue.getAnnotationCollection());
+            sequenceIdProperty.set(annotationCollectionProperty.get().getSequenceId());
 
             if (genomeMappingView != null) {
                 try {
@@ -146,11 +152,11 @@ public final class GraphAnnotation {
         if (rangeStart < 0) {
             throw new IllegalArgumentException("Range cannot start below 0.");
         }
-        if (annotationCollection == null) {
+        if (annotationCollectionProperty.get() == null) {
             return new ArrayList<>();
         }
 
-        return annotationCollection.getAnnotations().stream()
+        return annotationCollectionProperty.get().getAnnotations().stream()
                 .filter(annotation -> {
                     if (!startPoints.containsKey(annotation) || !endPoints.containsKey(annotation)) {
                         return false;
@@ -197,8 +203,8 @@ public final class GraphAnnotation {
      *
      * @return all annotations
      */
-    public AnnotationCollection getAnnotationCollection() {
-        return annotationCollection;
+    public ReadOnlyObjectProperty<AnnotationCollection> getAnnotationCollectionProperty() {
+        return annotationCollectionProperty;
     }
 
     /**
@@ -214,16 +220,16 @@ public final class GraphAnnotation {
         startPoints.clear();
         endPoints.clear();
 
-        if (annotationCollection == null || statusBar == null) {
+        if (annotationCollectionProperty.get() == null || statusBar == null) {
             return;
         }
 
         statusBar.monitorTask(progressUpdater -> {
             final int[] position = {1};
-            final int total = annotationCollection.getAnnotations().size();
+            final int total = annotationCollectionProperty.get().getAnnotations().size();
             LOGGER.info("Started placing " + total + " annotations");
 
-            annotationCollection.getAnnotations().forEach(annotation -> {
+            annotationCollectionProperty.get().getAnnotations().forEach(annotation -> {
                 if (position[0] % PROGRESS_UPDATE_INTERVAL == 0) {
                     progressUpdater.updateProgress(
                             Math.round(Math.max(5, 100f * position[0] / total)),
