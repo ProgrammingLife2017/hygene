@@ -113,11 +113,22 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
                              final String sequence) {
         getGraphicsContext().setFill(Color.BLACK);
         getGraphicsContext().setFont(getNodeFont());
-        final int charCount = (int) Math.max((segmentWidth - ARC_SIZE) / getCharWidth(), 0);
 
-        final double fontX = segmentX + (segmentWidth + (ARC_SIZE / 4.0) - charCount * getCharWidth()) / 2;
-        final double fontY = segmentY + getNodeHeight() / 2 + getCharHeight() / 2;
+        final int charCount = (int) (segmentWidth / getCharWidth());
+        final String sequenceToDraw;
+        if (charCount == 0) {
+            return;
+        } else if (sequence.length() > charCount) {
+            sequenceToDraw = sequence.substring(0, charCount - 1) + "\u2026";
+        } else {
+            sequenceToDraw = sequence;
+        }
 
-        getGraphicsContext().fillText(sequence.substring(0, Math.min(sequence.length(), charCount)), fontX, fontY);
+        final double sequenceWidth = sequenceToDraw.length() * getCharWidth();
+
+        final double fontX = segmentX + segmentWidth / 2 - sequenceWidth / 2;
+        final double fontY = segmentY + getNodeHeight() / 2 + getCharHeight() / 4;
+
+        getGraphicsContext().fillText(sequenceToDraw, fontX, fontY);
     }
 }

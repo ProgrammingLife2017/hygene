@@ -3,6 +3,7 @@ package org.dnacronym.hygene.ui.drawing;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     /**
      * Font used inside the nodes, this should always be a monospace font.
      */
-    static final String DEFAULT_NODE_FONT = "Consolas";
+    private static final String DEFAULT_NODE_FONT = "Courier New";
+    private static final String DEFAULT_MAC_NODE_FONT = "Andale Mono";
     /**
      * Scalar for the size of the node text font as fraction of the node's height.
      */
@@ -35,6 +37,7 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     private Font nodeFont;
 
 
+
     /**
      * Sets the node height used for drawing.
      * <p>
@@ -50,8 +53,17 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
         text.setFont(new Font(DEFAULT_NODE_FONT, 1));
 
         final double font1PHeight = text.getLayoutBounds().getHeight();
+
+        final String font;
+
+        if (SystemUtils.IS_OS_MAC) {
+            font = DEFAULT_MAC_NODE_FONT;
+        } else {
+            font = DEFAULT_NODE_FONT;
+        }
+
         final double fontSize = DEFAULT_NODE_FONT_HEIGHT_SCALAR * nodeHeight / font1PHeight;
-        this.nodeFont = new Font(DEFAULT_NODE_FONT, fontSize);
+        this.nodeFont = new Font(font, fontSize);
         text.setFont(nodeFont);
 
         this.charWidth = text.getLayoutBounds().getWidth();

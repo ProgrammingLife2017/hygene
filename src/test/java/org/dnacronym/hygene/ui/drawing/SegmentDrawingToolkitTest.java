@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
@@ -112,6 +114,6 @@ final class SegmentDrawingToolkitTest {
 
         segmentDrawingToolkit.drawSequence(0, 0, 0, text);
 
-        verify(graphicsContext).fillText(eq(""), anyDouble(), anyDouble());
+        verify(graphicsContext, times(0)).fillText(anyString(), anyDouble(), anyDouble());
     }
 }
