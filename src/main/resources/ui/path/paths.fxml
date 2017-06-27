@@ -6,50 +6,40 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.dnacronym.hygene.ui.path.PathController">
+<GridPane styleClass="sidePane" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.dnacronym.hygene.ui.path.PathController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="10.0"/>
+        <ColumnConstraints hgrow="SOMETIMES"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+    </rowConstraints>
     <children>
-        <TitledPane fx:id="pathPane" animated="false" minWidth="300.0" text="Path Highlighting"
-                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="0.0" expanded="false">
-            <content>
-                <GridPane styleClass="sidePane" vgap="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
+        <TableView fx:id="pathTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647"
+                   GridPane.rowIndex="2">
+            <columns>
+                <TableColumn fx:id="colorColumn" maxWidth="10.0" prefWidth="10"/>
+                <TableColumn fx:id="selectedColumn" maxWidth="-1.0" minWidth="28.0" prefWidth="-1.0"/>
+                <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" prefWidth="214.0" text="Name"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
 
-                        <TableView fx:id="pathTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-                            <columns>
-                                <TableColumn fx:id="colorColumn" maxWidth="10.0" prefWidth="10" />
-                                <TableColumn fx:id="selectedColumn" maxWidth="-1.0" minWidth="28.0" prefWidth="-1.0"/>
-                                <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" prefWidth="214.0" text="Name" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                        </TableView>
-
-                        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearHighlight" text="Clear Selection" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                        <TextField fx:id="searchField" promptText="Search for genomes" />
-                        <Label fx:id="pathsFound" text="Paths found:" GridPane.rowIndex="3" />
-                        <CheckBox fx:id="matchCase" mnemonicParsing="false" text="Match Case" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="regex" mnemonicParsing="false" text="Regex" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                    </children>
-                </GridPane>
-            </content>
-        </TitledPane>
+        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearHighlight" text="Clear Selection"
+                GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+        <TextField fx:id="searchField" promptText="Search for genomes"/>
+        <Label fx:id="pathsFound" text="Paths found:" GridPane.rowIndex="3"/>
+        <CheckBox fx:id="matchCase" mnemonicParsing="false" text="Match Case" GridPane.halignment="LEFT"
+                  GridPane.rowIndex="1"/>
+        <CheckBox fx:id="regex" mnemonicParsing="false" text="Regex" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
     </children>
-</AnchorPane>
+</GridPane>

@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
+import org.dnacronym.hygene.ui.MainController;
 import org.dnacronym.hygene.ui.console.ConsoleView;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
@@ -24,6 +25,8 @@ import java.util.ResourceBundle;
 public final class ViewMenuController implements Initializable {
     @Inject
     private SequenceVisualizer sequenceVisualizer;
+    @Inject
+    private MainController mainController;
     @Inject
     private GraphStore graphStore;
     @Inject
@@ -93,13 +96,13 @@ public final class ViewMenuController implements Initializable {
 
     @FXML
     void openBookmarksAction(final ActionEvent actionEvent) {
-        // TODO
+        mainController.expandBookmarksPane();
         actionEvent.consume();
     }
 
     @FXML
     void openGenomePathsAction(final ActionEvent actionEvent) {
-        // TODO
+        mainController.expandGenomePathsPane();
         actionEvent.consume();
     }
 

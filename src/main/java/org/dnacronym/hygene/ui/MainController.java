@@ -36,9 +36,20 @@ public final class MainController implements Initializable {
     @FXML
     private ToggleButton toggleRightPane;
     @FXML
+    private ScrollPane rightPane;
+
+    @FXML
     private TitledPane nodeProperties;
     @FXML
-    private ScrollPane rightPane;
+    private TitledPane genomePathsPane;
+    @FXML
+    private TitledPane bookmarksPane;
+    @FXML
+    private TitledPane annotationSearchPane;
+    @FXML
+    private TitledPane queryPane;
+    @FXML
+    private TitledPane genomeNavigationPane;
 
 
     @Override
@@ -72,5 +83,31 @@ public final class MainController implements Initializable {
                 nodeProperties.setExpanded(true);
             }
         });
+    }
+
+
+    public void expandGenomePathsPane() {
+        genomePathsPane.setExpanded(true);
+        toggleLeftPane.setSelected(true);
+    }
+
+    public void expandBookmarksPane() {
+        bookmarksPane.setExpanded(true);
+        toggleRightPane.setSelected(true);
+    }
+
+    public void expandAnnotationSearchPane() {
+        annotationSearchPane.setExpanded(true);
+        toggleRightPane.setSelected(true);
+    }
+
+    public void expandQueryPane() {
+        queryPane.setExpanded(true);
+        toggleRightPane.setSelected(true);
+    }
+
+    public void expandGenomeNavigationPane() {
+        genomeNavigationPane.setExpanded(true);
+        toggleRightPane.setSelected(true);
     }
 }
