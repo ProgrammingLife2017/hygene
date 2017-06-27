@@ -336,6 +336,16 @@ public final class GraphDimensionsCalculator {
     }
 
     /**
+     * Computes the absolute below y position of a node in pixels within the set canvas dimensions.
+     *
+     * @param node a {@link Node}
+     * @return the absolute below y position of a node within the current canvas
+     */
+    double computeBelowYPosition(final Node node) {
+        return computeYPosition(node) + nodeHeightProperty.get();
+    }
+
+    /**
      * Computes the width of a node in pixels within the set canvas dimensions.
      *
      * @param node a {@link Node}
