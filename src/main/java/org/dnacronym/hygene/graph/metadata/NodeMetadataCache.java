@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Represents the cache of {@link Node}s with metadata loaded.
+ * Represents the cache of {@link org.dnacronym.hygene.graph.node.Node}s with metadata loaded.
  */
 public final class NodeMetadataCache {
     private static final Logger LOGGER = LogManager.getLogger(NodeMetadataCache.class);
@@ -128,6 +128,8 @@ public final class NodeMetadataCache {
                     = getSortedSegmentsWithoutMetadata(segmentsWithoutMetadata);
             final Map<Integer, NodeMetadata> metadata
                     = gfaFile.parseNodeMetadata(sortedSegmentsWithoutMetadata);
+
+            cache.putAll(metadata);
 
             metadata.forEach((key, value) -> subgraph.getSegment(key)
                     .ifPresent(segment -> segment.setMetadata(value)));
