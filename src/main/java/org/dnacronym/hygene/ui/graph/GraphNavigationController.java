@@ -194,7 +194,7 @@ public final class GraphNavigationController implements Initializable {
      *
      * @param <T> the type to wrap
      */
-    final class Wrapper<T> {
+    static final class Wrapper<T> {
         private T content;
 
         /**
