@@ -407,10 +407,22 @@ public final class GraphVisualizer {
                 edge.getFromSegment().getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
                 && graphStore.getGfaFileProperty().get().containsGenomeMapping(
                 edge.getToSegment().getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
-                && edge.getFromSegment() instanceof Segment
-                && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
-                && edge.getToSegment() instanceof Segment
-                && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId();
+
+                &&
+
+                ((edge.getFromSegment() instanceof Segment
+                        && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId())
+                        || (edge.getFromSegment() instanceof GfaNode)
+                        && edge.getFromSegment().getSegments().stream().anyMatch(
+                                segment -> segment.getId() >= annotation.getStartNodeId()))
+
+                &&
+
+                ((edge.getToSegment() instanceof Segment
+                        && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId())
+                        || (edge.getToSegment() instanceof GfaNode)
+                        && edge.getToSegment().getSegments().stream().anyMatch(
+                                segment -> segment.getId() < annotation.getEndNodeId()));
     }
 
     /**
