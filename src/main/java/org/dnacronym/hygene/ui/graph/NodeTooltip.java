@@ -155,6 +155,7 @@ public class NodeTooltip {
     /**
      * Draws the list of genomes the node is in.
      */
+    @SuppressWarnings("PMD.NPathComplexity")
     private void drawGenomes() {
         if (!node.hasMetadata()) {
             return;
