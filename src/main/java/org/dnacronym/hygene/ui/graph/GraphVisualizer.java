@@ -190,7 +190,7 @@ public final class GraphVisualizer {
      */
     @SuppressWarnings({"PMD.NPathComplexity", "squid:S134", "squid:S3776"}) // See comment at top of class
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
-                          final List<Annotation> annotations) {
+                          final List<Annotation> annotations, final boolean simple) {
         if (!(node instanceof GfaNode)) {
             return;
         }
@@ -207,8 +207,14 @@ public final class GraphVisualizer {
             return;
         }
 
-        final GfaNode gfaNode = (GfaNode) node;
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+
+        if (simple) {
+            nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), "");
+            return;
+        }
+
+        final GfaNode gfaNode = (GfaNode) node;
 
         if (node.hasMetadata()) {
             nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), node.getMetadata().getSequence());
@@ -331,7 +337,7 @@ public final class GraphVisualizer {
      * @param edge        the edge to be drawn
      * @param annotations the list of annotations in view
      */
-    private void drawEdge(final Edge edge, final List<Annotation> annotations) {
+    private void drawEdge(final Edge edge, final List<Annotation> annotations, final boolean simple) {
         final Node fromNode = edge.getFrom();
         final Node toNode = edge.getTo();
 
@@ -339,6 +345,11 @@ public final class GraphVisualizer {
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
+
+        if (simple) {
+            edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, 1, computeEdgeColors(edge));
+            return;
+        }
 
         final double edgeThickness = computeEdgeThickness(edge);
         edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, edgeThickness, computeEdgeColors(edge));
@@ -485,6 +496,7 @@ public final class GraphVisualizer {
      *
      * @throws IllegalStateException if the {@link Canvas} has not been set
      */
+    @SuppressWarnings("PMD.NPathComplexity") // too bad
     public void draw() {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
@@ -496,6 +508,29 @@ public final class GraphVisualizer {
         snpDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
         snpDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
+
+        final boolean simple = graphDimensionsCalculator.getObservableQueryNodes().size() > 1000;
+
+        if (simple) {
+            final List<Annotation> observableAnnotations = Collections.emptyList();
+            // Edges should be drawn before nodes, don't combine this with node drawing loop
+            for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
+                node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations, false));
+            }
+
+            for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
+                final boolean bookmarked = bookmarkStore != null
+                        && (bookmarkStore.containsBookmark(node)
+                        || node instanceof GfaNode && bookmarkStore.getSimpleBookmarks().stream().anyMatch(
+                        simpleBookmark -> ((GfaNode) node).containsSegment(simpleBookmark.getNodeIdProperty().get()))
+                );
+                drawNode(node,
+                        bookmarked,
+                        node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
+                        observableAnnotations, false);
+            }
+            return;
+        }
 
         final int[] minNodeId = {Integer.MAX_VALUE};
         final int[] maxNodeId = {0};
@@ -516,7 +551,7 @@ public final class GraphVisualizer {
 
         // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations));
+            node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations, false));
         }
 
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
@@ -528,7 +563,7 @@ public final class GraphVisualizer {
             drawNode(node,
                     bookmarked,
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
-                    observableAnnotations);
+                    observableAnnotations, false);
         }
 
         if (displayLaneBordersProperty.get()) {
