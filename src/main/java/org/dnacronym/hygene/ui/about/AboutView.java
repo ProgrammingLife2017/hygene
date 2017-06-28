@@ -2,6 +2,8 @@ package org.dnacronym.hygene.ui.about;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.dnacronym.hygene.ui.runnable.Hygene;
@@ -35,6 +37,12 @@ public class AboutView {
         final URL resource = getClass().getResource(ABOUT_VIEW);
         fxmlLoader.setLocation(resource);
         final Scene rootScene = new Scene(fxmlLoader.load());
+
+        rootScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                stage.hide();
+            }
+        });
 
         stage.setScene(rootScene);
 
