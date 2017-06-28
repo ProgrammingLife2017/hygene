@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the node properties window. Shows the properties of the selected node.
  */
+@SuppressWarnings("PMD.ExcessiveImports") // not going to fix this
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
