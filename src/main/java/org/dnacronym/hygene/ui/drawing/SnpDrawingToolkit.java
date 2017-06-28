@@ -263,6 +263,9 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
             return new ArrayList<>();
         }
         String sequences = sequenceDescription;
+        if (sequences.length() == 0) {
+            return new ArrayList<>();
+        }
         if (sequences.charAt(0) == '[') {
             sequences = sequences.substring(1);
         }
