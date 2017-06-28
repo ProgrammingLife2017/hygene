@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -19,10 +20,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.graph.GraphAnnotation;
+import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
+import org.dnacronym.hygene.ui.graph.GraphStore;
 import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
@@ -33,6 +37,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for the node properties window. Shows the properties of the selected node.
  */
+@SuppressWarnings("PMD.ExcessiveImports") // not going to fix this
 public final class NodePropertiesController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(NodePropertiesController.class);
 
@@ -42,6 +47,10 @@ public final class NodePropertiesController implements Initializable {
     private SequenceVisualizer sequenceVisualizer;
     @Inject
     private GraphAnnotation graphAnnotation;
+    @Inject
+    private GraphDimensionsCalculator graphDimensionsCalculator;
+    @Inject
+    private GraphStore graphStore;
 
     @FXML
     private Label nodeId;
@@ -90,6 +99,29 @@ public final class NodePropertiesController implements Initializable {
                     setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
                 }
             }
+        });
+
+        annotationTable.setRowFactory(tableView -> {
+            final TableRow<Annotation> annotationTableRow = new TableRow<>();
+            annotationTableRow.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    final int startNodeId = annotationTableRow.getItem().getStartNodeId();
+                    final int endNodeId = annotationTableRow.getItem().getEndNodeId();
+
+                    final int radius = (int) Math.round(((double) endNodeId - startNodeId) / 2);
+                    final int middleNodeId = (int) Math.round(startNodeId + (double) radius / 2);
+
+                    final Graph graph = graphStore.getGfaFileProperty().get().getGraph();
+                    final int viewPointX = (int) Math.round(
+                            ((double) graph.getRealStartXPosition(middleNodeId)
+                                    + graph.getRealEndXPosition(middleNodeId)) / 2
+                    );
+
+                    graphDimensionsCalculator.getViewPointProperty().set(viewPointX);
+                    graphDimensionsCalculator.getRadiusProperty().set(radius);
+                }
+            });
+            return annotationTableRow;
         });
 
         selectedNodeProperty.addListener((observable, oldNode, newNode) -> updateFields(newNode));

@@ -16,10 +16,10 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.ui.graph.GraphDimensionsCalculator;
 import org.dnacronym.hygene.ui.graph.GraphStore;
-import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -36,8 +36,6 @@ public final class AnnotationController implements Initializable {
     private AnnotationSearch annotationSearch;
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
-    @Inject
-    private GraphVisualizer graphVisualizer;
     @Inject
     private GraphStore graphStore;
 
@@ -59,9 +57,20 @@ public final class AnnotationController implements Initializable {
             final TableRow<Annotation> annotationTableRow = new TableRow<>();
             annotationTableRow.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
-                    final int nodeId = annotationTableRow.getItem().getStartNodeId();
-                    graphDimensionsCalculator.getCenterNodeIdProperty().set(nodeId);
-                    graphVisualizer.setSelectedSegment(nodeId);
+                    final int startNodeId = annotationTableRow.getItem().getStartNodeId();
+                    final int endNodeId = annotationTableRow.getItem().getEndNodeId();
+
+                    final int radius = (int) Math.round(((double) endNodeId - startNodeId) / 2);
+                    final int middleNodeId = (int) Math.round(startNodeId + (double) radius / 2);
+
+                    final Graph graph = graphStore.getGfaFileProperty().get().getGraph();
+                    final int viewPointX = (int) Math.round(
+                            ((double) graph.getRealStartXPosition(middleNodeId)
+                                    + graph.getRealEndXPosition(middleNodeId)) / 2
+                    );
+
+                    graphDimensionsCalculator.getViewPointProperty().set(viewPointX);
+                    graphDimensionsCalculator.getRadiusProperty().set(radius);
                 }
             });
             return annotationTableRow;
