@@ -183,7 +183,7 @@ public final class GraphVisualizer {
      * @param queried     the boolean indicating whether this node has been queried
      * @param annotations the list of annotations in view
      */
-    @SuppressWarnings("PMD.NPathComplexity") // See comment at top of class
+    @SuppressWarnings({"PMD.NPathComplexity", "squid:S134", "squid:S3776"}) // See comment at top of class
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
                           final List<Annotation> annotations) {
         if (!(node instanceof GfaNode)) {
@@ -208,6 +208,14 @@ public final class GraphVisualizer {
             nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), node.getMetadata().getSequence());
         } else {
             nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), "");
+        }
+
+        if (node instanceof AggregateSegment) {
+            final List<Color> topColors = computeNodeColors(gfaNode.getSegments().get(0));
+            final List<Color> bottomColors = computeNodeColors(gfaNode.getSegments().get(1));
+            ((SnpDrawingToolkit) nodeDrawingToolkit).drawGenomes(nodeX, nodeY, nodeWidth, topColors, bottomColors);
+        } else {
+            nodeDrawingToolkit.drawGenomes(nodeX, nodeY, nodeWidth, computeNodeColors(gfaNode));
         }
 
         if (selectedSegmentProperty.isNotNull().get() && gfaNode.getSegmentIds().stream()
@@ -248,6 +256,25 @@ public final class GraphVisualizer {
                 rTree.addNode(segment.getId(), nodeX, nodeY, nodeWidth, nodeHeightProperty.get());
             }
         });
+    }
+
+    private List<Color> computeNodeColors(final GfaNode gfaNode) {
+        final List<Color> nodeColors = new ArrayList<>();
+
+        for (final Segment segment : gfaNode.getSegments()) {
+            if (segment.hasMetadata()
+                    && segment.getMetadata().getGenomes() != null
+                    && !segment.getMetadata().getGenomes().isEmpty()
+                    && graphDimensionsCalculator.getRadiusProperty().get() < MAX_PATH_THICKNESS_DRAWING_RADIUS) {
+                for (final String genome : segment.getMetadata().getGenomes()) {
+                    if (selectedGenomePaths.containsKey(genome)) {
+                        nodeColors.add(selectedGenomePaths.get(genome));
+                    }
+                }
+            }
+        }
+
+        return nodeColors;
     }
 
     /**

@@ -1,10 +1,10 @@
 package org.dnacronym.hygene.ui.drawing;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.Node;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +15,24 @@ import java.util.stream.Collectors;
  * Toolkit used to draw SNPs; single-nucleotide polymorphisms.
  */
 public final class SnpDrawingToolkit extends NodeDrawingToolkit {
+    private final EdgeDrawingToolkit edgeDrawingToolkit;
+
+
+    /**
+     * Creates instance of {@link SnpDrawingToolkit}.
+     */
+    public SnpDrawingToolkit() {
+        edgeDrawingToolkit = new EdgeDrawingToolkit();
+    }
+
+
+    @Override
+    public void setGraphicsContext(final GraphicsContext graphicsContext) {
+        super.setGraphicsContext(graphicsContext);
+        edgeDrawingToolkit.setGraphicsContext(graphicsContext);
+    }
+
+
     /**
      * Fills a rhombus based on the node position and width, with the set {@link Color} fill.
      *
@@ -53,7 +71,47 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     @Override
     public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
                             final List<Color> genomeColors) {
-        // Not yet implemented
+        final double centerY = snpY + getNodeHeight() / 2;
+
+        edgeDrawingToolkit.setGraphicsContext(getGraphicsContext());
+        edgeDrawingToolkit.drawEdge(snpX, centerY, snpX + snpWidth, centerY, getSnpHeight() / 8, genomeColors);
+    }
+
+    public void drawGenomes(final double snpX, final double snpY, final double snpWidth,
+                            final List<Color> topGenomeColors, final List<Color> bottomGenomeColors) {
+        final double centerY = snpY + getNodeHeight() / 2;
+        final double edgeWidth = getSnpHeight() / 8;
+
+        edgeDrawingToolkit.drawEdge(
+                snpX - edgeWidth / 2,
+                centerY,
+                snpX + snpWidth / 2,
+                centerY + getSnpHeight() / 2 + edgeWidth / 2,
+                edgeWidth,
+                topGenomeColors);
+        edgeDrawingToolkit.drawEdge(
+                snpX + snpWidth / 2,
+                centerY + getSnpHeight() / 2 + edgeWidth / 2,
+                snpX + snpWidth + edgeWidth / 2,
+                centerY,
+                edgeWidth,
+                topGenomeColors);
+
+        edgeDrawingToolkit.drawEdge(
+                snpX - edgeWidth / 2,
+                centerY,
+                snpX + snpWidth / 2,
+                centerY - getSnpHeight() / 2 - edgeWidth / 2,
+                edgeWidth,
+                bottomGenomeColors);
+        edgeDrawingToolkit.drawEdge(
+                snpX + snpWidth / 2,
+                centerY - getSnpHeight() / 2 - edgeWidth / 2,
+                snpX + snpWidth + edgeWidth / 2,
+                centerY,
+                edgeWidth,
+                bottomGenomeColors);
+
     }
 
     /**
@@ -200,10 +258,6 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
 
 
     private List<Character> extractSequences(final String sequenceDescription) {
-        if ("".equals(sequenceDescription)) {
-            return new ArrayList<>();
-        }
-
         String sequences = sequenceDescription;
         if (sequences.charAt(0) == '[') {
             sequences = sequences.substring(1);
@@ -213,7 +267,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         }
 
         return Arrays.stream(sequences.split(","))
-                .map(String::trim)
+                .map(sequence -> sequence.trim())
                 .map(sequence -> sequence.charAt(0))
                 .collect(Collectors.toList());
     }
