@@ -83,19 +83,15 @@ public final class GraphNavigationController implements Initializable {
      * Add an event handler to a node will trigger continuously trigger at a given interval while the button is
      * being pressed.
      *
-     * @param node the {@link Node}
+     * @param node     the {@link Node}
      * @param holdTime interval time
-     * @param handler the handler
+     * @param handler  the handler
      */
     private void addContinuousPressHandler(final Node node, final Duration holdTime,
                                            final EventHandler<MouseEvent> handler) {
+        final Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
 
-        class Wrapper<T> {
-            T content;
-        }
-        Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
-
-        PauseTransition holdTimer = new PauseTransition(holdTime);
+        final PauseTransition holdTimer = new PauseTransition(holdTime);
         holdTimer.setOnFinished(event -> {
             handler.handle(eventWrapper.content);
             holdTimer.playFromStart();
@@ -191,5 +187,32 @@ public final class GraphNavigationController implements Initializable {
     @FXML
     void takeSnapshotAction(final ActionEvent actionEvent) {
         HygeneEventBus.getInstance().post(new SnapshotButtonWasPressed());
+    }
+
+    /**
+     * Basic wrapper class.
+     *
+     * @param <T> the type to wrap
+     */
+    final class Wrapper<T> {
+        private T content;
+
+        /**
+         * Gets the content.
+         *
+         * @return the content
+         */
+        T getContent() {
+            return content;
+        }
+
+        /**
+         * Sets the content.
+         *
+         * @param content the content
+         */
+        void setContent(final T content) {
+            this.content = content;
+        }
     }
 }
