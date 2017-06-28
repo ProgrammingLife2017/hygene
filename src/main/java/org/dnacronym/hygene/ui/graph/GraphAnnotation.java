@@ -1,8 +1,11 @@
 package org.dnacronym.hygene.ui.graph;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -36,6 +39,7 @@ public final class GraphAnnotation {
     private static final Logger LOGGER = LogManager.getLogger(GraphAnnotation.class);
     private static final int PROGRESS_UPDATE_INTERVAL = 100;
 
+    private final BooleanProperty indexBuilt;
     private final Map<Annotation, Integer> startPoints;
     private final Map<Annotation, Integer> endPoints;
 
@@ -62,6 +66,7 @@ public final class GraphAnnotation {
         this.startPoints = new HashMap<>();
         this.endPoints = new HashMap<>();
         this.sequenceIdProperty = new SimpleStringProperty();
+        this.indexBuilt = new SimpleBooleanProperty();
 
         annotationCollectionProperty = new SimpleObjectProperty<>();
 
@@ -124,6 +129,7 @@ public final class GraphAnnotation {
             LOGGER.info("Finished building an index for " + mappedGenome);
             recalculateAnnotationPoints(genomeIndex);
         }));
+
     }
 
     /**
@@ -217,6 +223,7 @@ public final class GraphAnnotation {
      * @param genomeIndex the {@link GenomeIndex} instance
      */
     private void recalculateAnnotationPoints(final GenomeIndex genomeIndex) {
+        this.indexBuilt.set(false);
         startPoints.clear();
         endPoints.clear();
 
@@ -262,8 +269,17 @@ public final class GraphAnnotation {
                 new WarningDialogue("Unable to place " + (total - position[0]) + " annotations.").show();
             }
 
+            Platform.runLater(() -> this.indexBuilt.set(true));
             LOGGER.info("Finished placing " + position[0] + " of " + total + " annotations");
             progressUpdater.updateProgress(StatusBar.PROGRESS_MAX, "Finished placing annotations");
         });
+    }
+
+    public boolean isIndexBuilt() {
+        return indexBuilt.get();
+    }
+
+    public ReadOnlyBooleanProperty indexBuiltProperty() {
+        return indexBuilt;
     }
 }

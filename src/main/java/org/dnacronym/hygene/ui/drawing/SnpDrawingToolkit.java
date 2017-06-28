@@ -142,8 +142,6 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
                     snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2);
             getGraphicsContext().strokeLine(snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2,
                     snpX + nodeWidth, annotationYOffset);
-            getGraphicsContext().strokeLine(snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2,
-                    snpX + nodeWidth, annotationYOffset);
 
             annotationYOffset += getAnnotationHeight();
         }

@@ -168,6 +168,7 @@ public final class GraphVisualizer {
         snpDrawingToolkit = new SnpDrawingToolkit();
         edgeDrawingToolkit = new EdgeDrawingToolkit();
         graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
+        graphAnnotation.indexBuiltProperty().addListener((observable, oldValue, newValue) -> draw());
     }
 
 
@@ -407,10 +408,10 @@ public final class GraphVisualizer {
                 edge.getFromSegment().getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
                 && graphStore.getGfaFileProperty().get().containsGenomeMapping(
                 edge.getToSegment().getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
-                && edge.getFromSegment() instanceof Segment
-                && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
-                && edge.getToSegment() instanceof Segment
-                && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId();
+                && edge.getFromSegment().getSegments().stream().anyMatch(
+                segment -> segment.getId() >= annotation.getStartNodeId())
+                && edge.getToSegment().getSegments().stream().anyMatch(
+                segment -> segment.getId() < annotation.getEndNodeId());
     }
 
     /**
