@@ -105,6 +105,10 @@ MenuBar {
     -fx-background-color: -content-background;
 }
 
+.sidePane {
+    -fx-background-color: -content-background;
+}
+
 .sidePane Separator .line {
     -fx-border-color: -secondary;
     -fx-border-width: 1 1 1 1;
