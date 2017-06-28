@@ -9,8 +9,6 @@ import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.path.GenomePath;
 
-import javax.inject.Inject;
-
 
 /**
  * Represents a {@link NodeTooltip}.
@@ -35,8 +33,6 @@ public class NodeTooltip {
 
     private int offset;
 
-    @Inject
-    private GraphStore graphStore;
 
     /**
      * Constructs {@link NodeTooltip}.
