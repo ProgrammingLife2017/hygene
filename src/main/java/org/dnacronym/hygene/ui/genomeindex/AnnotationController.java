@@ -55,9 +55,6 @@ public final class AnnotationController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        queryField.textProperty().addListener((observable, oldValue, newValue) ->
-                annotationSearch.search(newValue));
-
         resultsTable.setRowFactory(tableView -> {
             final TableRow<Annotation> annotationTableRow = new TableRow<>();
             annotationTableRow.setOnMouseClicked(event -> {
