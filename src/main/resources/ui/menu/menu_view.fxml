@@ -32,11 +32,6 @@
                     </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem fx:id="closeGfaFile" disable="true" onAction="#closeGfaFileAction" text="Close GFA file">
-                    <accelerator>
-                        <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
-                    </accelerator>
-                </MenuItem>
                 <MenuItem fx:id="closeGffFile" disable="true" onAction="#closeGffFileAction" text="Close GFF file">
                     <accelerator>
                         <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
