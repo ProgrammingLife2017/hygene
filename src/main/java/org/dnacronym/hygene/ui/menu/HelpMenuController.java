@@ -5,9 +5,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dnacronym.hygene.ui.about.AboutView;
 import org.dnacronym.hygene.ui.help.HelpMenuView;
 import org.dnacronym.hygene.ui.runnable.UIInitialisationException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +22,8 @@ public final class HelpMenuController implements Initializable {
     private static final Logger LOGGER = LogManager.getLogger(HelpMenuController.class);
 
     private HelpMenuView helpMenuView;
+    @Inject
+    private AboutView aboutView;
 
 
     @Override
@@ -50,8 +54,8 @@ public final class HelpMenuController implements Initializable {
     }
 
     @FXML
-    public void openAboutAction(final ActionEvent actionEvent) throws IOException {
-        // TODO add About menu
+    public void openAboutAction(final ActionEvent actionEvent) throws IOException, UIInitialisationException {
+        aboutView.show();
         actionEvent.consume();
     }
 
