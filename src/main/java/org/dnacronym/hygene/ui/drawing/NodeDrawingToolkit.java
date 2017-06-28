@@ -4,8 +4,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.apache.commons.lang3.SystemUtils;
+import org.dnacronym.hygene.graph.annotation.Annotation;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
