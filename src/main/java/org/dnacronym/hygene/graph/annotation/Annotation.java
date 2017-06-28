@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -298,7 +299,7 @@ public final class Annotation {
                 || stringContains(strand, query)
                 || attributes.keySet().stream().anyMatch(key -> stringContains(key, query))
                 || attributes.values().stream().anyMatch(
-                values -> Arrays.stream(values).anyMatch(value -> value.contains(query))
+                values -> Arrays.stream(values).anyMatch(value -> stringContains(value, query))
         );
     }
 
