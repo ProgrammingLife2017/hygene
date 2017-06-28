@@ -21,6 +21,7 @@ public class NodeTooltip {
     private static final int X_PADDING = 10;
     private static final int Y_PADDING = 20;
     private static final int MAX_SEQUENCE_LENGTH = 20;
+    private static final int MAX_GENOME_COUNT = 10;
 
     private final GraphVisualizer graphVisualizer;
     private final GraphicsContext graphicsContext;
@@ -51,7 +52,7 @@ public class NodeTooltip {
         this.belowY = belowY;
 
         if (node.hasMetadata()) {
-            tempHeight += node.getMetadata().getGenomes().size() * LINE_HEIGHT + 10;
+            tempHeight += Math.min(node.getMetadata().getGenomes().size(), MAX_GENOME_COUNT + 1) * LINE_HEIGHT + 10;
         }
         if (node.getSegments().get(0).getSequenceLength() > MAX_SEQUENCE_LENGTH) {
             tempHeight += LINE_HEIGHT * 1.5;
@@ -167,20 +168,33 @@ public class NodeTooltip {
         );
         offset += LINE_HEIGHT;
 
-        node.getMetadata().getGenomes().forEach(genome -> {
-            final FilteredList<GenomePath> possiblePaths = graphVisualizer.getGenomePathsProperty()
-                    .filtered(genomePath -> genomePath.getName().equals(genome));
-            if (possiblePaths.isEmpty()) {
-                return;
-            }
+        final int genomeCount = node.getMetadata().getGenomes().size() > MAX_GENOME_COUNT
+                ? MAX_GENOME_COUNT
+                : node.getMetadata().getGenomes().size();
+        node.getMetadata().getGenomes()
+                .subList(0, genomeCount)
+                .forEach(genome -> {
+                    final FilteredList<GenomePath> possiblePaths = graphVisualizer.getGenomePathsProperty()
+                            .filtered(genomePath -> genomePath.getName().equals(genome));
+                    if (possiblePaths.isEmpty()) {
+                        return;
+                    }
 
-            final Color color = possiblePaths.get(0).getColor().get();
-            graphicsContext.setFill(color == null ? Color.BLACK : color);
-            graphicsContext.fillText("    " + genome,
+                    final Color color = possiblePaths.get(0).getColor().get();
+                    graphicsContext.setFill(color == null ? Color.BLACK : color);
+                    graphicsContext.fillText("    " + genome,
+                            middleX - (DEFAULT_WIDTH / 2) + X_PADDING,
+                            belowY + LINE_HEIGHT + Y_PADDING + offset);
+                    offset += LINE_HEIGHT;
+                });
+
+        if (node.getMetadata().getGenomes().size() > MAX_GENOME_COUNT) {
+            graphicsContext.setFill(Color.BLACK);
+            graphicsContext.fillText("    ...",
                     middleX - (DEFAULT_WIDTH / 2) + X_PADDING,
                     belowY + LINE_HEIGHT + Y_PADDING + offset);
             offset += LINE_HEIGHT;
-        });
+        }
     }
 
     private String limitStringAt(final String string, final int length) {
