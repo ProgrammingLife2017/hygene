@@ -119,13 +119,12 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
      * <p>
      * Annotations have the given colors, and are dashed.
      *
-     * @param snpX             the top left x position of the node
-     * @param snpY             the top left y position of the node
-     * @param annotationColors the colors of the annotations going through the node
-     * @param startOffset      the offset of the start of the annotation in the node. If it runs from the start of the
-     *                         node, it should be 0
-     * @param endOffset        the offset of the end of the annotation in de node. If it runs to the end of the node, it
-     *                         should be equal to the node width
+     * @param snpX        the top left x position of the node
+     * @param snpY        the top left y position of the node
+     * @param startOffset the offset of the start of the annotation in the node. If it runs from the start of the
+     *                    node, it should be 0
+     * @param endOffset   the offset of the end of the annotation in de node. If it runs to the end of the node, it
+     *                    should be equal to the node width
      */
     @Override
     public void drawAnnotations(final double snpX, final double snpY, final double nodeWidth,
@@ -140,6 +139,8 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
             getGraphicsContext().setStroke(color);
             getGraphicsContext().strokeLine(snpX, annotationYOffset,
                     snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2);
+            getGraphicsContext().strokeLine(snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2,
+                    snpX + nodeWidth, annotationYOffset);
             getGraphicsContext().strokeLine(snpX + nodeWidth / 2, annotationYOffset + getSnpHeight() / 2,
                     snpX + nodeWidth, annotationYOffset);
 
@@ -267,7 +268,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
         }
 
         return Arrays.stream(sequences.split(","))
-                .map(sequence -> sequence.trim())
+                .map(String::trim)
                 .map(sequence -> sequence.charAt(0))
                 .collect(Collectors.toList());
     }

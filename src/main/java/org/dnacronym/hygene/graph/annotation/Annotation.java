@@ -306,7 +306,7 @@ public final class Annotation {
      * Checks if given (lower cased) source string contains the given (lower cased) value.
      *
      * @param source the source string
-     * @param value the value to check
+     * @param value  the value to check
      * @return true if source contains value
      */
     private boolean stringContains(final String source, final String value) {
