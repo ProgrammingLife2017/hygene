@@ -240,7 +240,7 @@ public final class GraphVisualizer {
                             .collect(Collectors.toMap(annotation -> annotation,
                                     annotation -> (double) annotation.getStartNodeBaseOffset() / segment.getLength())),
                     annotations.stream()
-                            .filter(annotation -> annotation.getStartNodeId() == segment.getId())
+                            .filter(annotation -> annotation.getEndNodeId() == segment.getId())
                             .collect(Collectors.toMap(annotation -> annotation,
                                     annotation -> (double) annotation.getEndNodeBaseOffset() / segment.getLength())));
 
