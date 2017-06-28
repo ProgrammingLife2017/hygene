@@ -29,6 +29,9 @@ public final class AnnotationSearch {
     @Inject
     public AnnotationSearch(final GraphAnnotation graphAnnotation) {
         this.graphAnnotation = graphAnnotation;
+        graphAnnotation.getAnnotationCollectionProperty().addListener((observable, oldValue, newValue) -> {
+            searchResults.clear();
+        });
     }
 
     /**
@@ -37,7 +40,12 @@ public final class AnnotationSearch {
      * @param query search term
      */
     public void search(final String query) {
-        final List<Annotation> results = graphAnnotation.getAnnotationCollection().getAnnotations().stream()
+        if (graphAnnotation == null || graphAnnotation.getAnnotationCollectionProperty().get() == null) {
+            return;
+        }
+
+        final List<Annotation> results = graphAnnotation.getAnnotationCollectionProperty().get()
+                .getAnnotations().stream()
                 .filter(annotation -> annotation.matchString(query))
                 .collect(Collectors.toList());
 

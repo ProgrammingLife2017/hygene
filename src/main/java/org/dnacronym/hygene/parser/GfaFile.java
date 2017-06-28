@@ -1,14 +1,15 @@
 package org.dnacronym.hygene.parser;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.layout.Fafosp;
 import org.dnacronym.hygene.graph.metadata.EdgeMetadata;
-import org.dnacronym.hygene.graph.Graph;
 import org.dnacronym.hygene.graph.metadata.NodeMetadata;
-import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.parser.factories.GfaParserFactory;
+import org.dnacronym.hygene.parser.factories.MetadataParserFactory;
 import org.dnacronym.hygene.persistence.FileDatabase;
 import org.dnacronym.hygene.persistence.GraphLoader;
 import org.dnacronym.hygene.persistence.UnexpectedDatabaseException;
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -170,6 +172,23 @@ public final class GfaFile {
      */
     public Map<String, String> getGenomeMapping() {
         return genomeMapping;
+    }
+
+    /**
+     * Iterates over all genomes, and checks for each one in the genome mapping if they are present if they are numeric.
+     * If none are numeric, it simply checks if the passed genome is present in the list.
+     *
+     * @param genomes genomes
+     * @param genome  genome
+     * @return true iff it is found
+     */
+    public boolean containsGenomeMapping(final List<String> genomes, final String genome) {
+        for (final String criteria : genomes) {
+            if (StringUtils.isNumeric(criteria) && genome.equals(genomeMapping.get(criteria))) {
+                return true;
+            }
+        }
+        return genomes.contains(genome);
     }
 
     /**

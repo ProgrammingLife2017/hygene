@@ -106,6 +106,8 @@ public final class GraphVisualizer {
 
     private RTree rTree;
 
+    private final GraphStore graphStore;
+
 
     /**
      * Create a new {@link GraphVisualizer} instance.
@@ -122,13 +124,15 @@ public final class GraphVisualizer {
      */
     @Inject
     public GraphVisualizer(final GraphDimensionsCalculator graphDimensionsCalculator, final Query query,
-                           final BookmarkStore bookmarkStore, final GraphAnnotation graphAnnotation) {
+                           final BookmarkStore bookmarkStore, final GraphAnnotation graphAnnotation,
+                           final GraphStore graphStore) {
         HygeneEventBus.getInstance().register(this);
         this.graphDimensionsCalculator = graphDimensionsCalculator;
         this.query = query;
         this.bookmarkStore = bookmarkStore;
         this.colorRoulette = new ColorRoulette();
         this.graphAnnotation = graphAnnotation;
+        this.graphStore = graphStore;
 
         selectedSegmentProperty = new SimpleObjectProperty<>();
         selectedSegmentProperty.addListener((observable, oldValue, newValue) -> draw());
@@ -204,6 +208,7 @@ public final class GraphVisualizer {
 
         final GfaNode gfaNode = (GfaNode) node;
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+
         if (node.hasMetadata()) {
             nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), node.getMetadata().getSequence());
         } else {
@@ -305,7 +310,9 @@ public final class GraphVisualizer {
         final List<Annotation> filteredAnnotations = new ArrayList<>();
         for (final Annotation annotation : annotations) {
             if (segment.hasMetadata()
-                    && segment.getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
+                    && graphStore.getGfaFileProperty().get() != null
+                    && graphStore.getGfaFileProperty().get().containsGenomeMapping(
+                    segment.getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
                     && segment.getId() >= annotation.getStartNodeId()
                     && segment.getId() < annotation.getEndNodeId()) {
                 filteredAnnotations.add(annotation);
@@ -395,10 +402,15 @@ public final class GraphVisualizer {
     @SuppressWarnings("squid:S1067") // fixing this will require a re-write of the Edge class
     private boolean edgePartOfAnnotation(final Edge edge, final Annotation annotation) {
         return edge.getFromSegment().hasMetadata() && edge.getToSegment().hasMetadata()
-                && edge.getFromSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                && edge.getToSegment().getMetadata().getGenomes().contains(graphAnnotation.getMappedGenome())
-                && edge.getFromSegment().getSegmentIds().stream().anyMatch(id -> id >= annotation.getStartNodeId())
-                && edge.getToSegment().getSegmentIds().stream().anyMatch(id -> id < annotation.getEndNodeId());
+                && graphStore.getGfaFileProperty().get() != null
+                && graphStore.getGfaFileProperty().get().containsGenomeMapping(
+                edge.getFromSegment().getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
+                && graphStore.getGfaFileProperty().get().containsGenomeMapping(
+                edge.getToSegment().getMetadata().getGenomes(), graphAnnotation.getMappedGenome())
+                && edge.getFromSegment() instanceof Segment
+                && ((Segment) edge.getFromSegment()).getId() >= annotation.getStartNodeId()
+                && edge.getToSegment() instanceof Segment
+                && ((Segment) edge.getToSegment()).getId() < annotation.getEndNodeId();
     }
 
     /**

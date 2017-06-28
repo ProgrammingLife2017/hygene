@@ -299,7 +299,7 @@ public final class Annotation {
                 || stringContains(strand, query)
                 || attributes.keySet().stream().anyMatch(key -> stringContains(key, query))
                 || attributes.values().stream().anyMatch(
-                        values -> Arrays.stream(values).anyMatch(value -> stringContains(value, query))
+                values -> Arrays.stream(values).anyMatch(value -> stringContains(value, query))
         );
     }
 
@@ -307,7 +307,7 @@ public final class Annotation {
      * Checks if given (lower cased) source string contains the given (lower cased) value.
      *
      * @param source the source string
-     * @param value the value to check
+     * @param value  the value to check
      * @return true if source contains value
      */
     private boolean stringContains(final String source, final String value) {

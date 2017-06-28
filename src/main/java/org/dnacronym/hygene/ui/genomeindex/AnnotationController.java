@@ -1,6 +1,5 @@
 package org.dnacronym.hygene.ui.genomeindex;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -52,12 +51,9 @@ public final class AnnotationController implements Initializable {
     private TableColumn<Annotation, String> nameColumn;
     @FXML
     private TableColumn<Annotation, String> typeColumn;
-    @FXML
-    private TableColumn<Annotation, Integer> startColumn;
 
 
     @Override
-    @SuppressWarnings("squid:MaximumInheritanceDepth") // To modify table cell factories
     public void initialize(final URL location, final ResourceBundle resources) {
         queryField.textProperty().addListener((observable, oldValue, newValue) ->
                 annotationSearch.search(newValue));
@@ -85,7 +81,6 @@ public final class AnnotationController implements Initializable {
             }
         });
         typeColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getType()));
-        startColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getStart()));
 
         resultsTable.itemsProperty().bind(annotationSearch.getSearchResults());
 
