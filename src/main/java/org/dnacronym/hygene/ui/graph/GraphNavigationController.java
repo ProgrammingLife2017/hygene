@@ -60,15 +60,32 @@ public final class GraphNavigationController implements Initializable {
         graphNavigationButtons.managedProperty().bind(graphDimensionsCalculator.getGraphProperty().isNotNull());
 
 
+        addContinuousPressHandler(goLeft, Duration.millis(GO_RIGHT_LEFT_INTERVAL),
+                event -> goLeftAction(new ActionEvent()));
+
+        addContinuousPressHandler(goRight, Duration.millis(GO_RIGHT_LEFT_INTERVAL),
+                event -> goRightAction(new ActionEvent()));
+
+        addContinuousPressHandler(goLeftLarge, Duration.millis(GO_RIGHT_LEFT_INTERVAL_LARGE),
+                event -> goLeftLargeAction(new ActionEvent()));
+
+        addContinuousPressHandler(goRightLarge, Duration.millis(GO_RIGHT_LEFT_INTERVAL_LARGE),
+                event -> goRightLargeAction(new ActionEvent()));
+
+        addContinuousPressHandler(zoomIn, Duration.millis(ZOOM_IN_OUT_INTERVAL), event ->
+                zoomInAction(new ActionEvent()));
+
+        addContinuousPressHandler(zoomOut, Duration.millis(ZOOM_IN_OUT_INTERVAL), event ->
+                zoomOutAction(new ActionEvent()));
     }
 
     /**
      * Add an event handler to a node will trigger continuously trigger at a given interval while the button is
      * being pressed.
      *
-     * @param node     the {@link Node}
+     * @param node the {@link Node}
      * @param holdTime interval time
-     * @param handler  the handler
+     * @param handler the handler
      */
     private void addContinuousPressHandler(final Node node, final Duration holdTime,
                                            final EventHandler<MouseEvent> handler) {
