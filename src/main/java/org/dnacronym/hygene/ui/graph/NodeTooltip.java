@@ -4,6 +4,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import org.apache.commons.lang3.StringUtils;
 import org.dnacronym.hygene.graph.node.GfaNode;
 import org.dnacronym.hygene.graph.node.Segment;
 import org.dnacronym.hygene.ui.path.GenomePath;
@@ -176,14 +177,17 @@ public class NodeTooltip {
                 .subList(0, genomeCount)
                 .forEach(genome -> {
                     final FilteredList<GenomePath> possiblePaths = graphVisualizer.getGenomePathsProperty()
-                            .filtered(genomePath -> genomePath.getName().equals(genome));
+                            .filtered(genomePath -> genomePath.getName().equals(genome)
+                                    || genomePath.getIndex().equals(genome));
                     if (possiblePaths.isEmpty()) {
                         return;
                     }
 
                     final Color color = possiblePaths.get(0).getColor().get();
                     graphicsContext.setFill(color == null ? Color.BLACK : color);
-                    graphicsContext.fillText("    " + genome,
+
+                    graphicsContext.fillText(
+                            "    " + (StringUtils.isNumeric(genome) ? possiblePaths.get(0).getName() : genome),
                             middleX - (DEFAULT_WIDTH / 2) + X_PADDING,
                             belowY + LINE_HEIGHT + Y_PADDING + offset);
                     offset += LINE_HEIGHT;
