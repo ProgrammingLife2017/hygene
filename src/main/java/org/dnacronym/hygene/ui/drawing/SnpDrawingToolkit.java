@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import org.dnacronym.hygene.graph.annotation.Annotation;
 import org.dnacronym.hygene.graph.node.Node;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -258,6 +259,9 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
 
 
     private List<Character> extractSequences(final String sequenceDescription) {
+        if ("".equals(sequenceDescription)) {
+            return new ArrayList<>();
+        }
         String sequences = sequenceDescription;
         if (sequences.charAt(0) == '[') {
             sequences = sequences.substring(1);
