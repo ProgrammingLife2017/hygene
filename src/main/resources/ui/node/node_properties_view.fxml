@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,7 +12,7 @@
 <AnchorPane fx:id="nodePropertiesPane" styleClass="sidePane" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dnacronym.hygene.ui.node.NodePropertiesController">
     <children>
-        <GridPane hgap="5.0" prefWidth="355.0" vgap="7.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0"
+        <GridPane hgap="5.0" vgap="7.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0"
                   AnchorPane.topAnchor="0.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.0" minWidth="10.0" prefWidth="187.0"/>
@@ -21,6 +22,10 @@
                 <RowConstraints fillHeight="false" vgrow="NEVER"/>
                 <RowConstraints fillHeight="false"/>
                 <RowConstraints fillHeight="false" vgrow="NEVER"/>
+                <RowConstraints fillHeight="false"/>
+                <RowConstraints fillHeight="false"/>
+                <RowConstraints fillHeight="false"/>
+                <RowConstraints fillHeight="false"/>
                 <RowConstraints fillHeight="false"/>
                 <RowConstraints fillHeight="false"/>
                 <RowConstraints fillHeight="false"/>
@@ -40,8 +45,8 @@
                 <Label fx:id="sequencePreview" onMouseClicked="#onViewSequence" text="-" underline="true"
                        GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                <TableView fx:id="annotationTable" prefHeight="100.0" GridPane.columnIndex="0"
-                           GridPane.columnSpan="2147483647" GridPane.rowIndex="5" GridPane.vgrow="NEVER">
+                <TableView fx:id="annotationTable" prefHeight="100.0" GridPane.columnSpan="2147483647"
+                           GridPane.rowIndex="6" GridPane.vgrow="NEVER">
                     <columns>
                         <TableColumn fx:id="colorAnnotation" maxWidth="20.0" prefWidth="20.0"/>
                         <TableColumn fx:id="nameAnnotation" prefWidth="75.0" text="Name"/>
@@ -54,6 +59,9 @@
                         <Insets top="5.0"/>
                     </GridPane.margin>
                 </TableView>
+                <Label text="Annotations" GridPane.rowIndex="5"/>
+                <Label text="Genomes" GridPane.rowIndex="7"/>
+                <ListView fx:id="genomeList" prefHeight="100.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8"/>
             </children>
         </GridPane>
     </children>
