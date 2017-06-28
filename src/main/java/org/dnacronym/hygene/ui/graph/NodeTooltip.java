@@ -82,7 +82,7 @@ public class NodeTooltip {
         graphicsContext.setEffect(new DropShadow(10, 0, 2, Color.GREY));
 
         graphicsContext.setFill(Color.WHITE);
-        graphicsContext.fillRect(middleX - (DEFAULT_WIDTH / 2), belowY + LINE_HEIGHT, DEFAULT_WIDTH, height);
+        graphicsContext.fillRect(middleX - (DEFAULT_WIDTH / 2), belowY + 10, DEFAULT_WIDTH, height);
         graphicsContext.setEffect(null);
 
         graphicsContext.fillPolygon(
