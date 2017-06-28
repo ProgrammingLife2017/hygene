@@ -1,13 +1,29 @@
 <help docVersion="1.0">
     <articles>
         <article>
-            <title>About</title>
-            <content>Hygene is DNA sequence visualizer. It will enable scientists to analyse large DNA sequence alignment graphs, as well as easily identify mutations. Additionally, the tool will allow users to annotate their graphs and share these annotations with fellow users.
+            <title>Loading a GFA file</title>
+            <content>Click on 'File > Open GFA file' to open a GFA file. Select the file on your computer and click open. After the file is loaded you can navigate through the graph.
             </content>
         </article>
         <article>
-            <title>Loading a .GFA file</title>
-            <content>From the main file menu select: File -> Open -> Select your file. Note that large file might takes a little longer to longer.</content>
+            <title>Navigation</title>
+            <content>There are various ways to navigate through the graph. You can pan through the graph by dragging in the graph window, or by using the arrow buttons at the bottom of the screen. Zooming can be done by scrolling in the graph window, or by using the + or - buttons at the bottom of the screen.
+            </content>
+        </article>
+        <article>
+            <title>Bookmarks</title>
+            <content>To add a bookmark first select a node that you wish to create a bookmark for. Now click on 'View > Open bookmarks' and then on the 'Create Bookmark for Node' button. Add a nice description and click 'Save'.
+            </content>
+        </article>
+        <article>
+            <title>Loading annotations</title>
+            <content>To open an annotations file (a GFF file), click on 'File > Open GFF file'. After selecting the file on your computer, you can select the genome corresponding to the annotation file. The annotations will now be drawn under the nodes and via 'Navigate > Search in GFF annotations' you have the ability to search for a specific annotation.
+            </content>
+        </article>
+        <article>
+            <title>SNP collapsing</title>
+            <content>By default SNPs will be collapsed to give more context to the graph and to make it better understandable. SNP collapsing can be disabled via 'View > Toggle SNP collapsing'.
+            </content>
         </article>
     </articles>
 </help>
