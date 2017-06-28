@@ -22,7 +22,7 @@
             <Separator maxHeight="Infinity" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
                        prefWidth="0"/>
             <ScrollPane fx:id="leftPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0" styleClass="leftSidePane">
-                <VBox styleClass="sidePane" spacing="10">
+                <VBox spacing="10">
                     <TitledPane fx:id="nodeProperties" animated="false" text="Node Properties" expanded="false">
                         <fx:include source="node/node_properties_view.fxml"/>
                     </TitledPane>
@@ -39,7 +39,7 @@
         <HBox styleClass="sidePane">
             <ScrollPane fx:id="rightPane" hbarPolicy="NEVER" maxHeight="Infinity" minWidth="0"
                         styleClass="rightSidePane">
-                <VBox styleClass="sidePane" spacing="10">
+                <VBox spacing="10">
                     <TitledPane fx:id="bookmarksPane" animated="false" text="Bookmarks">
                         <fx:include source="bookmark/bookmarks_table_view.fxml"/>
                     </TitledPane>
