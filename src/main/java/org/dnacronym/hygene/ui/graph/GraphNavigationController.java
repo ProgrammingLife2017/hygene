@@ -24,13 +24,16 @@ import java.util.ResourceBundle;
 public final class GraphNavigationController implements Initializable {
     private static final int GO_AMOUNT = 1000;
     private static final int JUMP_AMOUNT = 100;
-    private static final int ZOOM_AMOUNT = 2000;
     private static final int GO_RIGHT_LEFT_INTERVAL = 45;
     private static final int GO_RIGHT_LEFT_INTERVAL_LARGE = 70;
     private static final int ZOOM_IN_OUT_INTERVAL = 45;
+    private static final double SCROLL_DELTA = 70;
 
     @Inject
     private GraphDimensionsCalculator graphDimensionsCalculator;
+
+    @Inject
+    private GraphMovementCalculator graphMovementCalculator;
 
     @FXML
     private StackPane graphNavigationButtons;
@@ -160,9 +163,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomInAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getViewRadiusProperty().set(
-                graphDimensionsCalculator.getViewRadiusProperty().get() - ZOOM_AMOUNT
-        );
+        graphMovementCalculator.onScroll(-SCROLL_DELTA);
+
         actionEvent.consume();
     }
 
@@ -173,9 +175,8 @@ public final class GraphNavigationController implements Initializable {
      */
     @FXML
     void zoomOutAction(final ActionEvent actionEvent) {
-        graphDimensionsCalculator.getViewRadiusProperty().set(
-                graphDimensionsCalculator.getViewRadiusProperty().get() + ZOOM_AMOUNT
-        );
+        graphMovementCalculator.onScroll(SCROLL_DELTA);
+
         actionEvent.consume();
     }
 
