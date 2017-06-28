@@ -123,20 +123,22 @@ TitledPane > .title > .arrow-button .arrow {
     -fx-background-color: -content-background;
 }
 
-.sidePane {
-    -fx-background-color: -content-background;
-}
-
 .leftSidePane {
-    -fx-padding: 10px;
+    -fx-background-color: -content-background;
+
     -fx-border-color: -secondary;
     -fx-border-width: 0 2px 0 0;
 }
 
 .rightSidePane {
-    -fx-padding: 10px;
+    -fx-background-color: -content-background;
+
     -fx-border-color: -secondary;
     -fx-border-width: 0 0 0 2px;
+}
+
+.leftSidePane VBox, .rightSidePane VBox {
+    -fx-padding: 10px;
 }
 
 #bottomBar {
