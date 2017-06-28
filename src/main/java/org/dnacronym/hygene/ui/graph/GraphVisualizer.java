@@ -496,6 +496,7 @@ public final class GraphVisualizer {
      *
      * @throws IllegalStateException if the {@link Canvas} has not been set
      */
+    @SuppressWarnings("PMD.NPathComplexity") // too bad
     public void draw() {
         if (canvas == null || graphicsContext == null) {
             throw new IllegalStateException("Attempting to draw whilst canvas not set.");
