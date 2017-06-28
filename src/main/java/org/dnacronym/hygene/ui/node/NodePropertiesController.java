@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -18,6 +19,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dnacronym.hygene.graph.Graph;
@@ -32,6 +34,7 @@ import org.dnacronym.hygene.ui.graph.GraphVisualizer;
 import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 /**
@@ -70,6 +73,8 @@ public final class NodePropertiesController implements Initializable {
     private TableColumn<Annotation, String> typeAnnotation;
     @FXML
     private TableColumn<Annotation, Color> colorAnnotation;
+    @FXML
+    private ListView<String> genomeList;
 
 
     @Override
@@ -180,6 +185,15 @@ public final class NodePropertiesController implements Initializable {
                 node instanceof Segment
                         ? graphAnnotation.getAnnotationsOfNode(((Segment) node).getId())
                         : FXCollections.emptyObservableList()));
+
+        genomeList.setItems(FXCollections.observableArrayList(
+                graphVisualizer.getGenomePathsProperty().stream()
+                        .filter(genomePath -> node.hasMetadata()
+                                && node.getMetadata().getGenomes().contains(genomePath.getIndex())
+                                || node.getMetadata().getGenomes().contains(genomePath.getName()))
+                        .map(genomePath -> StringUtils.isNumeric(genomePath.getIndex())
+                                ? genomePath.getName() : genomePath.getIndex()).collect(Collectors.toList())
+        ));
     }
 
 
