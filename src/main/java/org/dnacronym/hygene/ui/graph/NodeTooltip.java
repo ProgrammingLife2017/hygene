@@ -15,8 +15,8 @@ import org.dnacronym.hygene.ui.path.GenomePath;
 public class NodeTooltip {
     private static final Color HYGREEN = Color.rgb(0, 179, 146);
     private static final int DEFAULT_WIDTH = 315;
-    private static final int DEFAULT_HEIGHT = 85;
-    private static final int LINE_HEIGHT = 10;
+    private static final int DEFAULT_HEIGHT = 70;
+    private static final int LINE_HEIGHT = 15;
     private static final int BORDER_BOTTOM_HEIGHT = 4;
     private static final int X_PADDING = 10;
     private static final int Y_PADDING = 20;
@@ -159,7 +159,6 @@ public class NodeTooltip {
             return;
         }
 
-        offset += LINE_HEIGHT / 2;
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillText(
                 "Genomes:",
