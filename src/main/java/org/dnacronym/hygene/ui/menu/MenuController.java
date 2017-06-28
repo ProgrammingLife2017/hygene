@@ -62,7 +62,6 @@ public final class MenuController implements Initializable {
             setGfaFileChooser(initFileChooser(GraphStore.GFA_FILE_NAME, GraphStore.GFA_FILE_EXTENSION));
             setGffFileChooser(initFileChooser(GraphStore.GFF_FILE_NAME, GraphStore.GFF_FILE_EXTENSION));
 
-
             openGffFile.disableProperty().bind(graphStore.getGfaFileProperty().isNull());
             closeGffFile.disableProperty().bind(graphStore.getGffFileProperty().isNull());
         } catch (final UIInitialisationException e) {
