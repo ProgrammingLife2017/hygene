@@ -59,9 +59,6 @@ public final class AnnotationController implements Initializable {
     @Override
     @SuppressWarnings("squid:MaximumInheritanceDepth") // To modify table cell factories
     public void initialize(final URL location, final ResourceBundle resources) {
-        queryField.textProperty().addListener((observable, oldValue, newValue) ->
-                annotationSearch.search(newValue));
-
         resultsTable.setRowFactory(tableView -> {
             final TableRow<Annotation> annotationTableRow = new TableRow<>();
             annotationTableRow.setOnMouseClicked(event -> {

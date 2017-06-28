@@ -86,13 +86,6 @@ final class BasicSettingsViewControllerTest extends UITestBase {
     }
 
     @Test
-    void testEdgeColorDone() {
-        when(actionEvent.getSource()).thenReturn(colorPicker);
-        interact(() -> basicSettingsViewController.edgeColorDone(actionEvent));
-        verify(settings, times(1)).addRunnable(any(Runnable.class));
-    }
-
-    @Test
     void testNodeHeightUpdate() {
         assertThat(graphVisualizer.getNodeHeightProperty().getValue()).isEqualTo(20.0);
 

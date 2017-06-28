@@ -29,8 +29,8 @@
                         <Tooltip text="Search annotations either by name or type"/>
                     </tooltip>
                 </TextField>
-                <Button fx:id="annotationSearchButton" mnemonicParsing="false" onAction="#searchAction" text="Search"
-                        GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Button fx:id="annotationSearchButton" defaultButton="true" mnemonicParsing="false"
+                        onAction="#searchAction" text="Search" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                 <TableView fx:id="resultsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                            GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
