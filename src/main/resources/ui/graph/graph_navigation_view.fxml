@@ -28,25 +28,25 @@
         <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="50" spacing="10.0" StackPane.alignment="CENTER">
             <children>
                 <Separator orientation="VERTICAL"/>
-                <Button fx:id="goLeftLarge" mnemonicParsing="false" onAction="#goLeftLargeAction"
+                <Button fx:id="goLeftLarge" mnemonicParsing="false"
                         styleClass="square_button" text="&lt;&lt;">
                     <tooltip>
                         <Tooltip text="Go left by 1s00 nodes."/>
                     </tooltip>
                 </Button>
-                <Button fx:id="goLeft" mnemonicParsing="false" onAction="#goLeftAction" styleClass="square_button"
+                <Button fx:id="goLeft" mnemonicParsing="false" styleClass="square_button"
                         text="&lt;">
                     <tooltip>
                         <Tooltip text="Go left by a single node."/>
                     </tooltip>
                 </Button>
-                <Button fx:id="goRight" mnemonicParsing="false" onAction="#goRightAction" styleClass="square_button"
+                <Button fx:id="goRight" mnemonicParsing="false" styleClass="square_button"
                         text="&gt;">
                     <tooltip>
                         <Tooltip text="Go right by a single node."/>
                     </tooltip>
                 </Button>
-                <Button fx:id="goRightLarge" mnemonicParsing="false" onAction="#goRightLargeAction"
+                <Button fx:id="goRightLarge" mnemonicParsing="false"
                         styleClass="square_button" text="&gt;&gt;">
                     <tooltip>
                         <Tooltip text="Go right by 100 nodes."/>
@@ -62,13 +62,13 @@
               StackPane.alignment="CENTER_RIGHT">
             <children>
                 <Separator orientation="VERTICAL" prefHeight="200.0"/>
-                <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomInAction" styleClass="square_button"
+                <Button fx:id="zoomIn" mnemonicParsing="false" styleClass="square_button"
                         text="+">
                     <tooltip>
                         <Tooltip text="Zoom in."/>
                     </tooltip>
                 </Button>
-                <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOutAction" styleClass="square_button"
+                <Button fx:id="zoomOut" mnemonicParsing="false" styleClass="square_button"
                         text="-">
                     <tooltip>
                         <Tooltip text="Zoom out."/>
