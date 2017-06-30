@@ -12,7 +12,7 @@
 #### Visualizing Multiple-Genome Graphs
 ![Screenshot of the main Hygene UI](https://user-images.githubusercontent.com/5272244/27724165-d8cc7362-5d70-11e7-8a27-37602a504e62.png)
 
-### Inspecting Annotations
+#### Inspecting Annotations
 ![Screenshot of the Hygene annotation UI](https://user-images.githubusercontent.com/5272244/27724172-e8a923c0-5d70-11e7-8980-dd93ffcac00c.png)
 
 ### The Team
