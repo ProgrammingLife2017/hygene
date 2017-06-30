@@ -57,7 +57,8 @@ public final class QuerySettingsController implements Initializable {
         settings.addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            graphDimensionsCalculator.getCenterNodeIdProperty().set(newValue);
+            graphDimensionsCalculator.getViewPointProperty()
+                    .set(graphDimensionsCalculator.getGraphProperty().get().getRealStartXPosition(newValue));
         });
     }
 
@@ -71,7 +72,7 @@ public final class QuerySettingsController implements Initializable {
         settings.addRunnable(() -> {
             final TextField source = (TextField) keyEvent.getSource();
             final int newValue = Integer.parseInt(source.getText().replaceAll("[^\\d]", ""));
-            graphDimensionsCalculator.getRadiusProperty().set(newValue);
+            graphDimensionsCalculator.getViewRadiusProperty().set(newValue * 2000);
         });
     }
 }

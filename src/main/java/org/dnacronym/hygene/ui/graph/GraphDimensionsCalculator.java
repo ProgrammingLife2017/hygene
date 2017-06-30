@@ -399,7 +399,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return property which decides the current center {@link org.dnacronym.hygene.model.Node} id
      */
-    public IntegerProperty getCenterNodeIdProperty() {
+    public ReadOnlyIntegerProperty getCenterNodeIdProperty() {
         return centerNodeIdProperty;
     }
 
@@ -412,7 +412,7 @@ public final class GraphDimensionsCalculator {
      *
      * @return property which determines the amount of hops to draw in each direction around the center node
      */
-    public IntegerProperty getRadiusProperty() {
+    public ReadOnlyIntegerProperty getRadiusProperty() {
         return radiusProperty;
     }
 

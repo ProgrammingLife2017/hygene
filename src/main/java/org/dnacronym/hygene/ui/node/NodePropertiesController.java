@@ -123,7 +123,7 @@ public final class NodePropertiesController implements Initializable {
                     );
 
                     graphDimensionsCalculator.getViewPointProperty().set(viewPointX);
-                    graphDimensionsCalculator.getRadiusProperty().set(radius);
+                    graphDimensionsCalculator.getViewRadiusProperty().set(radius * 2000);
                 }
             });
             return annotationTableRow;
@@ -189,8 +189,8 @@ public final class NodePropertiesController implements Initializable {
         genomeList.setItems(FXCollections.observableArrayList(
                 graphVisualizer.getGenomePathsProperty().stream()
                         .filter(genomePath -> node.hasMetadata()
-                                && node.getMetadata().getGenomes().contains(genomePath.getIndex())
-                                || node.getMetadata().getGenomes().contains(genomePath.getName()))
+                                && (node.getMetadata().getGenomes().contains(genomePath.getIndex())
+                                || node.getMetadata().getGenomes().contains(genomePath.getName())))
                         .map(genomePath -> StringUtils.isNumeric(genomePath.getIndex())
                                 ? genomePath.getName() : genomePath.getIndex()).collect(Collectors.toList())
         ));
