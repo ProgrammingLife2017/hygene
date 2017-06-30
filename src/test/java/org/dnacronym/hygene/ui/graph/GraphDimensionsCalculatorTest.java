@@ -83,18 +83,6 @@ final class GraphDimensionsCalculatorTest {
         assertThat(graphDimensionsCalculator.getLaneHeightProperty().get()).isEqualTo(300 / 10);
     }
 
-    @Test
-    void testUpperBoundNodeId() {
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(1000);
-        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(1);
-    }
-
-    @Test
-    void testLowerBoundNodeId() {
-        graphDimensionsCalculator.getCenterNodeIdProperty().set(-1000);
-        assertThat(graphDimensionsCalculator.getCenterNodeIdProperty().get()).isEqualTo(1);
-    }
-
 
     private Graph createGraph() {
         return new Graph(new int[][] {
