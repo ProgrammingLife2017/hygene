@@ -19,9 +19,8 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     private final EdgeDrawingToolkit edgeDrawingToolkit;
 
     @Override
-    public void draw(double nodeX, double nodeY, double nodeWidth, Color color) {
-        getGraphicsContext().setFill(color);
-        getGraphicsContext().fillRoundRect(nodeX, nodeY, nodeWidth, getNodeHeight(), ARC_SIZE, ARC_SIZE);
+    public void draw(final double nodeX, final double nodeY, final double nodeWidth) {
+        getGraphicsContext().strokeRect(nodeX, nodeY, nodeWidth, getNodeHeight());
     }
 
     /**
