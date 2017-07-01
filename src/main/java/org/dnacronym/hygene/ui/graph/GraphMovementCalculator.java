@@ -2,7 +2,6 @@ package org.dnacronym.hygene.ui.graph;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import org.dnacronym.hygene.graph.layout.FafospLayerer;
 
 import javax.inject.Inject;
 
@@ -106,10 +105,6 @@ public final class GraphMovementCalculator {
         final int deltaRange = (int) Math.round(deltaY * getZoomingSensitivityProperty().get()
                 * (graphDimensionsCalculator.getViewRadiusProperty().get() / RADIUS_ZOOMING_FACTOR));
         final int newViewRadius = graphDimensionsCalculator.getViewRadiusProperty().get() + deltaRange;
-        if (newViewRadius < (long) FafospLayerer.LAYER_WIDTH * MIN_ZOOM_FACTOR
-                || newViewRadius > (long) FafospLayerer.LAYER_WIDTH * MAX_ZOOM_FACTOR) {
-            return;
-        }
         graphDimensionsCalculator.getViewRadiusProperty().set(newViewRadius);
         graphDimensionsCalculator.updateLastScrollTime();
     }

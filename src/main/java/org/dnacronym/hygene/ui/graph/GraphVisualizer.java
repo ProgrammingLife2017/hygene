@@ -485,7 +485,6 @@ public final class GraphVisualizer {
      * Clear the canvas, and resets the {@link RTree}.
      */
     private void clear() {
-        rTree = new RTree();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -509,28 +508,29 @@ public final class GraphVisualizer {
         snpDrawingToolkit.setCanvasHeight(canvas.getHeight());
         graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
-        final boolean simple = graphDimensionsCalculator.getObservableQueryNodes().size() > 1000;
-
-        if (simple) {
-            final List<Annotation> observableAnnotations = Collections.emptyList();
-            // Edges should be drawn before nodes, don't combine this with node drawing loop
-            for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-                node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations, false));
-            }
+        if (graphDimensionsCalculator.getObservableQueryNodes().size() > 1500) {
+            rTree = null;
 
             for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-                final boolean bookmarked = bookmarkStore != null
-                        && (bookmarkStore.containsBookmark(node)
-                        || node instanceof GfaNode && bookmarkStore.getSimpleBookmarks().stream().anyMatch(
-                        simpleBookmark -> ((GfaNode) node).containsSegment(simpleBookmark.getNodeIdProperty().get()))
-                );
-                drawNode(node,
-                        bookmarked,
-                        node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
-                        observableAnnotations, false);
+                final double nodeX = graphDimensionsCalculator.computeXPosition(node);
+                final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
+
+                if (nodeX + nodeWidth < 0 || nodeX > canvas.getWidth()) {
+                    return;
+                }
+
+                if (node instanceof Segment) {
+                    final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+                    segmentDrawingToolkit.draw(nodeX, nodeY, nodeWidth, Color.GREEN);
+                } else if (node instanceof AggregateSegment) {
+                    final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+                    snpDrawingToolkit.draw(nodeX, nodeY, nodeWidth, Color.GREEN);
+                }
             }
             return;
         }
+
+        rTree = new RTree();
 
         final int[] minNodeId = {Integer.MAX_VALUE};
         final int[] maxNodeId = {0};
@@ -660,22 +660,23 @@ public final class GraphVisualizer {
         this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {
+            selectedSegmentProperty.setValue(null);
             if (rTree == null) {
                 return;
             }
-
-            selectedSegmentProperty.setValue(null);
 
             rTree.find(event.getX(), event.getY(), this::setSelectedSegment);
         });
         canvas.setOnMouseMoved(event -> {
-            if (rTree == null) {
-                return;
-            }
             if (graphDimensionsCalculator.getLastScrollTime() > System.currentTimeMillis() - 100) {
                 return;
             }
+
             hoveredSegmentProperty.set(null);
+            if (rTree == null) {
+                return;
+            }
+
             rTree.find(event.getX(), event.getY(), this::setHoveredSegmentProperty);
         });
         canvas.setOnMouseExited(event -> hoveredSegmentProperty.set(null));

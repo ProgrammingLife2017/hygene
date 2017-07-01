@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 public final class SnpDrawingToolkit extends NodeDrawingToolkit {
     private final EdgeDrawingToolkit edgeDrawingToolkit;
 
+    @Override
+    public void draw(double nodeX, double nodeY, double nodeWidth, Color color) {
+        getGraphicsContext().setFill(color);
+        getGraphicsContext().fillRoundRect(nodeX, nodeY, nodeWidth, getNodeHeight(), ARC_SIZE, ARC_SIZE);
+    }
 
     /**
      * Creates instance of {@link SnpDrawingToolkit}.

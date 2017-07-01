@@ -12,6 +12,12 @@ import java.util.Map;
  * Toolkit used to draw segments.
  */
 public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
+    @Override
+    public void draw(double nodeX, double nodeY, double nodeWidth, Color color) {
+        getGraphicsContext().setFill(color);
+        getGraphicsContext().fillRoundRect(nodeX, nodeY, nodeWidth, getNodeHeight(), ARC_SIZE, ARC_SIZE);
+    }
+
     /**
      * Fills a round rectangle based on the node position and width, with the set {@link Color} fill.
      *
@@ -56,11 +62,11 @@ public final class SegmentDrawingToolkit extends NodeDrawingToolkit {
      * <p>
      * Annotations have the given colors, and are dashed.
      *
-     * @param segmentX         the top left x position of the node
-     * @param segmentY         the top left y position of the node
-     * @param nodeWidth        the width of the node
-     * @param startOffsets     the offset of the start of the annotation in the node. If it runs from the start of the
-     *                         node, it should be 0
+     * @param segmentX     the top left x position of the node
+     * @param segmentY     the top left y position of the node
+     * @param nodeWidth    the width of the node
+     * @param startOffsets the offset of the start of the annotation in the node. If it runs from the start of the
+     *                     node, it should be 0
      */
     @Override
     public void drawAnnotations(final double segmentX, final double segmentY, final double nodeWidth,
