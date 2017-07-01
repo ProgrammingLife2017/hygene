@@ -150,7 +150,6 @@ public final class GraphVisualizer {
 
         edgeColorProperty.addListener((observable, oldValue, newValue) -> draw());
         nodeHeightProperty.addListener((observable, oldValue, newValue) -> draw());
-
         Node.setColorScheme(BasicSettingsViewController.NODE_COLOR_SCHEMES.get(0).getValue());
 
         displayLaneBordersProperty = new SimpleBooleanProperty();
@@ -169,6 +168,15 @@ public final class GraphVisualizer {
         edgeDrawingToolkit = new EdgeDrawingToolkit();
         graphAnnotationVisualizer = new GraphAnnotationVisualizer(graphDimensionsCalculator);
         graphAnnotation.indexBuiltProperty().addListener((observable, oldValue, newValue) -> draw());
+
+        nodeHeightProperty.addListener((observable, oldValue, newValue) -> {
+            segmentDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+            snpDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+            draw();
+        });
+
+        segmentDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
+        snpDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
     }
 
 
@@ -190,7 +198,7 @@ public final class GraphVisualizer {
      */
     @SuppressWarnings({"PMD.NPathComplexity", "squid:S134", "squid:S3776"}) // See comment at top of class
     private void drawNode(final Node node, final boolean bookmarked, final boolean queried,
-                          final List<Annotation> annotations, final boolean simple) {
+                          final List<Annotation> annotations) {
         if (!(node instanceof GfaNode)) {
             return;
         }
@@ -208,12 +216,6 @@ public final class GraphVisualizer {
         }
 
         final double nodeY = graphDimensionsCalculator.computeYPosition(node);
-
-        if (simple) {
-            nodeDrawingToolkit.draw(nodeX, nodeY, nodeWidth, node.getColor(), "");
-            return;
-        }
-
         final GfaNode gfaNode = (GfaNode) node;
 
         if (node.hasMetadata()) {
@@ -337,7 +339,7 @@ public final class GraphVisualizer {
      * @param edge        the edge to be drawn
      * @param annotations the list of annotations in view
      */
-    private void drawEdge(final Edge edge, final List<Annotation> annotations, final boolean simple) {
+    private void drawEdge(final Edge edge, final List<Annotation> annotations) {
         final Node fromNode = edge.getFrom();
         final Node toNode = edge.getTo();
 
@@ -345,11 +347,6 @@ public final class GraphVisualizer {
         final double fromY = graphDimensionsCalculator.computeMiddleYPosition(fromNode);
         final double toX = graphDimensionsCalculator.computeXPosition(toNode);
         final double toY = graphDimensionsCalculator.computeMiddleYPosition(toNode);
-
-        if (simple) {
-            edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, 1, computeEdgeColors(edge));
-            return;
-        }
 
         final double edgeThickness = computeEdgeThickness(edge);
         edgeDrawingToolkit.drawEdge(fromX, fromY, toX, toY, edgeThickness, computeEdgeColors(edge));
@@ -485,7 +482,6 @@ public final class GraphVisualizer {
      * Clear the canvas, and resets the {@link RTree}.
      */
     private void clear() {
-        rTree = new RTree();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -503,34 +499,34 @@ public final class GraphVisualizer {
         }
 
         clear();
-        segmentDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
-        segmentDrawingToolkit.setCanvasHeight(canvas.getHeight());
-        snpDrawingToolkit.setNodeHeight(nodeHeightProperty.get());
-        snpDrawingToolkit.setCanvasHeight(canvas.getHeight());
-        graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
 
-        final boolean simple = graphDimensionsCalculator.getObservableQueryNodes().size() > 1000;
+        if (graphDimensionsCalculator.getObservableQueryNodes().size() > 1500) {
+            rTree = null;
 
-        if (simple) {
-            final List<Annotation> observableAnnotations = Collections.emptyList();
-            // Edges should be drawn before nodes, don't combine this with node drawing loop
+            graphicsContext.setFill(Color.rgb(0, 170, 135));
             for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-                node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations, false));
+                if (node instanceof Segment || node instanceof AggregateSegment) {
+                    final double nodeX = graphDimensionsCalculator.computeXPosition(node);
+                    final double nodeWidth = graphDimensionsCalculator.computeWidth(node);
+
+                    if (nodeX + nodeWidth < 0 || nodeX > canvas.getWidth()) {
+                        return;
+                    }
+
+                    final double nodeY = graphDimensionsCalculator.computeYPosition(node);
+
+                    if (node instanceof Segment) {
+                        segmentDrawingToolkit.draw(nodeX, nodeY, nodeWidth);
+                        continue;
+                    }
+                    snpDrawingToolkit.draw(nodeX, nodeY, nodeWidth);
+                }
             }
 
-            for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-                final boolean bookmarked = bookmarkStore != null
-                        && (bookmarkStore.containsBookmark(node)
-                        || node instanceof GfaNode && bookmarkStore.getSimpleBookmarks().stream().anyMatch(
-                        simpleBookmark -> ((GfaNode) node).containsSegment(simpleBookmark.getNodeIdProperty().get()))
-                );
-                drawNode(node,
-                        bookmarked,
-                        node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
-                        observableAnnotations, false);
-            }
             return;
         }
+
+        rTree = new RTree();
 
         final int[] minNodeId = {Integer.MAX_VALUE};
         final int[] maxNodeId = {0};
@@ -551,7 +547,7 @@ public final class GraphVisualizer {
 
         // Edges should be drawn before nodes, don't combine this with node drawing loop
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
-            node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations, false));
+            node.getOutgoingEdges().forEach(edge -> drawEdge(edge, observableAnnotations));
         }
 
         for (final Node node : graphDimensionsCalculator.getObservableQueryNodes()) {
@@ -563,7 +559,7 @@ public final class GraphVisualizer {
             drawNode(node,
                     bookmarked,
                     node instanceof Segment && query.getQueriedNodes().contains(((Segment) node).getId()),
-                    observableAnnotations, false);
+                    observableAnnotations);
         }
 
         if (displayLaneBordersProperty.get()) {
@@ -660,31 +656,41 @@ public final class GraphVisualizer {
         this.graphAnnotationVisualizer.setGraphicsContext(graphicsContext);
 
         canvas.setOnMouseClicked(event -> {
+            selectedSegmentProperty.setValue(null);
             if (rTree == null) {
                 return;
             }
-
-            selectedSegmentProperty.setValue(null);
 
             rTree.find(event.getX(), event.getY(), this::setSelectedSegment);
         });
         canvas.setOnMouseMoved(event -> {
-            if (rTree == null) {
-                return;
-            }
             if (graphDimensionsCalculator.getLastScrollTime() > System.currentTimeMillis() - 100) {
                 return;
             }
+
             hoveredSegmentProperty.set(null);
+            if (rTree == null) {
+                return;
+            }
+
             rTree.find(event.getX(), event.getY(), this::setHoveredSegmentProperty);
         });
         canvas.setOnMouseExited(event -> hoveredSegmentProperty.set(null));
 
         graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), canvas.getHeight());
-        canvas.widthProperty().addListener((observable, oldValue, newValue) ->
-                graphDimensionsCalculator.setCanvasSize(newValue.doubleValue(), canvas.getHeight()));
-        canvas.heightProperty().addListener((observable, oldValue, newValue) ->
-                graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), newValue.doubleValue()));
+        canvas.widthProperty().addListener((observable, oldValue, newValue) -> {
+            graphDimensionsCalculator.setCanvasSize(newValue.doubleValue(), canvas.getHeight());
+            graphAnnotationVisualizer.setCanvasWidth(newValue.doubleValue());
+        });
+        canvas.heightProperty().addListener((observable, oldValue, newValue) -> {
+            graphDimensionsCalculator.setCanvasSize(canvas.getWidth(), newValue.doubleValue());
+            segmentDrawingToolkit.setCanvasHeight(newValue.doubleValue());
+            snpDrawingToolkit.setCanvasHeight(newValue.doubleValue());
+        });
+
+        graphAnnotationVisualizer.setCanvasWidth(canvas.getWidth());
+        segmentDrawingToolkit.setCanvasHeight(canvas.getHeight());
+        snpDrawingToolkit.setCanvasHeight(canvas.getHeight());
     }
 
     /**

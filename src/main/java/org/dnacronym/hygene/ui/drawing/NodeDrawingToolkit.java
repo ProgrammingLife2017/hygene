@@ -81,6 +81,16 @@ public abstract class NodeDrawingToolkit extends DrawingToolkit {
     }
 
 
+
+    /**
+     * Fills a round rectangle based on the node position and width, with the set {@link Color} fill.
+     *
+     * @param nodeX     the top left x position of the node
+     * @param nodeY     the top left y position of the node
+     * @param nodeWidth the width of the node
+     */
+    public abstract void draw(double nodeX, double nodeY, double nodeWidth);
+
     /**
      * Fills a round rectangle based on the node position and width, with the set {@link Color} fill.
      *
