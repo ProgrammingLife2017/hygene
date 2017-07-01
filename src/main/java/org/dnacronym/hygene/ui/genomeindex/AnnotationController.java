@@ -70,7 +70,7 @@ public final class AnnotationController implements Initializable {
                     );
 
                     graphDimensionsCalculator.getViewPointProperty().set(viewPointX);
-                    graphDimensionsCalculator.getRadiusProperty().set(radius);
+                    graphDimensionsCalculator.getViewRadiusProperty().set(radius * 2000);
                 }
             });
             return annotationTableRow;

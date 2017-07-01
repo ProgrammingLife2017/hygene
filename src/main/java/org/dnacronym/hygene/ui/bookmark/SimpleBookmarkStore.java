@@ -113,7 +113,7 @@ public final class SimpleBookmarkStore implements BookmarkStore {
             observableSimpleBookmarks.add(new SimpleBookmark(bookmark, () -> {
                 final long bookmarkPosition = graphVisualizer.getGraph().getRealStartXPosition(bookmark.getNodeId());
                 graphDimensionsCalculator.getViewPointProperty().set(bookmarkPosition);
-                graphDimensionsCalculator.getRadiusProperty().set(bookmark.getRadius());
+                graphDimensionsCalculator.getViewRadiusProperty().set(bookmark.getRadius() * 2000);
 
                 graphVisualizer.setSelectedSegment(bookmark.getNodeId());
                 sequenceVisualizer.setOffset(bookmark.getBaseOffset());
