@@ -21,7 +21,7 @@ public final class GraphMovementCalculator {
     private static final double RADIUS_ZOOMING_FACTOR = 20000.0;
 
     private static final int MIN_ZOOM_FACTOR = 4;
-    private static final int MAX_ZOOM_FACTOR = 8000;
+    private static final int MAX_ZOOM_FACTOR = 3000;
 
     private final GraphDimensionsCalculator graphDimensionsCalculator;
 

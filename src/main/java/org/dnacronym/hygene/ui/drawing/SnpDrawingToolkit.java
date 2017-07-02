@@ -20,7 +20,7 @@ public final class SnpDrawingToolkit extends NodeDrawingToolkit {
 
     @Override
     public void draw(final double nodeX, final double nodeY, final double nodeWidth) {
-        getGraphicsContext().strokeRect(nodeX, nodeY, nodeWidth, getNodeHeight());
+        getGraphicsContext().fillRect(nodeX, nodeY, nodeWidth, getNodeHeight());
     }
 
     /**
