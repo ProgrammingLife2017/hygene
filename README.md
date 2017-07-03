@@ -15,6 +15,9 @@
 #### Inspecting Annotations
 ![Screenshot of the Hygene annotation UI](https://user-images.githubusercontent.com/5272244/27724172-e8a923c0-5d70-11e7-8980-dd93ffcac00c.png)
 
+### Demo Video
+[Watch the demo video to get an impression of Hygene.](https://www.youtube.com/watch?v=ty-hihaqENw)
+
 ### The Team
 | [Joël Abrahams](https://github.com/JSAbrahams) | [Georgios Andreadis](https://github.com/gandreadis) | [Casper Boone](https://github.com/casperboone) | [Niels de Bruin](https://github.com/nielsdebruin) | [Felix Dekker](https://github.com/FWDekker) |
 | --- | --- | --- | --- | --- |
