@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 /**
  * A collection of methods for algorithmically determining the optimal position for the nodes in a {@link Graph}
- * using FAFOSP, the Felix Algorithm For Optimal Segment Positioning.
+ * using FAFOSP, F's Algorithm For Optimal Segment Positioning.
  */
 public final class Fafosp {
     private static final int COLUMN_WIDTH = 1000;

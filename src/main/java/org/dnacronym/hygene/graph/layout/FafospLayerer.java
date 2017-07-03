@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * Part of the {@link SugiyamaLayout} algorithm, layers a {@link Subgraph} into a number of layers using the FAFOSP-X
  * algorithm.
  * <p>
- * FAFOSP stands for "Felix Algorithm For Optimal Segment Positioning", and is a now-obsolete algorithm for laying
+ * FAFOSP stands for "F's Algorithm For Optimal Segment Positioning", and is a now-obsolete algorithm for laying
  * out graphs. Its algorithm for calculating horizontal layouts, FAFOSP-X, is still useful, however.
  */
 @SuppressWarnings("PMD.TooManyMethods") // Unfeasible to refactor to multiple classes

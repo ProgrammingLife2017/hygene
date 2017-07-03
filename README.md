@@ -19,6 +19,6 @@
 [Watch the demo video to get an impression of Hygene.](https://www.youtube.com/watch?v=ty-hihaqENw)
 
 ### The Team
-| [Joël Abrahams](https://github.com/JSAbrahams) | [Georgios Andreadis](https://github.com/gandreadis) | [Casper Boone](https://github.com/casperboone) | [Niels de Bruin](https://github.com/nielsdebruin) | [Felix Dekker](https://github.com/FWDekker) |
-| --- | --- | --- | --- | --- |
-| <img src="https://scontent-ams3-1.xx.fbcdn.net/v/t1.0-9/1453262_4661677557548_4145955342984378850_n.jpg?oh=6f93338e5bb4fceee1c4d08831c0d28c&oe=59897D72" height="100" /> | <img src="https://avatars3.githubusercontent.com/u/5272244?v=3&s=460" height="100" /> | <img src="https://pbs.twimg.com/profile_images/860244689773092864/NpLUw-c_.jpg" height="100" /> | <img src="http://i.imgur.com/ED7Zc1j.png" height="100" /> |  <img src="http://i.imgur.com/jLduqqW.png" height="100" /> |
+| [Joël Abrahams](https://github.com/JSAbrahams) | [Georgios Andreadis](https://github.com/gandreadis) | [Casper Boone](https://github.com/casperboone) | [Niels de Bruin](https://github.com/nielsdebruin) | [F.W. Dekker](https://github.com/FWDekker)                |
+| --- | --- | --- | --- |-----------------------------------------------------------|
+| <img src="https://scontent-ams3-1.xx.fbcdn.net/v/t1.0-9/1453262_4661677557548_4145955342984378850_n.jpg?oh=6f93338e5bb4fceee1c4d08831c0d28c&oe=59897D72" height="100" /> | <img src="https://avatars3.githubusercontent.com/u/5272244?v=3&s=460" height="100" /> | <img src="https://pbs.twimg.com/profile_images/860244689773092864/NpLUw-c_.jpg" height="100" /> | <img src="http://i.imgur.com/ED7Zc1j.png" height="100" /> |  |
